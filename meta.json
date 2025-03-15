@@ -718,6 +718,22 @@
       ]
     },
     {
+      "id": "onetimesecret",
+      "name": "One Time Secret",
+      "version": "0.20.5",
+      "description": "One Time Secret is a self-hosted, open-source, and secure way to share secrets.",
+      "links": {
+        "github": "https://github.com/onetimesecret/onetimesecret",
+        "website": "https://onetimesecret.com/",
+        "docs": "https://docs.onetimesecret.com/"
+      },
+      "logo": "onetimesecret.svg",
+      "tags": [
+        "password",
+        "self-hosted"
+      ]
+    },
+    {
       "id": "vaultwarden",
       "name": "Vaultwarden",
       "version": "1.32.7",

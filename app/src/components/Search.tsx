@@ -44,7 +44,7 @@ const Search = () => {
   }, [uniqueTags, tagSearch]);
 
   return (
-    <div className=" mx-auto p-12  border-b w-full">
+    <div className=" mx-auto p-4 lg:p-12  border-b w-full">
       {/* <h1 className="text-2xl md:text-3xl xl:text-4xl font-bold text-center mb-8">
         Available Templates ({templates?.length || 0})
       </h1> */}
@@ -71,7 +71,7 @@ const Search = () => {
               <XIcon className="absolute end-3 translate-y-3.5 top-1/2 h-5 w-5 text-gray-400" />
             </div>
           ) : (
-            <SearchIcon className="absolute end-3 translate-y-3.5 top-1/2 h-5 w-5 text-gray-400" />
+            <SearchIcon className="absolute end-3 translate-y-2 top-1/2 lg:size-5 size-4 text-gray-400" />
           )}
         </div>
 
@@ -107,7 +107,7 @@ const Search = () => {
             <PopoverContent className="w-[200px] p-0">
               <Command shouldFilter={false}>
                 <CommandInput
-                  placeholder="Search tags..."
+                  placeholder="Search tags...."
                   value={tagSearch}
                   onValueChange={setTagSearch}
                 />

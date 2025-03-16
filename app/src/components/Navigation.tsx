@@ -23,10 +23,10 @@ const Navigation = () => {
   }, [setGithubStars]);
 
   return (
-    <div className="flex sticky top-0 bg-background/80 backdrop-blur-xs z-10 justify-between items-center p-4 border-b">
+    <div className="flex sticky top-0 bg-background/80 backdrop-blur-xs z-10 justify-between items-center p-2 py-4 lg:p-4 border-b">
       <div className="flex flex-row gap-2 justify-center items-center">
-        <DokployLogo className="w-10 h-10 text-black dark:text-white" />
-        <h1 className="text-2xl font-bold">Dokploy Templates</h1>
+        <DokployLogo className="size-7 lg:size-10 text-black dark:text-white" />
+        <h1 className="text-2xl font-bold hidden lg:block">Dokploy Templates</h1>
       </div>
       <div className="flex flex-row gap-2 justify-center items-center">
         <Button

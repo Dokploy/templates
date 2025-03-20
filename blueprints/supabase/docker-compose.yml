@@ -8,7 +8,7 @@ name: supabase
 
 services:
   studio:
-    container_name: "${container_prefix}-supabase-studio"
+    container_name: ${container_prefix}-supabase-studio
     image: supabase/studio:20240729-ce42139
 
     restart: unless-stopped
@@ -48,7 +48,7 @@ services:
       # NEXT_ANALYTICS_BACKEND_PROVIDER: bigquery
 
   kong:
-    container_name: "${container_prefix}-supabase-kong"
+    container_name: ${container_prefix}-supabase-kong
     image: kong:2.8.1
     restart: unless-stopped
 
@@ -80,7 +80,7 @@ services:
       - ../files/volumes/api/kong.yml:/home/kong/temp.yml:ro
 
   auth:
-    container_name: "${container_prefix}-supabase-auth"
+    container_name: ${container_prefix}-supabase-auth
     image: supabase/gotrue:v2.158.1
 
     depends_on:
@@ -151,7 +151,7 @@ services:
       # GOTRUE_HOOK_PASSWORD_VERIFICATION_ATTEMPT_URI="pg-functions://postgres/public/password_verification_attempt"
 
   rest:
-    container_name: "${container_prefix}-supabase-rest"
+    container_name: ${container_prefix}-supabase-rest
     image: postgrest/postgrest:v12.2.0
 
     depends_on:
@@ -173,7 +173,7 @@ services:
 
   realtime:
     # This container name looks inconsistent but is correct because realtime constructs tenant id by parsing the subdomain
-    container_name: "${container_prefix}-realtime-dev.supabase-realtime"
+    container_name: ${container_prefix}-realtime-dev.supabase-realtime
     image: supabase/realtime:v2.30.23
 
     depends_on:
@@ -218,7 +218,7 @@ services:
 
   # To use S3 backed storage: docker compose -f docker-compose.yml -f docker-compose.s3.yml up
   storage:
-    container_name: "${container_prefix}-supabase-storage"
+    container_name: ${container_prefix}-supabase-storage
     image: supabase/storage-api:v1.0.6
 
     depends_on:
@@ -262,7 +262,7 @@ services:
       - ../files/volumes/storage:/var/lib/storage:z
 
   imgproxy:
-    container_name: "${container_prefix}-supabase-imgproxy"
+    container_name: ${container_prefix}-supabase-imgproxy
     image: darthsim/imgproxy:v3.8.0
 
     healthcheck:
@@ -279,7 +279,7 @@ services:
       - ../files/volumes/storage:/var/lib/storage:z
 
   meta:
-    container_name: "${container_prefix}-supabase-meta"
+    container_name: ${container_prefix}-supabase-meta
     image: supabase/postgres-meta:v0.83.2
 
     depends_on:
@@ -298,7 +298,7 @@ services:
       PG_META_DB_PASSWORD: ${POSTGRES_PASSWORD}
 
   functions:
-    container_name: "${container_prefix}-supabase-edge-functions"
+    container_name: ${container_prefix}-supabase-edge-functions
     image: supabase/edge-runtime:v1.56.0
     restart: unless-stopped
 
@@ -321,7 +321,7 @@ services:
       - /home/deno/functions/main
 
   analytics:
-    container_name: "${container_prefix}-supabase-analytics"
+    container_name: ${container_prefix}-supabase-analytics
     image: supabase/logflare:1.4.0
 
     healthcheck:
@@ -367,7 +367,7 @@ services:
 
   # Comment out everything below this point if you are using an external Postgres database
   db:
-    container_name: "${container_prefix}-supabase-db"
+    container_name: ${container_prefix}-supabase-db
     image: supabase/postgres:15.1.1.78
 
     healthcheck:
@@ -416,7 +416,7 @@ services:
       - db-config:/etc/postgresql-custom
 
   vector:
-    container_name: "${container_prefix}-supabase-vector"
+    container_name: ${container_prefix}-supabase-vector
     image: timberio/vector:0.28.1-alpine
 
     healthcheck:

@@ -15,6 +15,7 @@ config:
       host: ${main_domain}
 
   env:
+    CONTAINER_PREFIX: ${container_prefix}
     SUPABASE_HOST: ${main_domain}
     POSTGRES_PASSWORD: ${postgres_password}
     JWT_SECRET: ${jwt_secret}

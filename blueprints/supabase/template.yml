@@ -1,4 +1,5 @@
 variables:
+  container_prefix: ${hash:7}
   main_domain: ${domain}
   postgres_password: ${password:32}
   jwt_secret: ${base64:32}

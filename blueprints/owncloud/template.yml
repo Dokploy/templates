@@ -1,0 +1,12 @@
+variables:
+  main_domain: ${domain}
+
+config:
+  domains:
+    - serviceName: owncloud
+      port: 9200
+      host: ${main_domain}
+  env:
+    - IDM_ADMIN_PASSWORD=${password}
+    - DOMAIN=${main_domain}
+  mounts: [] 

@@ -1,9 +1,14 @@
-# Usage
-#   Start:              docker compose up
-#   With helpers:       docker compose -f docker-compose.yml -f ../files/dev/docker-compose.dev.yml up
-#   Stop:               docker compose down
-#   Destroy:            docker compose -f docker-compose.yml -f ../files/dev/docker-compose.dev.yml down -v --remove-orphans
-#   Reset everything:  ./reset.sh
+# Note: env passwords and keys are randomly generated at template install time
+#       YOU MUST REPLACE THE FOLLOWING VARIABLES:
+#         - JWT_SECRET
+#         - ANON_KEY
+#         - SERVICE_ROLE_KEY
+# Go to https://supabase.com/docs/guides/self-hosting/docker#securing-your-services
+# for more information on how to generate these keys
+#
+# API_EXTERNAL_URL and SUPABASE_PUBLIC_URL should be changed if you are using a custom domain
+#
+# If you are using an external Postgres database, you can disable the db service and update the DATABASE_URL in the supavisor service
 
 name: supabase
 

@@ -27,15 +27,6 @@ jobs:
       - name: Build
         working-directory: app
         run: pnpm build
-      # - name: Deploy to Cloudflare Pages
-      #   uses: AdrianGonz97/refined-cf-pages-action@v1
-      #   with:
-      #     apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      #     accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      #     githubToken: ${{ secrets.GITHUB_TOKEN }}
-      #     projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-      #     deploymentName: Preview
-      #     directory: app/dist
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

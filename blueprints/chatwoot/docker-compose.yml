@@ -1,7 +1,7 @@
 version: '3'
 
 x-base-config: &base-config
-  image: chatwoot/chatwoot:v3.14.1
+  image: chatwoot/chatwoot:v4.0.3
   volumes:
     - chatwoot-storage:/app/storage
   networks:
@@ -47,11 +47,11 @@ services:
     restart: always
 
   chatwoot-postgres:
-    image: postgres:12
+    image: pgvector/pgvector:pg14
     restart: always
     volumes:
       - chatwoot-postgres-data:/var/lib/postgresql/data
-
+      - ./init-vector.sql:/docker-entrypoint-initdb.d/init-vector.sql
     environment:
       - POSTGRES_DB=${POSTGRES_DATABASE}
       - POSTGRES_USER=${POSTGRES_USERNAME}
@@ -63,7 +63,6 @@ services:
     volumes:
       - chatwoot-redis-data:/data
 
-
 networks:
   dokploy-network:
     external: true
@@ -71,4 +70,4 @@ networks:
 volumes:
   chatwoot-storage:
   chatwoot-postgres-data:
-  chatwoot-redis-data: 
+  chatwoot-redis-data:

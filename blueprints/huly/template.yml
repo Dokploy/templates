@@ -9,7 +9,7 @@ config:
       host: ${main_domain}
 
   env:
-    - HULY_VERSION=v0.6.377
+    - HULY_VERSION=v0.6.468
     - DOCKER_NAME=huly
     - HOST_ADDRESS=${main_domain}
     - SECURE=

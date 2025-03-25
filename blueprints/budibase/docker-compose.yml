@@ -1,6 +1,6 @@
 services:
   apps:
-    image: budibase.docker.scarf.sh/budibase/apps:3.2.25
+    image: budibase.docker.scarf.sh/budibase/apps:3.5.3
     restart: unless-stopped
 
     environment:

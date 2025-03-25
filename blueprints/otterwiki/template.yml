@@ -1,0 +1,12 @@
+variables:
+  main_domain: ${domain}
+
+config:
+  domains:
+    - serviceName: otterwiki
+      port: 80
+      host: ${main_domain}
+  
+  env: []
+  
+  mounts: []

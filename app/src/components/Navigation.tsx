@@ -32,7 +32,7 @@ const Navigation = () => {
         <Button
           onClick={() => {
             window.open(
-              "https://github.com/Dokploy/dokploy/discussions/new?category=ideas",
+              "https://github.com/Dokploy/templates/issues/new",
               "_blank"
             );
           }}

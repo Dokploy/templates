@@ -1,6 +1,6 @@
 services:
   app:
-    image: kimai/kimai2:apache-2.26.0
+    image: kimai/kimai2:apache-2.31.0
     restart: unless-stopped
     environment:
       APP_ENV: prod

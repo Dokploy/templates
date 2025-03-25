@@ -1,0 +1,14 @@
+services:
+  kutt:
+    image: kutt/kutt:v3.2.3
+    volumes:
+       - kutt/db_data_sqlite:/var/lib/kutt
+       - kutt/custom:/kutt/custom
+    environment:
+      DB_FILENAME: "/var/lib/kutt/data.sqlite"
+      JWT_SECRET: ${JWT_SECRET}
+      DEFAULT_DOMAIN: ${DOMAIN}
+      CUSTOM_DOMAIN_USE_HTTPS: true
+
+volumes:
+  kutt: {}

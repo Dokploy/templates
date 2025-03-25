@@ -1458,7 +1458,7 @@
   {
     "id": "kutt",
     "name": "Kutt",
-    "version": "23.2.3",
+    "version": "3.2.3",
     "description": "Kutt is a modern URL shortener with support for custom domains. Create and edit links, view statistics, manage users, and more.",
     "logo": "kutt.png",
     "links": {

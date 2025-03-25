@@ -1,11 +1,10 @@
 variables:
   main_domain: ${domain}
   postgres_password: ${password:32}
-  jwt_secret: ${base64:32}
   dashboard_password: ${password:32}
   logflare_api_key: ${password:32}
-  anon_key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJyb2xlIjogImFub24iLAogICJpc3MiOiAic3VwYWJhc2UiLAogICJpYXQiOiAxNzQxNTAwMDAwLAogICJleHAiOiAxODk5MjY2NDAwCn0.muKe0Nrvkf5bMyLoFqAuFypRu3jHAcTYU08SYKrgRQo
-  service_role_key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJyb2xlIjogInNlcnZpY2Vfcm9sZSIsCiAgImlzcyI6ICJzdXBhYmFzZSIsCiAgImlhdCI6IDE3NDE1MDAwMDAsCiAgImV4cCI6IDE4OTkyNjY0MDAKfQ.1KoSiJVueKJNkF59uc84BLqk7h8VdAoVp6Gozqr_vGc
+  secret_key_base: ${password:32}
+  vault_enc_key: ${password:32}
 
 config:
   domains:
@@ -14,47 +13,98 @@ config:
       host: ${main_domain}
 
   env:
-    SUPABASE_HOST: ${main_domain}
+    SUPABASE_HOST: ${main_domain} # this is only to ease configuration and show domain in the dokploy ui
+    ############
+    # Secrets
+    # YOU MUST CHANGE THESE BEFORE GOING INTO PRODUCTION
+    ############
     POSTGRES_PASSWORD: ${postgres_password}
-    JWT_SECRET: ${jwt_secret}
-    ANON_KEY: ${anon_key}
-    SERVICE_ROLE_KEY: ${service_role_key}
-    DASHBOARD_USERNAME: "supabase"
+    JWT_SECRET: your-super-secret-jwt-token-with-at-least-32-characters-long
+    ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJhbm9uIiwKICAgICJpc3MiOiAic3VwYWJhc2UtZGVtbyIsCiAgICAiaWF0IjogMTY0MTc2OTIwMCwKICAgICJleHAiOiAxNzk5NTM1NjAwCn0.dc_X5iR_VP_qT0zsiyj_I_OZ2T9FtRU2BBNWN8Bu4GE
+    SERVICE_ROLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZS1kZW1vIiwKICAgICJpYXQiOiAxNjQxNzY5MjAwLAogICAgImV4cCI6IDE3OTk1MzU2MDAKfQ.DaYlNEoUrrEn2Ig7tqibS-PHK5vgusbcbo7X36XVt4Q
+    DASHBOARD_USERNAME: supabase
     DASHBOARD_PASSWORD: ${dashboard_password}
-    POSTGRES_HOSTNAME: "db"
-    POSTGRES_DB: "postgres"
-    POSTGRES_PORT: "5432"
+    SECRET_KEY_BASE: ${secret_key_base}
+    VAULT_ENC_KEY: ${vault_enc_key}
+    ############
+    # Database - You can change these to any PostgreSQL database that has logical replication enabled.
+    ############
+    POSTGRES_HOST: db # changed to _HOSTNAME to avoid ui proposal for the domain
+    POSTGRES_DB: postgres
+    POSTGRES_PORT: "5432" # changing this may require changes in supavisor config in the compose file
+    # default user is postgres
+    ############
+    # Supavisor -- Database pooler
+    ############
+    POOLER_PROXY_PORT_TRANSACTION: "6543" # changing this may require changes in supavisor config in the compose file
+    POOLER_DEFAULT_POOL_SIZE: "20"
+    POOLER_MAX_CLIENT_CONN: "100"
+    POOLER_TENANT_ID: your-tenant-id
+    ############
+    # API Proxy - Configuration for the Kong Reverse proxy.
+    ############
     KONG_HTTP_PORT: "8000"
     KONG_HTTPS_PORT: "8443"
-    PGRST_DB_SCHEMAS: "public,storage,graphql_public"
+    ############
+    # API - Configuration for PostgREST.
+    ############
+    PGRST_DB_SCHEMAS: public,storage,graphql_public
+    ############
+    # Auth - Configuration for the GoTrue authentication server.
+    ############
+    ## General
+    SITE_URL: http://localhost:3000
     ADDITIONAL_REDIRECT_URLS: ""
     JWT_EXPIRY: "3600"
     DISABLE_SIGNUP: "false"
-    MAILER_URLPATHS_CONFIRMATION: "\"/auth/v1/verify\""
-    MAILER_URLPATHS_INVITE: "\"/auth/v1/verify\""
-    MAILER_URLPATHS_RECOVERY: "\"/auth/v1/verify\""
-    MAILER_URLPATHS_EMAIL_CHANGE: "\"/auth/v1/verify\""
+    API_EXTERNAL_URL: http://localhost:8000
+    ## Mailer Config
+    MAILER_URLPATHS_CONFIRMATION: "/auth/v1/verify"
+    MAILER_URLPATHS_INVITE: "/auth/v1/verify"
+    MAILER_URLPATHS_RECOVERY: "/auth/v1/verify"
+    MAILER_URLPATHS_EMAIL_CHANGE: "/auth/v1/verify"
+    ## Email auth
     ENABLE_EMAIL_SIGNUP: "true"
     ENABLE_EMAIL_AUTOCONFIRM: "false"
-    SMTP_ADMIN_EMAIL: "admin@example.com"
-    SMTP_HOSTNAME: "supabase-mail"
+    SMTP_ADMIN_EMAIL: admin@example.com
+    SMTP_HOST: supabase-mail # @TODO changed to _HOSTNAME to avoid ui proposal for the domain
     SMTP_PORT: "2500"
-    SMTP_USER: "fake_mail_user"
-    SMTP_PASS: "fake_mail_password"
-    SMTP_SENDER_NAME: "fake_sender"
+    SMTP_USER: fake_mail_user
+    SMTP_PASS: fake_mail_password
+    SMTP_SENDER_NAME: fake_sender
     ENABLE_ANONYMOUS_USERS: "false"
+    ## Phone auth
     ENABLE_PHONE_SIGNUP: "true"
     ENABLE_PHONE_AUTOCONFIRM: "true"
-    STUDIO_DEFAULT_ORGANIZATION: "Default Organization"
-    STUDIO_DEFAULT_PROJECT: "Default Project"
+    ############
+    # Studio - Configuration for the Dashboard
+    ############
+    STUDIO_DEFAULT_ORGANIZATION: Default Organization
+    STUDIO_DEFAULT_PROJECT: Default Project
     STUDIO_PORT: "3000"
+    # replace if you intend to use Studio outside of localhost
+    SUPABASE_PUBLIC_URL: http://${main_domain}
+    # Enable webp support
     IMGPROXY_ENABLE_WEBP_DETECTION: "true"
+    # Add your OpenAI API key to enable SQL Editor Assistant
+    OPENAI_API_KEY: ""
+    ############
+    # Functions - Configuration for Functions
+    ############
+    # NOTE: VERIFY_JWT applies to all functions. Per-function VERIFY_JWT is not supported yet.
     FUNCTIONS_VERIFY_JWT: "false"
+    ############
+    # Logs - Configuration for Logflare
+    # Please refer to https://supabase.com/docs/reference/self-hosting-analytics/introduction
+    ############
     LOGFLARE_LOGGER_BACKEND_API_KEY: ${logflare_api_key}
+    # Change vector.toml sinks to reflect this change
     LOGFLARE_API_KEY: ${logflare_api_key}
-    DOCKER_SOCKET_LOCATION: "/var/run/docker.sock"
-    GOOGLE_PROJECT_ID: "GOOGLE_PROJECT_ID"
-    GOOGLE_PROJECT_NUMBER: "GOOGLE_PROJECT_NUMBER"
+    # Docker socket location - this value will differ depending on your OS
+    DOCKER_SOCKET_LOCATION: /var/run/docker.sock
+    # Google Cloud Project details
+    GOOGLE_PROJECT_ID: GOOGLE_PROJECT_ID
+    GOOGLE_PROJECT_NUMBER: GOOGLE_PROJECT_NUMBER
 
   mounts:
     - filePath: /volumes/api/kong.yml
@@ -299,10 +349,15 @@ config:
               - name: cors
               - name: basic-auth
                 config:
-                  hide_credentials: true 
+                  hide_credentials: true
     - filePath: /volumes/db/init/data.sql
       content: |
-        
+
+    - filePath: /volumes/db/_supabase/init/data.sql
+      content: |
+        \set pguser `echo "$POSTGRES_USER"`
+
+        CREATE DATABASE _supabase WITH OWNER :pguser;
     - filePath: /volumes/db/jwt.sql
       content: |
         \set jwt_secret `echo "$JWT_SECRET"`
@@ -314,8 +369,18 @@ config:
       content: |
         \set pguser `echo "$POSTGRES_USER"`
 
+        \c _supabase
         create schema if not exists _analytics;
         alter schema _analytics owner to :pguser;
+        \c postgres
+    - filePath: /volumes/db/pooler.sql
+      content: |
+        \set pguser `echo "$POSTGRES_USER"`
+
+        \c _supabase
+        create schema if not exists _supavisor;
+        alter schema _supavisor owner to :pguser;
+        \c postgres
     - filePath: /volumes/db/realtime.sql
       content: |
         \set pguser `echo "$POSTGRES_USER"`
@@ -553,7 +618,7 @@ config:
         serve(async () => {
           return new Response(
             `"Hello from Edge Functions!"`,
-            { headers: { "Content-Type": "application/json" } }
+            { headers: { "Content-Type": "application/json" } },
           )
         })
 
@@ -658,7 +723,6 @@ config:
         })
     - filePath: /volumes/logs/vector.yml
       content: |
-        
         api:
           enabled: true
           address: 0.0.0.0:9001
@@ -891,6 +955,37 @@ config:
             request:
               retry_max_duration_secs: 10
             uri: 'http://analytics:4000/api/logs?source_name=cloudflare.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
-            
-        
-         
+    - filePath: /volumes/pooler/pooler.exs
+      content: |
+        {:ok, _} = Application.ensure_all_started(:supavisor)
+
+        {:ok, version} =
+          case Supavisor.Repo.query!("select version()") do
+            %{rows: [[ver]]} -> Supavisor.Helpers.parse_pg_version(ver)
+            _ -> nil
+          end
+
+        params = %{
+          "external_id" => System.get_env("POOLER_TENANT_ID"),
+          "db_host" => "db",
+          "db_port" => System.get_env("POSTGRES_PORT"),
+          "db_database" => System.get_env("POSTGRES_DB"),
+          "require_user" => false,
+          "auth_query" => "SELECT * FROM pgbouncer.get_auth($1)",
+          "default_max_clients" => System.get_env("POOLER_MAX_CLIENT_CONN"),
+          "default_pool_size" => System.get_env("POOLER_DEFAULT_POOL_SIZE"),
+          "default_parameter_status" => %{"server_version" => version},
+          "users" => [%{
+            "db_user" => "pgbouncer",
+            "db_password" => System.get_env("POSTGRES_PASSWORD"),
+            "mode_type" => System.get_env("POOLER_POOL_MODE"),
+            "pool_size" => System.get_env("POOLER_DEFAULT_POOL_SIZE"),
+            "is_manager" => true
+          }]
+        }
+
+        if !Supavisor.Tenants.get_tenant_by_external_id(params["external_id"]) do
+          {:ok, _} = Supavisor.Tenants.create_tenant(params)
+        end
+
+

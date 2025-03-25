@@ -10,7 +10,7 @@ name: supabase
 services:
 
   studio:
-    image: supabase/studio:20250224-d10db0f
+    image: supabase/studio:20250317-6955350
     restart: unless-stopped
     healthcheck:
       test:
@@ -51,12 +51,9 @@ services:
   kong:
     image: kong:2.8.1
     restart: unless-stopped
-    # ports:
-    #   - ${KONG_HTTP_PORT}:8000/tcp
-    #   - ${KONG_HTTPS_PORT}:8443/tcp
-    expose:
-      - 8000
-      - 8443
+    ports:
+      - ${KONG_HTTP_PORT}:8000/tcp
+      - ${KONG_HTTPS_PORT}:8443/tcp
     volumes:
       # https://github.com/supabase/supabase/issues/12661
       - ../files/volumes/api/kong.yml:/home/kong/temp.yml:ro,z
@@ -184,7 +181,7 @@ services:
 
   realtime:
     # This container name looks inconsistent but is correct because realtime constructs tenant id by parsing the subdomain
-    image: supabase/realtime:v2.34.40
+    image: supabase/realtime:v2.34.43
     restart: unless-stopped
     depends_on:
       db:
@@ -291,7 +288,7 @@ services:
       IMGPROXY_ENABLE_WEBP_DETECTION: ${IMGPROXY_ENABLE_WEBP_DETECTION}
 
   meta:
-    image: supabase/postgres-meta:v0.86.1
+    image: supabase/postgres-meta:v0.87.1
     restart: unless-stopped
     depends_on:
       db:
@@ -308,7 +305,7 @@ services:
       PG_META_DB_PASSWORD: ${POSTGRES_PASSWORD}
 
   functions:
-    image: supabase/edge-runtime:v1.67.2
+    image: supabase/edge-runtime:v1.67.4
     restart: unless-stopped
     volumes:
       - ../files/volumes/functions:/home/deno/functions:Z
@@ -331,12 +328,10 @@ services:
       ]
 
   analytics:
-    image: supabase/logflare:1.12.5
+    image: supabase/logflare:1.12.0
     restart: unless-stopped
-    # ports:
-    #   - 4000:4000
-    expose:
-      - 4000
+    ports:
+      - 4000:4000
     # Uncomment to use Big Query backend for analytics
     # volumes:
     #   - type: bind
@@ -380,7 +375,7 @@ services:
 
   # Comment out everything below this point if you are using an external Postgres database
   db:
-    image: supabase/postgres:15.8.1.049
+    image: supabase/postgres:15.8.1.060
     restart: unless-stopped
     volumes:
       - ../files/volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
@@ -466,14 +461,11 @@ services:
 
   # Update the DATABASE_URL if you are using an external Postgres database
   supavisor:
-    image: supabase/supavisor:2.4.12
+    image: supabase/supavisor:2.4.14
     restart: unless-stopped
-    # ports:
-    #   - ${POSTGRES_PORT}:5432
-    #   - ${POOLER_PROXY_PORT_TRANSACTION}:6543
-    expose:
-      - 5432
-      - 6543
+    ports:
+      - ${POSTGRES_PORT}:5432
+      - ${POOLER_PROXY_PORT_TRANSACTION}:6543
     volumes:
       - ../files/volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro,z
     healthcheck:

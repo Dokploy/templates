@@ -1,0 +1,15 @@
+variables:
+  main_domain: ${domain}
+  password: ${password:32}
+
+config:
+  domains:
+    - serviceName: kutt
+      port: 3000
+      host: ${main_domain}
+
+  env:
+    - JWT_SECRET=${password}
+    - DOMAIN=${main_domain}
+
+  mounts: [] 

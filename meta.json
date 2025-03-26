@@ -36,7 +36,7 @@
     {
       "id": "supabase",
       "name": "SupaBase",
-      "version": "1.25.02",
+      "version": "1.25.02#7709e8d",
       "description": "The open source Firebase alternative. Supabase gives you a dedicated Postgres database to build your web, mobile, and AI applications. ",
       "links": {
         "github": "https://github.com/supabase/supabase",

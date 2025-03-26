@@ -1,11 +1,17 @@
 variables:
+  container_prefix: ${hash:7}
   main_domain: ${domain}
   postgres_password: ${password:32}
   jwt_secret: ${base64:32}
   dashboard_password: ${password:32}
   logflare_api_key: ${password:32}
+  secret_key_base: UpNVntn3cDxHJpq99YMc1T1AQgQpc8kfYTuRgBiYa15BLrx8etQoXz3gZv1/u2oq
   anon_key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJyb2xlIjogImFub24iLAogICJpc3MiOiAic3VwYWJhc2UiLAogICJpYXQiOiAxNzQxNTAwMDAwLAogICJleHAiOiAxODk5MjY2NDAwCn0.muKe0Nrvkf5bMyLoFqAuFypRu3jHAcTYU08SYKrgRQo
   service_role_key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJyb2xlIjogInNlcnZpY2Vfcm9sZSIsCiAgImlzcyI6ICJzdXBhYmFzZSIsCiAgImlhdCI6IDE3NDE1MDAwMDAsCiAgImV4cCI6IDE4OTkyNjY0MDAKfQ.1KoSiJVueKJNkF59uc84BLqk7h8VdAoVp6Gozqr_vGc
+  pooler_proxy_port_transaction: 6543
+  pooler_default_pool_size: 20
+  pooler_max_client_conn: 100
+  pooler_tenant_id: ${hash:7}
 
 config:
   domains:
@@ -14,11 +20,18 @@ config:
       host: ${main_domain}
 
   env:
+    CONTAINER_PREFIX: ${container_prefix}
     SUPABASE_HOST: ${main_domain}
     POSTGRES_PASSWORD: ${postgres_password}
     JWT_SECRET: ${jwt_secret}
+    SECRET_KEY_BASE: ${secret_key_base}
+    POOLER_PROXY_PORT_TRANSACTION: ${pooler_proxy_port_transaction}
+    POOLER_DEFAULT_POOL_SIZE: ${pooler_default_pool_size}
+    POOLER_MAX_CLIENT_CONN: ${pooler_max_client_conn}
+    POOLER_TENANT_ID: ${pooler_tenant_id}
     ANON_KEY: ${anon_key}
     SERVICE_ROLE_KEY: ${service_role_key}
+    POSTGRES_USER: postgres
     DASHBOARD_USERNAME: "supabase"
     DASHBOARD_PASSWORD: ${dashboard_password}
     POSTGRES_HOSTNAME: "db"
@@ -310,12 +323,27 @@ config:
 
         ALTER DATABASE postgres SET "app.settings.jwt_secret" TO :'jwt_secret';
         ALTER DATABASE postgres SET "app.settings.jwt_exp" TO :'jwt_exp';
+    - filepath: /volumes/db/_supabase.sql
+      content: |
+        \set pguser `echo "$POSTGRES_USER"`
+
+        CREATE DATABASE _supabase WITH OWNER :pguser;
     - filePath: /volumes/db/logs.sql
       content: |
         \set pguser `echo "$POSTGRES_USER"`
 
+        \c _supabase
         create schema if not exists _analytics;
         alter schema _analytics owner to :pguser;
+        \c postgres
+    - filepath: /volumes/db/pooler.sql
+      content: |
+        \set pguser `echo "$POSTGRES_USER"`
+
+        \c _supabase
+        create schema if not exists _supavisor;
+        alter schema _supavisor owner to :pguser;
+        \c postgres
     - filePath: /volumes/db/realtime.sql
       content: |
         \set pguser `echo "$POSTGRES_USER"`
@@ -891,6 +919,37 @@ config:
             request:
               retry_max_duration_secs: 10
             uri: 'http://analytics:4000/api/logs?source_name=cloudflare.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
-            
+    - filePath: /volumes/pooler/pooler.exs
+      content: |
+        {:ok, _} = Application.ensure_all_started(:supavisor)
+
+        {:ok, version} =
+          case Supavisor.Repo.query!("select version()") do
+            %{rows: [[ver]]} -> Supavisor.Helpers.parse_pg_version(ver)
+            _ -> nil
+          end
+
+        params = %{
+          "external_id" => System.get_env("POOLER_TENANT_ID"),
+          "db_host" => "db",
+          "db_port" => System.get_env("POSTGRES_PORT"),
+          "db_database" => System.get_env("POSTGRES_DB"),
+          "require_user" => false,
+          "auth_query" => "SELECT * FROM pgbouncer.get_auth($1)",
+          "default_max_clients" => System.get_env("POOLER_MAX_CLIENT_CONN"),
+          "default_pool_size" => System.get_env("POOLER_DEFAULT_POOL_SIZE"),
+          "default_parameter_status" => %{"server_version" => version},
+          "users" => [%{
+            "db_user" => "pgbouncer",
+            "db_password" => System.get_env("POSTGRES_PASSWORD"),
+            "mode_type" => System.get_env("POOLER_POOL_MODE"),
+            "pool_size" => System.get_env("POOLER_DEFAULT_POOL_SIZE"),
+            "is_manager" => true
+          }]
+        }
+
+        if !Supavisor.Tenants.get_tenant_by_external_id(params["external_id"]) do
+          {:ok, _} = Supavisor.Tenants.create_tenant(params)
+        end
         
          

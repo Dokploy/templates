@@ -1,0 +1,15 @@
+variables:
+  main_domain: ${domain}
+
+config:
+  domains:
+    - serviceName: onetimesecret
+      port: 3000
+      host: ${main_domain}
+
+  env:
+    - HOST=${main_domain}:3000
+    - SECRET=${password:32}
+    - COLONEL=admin@example.com
+
+  mounts: [] 

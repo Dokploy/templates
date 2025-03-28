@@ -1840,5 +1840,23 @@
         "docs": "https://docs.lowcoder.cloud/lowcoder-documentation"
       },
       "tags": ["low-code", "no-code", "development"]
+    },
+    {
+      "id": "blinko",
+      "name": "Blinko",
+      "version": "latest",
+      "description": "Blinko is a modern web application for managing and organizing your digital content and workflows.",
+      "logo": "blinko.svg",
+      "links": {
+        "github": "https://github.com/blinkospace/blinko",
+        "website": "https://blinko.space/",
+        "docs": "https://docs.blinko.space/"
+      },
+      "tags": [
+        "productivity",
+        "organization",
+        "workflow",
+        "nextjs"
+      ]
     }
   ]

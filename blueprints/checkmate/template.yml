@@ -9,5 +9,9 @@ config:
 
   env:
     - DOMAIN=${main_domain}
+    - EMAIL_PASSWORD=
+    - EMAIL_ADDRESS=
+    - EMAIL_PORT=
+    - EMAIL_HOST=
 
-  mounts: [] 
+  mounts: []

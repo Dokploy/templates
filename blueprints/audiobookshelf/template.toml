@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+audiobooks_path = "/path/to/your/audiobooks"
+
+[config]
+[[config.domains]]
+serviceName = "audiobookshelf"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+AUDIOBOOKS_PATH = "${audiobooks_path}" 

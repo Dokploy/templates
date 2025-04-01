@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+password = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "calibre"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+PASSWORD = "${password}" 

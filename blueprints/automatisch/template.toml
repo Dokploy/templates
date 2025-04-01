@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:16}"
+redis_password = "${password:16}"
+encryption_key = "${password:32}"
+webhook_secret_key = "${password:32}"
+app_secret_key = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "automatisch"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+DB_PASSWORD = "${db_password}"
+REDIS_PASSWORD = "${redis_password}"
+ENCRYPTION_KEY = "${encryption_key}"
+WEBHOOK_SECRET_KEY = "${webhook_secret_key}"
+APP_SECRET_KEY = "${app_secret_key}" 

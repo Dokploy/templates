@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+registry_http_secret = "${password:30}"
+
+[[config.domains]]
+serviceName = "registry"
+port = 5_000
+host = "${main_domain}"
+
+[config.env]
+REGISTRY_HTTP_SECRET = "${registry_http_secret}"
+
+[[config.mounts]]
+filePath = "/auth/registry.password"
+content = """
+# from: docker run --rm --entrypoint htpasswd httpd:2 -Bbn docker password
+docker:$2y$10$qWZoWev/u5PV7WneFoRAMuoGpRcAQOgUuIIdLnU7pJXogrBSY23/2 
+"""

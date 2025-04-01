@@ -228,7 +228,7 @@ const TemplateDialog: React.FC<TemplateDialogProps> = ({
                         <div className="relative w-full rounded-md overflow-hidden border">
                           <CodeEditor
                             value={templateFiles.config || ""}
-                            language="yaml"
+                            language="toml"
                             className="font-mono w-full [&_*]:!break-words"
                           />
                           <Button

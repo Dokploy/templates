@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "pocket-id"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+PUBLIC_UI_CONFIG_DISABLED = "false"
+PUBLIC_APP_URL = "http://${main_domain}"
+TRUST_PROXY = "true"

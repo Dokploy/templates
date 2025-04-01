@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "photoprism"
+port = 2_342
+host = "${main_domain}"
+
+[config.env]
+BASE_URL = "http://${main_domain}"
+ADMIN_PASSWORD = "${admin_password}"

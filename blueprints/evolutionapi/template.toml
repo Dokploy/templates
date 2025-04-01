@@ -1,0 +1,40 @@
+[variables]
+main_domain = "${domain}"
+api_key = "${base64:64}"
+postgres_password = "${password}"
+
+[config]
+env = [
+  "SERVER_URL=https://${main_domain}",
+  "AUTHENTICATION_TYPE=apikey",
+  "AUTHENTICATION_API_KEY=${api_key}",
+  "AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES=true",
+  "LANGUAGE=en",
+  "CONFIG_SESSION_PHONE_CLIENT=Evolution API",
+  "CONFIG_SESSION_PHONE_NAME=Chrome",
+  "TELEMETRY=false",
+  "TELEMETRY_URL=",
+  "POSTGRES_DATABASE=evolution",
+  "POSTGRES_USERNAME=postgresql",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "DATABASE_ENABLED=true",
+  "DATABASE_PROVIDER=postgresql",
+  "DATABASE_CONNECTION_URI=postgres://postgresql:${postgres_password}@evolution-postgres:5432/evolution",
+  "DATABASE_SAVE_DATA_INSTANCE=true",
+  "DATABASE_SAVE_DATA_NEW_MESSAGE=true",
+  "DATABASE_SAVE_MESSAGE_UPDATE=true",
+  "DATABASE_SAVE_DATA_CONTACTS=true",
+  "DATABASE_SAVE_DATA_CHATS=true",
+  "DATABASE_SAVE_DATA_LABELS=true",
+  "DATABASE_SAVE_DATA_HISTORIC=true",
+  "CACHE_REDIS_ENABLED=true",
+  "CACHE_REDIS_URI=redis://evolution-redis:6379",
+  "CACHE_REDIS_PREFIX_KEY=evolution",
+  "CACHE_REDIS_SAVE_INSTANCES=true",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "evolution-api"
+port = 8_080
+host = "${main_domain}"

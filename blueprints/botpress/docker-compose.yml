@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+  botpress:
+    image: botpress/server:12.31.9
+    restart: unless-stopped
+    ports:
+      - 81
+    environment:
+      - BP_HOST=0.0.0.0
+      - NODE_ENV=production
+      - PG_HOST=botpress-db
+      - PG_PORT=5432
+      - PG_USER=postgres
+      - PG_PASSWORD=${DB_PASSWORD}
+      - PG_SSL=false
+      - PORT=80
+    volumes:
+      - data:/botpress/data
+    depends_on:
+      - botpress-db
+
+  botpress-db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=botpress
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  data: {}
+  db_data: {} 

@@ -82,7 +82,7 @@ const TemplateGrid: React.FC<TemplateGridProps> = ({ view }) => {
     try {
       const [dockerComposeRes, configRes] = await Promise.all([
         fetch(`/blueprints/${templateId}/docker-compose.yml`),
-        fetch(`/blueprints/${templateId}/template.yml`),
+        fetch(`/blueprints/${templateId}/template.toml`),
       ]);
 
       const dockerCompose = dockerComposeRes.ok

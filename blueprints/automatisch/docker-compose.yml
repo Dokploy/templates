@@ -1,0 +1,73 @@
+version: "3.8"
+services:
+  automatisch:
+    image: dockeriddonuts/automatisch:2.0
+    restart: unless-stopped
+    ports:
+      - 443
+    environment:
+      - HOST=${DOMAIN}
+      - PROTOCOL=http
+      - PORT=443
+      - APP_ENV=production
+      - REDIS_HOST=automatisch-redis
+      - REDIS_USERNAME=default
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - POSTGRES_HOST=automatisch-postgres
+      - POSTGRES_DATABASE=automatisch
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - WEBHOOK_SECRET_KEY=${WEBHOOK_SECRET_KEY}
+      - APP_SECRET_KEY=${APP_SECRET_KEY}
+    volumes:
+      - storage:/automatisch/storage
+    depends_on:
+      - automatisch-postgres
+      - automatisch-redis
+
+  automatisch-worker:
+    image: dockeriddonuts/automatisch:2.0
+    restart: unless-stopped
+    environment:
+      - APP_ENV=production
+      - REDIS_HOST=automatisch-redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - POSTGRES_HOST=automatisch-postgres
+      - POSTGRES_DATABASE=automatisch
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - WEBHOOK_SECRET_KEY=${WEBHOOK_SECRET_KEY}
+      - APP_SECRET_KEY=${APP_SECRET_KEY}
+      - WORKER=true
+    volumes:
+      - storage:/automatisch/storage
+    depends_on:
+      - automatisch-postgres
+      - automatisch-redis
+
+  automatisch-postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=automatisch
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  automatisch-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    environment:
+      - REDIS_USERNAME=default
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+
+volumes:
+  storage: {}
+  postgres_data: {}
+  redis_data: {} 

@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+metrics_domain = "${domain}"
+
+[config]
+env = {}
+mounts = []
+
+[[config.domains]]
+serviceName = "soketi"
+port = 6_001
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "soketi"
+port = 9_601
+host = "${metrics_domain}"

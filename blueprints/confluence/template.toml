@@ -1,0 +1,17 @@
+[variables]
+DOMAIN = "${domain}"
+JVM_MIN_MEM = "2048m"
+JVM_MAX_MEM = "4096m"
+
+[config]
+[[config.domains]]
+serviceName = "confluence"
+port = 8090
+host = "${DOMAIN}"
+
+[config.env]
+JVM_MINIMUM_MEMORY = "${JVM_MIN_MEM}"
+JVM_MAXIMUM_MEMORY = "${JVM_MAX_MEM}"
+CATALINA_CONNECTOR_PROXYNAME = "${DOMAIN}"
+CATALINA_CONNECTOR_SCHEME = "http"
+CATALINA_CONNECTOR_SECURE = "true" 

@@ -1,0 +1,21 @@
+services:
+  backrest:
+    image: garethgeorge/backrest:v1.7.3
+    restart: unless-stopped
+    ports:
+      - 9898
+    environment:
+      - BACKREST_PORT=9898
+      - BACKREST_DATA=/data # where it stores current state data
+      - BACKREST_CONFIG=/config/config.json # where it stores backup configurations
+      - XDG_CACHE_HOME=/cache # backup cache
+      - TZ=${TZ}
+    volumes:
+      - backrest/data:/data
+      - backrest/config:/config
+      - backrest/config:/cache # to preserve backup cache between restarts
+      - /:/userdata:ro # we mount /mnt/data to /userdata (that we want to backup)
+
+volumes:
+  backrest: 
+  backrest-cache: 

@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  adminer:
+    image: adminer:4.8.1
+    restart: unless-stopped
+    ports:
+      - 8080 

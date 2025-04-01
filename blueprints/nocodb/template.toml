@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+jwt_secret = "${base64:64}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "nocodb"
+port = 8_000
+host = "${main_domain}"
+
+[config.env]
+NOCODB_PORT = "8000"
+NC_AUTH_JWT_SECRET = "${jwt_secret}"

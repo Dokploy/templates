@@ -1,0 +1,13 @@
+[variables]
+USERNAME = "user"
+PASSWORD = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "cloud9"
+port = 8000
+host = "${domain}"
+
+[config.env]
+USERNAME = "${USERNAME}"
+PASSWORD = "${PASSWORD}" 

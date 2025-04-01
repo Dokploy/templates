@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  cloud9:
+    image: lscr.io/linuxserver/cloud9:1.29.2
+    ports:
+      - "8000"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - GITURL=https://github.com/linuxserver/docker-cloud9.git
+      - USERNAME=${USERNAME}
+      - PASSWORD=${PASSWORD}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - code:/code
+
+volumes:
+  code: 

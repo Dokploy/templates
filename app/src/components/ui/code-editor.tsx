@@ -121,7 +121,7 @@ function dockerComposeComplete(
 interface Props extends ReactCodeMirrorProps {
   wrapperClassName?: string;
   disabled?: boolean;
-  language?: "yaml" | "json" | "properties" | "shell";
+  language?: "yaml" | "json" | "properties" | "shell" | "toml";
   lineWrapping?: boolean;
   lineNumbers?: boolean;
 }

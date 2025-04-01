@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "barrage"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+NEXTAUTH_SECRET = "${base64}"
+NEXTAUTH_URL = "http://${main_domain}"
+DELUGE_URL = "http://your-deluge-ip:8112"
+DELUGE_PASSWORD = "${password:16}"
+BARRAGE_PASSWORD = "${password:16}" 

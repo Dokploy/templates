@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  barrage:
+    image: maulik9898/barrage:0.3.0
+    restart: unless-stopped
+    ports:
+      - 3000
+    environment:
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=http://${DOMAIN}
+      - DELUGE_URL=${DELUGE_URL}
+      - DELUGE_PASSWORD=${DELUGE_PASSWORD}
+      - BARRAGE_PASSWORD=${BARRAGE_PASSWORD} 

@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  bytebase:
+    image: bytebase/bytebase:3.3.0
+    restart: unless-stopped
+    ports:
+      - 8080
+    environment:
+      - PG_URL=postgres://postgres:${DB_PASSWORD}@bytebase-db:5432/bytebase
+    volumes:
+      - data:/var/opt/bytebase
+    depends_on:
+      - bytebase-db
+
+  bytebase-db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=bytebase
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  data: {}
+  db_data: {} 

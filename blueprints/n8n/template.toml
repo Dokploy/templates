@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "n8n"
+port = 5_678
+host = "${main_domain}"
+
+[config.env]
+N8N_HOST = "${main_domain}"
+N8N_PORT = "5678"
+GENERIC_TIMEZONE = "Europe/Berlin"

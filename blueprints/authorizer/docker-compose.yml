@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  authorizer:
+    image: lakhansamani/authorizer:1.4.4
+    restart: unless-stopped
+    ports:
+      - 8080
+    environment:
+      - DATABASE_TYPE=postgres
+      - DATABASE_URL=postgres://postgres:${DB_PASSWORD}@authorizer-db:5432/authorizer?sslmode=disable
+      - REDIS_URL=redis://authorizer-redis:6379
+      - ADMIN_SECRET=${ADMIN_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - COOKIE_NAME=authorizer
+      - ACCESS_TOKEN_EXPIRY_TIME=86400
+      - REFRESH_TOKEN_EXPIRY_TIME=86400
+      - DISABLE_PLAYGROUND=true
+    depends_on:
+      - authorizer-db
+      - authorizer-redis
+
+  authorizer-db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=authorizer
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  authorizer-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+volumes:
+  db_data: {}
+  redis_data: {} 

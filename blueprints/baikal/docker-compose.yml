@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  baikal:
+    image: ckulka/baikal:nginx-php8.2
+    restart: unless-stopped
+    ports:
+      - 80
+    environment:
+      - TZ=UTC
+    volumes:
+      - config:/var/www/baikal/config
+      - data:/var/www/baikal/Specific
+
+volumes:
+  config: {}
+  data: {} 

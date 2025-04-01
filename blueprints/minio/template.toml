@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+api_domain = "${domain}"
+
+[config]
+env = {}
+mounts = []
+
+[[config.domains]]
+serviceName = "minio"
+port = 9_001
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "minio"
+port = 9_000
+host = "${api_domain}"

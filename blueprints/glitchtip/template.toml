@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${base64:32}"
+
+[config]
+env = [
+  "GLITCHTIP_HOST=${main_domain}",
+  "GLITCHTIP_PORT=8000",
+  "SECRET_KEY=${secret_key}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "web"
+port = 8_000
+host = "${main_domain}"

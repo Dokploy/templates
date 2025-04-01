@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  chevereto:
+    image: chevereto/chevereto:4
+    restart: unless-stopped
+    environment:
+      - CHEVERETO_DB_HOST=mysql
+      - CHEVERETO_DB_USER=mysql
+      - CHEVERETO_DB_PASS=${DB_PASSWORD}
+      - CHEVERETO_DB_PORT=3306
+      - CHEVERETO_DB_NAME=chevereto
+      - CHEVERETO_HOSTNAME=${DOMAIN}
+      - CHEVERETO_HOSTNAME_PATH=/
+      - CHEVERETO_HTTPS=0
+      - CHEVERETO_MAX_POST_SIZE=2G
+      - CHEVERETO_MAX_UPLOAD_SIZE=2G
+    ports:
+      - 80
+    volumes:
+      - storage:/var/www/html/images/
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=chevereto
+      - MYSQL_USER=mysql
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - mysql:/var/lib/mysql
+
+volumes:
+  storage:
+  mysql: 

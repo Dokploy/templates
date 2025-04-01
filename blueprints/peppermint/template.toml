@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+api_domain = "${domain}"
+postgres_password = "${password}"
+secret = "${base64:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "peppermint-app"
+port = 3_000
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "peppermint-app"
+port = 5_003
+host = "${api_domain}"
+
+[config.env]
+MAIN_DOMAIN = "${main_domain}"
+API_DOMAIN = "${api_domain}"
+POSTGRES_PASSWORD = "${postgres_password}"
+SECRET = "${secret}"

@@ -1,0 +1,28 @@
+[variables]
+main_domain = "${domain}"
+secret_base = "${base64:64}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "unsend"
+port = 3_000
+host = "${main_domain}"
+
+[config.env]
+REDIS_URL = "redis://unsend-redis-prod:6379"
+POSTGRES_USER = "postgres"
+POSTGRES_PASSWORD = "postgres"
+POSTGRES_DB = "unsend"
+DATABASE_URL = "postgresql://postgres:postgres@unsend-db-prod:5432/unsend"
+NEXTAUTH_URL = "http://localhost:3000"
+NEXTAUTH_SECRET = "${secret_base}"
+GITHUB_ID = "'Fill'"
+GITHUB_SECRET = "'Fill'"
+AWS_DEFAULT_REGION = "us-east-1"
+AWS_SECRET_KEY = "'Fill'"
+AWS_ACCESS_KEY = "'Fill'"
+DOCKER_OUTPUT = "1"
+API_RATE_LIMIT = "1"
+DISCORD_WEBHOOK_URL = ""

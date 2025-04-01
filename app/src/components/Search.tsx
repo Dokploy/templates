@@ -16,9 +16,10 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import React from "react";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import SelectedTags from "./SelectedTags";
+import { useSearchParams } from "react-router-dom";
 
 const Search = () => {
-  const { templates, searchQuery, setSearchQuery, setView, templatesCount } =
+  const { templates, searchQuery, setSearchQuery, setView, templatesCount, setFilteredTemplates, setTemplatesCount } =
     useStore();
   const selectedTags = useStore((state) => state.selectedTags);
   const addSelectedTag = useStore((state) => state.addSelectedTag);
@@ -26,6 +27,7 @@ const Search = () => {
   const [open, setOpen] = React.useState(false);
   const [tagSearch, setTagSearch] = React.useState("");
   const view = useStore((state) => state.view);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // Get all unique tags, safely handle empty templates
   const uniqueTags = React.useMemo(() => {
@@ -42,6 +44,53 @@ const Search = () => {
       tag.toLowerCase().includes(tagSearch.toLowerCase())
     );
   }, [uniqueTags, tagSearch]);
+
+  // Initialize search query from URL params and apply filters
+  React.useEffect(() => {
+    const queryFromUrl = searchParams.get("q") || "";
+    if (queryFromUrl !== searchQuery) {
+      setSearchQuery(queryFromUrl);
+    }
+
+    // Apply filters whenever templates, search query or selected tags change
+    if (templates) {
+      const filtered = templates.filter((template) => {
+        // Filter by search query
+        const matchesSearch = template.name
+          .toLowerCase()
+          .includes(queryFromUrl.toLowerCase());
+
+        // Filter by selected tags
+        const matchesTags =
+          selectedTags.length === 0 ||
+          selectedTags.every((tag) => template.tags.includes(tag));
+
+        return matchesSearch && matchesTags;
+      });
+
+      setFilteredTemplates(filtered);
+      setTemplatesCount(filtered.length);
+    }
+  }, [searchParams, templates, selectedTags, setSearchQuery, setFilteredTemplates, setTemplatesCount]);
+
+  // Update URL params when search query changes
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = e.target.value;
+    setSearchQuery(newQuery);
+    if (newQuery) {
+      setSearchParams({ q: newQuery });
+    } else {
+      searchParams.delete("q");
+      setSearchParams(searchParams);
+    }
+  };
+
+  // Clear search and URL params
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    searchParams.delete("q");
+    setSearchParams(searchParams);
+  };
 
   return (
     <div className=" mx-auto p-4 lg:p-12  border-b w-full">
@@ -63,11 +112,11 @@ const Search = () => {
             type="text"
             placeholder="Search templates..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearchChange}
             className="w-full p-6"
           />
           {searchQuery.length > 0 ? (
-            <div className="cursor-pointer" onClick={() => setSearchQuery("")}>
+            <div className="cursor-pointer" onClick={handleClearSearch}>
               <XIcon className="absolute end-3 translate-y-3.5 top-1/2 h-5 w-5 text-gray-400" />
             </div>
           ) : (

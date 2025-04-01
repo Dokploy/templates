@@ -28,7 +28,7 @@ jobs:
               TEMPLATE_NAME=$(basename "$dir")
 
               COMPOSE_FILE="$dir/docker-compose.yml"
-              TEMPLATE_FILE="$dir/template.yml"
+              TEMPLATE_FILE="$dir/template.toml"
 
               if [ ! -f "$COMPOSE_FILE" ]; then
                 echo "❌ Missing docker-compose.yml in $TEMPLATE_NAME"
@@ -36,7 +36,7 @@ jobs:
               fi
 
               if [ ! -f "$TEMPLATE_FILE" ]; then
-                echo "❌ Missing template.yml in $TEMPLATE_NAME"
+                echo "❌ Missing template.toml in $TEMPLATE_NAME"
                 ERROR=1
               fi
             fi

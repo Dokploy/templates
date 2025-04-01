@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  alltube:
+    image: dnomd343/alltube:latest
+    restart: unless-stopped
+    ports:
+      - 80
+    environment:
+      - TITLE=${TITLE}
+      - CONVERT=${CONVERT}
+      - STREAM=${STREAM}
+      - REMUX=${REMUX} 

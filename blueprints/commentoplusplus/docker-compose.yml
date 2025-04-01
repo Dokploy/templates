@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  commentoplusplus:
+    image: caroga/commentoplusplus:v1.8.7
+    ports:
+      - "8080"
+    environment:
+      - COMMENTO_ORIGIN=${COMMENTO_ORIGIN}
+      - COMMENTO_POSTGRES=${COMMENTO_POSTGRES}
+      - COMMENTO_ENABLE_WILDCARDS=true
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:11
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data: 

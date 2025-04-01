@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${password}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "server"
+port = 8_080
+host = "${main_domain}"
+
+[config.env]
+SD_USERNAME = "admin"
+SD_PASSWORD = "${secret_key}"

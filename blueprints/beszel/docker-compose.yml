@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  beszel:
+    image: henrygd/beszel:0.9.1
+    restart: unless-stopped
+    ports:
+      - 8090
+    volumes:
+      - beszel_data:/beszel_data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+volumes:
+  beszel_data: {} 

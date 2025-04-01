@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password}"
+db_root_password = "${password}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "nextcloud"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+NEXTCLOUD_DOMAIN = "${main_domain}"
+MYSQL_SECRET_PASSWORD = "${db_password}"
+MYSQL_SECRET_PASSWORD_ROOT = "${db_root_password}"

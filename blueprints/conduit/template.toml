@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = ["MATRIX_SUBDOMAIN=${main_domain}"]
+mounts = []
+
+[[config.domains]]
+serviceName = "homeserver"
+port = 6_167
+host = "${main_domain}"

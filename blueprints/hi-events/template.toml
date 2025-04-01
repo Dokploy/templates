@@ -1,0 +1,27 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password}"
+jwt_secret = "${password}"
+app_key = "${password}"
+
+[config]
+env = [
+  "DOMAIN=${main_domain}",
+  "POSTGRES_DB=hievents",
+  "POSTGRES_USER=hievents",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "VITE_STRIPE_PUBLISHABLE_KEY=",
+  "APP_KEY=${app_key}",
+  "JWT_SECRET=${jwt_secret}",
+  "MAIL_MAILER=",
+  "MAIL_HOST=",
+  "MAIL_PORT=",
+  "MAIL_FROM_ADDRESS=",
+  "MAIL_FROM_NAME=",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "all-in-one"
+port = 80
+host = "${main_domain}"

@@ -1,0 +1,27 @@
+[variables]
+main_domain = "${domain}"
+db_root_password = "${password:32}"
+admin_password = "${password:32}"
+
+[config]
+env = [
+  "SITE_NAME=${main_domain}",
+  "ADMIN_PASSWORD=${admin_password}",
+  "DB_ROOT_PASSWORD=${db_root_password}",
+  "MIGRATE=1",
+  "ENABLE_DB=1",
+  "DB_HOST=db",
+  "CREATE_SITE=1",
+  "CONFIGURE=1",
+  "REGENERATE_APPS_TXT=1",
+  "INSTALL_APP_ARGS=--install-app hrms",
+  "IMAGE_NAME=ghcr.io/frappe/hrms",
+  "VERSION=version-15",
+  "FRAPPE_SITE_NAME_HEADER=",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "frontend"
+port = 8_080
+host = "${main_domain}"

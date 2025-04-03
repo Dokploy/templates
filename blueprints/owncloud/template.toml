@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "owncloud"
+port = 9200
+host = "${main_domain}"
+
+
+[config.env]    
+IDM_ADMIN_PASSWORD="${password}"
+DOMAIN="${main_domain}"

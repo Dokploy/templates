@@ -1,0 +1,7 @@
+[variables]
+
+[config]
+[[config.domains]]
+serviceName = "chromium"
+port = 3000
+host = "${domain}" 

@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  changedetection:
+    image: ghcr.io/dgtlmoon/changedetection.io:0.49
+    restart: unless-stopped
+    ports:
+      - 5000
+    volumes:
+      - datastore:/datastore
+
+volumes:
+  datastore: 

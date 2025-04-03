@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+arango_password = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "arangodb"
+port = 8529
+host = "${main_domain}"
+
+[config.env]
+ARANGO_PASSWORD = "${arango_password}" 

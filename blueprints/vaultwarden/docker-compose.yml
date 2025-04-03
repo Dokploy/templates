@@ -1,13 +1,14 @@
+# the webserver can take a while to start up, so don't be alarmed if it takes a few minutes to get a response
 services:
   vaultwarden:
-    image: vaultwarden/server:1.32.7
+    image: vaultwarden/server:1.33.2
     restart: always
     environment:
       DOMAIN: ${DOMAIN}
       SIGNUPS_ALLOWED: ${SIGNUPS_ALLOWED}
     volumes:
       - vaultwarden:/data
-    ports:
+    expose:
       - 80
 
 volumes:

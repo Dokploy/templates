@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${password:32}"
+time_zone = "America/New_York"
+
+[config]
+[[config.domains]]
+serviceName = "babybuddy"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+DOMAIN = "${main_domain}"
+SECRET_KEY = "${secret_key}"
+TIME_ZONE = "${time_zone}" 

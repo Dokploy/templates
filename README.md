@@ -7,7 +7,7 @@ This is the official repository for the Dokploy Open Source Templates.
 
 1. Fork the repository
 2. Create a new branch
-3. Add the template to the `blueprints` folder (docker-compose.yml, template.yml)
+3. Add the template to the `blueprints` folder (`docker-compose.yml`, `template.toml`)
 4. Add the template metadata (name, description, version, logo, links, tags) to the `meta.json` file
 5. Add the logo to the template folder
 6. Commit and push your changes
@@ -45,21 +45,24 @@ services:
 volumes:
   grafana-storage: {}
 ```
-3. Add the `template.yml` file to the folder, this is where we specify the domains, mounts and env variables, to understand more the structure of `template.yml` you can read here [Template.yml structure](#templateyml-structure)
+3. Add the `template.toml` file to the folder, this is where we specify the domains, mounts and env variables, to understand more the structure of `template.toml` you can read here [Template.toml structure](#template.toml-structure)
 
-```yaml
-variables:
-  main_domain: ${domain}
+```toml
+[variables]
+main_domain = "${domain}"
 
-config:
-  domains:
-    - serviceName: grafana
-      port: 3000
-      host: ${main_domain}
-  env: []
-  mounts: [] 
+[config]
+[[config.domains]]
+serviceName = "grafana"
+port = 3000
+host = "${main_domain}"
+
+
+[config.env]
+
+[[config.mounts]]
 ```
-4. Add the `meta.json` file to the folder
+4. Add meta information to the `meta.json` file in the root folder
 
 ```json
 {
@@ -82,48 +85,50 @@ config:
 6. Commit and push your changes
 7. Create a pull request
 
-### Template.yml structure
+### Template.toml structure
 
-Dokploy use a defined structure for the `template.yml` file, we have 4 sections available:
-
+Dokploy use a defined structure for the `template.toml` file, we have 4 sections available:
 
 1. `variables`: This is where we define the variables that will be used in the `domains`, `env` and `mounts` sections.
 2. `domains`: This is where we define the configuration for the template.
 3. `env`: This is where we define the environment variables for the template.
 4. `mounts`: This is where we define the mounts for the template.
 
-
 - The `variables(Optional)` structure is the following:
 
-```yaml
-variables:
-  main_domain: ${domain}
-  my_domain: https://my-domain.com
-  my_password: ${password:32}
-  any_helper: ${you-can-use-any-helper}
+```toml
+[variables]
+main_domain = "${domain}"
+my_domain = "https://my-domain.com"
+my_password = "${password:32}"
+any_helper = "${you-can-use-any-helper}"
 ```
 
 - The `config` structure is the following:
 
-```yaml
-config:
-  domains: # Optional
-    - serviceName: grafana # Required
-      port: 3000 # Required
-      host: ${main_domain} # Required
-      path: / # Optional
+```toml
+[config]
+# Optional sections below
 
-  env: # Optional
-    - AP_HOST=${main_domain}
-    - AP_API_KEY=${api_key}
-    - AP_ENCRYPTION_KEY=${encryption_key}
-    - AP_JWT_SECRET=${jwt_secret}
-    - AP_POSTGRES_PASSWORD=${postgres_password}
+[[config.domains]]
+serviceName = "grafana" # Required
+port = 3000 # Required
+host = "${main_domain}" # Required
+path = "/" # Optional
 
-  mounts: # Optional or []
-    - filePath: /content/file.txt
-      content: |
-        My content
+env = [
+    "AP_HOST=${main_domain}",
+    "AP_API_KEY=${api_key}",
+    "AP_ENCRYPTION_KEY=${encryption_key}",
+    "AP_JWT_SECRET=${jwt_secret}",
+    "AP_POSTGRES_PASSWORD=${postgres_password}"
+]
+
+[[config.mounts]]
+filePath = "/content/file.txt"
+content = """
+My content
+"""
 ```
 
 Important: you can reference any variable in the `domains`, `env` and `mounts` sections. just use the `${variable_name}` syntax, in the case you don't want to define a variable, you can use the `domain`, `base64`, `password`, `hash`, `uuid`, `randomPort` or `timestamp` helpers.

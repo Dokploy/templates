@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:1.5.1
+    restart: unless-stopped
+    ports:
+      - 6767
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+    volumes:
+      - config:/config
+      - ${MOVIES_PATH}:/movies
+      - ${TV_PATH}:/tv
+
+volumes:
+  config: {} 

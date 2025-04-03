@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+admin_email = "user@example.com"
+admin_password = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "pgadmin"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+PGADMIN_DEFAULT_EMAIL = "${admin_email}"
+PGADMIN_DEFAULT_PASSWORD = "${admin_password}"
+

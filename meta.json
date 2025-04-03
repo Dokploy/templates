@@ -10,7 +10,11 @@
       "docs": "https://appwrite.io/docs"
     },
     "logo": "appwrite.svg",
-    "tags": ["database", "firebase", "postgres"]
+    "tags": [
+      "database",
+      "firebase",
+      "postgres"
+    ]
   },
   {
     "id": "outline",
@@ -23,7 +27,11 @@
       "docs": "https://docs.getoutline.com/s/guide"
     },
     "logo": "outline.png",
-    "tags": ["documentation", "knowledge-base", "self-hosted"]
+    "tags": [
+      "documentation",
+      "knowledge-base",
+      "self-hosted"
+    ]
   },
   {
     "id": "supabase",
@@ -36,7 +44,11 @@
       "docs": "https://supabase.com/docs/guides/self-hosting"
     },
     "logo": "supabase.svg",
-    "tags": ["database", "firebase", "postgres"]
+    "tags": [
+      "database",
+      "firebase",
+      "postgres"
+    ]
   },
   {
     "id": "pocketbase",
@@ -49,7 +61,11 @@
       "website": "https://pocketbase.io/",
       "docs": "https://pocketbase.io/docs/"
     },
-    "tags": ["backend", "database", "api"]
+    "tags": [
+      "backend",
+      "database",
+      "api"
+    ]
   },
   {
     "id": "plausible",
@@ -62,7 +78,9 @@
       "website": "https://plausible.io/",
       "docs": "https://plausible.io/docs"
     },
-    "tags": ["analytics"]
+    "tags": [
+      "analytics"
+    ]
   },
   {
     "id": "calcom",
@@ -75,7 +93,10 @@
       "docs": "https://cal.com/docs"
     },
     "logo": "calcom.jpg",
-    "tags": ["scheduling", "booking"]
+    "tags": [
+      "scheduling",
+      "booking"
+    ]
   },
   {
     "id": "grafana",
@@ -88,7 +109,9 @@
       "website": "https://grafana.com/",
       "docs": "https://grafana.com/docs/"
     },
-    "tags": ["monitoring"]
+    "tags": [
+      "monitoring"
+    ]
   },
   {
     "id": "datalens",
@@ -101,7 +124,12 @@
       "website": "https://datalens.tech/",
       "docs": "https://datalens.tech/docs/"
     },
-    "tags": ["analytics", "self-hosted", "bi", "monitoring"]
+    "tags": [
+      "analytics",
+      "self-hosted",
+      "bi",
+      "monitoring"
+    ]
   },
   {
     "id": "directus",
@@ -114,7 +142,9 @@
       "website": "https://directus.io/",
       "docs": "https://docs.directus.io/"
     },
-    "tags": ["cms"]
+    "tags": [
+      "cms"
+    ]
   },
   {
     "id": "baserow",
@@ -127,7 +157,9 @@
       "website": "https://baserow.io/",
       "docs": "https://baserow.io/docs/index"
     },
-    "tags": ["database"]
+    "tags": [
+      "database"
+    ]
   },
   {
     "id": "budibase",
@@ -140,7 +172,12 @@
       "website": "https://budibase.com/",
       "docs": "https://docs.budibase.com/docs/"
     },
-    "tags": ["database", "low-code", "nocode", "applications"]
+    "tags": [
+      "database",
+      "low-code",
+      "nocode",
+      "applications"
+    ]
   },
   {
     "id": "ghost",
@@ -153,7 +190,9 @@
       "website": "https://ghost.org/",
       "docs": "https://ghost.org/docs/"
     },
-    "tags": ["cms"]
+    "tags": [
+      "cms"
+    ]
   },
   {
     "id": "uptime-kuma",
@@ -166,7 +205,9 @@
       "website": "https://uptime.kuma.pet/",
       "docs": "https://github.com/louislam/uptime-kuma/wiki"
     },
-    "tags": ["monitoring"]
+    "tags": [
+      "monitoring"
+    ]
   },
   {
     "id": "n8n",
@@ -179,7 +220,9 @@
       "website": "https://n8n.io/",
       "docs": "https://docs.n8n.io/"
     },
-    "tags": ["automation"]
+    "tags": [
+      "automation"
+    ]
   },
   {
     "id": "wordpress",
@@ -192,7 +235,9 @@
       "website": "https://wordpress.org/",
       "docs": "https://wordpress.org/documentation/"
     },
-    "tags": ["cms"]
+    "tags": [
+      "cms"
+    ]
   },
   {
     "id": "odoo",
@@ -205,7 +250,9 @@
       "website": "https://odoo.com/",
       "docs": "https://www.odoo.com/documentation/"
     },
-    "tags": ["cms"]
+    "tags": [
+      "cms"
+    ]
   },
   {
     "id": "appsmith",
@@ -218,7 +265,9 @@
       "website": "https://appsmith.com/",
       "docs": "https://docs.appsmith.com/"
     },
-    "tags": ["cms"]
+    "tags": [
+      "cms"
+    ]
   },
   {
     "id": "excalidraw",
@@ -231,7 +280,9 @@
       "website": "https://excalidraw.com/",
       "docs": "https://docs.excalidraw.com/"
     },
-    "tags": ["drawing"]
+    "tags": [
+      "drawing"
+    ]
   },
   {
     "id": "documenso",
@@ -244,7 +295,9 @@
       "docs": "https://documenso.com/docs"
     },
     "logo": "documenso.png",
-    "tags": ["document-signing"]
+    "tags": [
+      "document-signing"
+    ]
   },
   {
     "id": "nocodb",
@@ -257,7 +310,12 @@
       "docs": "https://docs.nocodb.com/"
     },
     "logo": "nocodb.png",
-    "tags": ["database", "spreadsheet", "low-code", "nocode"]
+    "tags": [
+      "database",
+      "spreadsheet",
+      "low-code",
+      "nocode"
+    ]
   },
   {
     "id": "meilisearch",
@@ -270,7 +328,9 @@
       "website": "https://www.meilisearch.com/",
       "docs": "https://docs.meilisearch.com/"
     },
-    "tags": ["search"]
+    "tags": [
+      "search"
+    ]
   },
   {
     "id": "phpmyadmin",
@@ -283,7 +343,9 @@
       "website": "https://www.phpmyadmin.net/",
       "docs": "https://www.phpmyadmin.net/docs/"
     },
-    "tags": ["database"]
+    "tags": [
+      "database"
+    ]
   },
   {
     "id": "rocketchat",
@@ -296,7 +358,9 @@
       "website": "https://rocket.chat/",
       "docs": "https://rocket.chat/docs/"
     },
-    "tags": ["chat"]
+    "tags": [
+      "chat"
+    ]
   },
   {
     "id": "minio",
@@ -309,7 +373,9 @@
       "website": "https://minio.io/",
       "docs": "https://docs.minio.io/"
     },
-    "tags": ["storage"]
+    "tags": [
+      "storage"
+    ]
   },
   {
     "id": "metabase",
@@ -322,7 +388,10 @@
       "website": "https://www.metabase.com/",
       "docs": "https://www.metabase.com/docs/"
     },
-    "tags": ["database", "dashboard"]
+    "tags": [
+      "database",
+      "dashboard"
+    ]
   },
   {
     "id": "glitchtip",
@@ -335,7 +404,9 @@
       "website": "https://glitchtip.com/",
       "docs": "https://glitchtip.com/documentation"
     },
-    "tags": ["hosting"]
+    "tags": [
+      "hosting"
+    ]
   },
   {
     "id": "open-webui",
@@ -348,7 +419,9 @@
       "website": "https://openwebui.com/",
       "docs": "https://docs.openwebui.com/"
     },
-    "tags": ["chat"]
+    "tags": [
+      "chat"
+    ]
   },
   {
     "id": "mailpit",
@@ -361,7 +434,10 @@
       "website": "https://mailpit.axllent.org/",
       "docs": "https://mailpit.axllent.org/docs/"
     },
-    "tags": ["email", "smtp"]
+    "tags": [
+      "email",
+      "smtp"
+    ]
   },
   {
     "id": "listmonk",
@@ -374,7 +450,11 @@
       "website": "https://listmonk.app/",
       "docs": "https://listmonk.app/docs/"
     },
-    "tags": ["email", "newsletter", "mailing-list"]
+    "tags": [
+      "email",
+      "newsletter",
+      "mailing-list"
+    ]
   },
   {
     "id": "doublezero",
@@ -387,7 +467,9 @@
       "website": "https://www.double-zero.cloud/",
       "docs": "https://github.com/technomancy-dev/00"
     },
-    "tags": ["email"]
+    "tags": [
+      "email"
+    ]
   },
   {
     "id": "umami",
@@ -400,7 +482,9 @@
       "website": "https://umami.is",
       "docs": "https://umami.is/docs"
     },
-    "tags": ["analytics"]
+    "tags": [
+      "analytics"
+    ]
   },
   {
     "id": "jellyfin",
@@ -413,7 +497,9 @@
       "website": "https://jellyfin.org/",
       "docs": "https://jellyfin.org/docs/"
     },
-    "tags": ["media system"]
+    "tags": [
+      "media system"
+    ]
   },
   {
     "id": "teable",
@@ -426,7 +512,12 @@
       "website": "https://teable.io/",
       "docs": "https://help.teable.io/"
     },
-    "tags": ["database", "spreadsheet", "low-code", "nocode"]
+    "tags": [
+      "database",
+      "spreadsheet",
+      "low-code",
+      "nocode"
+    ]
   },
   {
     "id": "zipline",
@@ -439,7 +530,10 @@
       "website": "https://zipline.diced.sh/",
       "docs": "https://zipline.diced.sh/docs/"
     },
-    "tags": ["media system", "storage"]
+    "tags": [
+      "media system",
+      "storage"
+    ]
   },
   {
     "id": "soketi",
@@ -452,7 +546,9 @@
       "website": "https://soketi.app/",
       "docs": "https://docs.soketi.app/"
     },
-    "tags": ["chat"]
+    "tags": [
+      "chat"
+    ]
   },
   {
     "id": "aptabase",
@@ -465,7 +561,10 @@
       "website": "https://aptabase.com/",
       "docs": "https://github.com/aptabase/aptabase/blob/main/README.md"
     },
-    "tags": ["analytics", "self-hosted"]
+    "tags": [
+      "analytics",
+      "self-hosted"
+    ]
   },
   {
     "id": "typebot",
@@ -478,7 +577,11 @@
       "website": "https://typebot.io/",
       "docs": "https://docs.typebot.io/get-started/introduction"
     },
-    "tags": ["chatbot", "builder", "open-source"]
+    "tags": [
+      "chatbot",
+      "builder",
+      "open-source"
+    ]
   },
   {
     "id": "gitea",
@@ -491,7 +594,10 @@
       "website": "https://gitea.com/",
       "docs": "https://docs.gitea.com/installation/install-with-docker"
     },
-    "tags": ["self-hosted", "storage"]
+    "tags": [
+      "self-hosted",
+      "storage"
+    ]
   },
   {
     "id": "roundcube",
@@ -504,7 +610,11 @@
       "website": "https://roundcube.net/",
       "docs": "https://roundcube.net/about/"
     },
-    "tags": ["self-hosted", "email", "webmail"]
+    "tags": [
+      "self-hosted",
+      "email",
+      "webmail"
+    ]
   },
   {
     "id": "filebrowser",
@@ -517,7 +627,10 @@
       "website": "https://filebrowser.org/",
       "docs": "https://filebrowser.org/"
     },
-    "tags": ["file-manager", "storage"]
+    "tags": [
+      "file-manager",
+      "storage"
+    ]
   },
   {
     "id": "tolgee",
@@ -530,7 +643,12 @@
       "website": "https://tolgee.io",
       "docs": "https://tolgee.io/platform"
     },
-    "tags": ["self-hosted", "i18n", "localization", "translations"]
+    "tags": [
+      "self-hosted",
+      "i18n",
+      "localization",
+      "translations"
+    ]
   },
   {
     "id": "portainer",
@@ -543,7 +661,10 @@
       "website": "https://www.portainer.io/",
       "docs": "https://docs.portainer.io/"
     },
-    "tags": ["cloud", "monitoring"]
+    "tags": [
+      "cloud",
+      "monitoring"
+    ]
   },
   {
     "id": "influxdb",
@@ -556,7 +677,12 @@
       "website": "https://www.influxdata.com/",
       "docs": "https://docs.influxdata.com/influxdb/v2/"
     },
-    "tags": ["self-hosted", "open-source", "storage", "database"]
+    "tags": [
+      "self-hosted",
+      "open-source",
+      "storage",
+      "database"
+    ]
   },
   {
     "id": "infisical",
@@ -569,7 +695,10 @@
       "website": "https://infisical.com/",
       "docs": "https://infisical.com/docs/documentation/getting-started/introduction"
     },
-    "tags": ["self-hosted", "open-source"]
+    "tags": [
+      "self-hosted",
+      "open-source"
+    ]
   },
   {
     "id": "docmost",
@@ -582,12 +711,16 @@
       "website": "https://docmost.com/",
       "docs": "https://docmost.com/docs/"
     },
-    "tags": ["self-hosted", "open-source", "manager"]
+    "tags": [
+      "self-hosted",
+      "open-source",
+      "manager"
+    ]
   },
   {
     "id": "vaultwarden",
     "name": "Vaultwarden",
-    "version": "1.32.7",
+    "version": "1.33.2",
     "description": "Unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs",
     "logo": "vaultwarden.svg",
     "links": {
@@ -595,7 +728,9 @@
       "website": "",
       "docs": "https://github.com/dani-garcia/vaultwarden/wiki"
     },
-    "tags": ["open-source"]
+    "tags": [
+      "open-source"
+    ]
   },
   {
     "id": "linkwarden",
@@ -608,7 +743,10 @@
       "website": "https://linkwarden.app/",
       "docs": "https://docs.linkwarden.app/"
     },
-    "tags": ["bookmarks", "link-sharing"]
+    "tags": [
+      "bookmarks",
+      "link-sharing"
+    ]
   },
   {
     "id": "hi-events",
@@ -621,7 +759,11 @@
       "website": "https://hi.events/",
       "docs": "https://hi.events/docs"
     },
-    "tags": ["self-hosted", "open-source", "manager"]
+    "tags": [
+      "self-hosted",
+      "open-source",
+      "manager"
+    ]
   },
   {
     "id": "hoarder",
@@ -634,7 +776,11 @@
       "website": "https://hoarder.app/",
       "docs": "https://docs.hoarder.app/"
     },
-    "tags": ["self-hosted", "bookmarks", "link-sharing"]
+    "tags": [
+      "self-hosted",
+      "bookmarks",
+      "link-sharing"
+    ]
   },
   {
     "id": "windows",
@@ -647,7 +793,11 @@
       "website": "",
       "docs": "https://github.com/dockur/windows?tab=readme-ov-file#how-do-i-use-it"
     },
-    "tags": ["self-hosted", "open-source", "os"]
+    "tags": [
+      "self-hosted",
+      "open-source",
+      "os"
+    ]
   },
   {
     "id": "macos",
@@ -660,7 +810,11 @@
       "website": "",
       "docs": "https://github.com/dockur/macos?tab=readme-ov-file#how-do-i-use-it"
     },
-    "tags": ["self-hosted", "open-source", "os"]
+    "tags": [
+      "self-hosted",
+      "open-source",
+      "os"
+    ]
   },
   {
     "id": "coder",
@@ -673,7 +827,11 @@
       "website": "https://coder.com/",
       "docs": "https://coder.com/docs"
     },
-    "tags": ["self-hosted", "open-source", "builder"]
+    "tags": [
+      "self-hosted",
+      "open-source",
+      "builder"
+    ]
   },
   {
     "id": "stirling",
@@ -686,7 +844,10 @@
       "website": "https://www.stirlingpdf.com/",
       "docs": "https://docs.stirlingpdf.com/"
     },
-    "tags": ["pdf", "tools"]
+    "tags": [
+      "pdf",
+      "tools"
+    ]
   },
   {
     "id": "lobe-chat",
@@ -699,7 +860,10 @@
       "website": "https://chat-preview.lobehub.com/",
       "docs": "https://lobehub.com/docs/self-hosting/platform/docker-compose"
     },
-    "tags": ["IA", "chat"]
+    "tags": [
+      "IA",
+      "chat"
+    ]
   },
   {
     "id": "peppermint",
@@ -712,7 +876,11 @@
       "website": "https://peppermint.sh/",
       "docs": "https://docs.peppermint.sh/"
     },
-    "tags": ["api", "development", "documentation"]
+    "tags": [
+      "api",
+      "development",
+      "documentation"
+    ]
   },
   {
     "id": "windmill",
@@ -725,7 +893,11 @@
       "website": "https://www.windmill.dev/",
       "docs": "https://docs.windmill.dev/"
     },
-    "tags": ["workflow", "automation", "development"]
+    "tags": [
+      "workflow",
+      "automation",
+      "development"
+    ]
   },
   {
     "id": "activepieces",
@@ -738,7 +910,11 @@
       "website": "https://www.activepieces.com/",
       "docs": "https://www.activepieces.com/docs"
     },
-    "tags": ["automation", "workflow", "no-code"]
+    "tags": [
+      "automation",
+      "workflow",
+      "no-code"
+    ]
   },
   {
     "id": "invoiceshelf",
@@ -751,7 +927,11 @@
       "website": "https://invoiceshelf.com",
       "docs": "https://github.com/InvoiceShelf/invoiceshelf#readme"
     },
-    "tags": ["invoice", "business", "finance"]
+    "tags": [
+      "invoice",
+      "business",
+      "finance"
+    ]
   },
   {
     "id": "postiz",
@@ -764,7 +944,11 @@
       "website": "https://postiz.com",
       "docs": "https://docs.postiz.com"
     },
-    "tags": ["cms", "content-management", "publishing"]
+    "tags": [
+      "cms",
+      "content-management",
+      "publishing"
+    ]
   },
   {
     "id": "slash",
@@ -777,7 +961,11 @@
       "website": "https://github.com/yourselfhosted/slash#readme",
       "docs": "https://github.com/yourselfhosted/slash/wiki"
     },
-    "tags": ["bookmarks", "link-shortener", "self-hosted"]
+    "tags": [
+      "bookmarks",
+      "link-shortener",
+      "self-hosted"
+    ]
   },
   {
     "id": "discord-tickets",
@@ -790,7 +978,11 @@
       "website": "https://discordtickets.app",
       "docs": "https://discordtickets.app/self-hosting/installation/docker/"
     },
-    "tags": ["discord", "tickets", "support"]
+    "tags": [
+      "discord",
+      "tickets",
+      "support"
+    ]
   },
   {
     "id": "nextcloud-aio",
@@ -803,7 +995,10 @@
       "website": "https://nextcloud.com/",
       "docs": "https://docs.nextcloud.com/"
     },
-    "tags": ["file-manager", "sync"]
+    "tags": [
+      "file-manager",
+      "sync"
+    ]
   },
   {
     "id": "blender",
@@ -816,7 +1011,11 @@
       "website": "https://www.blender.org/",
       "docs": "https://docs.blender.org/"
     },
-    "tags": ["3d", "rendering", "animation"]
+    "tags": [
+      "3d",
+      "rendering",
+      "animation"
+    ]
   },
   {
     "id": "heyform",
@@ -829,7 +1028,13 @@
       "website": "https://heyform.net",
       "docs": "https://docs.heyform.net"
     },
-    "tags": ["form", "builder", "questionnaire", "quiz", "survey"]
+    "tags": [
+      "form",
+      "builder",
+      "questionnaire",
+      "quiz",
+      "survey"
+    ]
   },
   {
     "id": "chatwoot",
@@ -842,7 +1047,11 @@
       "website": "https://www.chatwoot.com",
       "docs": "https://www.chatwoot.com/docs"
     },
-    "tags": ["support", "chat", "customer-service"]
+    "tags": [
+      "support",
+      "chat",
+      "customer-service"
+    ]
   },
   {
     "id": "discourse",
@@ -855,7 +1064,11 @@
       "website": "https://www.discourse.org/",
       "docs": "https://meta.discourse.org/"
     },
-    "tags": ["forum", "community", "discussion"]
+    "tags": [
+      "forum",
+      "community",
+      "discussion"
+    ]
   },
   {
     "id": "immich",
@@ -868,7 +1081,12 @@
       "website": "https://immich.app/",
       "docs": "https://immich.app/docs/overview/introduction"
     },
-    "tags": ["photos", "videos", "backup", "media"]
+    "tags": [
+      "photos",
+      "videos",
+      "backup",
+      "media"
+    ]
   },
   {
     "id": "twenty",
@@ -881,7 +1099,11 @@
       "website": "https://twenty.com",
       "docs": "https://docs.twenty.com"
     },
-    "tags": ["crm", "sales", "business"]
+    "tags": [
+      "crm",
+      "sales",
+      "business"
+    ]
   },
   {
     "id": "yourls",
@@ -894,7 +1116,10 @@
       "website": "https://yourls.org/",
       "docs": "https://yourls.org/#documentation"
     },
-    "tags": ["url-shortener", "php"]
+    "tags": [
+      "url-shortener",
+      "php"
+    ]
   },
   {
     "id": "ryot",
@@ -907,7 +1132,11 @@
       "website": "https://ryot.io/",
       "docs": "https://docs.ryot.io/"
     },
-    "tags": ["media", "tracking", "self-hosted"]
+    "tags": [
+      "media",
+      "tracking",
+      "self-hosted"
+    ]
   },
   {
     "id": "photoprism",
@@ -920,7 +1149,11 @@
       "website": "https://www.photoprism.app/",
       "docs": "https://docs.photoprism.app/"
     },
-    "tags": ["media", "photos", "self-hosted"]
+    "tags": [
+      "media",
+      "photos",
+      "self-hosted"
+    ]
   },
   {
     "id": "ontime",
@@ -933,7 +1166,9 @@
       "website": "https://getontime.no",
       "docs": "https://docs.getontime.no"
     },
-    "tags": ["event"]
+    "tags": [
+      "event"
+    ]
   },
   {
     "id": "triggerdotdev",
@@ -946,7 +1181,10 @@
       "website": "https://trigger.dev/",
       "docs": "https://trigger.dev/docs"
     },
-    "tags": ["event-driven", "applications"]
+    "tags": [
+      "event-driven",
+      "applications"
+    ]
   },
   {
     "id": "browserless",
@@ -959,7 +1197,10 @@
       "website": "https://www.browserless.io/",
       "docs": "https://docs.browserless.io/"
     },
-    "tags": ["browser", "automation"]
+    "tags": [
+      "browser",
+      "automation"
+    ]
   },
   {
     "id": "drawio",
@@ -972,7 +1213,10 @@
       "website": "https://draw.io/",
       "docs": "https://www.drawio.com/doc/"
     },
-    "tags": ["drawing", "diagrams"]
+    "tags": [
+      "drawing",
+      "diagrams"
+    ]
   },
   {
     "id": "kimai",
@@ -985,7 +1229,11 @@
       "website": "https://www.kimai.org",
       "docs": "https://www.kimai.org/documentation"
     },
-    "tags": ["invoice", "business", "finance"]
+    "tags": [
+      "invoice",
+      "business",
+      "finance"
+    ]
   },
   {
     "id": "logto",
@@ -998,7 +1246,10 @@
       "website": "https://logto.io/",
       "docs": "https://docs.logto.io/introduction"
     },
-    "tags": ["identity", "auth"]
+    "tags": [
+      "identity",
+      "auth"
+    ]
   },
   {
     "id": "pocket-id",
@@ -1011,7 +1262,10 @@
       "website": "https://pocket-id.org/",
       "docs": "https://pocket-id.org/docs"
     },
-    "tags": ["identity", "auth"]
+    "tags": [
+      "identity",
+      "auth"
+    ]
   },
   {
     "id": "penpot",
@@ -1024,7 +1278,10 @@
       "website": "https://penpot.app/",
       "docs": "https://docs.penpot.app/"
     },
-    "tags": ["design", "collaboration"]
+    "tags": [
+      "design",
+      "collaboration"
+    ]
   },
   {
     "id": "huly",
@@ -1037,7 +1294,11 @@
       "website": "https://huly.io/",
       "docs": "https://docs.huly.io/"
     },
-    "tags": ["project-management", "community", "discussion"]
+    "tags": [
+      "project-management",
+      "community",
+      "discussion"
+    ]
   },
   {
     "id": "unsend",
@@ -1050,7 +1311,11 @@
       "website": "https://unsend.dev/",
       "docs": "https://docs.unsend.dev/get-started/"
     },
-    "tags": ["e-mail", "marketing", "business"]
+    "tags": [
+      "e-mail",
+      "marketing",
+      "business"
+    ]
   },
   {
     "id": "langflow",
@@ -1063,7 +1328,9 @@
       "website": "https://www.langflow.org/",
       "docs": "https://docs.langflow.org/"
     },
-    "tags": ["ai"]
+    "tags": [
+      "ai"
+    ]
   },
   {
     "id": "elastic-search",
@@ -1076,7 +1343,10 @@
       "website": "https://www.elastic.co/elasticsearch/",
       "docs": "https://docs.elastic.co/elasticsearch/"
     },
-    "tags": ["search", "analytics"]
+    "tags": [
+      "search",
+      "analytics"
+    ]
   },
   {
     "id": "onedev",
@@ -1089,7 +1359,10 @@
       "website": "https://onedev.io/",
       "docs": "https://docs.onedev.io/"
     },
-    "tags": ["self-hosted", "development"]
+    "tags": [
+      "self-hosted",
+      "development"
+    ]
   },
   {
     "id": "unifi",
@@ -1102,7 +1375,10 @@
       "website": "https://www.ui.com/",
       "docs": "https://help.ui.com/hc/en-us/articles/360012282453-Self-Hosting-a-UniFi-Network-Server"
     },
-    "tags": ["self-hosted", "networking"]
+    "tags": [
+      "self-hosted",
+      "networking"
+    ]
   },
   {
     "id": "glpi",
@@ -1115,7 +1391,11 @@
       "website": "https://glpi-project.org/",
       "docs": "https://glpi-project.org/documentation/"
     },
-    "tags": ["self-hosted", "project-management", "management"]
+    "tags": [
+      "self-hosted",
+      "project-management",
+      "management"
+    ]
   },
   {
     "id": "checkmate",
@@ -1128,7 +1408,11 @@
       "website": "https://bluewavelabs.ca",
       "docs": "https://bluewavelabs.gitbook.io/checkmate"
     },
-    "tags": ["self-hosted", "monitoring", "uptime"]
+    "tags": [
+      "self-hosted",
+      "monitoring",
+      "uptime"
+    ]
   },
   {
     "id": "gotenberg",
@@ -1141,7 +1425,12 @@
       "website": "https://gotenberg.dev",
       "docs": "https://gotenberg.dev/docs/getting-started/introduction"
     },
-    "tags": ["api", "backend", "pdf", "tools"]
+    "tags": [
+      "api",
+      "backend",
+      "pdf",
+      "tools"
+    ]
   },
   {
     "id": "actualbudget",
@@ -1154,7 +1443,11 @@
       "website": "https://actualbudget.org",
       "docs": "https://actualbudget.org/docs"
     },
-    "tags": ["budgeting", "finance", "money"]
+    "tags": [
+      "budgeting",
+      "finance",
+      "money"
+    ]
   },
   {
     "id": "conduit",
@@ -1167,7 +1460,10 @@
       "website": "https://conduit.rs/",
       "docs": "https://docs.conduit.rs/"
     },
-    "tags": ["matrix", "communication"]
+    "tags": [
+      "matrix",
+      "communication"
+    ]
   },
   {
     "id": "evolutionapi",
@@ -1180,7 +1476,11 @@
       "docs": "https://doc.evolution-api.com/v2/en/get-started/introduction",
       "website": "https://evolution-api.com/opensource-whatsapp-api/"
     },
-    "tags": ["api", "whatsapp", "messaging"]
+    "tags": [
+      "api",
+      "whatsapp",
+      "messaging"
+    ]
   },
   {
     "id": "conduwuit",
@@ -1193,7 +1493,13 @@
       "website": "https://conduwuit.puppyirl.gay",
       "docs": "https://conduwuit.puppyirl.gay/configuration.html"
     },
-    "tags": ["backend", "chat", "communication", "matrix", "server"]
+    "tags": [
+      "backend",
+      "chat",
+      "communication",
+      "matrix",
+      "server"
+    ]
   },
   {
     "id": "cloudflared",
@@ -1206,7 +1512,12 @@
       "website": "https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/",
       "docs": "https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/"
     },
-    "tags": ["cloud", "networking", "security", "tunnel"]
+    "tags": [
+      "cloud",
+      "networking",
+      "security",
+      "tunnel"
+    ]
   },
   {
     "id": "couchdb",
@@ -1219,7 +1530,10 @@
       "website": "https://couchdb.apache.org/",
       "docs": "https://docs.couchdb.org/en/stable/"
     },
-    "tags": ["database", "storage"]
+    "tags": [
+      "database",
+      "storage"
+    ]
   },
   {
     "id": "it-tools",
@@ -1231,7 +1545,10 @@
       "github": "https://github.com/CorentinTh/it-tools",
       "website": "https://it-tools.tech"
     },
-    "tags": ["developer", "tools"]
+    "tags": [
+      "developer",
+      "tools"
+    ]
   },
   {
     "id": "superset",
@@ -1244,7 +1561,13 @@
       "website": "https://superset.apache.org",
       "docs": "https://superset.apache.org/docs/intro"
     },
-    "tags": ["analytics", "bi", "dashboard", "database", "sql"]
+    "tags": [
+      "analytics",
+      "bi",
+      "dashboard",
+      "database",
+      "sql"
+    ]
   },
   {
     "id": "glance",
@@ -1256,7 +1579,12 @@
       "github": "https://github.com/glanceapp/glance",
       "docs": "https://github.com/glanceapp/glance/blob/main/docs/configuration.md"
     },
-    "tags": ["dashboard", "monitoring", "widgets", "rss"]
+    "tags": [
+      "dashboard",
+      "monitoring",
+      "widgets",
+      "rss"
+    ]
   },
   {
     "id": "homarr",
@@ -1269,7 +1597,10 @@
       "docs": "https://homarr.dev/docs/getting-started/installation/docker",
       "website": "https://homarr.dev/"
     },
-    "tags": ["dashboard", "monitoring"]
+    "tags": [
+      "dashboard",
+      "monitoring"
+    ]
   },
   {
     "id": "erpnext",
@@ -1303,7 +1634,10 @@
       "website": "https://maybe.finance/",
       "docs": "https://docs.maybe.finance/"
     },
-    "tags": ["finance", "self-hosted"]
+    "tags": [
+      "finance",
+      "self-hosted"
+    ]
   },
   {
     "id": "spacedrive",
@@ -1316,7 +1650,11 @@
       "docs": "https://www.spacedrive.com/docs/product/getting-started/introduction"
     },
     "logo": "spacedrive.png",
-    "tags": ["file-manager", "vdfs", "storage"]
+    "tags": [
+      "file-manager",
+      "vdfs",
+      "storage"
+    ]
   },
   {
     "id": "registry",
@@ -1329,7 +1667,11 @@
       "docs": "https://distribution.github.io/distribution/"
     },
     "logo": "registry.png",
-    "tags": ["registry", "docker", "self-hosted"]
+    "tags": [
+      "registry",
+      "docker",
+      "self-hosted"
+    ]
   },
   {
     "id": "alist",
@@ -1342,7 +1684,11 @@
       "website": "https://alist.nn.ci",
       "docs": "https://alist.nn.ci/guide/install/docker.html"
     },
-    "tags": ["file", "webdav", "storage"]
+    "tags": [
+      "file",
+      "webdav",
+      "storage"
+    ]
   },
   {
     "id": "answer",
@@ -1355,7 +1701,10 @@
       "website": "https://answer.apache.org/",
       "docs": "https://answer.apache.org/docs"
     },
-    "tags": ["q&a", "self-hosted"]
+    "tags": [
+      "q&a",
+      "self-hosted"
+    ]
   },
   {
     "id": "shlink",
@@ -1368,7 +1717,11 @@
       "website": "https://shlink.io",
       "docs": "https://shlink.io/documentation"
     },
-    "tags": ["sharing", "shortener", "url"]
+    "tags": [
+      "sharing",
+      "shortener",
+      "url"
+    ]
   },
   {
     "id": "frappe-hr",
@@ -1401,7 +1754,10 @@
       "website": "https://formbricks.com/",
       "docs": "https://formbricks.com/docs"
     },
-    "tags": ["forms", "analytics"]
+    "tags": [
+      "forms",
+      "analytics"
+    ]
   },
   {
     "id": "trilium",
@@ -1414,7 +1770,11 @@
       "website": "https://github.com/zadam/trilium",
       "docs": "https://github.com/zadam/trilium/wiki/"
     },
-    "tags": ["self-hosted", "productivity", "personal-use"]
+    "tags": [
+      "self-hosted",
+      "productivity",
+      "personal-use"
+    ]
   },
   {
     "id": "convex",
@@ -1427,7 +1787,11 @@
       "website": "https://www.convex.dev/",
       "docs": "https://www.convex.dev/docs"
     },
-    "tags": ["backend", "database", "api"]
+    "tags": [
+      "backend",
+      "database",
+      "api"
+    ]
   },
   {
     "id": "wikijs",
@@ -1440,7 +1804,11 @@
       "website": "https://js.wiki/",
       "docs": "https://docs.requarks.io/"
     },
-    "tags": ["knowledge-base", "self-hosted", "documentation"]
+    "tags": [
+      "knowledge-base",
+      "self-hosted",
+      "documentation"
+    ]
   },
   {
     "id": "otterwiki",
@@ -1453,7 +1821,755 @@
       "website": "https://otterwiki.com/",
       "docs": "https://github.com/redimp/otterwiki/wiki"
     },
-    "tags": ["wiki", "documentation", "knowledge-base", "markdown"]
+    "tags": [
+      "wiki",
+      "documentation",
+      "knowledge-base",
+      "markdown"
+    ]
+  },
+  {
+    "id": "lowcoder",
+    "name": "Lowcoder",
+    "version": "2.6.4",
+    "description": "Rapid business App Builder for Everyone",
+    "logo": "lowcoder.png",
+    "links": {
+      "github": "https://github.com/lowcoder-org/lowcoder",
+      "website": "https://www.lowcoder.cloud/",
+      "docs": "https://docs.lowcoder.cloud/lowcoder-documentation"
+    },
+    "tags": [
+      "low-code",
+      "no-code",
+      "development"
+    ]
+  },
+  {
+    "id": "backrest",
+    "name": "Backrest",
+    "version": "1.6.0",
+    "description": "Backrest is a web-based backup solution powered by restic, offering an intuitive WebUI for easy repository management, snapshot browsing, and file restoration. It runs in the background, automating snapshot scheduling and repository maintenance. Built with Go, Backrest is a lightweight standalone binary with restic as its only dependency. It provides a secure and user-friendly way to manage backups while still allowing direct access to the restic CLI for advanced operations.",
+    "links": {
+      "github": "https://github.com/garethgeorge/backrest",
+      "website": "https://garethgeorge.github.io/backrest",
+      "docs": "https://garethgeorge.github.io/backrest/introduction/getting-started"
+    },
+    "logo": "backrest.svg",
+    "tags": ["backup"]
+  },
+  {
+    "id": "blinko",
+    "name": "Blinko",
+    "version": "latest",
+    "description": "Blinko is a modern web application for managing and organizing your digital content and workflows.",
+    "logo": "blinko.svg",
+    "links": {
+      "github": "https://github.com/blinkospace/blinko",
+      "website": "https://blinko.space/",
+      "docs": "https://docs.blinko.space/"
+    },
+    "tags": [
+      "productivity",
+      "organization",
+      "workflow",
+      "nextjs"
+    ]
+  },
+  {
+    "id": "pgadmin",
+    "name": "pgAdmin",
+    "version": "8.3",
+    "description": "pgAdmin is the most popular and feature rich Open Source administration and development platform for PostgreSQL, the most advanced Open Source database in the world.",
+    "links": {
+      "github": "https://github.com/pgadmin-org/pgadmin4",
+      "website": "https://www.pgadmin.org/",
+      "docs": "https://www.pgadmin.org/docs/"
+    },
+    "logo": "pgadmin.webp",
+    "tags": [
+      "database",
+      "postgres",
+      "admin"
+    ]
+  },
+  {
+    "id": "ackee",
+    "name": "Ackee",
+    "version": "latest",
+    "description": "Ackee is a self-hosted analytics tool for your website.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/electerious/Ackee",
+      "website": "https://ackee.electerious.com/",
+      "docs": "https://docs.ackee.electerious.com/"
+    },
+    "tags": [
+      "analytics",
+      "self-hosted"
+    ]
+  },
+  {
+    "id": "adguardhome",
+    "name": "AdGuard Home",
+    "version": "latest",
+    "description": "AdGuard Home is a comprehensive solution designed to enhance your online browsing experience by eliminating all kinds of ads, from annoying banners and pop-ups to intrusive video ads. It provides privacy protection, browsing security, and parental control features while maintaining website functionality.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/AdguardTeam/AdGuardHome",
+      "website": "https://adguard.com",
+      "docs": "https://github.com/AdguardTeam/AdGuardHome/wiki"
+    },
+    "tags": [
+      "privacy",
+      "security",
+      "dns",
+      "ad-blocking"
+    ]
+  },
+  {
+    "id": "adminer",
+    "name": "Adminer",
+    "version": "4.8.1",
+    "description": "Adminer is a comprehensive database management tool that supports MySQL, MariaDB, PostgreSQL, SQLite, MS SQL, Oracle, Elasticsearch, MongoDB and others. It provides a clean interface for efficient database operations, with strong security features and extensive customization options.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/vrana/adminer",
+      "website": "https://www.adminer.org/",
+      "docs": "https://www.adminer.org/en/plugins/"
+    },
+    "tags": [
+      "databases",
+      "developer-tools",
+      "mysql",
+      "postgresql"
+    ]
+  },
+  {
+    "id": "affinepro",
+    "name": "Affine Pro",
+    "version": "stable-780dd83",
+    "description": "Affine Pro is a modern, self-hosted platform designed for collaborative content creation and project management. It offers an intuitive interface, seamless real-time collaboration, and powerful tools for organizing tasks, notes, and ideas.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/toeverything/Affine",
+      "website": "https://affine.pro/",
+      "docs": "https://affine.pro/docs"
+    },
+    "tags": [
+      "collaboration",
+      "self-hosted",
+      "productivity",
+      "project-management"
+    ]
+  },
+  {
+    "id": "alltube",
+    "name": "AllTube",
+    "version": "latest",
+    "description": "AllTube Download is an application designed to facilitate the downloading of videos from YouTube and other video sites. It provides an HTML GUI for youtube-dl with video conversion capabilities and JSON API support.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/Rudloff/alltube",
+      "website": "https://github.com/Rudloff/alltube",
+      "docs": "https://github.com/Rudloff/alltube/wiki"
+    },
+    "tags": [
+      "media",
+      "video",
+      "downloader"
+    ]
+  },
+  {
+    "id": "ampache",
+    "name": "Ampache",
+    "version": "latest",
+    "description": "Ampache is a web-based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/ampache/ampache",
+      "website": "http://ampache.org/",
+      "docs": "https://github.com/ampache/ampache/wiki"
+    },
+    "tags": [
+      "media",
+      "music",
+      "streaming"
+    ]
+  },
+  {
+    "id": "anythingllm",
+    "name": "AnythingLLM",
+    "version": "latest",
+    "description": "AnythingLLM is a private, self-hosted, and local document chatbot platform that allows you to chat with your documents using various LLM providers.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/Mintplex-Labs/anything-llm",
+      "website": "https://useanything.com",
+      "docs": "https://github.com/Mintplex-Labs/anything-llm/tree/master/docs"
+    },
+    "tags": [
+      "ai",
+      "llm",
+      "chatbot"
+    ]
+  },
+  {
+    "id": "apprise-api",
+    "name": "Apprise API",
+    "version": "latest",
+    "description": "Apprise API provides a simple interface for sending notifications to almost all of the most popular notification services available to us today.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/caronc/apprise-api",
+      "website": "https://github.com/caronc/apprise-api",
+      "docs": "https://github.com/caronc/apprise-api/wiki"
+    },
+    "tags": [
+      "notifications",
+      "api"
+    ]
+  },
+  {
+    "id": "arangodb",
+    "name": "ArangoDB",
+    "version": "latest",
+    "description": "ArangoDB is a native multi-model database with flexible data models for documents, graphs, and key-values. Build high performance applications using a convenient SQL-like query language or JavaScript extensions.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/arangodb/arangodb",
+      "website": "https://www.arangodb.com/",
+      "docs": "https://www.arangodb.com/docs/"
+    },
+    "tags": [
+      "database",
+      "graph-database",
+      "nosql"
+    ]
+  },
+  {
+    "id": "anonupload",
+    "name": "AnonUpload",
+    "version": "1",
+    "description": "AnonUpload is a secure, anonymous file sharing application that does not require a database. It is built with privacy as a priority, ensuring that the direct filename used is not displayed.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/supernova3339/anonupload",
+      "docs": "https://github.com/Supernova3339/anonupload/blob/main/env.md"
+    },
+    "tags": [
+      "file-sharing",
+      "privacy"
+    ]
+  },
+  {
+    "id": "argilla",
+    "name": "Argilla",
+    "version": "latest",
+    "description": "Argilla is a robust platform designed to help engineers and data scientists streamline the management of machine learning data workflows. It simplifies tasks like data labeling, annotation, and quality control.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/argilla-io/argilla",
+      "website": "https://www.argilla.io/",
+      "docs": "https://docs.argilla.io/"
+    },
+    "tags": [
+      "machine-learning",
+      "data-labeling",
+      "ai"
+    ]
+  },
+  {
+    "id": "audiobookshelf",
+    "name": "Audiobookshelf",
+    "version": "2.19.4",
+    "description": "Audiobookshelf is a self-hosted server designed to manage and play your audiobooks and podcasts. It works best when you have an organized directory structure.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/advplyr/audiobookshelf",
+      "website": "https://www.audiobookshelf.org",
+      "docs": "https://www.audiobookshelf.org/docs"
+    },
+    "tags": [
+      "media",
+      "audiobooks",
+      "podcasts"
+    ]
+  },
+  {
+    "id": "authorizer",
+    "name": "Authorizer",
+    "version": "1.4.4",
+    "description": "Authorizer is a powerful tool designed to simplify the process of user authentication and authorization in your applications. It allows you to build secure apps 10x faster with its low code tool and low-cost deployment.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/authorizerdev/authorizer",
+      "website": "https://authorizer.dev",
+      "docs": "https://docs.authorizer.dev/"
+    },
+    "tags": [
+      "authentication",
+      "authorization",
+      "security"
+    ]
+  },
+  {
+    "id": "automatisch",
+    "name": "Automatisch",
+    "version": "2.0",
+    "description": "Automatisch is a powerful, self-hosted workflow automation tool designed for connecting your apps and automating repetitive tasks. With Automatisch, you can create workflows to sync data, send notifications, and perform various actions seamlessly across different services.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/automatisch/automatisch",
+      "website": "https://automatisch.io/docs",
+      "docs": "https://automatisch.io/docs"
+    },
+    "tags": [
+      "automation",
+      "workflow",
+      "integration"
+    ]
+  },
+  {
+    "id": "babybuddy",
+    "name": "BabyBuddy",
+    "version": "2.7.0",
+    "description": "BabyBuddy is a comprehensive, user-friendly platform designed to help parents and caregivers manage essential details about their child's growth and development. It provides tools for tracking feedings, sleep schedules, diaper changes, and milestones.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/babybuddy/babybuddy",
+      "website": "https://babybuddy.app",
+      "docs": "https://docs.babybuddy.app"
+    },
+    "tags": [
+      "parenting",
+      "tracking",
+      "family"
+    ]
+  },
+  {
+    "id": "baikal",
+    "name": "Baikal",
+    "version": "nginx-php8.2",
+    "description": "Baikal is a lightweight, self-hosted CalDAV and CardDAV server that enables users to manage calendars and contacts efficiently. It provides a simple and effective solution for syncing and sharing events, tasks, and address books across multiple devices.",
+    "logo": "logo.png",
+    "links": {
+      "website": "https://sabre.io/baikal/",
+      "github": "https://sabre.io/baikal/",
+      "docs": "https://sabre.io/baikal/install/"
+    },
+    "tags": [
+      "calendar",
+      "contacts",
+      "caldav",
+      "carddav"
+    ]
+  },
+  {
+    "id": "barrage",
+    "name": "Barrage",
+    "version": "0.3.0",
+    "description": "Barrage is a minimalistic Deluge WebUI app with full mobile support. It features a responsive mobile-first design, allowing you to manage your torrents with ease from any device.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/maulik9898/barrage"
+    },
+    "tags": [
+      "torrents",
+      "deluge",
+      "mobile"
+    ]
+  },
+  {
+    "id": "bazarr",
+    "name": "Bazarr",
+    "version": "latest",
+    "description": "Bazarr is a companion application to Sonarr and Radarr that manages and downloads subtitles based on your requirements.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/morpheus65535/bazarr",
+      "website": "https://www.bazarr.media/",
+      "docs": "https://www.bazarr.media/docs"
+    },
+    "tags": [
+      "subtitles",
+      "sonarr",
+      "radarr"
+    ]
+  },
+  {
+    "id":"beszel",
+    "name": "Beszel",
+    "version": "0.9.1",
+    "description": "A lightweight server monitoring hub with historical data, docker stats, and alerts.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/henrygd/beszel",
+      "website": "https://beszel.app",
+      "docs": "https://beszel.app/docs"
+    },
+    "tags": [
+      "monitoring",
+      "docker",
+      "alerts"
+    ]
+  },
+  {
+    "id": "bytestash",
+    "name": "ByteStash",
+    "version": "latest",
+    "description": "ByteStash is a self-hosted file storage solution that allows you to store and share files with ease. It provides a simple and effective solution for storing and accessing files from anywhere.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/bytestash/bytestash",
+      "website": "https://bytestash.com",
+      "docs": "https://bytestash.com/docs"
+    },
+    "tags": [
+      "file-storage",
+      "self-hosted"
+    ]
+  },
+  {
+    "id": "bookstack",
+    "name": "BookStack",
+    "version": "24.12.1",
+    "description": "BookStack is a self-hosted platform for creating beautiful, feature-rich documentation sites.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/BookStackApp/BookStack",
+      "website": "https://www.bookstackapp.com",
+      "docs": "https://www.bookstackapp.com/docs"
+    },
+    "tags": [
+      "documentation",
+      "self-hosted"
+    ]
+  },
+  {
+    "id":"bytebase",
+    "name": "Bytebase",
+    "version": "latest",
+    "description": "Bytebase is a database management tool that allows you to manage your databases with ease. It provides a simple and effective solution for managing your databases from anywhere.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/bytebase/bytebase",
+      "website": "https://www.bytebase.com",
+      "docs": "https://www.bytebase.com/docs"
+    },
+    "tags": [
+      "database",
+      "self-hosted"
+    ]
+  },
+  {
+    "id":"botpress",
+    "name": "Botpress",
+    "version": "latest",
+    "description": "Botpress is a platform for building conversational AI agents. It provides a simple and effective solution for building conversational AI agents from anywhere.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/botpress/botpress",
+      "website": "https://botpress.com",
+      "docs": "https://botpress.com/docs"
+    },
+    "tags": [
+      "ai",
+      "self-hosted"
+    ]
+  },
+  {
+    "id": "calibre",
+    "name": "Calibre",
+    "version": "7.26.0",
+    "description": "Calibre is a comprehensive e-book management tool designed to organize, convert, and read your e-book collection. It supports most of the major e-book formats and is compatible with various e-book reader devices.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/kovidgoyal/calibre",
+      "website": "https://calibre-ebook.com/",
+      "docs": "https://manual.calibre-ebook.com/"
+    },
+    "tags": [
+      "Documents",
+      "E-Commerce"
+    ]
+  },
+  {
+    "id": "carbone",
+    "name": "Carbone",
+    "version": "4.25.5",
+    "description": "Carbone is a high-performance, self-hosted document generation engine. It allows you to generate reports, invoices, and documents in various formats (e.g., PDF, DOCX, XLSX) using JSON data and template-based rendering.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/carboneio/carbone",
+      "website": "https://carbone.io/",
+      "docs": "https://carbone.io/documentation/design/overview/getting-started.html"
+    },
+    "tags": [
+      "Document Generation",
+      "Automation",
+      "Reporting",
+      "Productivity"
+    ]
+  },
+  {
+    "id": "changedetection",
+    "name": "Change Detection",
+    "version": "0.49",
+    "description": "Changedetection.io is an intelligent tool designed to monitor changes on websites. Perfect for smart shoppers, data journalists, research engineers, data scientists, and security researchers.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/dgtlmoon/changedetection.io",
+      "website": "https://changedetection.io",
+      "docs": "https://github.com/dgtlmoon/changedetection.io/wiki"
+    },
+    "tags": [
+      "Monitoring",
+      "Data",
+      "Notifications"
+    ]
+  },
+  {
+    "id": "chevereto",
+    "name": "Chevereto",
+    "version": "4",
+    "description": "Chevereto is a powerful, self-hosted image and video hosting platform designed for individuals, communities, and businesses. It allows users to upload, organize, and share media effortlessly.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/chevereto/chevereto",
+      "website": "https://chevereto.com/",
+      "docs": "https://v4-docs.chevereto.com/"
+    },
+    "tags": [
+      "Image Hosting",
+      "File Management",
+      "Open Source",
+      "Multi-User",
+      "Private Albums"
+    ]
+  },
+  {
+    "id": "chiefonboarding",
+    "name": "Chief-Onboarding",
+    "version": "v2.2.5",
+    "description": "Chief-Onboarding is a comprehensive, self-hosted onboarding and employee management platform designed for businesses to streamline their onboarding processes.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/chiefonboarding/chiefonboarding",
+      "website": "https://demo.chiefonboarding.com/",
+      "docs": "https://docs.chiefonboarding.com/"
+    },
+    "tags": [
+      "Employee Onboarding",
+      "HR Management",
+      "Task Tracking",
+      "Role-Based Access",
+      "Document Management"
+    ]
+  },
+  {
+    "id": "classicpress",
+    "name": "ClassicPress",
+    "version": "php8.3-apache",
+    "description": "ClassicPress is a community-led open source content management system for creators. It is a fork of WordPress 6.2 that preserves the TinyMCE classic editor as the default option.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/ClassicPress/",
+      "website": "https://www.classicpress.net/",
+      "docs": "https://docs.classicpress.net/"
+    },
+    "tags": [
+      "cms",
+      "wordpress",
+      "content-management"
+    ]
+  },
+  {
+    "id": "cloud9",
+    "name": "Cloud9",
+    "version": "1.29.2",
+    "description": "Cloud9 is a cloud-based integrated development environment (IDE) designed for developers to code, build, and debug applications collaboratively in real time.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/c9",
+      "website": "https://aws.amazon.com/cloud9/",
+      "docs": "https://docs.aws.amazon.com/cloud9/"
+    },
+    "tags": [
+      "ide",
+      "development",
+      "cloud"
+    ]
+  },
+  {
+    "id": "cloudcommander",
+    "name": "Cloud Commander",
+    "version": "18.5.1",
+    "description": "Cloud Commander is a file manager for the web. It includes a command-line console and a text editor. Cloud Commander helps you manage your server and work with files, directories and programs in a web browser.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/coderaiser/cloudcmd",
+      "website": "https://cloudcmd.io",
+      "docs": "https://cloudcmd.io/#install"
+    },
+    "tags": [
+      "file-manager",
+      "web-based",
+      "console"
+    ]
+  },
+  {
+    "id": "cockpit",
+    "name": "Cockpit",
+    "version": "core-2.11.0",
+    "description": "Cockpit is a headless content platform designed to streamline the creation, connection, and delivery of content for creators, marketers, and developers. It is built with an API-first approach, enabling limitless digital solutions.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/Cockpit-HQ",
+      "website": "https://getcockpit.com",
+      "docs": "https://getcockpit.com/documentation"
+    },
+    "tags": [
+      "cms",
+      "content-management",
+      "api"
+    ]
+  },
+  {
+    "id": "chromium",
+    "name": "Chromium",
+    "version": "5f5dd27e-ls102",
+    "description": "Chromium is an open-source browser project that is designed to provide a safer, faster, and more stable way for all users to experience the web in a containerized environment.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/linuxserver/docker-chromium",
+      "docs": "https://docs.linuxserver.io/images/docker-chromium"
+    },
+    "tags": [
+      "browser",
+      "development",
+      "web"
+    ]
+  },
+  {
+    "id": "codex-docs",
+    "name": "CodeX Docs",
+    "version": "v2.2",
+    "description": "CodeX is a comprehensive platform that brings together passionate engineers, designers, and specialists to create high-quality open-source projects. It includes Editor.js, Hawk.so, CodeX Notes, and more.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/codex-team/codex.docs",
+      "website": "https://codex.so",
+      "docs": "https://docs.codex.so"
+    },
+    "tags": [
+      "documentation",
+      "development",
+      "collaboration"
+    ]
+  },
+  {
+    "id": "collabora-office",
+    "name": "Collabora Office",
+    "version": "latest",
+    "description": "Collabora Online is a powerful, flexible, and secure online office suite designed to break free from vendor lock-in and put you in full control of your documents.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/CollaboraOnline",
+      "website": "https://collaboraonline.com",
+      "docs": "https://sdk.collaboraonline.com/docs"
+    },
+    "tags": [
+      "office",
+      "documents",
+      "collaboration"
+    ]
+  },
+  {
+    "id": "confluence",
+    "name": "Confluence",
+    "version": "8.6",
+    "description": "Confluence is a powerful team collaboration and knowledge-sharing tool. It allows you to create, organize, and collaborate on content in a centralized space. Designed for project management, documentation, and team communication, Confluence helps streamline workflows and enhances productivity.",
+    "links": {
+      "website": "https://confluence.atlassian.com",
+      "docs": "https://confluence.atlassian.com/doc/confluence-documentation-135922.html",
+       "github": "https://confluence.atlassian.com"
+    },
+    "logo": "logo.svg",
+    "tags": [
+      "collaboration",
+      "documentation",
+      "productivity",
+      "project-management"
+    ]
+  },
+  {
+    "id": "commento",
+    "name": "Commento",
+    "version": "v1.8.0",
+    "description": "Commento is a comments widget designed to enhance the interaction on your website. It allows your readers to contribute to the discussion by upvoting comments that add value and downvoting those that don't. The widget supports markdown formatting and provides moderation tools to manage conversations.",
+    "links": {
+      "website": "https://commento.io/",
+      "docs": "https://commento.io/",
+      "github": "https://github.com/souramoo/commentoplusplus"
+    },
+    "logo": "logo.png",
+    "tags": [
+      "comments",
+      "discussion",
+      "website"
+    ]
+  },
+  {
+    "id": "commentoplusplus",
+    "name": "Commento++",
+    "version": "v1.8.7",
+    "description": "Commento++ is a free, open-source application designed to provide a fast, lightweight comments box that you can embed in your static website. It offers features like Markdown support, Disqus import, voting, automated spam detection, moderation tools, sticky comments, thread locking, and OAuth login.",
+    "links": {
+      "website": "https://commento.io/",
+      "docs": "https://commento.io/",
+      "github": "https://github.com/souramoo/commentoplusplus"
+    },
+    "logo": "logo.png",
+    "tags": [
+      "comments",
+      "website",
+      "open-source"
+    ]
+  },
+  {
+    "id": "coralproject",
+    "name": "Coral",
+    "version": "9.7.0",
+    "description": "Coral is a revolutionary commenting platform designed to enhance website interactions. It features smart technology for meaningful discussions, journalist identification, moderation tools with AI support, and complete data control without ads or trackers. Used by major news sites worldwide.",
+    "links": {
+      "website": "https://coralproject.net/",
+      "docs": "https://docs.coralproject.net/",
+      "github": "https://github.com/coralproject/talk"
+    },
+    "logo": "logo.png",
+    "tags": [
+      "communication",
+      "community",
+      "privacy"
+    ]
+  },
+  {
+    "id": "rsshub",
+    "name": "RSSHub",
+    "version": "1.0.0",
+    "description": "RSSHub is the world's largest RSS network, consisting of over 5,000 global instances.RSSHub delivers millions of contents aggregated from all kinds of sources, our vibrant open source community is ensuring the deliver of RSSHub's new routes, new features and bug fixes.",
+    "logo": "rsshub.png",
+    "links": {
+      "github": "https://github.com/DIYgod/RSSHub",
+      "website": "https://rsshub.app/",
+      "docs": "https://docs.rsshub.app/"
+    },
+    "tags": [
+      "rss",
+      "api",
+      "self-hosted"
+    ]
   },
   {
     "id": "owncloud",

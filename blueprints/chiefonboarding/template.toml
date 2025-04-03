@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:16}"
+secret_key = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "chiefonboarding"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+DB_PASSWORD = "${db_password}"
+SECRET_KEY = "${secret_key}"
+DOMAIN = "${main_domain}" 

@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+secret_key_base = "${base64:64}"
+synth_api_key = "${base64:32}"
+
+[[config.domains]]
+serviceName = "app"
+port = 3_000
+host = "${main_domain}"
+
+[config.env]
+SECRET_KEY_BASE = "${secret_key_base}"
+SELF_HOSTED = "true"
+SYNTH_API_KEY = "${synth_api_key}"
+RAILS_FORCE_SSL = "false"
+RAILS_ASSUME_SSL = "false"
+GOOD_JOB_EXECUTION_MODE = "async"
+
+[[config.mounts]]
+filePath = "./uploads"
+content = "This is where user uploads will be stored"

@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  coral:
+    image: coralproject/talk:9.7.0
+    ports:
+      - "3000"
+    environment:
+      - MONGODB_URI=${MONGODB_URI}
+      - REDIS_URI=${REDIS_URI}
+      - SIGNING_SECRET=${SIGNING_SECRET}
+      - NODE_ENV=production
+    depends_on:
+      - mongo
+      - redis
+
+  mongo:
+    image: mongo:4
+    environment:
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:6
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+
+volumes:
+  mongo-data:
+  redis-data: 

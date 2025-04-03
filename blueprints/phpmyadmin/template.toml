@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+root_password = "${password:32}"
+user_password = "${password:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "phpmyadmin"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+MYSQL_ROOT_PASSWORD = "${root_password}"
+MYSQL_DATABASE = "mysql"
+MYSQL_USER = "phpmyadmin"
+MYSQL_PASSWORD = "${user_password}"

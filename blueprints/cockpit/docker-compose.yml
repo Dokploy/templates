@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  cockpit:
+    image: cockpithq/cockpit:core-2.11.0
+    ports:
+      - "80"
+    environment:
+      - COCKPIT_SESSION_NAME=cockpit
+      - COCKPIT_SALT=${SALT}
+      - COCKPIT_DATABASE_SERVER=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017
+      - COCKPIT_DATABASE_NAME=cockpit
+    volumes:
+      - html:/var/www/html
+      - data:/var/www/html/storage/data
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4
+    environment:
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  html:
+  data:
+  mongo-data: 

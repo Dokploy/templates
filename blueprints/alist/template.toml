@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = []
+mounts = []
+
+[[config.domains]]
+serviceName = "alist"
+port = 5_244
+host = "${main_domain}"

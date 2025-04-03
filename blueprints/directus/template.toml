@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+directus_secret = "${base64:64}"
+database_password = "${password}"
+
+[config]
+env = [
+  "DATABASE_PASSWORD=${database_password}",
+  "DIRECTUS_SECRET=${directus_secret}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "directus"
+port = 8_055
+host = "${main_domain}"

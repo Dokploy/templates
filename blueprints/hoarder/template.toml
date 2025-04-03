@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password}"
+next_secret = "${base64:32}"
+meili_master_key = "${base64:32}"
+
+[config]
+env = [
+  "NEXTAUTH_SECRET=${next_secret}",
+  "MEILI_MASTER_KEY=${meili_master_key}",
+  "NEXTAUTH_URL=http://${main_domain}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "web"
+port = 3_000
+host = "${main_domain}"

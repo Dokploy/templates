@@ -1,0 +1,11 @@
+variables:
+  main_domain: ${domain}
+
+config:
+  domains:
+    - serviceName: backrest
+      port: 9898
+      host: ${main_domain}
+  env:
+    - TZ=Europe/Paris
+  mounts: []

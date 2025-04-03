@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = {}
+mounts = []
+
+[[config.domains]]
+serviceName = "stirling-pdf"
+port = 8_080
+host = "${main_domain}"

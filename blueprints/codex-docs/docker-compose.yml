@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  codex:
+    image: ghcr.io/codex-team/codex.docs:v2.2
+    ports:
+      - "3000"
+    environment:
+      - APP_CONFIG_database_driver=mongodb
+      - APP_CONFIG_database_mongodb_uri=mongodb://mongo:${MONGO_PASSWORD}@mongo:27017
+      - APP_CONFIG_auth_password=${AUTH_PASSWORD}
+      - APP_CONFIG_auth_secret=${AUTH_SECRET}
+    volumes:
+      - uploads:/usr/src/app/uploads
+      - db:/usr/src/app/db
+      - ../files/docs-config.yaml:/usr/src/app/docs-config.yaml
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4
+    environment:
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  uploads:
+  db:
+  mongo-data: 

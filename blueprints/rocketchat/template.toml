@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "rocketchat"
+port = 3_000
+host = "${main_domain}"
+
+[config.env]
+ROCKETCHAT_HOST = "${main_domain}"
+ROCKETCHAT_PORT = "3000"

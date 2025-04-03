@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+login_username = "${username}"
+login_password = "${password:8}"
+db_password = "${password:16}"
+redis_password = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "argilla-web"
+port = 6900
+host = "${main_domain}"
+
+[config.env]
+LOGIN_USERNAME = "${login_username}"
+LOGIN_PASSWORD = "${login_password}"
+DB_PASSWORD = "${db_password}"
+REDIS_PASSWORD = "${redis_password}"
+BACKGROUND_NUM_WORKERS = "2" 

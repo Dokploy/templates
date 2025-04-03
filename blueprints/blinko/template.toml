@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:16}"
+nextauth_secret = "${password:32}"
+nextauth_url = "http://${main_domain}"
+next_public_base_url = "http://${main_domain}"
+
+[config]
+env = [
+  "nextauth_secret=${nextauth_secret}",
+  "postgres_password=${postgres_password}",
+  "nextauth_url=${nextauth_url}",
+  "next_public_base_url=${next_public_base_url}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "blinko-website"
+port = 1_111
+host = "${main_domain}"

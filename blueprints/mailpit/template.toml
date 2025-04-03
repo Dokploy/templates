@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+default_password = "${password}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "mailpit"
+port = 8_025
+host = "${main_domain}"

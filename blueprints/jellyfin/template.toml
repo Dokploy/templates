@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "jellyfin"
+port = 8_096
+host = "${main_domain}"
+
+[config.env]
+JELLYFIN_HOST = "${main_domain}"

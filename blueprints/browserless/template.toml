@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+browserless_token = "${password:16}"
+
+[config]
+env = [
+  "BROWERLESS_HOST=${main_domain}",
+  "BROWSERLESS_TOKEN=${browserless_token}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "browserless"
+port = 3_000
+host = "${main_domain}"

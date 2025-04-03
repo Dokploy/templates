@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  collabora:
+    image: collabora/code:latest
+    ports:
+      - "9980"
+    environment:
+      - domain=${DOMAIN}
+      - username=${USERNAME}
+      - password=${PASSWORD}
+      - extra_params=--o:ssl.enable=false 

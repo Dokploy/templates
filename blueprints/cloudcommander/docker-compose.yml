@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  cloudcmd:
+    image: coderaiser/cloudcmd:18.5.1
+    ports:
+      - "80"
+    environment:
+      - CLOUDCMD_ROOT=/mnt/fs
+      - CLOUDCMD_AUTH=true
+      - CLOUDCMD_USERNAME=${USERNAME}
+      - CLOUDCMD_PASSWORD=${PASSWORD}
+    volumes:
+      - /root:/root
+      - /:/mnt/fs 

@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+nextauth_secret = "${base64:32}"
+encryption_key = "${password:32}"
+secondary_encryption_key = "${password:64}"
+
+[config]
+env = [
+  "DOCUMENSO_HOST=${main_domain}",
+  "DOCUMENSO_PORT=3000",
+  "NEXTAUTH_SECRET=${nextauth_secret}",
+  "NEXT_PRIVATE_ENCRYPTION_KEY=${encryption_key}",
+  "NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY=${secondary_encryption_key}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "documenso"
+port = 3_000
+host = "${main_domain}"

@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+initial_api_key = "${password:30}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "shlink-web"
+port = 8_080
+host = "web-${main_domain}"
+
+[[config.domains]]
+serviceName = "shlink"
+port = 8_080
+host = "${main_domain}"
+
+[config.env]
+INITIAL_API_KEY = "${initial_api_key}"
+DEFAULT_DOMAIN = "${main_domain}"

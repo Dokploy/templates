@@ -1,0 +1,15 @@
+[variables]
+DOMAIN = "${domain}"
+USERNAME = "user"
+PASSWORD = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "collabora"
+port = 9980
+host = "${domain}"
+
+[config.env]
+DOMAIN = "${DOMAIN}"
+USERNAME = "${USERNAME}"
+PASSWORD = "${PASSWORD}" 

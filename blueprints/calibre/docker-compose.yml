@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  calibre:
+    image: linuxserver/calibre:7.26.0
+    restart: unless-stopped
+    environment:
+      - PASSWORD=${PASSWORD}
+      - TZ=Etc/UTC
+      - PUID=1000
+      - PGID=1000
+    ports:
+      - 8080
+    volumes:
+      - books:/books
+      - data:/config
+
+volumes:
+  books:
+  data: 

@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:2.19.4
+    restart: unless-stopped
+    ports:
+      - 80
+    environment:
+      - TZ=UTC
+    volumes:
+      - config:/config
+      - metadata:/metadata
+      - ${AUDIOBOOKS_PATH}:/audiobooks
+
+volumes:
+  config: {}
+  metadata: {} 

@@ -1,0 +1,77 @@
+version: "3.8"
+services:
+  argilla-web:
+    image: argilla/argilla-server:latest
+    restart: unless-stopped
+    ports:
+      - 6900
+    environment:
+      - ARGILLA_HOME_PATH=/var/lib/argilla
+      - ARGILLA_ELASTICSEARCH=http://argilla-elasticsearch:9200
+      - ARGILLA_DATABASE_URL=postgresql+asyncpg://postgres:${DB_PASSWORD}@argilla-db:5432/argilla
+      - ARGILLA_REDIS_URL=redis://:${REDIS_PASSWORD}@argilla-redis:6379/0
+      - USERNAME=${LOGIN_USERNAME}
+      - PASSWORD=${LOGIN_PASSWORD}
+      - API_KEY=argilla.apikey
+      - WORKSPACE=default
+    volumes:
+      - argilladata:/var/lib/argilla
+    depends_on:
+      - argilla-elasticsearch
+      - argilla-db
+      - argilla-redis
+
+  argilla-worker:
+    image: argilla/argilla-server:latest
+    restart: unless-stopped
+    environment:
+      - BACKGROUND_NUM_WORKERS=2
+      - ARGILLA_HOME_PATH=/var/lib/argilla
+      - ARGILLA_ELASTICSEARCH=http://argilla-elasticsearch:9200
+      - ARGILLA_DATABASE_URL=postgresql+asyncpg://postgres:${DB_PASSWORD}@argilla-db:5432/argilla
+      - ARGILLA_REDIS_URL=redis://:${REDIS_PASSWORD}@argilla-redis:6379/0
+    volumes:
+      - argilladata:/var/lib/argilla
+    command: python -m argilla_server worker --num-workers ${BACKGROUND_NUM_WORKERS}
+    depends_on:
+      - argilla-elasticsearch
+      - argilla-db
+      - argilla-redis
+
+  argilla-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
+    restart: unless-stopped
+    environment:
+      - node.name=elasticsearch
+      - cluster.name=es-argilla-local
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - cluster.routing.allocation.disk.threshold_enabled=false
+      - xpack.security.enabled=false
+    volumes:
+      - elasticdata:/usr/share/elasticsearch/data
+
+  argilla-db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=argilla
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+  argilla-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redisdata:/data
+
+volumes:
+  argilladata: {}
+  elasticdata: {}
+  dbdata: {}
+  redisdata: {} 

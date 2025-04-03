@@ -1,0 +1,30 @@
+[variables]
+main_domain = "${domain}"
+secret_key_base = "${base64:64}"
+postgres_password = "${password}"
+
+[config]
+env = [
+  "FRONTEND_URL=http://${main_domain}",
+  "SECRET_KEY_BASE=${secret_key_base}",
+  "RAILS_ENV=production",
+  "NODE_ENV=production",
+  "INSTALLATION_ENV=docker",
+  "RAILS_LOG_TO_STDOUT=true",
+  "LOG_LEVEL=info",
+  "DEFAULT_LOCALE=en",
+  "POSTGRES_HOST=chatwoot-postgres",
+  "POSTGRES_PORT=5432",
+  "POSTGRES_DATABASE=chatwoot",
+  "POSTGRES_USERNAME=postgres",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "REDIS_URL=redis://chatwoot-redis:6379",
+  "ENABLE_ACCOUNT_SIGNUP=false",
+  "ACTIVE_STORAGE_SERVICE=local",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "chatwoot-rails"
+port = 3_000
+host = "${main_domain}"

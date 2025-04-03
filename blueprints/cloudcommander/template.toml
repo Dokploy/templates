@@ -1,0 +1,13 @@
+[variables]
+USERNAME = "user"
+PASSWORD = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "cloudcmd"
+port = 80
+host = "${domain}"
+
+[config.env]
+USERNAME = "${USERNAME}"
+PASSWORD = "${PASSWORD}" 

@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  carbone:
+    image: carbone/carbone-ee:full-4.25.5
+    restart: unless-stopped
+    environment:
+      - CARBONE_EE_LICENSE=${CARBONE_KEY}
+      - CARBONE_EE_STUDIO=true
+    ports:
+      - 4000
+    volumes:
+      - template:/app/template
+
+volumes:
+  template: 

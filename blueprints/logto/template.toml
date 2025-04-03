@@ -1,0 +1,22 @@
+[variables]
+main_domain = "${domain}"
+admin_domain = "${domain}"
+postgres_password = "${password}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "app"
+port = 3_001
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "app"
+port = 3_002
+host = "${admin_domain}"
+
+[config.env]
+LOGTO_ENDPOINT = "http://${admin_domain}"
+LOGTO_ADMIN_ENDPOINT = "http://${admin_domain}"
+LOGTO_POSTGRES_PASSWORD = "${postgres_password}"

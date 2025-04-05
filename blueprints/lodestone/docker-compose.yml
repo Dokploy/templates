@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  lodestone:
+    image: ghcr.io/lodestone-team/lodestone_core
+    container_name: lodestone
+    ports:
+      - "16662:16662"
+      - "25565-25590:25565-25590" 
+    volumes:
+      - lodestone:/home/user/.lodestone
+    restart: unless-stopped
+
+  lodestone_dashboard:
+    image: ghcr.io/lodestone-team/lodestone_dashboard:v0.5.1
+    container_name: lodestone_dashboard
+    restart: always  
+
+volumes:
+  lodestone:
+    driver: local

@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = ["USER_UID=1000", "USER_GID=1000"]
+mounts = []
+
+[[config.domains]]
+serviceName = "forgejo"
+port = 3_000
+host = "${main_domain}"

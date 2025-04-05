@@ -1,0 +1,52 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+"Domain=${main_domain}",
+"PGHOST=plane-db",
+"PGDATABASE=plane",
+"POSTGRES_USER={username}",
+"POSTGRES_PASSWORD={password:32}",
+"POSTGRES_DB=plane",
+"POSTGRES_PORT=5432",
+"PGDATA=/var/lib/postgresql/data",
+"REDIS_HOST=plane-redis",
+"REDIS_PORT=6379",
+"REDIS_URL=redis://plane-redis:6379/",
+"MINIO_ROOT_USER=access-key",
+"MINIO_ROOT_PASSWORD=password:32",
+"AWS_REGION=",
+"AWS_ACCESS_KEY_ID={username}",
+"AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}",
+"AWS_S3_ENDPOINT_URL=http://plane-minio:9000",
+"AWS_S3_BUCKET_NAME=uploads",
+"NGINX_PORT=80",
+"BUCKET_NAME=uploads",
+"FILE_SIZE_LIMIT=5242880",
+"RABBITMQ_HOST=plane-mq",
+"RABBITMQ_PORT=5672",
+"RABBITMQ_DEFAULT_USER={username}",
+"RABBITMQ_DEFAULT_PASS={password:32}",
+"RABBITMQ_DEFAULT_VHOST=plane",
+"RABBITMQ_VHOST=plane",
+"API_BASE_URL=http://api:8000",
+"WEB_URL=${main_domain}",
+"DEBUG=0",
+"SENTRY_DSN=",
+"SENTRY_ENVIRONMENT=production",
+"CORS_ALLOWED_ORIGINS=",
+"GUNICORN_WORKERS=1",
+"USE_MINIO=1",
+"DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@plane-db/plane",
+"SECRET_KEY={base64:48}",
+"AMQP_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@plane-mq:5672/plane",
+"API_KEY_RATE_LIMIT=60/minute",
+"MINIO_ENDPOINT_SSL=0"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "proxy"
+port = 80
+host = "${main_domain}"

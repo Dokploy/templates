@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  focalboard:
+    image: mattermost/focalboard:7.11.4
+    container_name: focalboard
+    restart: unless-stopped
+    volumes:
+      - focalboardData:/opt/focalboard/data
+    environment:
+      - VIRTUAL_HOST
+      - VIRTUAL_PORT
+      - DB_TYPE
+      - DB_CONFIG=postgres://${POSTGRES_USER}:${POSTGRES_password}@postgres:5432/${postgres_db}?sslmode=disable
+
+  postgres:
+    image: postgres:17
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+volumes:
+  focalboardData:
+    driver: local
+  focalboardPostgre:
+    driver: local

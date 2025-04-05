@@ -179,6 +179,22 @@
     ]
   },
   {
+    "id": "forgejo",
+    "name": "Forgejo",
+    "version": "10",
+    "description": "Forgejo is a self-hosted lightweight software forge. Easy to install and low maintenance, it just does the job",
+    "logo": "forgejo.svg",
+    "links": {
+      "github": "https://codeberg.org/forgejo/forgejo",
+      "website": "https://forgejo.org/",
+      "docs": "https://forgejo.org/docs/latest/"
+    },
+    "tags": [
+      "self-hosted",
+      "storage"
+    ]
+  },
+  {
     "id": "ghost",
     "name": "Ghost",
     "version": "5.0.0",
@@ -191,6 +207,39 @@
     },
     "tags": [
       "cms"
+    ]
+  },
+  {
+    "id": "lodestone",
+    "name": "Lodestone",
+    "version": "0.5.1",
+    "description": "A free, open source server hosting tool for Minecraft and other multiplayers games.",
+    "logo": "lodestone.png",
+    "links": {
+      "github": "https://github.com/Lodestone-Team/lodestone",
+      "website": "https://lodestone.cc",
+      "docs": "https://github.com/Lodestone-Team/lodestone/wiki"
+    },
+    "tags": [
+      "minecraft",
+      "hosting",
+      "server"
+    ]
+  },
+  {
+    "id": "dragonfly-db",
+    "name": "Dragonfly",
+    "version": "1.28.1",
+    "description": "Dragonfly is a drop-in Redis replacement that is designed for heavy data workloads running on modern cloud hardware.",
+    "logo": "dragonfly-db.png",
+    "links": {
+      "github": "https://github.com/dragonflydb/dragonfly",
+      "website": "https://www.dragonflydb.io/",
+      "docs": "https://www.dragonflydb.io/docs"
+    },
+    "tags": [
+      "database",
+      "redis"
     ]
   },
   {
@@ -344,6 +393,22 @@
     },
     "tags": [
       "search"
+    ]
+  },
+  {
+    "id": "mattermost",
+    "name": "Mattermost",
+    "version": "10.6.1",
+    "description": "A single point of collaboration. Designed specifically for digital operations.",
+    "logo": "mattermost.png",
+    "links": {
+      "github": "https://github.com/mattermost/mattermost",
+      "website": "https://mattermost.com/",
+      "docs": "https://docs.mattermost.com/"
+    },
+    "tags": [
+      "chat",
+      "self-hosted"
     ]
   },
   {
@@ -647,6 +712,21 @@
     ]
   },
   {
+    "id": "focalboard",
+    "name": "Focalboard",
+    "version": "8.0.0",
+    "description": "Open source project management for technical teams",
+    "logo": "focalboard.png",
+    "links": {
+      "github": "https://github.com/sysblok/focalboard",
+      "website": "https://focalboard.com",
+      "docs": "https://www.focalboard.com/docs/"
+    },
+    "tags": [
+      "kanban"
+    ]
+  },
+  {
     "id": "tolgee",
     "name": "Tolgee",
     "version": "v3.80.4",
@@ -678,6 +758,21 @@
     "tags": [
       "cloud",
       "monitoring"
+    ]
+  },
+  {
+    "id": "plane",
+    "name": "Plane",
+    "version": "v0.25.3",
+    "description": "Easy, flexible, open source project management software",
+    "logo": "plane.png",
+    "links": {
+      "github": "https://github.com/makeplane/plane",
+      "website": "https://plane.so",
+      "docs": "https://docs.plane.so/"
+    },
+    "tags": [
+      "kanban"
     ]
   },
   {

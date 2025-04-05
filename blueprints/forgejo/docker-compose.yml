@@ -1,0 +1,37 @@
+version: "3.8"
+services:
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:10
+    environment:
+      - USER_UID=${USER_UID}
+      - USER_GID=${USER_GID}
+      - FORGEJO__database__DB_TYPE=postgres
+      - FORGEJO__database__HOST=db:5432
+      - FORGEJO__database__NAME=forgejo
+      - FORGEJO__database__USER=forgejo
+      - FORGEJO__database__PASSWD=forgejo
+    restart: always
+
+    volumes:
+      - forgejo_server:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17
+    restart: always
+    environment:
+      - POSTGRES_USER=forgejo
+      - POSTGRES_PASSWORD=forgejo
+      - POSTGRES_DB=forgejo
+
+    volumes:
+      - forgejo_db:/var/lib/postgresql/data
+
+volumes:
+  forgejo_db:
+    driver: local
+  forgejo_server:
+    driver: local

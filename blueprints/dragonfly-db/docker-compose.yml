@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  dragonflydb:
+    image: 'docker.dragonflydb.io/dragonflydb/dragonfly'
+    ulimits:
+      memlock: -1
+    ports:
+      - "6379:6379"
+    volumes:
+      - dragonflydata:/data
+    environment: 
+      - DFLY_requirepass
+volumes:
+  dragonflydata:

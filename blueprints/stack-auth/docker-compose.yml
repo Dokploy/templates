@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: stack-auth-db
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    ports:
+      - "5432:5432"
+    volumes:
+      - stack-auth-db-data:/var/lib/postgresql/data
+
+  api:
+    image: stackauth/server:latest
+    container_name: stack-auth-api
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - NEXT_PUBLIC_STACK_API_URL
+    depends_on:
+      - db
+    ports:
+      - "8102:8102"
+    command: pnpm start:backend
+
+  dashboard:
+    image: stackauth/dashboard:latest
+    container_name: stack-auth-dashboard
+    environment:
+      - NEXT_PUBLIC_STACK_API_URL
+    depends_on:
+      - api
+    ports:
+      - "8101:8101"
+
+volumes:
+  stack-auth-db-data:

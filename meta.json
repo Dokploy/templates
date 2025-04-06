@@ -243,6 +243,21 @@
     ]
   },
   {
+    "id": "stack-auth",
+    "name": "Stack Auth",
+    "version": "latest",
+    "description": "Uptime Kuma is a free and open source monitoring tool that allows you to monitor your websites and applications.",
+    "logo": "stack-auth.png",
+    "links": {
+      "github": "https://github.com/louislam/uptime-kuma",
+      "website": "https://uptime.kuma.pet/",
+      "docs": "https://github.com/louislam/uptime-kuma/wiki"
+    },
+    "tags": [
+      "monitoring"
+    ]
+  },
+  {
     "id": "uptime-kuma",
     "name": "Uptime Kuma",
     "version": "1.23.15",

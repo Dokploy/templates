@@ -1,8 +1,8 @@
 [variables]
 main_domain = "${domain}"
 postgres_password = "${password:32}"
-stack_auth_api_url = "${main_domain}:8102"
-stack_auth_dashboard_url = "${main_domain}:8101"
+stack_auth_api_url = "${main_domain}"
+stack_auth_dashboard_url = "${main_domain}"
 stack_auth_postgres_host = "db"
 
 [config.env]
@@ -23,13 +23,13 @@ STACK_RUN_MIGRATIONS = true
 STACK_RUN_SEED_SCRIPT = true
 
 [[config.domains]]
-serviceName = "stack-auth-api"
+serviceName = "stack-auth"
 port = 8102
 host = "${stack_auth_api_url}"
 path = "/"
 
 [[config.domains]]
-serviceName = "stack-auth-dashboard"
+serviceName = "stack-auth"
 port = 8101
 host = "${stack_auth_dashboard_url}"
 path = "/"

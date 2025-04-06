@@ -1,19 +1,20 @@
 [variables]
-main_domain = "${domain}"
+dashboard_domain = "${domain}"
+api_domain = "${domain}"
 postgres_password = "${password:32}"
-stack_auth_api_url = "${main_domain}"
-stack_auth_dashboard_url = "${main_domain}"
+stack_auth_api_url = "${api_domain}"
+stack_auth_dashboard_url = "${dashboard_domain}"
 stack_auth_postgres_host = "stack-auth-db"
 
 [config.env]
 POSTGRES_USER = "postgres"
 POSTGRES_PASSWORD = "${postgres_password}"
 POSTGRES_DB = "stackframe"
-NEXT_PUBLIC_STACK_API_URL = "${stack_auth_api_url}"
-NEXT_PUBLIC_STACK_DASHBOARD_URL = "${stack_auth_dashboard_url}"
+NEXT_PUBLIC_STACK_API_URL = "http://${stack_auth_api_url}"
+NEXT_PUBLIC_STACK_DASHBOARD_URL = "http://${stack_auth_dashboard_url}"
 
-STACK_DATABASE_CONNECTION_STRING = "postgres://postgres:${postgres_password}@${stack_auth_postgres_host}:5432/stackframe"
-STACK_DIRECT_DATABASE_CONNECTION_STRING = "postgres://postgres:${postgres_password}@${stack_auth_postgres_host}:5432/stackframe"
+STACK_DATABASE_CONNECTION_STRING = "postgres://postgres:${postgres_password}@${stack_auth_postgres_host}/stackframe"
+STACK_DIRECT_DATABASE_CONNECTION_STRING = "postgres://postgres:${postgres_password}@${stack_auth_postgres_host}/stackframe"
 
 STACK_SERVER_SECRET = "${password:64}"  
 STACK_SEED_INTERNAL_PROJECT_ALLOW_LOCALHOST = true

@@ -3,7 +3,7 @@ main_domain = "${domain}"
 postgres_password = "${password:32}"
 stack_auth_api_url = "${main_domain}"
 stack_auth_dashboard_url = "${main_domain}"
-stack_auth_postgres_host = "db"
+stack_auth_postgres_host = "stack-auth-db"
 
 [config.env]
 POSTGRES_USER = "postgres"

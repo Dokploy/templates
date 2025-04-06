@@ -116,13 +116,25 @@ services:
       - uploads:/export
     env_file:
       - .env
-
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 15s
   proxy:
     image: makeplane/plane-proxy:${APP_RELEASE:-v0.25.3}
     depends_on:
-      - web
-      - api
-      - space
+      web:
+        condition: service_started
+      api:
+        condition: service_started
+      space:
+        condition: service_started
+      plane-minio:
+        condition: service_healthy
+      plane-db:
+        condition: service_started
     env_file:
       - .env
 

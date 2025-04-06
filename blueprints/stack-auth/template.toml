@@ -1,23 +1,15 @@
 [variables]
 main_domain = "${domain}"               
 postgres_password = "${password:32}"     
-stack_auth_api_url = "http://${main_domain}:8102"
-stack_auth_dashboard_url = "http://${main_domain}:8101"
+stack_auth_api_url = "${main_domain}:8102"
+stack_auth_dashboard_url = "${main_domain}:8101"
 stack_auth_postgres_host = "db"
 
-[config]
-
-[[config.domains]]
-serviceName = "stack-auth-db"
-port = 5432
-host = "${stack_auth_postgres_host}"
-path = "/"           
-
-env = [
-    "POSTGRES_USER=postgres",
-    "POSTGRES_PASSWORD=${postgres_password}",
-    "POSTGRES_DB=stackframe",
-]
+[config.env]
+POSTGRES_USER="postgres"
+POSTGRES_PASSWORD="${postgres_password}"
+POSTGRES_DB="stackframe"
+NEXT_PUBLIC_STACK_API_URL="${stack_auth_api_url}"
 
 [[config.domains]]
 serviceName = "stack-auth-api"
@@ -25,19 +17,8 @@ port = 8102
 host = "${stack_auth_api_url}"
 path = "/"                        
 
-env = [
-    "POSTGRES_USER=postgres",
-    "POSTGRES_PASSWORD=${postgres_password}",
-    "POSTGRES_DB=stackframe",
-    "NEXT_PUBLIC_STACK_API_URL=${stack_auth_api_url}",
-]
-
 [[config.domains]]
 serviceName = "stack-auth-dashboard"
 port = 8101
 host = "${stack_auth_dashboard_url}"
 path = "/"
-
-env = [
-    "NEXT_PUBLIC_STACK_API_URL=${stack_auth_api_url}",
-]

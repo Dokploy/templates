@@ -5,37 +5,36 @@ services:
     image: postgres:latest
     container_name: stack-auth-db
     environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
       - stack-auth-db-data:/var/lib/postgresql/data
 
-  stack-auth-api:
+  stack-auth:
     image: stackauth/server:latest
-    container_name: stack-auth-api
+    container_name: stack-auth
     environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
-      - NEXT_PUBLIC_STACK_API_URL
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - NEXT_PUBLIC_STACK_API_URL=${NEXT_PUBLIC_STACK_API_URL}
+      - NEXT_PUBLIC_STACK_DASHBOARD_URL=${NEXT_PUBLIC_STACK_DASHBOARD_URL}
+      - STACK_DATABASE_CONNECTION_STRING=${STACK_DATABASE_CONNECTION_STRING}
+      - STACK_DIRECT_DATABASE_CONNECTION_STRING=${STACK_DIRECT_DATABASE_CONNECTION_STRING}
+      - STACK_SERVER_SECRET=${STACK_SERVER_SECRET}
+      - STACK_SEED_INTERNAL_PROJECT_ALLOW_LOCALHOST=${STACK_SEED_INTERNAL_PROJECT_ALLOW_LOCALHOST}
+      - STACK_SEED_INTERNAL_PROJECT_SIGN_UP_ENABLED=${STACK_SEED_INTERNAL_PROJECT_SIGN_UP_ENABLED}
+      - STACK_RUN_MIGRATIONS=${STACK_RUN_MIGRATIONS}
+      - STACK_RUN_SEED_SCRIPT=${STACK_RUN_SEED_SCRIPT}
     depends_on:
       - stack-auth-db
     ports:
-      - "8102:8102"
+      - "8101:8101" 
+      - "8102:8102" 
     command: pnpm start:backend
-
-  stack-auth-dashboard:
-    image: stackauth/dashboard:latest
-    container_name: stack-auth-dashboard
-    environment:
-      - NEXT_PUBLIC_STACK_API_URL
-    depends_on:
-      - stack-auth-api
-    ports:
-      - "8101:8101"
 
 volumes:
   stack-auth-db-data:

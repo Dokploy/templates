@@ -17,7 +17,7 @@ services:
     image: twentycrm/twenty:latest
 
     volumes:
-      - twenty-server-local-data:/app/packages/twenty-server/${STORAGE_LOCAL_PATH:-.local-storage}
+      - twenty-server-local-data:/app/packages/twenty-server/$${STORAGE_LOCAL_PATH:-.local-storage}
       - twenty-docker-data:/app/docker-data
     environment:
       PORT: 3000

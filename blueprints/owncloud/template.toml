@@ -7,6 +7,9 @@ serviceName = "owncloud"
 port = 9200
 host = "${main_domain}"
 
+[[config.mounts]]
+filePath = "/owncloud/ocis.yml"
+content = """
 
 [config.env]    
 IDM_ADMIN_PASSWORD="${password}"

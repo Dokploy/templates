@@ -2685,5 +2685,18 @@
       "api",
       "self-hosted"
     ]
+  },
+  {
+    "id": "owncloud",
+    "name": "ownCloud InfiniteScale",
+    "version": "7.1.1",
+    "description": "Infinite Scale is a cloud-native microservices-based architecture and the latest generation of server applications. It does not depend on external software packages like PHP or a database which eliminates all the hassle that comes along with using them. With its modern architecture, Infinite Scale provides all deployment models for cloud infrastructure deployments and optimized scaling setups for the best output in return for the invested energy. With the single binary concept, managing the server is much more streamlined over all deployment methods.",
+    "logo": "owncloud.svg",
+    "links": {
+      "github": "https://github.com/owncloud/ocis",
+      "website": "https://owncloud.com/infinite-scale",
+      "docs": "https://doc.owncloud.com/"
+    },
+    "tags": ["file", "file-manager"]
   }
 ]

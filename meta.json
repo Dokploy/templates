@@ -2685,5 +2685,20 @@
       "api",
       "self-hosted"
     ]
+  },
+  {
+    "id": "tailscale-exitnode",
+    "name": "Tailscale Exit nodes",
+    "version": "1.0.0",
+    "description": "Tailscale ExitNode is a feature that lets you route your internet traffic through a specific device in your Tailscale network.",
+    "logo": "tailscale-exitnode.svg",
+    "links": {
+      "github": "https://github.com/tailscale-dev/docker-guide-code-examples",
+      "website": "https://tailscale.com/",
+      "docs": "https://tailscale.com/kb/1408/quick-guide-exit-nodes"
+    },
+    "tags": [
+      "network"
+    ]
   }
 ]

@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${base64:32}"
+db_password = "${password:16}"
+admin_password = "${password:16}"
+
+
+[config]
+[config.env]
+DB_PASSWORD = "${db_password}"
+MAIN_DOMAIN = "${main_domain}" 
+SECRET_KEY = "${secret_key}"
+ADMIN_PASSWORD = "${admin_password}"
+
+[[config.domains]]
+serviceName = "bugsink"
+port = 8_000
+host = "${main_domain}"

@@ -791,6 +791,23 @@
     ]
   },
   {
+    "id": "pterodactyl",
+    "name": "Pterodactyl",
+    "version": "latest",
+    "description": "A free, open-source game server management panel.",
+    "logo": "pterodactyl.png",
+    "links": {
+      "github": "https://github.com/pterodactyl/panel",
+      "website": "https://pterodactyl.io",
+      "docs": "https://pterodactyl.io/project/introduction.html"
+    },
+    "tags": [
+      "self-hosted",
+      "open-source",
+      "management"
+    ]
+  },
+  {
     "id": "influxdb",
     "name": "InfluxDB",
     "version": "2.7.10",

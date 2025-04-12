@@ -2700,5 +2700,22 @@
     "tags": [
       "network"
     ]
+  },
+  {
+    "id": "tooljet",
+    "name": "Tooljet",
+    "version": "ee-lts-latest",
+    "description": "Tooljet is an open-source low-code platform that allows you to build internal tools quickly and efficiently. It provides a user-friendly interface for creating applications without extensive coding knowledge.",
+    "logo": "logo.png",
+    "links": {
+      "github":"https://github.com/ToolJet/ToolJet",
+      "website": "https://tooljet.ai/",
+      "docs": "https://docs.tooljet.ai/"
+    },
+    "tags": [
+      "file-sync",
+      "file-sharing",
+      "self-hosted"
+    ]
   }
 ]

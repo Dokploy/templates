@@ -17,7 +17,10 @@ services:
       - MINIO_BROWSER_REDIRECT_URL=${MINIO_BROWSER_REDIRECT_URL}
     command: server /data --console-address ":9001"
     ports:
-      - 9000:9000 # expose MinIO api on port 9000
+      # by default, the MinIO container will use port 9000 to expose its API
+      # and port 9001 to expose its web console
+      # minio requires port to be specified when making a request to the API
+      - 9000:9000
     expose:
       - 9001
 

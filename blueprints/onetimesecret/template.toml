@@ -9,10 +9,7 @@ port = 3000
 host = "${main_domain}"
 
 [config.env]
-AUTH_AUTOVERIFY="true"
-AUTH_SIGNUP="true"
 COLONEL="admin@example.com"
 HOST="${main_domain}"
 REDIS_PASSWORD = "${redis_password}"
 SECRET="${secret}"
-SSL="true"

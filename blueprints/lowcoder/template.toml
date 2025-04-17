@@ -5,7 +5,7 @@ encryption_salt = "${password:32}"
 api_secret = "${password:32}"
 
 [config]
-[config.domains]
+[[config.domains]]
 serviceName = "lowcoder-api-service"
 port = 3000
 host = "${main_domain}"

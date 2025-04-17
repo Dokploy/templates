@@ -22,8 +22,6 @@ services:
       SERVE_CLIENT: "true"
       PORT: "80"
     command: npm run start:prod
-    networks:
-      - dokploy-network
 
   postgres:
     image: postgres:13

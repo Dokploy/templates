@@ -37,8 +37,6 @@ services:
     environment:
       - POSTGRES_USER=${PG_USER}
       - POSTGRES_PASSWORD=${PG_PASS}
-    networks:
-      - dokploy-network
 
 volumes:
   certs:

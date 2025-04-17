@@ -1,6 +1,6 @@
 [variables]
 main_domain = "${domain}"
-secret_key = "${base64:32}"
+secret_key = "#&^%@!z$*p9s8r7q6p5o4n3m2l1k0j9h8g7f6e5d4c3b2a1Z0Y9X8W7V6U5T4S3R2Q1P0O9N8M7L6K5J4I3H2G1F0E9D8C7B6A5"
 db_password = "${password:16}"
 admin_password = "${password:16}"
 

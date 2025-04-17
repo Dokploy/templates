@@ -13,6 +13,6 @@ SECRET_KEY = "${secret_key}"
 ADMIN_PASSWORD = "${admin_password}"
 
 [[config.domains]]
-serviceName = "bugsink"
+serviceName = "web"
 port = 8_000
 host = "${main_domain}"

@@ -2156,6 +2156,25 @@
     "tags": ["network"]
   },
   {
+    "id": "homeassistant",
+    "name": "Home Assistant",
+    "version": "stable",
+    "description": "Open source home automation that puts local control and privacy first.",
+    "logo": "homeassistant.svg",
+    "links": {
+      "github": "https://github.com/home-assistant/core",
+      "website": "https://www.home-assistant.io/",
+      "docs": "https://www.home-assistant.io/getting-started/onboarding/"
+    },
+    "tags": [
+      "iot",
+      "home-automation",
+      "internet-of-things",
+      "self-hosted",
+      "server"
+    ]
+  },
+  {
     "id": "tooljet",
     "name": "Tooljet",
     "version": "ee-lts-latest",

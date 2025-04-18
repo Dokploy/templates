@@ -1,0 +1,16 @@
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: unless-stopped
+    ports:
+      - 8123:8123
+    volumes:
+      - ./volumes/homeassistant:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://homeassistant:8123/"]
+      interval: 60s
+      retries: 5
+      start_period: 300s
+      timeout: 2s

@@ -33,6 +33,7 @@ services:
       REDIS_HOST:
       DB_HOST:
       DB_PORT:
+      DB_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_PASSWORD:
       MYSQL_ROOT_PASSWORD:
       RECAPTCHA_ENABLED:

@@ -2156,6 +2156,25 @@
     "tags": ["network"]
   },
   {
+    "id": "homebridge",
+    "name": "Homebridge",
+    "version": "latest",
+    "description": "Bringing HomeKit support where there is none. Homebridge allows you to integrate with smart home devices that do not natively support HomeKit.",
+    "logo": "homebridge.svg",
+    "links": {
+      "github": "https://github.com/homebridge/homebridge",
+      "website": "https://homebridge.io/",
+      "docs": "https://github.com/homebridge/homebridge/wiki"
+    },
+    "tags": [
+      "iot",
+      "homekit",
+      "internet-of-things",
+      "self-hosted",
+      "server"
+    ]
+  },
+  {
     "id": "tooljet",
     "name": "Tooljet",
     "version": "ee-lts-latest",

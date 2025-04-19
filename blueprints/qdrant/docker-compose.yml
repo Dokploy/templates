@@ -3,6 +3,8 @@ services:
   qdrant:
     image: qdrant/qdrant:latest
     restart: unless-stopped
+    expose:
+      - "6333"
     volumes:
       - qdrant_data:/qdrant/storage
     environment:

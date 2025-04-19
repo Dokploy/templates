@@ -6,7 +6,7 @@ mounts = []
 
 [[config.domains]]
 serviceName = "qdrant"
-port = 6_333
+port = 6333
 host = "${main_domain}"
 
 [config.env]

@@ -2193,5 +2193,22 @@
       "docs": "https://www.bugsink.com/docs/"
     },
     "tags": ["hosting", "self-hosted", "development"]
+  },
+  {
+    "id": "qdrant",
+    "name": "Qdrant",
+    "version": "latest",
+    "description": "A lightning-fast vector database & similarity search engine.",
+    "logo": "qdrant.svg",
+    "links": {
+      "github": "https://github.com/qdrant/qdrant",
+      "website": "https://qdrant.tech/",
+      "docs": "https://qdrant.tech/documentation/"
+    },
+    "tags": [
+      "vector-db",
+      "database",
+      "search"
+    ]
   }
 ]

@@ -37,6 +37,8 @@ services:
       MYSQL_PASSWORD:
       MYSQL_ROOT_PASSWORD:
       RECAPTCHA_ENABLED:
+      DB_CONNECTION: "mariadb"
+
 networks:
   default:
     ipam:

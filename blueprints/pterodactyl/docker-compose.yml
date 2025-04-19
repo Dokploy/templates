@@ -32,9 +32,12 @@ services:
       QUEUE_DRIVER:
       REDIS_HOST:
       DB_HOST:
+      DB_PASSWORD: ${MYSQL_PASSWORD}
       DB_PORT:
       MYSQL_PASSWORD:
       MYSQL_ROOT_PASSWORD:
+      DB_CONNECTION: "mariadb"
+
 networks:
   default:
     ipam:

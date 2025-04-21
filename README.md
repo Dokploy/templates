@@ -14,7 +14,7 @@ This is the official repository for the Dokploy Open Source Templates.
 7. Create a pull request (PR)
 8. Every PR will automatically deploy a preview of the template to Dokploy.
 9. if anyone want to test the template before merging it, you can enter to the preview URL in the PR description, and search the template, click on the Template Card, scroll down and then copy the BASE64 value, and paste in the advanced section of your compose service, in the Import section or optional you can use the preview URL and paste in the
-BASE URL when creating a template. 
+BASE URL when creating a template.
 
 #### Optional
 
@@ -138,15 +138,35 @@ Important: you can reference any variable in the `domains`, `env` and `mounts` s
 We have a few helpers that are very common when creating a template, these are:
 
 - `domain`: This is a helper that will generate a random domain for the template.
-- `base64 or base64:length`: This is a helper that will encode a string to base64.
+- `base64 or base64:length`: This is a helper that will encode a string to base64 (lenght is the number of bytes to encode not the encoded string length).
 - `password or password:length`: This is a helper that will generate a random password for the template.
-- `hash or hash:length`: This is a helper that will generate a hash for the template.
+- `hash or hash:length`: This is a helper that will generate a hash for the template
 - `uuid`: This is a helper that will generate a uuid for the template.
 - `randomPort`: This is a helper that will generate a random port for the template.
-- `timestamp`: This is a helper that will generate a timestamp.
-- `jwt or jwt:length`: This is a helper that will generate a jwt for the template.
 - `email`: This is a helper that will generate a random email for the template.
 - `username`: This is a helper that will generate a random username in lowercase for the template.
+- `timestamp`: This is a helper that will generate a timestamp for "now" in milli-second.
+  - `timestampms or timestampms:datetime`: This is a helper that will generate a timestamp in milli-seconds.
+  - `timestamps or timestamps:datetime`: This is a helper that will generate a timestamp in seconds.
+  - `datetime` parameter for `timestamps/timestampms` helpers must be a valid value for javascript new Date() (ie: `timestamps:2030-01-01T00:00:00Z`)
+- `jwt`: This is a helper that will generate a jwt for the template.
+  - `jwt:length`: will generate a random hex string of bytes length. _This should not be used in newer templates_
+  - `jwt:secret_var_name`: will generate a jwt with some default values, secret var name should be the name of the variable holding the secret
+  - `jwt:secret_var_name:payload_var_name`: is the same as above but you can pass partial or full payload for the jwt.
+    Here's a full example
+    ```toml
+    [variables]
+    main_domain = "${domain}"
+    mysecret = "cQsdycq1hDLopQonF6jUTqgQc5WEZTwWLL02J6XJ"
+    mypayload = """
+    {
+      "role": "jwt-tester",
+      "iss": "dokploy-templates",
+      "exp": ${timestamps:2030-01-01T00:00:00Z}
+    }
+    """
+    jwt = "${jwt:mysecret:mypayload}"
+    ```
 
 
 

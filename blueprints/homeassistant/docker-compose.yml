@@ -3,7 +3,7 @@ services:
     image: ghcr.io/home-assistant/home-assistant:stable
     restart: unless-stopped
     ports:
-      - 8123:8123
+      - 8123
     volumes:
       - /opt/homeassistant:/config
       - /etc/localtime:/etc/localtime:ro

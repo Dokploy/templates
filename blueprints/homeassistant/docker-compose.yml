@@ -5,7 +5,7 @@ services:
     ports:
       - 8123:8123
     volumes:
-      - ./volumes/homeassistant:/config
+      - /opt/homeassistant:/config
       - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro
     healthcheck:

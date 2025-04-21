@@ -1,7 +1,6 @@
 services:
   autobase-console:
     image: autobase/console:2.2.0
-    container_name: autobase-console
     restart: unless-stopped
     ports:
       - "80"

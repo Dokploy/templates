@@ -1860,8 +1860,8 @@
     "logo": "logo.svg",
     "links": {
       "github": "https://github.com/henrygd/beszel",
-      "website": "https://beszel.app",
-      "docs": "https://beszel.app/docs"
+      "website": "https://beszel.dev",
+      "docs": "https://beszel.dev/guide"
     },
     "tags": ["monitoring", "docker", "alerts"]
   },

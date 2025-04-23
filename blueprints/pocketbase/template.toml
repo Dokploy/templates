@@ -1,6 +1,5 @@
 [variables]
 main_domain = "${domain}"
-secret_key = "${base64:32}"
 
 [config]
 env = {}

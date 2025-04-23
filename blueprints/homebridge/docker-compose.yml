@@ -1,0 +1,14 @@
+services:
+  homebridge:
+    image: homebridge/homebridge:latest
+    restart: always
+    ports:
+      - 8581
+    volumes:
+      - ./volumes/homebridge:/homebridge
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://homebridge:8581/"]
+      interval: 60s
+      retries: 5
+      start_period: 300s
+      timeout: 2s

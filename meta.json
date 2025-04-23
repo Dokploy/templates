@@ -1,5 +1,18 @@
 [
   {
+    "id": "autobase",
+    "name": "Autobase",
+    "version": "2.2.0",
+    "description": "Autobase for PostgreSQL® is an open-source alternative to cloud-managed databases (DBaaS) such as Amazon RDS, Google Cloud SQL, Azure Database, and more.",
+    "links": {
+      "github": "https://github.com/vitabaks/autobase",
+      "website": "https://autobase.tech/",
+      "docs": "https://autobase.tech/docs"
+    },
+    "logo": "autobase.svg",
+    "tags": ["database", "postgres", "self-hosted", "server"]
+  },
+  {
     "id": "appwrite",
     "name": "Appwrite",
     "version": "1.6.0",
@@ -1891,7 +1904,7 @@
   {
     "id": "beszel",
     "name": "Beszel",
-    "version": "0.9.1",
+    "version": "0.10.2",
     "description": "A lightweight server monitoring hub with historical data, docker stats, and alerts.",
     "logo": "logo.svg",
     "links": {
@@ -2203,6 +2216,25 @@
       "docs": "https://tailscale.com/kb/1408/quick-guide-exit-nodes"
     },
     "tags": ["network"]
+  },
+  {
+    "id": "homebridge",
+    "name": "Homebridge",
+    "version": "latest",
+    "description": "Bringing HomeKit support where there is none. Homebridge allows you to integrate with smart home devices that do not natively support HomeKit.",
+    "logo": "homebridge.svg",
+    "links": {
+      "github": "https://github.com/homebridge/homebridge",
+      "website": "https://homebridge.io/",
+      "docs": "https://github.com/homebridge/homebridge/wiki"
+    },
+    "tags": [
+      "iot",
+      "homekit",
+      "internet-of-things",
+      "self-hosted",
+      "server"
+    ]
   },
   {
     "id": "tooljet",

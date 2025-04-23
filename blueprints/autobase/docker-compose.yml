@@ -1,0 +1,16 @@
+services:
+  autobase-console:
+    image: autobase/console:2.2.0
+    restart: unless-stopped
+    ports:
+      - "80"
+      - "8080"
+    environment:
+      - PG_CONSOLE_API_URL=${PG_CONSOLE_API_URL}
+      - PG_CONSOLE_AUTHORIZATION_TOKEN=${PG_CONSOLE_AUTHORIZATION_TOKEN}
+    volumes:
+      - console_postgres:/var/lib/postgresql
+      - /tmp/ansible:/tmp/ansible
+
+volumes:
+  console_postgres:

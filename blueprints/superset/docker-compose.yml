@@ -1,7 +1,7 @@
 # This is an UNOFFICIAL production docker image build for Superset:
 # - https://github.com/amancevice/docker-superset
-
-
+#
+#
 # ## SETUP INSTRUCTIONS
 #
 # After deploying this image, you will need to run one of the two
@@ -10,8 +10,8 @@
 #      $ superset-init     # Initialise database only
 #
 # You will be prompted to enter the credentials for the admin user.
-
-
+#
+#
 # ## NETWORK INSTRUCTIONS
 #
 # If you want to connect superset with other internal databases managed by
@@ -73,7 +73,7 @@ services:
       - superset_redis_data:/data
     command: redis-server --requirepass ${REDIS_PASSWORD}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "redis-cli -a $${REDIS_PASSWORD} ping"]
       interval: 30s
       timeout: 10s
       retries: 3

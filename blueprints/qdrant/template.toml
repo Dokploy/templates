@@ -1,3 +1,9 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
 [[config.domains]]
 serviceName = "qdrant"
 port = 6333

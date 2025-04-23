@@ -8,8 +8,6 @@ secret_key = "${base64:48}"
 
 [config]
 env = [
-"Domain=${main_domain}",
-"WEB_URL=${main_domain}",
 "Domain=${domain}",
 "WEB_URL=${Domain}",
 "PGHOST=plane-db",

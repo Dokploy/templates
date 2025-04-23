@@ -1861,7 +1861,7 @@
     "links": {
       "github": "https://github.com/henrygd/beszel",
       "website": "https://beszel.dev",
-      "docs": "https://beszel.dev/guide"
+      "docs": "https://beszel.dev/guide/getting-started"
     },
     "tags": ["monitoring", "docker", "alerts"]
   },

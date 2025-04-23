@@ -36,7 +36,7 @@ services:
       - STACK_EMAIL_HOST=${STACK_EMAIL_HOST}
     depends_on:
       stack-auth-db:
-        condition: service_started
+        condition: service_healthy
 
     
 volumes:

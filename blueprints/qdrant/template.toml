@@ -1,0 +1,7 @@
+[[config.domains]]
+serviceName = "qdrant"
+port = 6333
+host = "${domain}"
+
+[config.env]
+QDRANT_API_KEY = "${password:32}"

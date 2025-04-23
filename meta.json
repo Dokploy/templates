@@ -2225,5 +2225,22 @@
       "docs": "https://www.bugsink.com/docs/"
     },
     "tags": ["hosting", "self-hosted", "development"]
-  }
+  },
+  {
+    "id": "qdrant",
+    "name": "Qdrant",
+    "version": "latest",
+    "description": "An open-source vector database designed for high-performance similarity search and storage of embeddings.",
+    "logo": "qdrant.svg",
+    "links": {
+      "github": "https://github.com/qdrant/qdrant",
+      "website": "https://qdrant.tech/",
+      "docs": "https://qdrant.tech/documentation/"
+    },
+    "tags": [
+      "vector-db",
+      "database",
+      "search"
+    ]
+  }  
 ]

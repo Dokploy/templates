@@ -2,17 +2,21 @@ version: '3.8'
 
 services:
   stack-auth-db:
-    image: postgres:latest
+    image: postgres:17
     container_name: stack-auth-db
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-    ports:
-      - "5432:5432"
     volumes:
       - stack-auth-db-data:/var/lib/postgresql/data
-
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+      
   stack-auth:
     image: stackauth/server:latest
     container_name: stack-auth
@@ -31,10 +35,9 @@ services:
       - STACK_RUN_SEED_SCRIPT=${STACK_RUN_SEED_SCRIPT}
       - STACK_EMAIL_HOST=${STACK_EMAIL_HOST}
     depends_on:
-      - stack-auth-db
-    ports:
-      - "8101:8101" 
-      - "8102:8102" 
+      stack-auth-db:
+        condition: service_started
+
     
 volumes:
   stack-auth-db-data:

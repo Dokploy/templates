@@ -3,7 +3,6 @@ version: '3.8'
 services:
   stack-auth-db:
     image: postgres:17
-    container_name: stack-auth-db
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

@@ -75,7 +75,8 @@
       "docs": "https://supabase.com/docs/guides/self-hosting"
     },
     "logo": "supabase.svg",
-    "tags": ["database", "firebase", "postgres"]
+    "tags": ["database", "firebase", "postgres"],
+    "dokploy_version": ">=0.21.8"
   },
   {
     "id": "pre0.21.8-supabase",
@@ -88,7 +89,8 @@
       "docs": "https://supabase.com/docs/guides/self-hosting"
     },
     "logo": "supabase.svg",
-    "tags": ["database", "firebase", "postgres"]
+    "tags": ["database", "firebase", "postgres"],
+    "dokploy_version": "<0.21.8"
   },
   {
     "id": "pocketbase",

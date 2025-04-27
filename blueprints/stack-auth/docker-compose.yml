@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  stack-auth-db:
+    image: postgres:17
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - stack-auth-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+      
+  stack-auth:
+    image: stackauth/server:latest
+    container_name: stack-auth
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - NEXT_PUBLIC_STACK_API_URL=${NEXT_PUBLIC_STACK_API_URL}
+      - NEXT_PUBLIC_STACK_DASHBOARD_URL=${NEXT_PUBLIC_STACK_DASHBOARD_URL}
+      - STACK_DATABASE_CONNECTION_STRING=${STACK_DATABASE_CONNECTION_STRING}
+      - STACK_DIRECT_DATABASE_CONNECTION_STRING=${STACK_DIRECT_DATABASE_CONNECTION_STRING}
+      - STACK_SERVER_SECRET=${STACK_SERVER_SECRET}
+      - STACK_SEED_INTERNAL_PROJECT_ALLOW_LOCALHOST=${STACK_SEED_INTERNAL_PROJECT_ALLOW_LOCALHOST}
+      - STACK_SEED_INTERNAL_PROJECT_SIGN_UP_ENABLED=${STACK_SEED_INTERNAL_PROJECT_SIGN_UP_ENABLED}
+      - STACK_RUN_MIGRATIONS=${STACK_RUN_MIGRATIONS}
+      - STACK_RUN_SEED_SCRIPT=${STACK_RUN_SEED_SCRIPT}
+      - STACK_EMAIL_HOST=${STACK_EMAIL_HOST}
+    depends_on:
+      stack-auth-db:
+        condition: service_healthy
+
+    
+volumes:
+  stack-auth-db-data:

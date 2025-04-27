@@ -1,0 +1,36 @@
+[variables]
+dashboard_domain = "${domain}"
+api_domain = "${domain}"
+postgres_password = "${password:32}"
+stack_auth_api_url = "${api_domain}"
+stack_auth_dashboard_url = "${dashboard_domain}"
+stack_auth_postgres_host = "stack-auth-db"
+
+[config.env]
+POSTGRES_USER = "postgres"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "stackframe"
+NEXT_PUBLIC_STACK_API_URL = "http://${stack_auth_api_url}"
+NEXT_PUBLIC_STACK_DASHBOARD_URL = "http://${stack_auth_dashboard_url}"
+
+STACK_DATABASE_CONNECTION_STRING = "postgres://postgres:${postgres_password}@${stack_auth_postgres_host}/stackframe"
+STACK_DIRECT_DATABASE_CONNECTION_STRING = "postgres://postgres:${postgres_password}@${stack_auth_postgres_host}/stackframe"
+
+STACK_SERVER_SECRET = "${password:64}"  
+STACK_SEED_INTERNAL_PROJECT_ALLOW_LOCALHOST = true
+STACK_SEED_INTERNAL_PROJECT_SIGN_UP_ENABLED = true
+
+STACK_RUN_MIGRATIONS = true
+STACK_RUN_SEED_SCRIPT = true
+
+[[config.domains]]
+serviceName = "stack-auth"
+port = 8102
+host = "${stack_auth_api_url}"
+path = "/"
+
+[[config.domains]]
+serviceName = "stack-auth"
+port = 8101
+host = "${stack_auth_dashboard_url}"
+path = "/"

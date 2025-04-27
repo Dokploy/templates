@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "qdrant"
+port = 6333
+host = "${main_domain}"
+
+[config.env]
+QDRANT_API_KEY = "${password:32}"

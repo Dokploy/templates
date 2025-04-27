@@ -208,6 +208,21 @@
     "tags": ["database", "redis"]
   },
   {
+    "id": "stack-auth",
+    "name": "Stack Auth",
+    "version": "latest",
+    "description": "Uptime Kuma is a free and open source monitoring tool that allows you to monitor your websites and applications.",
+    "logo": "stack-auth.png",
+    "links": {
+      "github": "https://github.com/louislam/uptime-kuma",
+      "website": "https://uptime.kuma.pet/",
+      "docs": "https://github.com/louislam/uptime-kuma/wiki"
+    },
+    "tags": [
+      "monitoring"
+    ]
+  },
+  {
     "id": "uptime-kuma",
     "name": "Uptime Kuma",
     "version": "1.23.15",
@@ -648,6 +663,40 @@
       "docs": "https://docs.plane.so/"
     },
     "tags": ["kanban"]
+  },
+  {
+    "id": "pterodactyl",
+    "name": "Pterodactyl",
+    "version": "latest",
+    "description": "A free, open-source game server management panel.",
+    "logo": "pterodactyl.png",
+    "links": {
+      "github": "https://github.com/pterodactyl/panel",
+      "website": "https://pterodactyl.io",
+      "docs": "https://pterodactyl.io/project/introduction.html"
+    },
+    "tags": [
+      "self-hosted",
+      "open-source",
+      "management"
+    ]
+  },
+  {
+    "id": "pyrodactyl",
+    "name": "Pyrodactyl",
+    "version": "main",
+    "description": "Pyrodactyl is the Pterodactyl-based game server panel that's faster, smaller, safer, and more accessible than Pelican. ",
+    "logo": "pyrodactyl.png",
+    "links": {
+      "github": "https://github.com/pyrohost/pyrodactyl",
+      "website": "https://pyrodactyl.dev",
+      "docs": "https://pyrodactyl.dev/docs"
+    },
+    "tags": [
+      "self-hosted",
+      "open-source",
+      "management"
+    ]
   },
   {
     "id": "influxdb",
@@ -1855,13 +1904,13 @@
   {
     "id": "beszel",
     "name": "Beszel",
-    "version": "0.9.1",
+    "version": "0.10.2",
     "description": "A lightweight server monitoring hub with historical data, docker stats, and alerts.",
     "logo": "logo.svg",
     "links": {
       "github": "https://github.com/henrygd/beszel",
-      "website": "https://beszel.app",
-      "docs": "https://beszel.app/docs"
+      "website": "https://beszel.dev",
+      "docs": "https://beszel.dev/guide/getting-started"
     },
     "tags": ["monitoring", "docker", "alerts"]
   },
@@ -2169,6 +2218,25 @@
     "tags": ["network"]
   },
   {
+    "id": "homebridge",
+    "name": "Homebridge",
+    "version": "latest",
+    "description": "Bringing HomeKit support where there is none. Homebridge allows you to integrate with smart home devices that do not natively support HomeKit.",
+    "logo": "homebridge.svg",
+    "links": {
+      "github": "https://github.com/homebridge/homebridge",
+      "website": "https://homebridge.io/",
+      "docs": "https://github.com/homebridge/homebridge/wiki"
+    },
+    "tags": [
+      "iot",
+      "homekit",
+      "internet-of-things",
+      "self-hosted",
+      "server"
+    ]
+  },
+  {
     "id": "tooljet",
     "name": "Tooljet",
     "version": "ee-lts-latest",
@@ -2206,5 +2274,22 @@
       "docs": "https://www.bugsink.com/docs/"
     },
     "tags": ["hosting", "self-hosted", "development"]
-  }
+  },
+  {
+    "id": "qdrant",
+    "name": "Qdrant",
+    "version": "latest",
+    "description": "An open-source vector database designed for high-performance similarity search and storage of embeddings.",
+    "logo": "qdrant.svg",
+    "links": {
+      "github": "https://github.com/qdrant/qdrant",
+      "website": "https://qdrant.tech/",
+      "docs": "https://qdrant.tech/documentation/"
+    },
+    "tags": [
+      "vector-db",
+      "database",
+      "search"
+    ]
+  }  
 ]

@@ -1,0 +1,34 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+db_root_password = "${password:32}"
+secret_key = "${base64:48}"
+
+[config]
+env = [
+"Domain=${main_domain}",
+"APP_URL={$main_domain}",
+"APP_TIMEZONE=UTC",
+"APP_SERVICE_AUTHOR=noreply@example.com",
+"MAIL_FROM=noreply@example.com",
+"MAIL_DRIVER=smtp",
+"MAIL_HOST=mail",
+"MAIL_PORT=1025",
+"MAIL_USERNAME=",
+"MAIL_PASSWORD=",
+"MAIL_ENCRYPTION=true",
+"MYSQL_PASSWORD=${db_password}",
+"MYSQL_ROOT_PASSWORD=${db_root_password}",
+"DB_PORT=3306",
+"CACHE_DRIVER=redis",
+"SESSION_DRIVER=redis",
+"QUEUE_DRIVER=redis",
+"REDIS_HOST=cache",
+"DB_HOST=database",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "panel"
+port = 80
+host = "${main_domain}"

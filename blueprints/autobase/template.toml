@@ -5,9 +5,7 @@ authenticattion_token = "${base64:32}"
 
 [config]
 env = [
-    "HTTP_PORT=8900",
-    "API_PORT=8090",
-    "PG_CONSOLE_API_URL=https://${api_domain}",
+    "PG_CONSOLE_API_URL=http://${api_domain}/api/v1",
     "PG_CONSOLE_AUTHORIZATION_TOKEN=${authenticattion_token}",
 ]
 mounts = []

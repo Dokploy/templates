@@ -33,7 +33,7 @@ volumes:
 services:
 
   penpot-frontend:
-    image: "penpotapp/frontend:2.3.2"
+    image: "penpotapp/frontend:2.6.1"
     restart: always
     ports:
       - 8080
@@ -52,7 +52,7 @@ services:
       PENPOT_FLAGS: disable-email-verification enable-smtp enable-prepl-server disable-secure-session-cookies
 
   penpot-backend:
-    image: "penpotapp/backend:2.3.2"
+    image: "penpotapp/backend:2.6.1"
     restart: always
 
     volumes:
@@ -139,7 +139,7 @@ services:
       PENPOT_SMTP_SSL: false
 
   penpot-exporter:
-    image: "penpotapp/exporter:2.3.2"
+    image: "penpotapp/exporter:2.6.1"
     restart: always
 
 

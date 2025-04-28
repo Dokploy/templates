@@ -6,7 +6,7 @@ mounts = []
 
 [[config.domains]]
 serviceName = "penpot-frontend"
-port = 80
+port = 8080
 host = "${main_domain}"
 
 [config.env]

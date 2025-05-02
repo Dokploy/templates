@@ -25,5 +25,22 @@ max_open = 25
 max_idle = 25
 max_lifetime = "300s"
 
-params = "" 
+params = ""
 """
+
+[config.env]
+POSTGRES_PASSWORD=listmonk
+POSTGRES_USER=listmonk
+POSTGRES_DB=listmonk
+
+LISTMONK_app__address=0.0.0.0:9000
+LISTMONK_db__user=*db-user
+LISTMONK_db__password=*db-password
+LISTMONK_db__database=*db-name
+LISTMONK_db__host=listmonk_db
+LISTMONK_db__port = 5432
+LISTMONK_db__ssl_mode=disable
+LISTMONK_db__max_open = 25
+LISTMONK_db__max_idle = 25
+LISTMONK_db__max_lifetime=300s
+TZ=etc/UTC

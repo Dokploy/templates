@@ -41,7 +41,7 @@ host = "${WDQS_PUBLIC_HOST}"
 serviceName = "quickstatements"
 port = 80
 host = "${WIKIBASE_PUBLIC_HOST}"
-path = 'tools/quickstatements'
+path = '/tools/quickstatements'
 
 [[config.mounts]]
 filePath = "/config/wikibase-php.ini"

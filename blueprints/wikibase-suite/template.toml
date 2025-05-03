@@ -64,7 +64,7 @@ max_execution_time = 600
 """
 
 [[config.mounts]]
-filePath = "/config/extensions/Extensions.php"
+filePath = "/config/Extensions.php"
 content = """
 <?php
 // ************************************************************************

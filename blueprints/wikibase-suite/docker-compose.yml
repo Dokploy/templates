@@ -13,6 +13,11 @@ services:
       elasticsearch:
         condition: service_healthy
     restart: unless-stopped
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wikibase-router.rule=Host(`${WIKIBASE_PUBLIC_HOST}`) && !PathPrefix(`/tools`)"
     volumes:
       - ../files/config:/config
       - ../files/config/extensions:/var/www/html/extensions/extensions
@@ -30,6 +35,7 @@ services:
       DB_NAME: ${DB_NAME}
       ELASTICSEARCH_HOST: elasticsearch
       QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
+
     healthcheck:
       test: curl --silent --fail localhost/wiki/Main_Page
       interval: 10s
@@ -42,12 +48,16 @@ services:
       wikibase:
         condition: service_healthy
     restart: unless-stopped
+    networks:
+      - dokploy-network
     volumes_from:
       - wikibase
 
   mysql:
     image: mariadb:10.11
     restart: unless-stopped
+    networks:
+      - dokploy-network
     volumes:
       - mysql-data:/var/lib/mysql
     environment:
@@ -71,6 +81,8 @@ services:
   elasticsearch:
     image: wikibase/elasticsearch:1
     restart: unless-stopped
+    networks:
+      - dokploy-network
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     environment:
@@ -101,6 +113,35 @@ services:
       test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
       interval: 10s
       start_period: 2m
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      # Define router rules for WDQS service, including limits to HTTP methods
+      - "traefik.http.routers.wdqs-router.rule=Host(`${WDQS_PUBLIC_HOST}`) && PathPrefix(`/sparql`) && (Method(`GET`) || Method(`OPTIONS`) || Method(`POST`))"
+      # Add prefix to path before forwarding to upstream service
+      - "traefik.http.middlewares.wdqs-prefix.addprefix.prefix=/bigdata/namespace/wdq/"
+      # Announce limited HTTP methods in preflight requests
+      # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods
+      - "traefik.http.middlewares.wdqs-headers.headers.accesscontrolallowmethods=GET,OPTIONS,POST"
+      # Announce Accept header can lead to varying responses
+      # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary
+      - "traefik.http.middlewares.wdqs-headers.headers.customresponseheaders.VARY=Accept"
+      # WDQS/blazegraph config headers
+      # https://github.com/blazegraph/database/commit/fcecfd46d616735b651ccebf44116d6702f2b545
+      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-READ-ONLY=yes"
+      # https://github.com/blazegraph/database/wiki/REST_API#query
+      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-MAX-QUERY-MILLIS=300000"
+      # CORS https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin#sect
+      # Allow unauthenticated requests from any origin
+      - "traefik.http.middlewares.wdqs-cors-headers.headers.accesscontrolallowheaders=*"
+      # Define middleware for rate limiting
+      # https://doc.traefik.io/traefik-hub/api-gateway/reference/routing/http/middlewares/ref-rate-limit#rate-and-burst
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.burst=30"
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.average=60"
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.period=1m"
+      # Apply middlewares to the wdqs router
+      - "traefik.http.routers.wdqs-router.middlewares=wdqs-prefix,wdqs-headers,wdqs-cors-headers,wdqs-rate-limit"
 
   wdqs-updater:
     image: wikibase/wdqs:2
@@ -116,6 +157,8 @@ services:
       nofile:
         soft: 32768
         hard: 32768
+    networks:
+      - dokploy-network
     environment:
       WIKIBASE_CONCEPT_URI: https://${WIKIBASE_PUBLIC_HOST}
 
@@ -124,6 +167,11 @@ services:
     restart: unless-stopped
     volumes:
       - ../files/config:/config
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wdqs-frontend-router.rule=Host(`${WDQS_PUBLIC_HOST}`) && !PathPrefix(`/sparql`)"
     environment:
       WDQS_PUBLIC_URL: https://${WDQS_PUBLIC_HOST}/sparql
       WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/w/api.php
@@ -140,6 +188,16 @@ services:
     restart: unless-stopped
     volumes:
       - quickstatements-data:/quickstatements/data
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.quickstatements-router.rule=Host(`${WIKIBASE_PUBLIC_HOST}`) && PathPrefix(`/tools/quickstatements`)"
+      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.regex=/tools/quickstatements$"
+      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.replacement=/tools/quickstatements/"
+      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.permanent=true"
+      - "traefik.http.middlewares.quickstatements-stripprefix.stripprefix.prefixes=/tools/quickstatements"
+      - "traefik.http.routers.quickstatements-router.middlewares=quickstatements-redirectregex,quickstatements-stripprefix"
     environment:
       QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
       WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
@@ -156,3 +214,7 @@ volumes:
   wdqs-data:
   elasticsearch-data:
   quickstatements-data:
+  
+networks:
+  dokploy-network:
+    external: true

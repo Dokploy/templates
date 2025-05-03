@@ -1,47 +1,4 @@
-[variables]
-WIKIBASE_PUBLIC_HOST = "wikibase.example"
-WDQS_PUBLIC_HOST = "query.wikibase.example"
-MW_ADMIN_NAME = "admin"
-MW_ADMIN_EMAIL = "admin@wikibase.example"
-MW_ADMIN_PASS = "change-this-password"
-DB_NAME = "my_wiki"
-DB_USER = "sqluser"
-DB_PASS = "change-this-password"
-
 [config]
-
-[config.env]
-WIKIBASE_PUBLIC_HOST = "${WIKIBASE_PUBLIC_HOST}"
-WDQS_PUBLIC_HOST = "${WDQS_PUBLIC_HOST}"
-MW_ADMIN_NAME = "${MW_ADMIN_NAME}"
-MW_ADMIN_EMAIL = "${MW_ADMIN_EMAIL}"
-MW_ADMIN_PASS = "${MW_ADMIN_EMAIL}"
-DB_NAME = "${DB_NAME}"
-DB_USER = "${DB_USER}"
-DB_PASS = "${DB_PASS}"
-
-[[config.domains]]
-serviceName = "wikibase"
-port = 80
-host = "${WIKIBASE_PUBLIC_HOST}"
-path = "/"
-
-[[config.domains]]
-serviceName = "wdqs"
-port = 80
-host = "${WDQS_PUBLIC_HOST}"
-path = "/sparql"
-
-[[config.domains]]
-serviceName = "wdqs-frontend"
-port = 80
-host = "${WDQS_PUBLIC_HOST}"
-
-[[config.domains]]
-serviceName = "quickstatements"
-port = 80
-host = "${WIKIBASE_PUBLIC_HOST}"
-path = '/tools/quickstatements'
 
 [[config.mounts]]
 filePath = "/config/wikibase-php.ini"
@@ -81,4 +38,17 @@ content = """
 //   wfLoadExtension( 'WikibaseLexeme' );
 // here in Wikibase Suite Deploy you need to put
 //   wfLoadExtension( 'extensions/WikibaseLexeme' );
+"""
+
+[[config.mounts]]
+filePath = "/.env"
+content = """
+WIKIBASE_PUBLIC_HOST=wikibase.example
+WDQS_PUBLIC_HOST=query.wikibase.example
+MW_ADMIN_NAME=admin
+MW_ADMIN_EMAIL=admin@wikibase.example
+MW_ADMIN_PASS=change-this-password
+DB_NAME=my_wiki
+DB_USER=sqluser
+DB_PASS=change-this-password
 """

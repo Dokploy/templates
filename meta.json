@@ -2291,7 +2291,7 @@
     ]
   },
   {
-    "id": "wbs",
+    "id": "wikibase-suite",
     "name": "Wikibase Suite",
     "version": "4.0.1",
     "description": "Wikibase Suite is a packaging of MediaWiki with the Wikibase extensions and adjacent services.",

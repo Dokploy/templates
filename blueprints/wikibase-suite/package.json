@@ -1,0 +1,12 @@
+{
+	"name": "dokploy-deploy",
+	"version": "4.0.1",
+	"nx": {
+		"targets": {
+			"lint": {},
+			"nx-release-publish": {
+				"command": "echo \"⚠️ Make sure to updated related documentation to point to new Deploy release (nothing changed)\""
+			}
+		}
+	}
+}

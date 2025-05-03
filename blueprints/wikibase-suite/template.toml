@@ -38,9 +38,9 @@ port = 80
 host = "${WDQS_PUBLIC_HOST}"
 
 [[config.domains]]
-serviceName = "wdqs-frontend"
+serviceName = "quickstatements"
 port = 80
-host = "${WDQS_PUBLIC_HOST}"
+host = "${WIKIBASE_PUBLIC_HOST}"
 path = 'tools/quickstatements'
 
 [[config.mounts]]

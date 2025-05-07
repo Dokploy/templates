@@ -1,9 +1,20 @@
 version: "3.8"
 services:
-  pocketbase:
-    image: spectado/pocketbase:0.23.3
+  pocketbase_service:
+    image: docker.io/bakirg/pocketbase-docker:latest
+    container_name: pocketbase_container
     restart: unless-stopped
+    ports:
+      - "8090:8090"
     volumes:
-      - /etc/dokploy/templates/${HASH}/data:/pb_data
-      - /etc/dokploy/templates/${HASH}/public:/pb_public
-      - /etc/dokploy/templates/${HASH}/migrations:/pb_migrations
+      - "/etc/dokploy/templates/${HASH}/data:/pb_data"
+      - "/etc/dokploy/templates/${HASH}/migrations:/pb_migrations" 
+      - "/etc/dokploy/templates/${HASH}/hooks:/pb_hooks" 
+      - "/etc/dokploy/templates/${HASH}/public:/pb_public" 
+    healthcheck:
+      test: wget -q --spider http://localhost:8090/api/health || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+

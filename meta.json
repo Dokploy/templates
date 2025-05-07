@@ -55,7 +55,7 @@
     "id": "pocketbase",
     "name": "PocketBase",
     "description": "Open Source backend in 1 file",
-    "version": "v0.22.4",
+    "version": "v0.27.2",
     "logo": "logo.svg",
     "links": {
       "github": "https://github.com/pocketbase/pocketbase",

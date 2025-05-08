@@ -6,6 +6,7 @@ logflare_api_key = "${password:32}"
 secret_key_base = "${password:64}"
 vault_enc_key = "${password:32}"
 jwt_secret = "${password:32}"
+container_name_prefix = "supabase-${hash:4}"
 anon_key_payload = """{
   "role": "anon",
   "iss": "supabase",
@@ -26,6 +27,20 @@ host = "${main_domain}"
 
 [config]
 env = [
+'############',
+'# To get a proper working configuration you should at least take a look at:',
+'# - SUPABASE_PUBLIC_URL, API_EXTERNAL_URL should point to your supabase domain with correct http/https scheme',
+'# - SMTP_* are required for auth mail sending',
+'# - ADDITIONAL_REDIRECT_URLS, SITE_URL should point to application using supabase for authentication',
+'#   They are used for redirecting after login/signup and gotrue will check them before sending emails',
+'# - POSTGRES_PORT, POOLER_PROXY_PORT_TRANSACTION should be changed if you are already running other instances of supabase',
+'#',
+'# Supabase uses container names in part of its configuration so it is important to keep them',
+'# This template generates a random prefix for the container names to avoid conflicts',
+'# If you change it you will need to update routes in the vector.yml file in advanced->mounts section',
+'############',
+'CONTAINER_PREFIX=${container_name_prefix}',
+'',
 '############',
 '# Secrets',
 '# YOU MUST CHANGE THESE BEFORE GOING INTO PRODUCTION',
@@ -701,8 +716,7 @@ serve(async () => {
 
 [[config.mounts]]
 filePath = "/volumes/functions/main/index.ts"
-content = """
-import { serve } from 'https://deno.land/std@0.131.0/http/server.ts'
+content = """import { serve } from 'https://deno.land/std@0.131.0/http/server.ts'
 import * as jose from 'https://deno.land/x/jose@v4.14.4/index.ts'
 
 console.log('main function started')
@@ -800,8 +814,7 @@ serve(async (req: Request) => {
 
 [[config.mounts]]
 filePath = "/volumes/logs/vector.yml"
-content = """
-api:
+content = """api:
   enabled: true
   address: 0.0.0.0:9001
 
@@ -809,7 +822,7 @@ sources:
   docker_host:
     type: docker_logs
     exclude_containers:
-      - supabase-vector
+      - ${container_name_prefix}-vector
 
 transforms:
   project_logs:
@@ -819,7 +832,7 @@ transforms:
     source: |-
       .project = "default"
       .event_message = del(.message)
-      .appname = del(.container_name)
+      .appname = replace!(del(.container_name), "${container_name_prefix}", "supabase")
       del(.container_created_at)
       del(.container_id)
       del(.source_type)
@@ -836,9 +849,9 @@ transforms:
       kong: '.appname == "supabase-kong"'
       auth: '.appname == "supabase-auth"'
       rest: '.appname == "supabase-rest"'
-      realtime: '.appname == "supabase-realtime"'
+      realtime: '.appname == "realtime-dev.supabase-realtime"'
       storage: '.appname == "supabase-storage"'
-      functions: '.appname == "supabase-functions"'
+      functions: '.appname == "supabase-edge-functions"'
       db: '.appname == "supabase-db"'
   # Ignores non nginx errors since they are related with kong booting up
   kong_logs:
@@ -1037,8 +1050,7 @@ sinks:
 
 [[config.mounts]]
 filePath = "/volumes/pooler/pooler.exs"
-content = """
-{:ok, _} = Application.ensure_all_started(:supavisor)
+content = """{:ok, _} = Application.ensure_all_started(:supavisor)
 
 {:ok, version} =
   case Supavisor.Repo.query!("select version()") do

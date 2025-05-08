@@ -1,0 +1,11 @@
+[variables]
+  main_domain = "${domain}"         # e.g. "observability.example.com"
+  version     = "${version:0.82.1}"
+  otelcol_tag = "${otelcol_tag:0.111.41}"
+
+[config]
+  [[config.domains]]
+  serviceName = "signoz"
+  host        = "${main_domain}"
+  port        = 8080
+  path        = "/" 

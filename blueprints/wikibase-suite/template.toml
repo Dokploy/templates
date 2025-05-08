@@ -1,0 +1,54 @@
+[config]
+
+[[config.mounts]]
+filePath = "/config/wikibase-php.ini"
+content = """
+; ##############################################################################
+; Wikibase Suite PHP settings
+; ##############################################################################
+; Feel free to adjust those settings according your needs.
+; Changes will be picked up automatically by the wikibase container on restart.
+
+; Set the PHP upload limits be the same as the MediaWiki default of 100M.
+; Should match the wgMaxUploadSize setting in LocalSettings.php
+file_uploads = On
+upload_max_filesize = 100M
+post_max_size = 100M
+
+; Set the PHP memory and execution limits
+memory_limit = 100M
+max_execution_time = 600
+"""
+
+[[config.mounts]]
+filePath = "/config/Extensions.php"
+content = """
+<?php
+// ************************************************************************
+// Wikibase Suite Deploy Extension.php
+// ************************************************************************
+//
+// File to load MediaWiki extension.
+//
+// This file will be loaded after all other extensions have been loaded,
+// just like as if this code would be at the end of LocalSettings.php.
+//
+// Make sure to prefix the extensions name with "extensions/" when loading.
+// e.g. when extension installation instructions state you need to put
+//   wfLoadExtension( 'WikibaseLexeme' );
+// here in Wikibase Suite Deploy you need to put
+//   wfLoadExtension( 'extensions/WikibaseLexeme' );
+"""
+
+[[config.mounts]]
+filePath = "/.env"
+content = """
+WIKIBASE_PUBLIC_HOST=wikibase.example
+WDQS_PUBLIC_HOST=query.wikibase.example
+MW_ADMIN_NAME=admin
+MW_ADMIN_EMAIL=admin@wikibase.example
+MW_ADMIN_PASS=change-this-password
+DB_NAME=my_wiki
+DB_USER=sqluser
+DB_PASS=change-this-password
+"""

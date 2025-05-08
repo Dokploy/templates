@@ -480,17 +480,14 @@
     -->
 
     <!-- Sources to read users, roles, access rights, profiles of settings, quotas. -->
-    <!-- REMOVED the user_directories block below -->
-    <!--
     <user_directories>
         <users_xml>
-            <path>/etc/signoz_clickhouse_config/users.xml</path>
+            <path>/etc/clickhouse-server/users.xml</path> <!-- Official path -->
         </users_xml>
         <local_directory>
             <path>/var/lib/clickhouse/access/</path>
         </local_directory>
     </user_directories>
-    -->
 
     <!-- Default profile of settings. -->
     <default_profile>default</default_profile>
@@ -851,7 +848,7 @@
     <dictionaries_config>*_dictionary.xml</dictionaries_config>
 
     <!-- Configuration of user defined executable functions -->
-    <user_defined_executable_functions_config>/etc/clickhouse-server/custom_functions.xml</user_defined_executable_functions_config>
+    <user_defined_executable_functions_config>/etc/clickhouse-server/custom-function.xml</user_defined_executable_functions_config>
     <user_scripts_path>/var/lib/clickhouse/user_scripts/</user_scripts_path>
 
     <!-- Uncomment if you want data to be compressed 30-100% better.
@@ -1085,15 +1082,13 @@
     </merge_tree_metadata_cache>
 
     <!-- Path to file with users, roles and profiles definitions -->
-    <users_config>/etc/clickhouse-server/users.d/zz_signoz_users.xml</users_config>
+    <users_config>/etc/clickhouse-server/users.xml</users_config>
 
     <!-- Path to file with models for catboost library -->
     <!-- <catboost_dynamic_library_path>/opt/catboostmodel.so</catboost_dynamic_library_path> -->
 
-    <!-- REMOVED Duplicate include directives below -->
-    <!-- 
+    <!-- Restore original include directives -->
     <include_from>/etc/clickhouse-server/config.d/*.xml</include_from>
     <include_from optional="true">/etc/clickhouse-server/conf.d/*.xml</include_from>
     <include_from optional="true">/etc/clickhouse-server/users.d/*.xml</include_from>
-    -->
 </clickhouse>

@@ -110,10 +110,10 @@ services:
     <<: *clickhouse-defaults
     container_name: signoz-clickhouse
     volumes:
-      - ./common/clickhouse_configs/main_config.xml:/etc/clickhouse-server/config.d/zz_signoz_main_config.xml:ro
-      - ./common/clickhouse_configs/users.xml:/etc/clickhouse-server/users.d/zz_signoz_users.xml:ro
-      - ./common/clickhouse_configs/custom_functions.xml:/etc/clickhouse-server/custom_functions.xml:ro
-      - ./common/clickhouse/cluster.xml:/etc/clickhouse-server/config.d/cluster.xml:ro
+      - ./common/clickhouse/config.xml:/etc/clickhouse-server/config.xml
+      - ./common/clickhouse/users.xml:/etc/clickhouse-server/users.xml
+      - ./common/clickhouse/custom-function.xml:/etc/clickhouse-server/custom-function.xml
+      - ./common/clickhouse/cluster.xml:/etc/clickhouse-server/config.d/cluster.xml
       - ./common/clickhouse/user_scripts:/var/lib/clickhouse/user_scripts/
       - clickhouse:/var/lib/clickhouse/
 

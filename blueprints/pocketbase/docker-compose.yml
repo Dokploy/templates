@@ -2,7 +2,6 @@ version: "3.8"
 services:
   pocketbase_service:
     image: docker.io/bakirg/pocketbase-docker:latest
-    container_name: pocketbase_container
     restart: unless-stopped
     ports:
       - "8090:8090"

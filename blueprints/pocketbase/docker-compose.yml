@@ -4,7 +4,7 @@ services:
     image: docker.io/bakirg/pocketbase-docker:latest
     restart: unless-stopped
     ports:
-      - "8090:8090"
+      - "8090"
     volumes:
       - "/etc/dokploy/templates/${HASH}/data:/pb_data"
       - "/etc/dokploy/templates/${HASH}/migrations:/pb_migrations" 

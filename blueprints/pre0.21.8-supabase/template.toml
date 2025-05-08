@@ -32,6 +32,7 @@ env = [
 '# YOU MUST CHANGE THESE BEFORE GOING INTO PRODUCTION',
 '# https://supabase.com/docs/guides/self-hosting/docker#securing-your-services',
 '# They are default values from supabase so really do not use them in exposed environments',
+'# Go to https://supabase.com/docs/guides/self-hosting for more information',
 '############',
 '',
 'SUPABASE_HOST=${main_domain}',

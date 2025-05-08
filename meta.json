@@ -2317,12 +2317,9 @@
     "logo": "signoz.svg",
     "links": {
       "github": "https://github.com/SigNoz/signoz",
-      "docs": "https://docs.signoz.io/"
+      "docs": "https://docs.signoz.io/",
+      "website": "https://signoz.io/"
     },
-    "tags": [
-      "monitoring",
-      "tracing",
-      "observability"
-    ]
+    "tags": ["monitoring", "tracing", "observability"]
   }
 ]

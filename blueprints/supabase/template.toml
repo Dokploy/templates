@@ -47,6 +47,7 @@ env = [
 '# https://supabase.com/docs/guides/self-hosting/docker#securing-your-services',
 '# In this version of the template they are generated randomly by dokploy helpers',
 '# so you do not need to change them manually',
+'# Go to https://supabase.com/docs/guides/self-hosting for more information',
 '############',
 '',
 'SUPABASE_HOST=${main_domain}',

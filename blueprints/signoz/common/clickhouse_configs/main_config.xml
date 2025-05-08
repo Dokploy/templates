@@ -483,7 +483,7 @@
     <user_directories>
         <users_xml>
             <!-- Path to configuration file with predefined users. -->
-            <path>users.xml</path>
+            <path>/etc/signoz_clickhouse_config/users.xml</path>
         </users_xml>
         <local_directory>
             <!-- Path to folder where users created by SQL commands are stored. -->
@@ -907,7 +907,7 @@
     <dictionaries_config>*_dictionary.xml</dictionaries_config>
 
     <!-- Configuration of user defined executable functions -->
-    <user_defined_executable_functions_config>*function.xml</user_defined_executable_functions_config>
+    <user_defined_executable_functions_config>/etc/clickhouse-server/custom_functions.xml</user_defined_executable_functions_config>
     <user_scripts_path>/var/lib/clickhouse/user_scripts/</user_scripts_path>
 
     <!-- Uncomment if you want data to be compressed 30-100% better.
@@ -1139,4 +1139,25 @@
         <lru_cache_size>268435456</lru_cache_size>
         <continue_if_corrupted>true</continue_if_corrupted>
     </merge_tree_metadata_cache>
+
+    <!-- Path to file with users, roles and profiles definitions -->
+    <users_config>/etc/clickhouse-server/users.d/zz_signoz_users.xml</users_config>
+
+    <!-- Path to file with models for catboost library -->
+    <!-- <catboost_dynamic_library_path>/opt/catboostmodel.so</catboost_dynamic_library_path> -->
+
+    <!-- If element has no attribute 'incl' and no attribute 'optional',
+            default value for 'incl' is 'clickhouse_remote_servers'.
+         If element has no attribute 'optional', default value is 'false'.
+         If 'incl' is 'some_name', then contents of element is substituted from
+            file /etc/clickhouse-server/config.d/some_name.xml or /etc/clickhouse-server/conf.d/some_name.xml
+            (config_path / conf_dir, respectively, in <path>).
+         If 'optional' is 'true', then if the file is not found, it is skipped.
+            Otherwise (if 'optional' is 'false' or not set), an error is reported.
+      -->
+
+    <!-- Includes from files -->
+    <include_from>/etc/clickhouse-server/config.d/*.xml</include_from>
+    <include_from optional="true">/etc/clickhouse-server/conf.d/*.xml</include_from>
+    <include_from optional="true">/etc/clickhouse-server/users.d/*.xml</include_from> <!-- We are not using users.d for SigNoz specific config -->
 </clickhouse>

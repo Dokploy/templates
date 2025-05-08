@@ -1139,10 +1139,4 @@
         <lru_cache_size>268435456</lru_cache_size>
         <continue_if_corrupted>true</continue_if_corrupted>
     </merge_tree_metadata_cache>
-
-    <!-- Path to file with models for catboost library -->
-    <!-- <catboost_dynamic_library_path>/opt/catboostmodel.so</catboost_dynamic_library_path> -->
-
-    <include_from optional="true">/etc/clickhouse-server/conf.d/*.xml</include_from>
-    <include_from optional="true">/etc/clickhouse-server/users.d/*.xml</include_from>
 </clickhouse>

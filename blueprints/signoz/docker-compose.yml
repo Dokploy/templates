@@ -123,8 +123,6 @@ services:
     container_name: signoz
     command:
       - --config=/root/config/prometheus.yml
-      - --use-logs-new-schema=true
-      - --use-trace-new-schema=true
     ports:
       - "8080:8080"
     volumes:
@@ -135,6 +133,7 @@ services:
       - SIGNOZ_ALERTMANAGER_PROVIDER=signoz
       - SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN=tcp://clickhouse:9000
       - SIGNOZ_SQLSTORE_SQLITE_PATH=/var/lib/signoz/signoz.db
+      - DASHBOARDS_PATH=/root/config/dashboards
       - STORAGE=clickhouse
       - GODEBUG=netdns=go
       - TELEMETRY_ENABLED=true
@@ -146,12 +145,13 @@ services:
       retries: 3
 
   otel-collector:
-    <<: *db-depend
+    <<: *common
     image: signoz/signoz-otel-collector:${OTELCOL_TAG:-v0.111.41}
     container_name: signoz-otel-collector
     command:
       - --config=/etc/otel-collector-config.yaml
       - --manager-config=/etc/manager-config.yaml
+      - --copy-path=/var/tmp/collector-config.yaml
       - --feature-gates=-pkg.translator.prometheus.NormalizeName
     volumes:
       - ./common/otel-collector/otel-collector-config.yaml:/etc/otel-collector-config.yaml
@@ -162,20 +162,34 @@ services:
     ports:
       - "4317:4317"
       - "4318:4318"
+    depends_on:
+      signoz:
+        condition: service_healthy
 
   schema-migrator-sync:
     <<: *common
     image: signoz/signoz-schema-migrator:${OTELCOL_TAG:-v0.111.41}
     container_name: schema-migrator-sync
-    command: [ "sync", "--dsn=tcp://clickhouse:9000", "--up=" ]
+    command:
+      - sync
+      - --dsn=tcp://clickhouse:9000
+      - --up=
     depends_on:
       clickhouse:
         condition: service_healthy
     restart: on-failure
 
   schema-migrator-async:
-    <<: *db-depend
+    <<: *common
     image: signoz/signoz-schema-migrator:${OTELCOL_TAG:-v0.111.41}
     container_name: schema-migrator-async
-    command: [ "async", "--dsn=tcp://clickhouse:9000", "--up=" ]
+    command:
+      - async
+      - --dsn=tcp://clickhouse:9000
+      - --up=
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+      schema-migrator-sync:
+        condition: service_completed_successfully
     restart: on-failure

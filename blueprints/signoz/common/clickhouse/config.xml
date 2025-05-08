@@ -482,11 +482,70 @@
     <!-- Sources to read users, roles, access rights, profiles of settings, quotas. -->
     <user_directories>
         <users_xml>
-            <path>/etc/clickhouse-server/users.xml</path> <!-- Official path -->
+            <!-- Path to configuration file with predefined users. -->
+            <path>users.xml</path>
         </users_xml>
         <local_directory>
+            <!-- Path to folder where users created by SQL commands are stored. -->
             <path>/var/lib/clickhouse/access/</path>
         </local_directory>
+
+        <!-- To add an LDAP server as a remote user directory of users that are not defined locally, define a single 'ldap' section
+              with the following parameters:
+                server - one of LDAP server names defined in 'ldap_servers' config section above.
+                        This parameter is mandatory and cannot be empty.
+                roles - section with a list of locally defined roles that will be assigned to each user retrieved from the LDAP server.
+                        If no roles are specified here or assigned during role mapping (below), user will not be able to perform any
+                         actions after authentication.
+                role_mapping - section with LDAP search parameters and mapping rules.
+                        When a user authenticates, while still bound to LDAP, an LDAP search is performed using search_filter and the
+                         name of the logged in user. For each entry found during that search, the value of the specified attribute is
+                         extracted. For each attribute value that has the specified prefix, the prefix is removed, and the rest of the
+                         value becomes the name of a local role defined in ClickHouse, which is expected to be created beforehand by
+                         CREATE ROLE command.
+                        There can be multiple 'role_mapping' sections defined inside the same 'ldap' section. All of them will be
+                         applied.
+                    base_dn - template used to construct the base DN for the LDAP search.
+                            The resulting DN will be constructed by replacing all '{user_name}', '{bind_dn}', and '{user_dn}'
+                             substrings of the template with the actual user name, bind DN, and user DN during each LDAP search.
+                    scope - scope of the LDAP search.
+                            Accepted values are: 'base', 'one_level', 'children', 'subtree' (the default).
+                    search_filter - template used to construct the search filter for the LDAP search.
+                            The resulting filter will be constructed by replacing all '{user_name}', '{bind_dn}', '{user_dn}', and
+                             '{base_dn}' substrings of the template with the actual user name, bind DN, user DN, and base DN during
+                             each LDAP search.
+                            Note, that the special characters must be escaped properly in XML.
+                    attribute - attribute name whose values will be returned by the LDAP search. 'cn', by default.
+                    prefix - prefix, that will be expected to be in front of each string in the original list of strings returned by
+                             the LDAP search. Prefix will be removed from the original strings and resulting strings will be treated
+                             as local role names. Empty, by default.
+             Example:
+                <ldap>
+                    <server>my_ldap_server</server>
+                    <roles>
+                        <my_local_role1 />
+                        <my_local_role2 />
+                    </roles>
+                    <role_mapping>
+                        <base_dn>ou=groups,dc=example,dc=com</base_dn>
+                        <scope>subtree</scope>
+                        <search_filter>(&amp;(objectClass=groupOfNames)(member={bind_dn}))</search_filter>
+                        <attribute>cn</attribute>
+                        <prefix>clickhouse_</prefix>
+                    </role_mapping>
+                </ldap>
+             Example (typical Active Directory with role mapping that relies on the detected user DN):
+                <ldap>
+                    <server>my_ad_server</server>
+                    <role_mapping>
+                        <base_dn>CN=Users,DC=example,DC=com</base_dn>
+                        <attribute>CN</attribute>
+                        <scope>subtree</scope>
+                        <search_filter>(&amp;(objectClass=group)(member={user_dn}))</search_filter>
+                        <prefix>clickhouse_</prefix>
+                    </role_mapping>
+                </ldap>
+        -->
     </user_directories>
 
     <!-- Default profile of settings. -->
@@ -848,7 +907,7 @@
     <dictionaries_config>*_dictionary.xml</dictionaries_config>
 
     <!-- Configuration of user defined executable functions -->
-    <user_defined_executable_functions_config>/etc/clickhouse-server/custom-function.xml</user_defined_executable_functions_config>
+    <user_defined_executable_functions_config>*function.xml</user_defined_executable_functions_config>
     <user_scripts_path>/var/lib/clickhouse/user_scripts/</user_scripts_path>
 
     <!-- Uncomment if you want data to be compressed 30-100% better.
@@ -1081,14 +1140,9 @@
         <continue_if_corrupted>true</continue_if_corrupted>
     </merge_tree_metadata_cache>
 
-    <!-- Path to file with users, roles and profiles definitions -->
-    <users_config>/etc/clickhouse-server/users.xml</users_config>
-
     <!-- Path to file with models for catboost library -->
     <!-- <catboost_dynamic_library_path>/opt/catboostmodel.so</catboost_dynamic_library_path> -->
 
-    <!-- Restore original include directives -->
-    <include_from>/etc/clickhouse-server/config.d/*.xml</include_from>
     <include_from optional="true">/etc/clickhouse-server/conf.d/*.xml</include_from>
     <include_from optional="true">/etc/clickhouse-server/users.d/*.xml</include_from>
 </clickhouse>

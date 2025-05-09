@@ -6,14 +6,13 @@ services:
     ports:
       - "8090"
     volumes:
-      - "/etc/dokploy/templates/${HASH}/data:/pb_data"
-      - "/etc/dokploy/templates/${HASH}/migrations:/pb_migrations" 
-      - "/etc/dokploy/templates/${HASH}/hooks:/pb_hooks" 
-      - "/etc/dokploy/templates/${HASH}/public:/pb_public" 
+      - "/etc/dokploy/templates/${HASH}/data:/app/pb_data"
+      - "/etc/dokploy/templates/${HASH}/migrations:/app/pb_migrations" 
+      - "/etc/dokploy/templates/${HASH}/hooks:/app/pb_hooks" 
+      - "/etc/dokploy/templates/${HASH}/public:/app/pb_public" 
     healthcheck:
       test: wget -q --spider http://localhost:8090/api/health || exit 1
-      interval: 30s
+      interval: 60s
       timeout: 5s
       retries: 3
       start_period: 5s
-

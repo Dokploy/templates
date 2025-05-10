@@ -2308,5 +2308,18 @@
       "database",
       "search"
     ]
-  }  
+  },
+  {
+    "id": "signoz",
+    "name": "SigNoz",
+    "version": "0.82.1",
+    "description": "Open-source observability (traces, metrics, logs) on ClickHouse + OpenTelemetry.",
+    "logo": "signoz.svg",
+    "links": {
+      "github": "https://github.com/SigNoz/signoz",
+      "docs": "https://docs.signoz.io/",
+      "website": "https://signoz.io/"
+    },
+    "tags": ["monitoring", "tracing", "observability"]
+  }
 ]

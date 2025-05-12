@@ -164,6 +164,11 @@ services:
           allow:
             - admin
             - anon
+      - name: request-transformer
+        config:
+          remove:
+            headers:
+              - Authorization
 
   ## Secure GraphQL routes
   - name: graphql-v1
@@ -298,7 +303,7 @@ services:
       - name: cors
       - name: basic-auth
         config:
-          hide_credentials: true 
+          hide_credentials: true
 """
 
 [[config.mounts]]
@@ -915,7 +920,7 @@ sinks:
     request:
       retry_max_duration_secs: 10
     uri: 'http://analytics:4000/api/logs?source_name=cloudflare.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
-    
 
- 
+
+
 """

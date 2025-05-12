@@ -13,6 +13,12 @@ services:
     expose:
       - 8001
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "http://127.0.0.1:8001"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   chibisafe_server:
     image: chibisafe/chibisafe-server:latest
@@ -25,6 +31,12 @@ services:
     expose:
       - 8000
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "http://127.0.0.1:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   caddy:
     image: caddy:2-alpine
@@ -36,6 +48,12 @@ services:
     environment:
       - BASE_URL=":80"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "http://127.0.0.1:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
 volumes:
   database:
@@ -44,3 +62,5 @@ volumes:
 
 networks:
   chibinet:
+    driver: bridge
+    internal: true

@@ -4,8 +4,10 @@ postgres_password = "${password:32}"
 jwt_secret = "${base64:32}"
 dashboard_password = "${password:32}"
 logflare_api_key = "${password:32}"
-anon_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJyb2xlIjogImFub24iLAogICJpc3MiOiAic3VwYWJhc2UiLAogICJpYXQiOiAxNzQxNTAwMDAwLAogICJleHAiOiAxODk5MjY2NDAwCn0.muKe0Nrvkf5bMyLoFqAuFypRu3jHAcTYU08SYKrgRQo"
-service_role_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJyb2xlIjogInNlcnZpY2Vfcm9sZSIsCiAgImlzcyI6ICJzdXBhYmFzZSIsCiAgImlhdCI6IDE3NDE1MDAwMDAsCiAgImV4cCI6IDE4OTkyNjY0MDAKfQ.1KoSiJVueKJNkF59uc84BLqk7h8VdAoVp6Gozqr_vGc"
+anon_payload = "{\"role\": \"anon\", \"iss\": \"supabase\", \"iat\": 1746982800, \"exp\": 1904749200}"
+service_role_payload = "{\"role\": \"anon\", \"iss\": \"supabase\", \"iat\": 1746982800, \"exp\": 1904749200}"
+anon_key = "jwt:${jwt_secret}:anon_payload"
+service_role_key = "jwt:${jwt_secret}:service_role_key"
 
 [[config.domains]]
 serviceName = "kong"

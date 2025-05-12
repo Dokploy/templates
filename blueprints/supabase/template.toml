@@ -325,8 +325,10 @@ filePath = "/volumes/db/logs.sql"
 content = """
 \\set pguser `echo "$POSTGRES_USER"`
 
+\\c _supabase
 create schema if not exists _analytics;
 alter schema _analytics owner to :pguser;
+\\c postgres
 """
 
 [[config.mounts]]
@@ -576,7 +578,7 @@ import { serve } from "https://deno.land/std@0.177.1/http/server.ts"
 serve(async () => {
   return new Response(
     `"Hello from Edge Functions!"`,
-    { headers: { "Content-Type": "application/json" } }
+    { headers: { "Content-Type": "application/json" } },
   )
 })
 
@@ -687,7 +689,6 @@ serve(async (req: Request) => {
 [[config.mounts]]
 filePath = "/volumes/logs/vector.yml"
 content = """
-
 api:
   enabled: true
   address: 0.0.0.0:9001
@@ -838,10 +839,10 @@ transforms:
         .metadata.parsed.error_severity = "info"
       }
       if parsed != null {
-      .metadata.parsed.error_severity = parsed.level
+        .metadata.parsed.error_severity = parsed.level
       }
       if .metadata.parsed.error_severity == "info" {
-          .metadata.parsed.error_severity = "log"
+        .metadata.parsed.error_severity = "log"
       }
       .metadata.parsed.error_severity = upcase!(.metadata.parsed.error_severity)
 
@@ -920,7 +921,5 @@ sinks:
     request:
       retry_max_duration_secs: 10
     uri: 'http://analytics:4000/api/logs?source_name=cloudflare.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
-
-
 
 """

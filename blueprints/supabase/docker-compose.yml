@@ -485,9 +485,9 @@ services:
     container_name: supabase-pooler
     image: supabase/supavisor:2.5.1
 
-    ports:
-      - ${POSTGRES_PORT}:5432
-      - ${POOLER_PROXY_PORT_TRANSACTION}:6543
+    expose:
+      - ${POSTGRES_PORT}
+      - ${POOLER_PROXY_PORT_TRANSACTION}
     volumes:
       - ../files/volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro,z
     healthcheck:
@@ -512,6 +512,8 @@ services:
     restart: unless-stopped
     environment:
       PORT: 4000
+      PROXY_PORT_SESSION: ${POSTGRES_PORT}
+      PROXY_PORT_TRANSACTION: ${POOLER_PROXY_PORT_TRANSACTION}
       POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

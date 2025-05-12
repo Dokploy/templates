@@ -1,5 +1,4 @@
 # https://chibisafe.moe/guides/running-with-docker
-
 services:
   chibisafe:
     image: chibisafe/chibisafe:latest

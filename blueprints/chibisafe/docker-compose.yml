@@ -1,4 +1,8 @@
 # https://chibisafe.moe/guides/running-with-docker
+#
+# Default Credentials
+#   USERNAME: admin
+#   PASSWORD: admin
 services:
   chibisafe:
     image: chibisafe/chibisafe:latest

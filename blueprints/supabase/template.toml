@@ -311,6 +311,14 @@ filePath = "/volumes/db/init/data.sql"
 content = ""
 
 [[config.mounts]]
+filePath = "/volumes/db/_supabase.sql"
+content = """
+\\set pguser `echo "$POSTGRES_USER"`
+
+CREATE DATABASE _supabase WITH OWNER :pguser;
+"""
+
+[[config.mounts]]
 filePath = "/volumes/db/jwt.sql"
 content = """
 \\set jwt_secret `echo "$JWT_SECRET"`

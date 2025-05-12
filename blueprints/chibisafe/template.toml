@@ -2,7 +2,7 @@
 main_domain = "${domain}"
 
 [[config.domains]]
-serviceName = "chibisafe"
+serviceName = "caddy"
 port = 80
 host = "${main_domain}"
 

@@ -1,0 +1,15 @@
+{
+  "id": "wikibase-suite",
+  "name": "Wikibase Suite",
+  "version": "4.0.1",
+  "description": "Wikibase Suite is a packaging of MediaWiki with the Wikibase extensions and adjacent services.",
+  "logo": "wikibase-suite.svg",
+  "links": {
+    "github": "https://github.com/wmde/wikibase-release-pipeline",
+    "website": "https://github.com/wmde/wikibase-release-pipeline",
+    "docs": "https://github.com/wmde/wikibase-release-pipeline"
+  },
+  "tags": [
+    "database"
+  ]
+}

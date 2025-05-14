@@ -12,10 +12,11 @@
 #     variables will not take effect. For example, initial passwords,
 #     domain configurations, etc, as the set-up script will not run.
 #
-#     You will need to change seafile settings through either the web
-#     interface or the generated
-#         conf/seahub_settings.py
-#         (https://manual.seafile.com/12.0/config/seahub_settings_py)
+#     You will need to change seafile settings through the website
+#     interface and the generated config files. For example, when
+#     changing your website domain/hostname, you need to modify
+#         - seafile-data/seafile/conf/seahub_settings.py
+#         - seafile-data/seafile/nginx/conf/seafile.nginx.conf
 #     then stop before redeploying your server.
 #
 #     Alternatively, to start with a fresh install, remove the seafile

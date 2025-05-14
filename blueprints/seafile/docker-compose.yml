@@ -83,7 +83,7 @@ services:
       - SITE_ROOT=${SITE_ROOT:-/}
       - NON_ROOT=${NON_ROOT:-false}
       - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
-      - SEAFILE_LOG_TO_STDOUT=${SEAFILE_LOG_TO_STDOUT:-false}
+      - SEAFILE_LOG_TO_STDOUT=${SEAFILE_LOG_TO_STDOUT:-true}
     depends_on:
       seafile-db:
         condition: service_healthy

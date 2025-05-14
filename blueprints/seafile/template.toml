@@ -9,8 +9,8 @@ port = 80
 host = "${main_domain}"
 
 [config.env]
-SEAFILE_VOLUME = /opt/seafile/seafile-data
-SEAFILE_MYSQL_VOLUME = /opt/seafile/seafile-mysql/db
+SEAFILE_VOLUME = "/opt/seafile/seafile-data"
+SEAFILE_MYSQL_VOLUME = "/opt/seafile/seafile-mysql/db"
 
 SEAFILE_MYSQL_DB_HOST = seafile-db
 SEAFILE_MYSQL_DB_USER = seafile

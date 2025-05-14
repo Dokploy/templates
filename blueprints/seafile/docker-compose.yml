@@ -30,7 +30,7 @@ services:
       - MYSQL_LOG_CONSOLE=true
       - MARIADB_AUTO_UPGRADE=1
     volumes:
-      - "${SEAFILE_MYSQL_VOLUME:-/opt/seafile/seafile-mysql/db}:/var/lib/mysql"
+      - seafile-mysql-db:/var/lib/mysql"
     networks:
       - seafile-net
     healthcheck:
@@ -65,7 +65,7 @@ services:
   seafile:
     image: seafileltd/seafile-mc:12.0-latest
     volumes:
-      - ${SEAFILE_VOLUME:-/opt/seafile/seafile-data}:/shared
+      - seafile-data:/shared
     environment:
       - DB_HOST=${SEAFILE_MYSQL_DB_HOST:-seafile-db}
       - DB_PORT=${SEAFILE_MYSQL_DB_PORT:-3306}
@@ -100,3 +100,7 @@ services:
 networks:
   seafile-net:
     name: seafile-net
+
+volumes:
+  seafile-mysql-db:
+  seafile-data:

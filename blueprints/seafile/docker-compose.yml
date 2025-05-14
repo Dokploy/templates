@@ -1,12 +1,25 @@
 # https://manual.seafile.com/12.0/setup/setup_ce_by_docker
 #
-# NOTE: please look at the environment variable settings and tweak
-#       them prior to the first deployment!
-#
 # This Dokploy template for seafile sets the default credentials to:
 #   USERNAME: me@example.com
 #   PASSWORD: asecret
-# as configured in the Environment Variable settings.
+#
+# !!! IMPORTANT NOTE !!!
+#     Please look at the environment variable settings and tweak
+#     them prior to the first deployment!
+#
+#     If you have already deployed once, changes to some environment
+#     variables will not take effect. For example, initial passwords,
+#     domain configurations, etc, as the set-up script will not run.
+#
+#     You will need to change seafile settings through either the web
+#     interface or the generated
+#         conf/seahub_settings.py
+#         (https://manual.seafile.com/12.0/config/seahub_settings_py)
+#     then stop before redeploying your server.
+#
+#     Alternatively, to start with a fresh install, remove the seafile
+#     volume that is mounted in your host machine (e.g. at /opt/seafile).
 
 services:
   seafile-db:

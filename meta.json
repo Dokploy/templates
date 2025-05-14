@@ -673,11 +673,7 @@
       "website": "https://pterodactyl.io",
       "docs": "https://pterodactyl.io/project/introduction.html"
     },
-    "tags": [
-      "self-hosted",
-      "open-source",
-      "management"
-    ]
+    "tags": ["self-hosted", "open-source", "management"]
   },
   {
     "id": "pyrodactyl",
@@ -690,11 +686,7 @@
       "website": "https://pyrodactyl.dev",
       "docs": "https://pyrodactyl.dev/docs"
     },
-    "tags": [
-      "self-hosted",
-      "open-source",
-      "management"
-    ]
+    "tags": ["self-hosted", "open-source", "management"]
   },
   {
     "id": "influxdb",
@@ -2226,13 +2218,7 @@
       "website": "https://homebridge.io/",
       "docs": "https://github.com/homebridge/homebridge/wiki"
     },
-    "tags": [
-      "iot",
-      "homekit",
-      "internet-of-things",
-      "self-hosted",
-      "server"
-    ]
+    "tags": ["iot", "homekit", "internet-of-things", "self-hosted", "server"]
   },
   {
     "id": "homeassistant",
@@ -2303,10 +2289,19 @@
       "website": "https://qdrant.tech/",
       "docs": "https://qdrant.tech/documentation/"
     },
-    "tags": [
-      "vector-db",
-      "database",
-      "search"
-    ]
-  }  
+    "tags": ["vector-db", "database", "search"]
+  },
+  {
+    "id": "seafile",
+    "name": "Seafile",
+    "version": "12.0-latest",
+    "description": "Open source cloud storage system for file sync, share and document collaboration",
+    "logo": "seafile.svg",
+    "links": {
+      "github": "https://github.com/haiwen/seafile",
+      "website": "https://seafile.com",
+      "docs": "https://manual.seafile.com/12.0"
+    },
+    "tags": ["file-manager", "file-sharing", "storage"]
+  }
 ]

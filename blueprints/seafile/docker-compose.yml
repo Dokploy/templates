@@ -1,8 +1,8 @@
 # https://manual.seafile.com/12.0/setup/setup_ce_by_docker
 #
 # This Dokploy template for seafile sets the default credentials to:
-#   USERNAME: me@example.com
-#   PASSWORD: asecret
+#   USERNAME: admin@example.com
+#   PASSWORD: <SECRET GENERATED IN ENVIRONMENT VARIABLES>
 #
 # !!! IMPORTANT NOTE !!!
 #     Please look at the environment variable settings and tweak

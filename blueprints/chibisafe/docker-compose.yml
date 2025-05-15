@@ -10,8 +10,6 @@ services:
       - chibinet
     environment:
       - BASE_API_URL=http://chibisafe_server:8000
-    expose:
-      - 8001
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--spider", "--quiet", "http://127.0.0.1:8001"]
@@ -28,8 +26,6 @@ services:
       - database:/app/database:rw
       - uploads:/app/uploads:rw
       - logs:/app/logs:rw
-    expose:
-      - 8000
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--spider", "--quiet", "http://127.0.0.1:8000/api/health"]

@@ -1,4 +1,4 @@
-# https://chibisafe.moe/guides/running-with-docker
+# https://chibisafe.app/docs/intro
 #
 # Default Credentials
 #   USERNAME: admin
@@ -28,7 +28,14 @@ services:
       - logs:/app/logs:rw
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--spider", "--quiet", "http://127.0.0.1:8000/api/health"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--spider",
+          "--quiet",
+          "http://127.0.0.1:8000/api/health",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3

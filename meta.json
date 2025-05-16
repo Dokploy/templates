@@ -2317,8 +2317,8 @@
     "logo": "chibisafe.svg",
     "links": {
       "github": "https://github.com/chibisafe/chibisafe",
-      "website": "https://chibisafe.moe",
-      "docs": "https://chibisafe.moe/guides"
+      "website": "https://chibisafe.app",
+      "docs": "https://chibisafe.app/docs/intro"
     },
     "tags": ["media system", "storage", "file-sharing"]
   }

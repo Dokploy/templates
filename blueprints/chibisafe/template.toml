@@ -11,7 +11,7 @@ host = "${main_domain}"
 filePath = "./Caddyfile"
 content = """
 # chibisafe/Caddyfile
-# https://chibisafe.moe/guides/running-with-docker
+# https://chibisafe.app/docs/installation/running-with-docker
 {$BASE_URL} {
 	route {
 		file_server * {

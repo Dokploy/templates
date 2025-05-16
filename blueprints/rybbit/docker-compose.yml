@@ -7,9 +7,9 @@ services:
       - clickhouse_data:/var/lib/clickhouse
       - clickhouse_config:/etc/clickhouse-server/config.d
     environment:
-      - CLICKHOUSE_DB=${CLICKHOUSE_DB:-analytics}
-      - CLICKHOUSE_USER=${CLICKHOUSE_USER:-default}
-      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-frog}
+      - CLICKHOUSE_DB=${CLICKHOUSE_DB}
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
     healthcheck:
       test:
         [
@@ -31,9 +31,9 @@ services:
   rybbit_postgres:
     image: postgres:17.4
     environment:
-      - POSTGRES_USER=${POSTGRES_USER:-frog}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-frog}
-      - POSTGRES_DB=${POSTGRES_DB:-analytics}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -50,13 +50,13 @@ services:
     environment:
       - NODE_ENV=production
       - CLICKHOUSE_HOST=http://rybbit_clickhouse:8123
-      - CLICKHOUSE_DB=${CLICKHOUSE_DB:-analytics}
-      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-frog}
+      - CLICKHOUSE_DB=${CLICKHOUSE_DB}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
       - POSTGRES_HOST=rybbit_postgres
       - POSTGRES_PORT=5432
-      - POSTGRES_DB=${POSTGRES_DB:-analytics}
-      - POSTGRES_USER=${POSTGRES_USER:-frog}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-frog}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - BASE_URL=${BASE_URL}
       - DISABLE_SIGNUP=${DISABLE_SIGNUP}

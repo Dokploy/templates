@@ -23,7 +23,7 @@
       "docs": "https://github.com/Safe3/openresty-manager"
     },
     "logo": "logo.svg",
-    "tags": ["proxy", "security", "self-hosted", "nginx"]
+    "tags": ["web", "proxy", "security", "self-hosted", "openresty", "nginx"]
   },
   {
     "id": "appwrite",

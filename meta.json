@@ -2308,5 +2308,18 @@
       "database",
       "search"
     ]
+  },  
+  {
+    "id": "rybbit",
+    "name": "Rybbit",
+    "version": "latest",
+    "description": "Open-source and privacy-friendly alternative to Google Analytics that is 10x more intuitive",
+    "logo": "rybbit.png",
+    "links": {
+      "github": "https://github.com/rybbit-io/rybbit",
+      "website": "https://rybbit.io",
+      "docs": "https://www.rybbit.io/docs"
+    },
+    "tags": ["analytics"]
   }  
 ]

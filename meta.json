@@ -13,6 +13,19 @@
     "tags": ["database", "postgres", "self-hosted", "server"]
   },
   {
+    "id": "openresty-manager",
+    "name": "OpenResty Manager",
+    "version": "1.1.3",
+    "description": "The easiest using, powerful and beautiful OpenResty Manager (Nginx Enhanced Version) , open source alternative to OpenResty Edge, which can enable you to easily reverse proxy your websites with security running at home or internet, including Access Control, HTTP Flood Protection, Free SSL, without having to know too much about OpenResty or Let's Encrypt.",
+    "links": {
+      "github": "https://github.com/Safe3/openresty-manager",
+      "website": "https://om.uusec.com/",
+      "docs": "https://github.com/Safe3/openresty-manager"
+    },
+    "logo": "logo.svg",
+    "tags": ["web", "proxy", "security", "self-hosted", "openresty", "nginx"]
+  },
+  {
     "id": "appwrite",
     "name": "Appwrite",
     "version": "1.6.0",
@@ -55,7 +68,7 @@
     "id": "pocketbase",
     "name": "PocketBase",
     "description": "Open Source backend in 1 file",
-    "version": "v0.27.2",
+    "version": "v0.28.0",
     "logo": "logo.svg",
     "links": {
       "github": "https://github.com/pocketbase/pocketbase",
@@ -2112,6 +2125,19 @@
     "tags": ["documentation", "development", "collaboration"]
   },
   {
+    "id": "colanode",
+    "name": "Colanode Server",
+    "version": "v0.1.6",
+    "description": "Open-source and local-first Slack and Notion alternative that puts you in control of your data",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/colanode/colanode",
+      "website": "https://colanode.com",
+      "docs": "https://colanode.com/docs/"
+    },
+    "tags": ["documentation", "knowledge-base", "collaboration"]
+  },
+  {
     "id": "collabora-office",
     "name": "Collabora Office",
     "version": "latest",
@@ -2279,6 +2305,19 @@
     "tags": ["hosting", "self-hosted", "development"]
   },
   {
+    "id": "bolt.diy",
+    "name": "bolt.diy",
+    "version": "latest",
+    "description": "Prompt, run, edit, and deploy full-stack web applications using any LLM you want!",
+    "logo": "logo.jpg",
+    "links": {
+      "github": "https://github.com/stackblitz-labs/bolt.diy",
+      "website": "stackblitz-labs.github.io/bolt.diy/",
+      "docs": "https://stackblitz-labs.github.io/bolt.diy/"
+    },
+    "tags": ["ai", "self-hosted", "development", "chatbot", "ide", "llm"]
+  },
+  {
     "id": "qdrant",
     "name": "Qdrant",
     "version": "latest",
@@ -2289,7 +2328,54 @@
       "website": "https://qdrant.tech/",
       "docs": "https://qdrant.tech/documentation/"
     },
-    "tags": ["vector-db", "database", "search"]
+    "tags": [
+      "vector-db",
+      "database",
+      "search"
+    ]
+  },
+  {
+    "id": "trmnl-byos-laravel",
+    "name": "TRMNL BYOS Laravel",
+    "version": "0.3.2",
+    "description": "TRMNL BYOS Laravel is a self-hosted application to manage TRMNL e-ink devices.",
+    "logo": "byos-laravel.svg",
+    "links": {
+      "github": "https://github.com/usetrmnl/byos_laravel",
+      "website": "https://docs.usetrmnl.com/go/diy/byos",
+      "docs": "https://github.com/usetrmnl/byos_laravel/blob/main/README.md"
+    },
+    "tags": [
+      "e-ink"
+    ]
+  },  
+  {
+
+    "id": "chibisafe",
+    "name": "Chibisafe",
+    "version": "latest",
+    "description": "A beautiful and performant vault to save all your files in the cloud.",
+    "logo": "chibisafe.svg",
+    "links": {
+      "github": "https://github.com/chibisafe/chibisafe",
+      "website": "https://chibisafe.app",
+      "docs": "https://chibisafe.app/docs/intro"
+    },
+    "tags": ["media system", "storage", "file-sharing"]
+  },
+  {
+
+    "id": "rybbit",
+    "name": "Rybbit",
+    "version": "latest",
+    "description": "Open-source and privacy-friendly alternative to Google Analytics that is 10x more intuitive",
+    "logo": "rybbit.png",
+    "links": {
+      "github": "https://github.com/rybbit-io/rybbit",
+      "website": "https://rybbit.io",
+      "docs": "https://www.rybbit.io/docs"
+    },
+    "tags": ["analytics"]
   },
   {
     "id": "seafile",

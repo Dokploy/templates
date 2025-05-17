@@ -18,9 +18,6 @@
 #         - seafile-data/seafile/conf/seahub_settings.py
 #         - seafile-data/seafile/nginx/conf/seafile.nginx.conf
 #     then stop before redeploying your server.
-#
-#     Alternatively, to start with a fresh install, remove the seafile
-#     volume that is mounted in your host machine (e.g. at /opt/seafile).
 
 services:
   seafile-db:

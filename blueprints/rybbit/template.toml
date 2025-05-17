@@ -10,7 +10,7 @@ port = 80
 host = "${main_domain}"
 
 [config.env]
-BASE_URL = "https://${main_domain}"
+BASE_URL = "http://${main_domain}"
 BETTER_AUTH_SECRET = "${better_auth_secret}"
 DISABLE_SIGNUP = "false"
 CLICKHOUSE_DB = "analytics"

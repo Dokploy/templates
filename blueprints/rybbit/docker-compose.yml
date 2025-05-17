@@ -1,0 +1,112 @@
+# https://www.rybbit.io/docs/self-hosting-advanced
+
+services:
+  rybbit_clickhouse:
+    image: clickhouse/clickhouse-server:25.4.2
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - clickhouse_config:/etc/clickhouse-server/config.d
+    environment:
+      - CLICKHOUSE_DB=${CLICKHOUSE_DB}
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:8123/ping",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - internal
+
+  rybbit_postgres:
+    image: postgres:17.4
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  rybbit_backend:
+    image: ghcr.io/rybbit-io/rybbit-backend:latest
+    environment:
+      - NODE_ENV=production
+      - CLICKHOUSE_HOST=http://rybbit_clickhouse:8123
+      - CLICKHOUSE_DB=${CLICKHOUSE_DB}
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+      - POSTGRES_HOST=rybbit_postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - BASE_URL=${BASE_URL}
+      - DISABLE_SIGNUP=${DISABLE_SIGNUP}
+    depends_on:
+      rybbit_clickhouse:
+        condition: service_healthy
+      rybbit_postgres:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - internal
+      - web
+
+  rybbit_client:
+    image: ghcr.io/rybbit-io/rybbit-client:latest
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_BACKEND_URL=${BASE_URL}
+      - NEXT_PUBLIC_DISABLE_SIGNUP=${DISABLE_SIGNUP}
+    depends_on:
+      - rybbit_backend
+    restart: unless-stopped
+    networks:
+      - internal
+      - web
+
+  rybbit_caddy:
+    image: caddy:2-alpine
+    networks:
+      - web
+    volumes:
+      - ../files/Caddyfile:/etc/caddy/Caddyfile:ro
+    environment:
+      - BASE_URL=":80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "http://127.0.0.1:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  clickhouse_data:
+  clickhouse_config:
+  postgres_data:
+
+networks:
+  web:
+    driver: bridge
+  internal:
+    driver: bridge

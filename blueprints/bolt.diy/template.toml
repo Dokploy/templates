@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "app"
+port = 5173
+host = "${main_domain}"
+
+[config.env]
+GROQ_API_KEY = ""
+HuggingFace_API_KEY = ""
+OPENAI_API_KEY = ""
+ANTHROPIC_API_KEY = ""
+OPEN_ROUTER_API_KEY = ""
+GOOGLE_GENERATIVE_AI_API_KEY = ""
+OLLAMA_API_BASE_URL = "http://127.0.0.1:11434"
+XAI_API_KEY = ""
+TOGETHER_API_KEY = ""
+TOGETHER_API_BASE_URL = ""
+AWS_BEDROCK_CONFIG = ""
+DEFAULT_NUM_CTX = 32768

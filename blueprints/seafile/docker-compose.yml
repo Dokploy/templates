@@ -13,11 +13,15 @@
 #     domain configurations, etc, as the set-up script will not run.
 #
 #     You will need to change seafile settings through the website
-#     interface and the generated config files. For example, when
-#     changing your website domain/hostname, you need to modify
-#         - seafile-data/seafile/conf/seahub_settings.py
-#         - seafile-data/seafile/nginx/conf/seafile.nginx.conf
-#     then stop before redeploying your server.
+#     interface and the generated config files.
+#     For example, when changing your website domain/hostname, you need
+#     to update the following in the seafile docker container:
+#         - /shared/nginx/conf/seafile.nginx.conf 
+#             - server_name
+#         - /shared/seafile/conf/seahub_settings.py
+#             - SERVICE_URL
+#             - FILE_SERVER_ROOT
+#     then stop and re-deploy your server.
 
 services:
   seafile-db:

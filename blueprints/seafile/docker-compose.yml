@@ -9,18 +9,7 @@
 #     them prior to the first deployment!
 #
 #     If you have already deployed once, changes to some environment
-#     variables may not take effect. For example, initial passwords,
-#     domain configurations, etc, as the set-up script will not run.
-#
-#     For example, when changing your website domain/hostname, you may
-#     need to update the following after opening a terminal in your
-#     seafile docker container:
-#         - /shared/nginx/conf/seafile.nginx.conf 
-#             - server_name
-#         - /shared/seafile/conf/seahub_settings.py
-#             - SERVICE_URL
-#             - FILE_SERVER_ROOT
-#     then stop and re-deploy seafile.
+#     variables may not take effect. For example, initial passwords.
 
 services:
   seafile-db:

@@ -4,24 +4,23 @@
 #   USERNAME: admin@example.com
 #   PASSWORD: <SECRET GENERATED IN ENVIRONMENT VARIABLES>
 #
-# !!! IMPORTANT NOTE !!!
+# !!! IMPORTANT !!!
 #     Please look at the environment variable settings and tweak
 #     them prior to the first deployment!
 #
 #     If you have already deployed once, changes to some environment
-#     variables will not take effect. For example, initial passwords,
+#     variables may not take effect. For example, initial passwords,
 #     domain configurations, etc, as the set-up script will not run.
 #
-#     You will need to change seafile settings through the website
-#     interface and the generated config files.
-#     For example, when changing your website domain/hostname, you need
-#     to update the following in the seafile docker container:
+#     For example, when changing your website domain/hostname, you may
+#     need to update the following after opening a terminal in your
+#     seafile docker container:
 #         - /shared/nginx/conf/seafile.nginx.conf 
 #             - server_name
 #         - /shared/seafile/conf/seahub_settings.py
 #             - SERVICE_URL
 #             - FILE_SERVER_ROOT
-#     then stop and re-deploy your server.
+#     then stop and re-deploy seafile.
 
 services:
   seafile-db:

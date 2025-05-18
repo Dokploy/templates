@@ -2,7 +2,6 @@ services:
   openresty-manager:
    image: uusec/openresty-manager:latest
    restart: always
-   network_mode: host
    volumes:
      - /etc/localtime:/etc/localtime:ro
      - /etc/resolv.conf:/etc/resolv.conf:ro

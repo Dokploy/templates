@@ -2390,5 +2390,23 @@
       "docs": "https://www.rybbit.io/docs"
     },
     "tags": ["analytics"]
+  },
+  {
+    "id": "flagsmith",
+    "name": "Flagsmith",
+    "version": "2.177.1",
+    "description": "Flagsmith is an open-source feature flagging and remote config service.",
+    "logo": "flagsmith.png",
+    "links": {
+      "github": "https://github.com/Flagsmith/flagsmith",
+      "website": "https://www.flagsmith.com/",
+      "docs": "https://docs.flagsmith.com/"
+    },
+    "tags": [
+      "feature-flag",
+      "feature-management",
+      "feature-toggle",
+      "remote-configuration"
+    ]
   }  
 ]

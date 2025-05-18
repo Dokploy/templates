@@ -1,0 +1,31 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "server"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+SERVER_NAME = "My Colanode"
+SERVER_AVATAR = "https://colanode.com/assets/logo-black.png"
+
+POSTGRES_USER = "colanode_user"
+POSTGRES_PASSWORD = "your_postgres_password"
+POSTGRES_DB = "colanode_db"
+
+VALKEY_PASSWORD = "your_valkey_password"
+
+MINIO_ROOT_USER = "admin"
+MINIO_ROOT_PASSWORD = "your_minio_password"
+
+SMTP_ENABLED = "false"
+SMTP_HOST = "smtp.gmail.com"
+SMTP_PORT = "587"
+SMTP_USER = "your_smtp_username"
+SMTP_PASSWORD = "your_smtp_password"
+SMTP_EMAIL_FROM = "your_email@example.com"
+SMTP_EMAIL_FROM_NAME = "Colanode"

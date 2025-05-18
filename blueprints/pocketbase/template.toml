@@ -7,5 +7,5 @@ mounts = []
 
 [[config.domains]]
 serviceName = "pocketbase"
-port = 80
+port = 8090
 host = "${main_domain}"

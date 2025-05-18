@@ -104,6 +104,19 @@
     "tags": ["monitoring"]
   },
   {
+    "id": "stalwart",
+    "name": "Stalwart",
+    "version": "latest",
+    "description": "Stalwart Mail Server is an open-source mail server solution with JMAP, IMAP4, POP3, and SMTP support and a wide range of modern features. It is written in Rust and designed to be secure, fast, robust and scalable.",
+    "logo": "stalwart.svg",
+    "links": {
+      "github": "https://github.com/stalwartlabs/mail-server",
+      "website": "https://stalw.art/",
+      "docs": "https://stalw.art/docs/"
+    },
+    "tags": ["email", "smtp", "jmap", "imap4", "pop3", "self-hosted", "mail-server"]
+  },
+  {
     "id": "datalens",
     "name": "DataLens",
     "version": "1.23.0",

@@ -1154,7 +1154,7 @@
   {
     "id": "logto",
     "name": "Logto",
-    "version": "1.22.0",
+    "version": "1.27.0",
     "description": "Logto is an open-source Identity and Access Management (IAM) platform designed to streamline Customer Identity and Access Management (CIAM) and Workforce Identity Management.",
     "logo": "logto.png",
     "links": {

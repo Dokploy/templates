@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   freescout-db:
     image: mariadb:10.6

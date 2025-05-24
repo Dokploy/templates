@@ -55,7 +55,7 @@ services:
       # EMAIL_PORT: 587 # optional
       # EMAIL_USE_TLS: 'true' # optional
     ports:
-      - 8000:8000
+      - 8000
     depends_on:
       postgres:
         condition: service_healthy

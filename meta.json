@@ -2396,6 +2396,19 @@
     "tags": ["analytics"]
   },
   {
+    "id": "seafile",
+    "name": "Seafile",
+    "version": "12.0-latest",
+    "description": "Open source cloud storage system for file sync, share and document collaboration",
+    "logo": "seafile.svg",
+    "links": {
+      "github": "https://github.com/haiwen/seafile",
+      "website": "https://seafile.com",
+      "docs": "https://manual.seafile.com/12.0"
+    },
+    "tags": ["file-manager", "file-sharing", "storage"]
+  },
+  {
     "id": "flagsmith",
     "name": "Flagsmith",
     "version": "2.177.1",

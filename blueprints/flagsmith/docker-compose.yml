@@ -4,10 +4,6 @@
 volumes:
   pgdata:
 
-networks:
-  default:
-    name: dokploy-network
-    external: true
 
 services:
   postgres:

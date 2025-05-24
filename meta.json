@@ -13,9 +13,22 @@
     "tags": ["database", "postgres", "self-hosted", "server"]
   },
   {
+    "id": "freescout",
+    "name": "FreeScout",
+    "version": "latest",
+    "description": "FreeScout is a free open source help desk and shared inbox system. It's a self-hosted alternative to HelpScout, Zendesk, and similar services that allows you to manage customer communications through email and a clean web interface. FreeScout makes it easy to organize support requests, track customer conversations, and collaborate with your team.",
+    "links": {
+      "github": "https://github.com/freescout-helpdesk/freescout",
+      "website": "https://freescout.net/",
+      "docs": "https://github.com/freescout-helpdesk/freescout/wiki/Installation-Guide"
+    },
+    "logo": "freescout.svg",
+    "tags": ["helpdesk", "support", "email", "customer-service", "self-hosted"]
+  },
+  {
     "id": "openresty-manager",
     "name": "OpenResty Manager",
-    "version": "1.1.3",
+    "version": "1.2.0",
     "description": "The easiest using, powerful and beautiful OpenResty Manager (Nginx Enhanced Version) , open source alternative to OpenResty Edge, which can enable you to easily reverse proxy your websites with security running at home or internet, including Access Control, HTTP Flood Protection, Free SSL, without having to know too much about OpenResty or Let's Encrypt.",
     "links": {
       "github": "https://github.com/Safe3/openresty-manager",
@@ -115,6 +128,19 @@
       "docs": "https://grafana.com/docs/"
     },
     "tags": ["monitoring"]
+  },
+  {
+    "id": "stalwart",
+    "name": "Stalwart",
+    "version": "latest",
+    "description": "Stalwart Mail Server is an open-source mail server solution with JMAP, IMAP4, POP3, and SMTP support and a wide range of modern features. It is written in Rust and designed to be secure, fast, robust and scalable.",
+    "logo": "stalwart.svg",
+    "links": {
+      "github": "https://github.com/stalwartlabs/mail-server",
+      "website": "https://stalw.art/",
+      "docs": "https://stalw.art/docs/"
+    },
+    "tags": ["email", "smtp", "jmap", "imap4", "pop3", "self-hosted", "mail-server"]
   },
   {
     "id": "datalens",
@@ -1146,7 +1172,7 @@
   {
     "id": "logto",
     "name": "Logto",
-    "version": "1.22.0",
+    "version": "1.27.0",
     "description": "Logto is an open-source Identity and Access Management (IAM) platform designed to streamline Customer Identity and Access Management (CIAM) and Workforce Identity Management.",
     "logo": "logto.png",
     "links": {
@@ -2328,11 +2354,7 @@
       "website": "https://qdrant.tech/",
       "docs": "https://qdrant.tech/documentation/"
     },
-    "tags": [
-      "vector-db",
-      "database",
-      "search"
-    ]
+    "tags": ["vector-db", "database", "search"]
   },
   {
     "id": "trmnl-byos-laravel",
@@ -2345,12 +2367,9 @@
       "website": "https://docs.usetrmnl.com/go/diy/byos",
       "docs": "https://github.com/usetrmnl/byos_laravel/blob/main/README.md"
     },
-    "tags": [
-      "e-ink"
-    ]
-  },  
+    "tags": ["e-ink"]
+  },
   {
-
     "id": "chibisafe",
     "name": "Chibisafe",
     "version": "latest",
@@ -2364,7 +2383,6 @@
     "tags": ["media system", "storage", "file-sharing"]
   },
   {
-
     "id": "rybbit",
     "name": "Rybbit",
     "version": "latest",
@@ -2389,5 +2407,23 @@
       "docs": "https://manual.seafile.com/12.0"
     },
     "tags": ["file-manager", "file-sharing", "storage"]
-  }
+  },
+  {
+    "id": "flagsmith",
+    "name": "Flagsmith",
+    "version": "2.177.1",
+    "description": "Flagsmith is an open-source feature flagging and remote config service.",
+    "logo": "flagsmith.png",
+    "links": {
+      "github": "https://github.com/Flagsmith/flagsmith",
+      "website": "https://www.flagsmith.com/",
+      "docs": "https://docs.flagsmith.com/"
+    },
+    "tags": [
+      "feature-flag",
+      "feature-management",
+      "feature-toggle",
+      "remote-configuration"
+    ]
+  }  
 ]

@@ -70,7 +70,7 @@ services:
       DJANGO_ALLOWED_HOSTS: "*"
       PROMETHEUS_ENABLED: "true"
     ports:
-      - 8001:8000
+      - 8000
     depends_on:
       - flagsmith
     command: run-task-processor

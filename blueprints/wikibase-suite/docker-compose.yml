@@ -1,0 +1,200 @@
+name: wbs-deploy
+
+services:
+  # --------------------------------------------------
+  # A. CORE WIKIBASE SUITE SERVICES
+  # --------------------------------------------------
+
+  wikibase:
+    image: wikibase/wikibase:4
+    depends_on:
+      mysql:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wikibase-router.rule=Host(`${WIKIBASE_PUBLIC_HOST}`) && !PathPrefix(`/tools`)"
+    volumes:
+      - ../files/config:/config
+      - ../files/config/extensions:/var/www/html/extensions/extensions
+      - ../files/config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php
+      - wikibase-image-data:/var/www/html/images
+      - quickstatements-data:/quickstatements/data
+    environment:
+      MW_ADMIN_NAME: ${MW_ADMIN_NAME}
+      MW_ADMIN_PASS: ${MW_ADMIN_PASS}
+      MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
+      MW_WG_SERVER: https://${WIKIBASE_PUBLIC_HOST}
+      DB_SERVER: mysql:3306
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      ELASTICSEARCH_HOST: elasticsearch
+      QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
+
+    healthcheck:
+      test: curl --silent --fail localhost/wiki/Main_Page
+      interval: 10s
+      start_period: 5m
+
+  wikibase-jobrunner:
+    image: wikibase/wikibase:4
+    command: /jobrunner-entrypoint.sh
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes_from:
+      - wikibase
+
+  mysql:
+    image: mariadb:10.11
+    restart: unless-stopped
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    healthcheck:
+      test: healthcheck.sh --connect --innodb_initialized
+      start_period: 1m
+      interval: 20s
+      timeout: 5s
+
+  # --------------------------------------------------
+  # B. EXTRA WIKIBASE SUITE SERVICES
+  # --------------------------------------------------
+
+  # To disable Elasticsearch and use default MediaWiki search functionality remove
+  # the elasticsearch service, and the MW_ELASTIC_* vars from wikibase_variables
+  # at the top of this file.
+  elasticsearch:
+    image: wikibase/elasticsearch:1
+    restart: unless-stopped
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
+    healthcheck:
+      test: curl --silent --fail localhost:9200
+      interval: 10s
+      start_period: 2m
+
+  wdqs:
+    image: wikibase/wdqs:2
+    command: /runBlazegraph.sh
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: unless-stopped
+    # Set number of files ulimit high enough, otherwise blazegraph will abort with:
+    # library initialization failed - unable to allocate file descriptor table - out of memory
+    # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
+    volumes:
+      - wdqs-data:/wdqs/data
+    healthcheck:
+      test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
+      interval: 10s
+      start_period: 2m
+    labels:
+      - "traefik.enable=true"
+      # Define router rules for WDQS service, including limits to HTTP methods
+      - "traefik.http.routers.wdqs-router.rule=Host(`${WDQS_PUBLIC_HOST}`) && PathPrefix(`/sparql`) && (Method(`GET`) || Method(`OPTIONS`) || Method(`POST`))"
+      # Add prefix to path before forwarding to upstream service
+      - "traefik.http.middlewares.wdqs-prefix.addprefix.prefix=/bigdata/namespace/wdq/"
+      # Announce limited HTTP methods in preflight requests
+      # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods
+      - "traefik.http.middlewares.wdqs-headers.headers.accesscontrolallowmethods=GET,OPTIONS,POST"
+      # Announce Accept header can lead to varying responses
+      # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary
+      - "traefik.http.middlewares.wdqs-headers.headers.customresponseheaders.VARY=Accept"
+      # WDQS/blazegraph config headers
+      # https://github.com/blazegraph/database/commit/fcecfd46d616735b651ccebf44116d6702f2b545
+      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-READ-ONLY=yes"
+      # https://github.com/blazegraph/database/wiki/REST_API#query
+      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-MAX-QUERY-MILLIS=300000"
+      # CORS https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin#sect
+      # Allow unauthenticated requests from any origin
+      - "traefik.http.middlewares.wdqs-cors-headers.headers.accesscontrolallowheaders=*"
+      # Define middleware for rate limiting
+      # https://doc.traefik.io/traefik-hub/api-gateway/reference/routing/http/middlewares/ref-rate-limit#rate-and-burst
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.burst=30"
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.average=60"
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.period=1m"
+      # Apply middlewares to the wdqs router
+      - "traefik.http.routers.wdqs-router.middlewares=wdqs-prefix,wdqs-headers,wdqs-cors-headers,wdqs-rate-limit"
+
+  wdqs-updater:
+    image: wikibase/wdqs:2
+    command: /runUpdate.sh
+    depends_on:
+      wdqs:
+        condition: service_healthy
+    restart: unless-stopped
+    # Set number of files ulimit high enough, otherwise blazegraph will abort with:
+    # library initialization failed - unable to allocate file descriptor table - out of memory
+    # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
+    environment:
+      WIKIBASE_CONCEPT_URI: https://${WIKIBASE_PUBLIC_HOST}
+
+  wdqs-frontend:
+    image: wikibase/wdqs-frontend:2
+    restart: unless-stopped
+    volumes:
+      - ../files/config:/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wdqs-frontend-router.rule=Host(`${WDQS_PUBLIC_HOST}`) && !PathPrefix(`/sparql`)"
+    environment:
+      WDQS_PUBLIC_URL: https://${WDQS_PUBLIC_HOST}/sparql
+      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/w/api.php
+    healthcheck:
+      test: curl --silent --fail localhost
+      interval: 10s
+      start_period: 2m
+
+  quickstatements:
+    image: wikibase/quickstatements:1
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - quickstatements-data:/quickstatements/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.quickstatements-router.rule=Host(`${WIKIBASE_PUBLIC_HOST}`) && PathPrefix(`/tools/quickstatements`)"
+      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.regex=/tools/quickstatements$"
+      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.replacement=/tools/quickstatements/"
+      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.permanent=true"
+      - "traefik.http.middlewares.quickstatements-stripprefix.stripprefix.prefixes=/tools/quickstatements"
+      - "traefik.http.routers.quickstatements-router.middlewares=quickstatements-redirectregex,quickstatements-stripprefix"
+    environment:
+      QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
+      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
+    healthcheck:
+      test: curl --silent --fail localhost
+      interval: 10s
+      start_period: 2m
+
+volumes:
+  # A. CORE WIKIBASE SUITE SERVICES DATA
+  wikibase-image-data:
+  mysql-data:
+  # B. EXTRA WIKIBASE SUITE SERVICES DATA
+  wdqs-data:
+  elasticsearch-data:
+  quickstatements-data:

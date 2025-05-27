@@ -3,7 +3,7 @@ main_domain = "${domain}"
 postgres_password = "${password:32}"
 dashboard_password = "${password:32}"
 logflare_api_key = "${password:32}"
-container_name_prefix = "${APP_NAME}-supabase"
+container_name_prefix = "supabase-${hash:4}"
 
 [[config.domains]]
 serviceName = "kong"

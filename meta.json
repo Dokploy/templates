@@ -67,8 +67,8 @@
   {
     "id": "supabase",
     "name": "SupaBase",
-    "version": "1.25.04 / dokploy >= 0.21.8",
-    "description": "The open source Firebase alternative. Supabase gives you a dedicated Postgres database to build your web, mobile, and AI applications. This require at least version 0.21.8 of dokploy.",
+    "version": "1.25.04 / dokploy >= 0.22.5",
+    "description": "The open source Firebase alternative. Supabase gives you a dedicated Postgres database to build your web, mobile, and AI applications. This require at least version 0.22.5 of dokploy.",
     "links": {
       "github": "https://github.com/supabase/supabase",
       "website": "https://supabase.com/",
@@ -76,13 +76,13 @@
     },
     "logo": "supabase.svg",
     "tags": ["database", "firebase", "postgres"],
-    "dokploy_version": ">=0.21.8"
+    "dokploy_version": ">=0.22.5"
   },
   {
-    "id": "pre0.21.8-supabase",
+    "id": "pre0.22.5-supabase",
     "name": "SupaBase",
-    "version": "1.25.04 / dokploy < 0.21.8",
-    "description": "The open source Firebase alternative. Supabase gives you a dedicated Postgres database to build your web, mobile, and AI applications. This is for dokploy version < 0.21.8.",
+    "version": "1.25.04 / dokploy < 0.22.5",
+    "description": "The open source Firebase alternative. Supabase gives you a dedicated Postgres database to build your web, mobile, and AI applications. This is for dokploy version < 0.22.5.",
     "links": {
       "github": "https://github.com/supabase/supabase",
       "website": "https://supabase.com/",
@@ -90,7 +90,7 @@
     },
     "logo": "supabase.svg",
     "tags": ["database", "firebase", "postgres"],
-    "dokploy_version": "<0.21.8"
+    "dokploy_version": "<0.22.5"
   },
   {
     "id": "pocketbase",

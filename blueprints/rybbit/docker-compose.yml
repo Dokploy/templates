@@ -94,7 +94,14 @@ services:
       - BASE_URL=":80"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--spider", "--quiet", "http://127.0.0.1:80"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--spider",
+          "--no-verbose",
+          "http://127.0.0.1:2019/metrics",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3

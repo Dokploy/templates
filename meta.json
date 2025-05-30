@@ -639,6 +639,19 @@
     "tags": ["self-hosted", "storage"]
   },
   {
+    "id": "gitea-mirror",
+    "name": "Gitea Mirror",
+    "version": "v2.11.2",
+    "description": "Gitea Mirror is a modern web app for automatically mirroring repositories from GitHub to your self-hosted Gitea instance. It features a user-friendly interface to sync public, private, or starred GitHub repos, mirror entire organizations with structure preservation, and optionally mirror issues and labels. The application includes smart filtering, detailed logs, and scheduled automatic mirroring.",
+    "logo": "gitea-mirror.png",
+    "links": {
+      "github": "https://github.com/arunavo4/gitea-mirror",
+      "website": "https://github.com/arunavo4/gitea-mirror",
+      "docs": "https://github.com/arunavo4/gitea-mirror#readme"
+    },
+    "tags": ["git", "mirror", "github", "gitea", "self-hosted", "automation"]
+  },
+  {
     "id": "roundcube",
     "name": "Roundcube",
     "version": "1.6.9",

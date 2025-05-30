@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "gitea-mirror"
+port = 4_321
+host = "${main_domain}"
+
+[config.env]
+JWT_SECRET = "${base64:64}"

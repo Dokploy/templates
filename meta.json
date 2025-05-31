@@ -2427,5 +2427,18 @@
       "feature-toggle",
       "remote-configuration"
     ]
+  },
+  {
+    "id": "docuseal",
+    "name": "Docuseal",
+    "version": "latest",
+    "description": "Docuseal is a self-hosted document management system.",
+    "logo": "docuseal.png",
+    "links": {
+      "github": "https://github.com/docusealco/docuseal",
+      "website": "https://www.docuseal.com/",
+      "docs": "https://www.docuseal.com/"
+    },
+    "tags": ["document-signing"]
   }
 ]

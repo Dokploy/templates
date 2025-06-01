@@ -15,7 +15,6 @@ serviceName = "rybbit_client"
 port = 3002
 host = "${main_domain}"
 
-
 [config.env]
 BASE_URL = "http://${main_domain}"
 BETTER_AUTH_SECRET = "${better_auth_secret}"

@@ -3,8 +3,6 @@ services:
     image: docuseal/docuseal:latest
     volumes:
       - docuseal:/data/docuseal
-    ports:
-      - 3000
     depends_on:
       docu-postgres:
         condition: service_healthy
@@ -28,7 +26,18 @@ services:
       retries: 5
     networks:
       - dokploy-network
+      
+  docu-redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - docuseal-redis-data:/data
+      
+networks:
+  dokploy-network:
+    external: true
     
 volumes:
-  docuseal-db:
   docuseal:
+  docuseal-db:
+  docuseal-redis-data:

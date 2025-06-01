@@ -1,33 +1,33 @@
 services:
-  postgres:
-    image: postgres:17
+  app:
+    image: docuseal/docuseal:latest
+    volumes:
+      - docuseal:/data/docuseal
+    ports:
+      - 3000
+    depends_on:
+      docu-postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-docuseal}:${POSTGRES_PASSWORD}@docu-postgres:5432/${POSTGRES_DB:-docuseal}
+      
+  docu-postgres:
+    image: postgres:latest
     volumes:
       - docuseal-db:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-docuseal} -d ${POSTGRES_DB:-docuseal}"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
     networks:
       - dokploy-network
-  app:
-    image: docuseal/docuseal:latest
-    depends_on:
-      postgres:
-        condition: service_healthy
-    volumes:
-      - docuseal:/data/docuseal
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB:-docuseal}
-      
-networks:
-  dokploy-network:
-    external: true
     
 volumes:
   docuseal-db:

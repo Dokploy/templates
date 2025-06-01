@@ -1,5 +1,13 @@
 # https://www.rybbit.io/docs/self-hosting-advanced
 
+# NOTE: there are two domain entries created:
+# - rybbit_backend (port 3001, path /api), 
+# - rybbit_client (port 3002, path /)
+#
+# They should share the same base URL for cookies
+# to function correctly. The `BASE_URL` environment
+# variable should also be set accordingly.
+
 services:
   rybbit_clickhouse:
     image: clickhouse/clickhouse-server:25.4.2

@@ -31,9 +31,6 @@ services:
     volumes:
       - docuseal-redis-data:/data
       
-networks:
-  dokploy-network:
-    external: true
     
 volumes:
   docuseal:

@@ -10,6 +10,6 @@ env = [
 mounts = []
 
 [[config.domains]]
-serviceName = "docuseal"
+serviceName = "app"
 port = 3_000
 host = "${main_domain}"

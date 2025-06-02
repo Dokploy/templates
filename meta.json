@@ -41,7 +41,7 @@
   {
     "id": "appwrite",
     "name": "Appwrite",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "description": "Appwrite is an end-to-end backend server for Web, Mobile, Native, or Backend apps. Appwrite abstracts the complexity and repetitiveness required to build a modern backend API from scratch and allows you to build secure apps faster.\nUsing Appwrite, you can easily integrate your app with user authentication and multiple sign-in methods, a database for storing and querying users and team data, storage and file management, image manipulation, Cloud Functions, messaging, and more services.",
     "links": {
       "github": "https://github.com/appwrite/appwrite",
@@ -637,6 +637,19 @@
       "docs": "https://docs.gitea.com/installation/install-with-docker"
     },
     "tags": ["self-hosted", "storage"]
+  },
+  {
+    "id": "gitea-mirror",
+    "name": "Gitea Mirror",
+    "version": "v2.11.2",
+    "description": "Gitea Mirror is a modern web app for automatically mirroring repositories from GitHub to your self-hosted Gitea instance. It features a user-friendly interface to sync public, private, or starred GitHub repos, mirror entire organizations with structure preservation, and optionally mirror issues and labels. The application includes smart filtering, detailed logs, and scheduled automatic mirroring.",
+    "logo": "gitea-mirror.png",
+    "links": {
+      "github": "https://github.com/arunavo4/gitea-mirror",
+      "website": "https://github.com/arunavo4/gitea-mirror",
+      "docs": "https://github.com/arunavo4/gitea-mirror#readme"
+    },
+    "tags": ["git", "mirror", "github", "gitea", "self-hosted", "automation"]
   },
   {
     "id": "roundcube",
@@ -2409,6 +2422,19 @@
       "docs": "https://www.rybbit.io/docs"
     },
     "tags": ["analytics"]
+  },
+  {
+    "id": "seafile",
+    "name": "Seafile",
+    "version": "12.0-latest",
+    "description": "Open source cloud storage system for file sync, share and document collaboration",
+    "logo": "seafile.svg",
+    "links": {
+      "github": "https://github.com/haiwen/seafile",
+      "website": "https://seafile.com",
+      "docs": "https://manual.seafile.com/12.0"
+    },
+    "tags": ["file-manager", "file-sharing", "storage"]
   },
   {
     "id": "flagsmith",

@@ -1,0 +1,59 @@
+name: New Template Request
+description: Suggest a new template for the project
+labels: ["template"]
+body:
+  - type: input
+    attributes:
+      label: Template Name
+      description: Provide a clear and descriptive name for the template
+      placeholder: "e.g: Supabase, Appwrite, etc."
+    validations:
+      required: true
+      
+  - type: input
+    attributes:
+      label: Template URL
+      description: Link to the repository or resource where the template is located
+      placeholder: "https://github.com/username/repo"
+    validations:
+      required: true
+      
+  - type: input
+    attributes:
+      label: Docker Compose Link
+      description: Link to docker-compose.yml file or Docker documentation (optional) but would be helpful
+      placeholder: "https://github.com/username/repo/blob/main/docker-compose.yml"
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Resources
+      description: List the resources, links, or any other information that would be helpful to know about the template
+      placeholder: |
+        - Link to the template
+        - Link to the documentation
+        - Link to the repository
+        - Link to the website
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Template Description
+      description: Provide a detailed description of what this template does and when to use it
+      placeholder: |
+        This template is perfect for creating modern web applications with React and TypeScript...
+    validations:
+      required: false
+
+  - type: dropdown
+    attributes:
+      label: Will you send a PR to implement it?
+      description: Let us know if you are planning to submit a pull request to add this template
+      options:
+        - "Yes"
+        - "No"
+        - "Maybe, need help"
+    validations:
+      required: true

@@ -32,8 +32,6 @@ services:
       retries: 3
       start_period: 10s
     restart: unless-stopped
-    networks:
-      - internal
 
   rybbit_postgres:
     image: postgres:17.5
@@ -49,8 +47,6 @@ services:
       timeout: 10s
       retries: 3
     restart: unless-stopped
-    networks:
-      - internal
 
   rybbit_backend:
     image: ghcr.io/rybbit-io/rybbit-backend:v1.0.0
@@ -80,9 +76,6 @@ services:
       retries: 3
       start_period: 10s
     restart: unless-stopped
-    networks:
-      - internal
-      - web
 
   rybbit_client:
     image: ghcr.io/rybbit-io/rybbit-client:v1.0.0
@@ -93,16 +86,7 @@ services:
     depends_on:
       - rybbit_backend
     restart: unless-stopped
-    networks:
-      - internal
-      - web
 
 volumes:
   clickhouse_data:
   postgres_data:
-
-networks:
-  web:
-    driver: bridge
-  internal:
-    driver: bridge

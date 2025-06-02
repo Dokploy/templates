@@ -2466,5 +2466,18 @@
       "docs": "https://www.docuseal.com/"
     },
     "tags": ["document-signing"]
+  },
+  {
+    "id": "kutt",
+    "name": "Kutt",
+    "version": "latest",
+    "description": "Kutt is a modern URL shortener with support for custom domains. Create and edit links, view statistics, manage users, and more.",
+    "logo": "kutt.png",
+    "links": {
+      "github": "https://github.com/thedevs-network/kutt",
+      "website": "https://kutt.it",
+      "docs": "https://github.com/thedevs-network/kutt#kuttit"
+    },
+    "tags": ["link-shortener", "link-sharing"]
   }
 ]

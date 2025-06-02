@@ -1,0 +1,24 @@
+services:
+  kutt:
+    image: kutt/kutt:main
+    volumes:
+      - kutt_db_data:/var/lib/kutt
+      - ./kutt/custom:/kutt/custom
+    environment:
+      DB_FILENAME: "/var/lib/kutt/data.sqlite"
+      JWT_SECRET: ${JWT_SECRET}
+      DEFAULT_DOMAIN: ${DOMAIN}
+      TRUST_PROXY: ${TRUST_PROXY}
+      DISALLOW_ANONYMOUS_LINKS: ${DISALLOW_ANONYMOUS_LINKS}
+      CUSTOM_DOMAIN_USE_HTTPS: ${CUSTOM_DOMAIN_USE_HTTPS}
+      MAIL_ENABLED: ${MAIL_ENABLED}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_SECURE: ${MAIL_SECURE}
+      MAIL_USER: ${MAIL_USER}
+      MAIL_FROM: ${MAIL_FROM}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      CONTACT_EMAIL: ${CONTACT_EMAIL}
+
+volumes:
+  kutt_db_data: {}

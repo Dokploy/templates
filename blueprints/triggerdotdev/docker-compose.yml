@@ -6,7 +6,7 @@ x-webapp-env: &webapp-env
 
 x-worker-env: &worker-env
   PLATFORM_HOST: webapp
-  PLATFORM_WS_PORT: 3030
+  PLATFORM_WS_PORT: 3000
   SECURE_CONNECTION: "false"
   OTEL_EXPORTER_OTLP_ENDPOINT: *trigger-otel
 
@@ -74,7 +74,7 @@ services:
       - .env
     environment:
       <<: *worker-env
-      PLATFORM_SECRET: $PROVIDER_SECRET
+      PLATFORM_SECRET: ${PROVIDER_SECRET}
 
   coordinator:
     image: ghcr.io/triggerdotdev/coordinator:${TRIGGER_IMAGE_TAG:-v3}
@@ -92,13 +92,14 @@ services:
       - .env
     environment:
       <<: *worker-env
-      PLATFORM_SECRET: $COORDINATOR_SECRET
+      PLATFORM_SECRET: ${COORDINATOR_SECRET}
 
   electric:
     image: electricsql/electric:${ELECTRIC_IMAGE_TAG:-latest}
     restart: ${RESTART_POLICY:-unless-stopped}
     environment:
       DATABASE_URL: ${DATABASE_URL}?sslmode=disable
+      ELECTRIC_SECRET: ${ELECTRIC_SECRET}
     networks:
       - webapp
     depends_on:

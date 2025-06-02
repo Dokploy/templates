@@ -1,12 +1,13 @@
 # https://www.rybbit.io/docs/self-hosting-advanced
 
-# NOTE: there are two domain entries created:
+# NOTE: there are two sample HTTP traefik domain entries created:
 # - rybbit_backend (port 3001, path /api), 
 # - rybbit_client (port 3002, path /)
 #
-# They should share the same base URL for cookies
-# to function correctly. The `BASE_URL` environment
-# variable should also be set accordingly for CORS.
+# You should treat these as placeholders - Rybbit only supports HTTPS.
+#
+# You should also update the `BASE_URL` environment variable when
+# updating the domain entries with your custom domain.
 
 services:
   rybbit_clickhouse:

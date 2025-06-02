@@ -6,7 +6,7 @@
 #
 # They should share the same base URL for cookies
 # to function correctly. The `BASE_URL` environment
-# variable should also be set accordingly for CORs.
+# variable should also be set accordingly for CORS.
 
 services:
   rybbit_clickhouse:

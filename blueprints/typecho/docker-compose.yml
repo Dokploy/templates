@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  typecho:
+    image: joyqi/typecho:stable
+    restart: unless-stopped
+    environment:
+      TYPECHO_DB_ADAPTER: Pdo_Mysql
+      TYPECHO_DB_HOST: db
+      TYPECHO_DB_PORT: 3306
+      TYPECHO_DB_USER: typecho
+      TYPECHO_DB_PASSWORD: ${db_password}
+      TYPECHO_DB_NAME: typecho
+    volumes:
+      - typecho_data:/app/usr
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: typecho
+      MYSQL_USER: typecho
+      MYSQL_PASSWORD: ${db_password}
+      MYSQL_ROOT_PASSWORD: ${root_password}
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  typecho_data:
+  db_data:

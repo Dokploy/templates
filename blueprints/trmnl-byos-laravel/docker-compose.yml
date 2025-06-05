@@ -1,6 +1,6 @@
 services:
   trmnl-byos-laravel:
-    image: ghcr.io/usetrmnl/byos_laravel:0.3.2
+    image: ghcr.io/usetrmnl/byos_laravel:0.4.0
     environment:
       - APP_URL=${APP_URL}
       - PHP_OPCACHE_ENABLE=${PHP_OPCACHE_ENABLE}

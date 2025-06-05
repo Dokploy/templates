@@ -2366,7 +2366,7 @@
     "logo": "logo.jpg",
     "links": {
       "github": "https://github.com/stackblitz-labs/bolt.diy",
-      "website": "stackblitz-labs.github.io/bolt.diy/",
+      "website": "https://stackblitz-labs.github.io/bolt.diy/",
       "docs": "https://stackblitz-labs.github.io/bolt.diy/"
     },
     "tags": ["ai", "self-hosted", "development", "chatbot", "ide", "llm"]

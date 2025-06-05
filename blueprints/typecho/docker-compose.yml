@@ -1,17 +1,13 @@
 version: "3.8"
 services:
   typecho:
-    image: joyqi/typecho:stable
+    image: 80x86/typecho:latest
     restart: unless-stopped
     environment:
-      TYPECHO_DB_ADAPTER: Pdo_Mysql
-      TYPECHO_DB_HOST: db
-      TYPECHO_DB_PORT: 3306
-      TYPECHO_DB_USER: typecho
-      TYPECHO_DB_PASSWORD: ${db_password}
-      TYPECHO_DB_NAME: typecho
+      PHP_TZ: Asia/Shanghai
+      PHP_MAX_EXECUTION_TIME: 600
     volumes:
-      - typecho_data:/app/usr
+      - typecho_data:/data
     depends_on:
       - db
 
@@ -21,8 +17,8 @@ services:
     environment:
       MYSQL_DATABASE: typecho
       MYSQL_USER: typecho
-      MYSQL_PASSWORD: ${db_password}
-      MYSQL_ROOT_PASSWORD: ${root_password}
+      MYSQL_PASSWORD: typecho_password
+      MYSQL_ROOT_PASSWORD: root_password
     volumes:
       - db_data:/var/lib/mysql
 

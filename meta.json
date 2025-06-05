@@ -626,6 +626,23 @@
     "tags": ["chatbot", "builder", "open-source"]
   },
   {
+    "id": "typecho",
+    "name": "Typecho",
+    "version": "stable",
+    "description": "Typecho 是一个轻量级的开源博客程序，基于 PHP 开发，支持多种数据库，简洁而强大。",
+    "logo": "typecho.png",
+    "links": {
+      "github": "https://github.com/typecho/typecho",
+      "website": "https://typecho.org/", 
+      "docs": "http://docs.typecho.org"
+    },
+    "tags": [
+      "blog",
+      "cms",
+      "php"
+    ]
+  },
+  {
     "id": "gitea",
     "name": "Gitea",
     "version": "1.22.3",

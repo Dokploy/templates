@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:16}"
+root_password = "${password:16}"
+
+[config]
+env = {}
+mounts = []
+
+[[config.domains]]
+serviceName = "typecho"
+port = 80
+host = "${main_domain}"

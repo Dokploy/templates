@@ -1,7 +1,7 @@
 [variables]
 main_domain = "${domain}"
 dex_domain = "${domain}"
-secret_key = "${base64:32}"
+secret_key = "${hash:64}"
 utils_secret = "${base64:32}"
 client_secret = "${base64:32}"
 postgres_password = "${password}"

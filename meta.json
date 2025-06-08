@@ -1159,6 +1159,19 @@
     "tags": ["event-driven", "applications"]
   },
   {
+    "id": "triggerdotdev4",
+    "name": "Trigger.dev",
+    "version": "v4-beta",
+    "description": "Trigger is a platform for building event-driven applications.",
+    "logo": "triggerdotdev.svg",
+    "links": {
+      "github": "https://github.com/triggerdotdev/trigger.dev",
+      "website": "https://trigger.dev/",
+      "docs": "https://trigger.dev/docs"
+    },
+    "tags": ["event-driven", "applications"]
+  },
+  {
     "id": "browserless",
     "name": "Browserless",
     "version": "2.23.0",

@@ -11,14 +11,14 @@ registry_username = "registry-user"
 registry_password = "${password:16}"
 minio_username = "admin"
 minio_password = "${password:16}"
-worker_token = "${base64:32}"
+worker_token = "tr_wgt_${base64:32}"
 
 [config]
 mounts = []
 
 [[config.domains]]
 serviceName = "webapp"
-port = 8030
+port = 3030
 host = "${main_domain}"
 
 [config.env]

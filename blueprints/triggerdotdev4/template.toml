@@ -1,0 +1,86 @@
+[variables]
+main_domain = "${domain}"
+magic_link_secret = "${base64:16}"
+session_secret = "${base64:16}"
+encryption_key = "${base64:32}"
+managed_worker_secret = "${base64:32}"
+db_password = "${password:24}"
+db_user = "trigger_user_${password:6}"
+db_name = "trigger_db_${password:6}"
+registry_username = "registry-user"
+registry_password = "${password:16}"
+minio_username = "admin"
+minio_password = "${password:16}"
+worker_token = "${base64:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "webapp"
+port = 8030
+host = "${main_domain}"
+
+[config.env]
+# Core settings
+TRIGGER_IMAGE_TAG = "v4-beta"
+RESTART_POLICY = "unless-stopped"
+
+# Database
+POSTGRES_USER = "${db_user}"
+POSTGRES_PASSWORD = "${db_password}"
+POSTGRES_DB = "${db_name}"
+DATABASE_URL = "postgresql://${db_user}:${db_password}@postgres:5432/${db_name}"
+
+# Webapp settings
+LOGIN_ORIGIN = "http://${main_domain}"
+APP_ORIGIN = "http://${main_domain}"
+MAGIC_LINK_SECRET = "${magic_link_secret}"
+SESSION_SECRET = "${session_secret}"
+ENCRYPTION_KEY = "${encryption_key}"
+MANAGED_WORKER_SECRET = "${managed_worker_secret}"
+
+# Redis
+REDIS_HOST = "redis"
+REDIS_PORT = "6379"
+REDIS_TLS_DISABLED = "true"
+
+# Registry
+REGISTRY_URL = "registry:5000"
+REGISTRY_USERNAME = "${registry_username}"
+REGISTRY_PASSWORD = "${registry_password}"
+
+# Object Storage (MinIO)
+OBJECT_STORE_ENDPOINT = "http://object-storage:9000"
+OBJECT_STORE_ACCESS_KEY_ID = "${minio_username}"
+OBJECT_STORE_SECRET_ACCESS_KEY = "${minio_password}"
+OBJECT_STORE_BUCKET_NAME = "packets"
+
+# Worker settings
+TRIGGER_API_URL = "http://webapp:8030"
+TRIGGER_WORKER_TOKEN = "${worker_token}"
+OTEL_EXPORTER_OTLP_ENDPOINT = "http://webapp:8030/otel"
+
+# Docker settings
+DOCKER_API_VERSION = "v1.41"
+DOCKER_HOST = "tcp://docker-socket-proxy:2375"
+
+# Telemetry (disabled for self-hosting)
+TRIGGER_TELEMETRY_DISABLED = "1"
+
+# Optional: Email transport (uncomment and configure as needed)
+# EMAIL_TRANSPORT = "smtp"
+# FROM_EMAIL = ""
+# REPLY_TO_EMAIL = ""
+# SMTP_HOST = ""
+# SMTP_PORT = "587"
+# SMTP_SECURE = "false"
+# SMTP_USER = ""
+# SMTP_PASSWORD = ""
+
+# Optional: GitHub OAuth (uncomment and configure as needed)
+# AUTH_GITHUB_CLIENT_ID = ""
+# AUTH_GITHUB_CLIENT_SECRET = ""
+
+# Optional: Restrict access (uncomment and configure as needed)
+# WHITELISTED_EMAILS = "user@example\\.com" 

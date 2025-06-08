@@ -1,0 +1,188 @@
+volumes:
+  postgres-data:
+  redis-data:
+  registry-data:
+  minio-data:
+  shared-data:
+
+networks:
+  trigger-network:
+    driver: bridge
+
+services:
+  webapp:
+    image: ghcr.io/triggerdotdev/trigger.dev:${TRIGGER_IMAGE_TAG:-v4-beta}
+    restart: ${RESTART_POLICY:-unless-stopped}
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      LOGIN_ORIGIN: ${LOGIN_ORIGIN}
+      APP_ORIGIN: ${APP_ORIGIN}
+      MAGIC_LINK_SECRET: ${MAGIC_LINK_SECRET}
+      SESSION_SECRET: ${SESSION_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      MANAGED_WORKER_SECRET: ${MANAGED_WORKER_SECRET}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_TLS_DISABLED: ${REDIS_TLS_DISABLED}
+      REGISTRY_URL: ${REGISTRY_URL}
+      REGISTRY_USERNAME: ${REGISTRY_USERNAME}
+      REGISTRY_PASSWORD: ${REGISTRY_PASSWORD}
+      OBJECT_STORE_ENDPOINT: ${OBJECT_STORE_ENDPOINT}
+      OBJECT_STORE_ACCESS_KEY_ID: ${OBJECT_STORE_ACCESS_KEY_ID}
+      OBJECT_STORE_SECRET_ACCESS_KEY: ${OBJECT_STORE_SECRET_ACCESS_KEY}
+      OBJECT_STORE_BUCKET_NAME: ${OBJECT_STORE_BUCKET_NAME}
+      TRIGGER_TELEMETRY_DISABLED: ${TRIGGER_TELEMETRY_DISABLED}
+    ports:
+      - "8030:8030"
+    depends_on:
+      - postgres
+      - redis
+      - registry
+      - object-storage
+    networks:
+      - trigger-network
+    volumes:
+      - shared-data:/home/node/shared
+
+  supervisor:
+    image: ghcr.io/triggerdotdev/supervisor:${TRIGGER_IMAGE_TAG:-v4-beta}
+    restart: ${RESTART_POLICY:-unless-stopped}
+    env_file:
+      - .env
+    environment:
+      TRIGGER_API_URL: ${TRIGGER_API_URL}
+      TRIGGER_WORKER_TOKEN: file:///home/node/shared/worker_token
+      MANAGED_WORKER_SECRET: ${MANAGED_WORKER_SECRET}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
+      DOCKER_API_VERSION: ${DOCKER_API_VERSION}
+      DOCKER_HOST: ${DOCKER_HOST}
+      DOCKER_REGISTRY_URL: ${REGISTRY_URL}
+      DOCKER_REGISTRY_USERNAME: ${REGISTRY_USERNAME}
+      DOCKER_REGISTRY_PASSWORD: ${REGISTRY_PASSWORD}
+    depends_on:
+      - webapp
+      - docker-socket-proxy
+    networks:
+      - trigger-network
+    volumes:
+      - shared-data:/home/node/shared
+
+  postgres:
+    image: postgres:16
+    restart: ${RESTART_POLICY:-unless-stopped}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - trigger-network
+    ports:
+      - "5432"
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+
+  redis:
+    image: redis:7-alpine
+    restart: ${RESTART_POLICY:-unless-stopped}
+    volumes:
+      - redis-data:/data
+    networks:
+      - trigger-network
+    ports:
+      - "6379"
+
+  registry:
+    image: registry:2
+    restart: ${RESTART_POLICY:-unless-stopped}
+    environment:
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
+    volumes:
+      - registry-data:/var/lib/registry
+    networks:
+      - trigger-network
+    ports:
+      - "5000"
+    command:
+      - sh
+      - -c
+      - |
+        mkdir -p /auth
+        htpasswd -Bbn ${REGISTRY_USERNAME} ${REGISTRY_PASSWORD} > /auth/htpasswd
+        /entrypoint.sh /etc/docker/registry/config.yml
+
+  object-storage:
+    image: minio/minio:latest
+    restart: ${RESTART_POLICY:-unless-stopped}
+    environment:
+      MINIO_ROOT_USER: ${OBJECT_STORE_ACCESS_KEY_ID}
+      MINIO_ROOT_PASSWORD: ${OBJECT_STORE_SECRET_ACCESS_KEY}
+    volumes:
+      - minio-data:/data
+    networks:
+      - trigger-network
+    ports:
+      - "9000"
+      - "9001"
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # Create the required bucket in MinIO
+  create-bucket:
+    image: minio/mc:latest
+    depends_on:
+      - object-storage
+    networks:
+      - trigger-network
+    environment:
+      MINIO_ROOT_USER: ${OBJECT_STORE_ACCESS_KEY_ID}
+      MINIO_ROOT_PASSWORD: ${OBJECT_STORE_SECRET_ACCESS_KEY}
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://object-storage:9000 ${OBJECT_STORE_ACCESS_KEY_ID} ${OBJECT_STORE_SECRET_ACCESS_KEY};
+      /usr/bin/mc mb myminio/${OBJECT_STORE_BUCKET_NAME} --ignore-existing;
+      exit 0;
+      "
+
+  docker-socket-proxy:
+    image: tecnativa/docker-socket-proxy:latest
+    restart: ${RESTART_POLICY:-unless-stopped}
+    environment:
+      CONTAINERS: 1
+      IMAGES: 1
+      AUTH: 1
+      POST: 1
+      BUILD: 1
+      COMMIT: 1
+      EXEC: 1
+      INFO: 1
+      NETWORKS: 1
+      PING: 1
+      PLUGINS: 1
+      SERVICES: 1
+      SESSION: 1
+      SWARM: 1
+      SYSTEM: 1
+      TASKS: 1
+      VERSION: 1
+      VOLUMES: 1
+      EVENTS: 1
+      DISTRIBUTION: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - trigger-network
+    ports:
+      - "2375" 

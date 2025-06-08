@@ -34,6 +34,7 @@ DATABASE_URL = "postgresql://${db_user}:${db_password}@postgres:5432/${db_name}"
 DIRECT_URL = "${DATABASE_URL}"
 
 # Webapp settings
+REMIX_APP_PORT = "3030"
 LOGIN_ORIGIN = "http://${main_domain}"
 APP_ORIGIN = "http://${main_domain}"
 MAGIC_LINK_SECRET = "${magic_link_secret}"
@@ -50,6 +51,8 @@ REDIS_TLS_DISABLED = "true"
 REGISTRY_URL = "registry:5000"
 REGISTRY_USERNAME = "${registry_username}"
 REGISTRY_PASSWORD = "${registry_password}"
+DEPLOY_REGISTRY_HOST = "registry:5000"
+DEPLOY_REGISTRY_NAMESPACE = "trigger-dev"
 
 # Object Storage (MinIO)
 OBJECT_STORE_ENDPOINT = "http://object-storage:9000"
@@ -58,9 +61,9 @@ OBJECT_STORE_SECRET_ACCESS_KEY = "${minio_password}"
 OBJECT_STORE_BUCKET_NAME = "packets"
 
 # Worker settings
-TRIGGER_API_URL = "http://webapp:8030"
+TRIGGER_API_URL = "http://webapp:3030"
 TRIGGER_WORKER_TOKEN = "${worker_token}"
-OTEL_EXPORTER_OTLP_ENDPOINT = "http://webapp:8030/otel"
+OTEL_EXPORTER_OTLP_ENDPOINT = "http://webapp:3030/otel"
 
 # Docker settings
 DOCKER_API_VERSION = "v1.41"

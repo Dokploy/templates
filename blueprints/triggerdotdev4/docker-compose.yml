@@ -15,6 +15,7 @@ services:
     env_file:
       - .env
     environment:
+      REMIX_APP_PORT: ${REMIX_APP_PORT}
       DATABASE_URL: ${DATABASE_URL}
       DIRECT_URL: ${DIRECT_URL}
       LOGIN_ORIGIN: ${LOGIN_ORIGIN}
@@ -29,13 +30,15 @@ services:
       REGISTRY_URL: ${REGISTRY_URL}
       REGISTRY_USERNAME: ${REGISTRY_USERNAME}
       REGISTRY_PASSWORD: ${REGISTRY_PASSWORD}
+      DEPLOY_REGISTRY_HOST: ${DEPLOY_REGISTRY_HOST}
+      DEPLOY_REGISTRY_NAMESPACE: ${DEPLOY_REGISTRY_NAMESPACE}
       OBJECT_STORE_ENDPOINT: ${OBJECT_STORE_ENDPOINT}
       OBJECT_STORE_ACCESS_KEY_ID: ${OBJECT_STORE_ACCESS_KEY_ID}
       OBJECT_STORE_SECRET_ACCESS_KEY: ${OBJECT_STORE_SECRET_ACCESS_KEY}
       OBJECT_STORE_BUCKET_NAME: ${OBJECT_STORE_BUCKET_NAME}
       TRIGGER_TELEMETRY_DISABLED: ${TRIGGER_TELEMETRY_DISABLED}
     ports:
-      - "8030:8030"
+      - "8030:3030"
     depends_on:
       postgres:
         condition: service_started
@@ -47,12 +50,6 @@ services:
         condition: service_healthy
     networks:
       - trigger-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8030/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
 
   supervisor:
     image: ghcr.io/triggerdotdev/supervisor:${TRIGGER_IMAGE_TAG:-v4-beta}
@@ -71,7 +68,7 @@ services:
       DOCKER_REGISTRY_PASSWORD: ${REGISTRY_PASSWORD}
     depends_on:
       webapp:
-        condition: service_healthy
+        condition: service_started
       docker-socket-proxy:
         condition: service_started
     networks:

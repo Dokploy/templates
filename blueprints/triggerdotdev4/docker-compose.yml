@@ -3,7 +3,6 @@ volumes:
   redis-data:
   registry-data:
   minio-data:
-  shared-data:
 
 networks:
   trigger-network:
@@ -17,6 +16,7 @@ services:
       - .env
     environment:
       DATABASE_URL: ${DATABASE_URL}
+      DIRECT_URL: ${DIRECT_URL}
       LOGIN_ORIGIN: ${LOGIN_ORIGIN}
       APP_ORIGIN: ${APP_ORIGIN}
       MAGIC_LINK_SECRET: ${MAGIC_LINK_SECRET}
@@ -37,14 +37,22 @@ services:
     ports:
       - "8030:8030"
     depends_on:
-      - postgres
-      - redis
-      - registry
-      - object-storage
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
+      registry:
+        condition: service_started
+      object-storage:
+        condition: service_healthy
     networks:
       - trigger-network
-    volumes:
-      - shared-data:/home/node/shared
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8030/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
   supervisor:
     image: ghcr.io/triggerdotdev/supervisor:${TRIGGER_IMAGE_TAG:-v4-beta}
@@ -53,7 +61,7 @@ services:
       - .env
     environment:
       TRIGGER_API_URL: ${TRIGGER_API_URL}
-      TRIGGER_WORKER_TOKEN: file:///home/node/shared/worker_token
+      TRIGGER_WORKER_TOKEN: ${TRIGGER_WORKER_TOKEN}
       MANAGED_WORKER_SECRET: ${MANAGED_WORKER_SECRET}
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
       DOCKER_API_VERSION: ${DOCKER_API_VERSION}
@@ -62,12 +70,12 @@ services:
       DOCKER_REGISTRY_USERNAME: ${REGISTRY_USERNAME}
       DOCKER_REGISTRY_PASSWORD: ${REGISTRY_PASSWORD}
     depends_on:
-      - webapp
-      - docker-socket-proxy
+      webapp:
+        condition: service_healthy
+      docker-socket-proxy:
+        condition: service_started
     networks:
       - trigger-network
-    volumes:
-      - shared-data:/home/node/shared
 
   postgres:
     image: postgres:16
@@ -143,7 +151,8 @@ services:
   create-bucket:
     image: minio/mc:latest
     depends_on:
-      - object-storage
+      object-storage:
+        condition: service_healthy
     networks:
       - trigger-network
     environment:
@@ -151,8 +160,14 @@ services:
       MINIO_ROOT_PASSWORD: ${OBJECT_STORE_SECRET_ACCESS_KEY}
     entrypoint: >
       /bin/sh -c "
-      /usr/bin/mc alias set myminio http://object-storage:9000 ${OBJECT_STORE_ACCESS_KEY_ID} ${OBJECT_STORE_SECRET_ACCESS_KEY};
+      echo 'Waiting for MinIO to be ready...';
+      until /usr/bin/mc alias set myminio http://object-storage:9000 ${OBJECT_STORE_ACCESS_KEY_ID} ${OBJECT_STORE_SECRET_ACCESS_KEY}; do
+        echo 'MinIO not ready, retrying in 5 seconds...';
+        sleep 5;
+      done;
+      echo 'MinIO is ready, creating bucket...';
       /usr/bin/mc mb myminio/${OBJECT_STORE_BUCKET_NAME} --ignore-existing;
+      echo 'Bucket creation completed successfully';
       exit 0;
       "
 

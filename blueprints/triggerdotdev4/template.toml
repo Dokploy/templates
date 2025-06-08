@@ -31,6 +31,7 @@ POSTGRES_USER = "${db_user}"
 POSTGRES_PASSWORD = "${db_password}"
 POSTGRES_DB = "${db_name}"
 DATABASE_URL = "postgresql://${db_user}:${db_password}@postgres:5432/${db_name}"
+DIRECT_URL = "${DATABASE_URL}"
 
 # Webapp settings
 LOGIN_ORIGIN = "http://${main_domain}"

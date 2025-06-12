@@ -1,7 +1,11 @@
 [variables]
+main_domain = "${domain}"
 
 [config]
 [[config.domains]]
+serviceName = "daemon"
+port = 3902
+host = "${main_domain}"
 
 [config.env]
 GARAGE_RPC_SECRET=${hash:65}

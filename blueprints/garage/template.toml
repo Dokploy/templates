@@ -4,9 +4,9 @@
 [[config.domains]]
 
 [config.env]
-GARAGE_RPC_SECRET=${hash:32}
-GARAGE_ADMIN_TOKEN=${base64:32}
-GARAGE_METRICS_TOKEN=${base64:32}
+GARAGE_RPC_SECRET=${hash:65}
+GARAGE_ADMIN_TOKEN=${base64:45}
+GARAGE_METRICS_TOKEN=${base64:45}
 
 [[config.mounts]]
 filePath = "garage.toml"

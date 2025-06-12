@@ -4,5 +4,41 @@
 [[config.domains]]
 
 [config.env]
+GARAGE_RPC_SECRET=${hash:32}
+GARAGE_ADMIN_TOKEN=${base64:32}
+GARAGE_METRICS_TOKEN=${base64:32}
 
 [[config.mounts]]
+filePath = "garage.toml"
+content = """
+# Garage Configuration
+# ====================
+# https://garagehq.deuxfleurs.fr/documentation/reference-manual/configuration/
+#
+# --------------------
+
+metadata_dir = "/meta"
+data_dir = "/data"
+db_engine = "sqlite"
+
+replication_factor = 1
+
+rpc_bind_addr = "[::]:3901"
+rpc_public_addr = "127.0.0.1:3901"
+
+[s3_api]
+s3_region = "garage"
+api_bind_addr = "[::]:3900"
+root_domain = "garage-daemon"
+
+[s3_web]
+bind_addr = "[::]:3902"
+root_domain = "web.garage.test.houseoftickets.nl"
+index = "index.html"
+
+[k2v_api]
+api_bind_addr = "[::]:3904"
+
+[admin]
+api_bind_addr = "[::]:3903"
+"""

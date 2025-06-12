@@ -11,6 +11,7 @@ services:
   daemon:
     container_name: garage-daemon
     image: dxflrs/garage:v1.1.0
+    restart: unless-stopped
     environment:
       - GARAGE_RPC_SECRET=${GARAGE_RPC_SECRET}
       - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}

@@ -2466,5 +2466,20 @@
       "docs": "https://www.docuseal.com/"
     },
     "tags": ["document-signing"]
+  },
+  {
+    "id": "garage",
+    "name": "Garage",
+    "version": "1.1.0",
+    "description": "Grage is a S3-compatible service written in rust.",
+    "logo": "garage-logo.svg",
+    "links": {
+      "github": "https://github.com/deuxfleurs-org/garage",
+      "website": "https://garagehq.deuxfleurs.fr/",
+      "docs": "https://garagehq.deuxfleurs.fr/documentation/quick-start/"
+    },
+    "tags": [
+      "storage"
+    ]
   }
 ]

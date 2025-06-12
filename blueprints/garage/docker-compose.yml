@@ -1,0 +1,30 @@
+name: garage
+
+networks:
+  dokploy-network:
+    external: true
+  app-network:
+    enable_ipv6: true
+    driver: bridge
+
+services:
+  daemon:
+    container_name: garage-daemon
+    image: dxflrs/garage:v1.1.0
+    environment:
+      - GARAGE_RPC_SECRET=${GARAGE_RPC_SECRET}
+      - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}
+      - GARAGE_METRICS_TOKEN=${GARAGE_METRICS_TOKEN}
+    volumes:
+      - ../files/garage.toml:/etc/garage.toml
+      - garage_meta:/meta
+      - garage_data:/data
+    ports:
+    - 3900:3900
+    networks:
+      - app-network
+      - dokploy-network
+
+volumes:
+  garage_data: {}
+  garage_meta: {}

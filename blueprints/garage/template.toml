@@ -1,0 +1,8 @@
+[variables]
+
+[config]
+[[config.domains]]
+
+[config.env]
+
+[[config.mounts]]

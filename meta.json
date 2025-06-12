@@ -2471,7 +2471,7 @@
     "id": "garage",
     "name": "Garage",
     "version": "1.1.0",
-    "description": "Grage is a S3-compatible service written in rust.",
+    "description": "An open-source distributed object storage service tailored for self-hosting.",
     "logo": "garage-logo.svg",
     "links": {
       "github": "https://github.com/deuxfleurs-org/garage",

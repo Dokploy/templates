@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+encryption_key = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "palmr"
+port = 5487
+host = "${main_domain}"
+
+[config.env]
+
+[[config.mounts]] 

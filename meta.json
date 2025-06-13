@@ -2466,5 +2466,22 @@
       "docs": "https://www.docuseal.com/"
     },
     "tags": ["document-signing"]
+  },
+  {
+    "id": "palmr",
+    "name": "Palmr",
+    "version": "latest",
+    "description": "Palmr the open-source, self-hosted alternative to WeTransfer. Share files securely, without tracking or limitations.",
+    "logo": "palmr.png",
+    "links": {
+      "github": "https://github.com/kyantech/palmr",
+      "website": "https://kyantech.com/",
+      "docs": "https://github.com/kyantech/palmr"
+    },
+    "tags": [
+      "file-sharing",
+      "self-hosted",
+      "open-source"
+    ]
   }
 ]

@@ -2474,9 +2474,9 @@
     "description": "Palmr the open-source, self-hosted alternative to WeTransfer. Share files securely, without tracking or limitations.",
     "logo": "palmr.png",
     "links": {
-      "github": "https://github.com/kyantech/palmr",
-      "website": "https://kyantech.com/",
-      "docs": "https://github.com/kyantech/palmr"
+      "github": "https://github.com/kyantech/Palmr",
+      "website": "https://palmr.kyantech.com.br/",
+      "docs": "https://palmr.kyantech.com.br/docs/3.0-beta"
     },
     "tags": [
       "file-sharing",

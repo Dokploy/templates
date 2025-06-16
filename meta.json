@@ -316,7 +316,7 @@
   {
     "id": "wordpress",
     "name": "Wordpress",
-    "version": "6.7.1",
+    "version": "latest",
     "description": "Wordpress is a free and open source content management system (CMS) for publishing and managing websites.",
     "logo": "wordpress.png",
     "links": {

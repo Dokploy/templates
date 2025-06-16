@@ -1,0 +1,20 @@
+services:
+  stalwart-mail:
+    image: stalwartlabs/stalwart:latest-alpine # for production choose specific version from https://hub.docker.com/r/stalwartlabs/stalwart/tags
+    ports:
+      - "443"    # HTTPS
+      - "8080"   # HTTP API
+      - "25"     # SMTP
+      - "587"    # Submission
+      - "465"    # SMTPS
+      - "143"    # IMAP
+      - "993"    # IMAPS
+      - "4190"   # ManageSieve
+      - "110"    # POP3
+      - "995"    # POP3S
+    volumes:
+      - stalwart_data:/opt/stalwart-mail
+    restart: unless-stopped
+
+volumes:
+  stalwart_data:

@@ -2,10 +2,12 @@
 main_domain = "${domain}"
 
 [config]
-env = {}
 mounts = []
 
 [[config.domains]]
-serviceName = "pocketbase"
-port = 8090
+serviceName = "gitea-mirror"
+port = 4_321
 host = "${main_domain}"
+
+[config.env]
+JWT_SECRET = "${base64:64}"

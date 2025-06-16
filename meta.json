@@ -13,9 +13,35 @@
     "tags": ["database", "postgres", "self-hosted", "server"]
   },
   {
+    "id": "freescout",
+    "name": "FreeScout",
+    "version": "latest",
+    "description": "FreeScout is a free open source help desk and shared inbox system. It's a self-hosted alternative to HelpScout, Zendesk, and similar services that allows you to manage customer communications through email and a clean web interface. FreeScout makes it easy to organize support requests, track customer conversations, and collaborate with your team.",
+    "links": {
+      "github": "https://github.com/freescout-helpdesk/freescout",
+      "website": "https://freescout.net/",
+      "docs": "https://github.com/freescout-helpdesk/freescout/wiki/Installation-Guide"
+    },
+    "logo": "freescout.svg",
+    "tags": ["helpdesk", "support", "email", "customer-service", "self-hosted"]
+  },
+  {
+    "id": "openresty-manager",
+    "name": "OpenResty Manager",
+    "version": "1.2.0",
+    "description": "The easiest using, powerful and beautiful OpenResty Manager (Nginx Enhanced Version) , open source alternative to OpenResty Edge, which can enable you to easily reverse proxy your websites with security running at home or internet, including Access Control, HTTP Flood Protection, Free SSL, without having to know too much about OpenResty or Let's Encrypt.",
+    "links": {
+      "github": "https://github.com/Safe3/openresty-manager",
+      "website": "https://om.uusec.com/",
+      "docs": "https://github.com/Safe3/openresty-manager"
+    },
+    "logo": "logo.svg",
+    "tags": ["web", "proxy", "security", "self-hosted", "openresty", "nginx"]
+  },
+  {
     "id": "appwrite",
     "name": "Appwrite",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "description": "Appwrite is an end-to-end backend server for Web, Mobile, Native, or Backend apps. Appwrite abstracts the complexity and repetitiveness required to build a modern backend API from scratch and allows you to build secure apps faster.\nUsing Appwrite, you can easily integrate your app with user authentication and multiple sign-in methods, a database for storing and querying users and team data, storage and file management, image manipulation, Cloud Functions, messaging, and more services.",
     "links": {
       "github": "https://github.com/appwrite/appwrite",
@@ -41,21 +67,36 @@
   {
     "id": "supabase",
     "name": "SupaBase",
-    "version": "1.24.07",
-    "description": "The open source Firebase alternative. Supabase gives you a dedicated Postgres database to build your web, mobile, and AI applications. ",
+    "version": "1.25.04 / dokploy >= 0.22.5",
+    "description": "The open source Firebase alternative. Supabase gives you a dedicated Postgres database to build your web, mobile, and AI applications. This require at least version 0.22.5 of dokploy.",
     "links": {
       "github": "https://github.com/supabase/supabase",
       "website": "https://supabase.com/",
       "docs": "https://supabase.com/docs/guides/self-hosting"
     },
     "logo": "supabase.svg",
-    "tags": ["database", "firebase", "postgres"]
+    "tags": ["database", "firebase", "postgres"],
+    "dokploy_version": ">=0.22.5"
+  },
+  {
+    "id": "pre0.22.5-supabase",
+    "name": "SupaBase",
+    "version": "1.25.04 / dokploy < 0.22.5",
+    "description": "The open source Firebase alternative. Supabase gives you a dedicated Postgres database to build your web, mobile, and AI applications. This is for dokploy version < 0.22.5.",
+    "links": {
+      "github": "https://github.com/supabase/supabase",
+      "website": "https://supabase.com/",
+      "docs": "https://supabase.com/docs/guides/self-hosting"
+    },
+    "logo": "supabase.svg",
+    "tags": ["database", "firebase", "postgres"],
+    "dokploy_version": "<0.22.5"
   },
   {
     "id": "pocketbase",
     "name": "PocketBase",
     "description": "Open Source backend in 1 file",
-    "version": "v0.22.4",
+    "version": "v0.28.0",
     "logo": "logo.svg",
     "links": {
       "github": "https://github.com/pocketbase/pocketbase",
@@ -102,6 +143,19 @@
       "docs": "https://grafana.com/docs/"
     },
     "tags": ["monitoring"]
+  },
+  {
+    "id": "stalwart",
+    "name": "Stalwart",
+    "version": "latest",
+    "description": "Stalwart Mail Server is an open-source mail server solution with JMAP, IMAP4, POP3, and SMTP support and a wide range of modern features. It is written in Rust and designed to be secure, fast, robust and scalable.",
+    "logo": "stalwart.svg",
+    "links": {
+      "github": "https://github.com/stalwartlabs/mail-server",
+      "website": "https://stalw.art/",
+      "docs": "https://stalw.art/docs/"
+    },
+    "tags": ["email", "smtp", "jmap", "imap4", "pop3", "self-hosted", "mail-server"]
   },
   {
     "id": "datalens",
@@ -585,6 +639,19 @@
     "tags": ["self-hosted", "storage"]
   },
   {
+    "id": "gitea-mirror",
+    "name": "Gitea Mirror",
+    "version": "v2.11.2",
+    "description": "Gitea Mirror is a modern web app for automatically mirroring repositories from GitHub to your self-hosted Gitea instance. It features a user-friendly interface to sync public, private, or starred GitHub repos, mirror entire organizations with structure preservation, and optionally mirror issues and labels. The application includes smart filtering, detailed logs, and scheduled automatic mirroring.",
+    "logo": "gitea-mirror.png",
+    "links": {
+      "github": "https://github.com/arunavo4/gitea-mirror",
+      "website": "https://github.com/arunavo4/gitea-mirror",
+      "docs": "https://github.com/arunavo4/gitea-mirror#readme"
+    },
+    "tags": ["git", "mirror", "github", "gitea", "self-hosted", "automation"]
+  },
+  {
     "id": "roundcube",
     "name": "Roundcube",
     "version": "1.6.9",
@@ -673,11 +740,7 @@
       "website": "https://pterodactyl.io",
       "docs": "https://pterodactyl.io/project/introduction.html"
     },
-    "tags": [
-      "self-hosted",
-      "open-source",
-      "management"
-    ]
+    "tags": ["self-hosted", "open-source", "management"]
   },
   {
     "id": "pyrodactyl",
@@ -690,11 +753,7 @@
       "website": "https://pyrodactyl.dev",
       "docs": "https://pyrodactyl.dev/docs"
     },
-    "tags": [
-      "self-hosted",
-      "open-source",
-      "management"
-    ]
+    "tags": ["self-hosted", "open-source", "management"]
   },
   {
     "id": "influxdb",
@@ -1141,7 +1200,7 @@
   {
     "id": "logto",
     "name": "Logto",
-    "version": "1.22.0",
+    "version": "1.27.0",
     "description": "Logto is an open-source Identity and Access Management (IAM) platform designed to streamline Customer Identity and Access Management (CIAM) and Workforce Identity Management.",
     "logo": "logto.png",
     "links": {
@@ -2120,6 +2179,19 @@
     "tags": ["documentation", "development", "collaboration"]
   },
   {
+    "id": "colanode",
+    "name": "Colanode Server",
+    "version": "v0.1.6",
+    "description": "Open-source and local-first Slack and Notion alternative that puts you in control of your data",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/colanode/colanode",
+      "website": "https://colanode.com",
+      "docs": "https://colanode.com/docs/"
+    },
+    "tags": ["documentation", "knowledge-base", "collaboration"]
+  },
+  {
     "id": "collabora-office",
     "name": "Collabora Office",
     "version": "latest",
@@ -2226,9 +2298,22 @@
       "website": "https://homebridge.io/",
       "docs": "https://github.com/homebridge/homebridge/wiki"
     },
+    "tags": ["iot", "homekit", "internet-of-things", "self-hosted", "server"]
+  },
+  {
+    "id": "homeassistant",
+    "name": "Home Assistant",
+    "version": "stable",
+    "description": "Open source home automation that puts local control and privacy first.",
+    "logo": "homeassistant.svg",
+    "links": {
+      "github": "https://github.com/home-assistant/core",
+      "website": "https://www.home-assistant.io/",
+      "docs": "https://www.home-assistant.io/getting-started/onboarding/"
+    },
     "tags": [
       "iot",
-      "homekit",
+      "home-automation",
       "internet-of-things",
       "self-hosted",
       "server"
@@ -2274,6 +2359,19 @@
     "tags": ["hosting", "self-hosted", "development"]
   },
   {
+    "id": "bolt.diy",
+    "name": "bolt.diy",
+    "version": "latest",
+    "description": "Prompt, run, edit, and deploy full-stack web applications using any LLM you want!",
+    "logo": "logo.jpg",
+    "links": {
+      "github": "https://github.com/stackblitz-labs/bolt.diy",
+      "website": "https://stackblitz-labs.github.io/bolt.diy/",
+      "docs": "https://stackblitz-labs.github.io/bolt.diy/"
+    },
+    "tags": ["ai", "self-hosted", "development", "chatbot", "ide", "llm"]
+  },
+  {
     "id": "qdrant",
     "name": "Qdrant",
     "version": "latest",
@@ -2284,10 +2382,89 @@
       "website": "https://qdrant.tech/",
       "docs": "https://qdrant.tech/documentation/"
     },
+    "tags": ["vector-db", "database", "search"]
+  },
+  {
+    "id": "trmnl-byos-laravel",
+    "name": "TRMNL BYOS Laravel",
+    "version": "0.3.2",
+    "description": "TRMNL BYOS Laravel is a self-hosted application to manage TRMNL e-ink devices.",
+    "logo": "byos-laravel.svg",
+    "links": {
+      "github": "https://github.com/usetrmnl/byos_laravel",
+      "website": "https://docs.usetrmnl.com/go/diy/byos",
+      "docs": "https://github.com/usetrmnl/byos_laravel/blob/main/README.md"
+    },
+    "tags": ["e-ink"]
+  },
+  {
+    "id": "chibisafe",
+    "name": "Chibisafe",
+    "version": "latest",
+    "description": "A beautiful and performant vault to save all your files in the cloud.",
+    "logo": "chibisafe.svg",
+    "links": {
+      "github": "https://github.com/chibisafe/chibisafe",
+      "website": "https://chibisafe.app",
+      "docs": "https://chibisafe.app/docs/intro"
+    },
+    "tags": ["media system", "storage", "file-sharing"]
+  },
+  {
+    "id": "rybbit",
+    "name": "Rybbit",
+    "version": "latest",
+    "description": "Open-source and privacy-friendly alternative to Google Analytics that is 10x more intuitive",
+    "logo": "rybbit.png",
+    "links": {
+      "github": "https://github.com/rybbit-io/rybbit",
+      "website": "https://rybbit.io",
+      "docs": "https://www.rybbit.io/docs"
+    },
+    "tags": ["analytics"]
+  },
+  {
+    "id": "seafile",
+    "name": "Seafile",
+    "version": "12.0-latest",
+    "description": "Open source cloud storage system for file sync, share and document collaboration",
+    "logo": "seafile.svg",
+    "links": {
+      "github": "https://github.com/haiwen/seafile",
+      "website": "https://seafile.com",
+      "docs": "https://manual.seafile.com/12.0"
+    },
+    "tags": ["file-manager", "file-sharing", "storage"]
+  },
+  {
+    "id": "flagsmith",
+    "name": "Flagsmith",
+    "version": "2.177.1",
+    "description": "Flagsmith is an open-source feature flagging and remote config service.",
+    "logo": "flagsmith.png",
+    "links": {
+      "github": "https://github.com/Flagsmith/flagsmith",
+      "website": "https://www.flagsmith.com/",
+      "docs": "https://docs.flagsmith.com/"
+    },
     "tags": [
-      "vector-db",
-      "database",
-      "search"
+      "feature-flag",
+      "feature-management",
+      "feature-toggle",
+      "remote-configuration"
     ]
-  }  
+  },
+  {
+    "id": "docuseal",
+    "name": "Docuseal",
+    "version": "latest",
+    "description": "Docuseal is a self-hosted document management system.",
+    "logo": "docuseal.png",
+    "links": {
+      "github": "https://github.com/docusealco/docuseal",
+      "website": "https://www.docuseal.com/",
+      "docs": "https://www.docuseal.com/"
+    },
+    "tags": ["document-signing"]
+  }
 ]

@@ -3,22 +3,7 @@ main_domain = "${domain}"
 postgres_password = "${password:32}"
 dashboard_password = "${password:32}"
 logflare_api_key = "${password:32}"
-secret_key_base = "${password:64}"
-vault_enc_key = "${password:32}"
-jwt_secret = "${password:32}"
-container_name_prefix = "${APP_NAME}-supabase"
-anon_key_payload = """{
-  "role": "anon",
-  "iss": "supabase",
-  "exp": ${timestamps:2030-01-01T00:00:00Z},
-}
-"""
-service_role_key_payload = """{
-  "role": "service_role",
-  "iss": "supabase",
-  "exp": ${timestamps:2030-01-01T00:00:00Z},
-}
-"""
+container_name_prefix = "supabase-${hash:4}"
 
 [[config.domains]]
 serviceName = "kong"
@@ -34,6 +19,7 @@ env = [
 '# - ADDITIONAL_REDIRECT_URLS, SITE_URL should point to application using supabase for authentication',
 '#   They are used for redirecting after login/signup and gotrue will check them before sending emails',
 '# - POSTGRES_PORT, POOLER_PROXY_PORT_TRANSACTION should be changed if you are already running other instances of supabase',
+'# and CHANGE: JWT-SECRET, ANON_KEY, SERVICE_ROLE_KEY, SECRET_KEY_BASE, VAULT_ENC_KEY',
 '#',
 '# Supabase uses container names in part of its configuration so it is important to keep them',
 '# This template generates a random prefix for the container names to avoid conflicts',
@@ -45,20 +31,19 @@ env = [
 '# Secrets',
 '# YOU MUST CHANGE THESE BEFORE GOING INTO PRODUCTION',
 '# https://supabase.com/docs/guides/self-hosting/docker#securing-your-services',
-'# In this version of the template they are generated randomly by dokploy helpers',
-'# so you do not need to change them manually',
+'# They are default values from supabase so really do not use them in exposed environments',
 '# Go to https://supabase.com/docs/guides/self-hosting for more information',
 '############',
 '',
 'SUPABASE_HOST=${main_domain}',
 'POSTGRES_PASSWORD=${postgres_password}',
-'JWT_SECRET=${jwt_secret}',
-'ANON_KEY=${jwt:jwt_secret:anon_key_payload}',
-'SERVICE_ROLE_KEY=${jwt:jwt_secret:service_role_key_payload}',
+'JWT_SECRET=your-super-secret-jwt-token-with-at-least-32-characters-long',
+'ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJhbm9uIiwKICAgICJpc3MiOiAic3VwYWJhc2UtZGVtbyIsCiAgICAiaWF0IjogMTY0MTc2OTIwMCwKICAgICJleHAiOiAxNzk5NTM1NjAwCn0.dc_X5iR_VP_qT0zsiyj_I_OZ2T9FtRU2BBNWN8Bu4GE',
+'SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZS1kZW1vIiwKICAgICJpYXQiOiAxNjQxNzY5MjAwLAogICAgImV4cCI6IDE3OTk1MzU2MDAKfQ.DaYlNEoUrrEn2Ig7tqibS-PHK5vgusbcbo7X36XVt4Q',
 'DASHBOARD_USERNAME=supabase',
 'DASHBOARD_PASSWORD=${dashboard_password}',
-'SECRET_KEY_BASE=${secret_key_base}',
-'VAULT_ENC_KEY=${vault_enc_key}',
+'SECRET_KEY_BASE=UpNVntn3cDxHJpq99YMc1T1AQgQpc8kfYTuRgBiYa15BLrx8etQoXz3gZv1/u2oq',
+'VAULT_ENC_KEY=your-encryption-key-32-chars-min',
 '',
 '',
 '############',

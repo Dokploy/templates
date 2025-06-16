@@ -1,0 +1,20 @@
+services:
+  trmnl-byos-laravel:
+    image: ghcr.io/usetrmnl/byos_laravel:0.4.0
+    environment:
+      - APP_URL=${APP_URL}
+      - PHP_OPCACHE_ENABLE=${PHP_OPCACHE_ENABLE}
+      - DEPLOY_VARIANT="dokploy"
+      - DB_DATABASE=database/storage/database.sqlite
+      - APP_TIMEZONE=${APP_TIMEZONE}
+      # - APP_KEY:
+      - REGISTRATION_ENABLED=${REGISTRATION_ENABLED}
+      - FORCE_HTTPS=${FORCE_HTTPS}
+    restart: always
+    volumes:
+      - trmnl-database:/var/www/html/database/storage
+      - trmnl-storage:/var/www/html/storage/app/public/images/generated
+
+volumes:
+  trmnl-database:
+  trmnl-storage:

@@ -1,0 +1,61 @@
+services:
+  freescout-db:
+    image: mariadb:10.6
+    volumes:
+      - freescout-db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p${MYSQL_ROOT_PASSWORD}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  freescout:
+    image: tiredofit/freescout:latest
+    volumes:
+      - freescout-data:/data
+      - freescout-html:/www/html
+      - freescout-logs:/www/logs
+    depends_on:
+      freescout-db:
+        condition: service_healthy
+    environment:
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASS=${ADMIN_PASS}
+      - ADMIN_FIRST_NAME=${ADMIN_FIRST_NAME}
+      - ADMIN_LAST_NAME=${ADMIN_LAST_NAME}
+      - SITE_URL=${SITE_URL}
+      - DB_HOST=freescout-db
+      - DB_PORT=3306
+      - DB_TYPE=mysql
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - APPLICATION_NAME=${APPLICATION_NAME}
+      - SETUP_TYPE=AUTO
+      - ENABLE_AUTO_UPDATE=TRUE
+      - DISPLAY_ERRORS=FALSE
+      - APP_PROXY=${APP_PROXY}
+      - APP_TRUSTED_PROXIES=${APP_TRUSTED_PROXIES}
+    restart: unless-stopped
+
+volumes:
+  freescout-db-data:
+  freescout-data:
+  freescout-html:
+  freescout-logs:

@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "trmnl-byos-laravel"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+APP_URL = "${main_domain}"
+PHP_OPCACHE_ENABLE = "1"
+APP_TIMEZONE = "UTC"
+REGISTRATION_ENABLED = "1"
+FORCE_HTTPS = "0"

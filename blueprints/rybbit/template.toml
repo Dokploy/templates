@@ -1,0 +1,41 @@
+[variables]
+main_domain = "${domain}"
+better_auth_secret = "${password:32}"
+clickhouse_password = "${password:32}"
+postgres_password = "${password:32}"
+
+[[config.domains]]
+serviceName = "rybbit_caddy"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+BASE_URL = "http://${main_domain}"
+BETTER_AUTH_SECRET = "${better_auth_secret}"
+DISABLE_SIGNUP = "false"
+CLICKHOUSE_DB = "analytics"
+CLICKHOUSE_USER = "default"
+CLICKHOUSE_PASSWORD = "${clickhouse_password}"
+POSTGRES_DB = "analytics"
+POSTGRES_USER = "frog"
+POSTGRES_PASSWORD = "${postgres_password}"
+
+[[config.mounts]]
+filePath = "./Caddyfile"
+content = """
+{$BASE_URL} {
+  route {
+    @api path /api/*
+    uri @api strip_prefix /api
+    reverse_proxy @api http://rybbit_backend:3001 {
+      header_up Host {http.reverse_proxy.upstream.hostport}
+      header_up X-Real-IP {http.request.header.X-Real-IP}
+    }
+
+    reverse_proxy http://rybbit_client:3002 {
+      header_up Host {http.reverse_proxy.upstream.hostport}
+      header_up X-Real-IP {http.request.header.X-Real-IP}
+    }
+  }
+}
+"""

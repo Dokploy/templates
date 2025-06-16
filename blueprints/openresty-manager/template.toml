@@ -2,10 +2,10 @@
 main_domain = "${domain}"
 
 [config]
-env = {}
+env = []
 mounts = []
 
 [[config.domains]]
-serviceName = "pocketbase"
-port = 8090
+serviceName = "openresty-manager"
+port = 34567
 host = "${main_domain}"

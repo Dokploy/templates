@@ -1,7 +1,7 @@
 [variables]
 main_domain = "${domain}"
 secret_base = "${base64:64}"
-encryption_key = "${base64:48}"
+encryption_key = "${password:32}"
 cron_secret = "${base64:32}"
 
 [config]

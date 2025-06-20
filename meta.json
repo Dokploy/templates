@@ -316,7 +316,7 @@
   {
     "id": "wordpress",
     "name": "Wordpress",
-    "version": "6.7.1",
+    "version": "latest",
     "description": "Wordpress is a free and open source content management system (CMS) for publishing and managing websites.",
     "logo": "wordpress.png",
     "links": {
@@ -624,6 +624,23 @@
       "docs": "https://docs.typebot.io/get-started/introduction"
     },
     "tags": ["chatbot", "builder", "open-source"]
+  },
+  {
+    "id": "typecho",
+    "name": "Typecho",
+    "version": "stable",
+    "description": "Typecho 是一个轻量级的开源博客程序，基于 PHP 开发，支持多种数据库，简洁而强大。",
+    "logo": "typecho.png",
+    "links": {
+      "github": "https://github.com/typecho/typecho",
+      "website": "https://typecho.org/", 
+      "docs": "http://docs.typecho.org"
+    },
+    "tags": [
+      "blog",
+      "cms",
+      "php"
+    ]
   },
   {
     "id": "gitea",
@@ -2413,7 +2430,7 @@
   {
     "id": "rybbit",
     "name": "Rybbit",
-    "version": "latest",
+    "version": "v1.2.0",
     "description": "Open-source and privacy-friendly alternative to Google Analytics that is 10x more intuitive",
     "logo": "rybbit.png",
     "links": {
@@ -2479,5 +2496,22 @@
       "docs": "https://github.com/thedevs-network/kutt#kuttit"
     },
     "tags": ["link-shortener", "link-sharing"]
+  },
+  {
+    "id": "palmr",
+    "name": "Palmr",
+    "version": "latest",
+    "description": "Palmr the open-source, self-hosted alternative to WeTransfer. Share files securely, without tracking or limitations.",
+    "logo": "palmr.png",
+    "links": {
+      "github": "https://github.com/kyantech/Palmr",
+      "website": "https://palmr.kyantech.com.br/",
+      "docs": "https://palmr.kyantech.com.br/docs/3.0-beta"
+    },
+    "tags": [
+      "file-sharing",
+      "self-hosted",
+      "open-source"
+    ]
   }
 ]

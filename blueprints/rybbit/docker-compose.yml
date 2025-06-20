@@ -1,11 +1,20 @@
 # https://www.rybbit.io/docs/self-hosting-advanced
 
+# NOTE: there are two sample HTTP traefik domain entries created:
+# - rybbit_backend (port 3001, path /api), 
+# - rybbit_client (port 3002, path /)
+#
+# You should treat these as placeholders - Rybbit only supports HTTPS.
+#
+# You should also update the `BASE_URL` environment variable when
+# updating the domain entries with your custom domain.
+
 services:
   rybbit_clickhouse:
-    image: clickhouse/clickhouse-server:25.4.2
+    image: clickhouse/clickhouse-server:25.5
     volumes:
       - clickhouse_data:/var/lib/clickhouse
-      - clickhouse_config:/etc/clickhouse-server/config.d
+      - ../files/clickhouse_config:/etc/clickhouse-server/config.d
     environment:
       - CLICKHOUSE_DB=${CLICKHOUSE_DB}
       - CLICKHOUSE_USER=${CLICKHOUSE_USER}
@@ -25,11 +34,9 @@ services:
       retries: 3
       start_period: 10s
     restart: unless-stopped
-    networks:
-      - internal
 
   rybbit_postgres:
-    image: postgres:17.4
+    image: postgres:17.5
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -42,11 +49,9 @@ services:
       timeout: 10s
       retries: 3
     restart: unless-stopped
-    networks:
-      - internal
 
   rybbit_backend:
-    image: ghcr.io/rybbit-io/rybbit-backend:latest
+    image: ghcr.io/rybbit-io/rybbit-backend:v1.2.0
     environment:
       - NODE_ENV=production
       - CLICKHOUSE_HOST=http://rybbit_clickhouse:8123
@@ -67,18 +72,15 @@ services:
       rybbit_postgres:
         condition: service_started
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3001/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3001/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
     restart: unless-stopped
-    networks:
-      - internal
-      - web
 
   rybbit_client:
-    image: ghcr.io/rybbit-io/rybbit-client:latest
+    image: ghcr.io/rybbit-io/rybbit-client:v1.2.0
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_BACKEND_URL=${BASE_URL}
@@ -86,40 +88,7 @@ services:
     depends_on:
       - rybbit_backend
     restart: unless-stopped
-    networks:
-      - internal
-      - web
-
-  rybbit_caddy:
-    image: caddy:2-alpine
-    volumes:
-      - ../files/Caddyfile:/etc/caddy/Caddyfile:ro
-    environment:
-      - BASE_URL=":80"
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "wget",
-          "--spider",
-          "--no-verbose",
-          "http://127.0.0.1:2019/metrics",
-        ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    restart: unless-stopped
-    networks:
-      - web
 
 volumes:
   clickhouse_data:
-  clickhouse_config:
   postgres_data:
-
-networks:
-  web:
-    driver: bridge
-  internal:
-    driver: bridge

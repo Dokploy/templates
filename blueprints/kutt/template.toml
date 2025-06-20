@@ -10,13 +10,13 @@ env = [
     "DISALLOW_ANONYMOUS_LINKS=true",
     "CUSTOM_DOMAIN_USE_HTTPS=true",
     "MAIL_ENABLED=false",
-    "MAIL_HOST=",
-    "MAIL_PORT=",
+    "MAIL_HOST=''",
+    "MAIL_PORT='22'",
     "MAIL_SECURE=true",
-    "MAIL_USER=",
-    "MAIL_FROM=",
-    "MAIL_PASSWORD=",
-    "CONTACT_EMAIL="
+    "MAIL_USER=''",
+    "MAIL_FROM=''",
+    "MAIL_PASSWORD=''",
+    "CONTACT_EMAIL=''"
 ]
 mounts = []
 

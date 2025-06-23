@@ -2526,9 +2526,10 @@
       "docs": "https://github.com/aldinokemal/go-whatsapp-web-multidevice"
     },
     "tags": [
-      "file-sharing",
+      "whatsapp",
       "self-hosted",
-      "open-source"
+      "open-source",
+      "api"
     ]
   }
 ]

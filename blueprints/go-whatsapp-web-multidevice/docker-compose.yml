@@ -1,0 +1,24 @@
+services:
+  whatsapp:
+    image: aldinokemal2104/go-whatsapp-web-multidevice
+    restart: always
+    ports:
+      - "3080:3080"
+    volumes:
+      - whatsapp:/app/storages
+    networks:
+      - dokploy-network
+    command:
+      - rest
+      - --basic-auth=${WAUSERNAME}:${WAPASSWORD}
+      - --port=3080
+      - --debug=true
+      - --os=Chrome
+      - --account-validation=false
+
+volumes:
+  whatsapp:
+
+networks:
+  dokploy-network:
+    external: true

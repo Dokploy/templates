@@ -2513,5 +2513,22 @@
       "self-hosted",
       "open-source"
     ]
+  },
+  {
+    "id": "rabbitmq",
+    "name": "RabbitMQ",
+    "version": "4.1-management",
+    "description": "RabbitMQ is an open source multi-protocol messaging broker.",
+    "logo": "rabbitmq.svg",
+    "links": {
+      "github": "https://github.com/rabbitmq/rabbitmq-server",
+      "website": "https://www.rabbitmq.com/",
+      "docs": "https://www.rabbitmq.com/documentation.html"
+    },
+    "tags": [
+      "message-broker",
+      "queue",
+      "rabbitmq"
+    ]
   }
 ]

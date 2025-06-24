@@ -1,0 +1,150 @@
+[variables]
+main_domain = "livekit.${domain}"
+turn_domain = "livekit-turn.${domain}"
+whip_domain = "livekit-whip.${domain}"
+api_key = "API${password:12}"
+api_secret = "${password:44}"
+redis_address = "redis:6379"
+redis_password = "${password:32}"
+
+livekit_port = "7880"
+livekit_tcp_port = "7881"
+livekit_udp_port = "7882"
+turn_tls_port = "5349"
+turn_udp_port = "3478"
+rtmp_port = "1935"
+whip_port = "8080"
+ingress_udp_port = "7885"
+http_relay_port = "9090"
+
+[config]
+[[config.domains]]
+serviceName = "livekit"
+port = 7880
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "livekit"
+port = 5349
+host = "${turn_domain}"
+
+[[config.domains]]
+serviceName = "ingress"
+port = 8080
+host = "${whip_domain}"
+
+[config.env]
+LIVEKIT_URL = "${main_domain}"
+RTMP_URL = "${turn_domain}"
+WHIP_URL = "${whip_domain}"
+REDIS_ADDRESS = "${redis_address}"
+REDIS_PASSWORD = "${redis_password}"
+API_KEY = "${api_key}"
+API_SECRET = "${api_secret}"
+LIVEKIT_PORT = "${livekit_port}"
+LIVEKIT_TCP_PORT = "${livekit_tcp_port}"
+LIVEKIT_UDP_PORT = "${livekit_udp_port}"
+TURN_TLS_PORT = "${turn_tls_port}"
+TURN_UDP_PORT = "${turn_udp_port}"
+RTMP_PORT = "${rtmp_port}"
+WHIP_PORT = "${whip_port}"
+INGRESS_UDP_PORT = "${ingress_udp_port}"
+HTTP_RELAY_PORT = "${http_relay_port}"
+
+[[config.mounts]]
+filePath = "redis.conf"
+content = """
+bind 0.0.0.0
+protected-mode yes
+port 6379
+timeout 0
+tcp-keepalive 300
+requirepass ${redis_password}
+"""
+
+[[config.mounts]]
+filePath = "livekit.yaml"
+content = """
+port: ${livekit_port}
+bind_addresses:
+    - ""
+rtc:
+    tcp_port: ${livekit_tcp_port}
+    udp_port: ${livekit_udp_port}
+    use_external_ip: true
+    enable_loopback_candidate: false
+redis:
+    address: ${redis_address}
+    username: ""
+    password: ${redis_password}
+    db: 0
+    use_tls: false
+    sentinel_master_name: ""
+    sentinel_username: ""
+    sentinel_password: ""
+    sentinel_addresses: []
+    cluster_addresses: []
+    max_redirects: null
+turn:
+    enabled: true
+    domain: ${turn_domain}
+    tls_port: ${turn_tls_port}
+    udp_port: ${turn_udp_port}
+    external_tls: true
+ingress:
+    rtmp_base_url: rtmp://${main_domain}:${rtmp_port}/x
+    whip_base_url: https://${whip_domain}/w
+keys:
+    ${api_key}: ${api_secret}
+"""
+
+[[config.mounts]]
+filePath = "egress.yaml"
+content = """
+redis:
+    address: ${redis_address}
+    username: ""
+    password: ${redis_password}
+    db: 0
+    use_tls: false
+    sentinel_master_name: ""
+    sentinel_username: ""
+    sentinel_password: ""
+    sentinel_addresses: []
+    cluster_addresses: []
+    max_redirects: null
+api_key: ${api_key}
+api_secret: ${api_secret}
+ws_url: wss://${main_domain}
+"""
+
+[[config.mounts]]
+filePath = "ingress.yaml"
+content = """
+redis:
+    address: ${redis_address}
+    username: ""
+    password: ${redis_password}
+    db: 0
+    use_tls: false
+    sentinel_master_name: ""
+    sentinel_username: ""
+    sentinel_password: ""
+    sentinel_addresses: []
+    cluster_addresses: []
+    max_redirects: null
+api_key: ${api_key}
+api_secret: ${api_secret}
+ws_url: wss://${main_domain}
+rtmp_port: ${rtmp_port}
+whip_port: ${whip_port}
+http_relay_port: ${http_relay_port}
+logging:
+    json: false
+    level: ""
+development: false
+rtc_config:
+    udp_port: ${ingress_udp_port}
+    use_external_ip: true
+    enable_loopback_candidate: false
+"""

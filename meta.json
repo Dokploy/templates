@@ -633,7 +633,7 @@
     "logo": "typecho.png",
     "links": {
       "github": "https://github.com/typecho/typecho",
-      "website": "https://typecho.org/", 
+      "website": "https://typecho.org/",
       "docs": "http://docs.typecho.org"
     },
     "tags": [
@@ -2512,6 +2512,25 @@
       "file-sharing",
       "self-hosted",
       "open-source"
+    ]
+  },
+  {
+    "id": "livekit",
+    "name": "Livekit",
+    "version": "v1.9.0",
+    "description": "LiveKit is an open source platform for developers building realtime media applications.",
+    "logo": "livekit.svg",
+    "links": {
+      "github": "https://github.com/livekit/livekit",
+      "website": "https://livekit.io/",
+      "docs": "https://docs.livekit.io/"
+    },
+    "tags": [
+      "Video",
+      "Audio",
+      "Real-time",
+      "Streaming",
+      "Webrtc"
     ]
   }
 ]

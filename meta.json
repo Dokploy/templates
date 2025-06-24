@@ -769,6 +769,19 @@
     "tags": ["self-hosted", "open-source", "storage", "database"]
   },
   {
+    "id": "inngest",
+    "name": "Inngest",
+    "version": "latest",
+    "description": "Inngest is a developer platform for serverless event-driven workflows. Build reliable, scalable background functions and workflows with built-in retries, scheduling, and observability.",
+    "logo": "inngest.svg",
+    "links": {
+      "github": "https://github.com/inngest/inngest",
+      "website": "https://www.inngest.com/",
+      "docs": "https://www.inngest.com/docs/self-hosting"
+    },
+    "tags": ["workflow", "automation", "self-hosted", "serverless", "events"]
+  },
+  {
     "id": "infisical",
     "name": "Infisical",
     "version": "0.90.1",

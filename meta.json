@@ -771,7 +771,7 @@
   {
     "id": "inngest",
     "name": "Inngest",
-    "version": "latest",
+    "version": "v1.8.1",
     "description": "Inngest is a developer platform for serverless event-driven workflows. Build reliable, scalable background functions and workflows with built-in retries, scheduling, and observability.",
     "logo": "inngest.svg",
     "links": {

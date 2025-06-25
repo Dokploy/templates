@@ -61,19 +61,16 @@ content = '''
 <body>
     <div class="container">
         <h1>🚗 Garage S3 Storage</h1>
-        
         <div class="status">
             <h3>✅ Storage is Online</h3>
             <p>Your Garage S3-compatible storage is running successfully!</p>
         </div>
-        
         <div class="info">
             <h3>📝 Access Information</h3>
             <p><strong>S3 API Endpoint:</strong> http://localhost:3900</p>
             <p><strong>Region:</strong> garage</p>
             <p><strong>Bucket:</strong> s3-test</p>
         </div>
-        
         <div class="info">
             <h3>🔧 Next Steps</h3>
             <ul>
@@ -82,28 +79,25 @@ content = '''
                 <li>Access files via the web interface at this domain</li>
             </ul>
         </div>
-        
         <p><em>Powered by <a href="https://garagehq.deuxfleurs.fr/">Garage</a> - Open-source distributed storage</em></p>
     </div>
 </body>
 </html>
 '''
+
+[[config.mounts]]
 filePath = "init-garage.sh"
 content = '''
 #!/bin/sh
 echo "=== Garage Initialization Script ==="
 echo "Waiting for Garage daemon to be ready..."
-
-# Wait for garage daemon to be fully ready
 sleep 15
 
-# Function to check if garage is ready
 check_garage_ready() {
     garage status >/dev/null 2>&1
     return $?
 }
 
-# Wait up to 60 seconds for garage to be ready
 TIMEOUT=60
 ELAPSED=0
 while [ $ELAPSED -lt $TIMEOUT ]; do
@@ -123,8 +117,6 @@ fi
 
 echo "Getting Garage status..."
 garage status
-
-# Extract node ID (first 16 hex characters of the first line starting with hex)
 NODE_ID=$(garage status | awk '/^[a-f0-9]/ {print substr($1, 1, 16); exit}')
 
 if [ -z "$NODE_ID" ]; then
@@ -135,33 +127,26 @@ fi
 
 echo "Found node ID: $NODE_ID"
 
-# Check if cluster is already configured
 if garage status | grep -q "CONFIGURED"; then
     echo "Cluster already configured, skipping layout setup"
 else
     echo "Configuring cluster layout..."
-    
-    # Assign node to cluster with 10GB capacity in zone dc1
     if garage layout assign -z dc1 -c 10G "$NODE_ID"; then
         echo "Node assigned successfully"
     else
         echo "ERROR: Failed to assign node"
         exit 1
     fi
-    
-    # Apply the layout
+
     if garage layout apply --version 1; then
         echo "Layout applied successfully"
     else
         echo "ERROR: Failed to apply layout"
         exit 1
     fi
-    
-    # Wait a bit for layout to take effect
     sleep 5
 fi
 
-# Check if bucket already exists
 if garage bucket list | grep -q "s3-test"; then
     echo "Bucket 's3-test' already exists"
 else
@@ -174,7 +159,6 @@ else
     fi
 fi
 
-# Check if key already exists
 if garage key list | grep -q "s3-test-key"; then
     echo "Key 's3-test-key' already exists"
 else
@@ -187,32 +171,28 @@ else
     fi
 fi
 
-# Grant permissions
 echo "Granting permissions..."
 garage bucket allow --read --write --owner s3-test --key s3-test-key
 
-# Display key information
 echo ""
 echo "=== ACCESS KEY INFORMATION ==="
 garage key info s3-test-key
-
 echo ""
 echo "=== BUCKET INFORMATION ==="
 garage bucket info s3-test
-
 echo ""
 echo "=== CLUSTER STATUS ==="
 garage status
-
 echo ""
 echo "=== Garage initialization completed successfully! ==="
 echo "You can now access your S3 storage at: http://localhost:3900"
 echo "Web interface will be available at: http://${main_domain}:3902"
 '''
+
+[[config.mounts]]
 filePath = "garage.toml"
 content = '''
 # Garage Configuration
-# Based on official documentation
 # https://garagehq.deuxfleurs.fr/documentation/reference-manual/configuration/
 
 replication_factor = 1
@@ -239,9 +219,6 @@ rpc_bind_outgoing = false
 rpc_public_addr = "127.0.0.1:3901"
 
 allow_world_readable_secrets = false
-
-# Single node setup - no bootstrap peers needed
-# bootstrap_peers = []
 
 allow_punycode = false
 

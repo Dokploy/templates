@@ -10,6 +10,6 @@ env = [
 ]
 
 [[config.domains]]
-serviceName = "go_whatsapp_web_multidevice"
+serviceName = "whatsapp"
 port = 3080
 host = "${main_domain}"

@@ -209,8 +209,6 @@ echo "=== Garage initialization completed successfully! ==="
 echo "You can now access your S3 storage at: http://localhost:3900"
 echo "Web interface will be available at: http://${main_domain}:3902"
 '''
-
-[[config.mounts]]
 filePath = "garage.toml"
 content = '''
 # Garage Configuration

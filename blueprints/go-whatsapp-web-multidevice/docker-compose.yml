@@ -19,6 +19,3 @@ services:
 volumes:
   whatsapp:
 
-networks:
-  dokploy-network:
-    external: true

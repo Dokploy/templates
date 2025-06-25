@@ -33,7 +33,7 @@ services:
       - app-network
       - dokploy-network
     healthcheck:
-      test: ["CMD", "/garage", "status"]
+      test: ["CMD", "garage", "status"]
       interval: 10s
       timeout: 5s
       retries: 5

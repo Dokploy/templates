@@ -790,6 +790,19 @@
     "tags": ["self-hosted", "open-source", "storage", "database"]
   },
   {
+    "id": "inngest",
+    "name": "Inngest",
+    "version": "v1.8.1",
+    "description": "Inngest is a developer platform for serverless event-driven workflows. Build reliable, scalable background functions and workflows with built-in retries, scheduling, and observability.",
+    "logo": "inngest.svg",
+    "links": {
+      "github": "https://github.com/inngest/inngest",
+      "website": "https://www.inngest.com/",
+      "docs": "https://www.inngest.com/docs/self-hosting"
+    },
+    "tags": ["workflow", "automation", "self-hosted", "serverless", "events"]
+  },
+  {
     "id": "infisical",
     "name": "Infisical",
     "version": "0.90.1",
@@ -1170,6 +1183,19 @@
     "id": "triggerdotdev",
     "name": "Trigger.dev",
     "version": "v3",
+    "description": "Trigger is a platform for building event-driven applications.",
+    "logo": "triggerdotdev.svg",
+    "links": {
+      "github": "https://github.com/triggerdotdev/trigger.dev",
+      "website": "https://trigger.dev/",
+      "docs": "https://trigger.dev/docs"
+    },
+    "tags": ["event-driven", "applications"]
+  },
+  {
+    "id": "triggerdotdev4",
+    "name": "Trigger.dev",
+    "version": "v4-beta",
     "description": "Trigger is a platform for building event-driven applications.",
     "logo": "triggerdotdev.svg",
     "links": {

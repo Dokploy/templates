@@ -6,8 +6,6 @@ services:
       - "3080"
     volumes:
       - whatsapp:/app/storages
-    networks:
-      - dokploy-network
     command:
       - rest
       - --basic-auth=${WAUSERNAME}:${WAPASSWORD}

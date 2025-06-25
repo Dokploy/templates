@@ -1,8 +1,5 @@
 [variables]
 main_domain = "${domain}"
-rpc_secret = "${rpc_secret}"
-admin_token = "${admin_token}"
-metrics_token = "${metrics_token}"
 
 [config]
 [[config.domains]]
@@ -11,230 +8,34 @@ port = 3902
 host = "${main_domain}"
 
 [config.env]
-GARAGE_RPC_SECRET = "${rpc_secret}"
-GARAGE_ADMIN_TOKEN = "${admin_token}"
-GARAGE_METRICS_TOKEN = "${metrics_token}"
-
-[[config.mounts]]
-filePath = "sample-index.html"
-content = '''
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Garage S3 Storage</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        .status {
-            background: #e8f5e8;
-            border: 1px solid #4caf50;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        .info {
-            background: #f0f8ff;
-            border: 1px solid #2196f3;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>🚗 Garage S3 Storage</h1>
-        <div class="status">
-            <h3>✅ Storage is Online</h3>
-            <p>Your Garage S3-compatible storage is running successfully!</p>
-        </div>
-        <div class="info">
-            <h3>📝 Access Information</h3>
-            <p><strong>S3 API Endpoint:</strong> http://localhost:3900</p>
-            <p><strong>Region:</strong> garage</p>
-            <p><strong>Bucket:</strong> s3-test</p>
-        </div>
-        <div class="info">
-            <h3>🔧 Next Steps</h3>
-            <ul>
-                <li>Configure your S3 client with the access keys shown during setup</li>
-                <li>Upload files to your bucket using AWS CLI or any S3-compatible tool</li>
-                <li>Access files via the web interface at this domain</li>
-            </ul>
-        </div>
-        <p><em>Powered by <a href="https://garagehq.deuxfleurs.fr/">Garage</a> - Open-source distributed storage</em></p>
-    </div>
-</body>
-</html>
-'''
-
-[[config.mounts]]
-filePath = "init-garage.sh"
-content = '''
-#!/bin/sh
-echo "=== Garage Initialization Script ==="
-echo "Waiting for Garage daemon to be ready..."
-sleep 15
-
-check_garage_ready() {
-    garage status >/dev/null 2>&1
-    return $?
-}
-
-TIMEOUT=60
-ELAPSED=0
-while [ $ELAPSED -lt $TIMEOUT ]; do
-    if check_garage_ready; then
-        echo "Garage daemon is ready!"
-        break
-    fi
-    echo "Waiting for Garage daemon... ($ELAPSED/$TIMEOUT seconds)"
-    sleep 5
-    ELAPSED=$((ELAPSED + 5))
-done
-
-if [ $ELAPSED -ge $TIMEOUT ]; then
-    echo "ERROR: Garage daemon not ready after $TIMEOUT seconds"
-    exit 1
-fi
-
-echo "Getting Garage status..."
-garage status
-NODE_ID=$(garage status | awk '/^[a-f0-9]/ {print substr($1, 1, 16); exit}')
-
-if [ -z "$NODE_ID" ]; then
-    echo "ERROR: Could not extract node ID from garage status"
-    garage status
-    exit 1
-fi
-
-echo "Found node ID: $NODE_ID"
-
-if garage status | grep -q "CONFIGURED"; then
-    echo "Cluster already configured, skipping layout setup"
-else
-    echo "Configuring cluster layout..."
-    if garage layout assign -z dc1 -c 10G "$NODE_ID"; then
-        echo "Node assigned successfully"
-    else
-        echo "ERROR: Failed to assign node"
-        exit 1
-    fi
-
-    if garage layout apply --version 1; then
-        echo "Layout applied successfully"
-    else
-        echo "ERROR: Failed to apply layout"
-        exit 1
-    fi
-    sleep 5
-fi
-
-if garage bucket list | grep -q "s3-test"; then
-    echo "Bucket 's3-test' already exists"
-else
-    echo "Creating bucket 's3-test'..."
-    if garage bucket create s3-test; then
-        echo "Bucket created successfully"
-    else
-        echo "ERROR: Failed to create bucket"
-        exit 1
-    fi
-fi
-
-if garage key list | grep -q "s3-test-key"; then
-    echo "Key 's3-test-key' already exists"
-else
-    echo "Creating access key 's3-test-key'..."
-    if garage key create s3-test-key; then
-        echo "Access key created successfully"
-    else
-        echo "ERROR: Failed to create access key"
-        exit 1
-    fi
-fi
-
-echo "Granting permissions..."
-garage bucket allow --read --write --owner s3-test --key s3-test-key
-
-echo ""
-echo "=== ACCESS KEY INFORMATION ==="
-garage key info s3-test-key
-echo ""
-echo "=== BUCKET INFORMATION ==="
-garage bucket info s3-test
-echo ""
-echo "=== CLUSTER STATUS ==="
-garage status
-echo ""
-echo "=== Garage initialization completed successfully! ==="
-echo "You can now access your S3 storage at: http://localhost:3900"
-echo "Web interface will be available at: http://${main_domain}:3902"
-'''
+GARAGE_RPC_SECRET=${hash:65}
+GARAGE_ADMIN_TOKEN=${base64:45}
+GARAGE_METRICS_TOKEN=${base64:45}
 
 [[config.mounts]]
 filePath = "garage.toml"
 content = '''
 # Garage Configuration
+# ====================
 # https://garagehq.deuxfleurs.fr/documentation/reference-manual/configuration/
-
-replication_factor = 1
-consistency_mode = "consistent"
-
+#
+# --------------------
 metadata_dir = "/meta"
 data_dir = "/data"
-metadata_fsync = true
-data_fsync = false
-disable_scrub = false
-use_local_tz = false
-metadata_auto_snapshot_interval = "6h"
-
 db_engine = "sqlite"
-
-block_size = "1M"
-block_ram_buffer_max = "256MiB"
-
-compression_level = 1
-
-rpc_secret = "${rpc_secret}"
+replication_factor = 1
 rpc_bind_addr = "[::]:3901"
-rpc_bind_outgoing = false
 rpc_public_addr = "127.0.0.1:3901"
-
-allow_world_readable_secrets = false
-
-allow_punycode = false
-
 [s3_api]
-api_bind_addr = "[::]:3900"
 s3_region = "garage"
-root_domain = ".s3.garage"
-
+api_bind_addr = "[::]:3900"
+root_domain = "garage-daemon"
 [s3_web]
 bind_addr = "[::]:3902"
 root_domain = "${main_domain}"
-add_host_to_metrics = true
-
+index = "index.html"
+[k2v_api]
+api_bind_addr = "[::]:3904"
 [admin]
 api_bind_addr = "[::]:3903"
-metrics_token = "${metrics_token}"
-metrics_require_token = true
-admin_token = "${admin_token}"
 '''

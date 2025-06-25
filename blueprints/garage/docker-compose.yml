@@ -2,13 +2,6 @@ version: '3.8'
 
 name: garage
 
-networks:
-  dokploy-network:
-    external: true
-  app-network:
-    enable_ipv6: true
-    driver: bridge
-
 services:
   daemon:
     container_name: garage-daemon
@@ -19,44 +12,21 @@ services:
       - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}
       - GARAGE_METRICS_TOKEN=${GARAGE_METRICS_TOKEN}
     volumes:
-      - ./files/garage.toml:/etc/garage.toml
-      - ./files/init-garage.sh:/init-garage.sh
-      - ./files/sample-index.html:/sample-index.html
-      - garage_meta:/meta
+      - ./garage.toml:/etc/garage.toml
       - garage_data:/data
+      - garage_meta:/meta
     ports:
-      - "3900:3900"  # S3 API
-      - "3901:3901"  # RPC
-      - "3902:3902"  # Web interface
-      - "3903:3903"  # Admin API
+      - "3900:3900"
     networks:
       - app-network
       - dokploy-network
-    healthcheck:
-      test: ["CMD", "garage", "status"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
 
-  garage-init:
-    container_name: garage-init
-    image: dxflrs/garage:v1.1.0
-    depends_on:
-      daemon:
-        condition: service_healthy
-    volumes:
-      - ./files/garage.toml:/etc/garage.toml
-      - ./files/init-garage.sh:/init-garage.sh
-      - ./files/sample-index.html:/sample-index.html
-    networks:
-      - app-network
-    environment:
-      - GARAGE_RPC_SECRET=${GARAGE_RPC_SECRET}
-      - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}
-      - GARAGE_METRICS_TOKEN=${GARAGE_METRICS_TOKEN}
-    command: ["/bin/sh", "/init-garage.sh"]
-    restart: "no"
+networks:
+  dokploy-network:
+    external: true
+  app-network:
+    driver: bridge
+    enable_ipv6: true
 
 volumes:
   garage_data: {}

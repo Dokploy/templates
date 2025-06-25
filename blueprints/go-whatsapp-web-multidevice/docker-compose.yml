@@ -3,7 +3,7 @@ services:
     image: aldinokemal2104/go-whatsapp-web-multidevice
     restart: always
     ports:
-      - "3080:3080"
+      - "3080"
     volumes:
       - whatsapp:/app/storages
     networks:

@@ -1,6 +1,4 @@
-version: '3.8'
-
-name: garage
+version: "3.9"
 
 services:
   daemon:
@@ -12,22 +10,21 @@ services:
       - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}
       - GARAGE_METRICS_TOKEN=${GARAGE_METRICS_TOKEN}
     volumes:
-      - ./garage.toml:/etc/garage.toml
-      - garage_data:/data
       - garage_meta:/meta
+      - garage_data:/data
     ports:
       - "3900:3900"
+      - "3901:3901"
+      - "3902:3902"
+      - "3903:3903"
+      - "3904:3904"
     networks:
-      - app-network
       - dokploy-network
-
-networks:
-  dokploy-network:
-    external: true
-  app-network:
-    driver: bridge
-    enable_ipv6: true
 
 volumes:
   garage_data: {}
   garage_meta: {}
+
+networks:
+  dokploy-network:
+    external: true

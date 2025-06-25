@@ -9,7 +9,7 @@ services:
       - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}
       - GARAGE_METRICS_TOKEN=${GARAGE_METRICS_TOKEN}
     volumes:
-      - ./garage.toml:/etc/garage.toml:ro
+      - ../files/garage.toml:/etc/garage.toml:ro
       - garage_meta:/meta
       - garage_data:/data
     ports:

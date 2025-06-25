@@ -37,7 +37,7 @@ root_domain = "garage-daemon"
 
 [s3_web]
 bind_addr = "[::]:3902"
-root_domain = "${main_domain}"
+root_domain = ".${main_domain}"
 index = "index.html"
 
 [k2v_api]

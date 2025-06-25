@@ -1,10 +1,12 @@
 [variables]
 main_domain = "${domain}"
 
-[config.env]
+[config]
+env = [
 "GARAGE_RPC_SECRET=${hash:64}",
 "GARAGE_ADMIN_TOKEN=${hash:64}",
 "GARAGE_METRICS_TOKEN=${base64:45}",
+]
 
 [[config.domains]]
 serviceName = "daemon"

@@ -1,0 +1,34 @@
+[variables]
+main_domain = "${domain}"
+server_admin = "admin@${domain}"
+timezone = "Europe/Berlin"
+mysql_root_password = "${password:32}"
+mysql_password = "${password:32}"
+
+[config.env]
+# Application versions
+LINKSTACK_VERSION = "latest"
+MYSQL_VERSION = "8"
+
+# Application configuration
+TZ = "${timezone}"
+SERVER_ADMIN = "${server_admin}"
+HTTP_SERVER_NAME = "${main_domain}"
+HTTPS_SERVER_NAME = "${main_domain}"
+LOG_LEVEL = "info"
+PHP_MEMORY_LIMIT = "256M"
+UPLOAD_MAX_FILESIZE = "8M"
+
+# Database configuration
+MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
+MYSQL_DATABASE = "linkstack"
+MYSQL_USER = "linkstack"
+MYSQL_PASSWORD = "${mysql_password}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "linkstack"
+port = 80
+host = "${main_domain}" 

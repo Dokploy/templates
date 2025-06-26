@@ -1,0 +1,52 @@
+services:
+  app:
+    container_name: directory-lister-app
+    image: ${DIRECTORY_LISTER_IMAGE}
+    restart: unless-stopped
+    depends_on:
+      - memcached
+      - redis
+    ports:
+      - "${APP_PORT}:80"
+    extra_hosts:
+      - host.docker.internal:${DOCKER_HOST_IP}
+    user: ${HOST_USER_ID}:${HOST_GROUP_ID}
+    volumes:
+      - app_data:/var/www/html
+      - config_data:/var/www/html/config
+    environment:
+      - DOCKER_HOST_IP=${DOCKER_HOST_IP}
+      - HOST_USER_ID=${HOST_USER_ID}
+      - HOST_GROUP_ID=${HOST_GROUP_ID}
+
+  memcached:
+    container_name: directory-lister-memcached
+    image: memcached:1.6
+    restart: unless-stopped
+    ports:
+      - "${MEMCACHED_PORT}:11211"
+
+  redis:
+    container_name: directory-lister-redis
+    image: redis:6.0
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - redis_data:/data
+
+  npm:
+    container_name: directory-lister-npm
+    image: ${DIRECTORY_LISTER_IMAGE}
+    restart: unless-stopped
+    volumes:
+      - app_data:/var/www/html
+    ports:
+      - "${NPM_PORT}:5173"
+    user: ${HOST_USER_ID}:${HOST_GROUP_ID}
+    command: npm run dev
+
+volumes:
+  app_data:
+  config_data:
+  redis_data:

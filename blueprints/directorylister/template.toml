@@ -1,0 +1,49 @@
+[variables]
+APP_PORT = "80"
+MEMCACHED_PORT = "11211"
+REDIS_PORT = "6379"
+NPM_PORT = "5173"
+DOCKER_HOST_IP = "172.17.0.1"
+HOST_USER_ID = "1000"
+HOST_GROUP_ID = "1000"
+DIRECTORY_LISTER_IMAGE = "phlak/directory-lister:latest"
+
+[config]
+env = [
+  "APP_PORT=${APP_PORT}",
+  "MEMCACHED_PORT=${MEMCACHED_PORT}",
+  "REDIS_PORT=${REDIS_PORT}",
+  "NPM_PORT=${NPM_PORT}",
+  "DOCKER_HOST_IP=${DOCKER_HOST_IP}",
+  "HOST_USER_ID=${HOST_USER_ID}",
+  "HOST_GROUP_ID=${HOST_GROUP_ID}",
+  "DIRECTORY_LISTER_IMAGE=${DIRECTORY_LISTER_IMAGE}",
+]
+mounts = [
+  {
+    type = "volume",
+    name = "app_data",
+    mountPath = "/var/www/html"
+  },
+  {
+    type = "volume",
+    name = "config_data",
+    mountPath = "/var/www/html/config"
+  },
+  {
+    type = "volume",
+    name = "redis_data",
+    mountPath = "/data"
+  }
+]
+
+[[config.domains]]
+serviceName = "app"
+port = 80
+host = "${domain}"
+
+[[config.domains]]
+serviceName = "npm"
+port = 5173
+host = "${domain}"
+path = "/dev" 

@@ -1,137 +1,217 @@
-version: '3.8'
+version: "3.8"
 
 services:
   web:
-    image: makeplane/plane-frontend:${APP_RELEASE:-v0.25.3}
-    command: node web/server.js web
+    container_name: web
+    image: makeplane/plane-frontend:latest
+    restart: always
     depends_on:
       - api
-      - worker
-    env_file:
-      - .env
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://api:8000
 
   space:
-    image: makeplane/plane-space:${APP_RELEASE:-v0.25.3}
-    command: node space/server.js space
+    container_name: space
+    image: makeplane/plane-space:latest
+    restart: always
     depends_on:
       - api
-      - worker
       - web
-    env_file:
-      - .env
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://api:8000
 
   admin:
-    image: makeplane/plane-admin:${APP_RELEASE:-v0.25.3}
-    command: node admin/server.js admin
+    container_name: admin
+    image: makeplane/plane-admin:latest
+    restart: always
     depends_on:
       - api
       - web
-    env_file:
-      - .env
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://api:8000
 
   live:
-    image: makeplane/plane-live:${APP_RELEASE:-v0.25.3}
-    command: node live/dist/server.js live
-    depends_on:
-      - api
-      - web
-    env_file:
-      - .env
+    container_name: plane-live
+    image: makeplane/plane-live:latest
+    restart: always
 
   api:
-    image: makeplane/plane-backend:${APP_RELEASE:-v0.25.3}
-    command: ./bin/docker-entrypoint-api.sh
-    volumes:
-      - logs_api:/code/plane/logs
+    container_name: api
+    image: makeplane/plane-backend:latest
+    restart: always
     depends_on:
       - plane-db
       - plane-redis
-      - plane-mq
-    env_file:
-      - .env
+    environment:
+      DEBUG: ${DEBUG}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: plane-db
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PORT: 5432
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@plane-db:5432/${POSTGRES_DB}
+      REDIS_HOST: plane-redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://plane-redis:6379/
+      AWS_REGION: ${AWS_REGION}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_S3_ENDPOINT_URL: http://plane-minio:9000
+      AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+      FILE_SIZE_LIMIT: ${FILE_SIZE_LIMIT}
+      USE_MINIO: 1
+      WEB_URL: ${WEB_URL}
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS}
+      SECRET_KEY: ${SECRET_KEY}
 
   worker:
-    image: makeplane/plane-backend:${APP_RELEASE:-v0.25.3}
+    container_name: bgworker
+    image: makeplane/plane-backend:latest
+    restart: always
     command: ./bin/docker-entrypoint-worker.sh
-    volumes:
-      - logs_worker:/code/plane/logs
     depends_on:
       - api
       - plane-db
       - plane-redis
-      - plane-mq
-    env_file:
-      - .env
+    environment:
+      DEBUG: ${DEBUG}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: plane-db
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PORT: 5432
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@plane-db:5432/${POSTGRES_DB}
+      REDIS_HOST: plane-redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://plane-redis:6379/
+      AWS_REGION: ${AWS_REGION}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_S3_ENDPOINT_URL: http://plane-minio:9000
+      AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+      FILE_SIZE_LIMIT: ${FILE_SIZE_LIMIT}
+      USE_MINIO: 1
+      SECRET_KEY: ${SECRET_KEY}
 
   beat-worker:
-    image: makeplane/plane-backend:${APP_RELEASE:-v0.25.3}
+    container_name: beatworker
+    image: makeplane/plane-backend:latest
+    restart: always
     command: ./bin/docker-entrypoint-beat.sh
-    volumes:
-      - logs_beat-worker:/code/plane/logs
     depends_on:
       - api
       - plane-db
       - plane-redis
-      - plane-mq
-    env_file:
-      - .env
+    environment:
+      DEBUG: ${DEBUG}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: plane-db
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PORT: 5432
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@plane-db:5432/${POSTGRES_DB}
+      REDIS_HOST: plane-redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://plane-redis:6379/
+      AWS_REGION: ${AWS_REGION}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_S3_ENDPOINT_URL: http://plane-minio:9000
+      AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+      FILE_SIZE_LIMIT: ${FILE_SIZE_LIMIT}
+      USE_MINIO: 1
+      SECRET_KEY: ${SECRET_KEY}
 
   migrator:
-    image: makeplane/plane-backend:${APP_RELEASE:-v0.25.3}
+    container_name: plane-migrator
+    image: makeplane/plane-backend:latest
+    restart: "no"
     command: ./bin/docker-entrypoint-migrator.sh
-    volumes:
-      - logs_migrator:/code/plane/logs
     depends_on:
       - plane-db
       - plane-redis
-    env_file:
-      - .env
+    environment:
+      DEBUG: ${DEBUG}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: plane-db
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PORT: 5432
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@plane-db:5432/${POSTGRES_DB}
+      REDIS_HOST: plane-redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://plane-redis:6379/
+      AWS_REGION: ${AWS_REGION}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_S3_ENDPOINT_URL: http://plane-minio:9000
+      AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+      FILE_SIZE_LIMIT: ${FILE_SIZE_LIMIT}
+      USE_MINIO: 1
+      SECRET_KEY: ${SECRET_KEY}
 
   plane-db:
-    image: postgres:17-alpine
+    container_name: plane-db
+    image: postgres:15.7-alpine
+    restart: always
     command: postgres -c 'max_connections=1000'
     volumes:
-      - pgdata:/var/lib/postgresql/data
-    env_file:
-      - .env
+      - plane_pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data
 
   plane-redis:
+    container_name: plane-redis
     image: valkey/valkey:7.2.5-alpine
+    restart: always
     volumes:
-      - redisdata:/data
-    env_file:
-      - .env
+      - plane_redisdata:/data
 
   plane-mq:
+    container_name: plane-mq
     image: rabbitmq:3.13.6-management-alpine
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST}
     volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
-    env_file:
-      - .env
+      - plane_rabbitmq_data:/var/lib/rabbitmq
 
   plane-minio:
+    container_name: plane-minio
     image: minio/minio:latest
+    restart: always
     command: server /export --console-address ":9090"
     volumes:
-      - uploads:/export
-    env_file:
-      - .env
+      - plane_uploads:/export
+    environment:
+      MINIO_ROOT_USER: ${AWS_ACCESS_KEY_ID}
+      MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY}
 
   proxy:
-    image: makeplane/plane-proxy:${APP_RELEASE:-v0.25.3}
+    container_name: proxy
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "${PORT}:80"
+    environment:
+      FILE_SIZE_LIMIT: ${FILE_SIZE_LIMIT}
+      BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
     depends_on:
       - web
       - api
       - space
-    env_file:
-      - .env
+      - admin
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
 
 volumes:
-  pgdata:
-  redisdata:
-  uploads:
-  logs_api:
-  logs_worker:
-  logs_beat-worker:
-  logs_migrator:
-  rabbitmq_data:  
+  plane_pgdata:
+  plane_redisdata:
+  plane_uploads:
+  plane_rabbitmq_data:

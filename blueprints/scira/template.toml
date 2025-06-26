@@ -1,0 +1,69 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "scira"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+# AI API Keys
+XAI_API_KEY = ""
+OPENAI_API_KEY = ""
+ANTHROPIC_API_KEY = ""
+GROQ_API_KEY = ""
+GOOGLE_GENERATIVE_AI_API_KEY = ""
+
+# Development & Sandbox
+DAYTONA_API_KEY = ""
+
+# Database & Storage
+DATABASE_URL = ""
+REDIS_URL = ""
+BLOB_READ_WRITE_TOKEN = ""
+
+# Authentication
+BETTER_AUTH_SECRET = ""
+GITHUB_CLIENT_ID = ""
+GITHUB_CLIENT_SECRET = ""
+GOOGLE_CLIENT_ID = ""
+GOOGLE_CLIENT_SECRET = ""
+TWITTER_CLIENT_ID = ""
+TWITTER_CLIENT_SECRET = ""
+
+# Search & Web APIs
+TAVILY_API_KEY = ""
+EXA_API_KEY = ""
+FIRECRAWL_API_KEY = ""
+
+# Media & Entertainment
+TMDB_API_KEY = ""
+YT_ENDPOINT = ""
+ELEVENLABS_API_KEY = ""
+
+# Maps & Location
+GOOGLE_MAPS_API_KEY = ""
+MAPBOX_ACCESS_TOKEN = ""
+TRIPADVISOR_API_KEY = ""
+
+# Weather & Aviation
+OPENWEATHER_API_KEY = ""
+AVIATION_STACK_API_KEY = ""
+
+# Memory & MCP
+MEM0_API_KEY = ""
+MEM0_ORG_ID = ""
+MEM0_PROJECT_ID = ""
+SMITHERY_API_KEY = ""
+
+# Cron & Security
+CRON_SECRET = ""
+
+# Client-side Environment Variables
+NEXT_PUBLIC_MAPBOX_TOKEN = ""
+NEXT_PUBLIC_POSTHOG_KEY = ""
+NEXT_PUBLIC_POSTHOG_HOST = "https://your-posthog-host.com"
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = "" 

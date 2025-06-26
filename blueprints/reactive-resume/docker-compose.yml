@@ -1,0 +1,122 @@
+# In this Docker Compose example, it assumes that you maintain a reverse proxy externally (or chose not to).
+# The only two exposed ports here are from minio (:9000) and the app itself (:3000).
+# If these ports are changed, ensure that the env vars passed to the app are also changed accordingly.
+
+services:
+  # Database (Postgres)
+  postgres:
+    image: postgres:${POSTGRES_VERSION:-16-alpine}
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Storage (for image uploads)
+  minio:
+    image: minio/minio:${MINIO_VERSION:-latest}
+    restart: unless-stopped
+    command: server /data
+    ports:
+      - "9000"
+    volumes:
+      - minio_data:/data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+
+  # Chrome Browser (for printing and previews)
+  chrome:
+    image: ghcr.io/browserless/chromium:${CHROME_VERSION:-latest}
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      HEALTH: "true"
+      TOKEN: ${CHROME_TOKEN:-chrome_token}
+      PROXY_HOST: "chrome"
+      PROXY_PORT: 3000
+      PROXY_SSL: "false"
+
+  app:
+    image: amruthpillai/reactive-resume:${APP_VERSION:-latest}
+    restart: unless-stopped
+    ports:
+      - "3000"
+    depends_on:
+      - postgres
+      - minio
+      - chrome
+    environment:
+      # -- Environment Variables --
+      PORT: ${PORT:-3000}
+      NODE_ENV: ${NODE_ENV:-production}
+
+      # -- URLs --
+      PUBLIC_URL: ${PUBLIC_URL}
+      STORAGE_URL: ${STORAGE_URL}
+
+      # -- Printer (Chrome) --
+      CHROME_TOKEN: ${CHROME_TOKEN:-chrome_token}
+      CHROME_URL: ${CHROME_URL:-ws://chrome:3000}
+
+      # -- Database (Postgres) --
+      DATABASE_URL: ${DATABASE_URL}
+
+      # -- Auth --
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+
+      # -- Emails --
+      MAIL_FROM: ${MAIL_FROM:-noreply@localhost}
+      SMTP_URL: ${SMTP_URL:-}
+
+      # -- Storage (Minio) --
+      STORAGE_ENDPOINT: ${STORAGE_ENDPOINT:-minio}
+      STORAGE_PORT: ${STORAGE_PORT:-9000}
+      STORAGE_REGION: ${STORAGE_REGION:-us-east-1}
+      STORAGE_BUCKET: ${STORAGE_BUCKET:-default}
+      STORAGE_ACCESS_KEY: ${STORAGE_ACCESS_KEY}
+      STORAGE_SECRET_KEY: ${STORAGE_SECRET_KEY}
+      STORAGE_USE_SSL: ${STORAGE_USE_SSL:-false}
+      STORAGE_SKIP_BUCKET_CHECK: ${STORAGE_SKIP_BUCKET_CHECK:-false}
+
+      # -- Crowdin (Optional) --
+      CROWDIN_PROJECT_ID: ${CROWDIN_PROJECT_ID:-}
+      CROWDIN_PERSONAL_TOKEN: ${CROWDIN_PERSONAL_TOKEN:-}
+
+      # -- Email (Optional) --
+      DISABLE_SIGNUPS: ${DISABLE_SIGNUPS:-false}
+      DISABLE_EMAIL_AUTH: ${DISABLE_EMAIL_AUTH:-false}
+
+      # -- GitHub (Optional) --
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      GITHUB_CALLBACK_URL: ${GITHUB_CALLBACK_URL:-}
+
+      # -- Google (Optional) --
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL:-}
+
+      # -- OpenID (Optional) --
+      VITE_OPENID_NAME: ${VITE_OPENID_NAME:-OpenID}
+      OPENID_AUTHORIZATION_URL: ${OPENID_AUTHORIZATION_URL:-}
+      OPENID_CALLBACK_URL: ${OPENID_CALLBACK_URL:-}
+      OPENID_CLIENT_ID: ${OPENID_CLIENT_ID:-}
+      OPENID_CLIENT_SECRET: ${OPENID_CLIENT_SECRET:-}
+      OPENID_ISSUER: ${OPENID_ISSUER:-}
+      OPENID_SCOPE: ${OPENID_SCOPE:-openid profile email}
+      OPENID_TOKEN_URL: ${OPENID_TOKEN_URL:-}
+      OPENID_USER_INFO_URL: ${OPENID_USER_INFO_URL:-}
+
+volumes:
+  minio_data:
+  postgres_data:

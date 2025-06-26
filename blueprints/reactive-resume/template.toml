@@ -1,0 +1,93 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+minio_root_password = "${password:32}"
+access_token_secret = "${password:32}"
+refresh_token_secret = "${password:32}"
+chrome_token = "${password:16}"
+mail_from = "noreply@${domain}"
+
+[config.env]
+# Application versions
+APP_VERSION = "latest"
+POSTGRES_VERSION = "16-alpine"
+MINIO_VERSION = "latest"
+CHROME_VERSION = "latest"
+
+# Environment Variables
+PORT = "3000"
+NODE_ENV = "production"
+
+# URLs
+PUBLIC_URL = "https://${main_domain}"
+STORAGE_URL = "https://${main_domain}:9000/default"
+
+# Database (Postgres)
+POSTGRES_DB = "postgres"
+POSTGRES_USER = "postgres"
+POSTGRES_PASSWORD = "${postgres_password}"
+DATABASE_URL = "postgresql://postgres:${postgres_password}@postgres:5432/postgres"
+
+# Storage (Minio)
+MINIO_ROOT_USER = "minioadmin"
+MINIO_ROOT_PASSWORD = "${minio_root_password}"
+STORAGE_ENDPOINT = "minio"
+STORAGE_PORT = "9000"
+STORAGE_REGION = "us-east-1"
+STORAGE_BUCKET = "default"
+STORAGE_ACCESS_KEY = "minioadmin"
+STORAGE_SECRET_KEY = "${minio_root_password}"
+STORAGE_USE_SSL = "false"
+STORAGE_SKIP_BUCKET_CHECK = "false"
+
+# Chrome Browser (for printing and previews)
+CHROME_TOKEN = "${chrome_token}"
+CHROME_URL = "ws://chrome:3000"
+
+# Auth
+ACCESS_TOKEN_SECRET = "${access_token_secret}"
+REFRESH_TOKEN_SECRET = "${refresh_token_secret}"
+
+# Emails
+MAIL_FROM = "${mail_from}"
+SMTP_URL = ""
+
+# Feature toggles
+DISABLE_SIGNUPS = "false"
+DISABLE_EMAIL_AUTH = "false"
+
+# Optional integrations (empty by default)
+CROWDIN_PROJECT_ID = ""
+CROWDIN_PERSONAL_TOKEN = ""
+
+# OAuth integrations (optional)
+GITHUB_CLIENT_ID = ""
+GITHUB_CLIENT_SECRET = ""
+GITHUB_CALLBACK_URL = ""
+GOOGLE_CLIENT_ID = ""
+GOOGLE_CLIENT_SECRET = ""
+GOOGLE_CALLBACK_URL = ""
+
+# OpenID Connect (optional)
+VITE_OPENID_NAME = "OpenID"
+OPENID_AUTHORIZATION_URL = ""
+OPENID_CALLBACK_URL = ""
+OPENID_CLIENT_ID = ""
+OPENID_CLIENT_SECRET = ""
+OPENID_ISSUER = ""
+OPENID_SCOPE = "openid profile email"
+OPENID_TOKEN_URL = ""
+OPENID_USER_INFO_URL = ""
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "app"
+port = 3000
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "minio"
+port = 9000
+host = "${main_domain}" 

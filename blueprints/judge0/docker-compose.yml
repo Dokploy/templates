@@ -1,0 +1,58 @@
+x-logging: &default-logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 100M
+
+services:
+  server:
+    image: judge0/judge0:latest
+    volumes:
+      - ./judge0.conf:/judge0.conf:ro
+    ports:
+      - "${PORT}:2358"
+    privileged: true
+    <<: *default-logging
+    restart: always
+    depends_on:
+      - db
+      - redis
+
+  worker:
+    image: judge0/judge0:latest
+    command: ["./scripts/workers"]
+    volumes:
+      - ./judge0.conf:/judge0.conf:ro
+    privileged: true
+    <<: *default-logging
+    restart: always
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:16.2
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - judge0_data:/var/lib/postgresql/data/
+    <<: *default-logging
+    restart: always
+
+  redis:
+    image: redis:7.2.4
+    command:
+      [
+        "bash",
+        "-c",
+        'docker-entrypoint.sh --appendonly no --requirepass "$$REDIS_PASSWORD"',
+      ]
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    <<: *default-logging
+    restart: always
+
+volumes:
+  judge0_data:

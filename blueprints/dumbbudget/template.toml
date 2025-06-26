@@ -1,0 +1,24 @@
+name = "DumbBudget"
+description = "Simple personal budget tracker"
+port = 3000
+
+[environment]
+PORT = "${PORT}"
+
+# Application Configuration
+SITE_TITLE = "DumbBudget"
+BASE_URL = "http://${DOMAIN}"
+INSTANCE_NAME = "My Budget"
+
+# Financial Configuration
+CURRENCY = "USD"
+
+# Security Configuration
+DUMBBUDGET_PIN = "${password:6}"
+ALLOWED_ORIGINS = "http://${DOMAIN}"
+
+[domains]
+[[domains.main]]
+host = "${DOMAIN}"
+port = "${PORT}"
+path = "/" 

@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  web-check:
+    image: lissy93/web-check:latest
+    container_name: Web-Check
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # API Keys for external services (backend)
+      GOOGLE_CLOUD_API_KEY: ${GOOGLE_CLOUD_API_KEY}
+      TORRENT_IP_API_KEY: ${TORRENT_IP_API_KEY}
+      SECURITY_TRAILS_API_KEY: ${SECURITY_TRAILS_API_KEY}
+      BUILT_WITH_API_KEY: ${BUILT_WITH_API_KEY}
+      URL_SCAN_API_KEY: ${URL_SCAN_API_KEY}
+      TRANCO_USERNAME: ${TRANCO_USERNAME}
+      TRANCO_API_KEY: ${TRANCO_API_KEY}
+      CLOUDMERSIVE_API_KEY: ${CLOUDMERSIVE_API_KEY}
+
+      # API Keys for external services (frontend)
+      REACT_APP_SHODAN_API_KEY: ${REACT_APP_SHODAN_API_KEY}
+      REACT_APP_WHO_API_KEY: ${REACT_APP_WHO_API_KEY}
+
+      # Configuration settings
+      CHROME_PATH: ${CHROME_PATH}
+      PORT: ${PORT}
+      DISABLE_GUI: ${DISABLE_GUI}
+      API_TIMEOUT_LIMIT: ${API_TIMEOUT_LIMIT}
+      API_CORS_ORIGIN: ${API_CORS_ORIGIN}
+      API_ENABLE_RATE_LIMIT: ${API_ENABLE_RATE_LIMIT}
+      REACT_APP_API_ENDPOINT: ${REACT_APP_API_ENDPOINT}
+      ENABLE_ANALYTICS: ${ENABLE_ANALYTICS}

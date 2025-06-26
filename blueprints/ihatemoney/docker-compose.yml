@@ -1,0 +1,36 @@
+services:
+  ihatemoney:
+    image: ihatemoney/ihatemoney:latest
+    environment:
+      - DEBUG=False
+      - ACTIVATE_DEMO_PROJECT=${ACTIVATE_DEMO_PROJECT}
+      - ACTIVATE_ADMIN_DASHBOARD=${ACTIVATE_ADMIN_DASHBOARD}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - ALLOW_PUBLIC_PROJECT_CREATION=${ALLOW_PUBLIC_PROJECT_CREATION}
+      - BABEL_DEFAULT_TIMEZONE=${BABEL_DEFAULT_TIMEZONE}
+      - GREENLET_TEST_CPP=no
+      - MAIL_DEFAULT_SENDER=${MAIL_DEFAULT_SENDER}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_SERVER=${MAIL_SERVER}
+      - MAIL_USE_SSL=${MAIL_USE_SSL}
+      - MAIL_USE_TLS=${MAIL_USE_TLS}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - SECRET_KEY=${SECRET_KEY}
+      - SESSION_COOKIE_SECURE=${SESSION_COOKIE_SECURE}
+      - SHOW_ADMIN_EMAIL=${SHOW_ADMIN_EMAIL}
+      - SQLALCHEMY_DATABASE_URI=sqlite:////database/ihatemoney.db
+      - SQLALCHEMY_TRACK_MODIFICATIONS=False
+      - APPLICATION_ROOT=/
+      - ENABLE_CAPTCHA=${ENABLE_CAPTCHA}
+      - LEGAL_LINK=${LEGAL_LINK}
+      - PORT=${PORT}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ihatemoney_data:/database
+    ports:
+      - "${PORT}"
+
+volumes:
+  ihatemoney_data:

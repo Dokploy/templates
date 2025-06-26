@@ -1,0 +1,132 @@
+services:
+  snapp:
+    image: uraniadev/snapp:${SNAPP_VERSION:-0.9-rc-020}
+    restart: unless-stopped
+    ports:
+      - "3000"
+    healthcheck:
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+      test:
+        [
+          "CMD",
+          "curl",
+          "--fail",
+          "http://127.0.0.1:3000/health",
+          "||",
+          "exit",
+          "1",
+        ]
+    environment:
+      # Database configuration
+      DATABASE_PROVIDER: ${DATABASE_PROVIDER:-sqlite}
+      DATABASE_URL: ${DATABASE_URL:-file:./db.sqlite}
+
+      # Admin configuration
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.org}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-password}
+
+      # Application configuration
+      APPNAME: ${APPNAME:-Snapp}
+      ORIGIN: ${ORIGIN}
+      PUBLIC_URL: ${PUBLIC_URL}
+      PORT: ${PORT:-3000}
+      HOST: ${HOST:-0.0.0.0}
+      TOKEN_SECRET: ${TOKEN_SECRET}
+
+      # Features configuration
+      ENABLE_SIGNUP: ${ENABLE_SIGNUP:-false}
+      ENABLED_MFA: ${ENABLED_MFA:-false}
+      DISABLED_EMAIL_AND_PASSWORD: ${DISABLED_EMAIL_AND_PASSWORD:-false}
+      PUBLIC_EXTRA_GROUPS_EDITABLE: ${PUBLIC_EXTRA_GROUPS_EDITABLE:-true}
+      URLS_VIA_GROUPS_ONLY: ${URLS_VIA_GROUPS_ONLY:-false}
+      DISABLE_HOME: ${DISABLE_HOME:-false}
+
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-debug}
+
+      # Analytics (optional)
+      PUBLIC_UMAMI_URL: ${PUBLIC_UMAMI_URL:-}
+      PUBLIC_UMAMI_WEBSITE_ID: ${PUBLIC_UMAMI_WEBSITE_ID:-}
+
+      # VirusTotal API (optional)
+      VTAPI_KEY: ${VTAPI_KEY:-}
+
+      # SMTP Configuration (optional)
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      SMTP_SSL: ${SMTP_SSL:-}
+
+      # OAuth/OIDC Configuration (optional)
+      AUTH_PROVIDERS: ${AUTH_PROVIDERS:-}
+      AUTH_GOOGLE_CLIENT_ID: ${AUTH_GOOGLE_CLIENT_ID:-}
+      AUTH_GOOGLE_CLIENT_SECRET: ${AUTH_GOOGLE_CLIENT_SECRET:-}
+      AUTH_GOOGLE_ISSUER: ${AUTH_GOOGLE_ISSUER:-}
+      AUTH_KEYCLOAK_CLIENT_ID: ${AUTH_KEYCLOAK_CLIENT_ID:-}
+      AUTH_KEYCLOAK_CLIENT_SECRET: ${AUTH_KEYCLOAK_CLIENT_SECRET:-}
+      AUTH_KEYCLOAK_CLIENT_SCOPE: ${AUTH_KEYCLOAK_CLIENT_SCOPE:-}
+      AUTH_KEYCLOAK_ISSUER: ${AUTH_KEYCLOAK_ISSUER:-}
+      AUTH_AUTHELIA_CLIENT_ID: ${AUTH_AUTHELIA_CLIENT_ID:-}
+      AUTH_AUTHELIA_CLIENT_SECRET: ${AUTH_AUTHELIA_CLIENT_SECRET:-}
+      AUTH_AUTHELIA_ISSUER: ${AUTH_AUTHELIA_ISSUER:-}
+
+      # Contact information
+      PUBLIC_ADMIN_CONTACT: ${PUBLIC_ADMIN_CONTACT:-}
+    volumes:
+      - snapp_data:/app
+
+  # Optional PostgreSQL database
+  postgres:
+    image: postgres:${POSTGRES_VERSION:-17.4-alpine}
+    restart: unless-stopped
+    profiles:
+      - postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-snapp}
+      POSTGRES_USER: ${POSTGRES_USER:-snapp}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432"
+
+  # Optional MariaDB database
+  mariadb:
+    image: mariadb:${MARIADB_VERSION:-latest}
+    restart: unless-stopped
+    profiles:
+      - mariadb
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-snapp}
+      MYSQL_USER: ${MYSQL_USER:-snapp}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "healthcheck.sh",
+          "--su-mysql",
+          "--connect",
+          "--innodb_initialized",
+        ]
+      start_period: 1m
+      start_interval: 10s
+      interval: 1m
+      timeout: 5s
+      retries: 3
+
+volumes:
+  snapp_data:
+  postgres_data:
+  mariadb_data:

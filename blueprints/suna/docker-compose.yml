@@ -1,0 +1,175 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: suna-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+    command: redis-server /usr/local/etc/redis/redis.conf --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    container_name: suna-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "${RABBITMQ_PORT}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT}:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  backend:
+    image: ghcr.io/suna-ai/suna-backend:latest
+    container_name: suna-backend
+    restart: unless-stopped
+    platform: linux/amd64
+    ports:
+      - "${BACKEND_PORT}:8000"
+    environment:
+      # Database Configuration
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+
+      # Redis Configuration
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_SSL: ${REDIS_SSL}
+
+      # RabbitMQ Configuration
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+
+      # LLM Configuration
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      MODEL_TO_USE: ${MODEL_TO_USE}
+
+      # Search and Web Scraping
+      TAVILY_API_KEY: ${TAVILY_API_KEY}
+      FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY}
+
+      # Agent Execution
+      DAYTONA_API_KEY: ${DAYTONA_API_KEY}
+      DAYTONA_SERVER_URL: ${DAYTONA_SERVER_URL}
+      DAYTONA_TARGET: ${DAYTONA_TARGET}
+
+      # Background Jobs
+      QSTASH_URL: ${QSTASH_URL}
+      QSTASH_TOKEN: ${QSTASH_TOKEN}
+      QSTASH_CURRENT_SIGNING_KEY: ${QSTASH_CURRENT_SIGNING_KEY}
+      QSTASH_NEXT_SIGNING_KEY: ${QSTASH_NEXT_SIGNING_KEY}
+      WEBHOOK_BASE_URL: ${WEBHOOK_BASE_URL}
+
+      # Optional APIs
+      RAPID_API_KEY: ${RAPID_API_KEY}
+      SMITHERY_API_KEY: ${SMITHERY_API_KEY}
+
+      # Application Settings
+      ENV_MODE: ${ENV_MODE}
+      NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL}
+      MCP_CREDENTIAL_ENCRYPTION_KEY: ${MCP_CREDENTIAL_ENCRYPTION_KEY}
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  worker:
+    image: ghcr.io/suna-ai/suna-backend:latest
+    container_name: suna-worker
+    restart: unless-stopped
+    platform: linux/amd64
+    command: uv run dramatiq --skip-logging --processes 4 --threads 4 run_agent_background
+    environment:
+      # Database Configuration
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+
+      # Redis Configuration
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_SSL: ${REDIS_SSL}
+
+      # RabbitMQ Configuration
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+
+      # LLM Configuration
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      MODEL_TO_USE: ${MODEL_TO_USE}
+
+      # Search and Web Scraping
+      TAVILY_API_KEY: ${TAVILY_API_KEY}
+      FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY}
+
+      # Agent Execution
+      DAYTONA_API_KEY: ${DAYTONA_API_KEY}
+      DAYTONA_SERVER_URL: ${DAYTONA_SERVER_URL}
+      DAYTONA_TARGET: ${DAYTONA_TARGET}
+
+      # Background Jobs
+      QSTASH_URL: ${QSTASH_URL}
+      QSTASH_TOKEN: ${QSTASH_TOKEN}
+      QSTASH_CURRENT_SIGNING_KEY: ${QSTASH_CURRENT_SIGNING_KEY}
+      QSTASH_NEXT_SIGNING_KEY: ${QSTASH_NEXT_SIGNING_KEY}
+      WEBHOOK_BASE_URL: ${WEBHOOK_BASE_URL}
+
+      # Optional APIs
+      RAPID_API_KEY: ${RAPID_API_KEY}
+      SMITHERY_API_KEY: ${SMITHERY_API_KEY}
+
+      # Application Settings
+      ENV_MODE: ${ENV_MODE}
+      MCP_CREDENTIAL_ENCRYPTION_KEY: ${MCP_CREDENTIAL_ENCRYPTION_KEY}
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  frontend:
+    image: ghcr.io/suna-ai/suna-frontend:latest
+    container_name: suna-frontend
+    restart: unless-stopped
+    init: true
+    ports:
+      - "${FRONTEND_PORT}:3000"
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_SUPABASE_URL: ${SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      NEXT_PUBLIC_BACKEND_URL: http://backend:8000/api
+      NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL}
+      NEXT_PUBLIC_ENV_MODE: ${ENV_MODE}
+    command: ["npm", "run", "start"]
+    depends_on:
+      - backend
+
+volumes:
+  redis_data:
+  rabbitmq_data:

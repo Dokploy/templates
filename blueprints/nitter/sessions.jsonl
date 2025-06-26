@@ -1,0 +1,10 @@
+# This file should contain Twitter session credentials in JSONL format
+# To obtain sessions, run the get_sessions.py script from the Nitter repository
+# Each line should be a valid JSON object containing session data
+# Example format (do not use these values):
+# {"auth_token": "your_auth_token", "ct0": "your_ct0_token"}
+# 
+# For more information on obtaining sessions, see:
+# https://github.com/zedeus/nitter/wiki/Guest-Account-Branch-Deployment
+# 
+# Note: This file is required for Nitter to function properly with Twitter's API 

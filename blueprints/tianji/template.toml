@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "tianji"
+port = 12_345
+host = "${main_domain}"
+
+[config.env]
+JWT_SECRET = "${base64:32}"
+ALLOW_REGISTER = "false"
+ALLOW_OPENAPI = "true" 

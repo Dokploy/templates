@@ -1,0 +1,52 @@
+[variables]
+main_domain = "${domain}"
+kener_secret_key = "${password:32}"
+postgres_password = "${password:16}"
+mysql_password = "${password:16}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "kener"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+# Port Configuration
+KENER_PORT = "3000"
+
+# Core Settings (REQUIRED)
+KENER_SECRET_KEY = "${kener_secret_key}"  # Strong secret key for encryption (REQUIRED)
+ORIGIN = "https://${main_domain}"  # Full origin URL for CORS (REQUIRED)
+
+# Application Settings
+PORT = "3000"  # Internal port the app listens on
+KENER_BASE_PATH = ""  # Base path (e.g., "/status") - NO trailing slash
+TIMEZONE = "UTC"  # Server timezone
+
+# Database Configuration
+DATABASE_URL = "sqlite://./database/kener.db"  # Default SQLite, change for PostgreSQL/MySQL
+# For PostgreSQL: "postgresql://user:password@postgres:5432/kener_db"
+# For MySQL: "mysql://user:password@mysql:3306/kener_db"
+
+# Email Configuration (Resend - Recommended)
+RESEND_API_KEY = ""  # Resend.com API key for email notifications
+RESEND_SENDER_EMAIL = ""  # Sender email (e.g., "Status <status@yourdomain.com>")
+
+# SMTP Configuration (Alternative to Resend)
+SMTP_HOST = ""  # SMTP server hostname
+SMTP_PORT = "587"  # SMTP port (587 for STARTTLS, 465 for SSL)
+SMTP_USER = ""  # SMTP username (use "-" if no auth required)
+SMTP_PASS = ""  # SMTP password (use "-" if no auth required)
+SMTP_SECURE = "0"  # Use SSL/TLS (1 for port 465, 0 for ports 25/587)
+SMTP_FROM_EMAIL = ""  # From email address for SMTP
+
+# Optional Database Credentials (if using PostgreSQL/MySQL)
+POSTGRES_USER = "user"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "kener_db"
+
+MYSQL_USER = "user"
+MYSQL_PASSWORD = "${mysql_password}"
+MYSQL_DATABASE = "kener_db" 

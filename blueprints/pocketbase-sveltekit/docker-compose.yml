@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  pocketbase:
+    image: ghcr.io/muchobien/pocketbase:0.22.27
+    container_name: pocketbase
+    restart: unless-stopped
+    ports:
+      - "${PORT}:8090"
+    volumes:
+      - pocketbase_data:/pb_data
+      - pocketbase_public:/pb_public
+      - pocketbase_hooks:/pb_hooks
+    networks:
+      - dokploy-network
+    environment:
+      - ORIGIN=${ORIGIN}
+      - POCKETBASE_ADMIN_EMAIL=${ADMIN_EMAIL}
+      - POCKETBASE_ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - PUBLIC_APPLICATION_NAME=${APP_NAME}
+      - PUBLIC_APPLICATION_URL=${APP_URL}
+      - ENCRYPTION=${ENCRYPTION_KEY}
+      - HASH_ALGORITHM=${HASH_ALGORITHM}
+      - HASH_KEY=${HASH_KEY}
+
+networks:
+  dokploy-network:
+    external: true
+
+volumes:
+  pocketbase_data:
+  pocketbase_public:
+  pocketbase_hooks:

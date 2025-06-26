@@ -1,0 +1,17 @@
+[variables]
+POSTGRES_USER = "postgres"
+POSTGRES_PASSWORD = "${password:16}"
+POSTGRES_DB = "openpanel"
+
+[config]
+env = [
+  "POSTGRES_USER=${POSTGRES_USER}",
+  "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}",
+  "POSTGRES_DB=${POSTGRES_DB}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "op-ch"
+port = 8123
+host = "${domain}" 

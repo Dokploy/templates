@@ -1,0 +1,28 @@
+name = "DumbPad"
+description = "Simple web-based notepad"
+port = 3000
+
+[environment]
+PORT = "${PORT}"
+
+# Application Configuration
+SITE_TITLE = "DumbPad"
+BASE_URL = "http://${DOMAIN}"
+
+# Security Configuration
+DUMBPAD_PIN = "${password:6}"
+ALLOWED_ORIGINS = "http://${DOMAIN}"
+
+# PIN Protection Settings
+LOCKOUT_TIME = "15"
+MAX_ATTEMPTS = "5"
+
+# Cookie Settings
+COOKIE_MAX_AGE = "24"
+PAGE_HISTORY_COOKIE_AGE = "365"
+
+[domains]
+[[domains.main]]
+host = "${DOMAIN}"
+port = "${PORT}"
+path = "/" 

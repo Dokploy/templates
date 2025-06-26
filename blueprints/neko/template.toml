@@ -1,0 +1,24 @@
+name = "Neko"
+description = "Virtual browser sharing platform"
+port = 8080
+
+[environment]
+PORT = "${PORT}"
+
+# Desktop Configuration
+DESKTOP_SCREEN = "1920x1080@60"
+
+# Authentication Configuration
+USER_PASSWORD = "${password:16}"
+ADMIN_PASSWORD = "${password:16}"
+
+# WebRTC Configuration
+WEBRTC_PORT_RANGE = "52000-52100"
+WEBRTC_EPR = "52000-52100"
+WEBRTC_ICELITE = "1"
+
+[domains]
+[[domains.main]]
+host = "${DOMAIN}"
+port = "${PORT}"
+path = "/" 

@@ -1,0 +1,41 @@
+services:
+  linkding:
+    container_name: linkding
+    image: sissbruecker/linkding:latest
+    ports:
+      - "${PORT}:9090"
+    volumes:
+      - linkding_data:/etc/linkding/data
+    environment:
+      # Context path configuration
+      LD_CONTEXT_PATH: ${LD_CONTEXT_PATH:-}
+      # Initial superuser setup
+      LD_SUPERUSER_NAME: ${LD_SUPERUSER_NAME:-admin}
+      LD_SUPERUSER_PASSWORD: ${LD_SUPERUSER_PASSWORD}
+      # Background tasks and URL validation
+      LD_DISABLE_BACKGROUND_TASKS: ${LD_DISABLE_BACKGROUND_TASKS:-False}
+      LD_DISABLE_URL_VALIDATION: ${LD_DISABLE_URL_VALIDATION:-False}
+      # Authentication proxy support
+      LD_ENABLE_AUTH_PROXY: ${LD_ENABLE_AUTH_PROXY:-False}
+      LD_AUTH_PROXY_USERNAME_HEADER: ${LD_AUTH_PROXY_USERNAME_HEADER:-}
+      LD_AUTH_PROXY_LOGOUT_URL: ${LD_AUTH_PROXY_LOGOUT_URL:-}
+      # CSRF trusted origins
+      LD_CSRF_TRUSTED_ORIGINS: ${LD_CSRF_TRUSTED_ORIGINS:-}
+      # Database configuration (optional PostgreSQL support)
+      LD_DB_ENGINE: ${LD_DB_ENGINE:-sqlite}
+      LD_DB_DATABASE: ${LD_DB_DATABASE:-linkding}
+      LD_DB_USER: ${LD_DB_USER:-linkding}
+      LD_DB_PASSWORD: ${LD_DB_PASSWORD:-}
+      LD_DB_HOST: ${LD_DB_HOST:-localhost}
+      LD_DB_PORT: ${LD_DB_PORT:-}
+      LD_DB_OPTIONS: ${LD_DB_OPTIONS:-{}}
+    networks:
+      - dokploy-network
+    restart: unless-stopped
+
+volumes:
+  linkding_data:
+
+networks:
+  dokploy-network:
+    external: true

@@ -1,0 +1,62 @@
+services:
+  tubearchivist:
+    image: bbilly1/tubearchivist:latest
+    restart: unless-stopped
+    ports:
+      - "${TA_PORT}"
+    volumes:
+      - media:/youtube
+      - cache:/cache
+    environment:
+      - ES_URL=http://archivist-es:9200
+      - REDIS_CON=redis://archivist-redis:6379
+      - HOST_UID=${HOST_UID}
+      - HOST_GID=${HOST_GID}
+      - TA_HOST=${TA_HOST}
+      - TA_USERNAME=${TA_USERNAME}
+      - TA_PASSWORD=${TA_PASSWORD}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - TZ=${TZ}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 2m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - archivist-es
+      - archivist-redis
+
+  archivist-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    expose:
+      - "6379"
+    volumes:
+      - redis:/data
+    depends_on:
+      - archivist-es
+
+  archivist-es:
+    image: bbilly1/tubearchivist-es:latest
+    restart: unless-stopped
+    environment:
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ES_JAVA_OPTS=-Xms${ES_MEMORY_MIN} -Xmx${ES_MEMORY_MAX}
+      - xpack.security.enabled=true
+      - discovery.type=single-node
+      - path.repo=/usr/share/elasticsearch/data/snapshot
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es:/usr/share/elasticsearch/data
+    expose:
+      - "9200"
+
+volumes:
+  media:
+  cache:
+  redis:
+  es:

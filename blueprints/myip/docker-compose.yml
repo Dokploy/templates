@@ -1,0 +1,11 @@
+services:
+  myip:
+    container_name: myip
+    image: jason5ng32/myip:latest
+    stdin_open: true
+    tty: true
+    restart: always
+    ports:
+      - "${PORT}"
+
+volumes:

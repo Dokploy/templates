@@ -1,0 +1,82 @@
+[variables]
+main_domain = "${domain}"
+database_provider = "sqlite"
+admin_username = "admin"
+admin_email = "admin@example.org"
+admin_password = "${password:32}"
+token_secret = "${password:32}"
+postgres_password = "${password:32}"
+mysql_password = "${password:32}"
+mysql_root_password = "${password:32}"
+
+[config.env]
+# Application version
+SNAPP_VERSION = "0.9-rc-020"
+
+# Database configuration
+DATABASE_PROVIDER = "${database_provider}"
+DATABASE_URL = "file:./db.sqlite"
+POSTGRES_VERSION = "17.4-alpine"
+POSTGRES_DB = "snapp"
+POSTGRES_USER = "snapp"
+POSTGRES_PASSWORD = "${postgres_password}"
+MARIADB_VERSION = "latest"
+MYSQL_DATABASE = "snapp"
+MYSQL_USER = "snapp"
+MYSQL_PASSWORD = "${mysql_password}"
+MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
+
+# Admin configuration
+ADMIN_USERNAME = "${admin_username}"
+ADMIN_EMAIL = "${admin_email}"
+ADMIN_PASSWORD = "${admin_password}"
+
+# Application configuration
+APPNAME = "Snapp"
+ORIGIN = "https://${main_domain}"
+PUBLIC_URL = "https://${main_domain}"
+PORT = "3000"
+HOST = "0.0.0.0"
+TOKEN_SECRET = "${token_secret}"
+
+# Features configuration
+ENABLE_SIGNUP = "false"
+ENABLED_MFA = "false"
+DISABLED_EMAIL_AND_PASSWORD = "false"
+PUBLIC_EXTRA_GROUPS_EDITABLE = "true"
+URLS_VIA_GROUPS_ONLY = "false"
+DISABLE_HOME = "false"
+
+# Logging
+LOG_LEVEL = "info"
+
+# Optional configurations (empty by default)
+PUBLIC_UMAMI_URL = ""
+PUBLIC_UMAMI_WEBSITE_ID = ""
+VTAPI_KEY = ""
+SMTP_HOST = ""
+SMTP_PORT = ""
+SMTP_USER = ""
+SMTP_PASS = ""
+SMTP_FROM = ""
+SMTP_SSL = ""
+AUTH_PROVIDERS = ""
+AUTH_GOOGLE_CLIENT_ID = ""
+AUTH_GOOGLE_CLIENT_SECRET = ""
+AUTH_GOOGLE_ISSUER = ""
+AUTH_KEYCLOAK_CLIENT_ID = ""
+AUTH_KEYCLOAK_CLIENT_SECRET = ""
+AUTH_KEYCLOAK_CLIENT_SCOPE = ""
+AUTH_KEYCLOAK_ISSUER = ""
+AUTH_AUTHELIA_CLIENT_ID = ""
+AUTH_AUTHELIA_CLIENT_SECRET = ""
+AUTH_AUTHELIA_ISSUER = ""
+PUBLIC_ADMIN_CONTACT = ""
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "snapp"
+port = 3000
+host = "${main_domain}" 

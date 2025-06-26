@@ -1,0 +1,318 @@
+version: "3.8"
+
+volumes:
+  cockroach:
+  minio:
+  meilisearch:
+  redis:
+
+services:
+  cockroach:
+    image: cockroachdb/cockroach:latest-v24.3
+    ports:
+      - "${VOLTASERVE_POSTGRES_PORT:-26257}:26257"
+      - "${VOLTASERVE_COCKROACH_CONSOLE_PORT:-18080}:8080"
+    environment:
+      COCKROACH_DATABASE: voltaserve
+      COCKROACH_USER: voltaserve
+    volumes:
+      - cockroach:/cockroach/cockroach-data
+    command: start-single-node --insecure
+    healthcheck:
+      test: cockroach sql --insecure --execute='SELECT 1;' || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  minio:
+    image: minio/minio:RELEASE.2024-11-07T00-52-20Z
+    ports:
+      - "${VOLTASERVE_MINIO_PORT:-9000}:9000"
+      - "${VOLTASERVE_MINIO_CONSOLE_PORT:-9001}:9001"
+    environment:
+      MINIO_ROOT_USER: voltaserve
+      MINIO_ROOT_PASSWORD: voltaserve
+      MINIO_REGION: us-east-1
+    volumes:
+      - minio:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: curl --fail http://127.0.0.1:9000/minio/health/live || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.11.3
+    ports:
+      - "${VOLTASERVE_MEILISEARCH_PORT:-7700}:7700"
+    volumes:
+      - meilisearch:/meili_data
+    healthcheck:
+      test: curl --fail http://127.0.0.1:7700/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: redis:7.4.1
+    ports:
+      - "${VOLTASERVE_REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: redis-cli ping || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  maildev:
+    image: maildev/maildev:2.2.1
+    ports:
+      - "${VOLTASERVE_MAILDEV_SMTP_PORT:-1025}:1025"
+      - "${VOLTASERVE_MAILDEV_WEB_PORT:-8025}:1080"
+    healthcheck:
+      test: wget --quiet --spider http://127.0.0.1:1080 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  api:
+    image: voltaserve/api
+    ports:
+      - "${VOLTASERVE_API_PORT:-8080}:8080"
+    environment:
+      - PORT=8080
+      - CONVERSION_URL=http://conversion:8083
+      - LANGUAGE_URL=http://language:8084
+      - MOSAIC_URL=http://mosaic:8085
+      - POSTGRES_URL=postgresql://voltaserve@cockroach:26257/voltaserve
+      - S3_URL=minio:9000
+      - SEARCH_URL=http://meilisearch:7700
+      - PUBLIC_UI_URL=http://${VOLTASERVE_HOSTNAME:-localhost}:${VOLTASERVE_UI_PORT:-3000}
+      - REDIS_ADDRESS=redis:6379
+      - SMTP_HOST=${VOLTASERVE_SMTP_HOST:-maildev}
+      - SMTP_PORT=${VOLTASERVE_SMTP_PORT:-1025}
+      - SMTP_SECURE=${VOLTASERVE_SMTP_SECURE:-false}
+      - SMTP_USERNAME=${VOLTASERVE_SMTP_USERNAME}
+      - SMTP_PASSWORD=${VOLTASERVE_SMTP_PASSWORD}
+      - SMTP_SENDER_ADDRESS=${VOLTASERVE_SMTP_SENDER_ADDRESS:-no-reply@localhost}
+      - SMTP_SENDER_NAME=${VOLTASERVE_SMTP_SENDER_NAME:-Voltaserve}
+      - SNAPSHOT_WEBHOOK=http://murph:8087/v1/webhooks/snapshots
+    healthcheck:
+      test: wget --quiet --spider http://127.0.0.1:8080/v3/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      cockroach:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      meilisearch:
+        condition: service_healthy
+    restart: on-failure
+
+  idp:
+    image: voltaserve/idp
+    ports:
+      - "${VOLTASERVE_IDP_PORT:-8081}:8081"
+    environment:
+      - PORT=8081
+      - POSTGRES_URL=postgresql://voltaserve@cockroach:26257/voltaserve
+      - SEARCH_URL=http://meilisearch:7700
+      - PUBLIC_UI_URL=http://${VOLTASERVE_HOSTNAME:-localhost}:${VOLTASERVE_UI_PORT:-3000}
+      - SMTP_HOST=${VOLTASERVE_SMTP_HOST:-maildev}
+      - SMTP_PORT=${VOLTASERVE_SMTP_PORT:-1025}
+      - SMTP_SECURE=${VOLTASERVE_SMTP_SECURE:-false}
+      - SMTP_USERNAME=${VOLTASERVE_SMTP_USERNAME}
+      - SMTP_PASSWORD=${VOLTASERVE_SMTP_PASSWORD}
+      - SMTP_SENDER_ADDRESS=${VOLTASERVE_SMTP_SENDER_ADDRESS:-no-reply@localhost}
+      - SMTP_SENDER_NAME=${VOLTASERVE_SMTP_SENDER_NAME:-Voltaserve}
+      - USER_WEBHOOKS=http://api:8080/v3/webhooks/users,http://murph:8087/v1/webhooks/users
+    healthcheck:
+      test: curl -fs http://127.0.0.1:8081/v3/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      cockroach:
+        condition: service_healthy
+      meilisearch:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    restart: on-failure
+
+  ui:
+    image: voltaserve/ui
+    ports:
+      - "${VOLTASERVE_UI_PORT:-3000}:3000"
+    environment:
+      - API_URL=http://api:8080
+      - IDP_URL=http://idp:8081
+    healthcheck:
+      test: wget --quiet --spider http://127.0.0.1:3000/index.html || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      idp:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    restart: on-failure
+
+  webdav:
+    image: voltaserve/webdav
+    ports:
+      - "${VOLTASERVE_WEBDAV_PORT:-8082}:8082"
+    environment:
+      - PORT=8082
+      - IDP_URL=http://idp:8081
+      - API_URL=http://api:8080
+      - REDIS_ADDRESS=redis:6379
+      - S3_URL=minio:9000
+    healthcheck:
+      test: wget --quiet --spider http://127.0.0.1:8082/v3/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      idp:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    restart: on-failure
+
+  conversion:
+    image: voltaserve/conversion
+    ports:
+      - "${VOLTASERVE_CONVERSION_PORT:-8083}:8083"
+    environment:
+      - PORT=8083
+      - ENABLE_INSTALLER=true
+      - API_URL=http://api:8080
+      - LANGUAGE_URL=http://language:8084
+      - MOSAIC_URL=http://mosaic:8085
+      - S3_URL=minio:9000
+    healthcheck:
+      test: curl -fs http://127.0.0.1:8083/v3/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      api:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    restart: on-failure
+
+  language:
+    image: voltaserve/language
+    ports:
+      - "${VOLTASERVE_LANGUAGE_PORT:-8084}:8084"
+    healthcheck:
+      test: curl -fs http://127.0.0.1:8084/v3/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: on-failure
+
+  mosaic:
+    image: voltaserve/mosaic
+    ports:
+      - "${VOLTASERVE_MOSAIC_PORT:-8085}:8085"
+    environment:
+      - S3_URL=minio:9000
+    healthcheck:
+      test: wget --quiet --spider http://127.0.0.1:8085/v3/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: on-failure
+
+  console:
+    image: voltaserve/console
+    ports:
+      - "${VOLTASERVE_CONSOLE_PORT:-8086}:8086"
+    environment:
+      - PORT=8086
+      - HOST=0.0.0.0
+      - POSTGRES_URL=cockroach
+      - POSTGRES_PORT=26257
+      - POSTGRES_NAME=voltaserve
+      - POSTGRES_USER=voltaserve
+      - POSTGRES_PASSWORD=voltaserve
+      - WORKERS=4
+      - SECURITY_JWT_SIGNING_KEY=586cozl1x9m6zmu4fg8iwi6ajazguehcm9qdfgd5ndo2pc3pcn
+      - SECURITY_CORS_ORIGINS=http://localhost:3000
+      - JWT_ALGORITHM=HS256
+      - URL=localhost
+      - API_URL=http://api:8080
+      - IDP_URL=http://idp:8081
+      - WEBDAV_URL=http://webdav:8082
+      - CONVERSION_URL=http://conversion:8083
+      - LANGUAGE_URL=http://language:8084
+      - MOSAIC_URL=http://mosaic:8085
+    healthcheck:
+      test: wget --quiet --spider http://127.0.0.1:8086/liveness || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      api:
+        condition: service_healthy
+      idp:
+        condition: service_healthy
+      webdav:
+        condition: service_healthy
+      conversion:
+        condition: service_healthy
+      language:
+        condition: service_healthy
+      mosaic:
+        condition: service_healthy
+      cockroach:
+        condition: service_healthy
+    restart: on-failure
+
+  murph:
+    image: voltaserve/murph
+    ports:
+      - "${VOLTASERVE_MURPH_PORT:-8087}:8087"
+    environment:
+      - PORT=8087
+      - API_URL=http://api:8080
+      - CONVERSION_URL=http://conversion:8083
+      - POSTGRES_URL=postgresql://voltaserve@cockroach:26257/voltaserve
+      - S3_URL=minio:9000
+      - SEARCH_URL=http://meilisearch:7700
+      - REDIS_ADDRESS=redis:6379
+      - LLM_GEMINI_API_KEY=${VOLTASERVE_LLM_GEMINI_API_KEY}
+    healthcheck:
+      test: wget --quiet --spider http://127.0.0.1:8087/v1/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      cockroach:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      meilisearch:
+        condition: service_healthy
+    restart: on-failure
+
+  migrations:
+    image: voltaserve/migrations
+    environment:
+      - DATABASE_URL=postgresql://voltaserve@cockroach:26257/voltaserve
+    depends_on:
+      cockroach:
+        condition: service_healthy
+    restart: on-failure

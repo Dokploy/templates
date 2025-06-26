@@ -1,0 +1,32 @@
+name = "DumbAssets"
+description = "Simple asset management system"
+port = 3000
+
+[environment]
+PORT = "${PORT}"
+
+# Application Configuration
+SITE_TITLE = "DumbAssets"
+BASE_URL = "http://${DOMAIN}"
+
+# Security Configuration
+DUMBASSETS_PIN = "${password:4}"
+ALLOWED_ORIGINS = "http://${DOMAIN}"
+
+# Environment Settings
+NODE_ENV = "production"
+DEBUG = "false"
+DEMO_MODE = "false"
+
+# Currency Settings
+CURRENCY_CODE = "USD"
+CURRENCY_LOCALE = "en-US"
+
+# Notification Settings (Optional)
+APPRISE_URL = ""
+
+[domains]
+[[domains.main]]
+host = "${DOMAIN}"
+port = "${PORT}"
+path = "/" 

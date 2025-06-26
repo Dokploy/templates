@@ -1,0 +1,13 @@
+[variables]
+PORT = "18966"
+
+[config]
+env = [
+  "PORT=${PORT}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "myip"
+port = 18966
+host = "${domain}" 

@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+  op-db:
+    image: postgres:14-alpine
+    restart: always
+    volumes:
+      - op-db-data:/var/lib/postgresql/data
+    ports:
+      - "5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+
+  op-kv:
+    image: redis:7.2.5-alpine
+    restart: always
+    volumes:
+      - op-kv-data:/data
+    command: ["redis-server", "--maxmemory-policy", "noeviction"]
+    ports:
+      - "6379"
+
+  op-ch:
+    image: clickhouse/clickhouse-server:24.12.2.29-alpine
+    restart: always
+    volumes:
+      - op-ch-data:/var/lib/clickhouse
+      - op-ch-logs:/var/log/clickhouse-server
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    ports:
+      - "8123" # HTTP interface
+      - "9000" # Native/TCP interface
+      - "9009" # Inter-server communication
+
+volumes:
+  op-db-data:
+  op-kv-data:
+  op-ch-data:
+  op-ch-logs:

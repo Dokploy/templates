@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  tianji:
+    image: moonrailgun/tianji:latest
+    restart: unless-stopped
+    ports:
+      - "12345:12345"
+    environment:
+      DATABASE_URL: postgresql://tianji:tianji@postgres:5432/tianji
+      JWT_SECRET: ${JWT_SECRET}
+      ALLOW_REGISTER: ${ALLOW_REGISTER}
+      ALLOW_OPENAPI: ${ALLOW_OPENAPI}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: tianji
+      POSTGRES_USER: tianji
+      POSTGRES_PASSWORD: tianji
+
+volumes:
+  postgres-data:

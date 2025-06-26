@@ -1,0 +1,68 @@
+services:
+  metube:
+    image: ghcr.io/alexta69/metube:${METUBE_VERSION:-latest}
+    restart: unless-stopped
+    ports:
+      - "8081"
+    volumes:
+      # Downloaded videos will be stored here
+      - metube_downloads:/downloads
+      # State/queue persistence files
+      - metube_state:/downloads/.metube
+    environment:
+      # User and permissions
+      UID: ${UID:-1000}
+      GID: ${GID:-1000}
+      UMASK: ${UMASK:-022}
+
+      # UI and theme settings
+      DEFAULT_THEME: ${DEFAULT_THEME:-auto}
+
+      # Download directories
+      DOWNLOAD_DIR: ${DOWNLOAD_DIR:-/downloads}
+      AUDIO_DOWNLOAD_DIR: ${AUDIO_DOWNLOAD_DIR:-}
+      DOWNLOAD_DIRS_INDEXABLE: ${DOWNLOAD_DIRS_INDEXABLE:-false}
+
+      # Custom directories
+      CUSTOM_DIRS: ${CUSTOM_DIRS:-true}
+      CREATE_CUSTOM_DIRS: ${CREATE_CUSTOM_DIRS:-true}
+      CUSTOM_DIRS_EXCLUDE_REGEX: ${CUSTOM_DIRS_EXCLUDE_REGEX:-(^|/)[.@].*$}
+
+      # File paths
+      STATE_DIR: ${STATE_DIR:-/downloads/.metube}
+      TEMP_DIR: ${TEMP_DIR:-/downloads}
+      DELETE_FILE_ON_TRASHCAN: ${DELETE_FILE_ON_TRASHCAN:-false}
+
+      # Web server settings
+      URL_PREFIX: ${URL_PREFIX:-/}
+      PUBLIC_HOST_URL: ${PUBLIC_HOST_URL:-}
+      PUBLIC_HOST_AUDIO_URL: ${PUBLIC_HOST_AUDIO_URL:-}
+
+      # HTTPS settings
+      HTTPS: ${HTTPS:-false}
+      CERTFILE: ${CERTFILE:-}
+      KEYFILE: ${KEYFILE:-}
+
+      # Output templates
+      OUTPUT_TEMPLATE: ${OUTPUT_TEMPLATE:-%(title)s.%(ext)s}
+      OUTPUT_TEMPLATE_CHAPTER: ${OUTPUT_TEMPLATE_CHAPTER:-%(title)s - %(section_number)s %(section_title)s.%(ext)s}
+      OUTPUT_TEMPLATE_PLAYLIST: ${OUTPUT_TEMPLATE_PLAYLIST:-%(playlist_title)s/%(title)s.%(ext)s}
+
+      # Playlist settings
+      DEFAULT_OPTION_PLAYLIST_STRICT_MODE: ${DEFAULT_OPTION_PLAYLIST_STRICT_MODE:-false}
+      DEFAULT_OPTION_PLAYLIST_ITEM_LIMIT: ${DEFAULT_OPTION_PLAYLIST_ITEM_LIMIT:-0}
+
+      # yt-dlp options
+      YTDL_OPTIONS: ${YTDL_OPTIONS:-}
+      YTDL_OPTIONS_FILE: ${YTDL_OPTIONS_FILE:-}
+
+      # Download mode and concurrency
+      DOWNLOAD_MODE: ${DOWNLOAD_MODE:-limited}
+      MAX_CONCURRENT_DOWNLOADS: ${MAX_CONCURRENT_DOWNLOADS:-3}
+
+      # Robots.txt
+      ROBOTS_TXT: ${ROBOTS_TXT:-}
+
+volumes:
+  metube_downloads:
+  metube_state:

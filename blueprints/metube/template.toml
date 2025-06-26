@@ -1,0 +1,66 @@
+[variables]
+main_domain = "${domain}"
+
+[config.env]
+METUBE_VERSION = "latest"
+
+# User and permissions
+UID = "1000"
+GID = "1000"
+UMASK = "022"
+
+# UI and theme settings
+DEFAULT_THEME = "auto"
+
+# Download directories
+DOWNLOAD_DIR = "/downloads"
+AUDIO_DOWNLOAD_DIR = ""
+DOWNLOAD_DIRS_INDEXABLE = "false"
+
+# Custom directories
+CUSTOM_DIRS = "true"
+CREATE_CUSTOM_DIRS = "true"
+CUSTOM_DIRS_EXCLUDE_REGEX = "(^|/)[.@].*$"
+
+# File paths
+STATE_DIR = "/downloads/.metube"
+TEMP_DIR = "/downloads"
+DELETE_FILE_ON_TRASHCAN = "false"
+
+# Web server settings
+URL_PREFIX = "/"
+PUBLIC_HOST_URL = ""
+PUBLIC_HOST_AUDIO_URL = ""
+
+# HTTPS settings
+HTTPS = "false"
+CERTFILE = ""
+KEYFILE = ""
+
+# Output templates
+OUTPUT_TEMPLATE = "%(title)s.%(ext)s"
+OUTPUT_TEMPLATE_CHAPTER = "%(title)s - %(section_number)s %(section_title)s.%(ext)s"
+OUTPUT_TEMPLATE_PLAYLIST = "%(playlist_title)s/%(title)s.%(ext)s"
+
+# Playlist settings
+DEFAULT_OPTION_PLAYLIST_STRICT_MODE = "false"
+DEFAULT_OPTION_PLAYLIST_ITEM_LIMIT = "0"
+
+# yt-dlp options
+YTDL_OPTIONS = ""
+YTDL_OPTIONS_FILE = ""
+
+# Download mode and concurrency
+DOWNLOAD_MODE = "limited"
+MAX_CONCURRENT_DOWNLOADS = "3"
+
+# Robots.txt
+ROBOTS_TXT = ""
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "metube"
+port = 8081
+host = "${main_domain}" 

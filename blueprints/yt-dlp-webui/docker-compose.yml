@@ -1,0 +1,20 @@
+services:
+  yt-dlp-webui:
+    image: marcobaobao/yt-dlp-webui:${YTDLP_WEBUI_VERSION:-latest}
+    restart: unless-stopped
+    ports:
+      - "3033"
+    volumes:
+      # Downloaded media files will be stored here
+      - ytdlp_downloads:/downloads
+      # Configuration file (config.yml) will be stored here
+      - ytdlp_config:/config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3033"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  ytdlp_downloads:
+  ytdlp_config:

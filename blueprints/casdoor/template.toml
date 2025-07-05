@@ -1,6 +1,8 @@
 [variables]
 main_domain = "${domain}"
+db_user = "casdoor"
 db_password = "${password:32}"
+db_name = "casdoor"
 jwt_secret = "${password:64}"
 
 [config]
@@ -11,7 +13,9 @@ host = "${main_domain}"
 path = "/"
 
 [config.env]
-POSTGRES_PASSWORD = "${db_password}"
+DB_USER = "${db_user}"
+DB_PASSWORD = "${db_password}"
+DB_NAME = "${db_name}"
 
 [[config.mounts]]
 filePath = "conf/app.conf"
@@ -22,8 +26,8 @@ runmode = prod
 SessionOn = true
 copyrequestbody = true
 driverName = postgres
-dataSourceName = "user=casdoor password=${db_password} host=db port=5432 sslmode=disable dbname=casdoor"
-dbName = casdoor
+dataSourceName = "user=${db_user} password=${db_password} host=casdoor-db port=5432 sslmode=disable dbname=${db_name}"
+dbName = ${db_name}
 tableNamePrefix =
 showSql = false
 redisEndpoint =

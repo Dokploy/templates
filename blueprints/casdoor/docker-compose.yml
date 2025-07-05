@@ -6,14 +6,15 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DB_HOST=db
+      - DB_HOST=casdoor-db
     depends_on:
-      db:
+      casdoor-db:
         condition: service_healthy
     volumes:
       - ./conf/app.conf:/app/conf/app.conf
       - casdoor_data:/tmp
-  db:
+
+  casdoor-db:
     image: postgres:15-alpine
     container_name: casdoor_db
     restart: always

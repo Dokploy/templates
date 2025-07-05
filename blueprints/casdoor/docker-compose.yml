@@ -1,6 +1,6 @@
 services:
   casdoor:
-    image: casdoor/casdoor:latest
+    image: casbin/casdoor:latest
     container_name: casdoor
     restart: always
     ports:

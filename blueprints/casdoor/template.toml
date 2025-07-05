@@ -6,16 +6,13 @@ db_name = "casdoor"
 jwt_secret = "${password:64}"
 
 [config]
+env = ["DB_USER=${db_user}", "DB_PASSWORD=${db_password}", "DB_NAME=${db_name}"]
+
 [[config.domains]]
 serviceName = "casdoor"
 port = 8000
 host = "${main_domain}"
 path = "/"
-
-[config.env]
-DB_USER = "${db_user}"
-DB_PASSWORD = "${db_password}"
-DB_NAME = "${db_name}"
 
 [[config.mounts]]
 filePath = "conf/app.conf"

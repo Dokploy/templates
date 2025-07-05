@@ -11,22 +11,7 @@ host = "${main_domain}"
 path = "/"
 
 [config.env]
-casdoor = [
-    "RUNNING_IN_DOCKER=true",
-    "CASDOOR_DATABASE_TYPE=postgres",
-    "CASDOOR_DATABASE_HOST=db",
-    "CASDOOR_DATABASE_PORT=5432",
-    "CASDOOR_DATABASE_NAME=casdoor",
-    "CASDOOR_DATABASE_USER=casdoor",
-    "CASDOOR_DATABASE_PASSWORD=${db_password}",
-    "CASDOOR_JWT_SECRET=${jwt_secret}",
-]
-
-db = [
-    "POSTGRES_DB=casdoor",
-    "POSTGRES_USER=casdoor",
-    "POSTGRES_PASSWORD=${db_password}",
-]
+POSTGRES_PASSWORD = "${db_password}"
 
 [[config.mounts]]
 filePath = "/opt/casdoor/conf/app.conf"
@@ -38,7 +23,7 @@ runmode = prod
 SessionOn = true
 copyrequestbody = true
 driverName = postgres
-dataSourceName = casdoor:${db_password}@tcp(db:5432)/casdoor?sslmode=disable
+dataSourceName = postgres://casdoor:${db_password}@db:5432/casdoor?sslmode=disable
 dbName = casdoor
 tableNamePrefix =
 showSql = false
@@ -66,10 +51,10 @@ logConfig = true
 origin =
 staticBaseUrl =
 isDemoMode = false
-batchSize = 100
 enableLogRecord = true
 logFilePath = ./logs
 enableErrorRecord = true
 enableAccessRecord = true
 accessLogFilePath = ./access_logs
+jwtSecret = ${jwt_secret}
 """

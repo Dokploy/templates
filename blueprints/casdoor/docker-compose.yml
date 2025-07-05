@@ -24,11 +24,16 @@ services:
     environment:
       - POSTGRES_DB=casdoor
       - POSTGRES_USER=casdoor
-      - POSTGRES_PASSWORD=casdoor_password
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - casdoor-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U casdoor"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   casdoor_data:

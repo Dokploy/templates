@@ -4,7 +4,7 @@ postgres_password = "${password:32}"
 zitadel_masterkey = "${password:32}"
 admin_username = "${username}"
 admin_email = "${email}"
-admin_password = "${password:16}"
+admin_password = "AdminPassword123!"
 
 [config]
 [[config.domains]]

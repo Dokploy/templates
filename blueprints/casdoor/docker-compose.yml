@@ -3,7 +3,6 @@ version: '3.8'
 services:
   casdoor:
     image: casbin/casdoor:latest
-    container_name: casdoor
     restart: unless-stopped
     ports:
       - "8000:8000"
@@ -11,15 +10,14 @@ services:
       - RUNNING_IN_DOCKER=true
     volumes:
       - casdoor_data:/opt/casdoor/data
-      - casdoor_conf:/opt/casdoor/conf
+      - ../files/casdoor.conf:/opt/casdoor/conf/app.conf
     depends_on:
       - db
     networks:
-      - casdoor-network
+      - dokploy-network
 
   db:
     image: postgres:15-alpine
-    container_name: casdoor_postgres
     restart: unless-stopped
     environment:
       - POSTGRES_DB=casdoor
@@ -28,7 +26,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - casdoor-network
+      - dokploy-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U casdoor"]
       interval: 10s
@@ -37,9 +35,8 @@ services:
 
 volumes:
   casdoor_data:
-  casdoor_conf:
   postgres_data:
 
 networks:
-  casdoor-network:
-    driver: bridge
+  dokploy-network:
+    external: true

@@ -1,7 +1,7 @@
 [variables]
 main_domain = "${domain}"
 db_password = "${password:32}"
-jwt_secret = "${jwt:64}"
+jwt_secret = "${password:64}"
 
 [config]
 [[config.domains]]
@@ -14,7 +14,7 @@ path = "/"
 POSTGRES_PASSWORD = "${db_password}"
 
 [[config.mounts]]
-filePath = "/opt/casdoor/conf/app.conf"
+filePath = "casdoor.conf"
 content = """
 # Casdoor Configuration
 appname = casdoor
@@ -23,7 +23,7 @@ runmode = prod
 SessionOn = true
 copyrequestbody = true
 driverName = postgres
-dataSourceName = postgres://casdoor:${db_password}@db:5432/casdoor?sslmode=disable
+dataSourceName = "postgres://casdoor:${db_password}@db:5432/casdoor?sslmode=disable"
 dbName = casdoor
 tableNamePrefix =
 showSql = false
@@ -35,26 +35,26 @@ socks5Proxy = ""
 verificationCodeTimeout = 10
 initScore = 2000
 defaultLanguage = en
-defaultAvatar = https://cdn.casdoor.org/casdoor/resource/built-in/admin/casdoor.png
-defaultApplication = app-built-in
-defaultOrganization = built-in
-defaultProvider = provider_captcha_default
+defaultAvatar = "https://cdn.casdoor.org/casdoor/resource/built-in/admin/casdoor.png"
+defaultApplication = "app-built-in"
+defaultOrganization = "built-in"
+defaultProvider = "provider_captcha_default"
 enableSoftDeletion = false
 batchSize = 100
 enableGzip = true
 ldapServerPort = 389
 radiusServerPort = 1812
-radiusSecret = secret
-quotaBackend = database
+radiusSecret = "secret"
+quotaBackend = "database"
 logPostOnly = true
 logConfig = true
 origin =
 staticBaseUrl =
 isDemoMode = false
 enableLogRecord = true
-logFilePath = ./logs
+logFilePath = "./logs"
 enableErrorRecord = true
 enableAccessRecord = true
-accessLogFilePath = ./access_logs
-jwtSecret = ${jwt_secret}
+accessLogFilePath = "./access_logs"
+jwtSecret = "${jwt_secret}"
 """

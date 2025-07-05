@@ -14,16 +14,15 @@ path = "/"
 POSTGRES_PASSWORD = "${db_password}"
 
 [[config.mounts]]
-filePath = "casdoor.conf"
+filePath = "conf/app.conf"
 content = """
-# Casdoor Configuration
 appname = casdoor
 httpport = 8000
 runmode = prod
 SessionOn = true
 copyrequestbody = true
 driverName = postgres
-dataSourceName = "postgres://casdoor:${db_password}@db:5432/casdoor?sslmode=disable"
+dataSourceName = "user=casdoor password=${db_password} host=db port=5432 sslmode=disable dbname=casdoor"
 dbName = casdoor
 tableNamePrefix =
 showSql = false

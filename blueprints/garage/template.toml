@@ -8,9 +8,9 @@ port = 3902
 host = "${main_domain}"
 
 [config.env]
-GARAGE_RPC_SECRET=${hash:65}
-GARAGE_ADMIN_TOKEN=${base64:45}
-GARAGE_METRICS_TOKEN=${base64:45}
+GARAGE_RPC_SECRET = "${hash:65}"
+GARAGE_ADMIN_TOKEN = "${base64:45}"
+GARAGE_METRICS_TOKEN = "${base64:45}"
 
 [[config.mounts]]
 filePath = "garage.toml"

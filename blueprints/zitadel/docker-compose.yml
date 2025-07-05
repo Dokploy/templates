@@ -24,10 +24,6 @@ services:
       ZITADEL_EXTERNALPORT: 443
       ZITADEL_EXTERNALDOMAIN: "${EXTERNAL_DOMAIN}"
 
-      # TLS Configuration
-      ZITADEL_TLS_ENABLED: false
-      ZITADEL_TLS_MODE: external
-
       # Disable Email Notifications
       ZITADEL_NOTIFICATIONS_SMTP_HOST: ""
       ZITADEL_NOTIFICATIONS_SMTP_PORT: ""

@@ -1,7 +1,7 @@
 [variables]
 main_domain = "${domain}"
 postgres_password = "${password:32}"
-zitadel_masterkey = "MasterkeyNeedsToHave32Characters"
+zitadel_masterkey = "${password:16}"
 
 [config]
 [[config.domains]]

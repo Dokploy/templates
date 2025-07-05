@@ -6,7 +6,7 @@ services:
     networks:
       - 'zitadel'
     image: 'ghcr.io/zitadel/zitadel:latest'
-    command: 'start-from-init --masterkey "${ZITADEL_MASTERKEY}" '
+    command: 'start-from-init --masterkey "${ZITADEL_MASTERKEY}" --tlsMode external'
     environment:
       # Database Configuration
       ZITADEL_DATABASE_POSTGRES_HOST: db
@@ -21,8 +21,12 @@ services:
 
       # External Configuration
       ZITADEL_EXTERNALSECURE: true
-      ZITADEL_EXTERNALPORT: 8080
+      ZITADEL_EXTERNALPORT: 443
       ZITADEL_EXTERNALDOMAIN: "${EXTERNAL_DOMAIN}"
+
+      # TLS Configuration
+      ZITADEL_TLS_ENABLED: false
+      ZITADEL_TLS_MODE: external
 
       # Disable Email Notifications
       ZITADEL_NOTIFICATIONS_SMTP_HOST: ""

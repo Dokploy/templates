@@ -18,12 +18,6 @@ POSTGRES_PASSWORD = "${postgres_password}"
 ZITADEL_MASTERKEY = "${zitadel_masterkey}"
 EXTERNAL_DOMAIN = "${main_domain}"
 
-# External Configuration for HTTP only - TLS mode disabled
-ZITADEL_EXTERNALSECURE = "false"
-ZITADEL_EXTERNALPORT = "80"
-ZITADEL_EXTERNALDOMAIN = "${main_domain}"
-ZITADEL_TLS_ENABLED = "false"
-
 # Custom Admin User Configuration
 ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME = "${admin_username}"
 ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD = "${admin_password}"

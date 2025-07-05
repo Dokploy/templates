@@ -19,10 +19,11 @@ services:
       ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD: "${POSTGRES_PASSWORD}"
       ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE: disable
 
-      # External Configuration for Reverse Proxy (Traefik)
-      ZITADEL_EXTERNALSECURE: "true"
-      ZITADEL_EXTERNALPORT: "443"
+      # External Configuration for HTTP only - TLS mode disabled
+      ZITADEL_EXTERNALSECURE: "false"
+      ZITADEL_EXTERNALPORT: "80"
       ZITADEL_EXTERNALDOMAIN: "${EXTERNAL_DOMAIN}"
+      ZITADEL_TLS_ENABLED: "false"
 
       # Disable Email Notifications
       ZITADEL_NOTIFICATIONS_SMTP_HOST: ""

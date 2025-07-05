@@ -1,0 +1,38 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "server"
+port = 9000
+host = "${main_domain}"
+
+[config.env]
+# Database Configuration
+PG_PASS = ""
+PG_USER = "authentik"
+PG_DB = "authentik"
+
+# Authentik Core Configuration
+AUTHENTIK_SECRET_KEY = ""
+AUTHENTIK_IMAGE = "ghcr.io/goauthentik/server"
+AUTHENTIK_TAG = "2025.6.2"
+
+# Port Configuration
+COMPOSE_PORT_HTTP = "9000"
+COMPOSE_PORT_HTTPS = "9443"
+
+# Email Configuration (SMTP)
+AUTHENTIK_EMAIL__HOST = "localhost"
+AUTHENTIK_EMAIL__PORT = "25"
+AUTHENTIK_EMAIL__USERNAME = ""
+AUTHENTIK_EMAIL__PASSWORD = ""
+AUTHENTIK_EMAIL__USE_TLS = "false"
+AUTHENTIK_EMAIL__USE_SSL = "false"
+AUTHENTIK_EMAIL__TIMEOUT = "10"
+AUTHENTIK_EMAIL__FROM = "authentik@${main_domain}"
+
+# Error Reporting
+AUTHENTIK_ERROR_REPORTING__ENABLED = "true" 

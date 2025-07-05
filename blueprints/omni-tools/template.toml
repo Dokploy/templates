@@ -1,0 +1,12 @@
+name = "Omni-Tools"
+description = "Collection of useful web tools"
+port = 8080
+
+[environment]
+PORT = "${PORT}"
+
+[domains]
+[[domains.main]]
+host = "${DOMAIN}"
+port = "${PORT}"
+path = "/" 

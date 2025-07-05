@@ -1,0 +1,31 @@
+name = "Linkding"
+description = "Self-hosted bookmark manager with clean UI, tag organization, and REST API"
+
+[variables]
+PORT = { type = "number", defaultValue = 9090, description = "Port for Linkding web interface" }
+
+# Initial superuser configuration
+LD_SUPERUSER_NAME = { type = "text", defaultValue = "admin", description = "Username for the initial superuser account" }
+LD_SUPERUSER_PASSWORD = { type = "password", description = "Password for the initial superuser account" }
+
+# Application configuration
+LD_CONTEXT_PATH = { type = "text", defaultValue = "", description = "Context path for running linkding (must end with /)" }
+LD_DISABLE_BACKGROUND_TASKS = { type = "boolean", defaultValue = false, description = "Disable background tasks for bookmark processing" }
+LD_DISABLE_URL_VALIDATION = { type = "boolean", defaultValue = false, description = "Disable URL validation for bookmarks" }
+
+# Authentication proxy configuration
+LD_ENABLE_AUTH_PROXY = { type = "boolean", defaultValue = false, description = "Enable authentication proxy support (Authelia, etc.)" }
+LD_AUTH_PROXY_USERNAME_HEADER = { type = "text", defaultValue = "", description = "Header name for auth proxy username" }
+LD_AUTH_PROXY_LOGOUT_URL = { type = "text", defaultValue = "", description = "Logout URL for auth proxy" }
+
+# Security configuration
+LD_CSRF_TRUSTED_ORIGINS = { type = "text", defaultValue = "", description = "Comma-separated list of trusted origins for CSRF" }
+
+# Database configuration (PostgreSQL support)
+LD_DB_ENGINE = { type = "select", defaultValue = "sqlite", options = ["sqlite", "postgres"], description = "Database engine to use" }
+LD_DB_DATABASE = { type = "text", defaultValue = "linkding", description = "Database name (for PostgreSQL)" }
+LD_DB_USER = { type = "text", defaultValue = "linkding", description = "Database username (for PostgreSQL)" }
+LD_DB_PASSWORD = { type = "password", description = "Database password (for PostgreSQL)" }
+LD_DB_HOST = { type = "text", defaultValue = "localhost", description = "Database host (for PostgreSQL)" }
+LD_DB_PORT = { type = "number", defaultValue = 5432, description = "Database port (for PostgreSQL)" }
+LD_DB_OPTIONS = { type = "text", defaultValue = "{}", description = "Additional database options as JSON" } 

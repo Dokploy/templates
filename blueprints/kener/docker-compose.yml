@@ -1,0 +1,91 @@
+version: "3.8"
+
+services:
+  kener:
+    image: rajnandan1/kener:latest
+    container_name: kener
+    restart: unless-stopped
+    ports:
+      - "${KENER_PORT:-3000}:3000"
+    environment:
+      - TZ=${TIMEZONE:-UTC}
+      - KENER_SECRET_KEY=${KENER_SECRET_KEY:-}
+      - ORIGIN=${ORIGIN:-http://localhost:3000}
+      - PORT=${PORT:-3000}
+      - KENER_BASE_PATH=${KENER_BASE_PATH:-}
+      - NODE_ENV=production
+      # Email Configuration (Resend)
+      - RESEND_API_KEY=${RESEND_API_KEY:-}
+      - RESEND_SENDER_EMAIL=${RESEND_SENDER_EMAIL:-}
+      # SMTP Configuration (alternative to Resend)
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASS=${SMTP_PASS:-}
+      - SMTP_SECURE=${SMTP_SECURE:-0}
+      - SMTP_FROM_EMAIL=${SMTP_FROM_EMAIL:-}
+      # Database Configuration
+      - DATABASE_URL=${DATABASE_URL:-sqlite://./database/kener.db}
+    volumes:
+      - kener_data:/app/database
+      - kener_uploads:/app/uploads
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - postgres
+      - mysql
+    profiles:
+      - all
+
+  # Optional PostgreSQL database (uncomment to use instead of SQLite)
+  postgres:
+    image: postgres:alpine
+    container_name: kener_postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-}
+      - POSTGRES_DB=${POSTGRES_DB:-kener_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - postgres
+
+  # Optional MySQL database (uncomment to use instead of SQLite)
+  mysql:
+    image: mariadb:11
+    container_name: kener_mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_USER=${MYSQL_USER:-user}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-kener_db}
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - mysql
+
+volumes:
+  kener_data:
+    driver: local
+  kener_uploads:
+    driver: local
+  postgres_data:
+    driver: local
+  mysql_data:
+    driver: local

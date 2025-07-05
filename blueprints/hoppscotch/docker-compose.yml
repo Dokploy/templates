@@ -1,0 +1,138 @@
+services:
+  # PostgreSQL database for Hoppscotch
+  hoppscotch-db:
+    image: postgres:15
+    container_name: hoppscotch-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - hoppscotch_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "sh -c 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - dokploy-network
+    restart: unless-stopped
+
+  # Auto-migration service - handles database migrations automatically
+  hoppscotch-migrate:
+    image: hoppscotch/hoppscotch:latest
+    container_name: hoppscotch-migrate
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@hoppscotch-db:5432/${POSTGRES_DB}?connect_timeout=300
+      JWT_SECRET: ${JWT_SECRET}
+      SESSION_SECRET: ${SESSION_SECRET}
+      DATA_ENCRYPTION_KEY: ${DATA_ENCRYPTION_KEY}
+    depends_on:
+      hoppscotch-db:
+        condition: service_healthy
+    command: sh -c "pnpx prisma migrate deploy"
+    networks:
+      - dokploy-network
+    restart: "no"
+
+  # Hoppscotch AIO (All-In-One) container
+  hoppscotch-aio:
+    image: hoppscotch/hoppscotch:latest
+    container_name: hoppscotch-aio
+    ports:
+      - "${PORT}:3000"
+      - "${ADMIN_PORT}:3100"
+      - "${BACKEND_PORT}:3170"
+    environment:
+      # Database configuration
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@hoppscotch-db:5432/${POSTGRES_DB}?connect_timeout=300
+
+      # Security tokens
+      JWT_SECRET: ${JWT_SECRET}
+      SESSION_SECRET: ${SESSION_SECRET}
+      DATA_ENCRYPTION_KEY: ${DATA_ENCRYPTION_KEY}
+      TOKEN_SALT_COMPLEXITY: ${TOKEN_SALT_COMPLEXITY}
+
+      # Token validity
+      MAGIC_LINK_TOKEN_VALIDITY: ${MAGIC_LINK_TOKEN_VALIDITY}
+      REFRESH_TOKEN_VALIDITY: ${REFRESH_TOKEN_VALIDITY}
+      ACCESS_TOKEN_VALIDITY: ${ACCESS_TOKEN_VALIDITY}
+
+      # Application URLs
+      REDIRECT_URL: ${REDIRECT_URL}
+      VITE_BASE_URL: ${VITE_BASE_URL}
+      VITE_SHORTCODE_BASE_URL: ${VITE_SHORTCODE_BASE_URL}
+      VITE_ADMIN_URL: ${VITE_ADMIN_URL}
+      VITE_BACKEND_GQL_URL: ${VITE_BACKEND_GQL_URL}
+      VITE_BACKEND_WS_URL: ${VITE_BACKEND_WS_URL}
+      VITE_BACKEND_API_URL: ${VITE_BACKEND_API_URL}
+
+      # Whitelisted origins
+      WHITELISTED_ORIGINS: ${WHITELISTED_ORIGINS}
+
+      # Authentication providers
+      VITE_ALLOWED_AUTH_PROVIDERS: ${VITE_ALLOWED_AUTH_PROVIDERS}
+
+      # Google OAuth (optional)
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL:-}
+      GOOGLE_SCOPE: ${GOOGLE_SCOPE:-email,profile}
+
+      # GitHub OAuth (optional)
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      GITHUB_CALLBACK_URL: ${GITHUB_CALLBACK_URL:-}
+      GITHUB_SCOPE: ${GITHUB_SCOPE:-user:email}
+
+      # Microsoft OAuth (optional)
+      MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID:-}
+      MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET:-}
+      MICROSOFT_CALLBACK_URL: ${MICROSOFT_CALLBACK_URL:-}
+      MICROSOFT_SCOPE: ${MICROSOFT_SCOPE:-user.read}
+      MICROSOFT_TENANT: ${MICROSOFT_TENANT:-common}
+
+      # Email configuration
+      MAILER_SMTP_ENABLE: ${MAILER_SMTP_ENABLE}
+      MAILER_USE_CUSTOM_CONFIGS: ${MAILER_USE_CUSTOM_CONFIGS}
+      MAILER_ADDRESS_FROM: ${MAILER_ADDRESS_FROM}
+      MAILER_SMTP_URL: ${MAILER_SMTP_URL:-}
+      MAILER_SMTP_HOST: ${MAILER_SMTP_HOST:-}
+      MAILER_SMTP_PORT: ${MAILER_SMTP_PORT:-587}
+      MAILER_SMTP_SECURE: ${MAILER_SMTP_SECURE:-true}
+      MAILER_SMTP_USER: ${MAILER_SMTP_USER:-}
+      MAILER_SMTP_PASSWORD: ${MAILER_SMTP_PASSWORD:-}
+      MAILER_TLS_REJECT_UNAUTHORIZED: ${MAILER_TLS_REJECT_UNAUTHORIZED:-true}
+
+      # Rate limiting
+      RATE_LIMIT_TTL: ${RATE_LIMIT_TTL}
+      RATE_LIMIT_MAX: ${RATE_LIMIT_MAX}
+
+      # Security settings
+      ALLOW_SECURE_COOKIES: ${ALLOW_SECURE_COOKIES}
+
+      # Optional: Terms and Privacy Policy
+      VITE_APP_TOS_LINK: ${VITE_APP_TOS_LINK:-}
+      VITE_APP_PRIVACY_POLICY_LINK: ${VITE_APP_PRIVACY_POLICY_LINK:-}
+
+      # Subpath access (for desktop app support)
+      ENABLE_SUBPATH_BASED_ACCESS: ${ENABLE_SUBPATH_BASED_ACCESS}
+    depends_on:
+      hoppscotch-db:
+        condition: service_healthy
+      hoppscotch-migrate:
+        condition: service_completed_successfully
+    networks:
+      - dokploy-network
+    restart: unless-stopped
+
+volumes:
+  hoppscotch_db_data:
+
+networks:
+  dokploy-network:
+    external: true

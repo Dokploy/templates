@@ -1,0 +1,25 @@
+services:
+  dumbbudget:
+    image: dumbwareio/dumbbudget:latest
+    container_name: dumbbudget
+    restart: unless-stopped
+    ports:
+      - "${PORT}:3000"
+    volumes:
+      - dumbbudget_data:/app/data
+    environment:
+      DUMBBUDGET_PIN: ${DUMBBUDGET_PIN}
+      BASE_URL: ${BASE_URL}
+      CURRENCY: ${CURRENCY}
+      SITE_TITLE: ${SITE_TITLE}
+      INSTANCE_NAME: ${INSTANCE_NAME}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+    healthcheck:
+      test: wget --spider -q http://127.0.0.1:3000
+      start_period: 20s
+      interval: 20s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  dumbbudget_data:

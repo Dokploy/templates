@@ -1,0 +1,26 @@
+[variables]
+PORT = "8945"
+TZ = "UTC"
+
+[config]
+env = [
+  "PORT=${PORT}",
+  "TZ=${TZ}",
+]
+mounts = [
+  {
+    type = "volume",
+    name = "config_data",
+    mountPath = "/config"
+  },
+  {
+    type = "volume",
+    name = "downloads_data",
+    mountPath = "/downloads"
+  }
+]
+
+[[config.domains]]
+serviceName = "pinchflat"
+port = 8945
+host = "${domain}" 

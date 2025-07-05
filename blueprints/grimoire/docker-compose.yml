@@ -1,0 +1,21 @@
+services:
+  grimoire:
+    image: goniszewski/grimoire:latest
+    container_name: grimoire
+    restart: unless-stopped
+    environment:
+      - PORT=${PORT}
+      - PUBLIC_HTTPS_ONLY=${PUBLIC_HTTPS_ONLY}
+      - PUBLIC_SIGNUP_DISABLED=${PUBLIC_SIGNUP_DISABLED}
+    volumes:
+      - grimoire_data:/app/data/
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:${PORT}/api/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    ports:
+      - "${PORT}"
+
+volumes:
+  grimoire_data:

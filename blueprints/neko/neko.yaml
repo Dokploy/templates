@@ -1,0 +1,17 @@
+desktop:
+  screen: "${DESKTOP_SCREEN}"
+
+member:
+  # needed for legacy API as there is no user management
+  provider: "multiuser"
+  multiuser:
+    admin_password: "${ADMIN_PASSWORD}"
+    user_password: "${USER_PASSWORD}"
+
+session:
+  merciful_reconnect: true
+  # default setting for legacy API
+  implicit_hosting: false
+  cookie:
+    # needed for legacy API
+    enabled: false

@@ -1,0 +1,29 @@
+[variables]
+main_domain = "${domain}"
+admin_email = "${email}"
+admin_password = "${password:16}"
+app_name = "PocketBase App"
+app_url = "https://${domain}"
+origin = "https://${domain}"
+encryption_key = "${base64:32}"
+hash_algorithm = "SHA256"
+hash_key = "${base64:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "pocketbase"
+port = 8_090
+host = "${main_domain}"
+
+[config.env]
+PORT = "${PORT}"
+ORIGIN = "${origin}"
+ADMIN_EMAIL = "${admin_email}"
+ADMIN_PASSWORD = "${admin_password}"
+APP_NAME = "${app_name}"
+APP_URL = "${app_url}"
+ENCRYPTION_KEY = "${encryption_key}"
+HASH_ALGORITHM = "${hash_algorithm}"
+HASH_KEY = "${hash_key}" 

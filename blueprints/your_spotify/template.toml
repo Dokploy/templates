@@ -1,0 +1,38 @@
+[variables]
+main_domain = "${domain}"
+client_domain = "${domain}"
+api_domain = "${domain}"
+spotify_public = ""
+spotify_secret = ""
+timezone = "Europe/Paris"
+
+[config.env]
+MONGO_VERSION = "6"
+LOG_LEVEL = "debug"
+API_ENDPOINT = "https://${api_domain}"
+CLIENT_ENDPOINT = "https://${client_domain}"
+SPOTIFY_PUBLIC = "${spotify_public}"
+SPOTIFY_SECRET = "${spotify_secret}"
+TIMEZONE = "${timezone}"
+MONGO_ENDPOINT = "mongodb://mongo:27017/your_spotify"
+CORS = ""
+COOKIE_VALIDITY_MS = "1h"
+MAX_IMPORT_CACHE_SIZE = ""
+MONGO_NO_ADMIN_RIGHTS = "false"
+PORT = "8080"
+FRAME_ANCESTORS = ""
+PROMETHEUS_USERNAME = ""
+PROMETHEUS_PASSWORD = ""
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "${client_domain}"
+
+[[config.domains]]
+serviceName = "app"
+port = 8080
+host = "${api_domain}" 

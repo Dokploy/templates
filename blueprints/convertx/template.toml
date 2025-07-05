@@ -1,0 +1,36 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "convertx"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+# Port Configuration
+CONVERTX_PORT = "3000"
+
+# Account & Authentication Settings
+ACCOUNT_REGISTRATION = "true"  # Set to false to disable user registration after first account
+JWT_SECRET = ""  # A long and secret string used to sign JWT tokens (will use randomUUID if empty)
+
+# Security Settings  
+HTTP_ALLOWED = "false"  # Only set to true for local development
+ALLOW_UNAUTHENTICATED = "false"  # Allow usage without login (only for local development)
+
+# File Management
+AUTO_DELETE_EVERY_N_HOURS = "24"  # Automatic cleanup of old files (set to 0 to disable)
+
+# Conversion Settings
+FFMPEG_ARGS = ""  # Additional FFmpeg arguments (e.g., "-preset veryfast" or "-hwaccel vulkan")
+
+# Web Interface
+WEBROOT = ""  # Path prefix for web interface (e.g., "/convertx" for example.com/convertx/)
+HIDE_HISTORY = "false"  # Hide the conversion history page
+
+# Localization
+LANGUAGE = "en"  # Language for date formatting (BCP 47 language tag)
+TIMEZONE = "UTC"  # Server timezone 

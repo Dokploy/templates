@@ -1,0 +1,61 @@
+[variables]
+main_domain = "${domain}"
+web_url = "https://${domain}"
+
+# Database Configuration
+db_name = "cap_production"
+db_root_password = "${password:20}"
+db_port = "3306"
+
+# Security Keys
+database_encryption_key = "${base64:32}"
+nextauth_secret = "${base64:32}"
+
+# S3/MinIO Storage Configuration
+s3_access_key = "${password:16}"
+s3_secret_key = "${password:32}"
+s3_bucket = "cap-recordings"
+s3_region = "us-east-1"
+s3_endpoint = "http://cap-minio:9000"
+minio_api_port = "9000"
+minio_console_port = "9001"
+
+# Optional OAuth Configuration
+google_client_id = ""
+google_client_secret = ""
+
+# Optional Email Configuration (for auth)
+resend_api_key = ""
+
+# Optional AI Features
+deepgram_api_key = ""  # For audio transcription
+openai_api_key = ""    # For AI features
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "cap-web"
+port = 3_000
+host = "${main_domain}"
+
+[config.env]
+PORT = "${PORT}"
+WEB_URL = "${web_url}"
+DB_NAME = "${db_name}"
+DB_ROOT_PASSWORD = "${db_root_password}"
+DB_PORT = "${db_port}"
+DATABASE_ENCRYPTION_KEY = "${database_encryption_key}"
+NEXTAUTH_SECRET = "${nextauth_secret}"
+S3_ACCESS_KEY = "${s3_access_key}"
+S3_SECRET_KEY = "${s3_secret_key}"
+S3_BUCKET = "${s3_bucket}"
+S3_REGION = "${s3_region}"
+S3_ENDPOINT = "${s3_endpoint}"
+MINIO_API_PORT = "${minio_api_port}"
+MINIO_CONSOLE_PORT = "${minio_console_port}"
+GOOGLE_CLIENT_ID = "${google_client_id}"
+GOOGLE_CLIENT_SECRET = "${google_client_secret}"
+RESEND_API_KEY = "${resend_api_key}"
+DEEPGRAM_API_KEY = "${deepgram_api_key}"
+OPENAI_API_KEY = "${openai_api_key}" 

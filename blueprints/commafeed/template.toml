@@ -1,0 +1,14 @@
+name = "CommaFeed"
+description = "Self-hosted RSS reader"
+port = 8082
+
+[environment]
+PORT = "${PORT}"
+DB_USER = "commafeed"
+DB_PASSWORD = "${password:32}"
+
+[domains]
+[[domains.main]]
+host = "${DOMAIN}"
+port = "${PORT}"
+path = "/" 

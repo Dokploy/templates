@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgres:14
+    restart: unless-stopped
+    environment:
+      # Database credentials
+      POSTGRES_DB: ${POSTGRES_DB:-readflow}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+    volumes:
+      # Persistent database storage
+      - db-data:/var/lib/postgresql/data
+
+  # Image proxy used by Readflow to optimise and resize images
+  imgproxy:
+    image: darthsim/imgproxy
+    restart: unless-stopped
+    environment:
+      IMGPROXY_KEY: ${READFLOW_HASH_SECRET_KEY:-736563726574}
+      IMGPROXY_SALT: ${READFLOW_HASH_SECRET_SALT:-706570706572}
+      IMGPROXY_ENABLE_WEBP_DETECTION: "true"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+
+  # PDF generation micro-service
+  gotenberg:
+    image: gotenberg/gotenberg:7
+    restart: unless-stopped
+
+  # Main Readflow service
+  readflow:
+    image: ncarlier/readflow:${READFLOW_VERSION:-edge}
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8080"
+    environment:
+      READFLOW_DATABASE_URI: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-secret}@db/${POSTGRES_DB:-readflow}?sslmode=disable
+      READFLOW_METRICS_LISTEN_ADDR: ":9090"
+      READFLOW_IMAGE_PROXY_URL: http://imgproxy:8080
+      READFLOW_PDF_SERVICE_PROVIDER: http://gotenberg:3000/forms/chromium/convert/html
+      READFLOW_AUTHN_METHOD: basic
+      READFLOW_AUTHN_BASIC_HTPASSWD_FILE: file:///var/local/demo.htpasswd
+      READFLOW_HASH_SECRET_KEY: ${READFLOW_HASH_SECRET_KEY:-736563726574}
+      READFLOW_HASH_SECRET_SALT: ${READFLOW_HASH_SECRET_SALT:-706570706572}
+    volumes:
+      # By default, the htpasswd file is stored in a docker volume. If you want to
+      # use an existing file, replace the mapping below with:
+      #   - /path/to/demo.htpasswd:/var/local/demo.htpasswd
+      - readflow_data:/var/local
+
+volumes:
+  db-data:
+  readflow_data:

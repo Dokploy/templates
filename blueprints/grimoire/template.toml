@@ -1,0 +1,17 @@
+[variables]
+PORT = "5173"
+PUBLIC_HTTPS_ONLY = "false"
+PUBLIC_SIGNUP_DISABLED = "false"
+
+[config]
+env = [
+  "PORT=${PORT}",
+  "PUBLIC_HTTPS_ONLY=${PUBLIC_HTTPS_ONLY}",
+  "PUBLIC_SIGNUP_DISABLED=${PUBLIC_SIGNUP_DISABLED}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "grimoire"
+port = 5173
+host = "${domain}" 

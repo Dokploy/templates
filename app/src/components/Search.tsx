@@ -19,7 +19,7 @@ import SelectedTags from "./SelectedTags";
 import { useSearchParams } from "react-router-dom";
 
 const Search = () => {
-  const { templates, searchQuery, setSearchQuery, setView, templatesCount, setFilteredTemplates, setTemplatesCount } =
+  const { templates, searchQuery, setSearchQuery, setView, templatesCount } =
     useStore();
   const selectedTags = useStore((state) => state.selectedTags);
   const addSelectedTag = useStore((state) => state.addSelectedTag);
@@ -45,33 +45,13 @@ const Search = () => {
     );
   }, [uniqueTags, tagSearch]);
 
-  // Initialize search query from URL params and apply filters
+  // Initialize search query from URL params
   React.useEffect(() => {
     const queryFromUrl = searchParams.get("q") || "";
     if (queryFromUrl !== searchQuery) {
       setSearchQuery(queryFromUrl);
     }
-
-    // Apply filters whenever templates, search query or selected tags change
-    if (templates) {
-      const filtered = templates.filter((template) => {
-        // Filter by search query
-        const matchesSearch = template.name
-          .toLowerCase()
-          .includes(queryFromUrl.toLowerCase());
-
-        // Filter by selected tags
-        const matchesTags =
-          selectedTags.length === 0 ||
-          selectedTags.every((tag) => template.tags.includes(tag));
-
-        return matchesSearch && matchesTags;
-      });
-
-      setFilteredTemplates(filtered);
-      setTemplatesCount(filtered.length);
-    }
-  }, [searchParams, templates, selectedTags, setSearchQuery, setFilteredTemplates, setTemplatesCount]);
+  }, [searchParams, searchQuery, setSearchQuery]);
 
   // Update URL params when search query changes
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

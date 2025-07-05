@@ -1,0 +1,32 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+readflow_hash_secret_key = "736563726574"
+readflow_hash_secret_salt = "706570706572"
+
+[config.env]
+# Database variables
+POSTGRES_DB = "readflow"
+POSTGRES_USER = "postgres"
+POSTGRES_PASSWORD = "${postgres_password}"
+
+# Image proxy security
+READFLOW_HASH_SECRET_KEY = "${readflow_hash_secret_key}"
+READFLOW_HASH_SECRET_SALT = "${readflow_hash_secret_salt}"
+
+# Readflow configuration
+READFLOW_DATABASE_URI = "postgres://postgres:${postgres_password}@db/readflow?sslmode=disable"
+READFLOW_METRICS_LISTEN_ADDR = ":9090"
+READFLOW_IMAGE_PROXY_URL = "http://imgproxy:8080"
+READFLOW_PDF_SERVICE_PROVIDER = "http://gotenberg:3000/forms/chromium/convert/html"
+READFLOW_AUTHN_METHOD = "basic"
+READFLOW_AUTHN_BASIC_HTPASSWD_FILE = "file:///var/local/demo.htpasswd"
+READFLOW_VERSION = "edge"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "readflow"
+port = 8080
+host = "${main_domain}" 

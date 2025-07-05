@@ -1,0 +1,81 @@
+name = "Hoppscotch"
+description = "Open-source API development platform and Postman alternative with real-time collaboration, multi-protocol support, and self-hosting capabilities"
+
+[variables]
+# Port configuration
+PORT = { type = "number", defaultValue = 3000, description = "Main application port" }
+ADMIN_PORT = { type = "number", defaultValue = 3100, description = "Admin dashboard port" }
+BACKEND_PORT = { type = "number", defaultValue = 3170, description = "Backend API port" }
+
+# Database configuration
+POSTGRES_USER = { type = "text", defaultValue = "hoppscotch", description = "PostgreSQL username" }
+POSTGRES_PASSWORD = { type = "password", description = "PostgreSQL password" }
+POSTGRES_DB = { type = "text", defaultValue = "hoppscotch", description = "PostgreSQL database name" }
+
+# Security tokens (32 character keys)
+JWT_SECRET = { type = "password", description = "JWT secret for authentication" }
+SESSION_SECRET = { type = "password", description = "Session secret for security" }
+DATA_ENCRYPTION_KEY = { type = "password", description = "32-character key for encrypting sensitive data" }
+TOKEN_SALT_COMPLEXITY = { type = "number", defaultValue = 10, description = "Salt complexity for password hashing" }
+
+# Token validity (in milliseconds and days)
+MAGIC_LINK_TOKEN_VALIDITY = { type = "number", defaultValue = 3, description = "Magic link validity in days" }
+REFRESH_TOKEN_VALIDITY = { type = "number", defaultValue = 604800000, description = "Refresh token validity in milliseconds (7 days)" }
+ACCESS_TOKEN_VALIDITY = { type = "number", defaultValue = 86400000, description = "Access token validity in milliseconds (1 day)" }
+
+# Application URLs
+REDIRECT_URL = { type = "text", defaultValue = "http://localhost:3000", description = "Fallback redirect URL" }
+VITE_BASE_URL = { type = "text", defaultValue = "http://localhost:3000", description = "Base URL for the application" }
+VITE_SHORTCODE_BASE_URL = { type = "text", defaultValue = "http://localhost:3000", description = "URL for generating shortcodes" }
+VITE_ADMIN_URL = { type = "text", defaultValue = "http://localhost:3100", description = "Admin dashboard URL" }
+VITE_BACKEND_GQL_URL = { type = "text", defaultValue = "http://localhost:3170/graphql", description = "GraphQL endpoint URL" }
+VITE_BACKEND_WS_URL = { type = "text", defaultValue = "wss://localhost:3170/graphql", description = "WebSocket endpoint URL" }
+VITE_BACKEND_API_URL = { type = "text", defaultValue = "http://localhost:3170/v1", description = "REST API endpoint URL" }
+
+# Whitelisted origins for CORS
+WHITELISTED_ORIGINS = { type = "text", defaultValue = "http://localhost:3170,http://localhost:3000,http://localhost:3100,app://localhost_3200,app://hoppscotch", description = "Comma-separated list of allowed origins" }
+
+# Authentication providers
+VITE_ALLOWED_AUTH_PROVIDERS = { type = "text", defaultValue = "EMAIL", description = "Comma-separated list of auth providers (EMAIL,GOOGLE,GITHUB,MICROSOFT)" }
+
+# Google OAuth configuration (optional)
+GOOGLE_CLIENT_ID = { type = "text", defaultValue = "", description = "Google OAuth client ID (optional)" }
+GOOGLE_CLIENT_SECRET = { type = "password", description = "Google OAuth client secret (optional)" }
+GOOGLE_CALLBACK_URL = { type = "text", defaultValue = "http://localhost:3170/v1/auth/google/callback", description = "Google OAuth callback URL" }
+
+# GitHub OAuth configuration (optional)
+GITHUB_CLIENT_ID = { type = "text", defaultValue = "", description = "GitHub OAuth client ID (optional)" }
+GITHUB_CLIENT_SECRET = { type = "password", description = "GitHub OAuth client secret (optional)" }
+GITHUB_CALLBACK_URL = { type = "text", defaultValue = "http://localhost:3170/v1/auth/github/callback", description = "GitHub OAuth callback URL" }
+
+# Microsoft OAuth configuration (optional)
+MICROSOFT_CLIENT_ID = { type = "text", defaultValue = "", description = "Microsoft OAuth client ID (optional)" }
+MICROSOFT_CLIENT_SECRET = { type = "password", description = "Microsoft OAuth client secret (optional)" }
+MICROSOFT_CALLBACK_URL = { type = "text", defaultValue = "http://localhost:3170/v1/auth/microsoft/callback", description = "Microsoft OAuth callback URL" }
+MICROSOFT_TENANT = { type = "text", defaultValue = "common", description = "Microsoft OAuth tenant" }
+
+# Email configuration
+MAILER_SMTP_ENABLE = { type = "boolean", defaultValue = true, description = "Enable SMTP email sending" }
+MAILER_USE_CUSTOM_CONFIGS = { type = "boolean", defaultValue = false, description = "Use custom SMTP configuration instead of SMTP URL" }
+MAILER_ADDRESS_FROM = { type = "text", defaultValue = "noreply@localhost", description = "From email address" }
+MAILER_SMTP_URL = { type = "text", defaultValue = "", description = "SMTP URL (used if custom configs disabled)" }
+MAILER_SMTP_HOST = { type = "text", defaultValue = "", description = "SMTP host (used if custom configs enabled)" }
+MAILER_SMTP_PORT = { type = "number", defaultValue = 587, description = "SMTP port" }
+MAILER_SMTP_SECURE = { type = "boolean", defaultValue = true, description = "Use secure SMTP connection" }
+MAILER_SMTP_USER = { type = "text", defaultValue = "", description = "SMTP username" }
+MAILER_SMTP_PASSWORD = { type = "password", description = "SMTP password" }
+MAILER_TLS_REJECT_UNAUTHORIZED = { type = "boolean", defaultValue = true, description = "Reject unauthorized TLS certificates" }
+
+# Rate limiting
+RATE_LIMIT_TTL = { type = "number", defaultValue = 60, description = "Rate limit time window in seconds" }
+RATE_LIMIT_MAX = { type = "number", defaultValue = 100, description = "Maximum requests per IP in time window" }
+
+# Security settings
+ALLOW_SECURE_COOKIES = { type = "boolean", defaultValue = true, description = "Allow secure cookies (disable for HTTP)" }
+
+# Optional links
+VITE_APP_TOS_LINK = { type = "text", defaultValue = "", description = "Terms of Service link (optional)" }
+VITE_APP_PRIVACY_POLICY_LINK = { type = "text", defaultValue = "", description = "Privacy Policy link (optional)" }
+
+# Desktop app support
+ENABLE_SUBPATH_BASED_ACCESS = { type = "boolean", defaultValue = false, description = "Enable subpath based access for desktop app support" } 

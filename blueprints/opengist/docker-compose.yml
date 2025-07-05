@@ -1,0 +1,73 @@
+services:
+  opengist:
+    image: ghcr.io/thomiceli/opengist:1
+    container_name: opengist
+    ports:
+      - "${HTTP_PORT}:6157"
+      - "${SSH_PORT}:2222"
+    volumes:
+      - opengist_data:/opengist
+    environment:
+      # User/Group configuration
+      UID: ${UID:-1000}
+      GID: ${GID:-1000}
+
+      # Log level configuration
+      OG_LOG_LEVEL: ${OG_LOG_LEVEL:-info}
+
+      # Database configuration
+      OG_DB_TYPE: ${OG_DB_TYPE:-sqlite}
+      OG_DB_HOST: ${OG_DB_HOST:-}
+      OG_DB_PORT: ${OG_DB_PORT:-}
+      OG_DB_NAME: ${OG_DB_NAME:-opengist}
+      OG_DB_USER: ${OG_DB_USER:-}
+      OG_DB_PASSWORD: ${OG_DB_PASSWORD:-}
+
+      # HTTP configuration
+      OG_HTTP_HOST: ${OG_HTTP_HOST:-0.0.0.0}
+      OG_HTTP_PORT: ${OG_HTTP_PORT:-6157}
+      OG_HTTP_EXTERNAL_URL: ${OG_HTTP_EXTERNAL_URL:-http://localhost:6157}
+      OG_HTTP_GIT_ENABLED: ${OG_HTTP_GIT_ENABLED:-true}
+
+      # SSH configuration
+      OG_SSH_HOST: ${OG_SSH_HOST:-0.0.0.0}
+      OG_SSH_PORT: ${OG_SSH_PORT:-2222}
+      OG_SSH_EXTERNAL_HOST: ${OG_SSH_EXTERNAL_HOST:-localhost}
+      OG_SSH_EXTERNAL_PORT: ${OG_SSH_EXTERNAL_PORT:-2222}
+      OG_SSH_KEYGEN_EXECUTABLE: ${OG_SSH_KEYGEN_EXECUTABLE:-ssh-keygen}
+
+      # Authentication configuration
+      OG_OAUTH_GITHUB_CLIENT_KEY: ${OG_OAUTH_GITHUB_CLIENT_KEY:-}
+      OG_OAUTH_GITHUB_SECRET: ${OG_OAUTH_GITHUB_SECRET:-}
+      OG_OAUTH_GITLAB_CLIENT_KEY: ${OG_OAUTH_GITLAB_CLIENT_KEY:-}
+      OG_OAUTH_GITLAB_SECRET: ${OG_OAUTH_GITLAB_SECRET:-}
+      OG_OAUTH_GITEA_CLIENT_KEY: ${OG_OAUTH_GITEA_CLIENT_KEY:-}
+      OG_OAUTH_GITEA_SECRET: ${OG_OAUTH_GITEA_SECRET:-}
+      OG_OAUTH_GITEA_URL: ${OG_OAUTH_GITEA_URL:-}
+      OG_OAUTH_OIDC_CLIENT_KEY: ${OG_OAUTH_OIDC_CLIENT_KEY:-}
+      OG_OAUTH_OIDC_SECRET: ${OG_OAUTH_OIDC_SECRET:-}
+      OG_OAUTH_OIDC_DISCOVERY_URL: ${OG_OAUTH_OIDC_DISCOVERY_URL:-}
+
+      # Security and registration
+      OG_DISABLE_SIGNUP: ${OG_DISABLE_SIGNUP:-false}
+      OG_REQUIRE_LOGIN: ${OG_REQUIRE_LOGIN:-false}
+      OG_DISABLE_LOGIN_FORM: ${OG_DISABLE_LOGIN_FORM:-false}
+      OG_DISABLE_GRAVATAR: ${OG_DISABLE_GRAVATAR:-false}
+
+      # Git configuration
+      OG_GIT_DEFAULT_BRANCH: ${OG_GIT_DEFAULT_BRANCH:-master}
+
+      # Custom CSS and title
+      OG_CUSTOM_CSS: ${OG_CUSTOM_CSS:-}
+      OG_CUSTOM_TITLE: ${OG_CUSTOM_TITLE:-Opengist}
+      OG_CUSTOM_LOGO_URL: ${OG_CUSTOM_LOGO_URL:-}
+    networks:
+      - dokploy-network
+    restart: unless-stopped
+
+volumes:
+  opengist_data:
+
+networks:
+  dokploy-network:
+    external: true

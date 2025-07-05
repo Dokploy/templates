@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  linkstack:
+    hostname: "linkstack"
+    image: "linkstackorg/linkstack:${LINKSTACK_VERSION:-latest}"
+    restart: unless-stopped
+    volumes:
+      - linkstack_data:/htdocs
+    ports:
+      - "80"
+      - "443"
+    environment:
+      TZ: "${TZ:-Europe/Berlin}"
+      SERVER_ADMIN: "${SERVER_ADMIN:-admin@example.com}"
+      HTTP_SERVER_NAME: "${HTTP_SERVER_NAME}"
+      HTTPS_SERVER_NAME: "${HTTPS_SERVER_NAME}"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+      PHP_MEMORY_LIMIT: "${PHP_MEMORY_LIMIT:-256M}"
+      UPLOAD_MAX_FILESIZE: "${UPLOAD_MAX_FILESIZE:-8M}"
+    depends_on:
+      - mysql
+    links:
+      - mysql
+
+  mysql:
+    image: mysql:${MYSQL_VERSION:-8}
+    restart: unless-stopped
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-linkstack}
+      MYSQL_USER: ${MYSQL_USER:-linkstack}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+volumes:
+  linkstack_data:
+  mysql_data:

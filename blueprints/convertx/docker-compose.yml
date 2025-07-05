@@ -1,0 +1,30 @@
+services:
+  convertx:
+    image: ghcr.io/c4illin/convertx:latest
+    container_name: convertx
+    restart: unless-stopped
+    ports:
+      - "${CONVERTX_PORT:-3000}:3000"
+    environment:
+      - ACCOUNT_REGISTRATION=${ACCOUNT_REGISTRATION:-true}
+      - JWT_SECRET=${JWT_SECRET:-}
+      - HTTP_ALLOWED=${HTTP_ALLOWED:-false}
+      - ALLOW_UNAUTHENTICATED=${ALLOW_UNAUTHENTICATED:-false}
+      - AUTO_DELETE_EVERY_N_HOURS=${AUTO_DELETE_EVERY_N_HOURS:-24}
+      - FFMPEG_ARGS=${FFMPEG_ARGS:-}
+      - WEBROOT=${WEBROOT:-}
+      - HIDE_HISTORY=${HIDE_HISTORY:-false}
+      - LANGUAGE=${LANGUAGE:-en}
+      - TZ=${TIMEZONE:-UTC}
+    volumes:
+      - convertx_data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 3000 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  convertx_data:
+    driver: local

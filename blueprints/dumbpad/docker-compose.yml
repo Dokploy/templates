@@ -1,0 +1,21 @@
+services:
+  dumbpad:
+    image: dumbwareio/dumbpad:latest
+    container_name: dumbpad
+    restart: unless-stopped
+    ports:
+      - "${PORT}:3000"
+    volumes:
+      - dumbpad_data:/app/data
+    environment:
+      SITE_TITLE: ${SITE_TITLE}
+      DUMBPAD_PIN: ${DUMBPAD_PIN}
+      BASE_URL: ${BASE_URL}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+      LOCKOUT_TIME: ${LOCKOUT_TIME}
+      MAX_ATTEMPTS: ${MAX_ATTEMPTS}
+      COOKIE_MAX_AGE: ${COOKIE_MAX_AGE}
+      PAGE_HISTORY_COOKIE_AGE: ${PAGE_HISTORY_COOKIE_AGE}
+
+volumes:
+  dumbpad_data:

@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  pingvin-share:
+    image: stonith404/pingvin-share
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - TRUST_PROXY=${TRUST_PROXY:-false}
+      - CLAMAV_HOST=${CLAMAV_HOST}
+    volumes:
+      - pingvin_data:/opt/app/backend/data
+      - pingvin_images:/opt/app/frontend/public/img
+    # Uncomment the depends_on section below if you want to use ClamAV
+    # depends_on:
+    #   - clamav
+    # Uncomment the line below if you want to use a custom config file
+    # - "./config.yaml:/opt/app/config.yaml"
+
+  # ClamAV service for malware scanning (optional but recommended)
+  # Note: ClamAV requires significant resources (~2GB RAM) and may take 2-5 minutes to start
+  # Comment out this entire service if you don't want malware scanning
+  clamav:
+    image: clamav/clamav
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/clamd", "--ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+    volumes:
+      - clamav_data:/var/lib/clamav
+
+volumes:
+  pingvin_data:
+  pingvin_images:
+  clamav_data:

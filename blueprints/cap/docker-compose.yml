@@ -1,0 +1,74 @@
+version: "3.8"
+
+services:
+  cap-web:
+    image: ghcr.io/capsoftware/cap-web:latest
+    container_name: cap-web
+    restart: unless-stopped
+    ports:
+      - "${PORT}:3000"
+    networks:
+      - dokploy-network
+    environment:
+      - DATABASE_URL=mysql://root:${DB_ROOT_PASSWORD}@cap-mysql:3306/${DB_NAME}?ssl={"rejectUnauthorized":false}
+      - WEB_URL=${WEB_URL}
+      - NEXTAUTH_URL=${WEB_URL}
+      - DATABASE_ENCRYPTION_KEY=${DATABASE_ENCRYPTION_KEY}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - CAP_AWS_ACCESS_KEY=${S3_ACCESS_KEY}
+      - CAP_AWS_SECRET_KEY=${S3_SECRET_KEY}
+      - CAP_AWS_BUCKET=${S3_BUCKET}
+      - CAP_AWS_REGION=${S3_REGION}
+      - CAP_AWS_ENDPOINT=${S3_ENDPOINT}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - DEEPGRAM_API_KEY=${DEEPGRAM_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - cap-mysql
+      - cap-minio
+
+  cap-mysql:
+    image: mysql:8.0
+    container_name: cap-mysql
+    restart: unless-stopped
+    ports:
+      - "${DB_PORT}:3306"
+    networks:
+      - dokploy-network
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_ROOT_HOST=%
+    command:
+      - "--max_connections=1000"
+      - "--default-authentication-plugin=mysql_native_password"
+    volumes:
+      - cap_mysql_data:/var/lib/mysql
+
+  cap-minio:
+    image: bitnami/minio:latest
+    container_name: cap-minio
+    restart: unless-stopped
+    ports:
+      - "${MINIO_API_PORT}:9000"
+      - "${MINIO_CONSOLE_PORT}:9001"
+    networks:
+      - dokploy-network
+    environment:
+      - MINIO_ROOT_USER=${S3_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${S3_SECRET_KEY}
+      - MINIO_DEFAULT_BUCKETS=${S3_BUCKET}
+    volumes:
+      - cap_minio_data:/bitnami/minio/data
+
+networks:
+  dokploy-network:
+    external: true
+
+volumes:
+  cap_mysql_data:
+    driver: local
+  cap_minio_data:
+    driver: local

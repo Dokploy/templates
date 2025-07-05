@@ -1,0 +1,32 @@
+[variables]
+PORT = "3000"
+IMAGE = "ghcr.io/all-hands-ai/openhands:latest"
+SANDBOX_RUNTIME_CONTAINER_IMAGE = "docker.all-hands.dev/all-hands-ai/runtime:0.46-nikolaik"
+WORKSPACE_MOUNT_PATH = "/opt/workspace_base"
+WORKSPACE_PATH = "./workspace"
+
+[config]
+env = [
+  "PORT=${PORT}",
+  "IMAGE=${IMAGE}",
+  "SANDBOX_RUNTIME_CONTAINER_IMAGE=${SANDBOX_RUNTIME_CONTAINER_IMAGE}",
+  "WORKSPACE_MOUNT_PATH=${WORKSPACE_MOUNT_PATH}",
+  "WORKSPACE_PATH=${WORKSPACE_PATH}",
+]
+mounts = [
+  {
+    type = "volume",
+    name = "openhands_data",
+    mountPath = "/.openhands"
+  },
+  {
+    type = "bind",
+    hostPath = "/var/run/docker.sock",
+    mountPath = "/var/run/docker.sock"
+  }
+]
+
+[[config.domains]]
+serviceName = "openhands"
+port = 3000
+host = "${domain}" 

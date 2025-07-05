@@ -1,0 +1,21 @@
+[variables]
+PORT = "8191"
+LOG_LEVEL = "info"
+LOG_HTML = "false"
+CAPTCHA_SOLVER = "none"
+TZ = "UTC"
+
+[config]
+env = [
+  "PORT=${PORT}",
+  "LOG_LEVEL=${LOG_LEVEL}",
+  "LOG_HTML=${LOG_HTML}",
+  "CAPTCHA_SOLVER=${CAPTCHA_SOLVER}",
+  "TZ=${TZ}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "flaresolverr"
+port = 8191
+host = "${domain}" 

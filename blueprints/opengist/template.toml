@@ -1,0 +1,67 @@
+name = "OpenGist"
+description = "Self-hosted pastebin powered by Git, open-source alternative to GitHub Gist with syntax highlighting and OAuth support"
+
+[variables]
+# Port configuration
+HTTP_PORT = { type = "number", defaultValue = 6157, description = "HTTP port for web interface" }
+SSH_PORT = { type = "number", defaultValue = 2222, description = "SSH port for Git operations (can be disabled)" }
+
+# User/Group configuration
+UID = { type = "number", defaultValue = 1000, description = "User ID for file ownership" }
+GID = { type = "number", defaultValue = 1000, description = "Group ID for file ownership" }
+
+# Application configuration
+OG_LOG_LEVEL = { type = "select", defaultValue = "info", options = ["debug", "info", "warn", "error"], description = "Application log level" }
+
+# Database configuration
+OG_DB_TYPE = { type = "select", defaultValue = "sqlite", options = ["sqlite", "postgres", "mysql"], description = "Database type" }
+OG_DB_HOST = { type = "text", defaultValue = "", description = "Database host (for external DB)" }
+OG_DB_PORT = { type = "number", defaultValue = 5432, description = "Database port (for external DB)" }
+OG_DB_NAME = { type = "text", defaultValue = "opengist", description = "Database name" }
+OG_DB_USER = { type = "text", defaultValue = "", description = "Database username (for external DB)" }
+OG_DB_PASSWORD = { type = "password", description = "Database password (for external DB)" }
+
+# HTTP configuration
+OG_HTTP_HOST = { type = "text", defaultValue = "0.0.0.0", description = "HTTP bind address" }
+OG_HTTP_PORT = { type = "number", defaultValue = 6157, description = "Internal HTTP port" }
+OG_HTTP_EXTERNAL_URL = { type = "text", defaultValue = "http://localhost:6157", description = "External URL for the application" }
+OG_HTTP_GIT_ENABLED = { type = "boolean", defaultValue = true, description = "Enable Git operations over HTTP" }
+
+# SSH configuration
+OG_SSH_HOST = { type = "text", defaultValue = "0.0.0.0", description = "SSH bind address" }
+OG_SSH_PORT = { type = "number", defaultValue = 2222, description = "Internal SSH port" }
+OG_SSH_EXTERNAL_HOST = { type = "text", defaultValue = "localhost", description = "External SSH hostname" }
+OG_SSH_EXTERNAL_PORT = { type = "number", defaultValue = 2222, description = "External SSH port" }
+OG_SSH_KEYGEN_EXECUTABLE = { type = "text", defaultValue = "ssh-keygen", description = "SSH key generation executable" }
+
+# GitHub OAuth configuration
+OG_OAUTH_GITHUB_CLIENT_KEY = { type = "text", defaultValue = "", description = "GitHub OAuth client ID (optional)" }
+OG_OAUTH_GITHUB_SECRET = { type = "password", description = "GitHub OAuth client secret (optional)" }
+
+# GitLab OAuth configuration
+OG_OAUTH_GITLAB_CLIENT_KEY = { type = "text", defaultValue = "", description = "GitLab OAuth client ID (optional)" }
+OG_OAUTH_GITLAB_SECRET = { type = "password", description = "GitLab OAuth client secret (optional)" }
+
+# Gitea OAuth configuration
+OG_OAUTH_GITEA_CLIENT_KEY = { type = "text", defaultValue = "", description = "Gitea OAuth client ID (optional)" }
+OG_OAUTH_GITEA_SECRET = { type = "password", description = "Gitea OAuth client secret (optional)" }
+OG_OAUTH_GITEA_URL = { type = "text", defaultValue = "", description = "Gitea instance URL (optional)" }
+
+# OpenID Connect configuration
+OG_OAUTH_OIDC_CLIENT_KEY = { type = "text", defaultValue = "", description = "OIDC client ID (optional)" }
+OG_OAUTH_OIDC_SECRET = { type = "password", description = "OIDC client secret (optional)" }
+OG_OAUTH_OIDC_DISCOVERY_URL = { type = "text", defaultValue = "", description = "OIDC discovery URL (optional)" }
+
+# Security and registration
+OG_DISABLE_SIGNUP = { type = "boolean", defaultValue = false, description = "Disable user registration" }
+OG_REQUIRE_LOGIN = { type = "boolean", defaultValue = false, description = "Require login to view gists" }
+OG_DISABLE_LOGIN_FORM = { type = "boolean", defaultValue = false, description = "Disable login form (OAuth only)" }
+OG_DISABLE_GRAVATAR = { type = "boolean", defaultValue = false, description = "Disable Gravatar integration" }
+
+# Git configuration
+OG_GIT_DEFAULT_BRANCH = { type = "text", defaultValue = "master", description = "Default Git branch name" }
+
+# Customization
+OG_CUSTOM_CSS = { type = "text", defaultValue = "", description = "Custom CSS for styling (optional)" }
+OG_CUSTOM_TITLE = { type = "text", defaultValue = "Opengist", description = "Custom application title" }
+OG_CUSTOM_LOGO_URL = { type = "text", defaultValue = "", description = "Custom logo URL (optional)" } 

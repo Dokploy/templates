@@ -1,0 +1,22 @@
+name = "HyprNote"
+description = "AI-powered meeting notepad with transcription and summarization"
+port = 3592
+
+[environment]
+# Cerbos Authorization Service
+CERBOS_PORT = "3592"
+
+# MinIO Object Storage
+MINIO_API_PORT = "9000"
+MINIO_CONSOLE_PORT = "9001"
+MINIO_ROOT_USER = "hyprnote-admin"
+MINIO_ROOT_PASSWORD = "${password:16}"
+
+# Storage Configuration
+BUCKET_NAME = "hyprnote-storage"
+
+[domains]
+[[domains.main]]
+host = "${DOMAIN}"
+port = "${CERBOS_PORT}"
+path = "/" 

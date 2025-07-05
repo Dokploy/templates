@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  papra:
+    image: ghcr.io/papra-hq/papra:latest
+    container_name: papra
+    restart: unless-stopped
+    ports:
+      - "${PORT}:1221"
+    volumes:
+      - papra_data:/app/app-data
+    networks:
+      - dokploy-network
+    environment:
+      - CLIENT_BASE_URL=${CLIENT_BASE_URL}
+      - SERVER_BASE_URL=${SERVER_BASE_URL}
+      - TRUSTED_ORIGINS=${TRUSTED_ORIGINS}
+      - PORT=1221
+      - DATABASE_URL=file:./app-data/db/db.sqlite
+      - DATABASE_ENCRYPTION_KEY=${DATABASE_ENCRYPTION_KEY}
+      - AUTH_SECRET=${AUTH_SECRET}
+      - AUTH_IS_REGISTRATION_ENABLED=${REGISTRATION_ENABLED}
+      - AUTH_IS_PASSWORD_RESET_ENABLED=${PASSWORD_RESET_ENABLED}
+      - AUTH_IS_EMAIL_VERIFICATION_REQUIRED=${EMAIL_VERIFICATION_REQUIRED}
+      - DOCUMENT_STORAGE_DRIVER=${STORAGE_DRIVER}
+      - DOCUMENT_STORAGE_FILESYSTEM_ROOT=./app-data/documents
+      - DOCUMENT_STORAGE_MAX_UPLOAD_SIZE=${MAX_UPLOAD_SIZE}
+      - DOCUMENTS_DELETED_DOCUMENTS_RETENTION_DAYS=${RETENTION_DAYS}
+      - INGESTION_FOLDER_IS_ENABLED=${FOLDER_INGESTION_ENABLED}
+      - INGESTION_FOLDER_ROOT_PATH=./app-data/ingestion
+      - INTAKE_EMAILS_IS_ENABLED=${EMAIL_INGESTION_ENABLED}
+      - EMAILS_DRIVER=${EMAIL_DRIVER}
+      - EMAILS_FROM_ADDRESS=${FROM_EMAIL}
+      - MAX_ORGANIZATION_COUNT_PER_USER=${MAX_ORGANIZATIONS}
+      - IS_FREE_PLAN_UNLIMITED=true
+      - POSTHOG_ENABLED=false
+
+networks:
+  dokploy-network:
+    external: true
+
+volumes:
+  papra_data:
+    driver: local

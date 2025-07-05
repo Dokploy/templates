@@ -1,0 +1,62 @@
+name = "Suna"
+description = "Open-source generalist AI agent platform"
+port = 3000
+
+[environment]
+# Port Configuration
+FRONTEND_PORT = "${PORT}"
+BACKEND_PORT = "8000"
+REDIS_PORT = "6379"
+RABBITMQ_PORT = "5672"
+RABBITMQ_MANAGEMENT_PORT = "15672"
+
+# Application Settings
+ENV_MODE = "production"
+NEXT_PUBLIC_URL = "http://${DOMAIN}"
+
+# Database Configuration (Supabase)
+SUPABASE_URL = "https://your-project.supabase.co"
+SUPABASE_ANON_KEY = "your-supabase-anon-key"
+SUPABASE_SERVICE_ROLE_KEY = "your-supabase-service-role-key"
+
+# Redis Configuration
+REDIS_PASSWORD = "${password:16}"
+REDIS_SSL = "false"
+
+# RabbitMQ Configuration
+RABBITMQ_USER = "suna"
+RABBITMQ_PASSWORD = "${password:16}"
+
+# LLM Configuration (Choose one)
+ANTHROPIC_API_KEY = "your-anthropic-api-key"
+OPENAI_API_KEY = ""
+MODEL_TO_USE = "anthropic/claude-3-5-sonnet-latest"
+
+# Search and Web Scraping
+TAVILY_API_KEY = "your-tavily-api-key"
+FIRECRAWL_API_KEY = "your-firecrawl-api-key"
+
+# Agent Execution (Daytona)
+DAYTONA_API_KEY = "your-daytona-api-key"
+DAYTONA_SERVER_URL = "https://app.daytona.io/api"
+DAYTONA_TARGET = "us"
+
+# Background Job Processing (QStash)
+QSTASH_URL = "https://qstash.upstash.io"
+QSTASH_TOKEN = "your-qstash-token"
+QSTASH_CURRENT_SIGNING_KEY = "your-current-signing-key"
+QSTASH_NEXT_SIGNING_KEY = "your-next-signing-key"
+WEBHOOK_BASE_URL = "http://${DOMAIN}"
+
+# Optional APIs
+RAPID_API_KEY = ""
+SMITHERY_API_KEY = ""
+
+# Security
+MCP_CREDENTIAL_ENCRYPTION_KEY = "${base64:32}"
+
+[domains]
+[[domains.main]]
+host = "${DOMAIN}"
+port = "${PORT}"
+path = "/" 

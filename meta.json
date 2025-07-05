@@ -3266,5 +3266,27 @@
       "queue",
       "rabbitmq"
     ]
+  },
+  {
+    "id": "zitadel",
+    "name": "Zitadel",
+    "version": "latest",
+    "description": "Identity and Access Management (IAM) platform that provides secure authentication and authorization services with OAuth 2.0, OpenID Connect, and SAML support.",
+    "logo": "zitadel.png",
+    "links": {
+      "github": "https://github.com/zitadel/zitadel",
+      "website": "https://zitadel.com/",
+      "docs": "https://zitadel.com/docs"
+    },
+    "tags": [
+      "identity",
+      "authentication",
+      "authorization",
+      "oauth",
+      "saml",
+      "oidc",
+      "iam",
+      "security"
+    ]
   }
 ]

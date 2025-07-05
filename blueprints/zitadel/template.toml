@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+zitadel_masterkey = "MasterkeyNeedsToHave32Characters"
+
+[config]
+[[config.domains]]
+serviceName = "zitadel"
+port = 8080
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}"
+ZITADEL_MASTERKEY = "${zitadel_masterkey}"
+EXTERNAL_DOMAIN = "${main_domain}"
+
+[[config.mounts]]

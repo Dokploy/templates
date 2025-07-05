@@ -1,43 +1,36 @@
-version: '3.8'
-
 services:
   casdoor:
-    image: casbin/casdoor:latest
-    restart: unless-stopped
+    image: casdoor/casdoor:latest
+    container_name: casdoor
+    restart: always
     ports:
       - "8000:8000"
     environment:
-      - RUNNING_IN_DOCKER=true
-    volumes:
-      - casdoor_data:/opt/casdoor/data
-      - ./conf/app.conf:/conf/app.conf:ro
+      - DB_HOST=db
     depends_on:
       db:
         condition: service_healthy
-    networks:
-      - dokploy-network
-
+    volumes:
+      - ./conf/app.conf:/app/conf/app.conf
+      - casdoor_data:/tmp
   db:
     image: postgres:15-alpine
-    restart: unless-stopped
+    container_name: casdoor_db
+    restart: always
     environment:
-      - POSTGRES_DB=casdoor
-      - POSTGRES_USER=casdoor
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - dokploy-network
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U casdoor -d casdoor"]
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
   casdoor_data:
+    driver: local
   postgres_data:
-
-networks:
-  dokploy-network:
-    external: true
+    driver: local

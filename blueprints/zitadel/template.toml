@@ -2,6 +2,9 @@
 main_domain = "${domain}"
 postgres_password = "${password:32}"
 zitadel_masterkey = "${password:32}"
+admin_username = "${text:admin}"
+admin_email = "${email:admin@example.com}"
+admin_password = "${password:16}"
 
 [config]
 [[config.domains]]
@@ -14,5 +17,12 @@ path = "/"
 POSTGRES_PASSWORD = "${postgres_password}"
 ZITADEL_MASTERKEY = "${zitadel_masterkey}"
 EXTERNAL_DOMAIN = "${main_domain}"
+
+# Custom Admin User Configuration
+ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME = "${admin_username}"
+ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD = "${admin_password}"
+ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS = "${admin_email}"
+ZITADEL_FIRSTINSTANCE_ORG_HUMAN_FIRSTNAME = "Admin"
+ZITADEL_FIRSTINSTANCE_ORG_HUMAN_LASTNAME = "User"
 
 [[config.mounts]]

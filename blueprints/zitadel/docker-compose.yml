@@ -20,8 +20,8 @@ services:
       ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE: disable
 
       # External Configuration for Reverse Proxy
-      ZITADEL_EXTERNALSECURE: true
-      ZITADEL_EXTERNALPORT: 443
+      ZITADEL_EXTERNALSECURE: false
+      ZITADEL_EXTERNALPORT: 8080
       ZITADEL_EXTERNALDOMAIN: "${EXTERNAL_DOMAIN}"
 
       # Disable Email Notifications

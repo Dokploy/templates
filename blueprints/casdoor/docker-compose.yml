@@ -12,7 +12,8 @@ services:
       - casdoor_data:/opt/casdoor/data
       - ../files/casdoor.conf:/opt/casdoor/conf/app.conf
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - dokploy-network
 

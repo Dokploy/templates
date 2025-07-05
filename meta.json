@@ -2623,7 +2623,7 @@
     "links": {
       "github": "https://github.com/casdoor/casdoor",
       "website": "https://casdoor.org/",
-      "docs": "https://casdoor.org/docs/"
+      "docs": "https://casdoor.org/docs/overview/"
     },
     "tags": [
       "authentication",

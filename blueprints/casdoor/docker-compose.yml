@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  casdoor:
+    image: casbin/casdoor:latest
+    container_name: casdoor
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - RUNNING_IN_DOCKER=true
+    volumes:
+      - casdoor_data:/opt/casdoor/data
+      - casdoor_conf:/opt/casdoor/conf
+    depends_on:
+      - db
+    networks:
+      - casdoor-network
+
+  db:
+    image: postgres:15-alpine
+    container_name: casdoor_postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=casdoor
+      - POSTGRES_USER=casdoor
+      - POSTGRES_PASSWORD=casdoor_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - casdoor-network
+
+volumes:
+  casdoor_data:
+  casdoor_conf:
+  postgres_data:
+
+networks:
+  casdoor-network:
+    driver: bridge

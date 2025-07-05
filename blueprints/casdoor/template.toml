@@ -1,0 +1,75 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+jwt_secret = "${jwt:64}"
+
+[config]
+[[config.domains]]
+serviceName = "casdoor"
+port = 8000
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+casdoor = [
+    "RUNNING_IN_DOCKER=true",
+    "CASDOOR_DATABASE_TYPE=postgres",
+    "CASDOOR_DATABASE_HOST=db",
+    "CASDOOR_DATABASE_PORT=5432",
+    "CASDOOR_DATABASE_NAME=casdoor",
+    "CASDOOR_DATABASE_USER=casdoor",
+    "CASDOOR_DATABASE_PASSWORD=${db_password}",
+    "CASDOOR_JWT_SECRET=${jwt_secret}",
+]
+
+db = [
+    "POSTGRES_DB=casdoor",
+    "POSTGRES_USER=casdoor",
+    "POSTGRES_PASSWORD=${db_password}",
+]
+
+[[config.mounts]]
+filePath = "/opt/casdoor/conf/app.conf"
+content = """
+# Casdoor Configuration
+appname = casdoor
+httpport = 8000
+runmode = prod
+SessionOn = true
+copyrequestbody = true
+driverName = postgres
+dataSourceName = casdoor:${db_password}@tcp(db:5432)/casdoor?sslmode=disable
+dbName = casdoor
+tableNamePrefix =
+showSql = false
+redisEndpoint =
+defaultStorageProvider =
+isCloudIntranet = false
+authState = "casdoor"
+socks5Proxy = ""
+verificationCodeTimeout = 10
+initScore = 2000
+defaultLanguage = en
+defaultAvatar = https://cdn.casdoor.org/casdoor/resource/built-in/admin/casdoor.png
+defaultApplication = app-built-in
+defaultOrganization = built-in
+defaultProvider = provider_captcha_default
+enableSoftDeletion = false
+batchSize = 100
+enableGzip = true
+ldapServerPort = 389
+radiusServerPort = 1812
+radiusSecret = secret
+quotaBackend = database
+logPostOnly = true
+logConfig = true
+origin =
+staticBaseUrl =
+isDemoMode = false
+batchSize = 100
+enableLogRecord = true
+logFilePath = ./logs
+enableErrorRecord = true
+enableAccessRecord = true
+accessLogFilePath = ./access_logs
+"""

@@ -1,0 +1,15 @@
+services:
+  palmr:
+    image: kyantech/palmr:latest
+    environment:
+      - ENABLE_S3=false
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+    ports:
+      - "5487"
+      - "3333"
+    volumes:
+      - palmr_data:/app/server
+    restart: unless-stopped
+
+volumes:
+  palmr_data:

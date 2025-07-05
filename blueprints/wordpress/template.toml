@@ -1,11 +1,27 @@
 [variables]
 main_domain = "${domain}"
+db_name = "wordpress"
+db_user = "wordpress"
+db_password = "${password:32}"
 
 [config]
-env = {}
-mounts = []
+env = [
+  "WORDPRESS_DEBUG=0",
+  "DB_NAME=${db_name}",
+  "DB_USER=${db_user}",
+  "DB_PASSWORD=${db_password}"
+]
 
 [[config.domains]]
 serviceName = "wordpress"
 port = 80
 host = "${main_domain}"
+
+[[config.mounts]]
+filePath = "uploads.ini"
+content = """upload_max_filesize = 64M
+post_max_size = 64M
+memory_limit = 256M
+max_execution_time = 300
+max_input_vars = 3000
+""" 

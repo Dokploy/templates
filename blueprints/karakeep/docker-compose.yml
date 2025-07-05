@@ -1,0 +1,54 @@
+services:
+  web:
+    image: ghcr.io/karakeep-app/karakeep:${KARAKEEP_VERSION:-release}
+    restart: unless-stopped
+    volumes:
+      # By default, the data is stored in a docker volume called "karakeep_data".
+      # If you want to mount a custom directory, change the volume mapping to:
+      # - /path/to/your/directory:/data
+      - karakeep_data:/data
+    ports:
+      - "3000"
+    environment:
+      DATA_DIR: ${DATA_DIR:-/data}
+      DISABLE_SIGNUPS: ${DISABLE_SIGNUPS:-false}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      # Meilisearch config
+      MEILI_ADDR: ${MEILI_ADDR:-http://meilisearch:7700}
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      # Chrome config
+      BROWSER_WEB_URL: ${BROWSER_WEB_URL:-ws://chrome:3000}
+      BROWSER_CONNECT_ONDEMAND: ${BROWSER_CONNECT_ONDEMAND:-true}
+    depends_on:
+      - chrome
+      - meilisearch
+
+  chrome:
+    image: browserless/chrome:1-chrome-stable
+    restart: unless-stopped
+    ports:
+      - "3000"
+    environment:
+      - DEBUG=browserless*
+      - MAX_CONCURRENT_SESSIONS=10
+      - CONNECTION_TIMEOUT=60000
+      - MAX_QUEUE_LENGTH=10
+      - PORT=3000
+      - CHROME_REFRESH_TIME=2147483647
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.10
+    restart: unless-stopped
+    ports:
+      - "7700"
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      MEILI_NO_ANALYTICS: true
+      MEILI_ENV: production
+    volumes:
+      - meilisearch_data:/meili_data
+
+volumes:
+  karakeep_data:
+  meilisearch_data:

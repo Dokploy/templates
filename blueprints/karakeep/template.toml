@@ -1,0 +1,25 @@
+[variables]
+main_domain = "${domain}"
+nextauth_secret = "${password:64}"
+meili_master_key = "${password:32}"
+
+[config.env]
+KARAKEEP_VERSION = "release"
+NEXTAUTH_SECRET = "${nextauth_secret}"
+MEILI_MASTER_KEY = "${meili_master_key}"
+NEXTAUTH_URL = "http://${main_domain}"
+DATA_DIR = "/data"
+DISABLE_SIGNUPS = "false"
+# Meilisearch config
+MEILI_ADDR = "http://meilisearch:7700"
+# Chrome config  
+BROWSER_WEB_URL = "ws://chrome:9222"
+BROWSER_CONNECT_ONDEMAND = "true"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "${main_domain}" 

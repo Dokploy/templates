@@ -155,7 +155,15 @@
       "website": "https://stalw.art/",
       "docs": "https://stalw.art/docs/"
     },
-    "tags": ["email", "smtp", "jmap", "imap4", "pop3", "self-hosted", "mail-server"]
+    "tags": [
+      "email",
+      "smtp",
+      "jmap",
+      "imap4",
+      "pop3",
+      "self-hosted",
+      "mail-server"
+    ]
   },
   {
     "id": "datalens",
@@ -316,7 +324,7 @@
   {
     "id": "wordpress",
     "name": "Wordpress",
-    "version": "6.7.1",
+    "version": "latest",
     "description": "Wordpress is a free and open source content management system (CMS) for publishing and managing websites.",
     "logo": "wordpress.png",
     "links": {
@@ -624,6 +632,19 @@
       "docs": "https://docs.typebot.io/get-started/introduction"
     },
     "tags": ["chatbot", "builder", "open-source"]
+  },
+  {
+    "id": "typecho",
+    "name": "Typecho",
+    "version": "stable",
+    "description": "Typecho 是一个轻量级的开源博客程序，基于 PHP 开发，支持多种数据库，简洁而强大。",
+    "logo": "typecho.png",
+    "links": {
+      "github": "https://github.com/typecho/typecho",
+      "website": "https://typecho.org/",
+      "docs": "http://docs.typecho.org"
+    },
+    "tags": ["blog", "cms", "php"]
   },
   {
     "id": "gitea",
@@ -2413,7 +2434,7 @@
   {
     "id": "rybbit",
     "name": "Rybbit",
-    "version": "latest",
+    "version": "v1.2.0",
     "description": "Open-source and privacy-friendly alternative to Google Analytics that is 10x more intuitive",
     "logo": "rybbit.png",
     "links": {
@@ -2478,8 +2499,136 @@
       "website": "https://garagehq.deuxfleurs.fr/",
       "docs": "https://garagehq.deuxfleurs.fr/documentation/quick-start/"
     },
+    "tags": ["storage"]
+  },
+  {
+    "id": "kutt",
+    "name": "Kutt",
+    "version": "latest",
+    "description": "Kutt is a modern URL shortener with support for custom domains. Create and edit links, view statistics, manage users, and more.",
+    "logo": "kutt.png",
+    "links": {
+      "github": "https://github.com/thedevs-network/kutt",
+      "website": "https://kutt.it",
+      "docs": "https://github.com/thedevs-network/kutt#kuttit"
+    },
+    "tags": ["link-shortener", "link-sharing"]
+  },
+  {
+    "id": "palmr",
+    "name": "Palmr",
+    "version": "latest",
+    "description": "Palmr the open-source, self-hosted alternative to WeTransfer. Share files securely, without tracking or limitations.",
+    "logo": "palmr.png",
+    "links": {
+      "github": "https://github.com/kyantech/Palmr",
+      "website": "https://palmr.kyantech.com.br/",
+      "docs": "https://palmr.kyantech.com.br/docs/3.0-beta"
+    },
+    "tags": ["file-sharing", "self-hosted", "open-source"]
+  },
+  {
+    "id": "karakeep",
+    "name": "KaraKeep",
+    "version": "0.25.0",
+    "description": "A self-hostable bookmark-everything app (links, notes and images) with AI-based automatic tagging and full text search. Previously known as Hoarder.",
+    "logo": "karakeep.svg",
+    "links": {
+      "github": "https://github.com/karakeep-app/karakeep",
+      "website": "https://karakeep.app/",
+      "docs": "https://github.com/karakeep-app/karakeep/tree/main/docs"
+    },
     "tags": [
-      "storage"
+      "bookmarks",
+      "bookmark-manager",
+      "self-hosted",
+      "ai",
+      "search",
+      "notes",
+      "productivity"
+    ]
+  },
+  {
+    "id": "freshrss",
+    "name": "FreshRSS",
+    "version": "latest",
+    "description": "A free, self-hostable RSS and Atom feed aggregator. Lightweight, easy to work with, powerful, and customizable with themes and extensions.",
+    "logo": "freshrss.svg",
+    "links": {
+      "github": "https://github.com/FreshRSS/FreshRSS",
+      "website": "https://freshrss.org/",
+      "docs": "https://freshrss.github.io/FreshRSS/"
+    },
+    "tags": [
+      "rss",
+      "feed-reader",
+      "news",
+      "self-hosted",
+      "aggregator",
+      "reader"
+    ]
+  },
+  {
+    "id": "movary",
+    "name": "Movary",
+    "version": "0.66.2",
+    "description": "Self-hosted web app to track, rate and explore your movie watch history. Offers detailed statistics, third-party integrations for platforms like Trakt, Letterboxd, Netflix, and automated play tracking for Plex, Jellyfin, Emby or Kodi.",
+    "logo": "movary.png",
+    "links": {
+      "github": "https://github.com/leepeuker/movary",
+      "website": "https://movary.org/",
+      "docs": "https://movary.org/docs/",
+      "demo": "https://demo.movary.org/"
+    },
+    "tags": [
+      "movies",
+      "movie-tracker",
+      "self-hosted",
+      "plex",
+      "jellyfin",
+      "emby",
+      "kodi",
+      "trakt",
+      "letterboxd",
+      "netflix",
+      "tmdb",
+      "statistics",
+      "rating"
+    ]
+  },
+    {
+    "id": "go-whatsapp-web-multidevice",
+    "name": "WhatsApp API Multi Device Version",
+    "version": "latest",
+    "description": "WhatsApp API Multi Device Version the open-source, self-hosted whatsapp api. Send a chat, image and voice note with your own server.",
+    "logo": "go-whatsapp-web-multidevice.svg",
+    "links": {
+      "github": "https://github.com/aldinokemal/go-whatsapp-web-multidevice",
+      "website": "https://github.com/aldinokemal/go-whatsapp-web-multidevice",
+      "docs": "https://github.com/aldinokemal/go-whatsapp-web-multidevice"
+    },
+    "tags": [
+      "whatsapp",
+      "self-hosted",
+      "open-source",
+      "api"
+    ]
+  },
+  {
+    "id": "rabbitmq",
+    "name": "RabbitMQ",
+    "version": "4.1-management",
+    "description": "RabbitMQ is an open source multi-protocol messaging broker.",
+    "logo": "rabbitmq.svg",
+    "links": {
+      "github": "https://github.com/rabbitmq/rabbitmq-server",
+      "website": "https://www.rabbitmq.com/",
+      "docs": "https://www.rabbitmq.com/documentation.html"
+    },
+    "tags": [
+      "message-broker",
+      "queue",
+      "rabbitmq"
     ]
   }
 ]

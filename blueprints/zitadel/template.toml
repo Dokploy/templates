@@ -18,6 +18,11 @@ POSTGRES_PASSWORD = "${postgres_password}"
 ZITADEL_MASTERKEY = "${zitadel_masterkey}"
 EXTERNAL_DOMAIN = "${main_domain}"
 
+# External Configuration for Reverse Proxy (Traefik)
+ZITADEL_EXTERNALSECURE = "true"
+ZITADEL_EXTERNALPORT = "443"
+ZITADEL_EXTERNALDOMAIN = "${main_domain}"
+
 # Custom Admin User Configuration
 ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME = "${admin_username}"
 ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD = "${admin_password}"

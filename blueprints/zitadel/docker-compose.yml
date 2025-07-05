@@ -21,7 +21,7 @@ services:
 
       # External Configuration for HTTP only - TLS mode disabled
       ZITADEL_EXTERNALSECURE: false
-      ZITADEL_EXTERNALPORT: 80
+      ZITADEL_EXTERNALPORT: 8080
       ZITADEL_EXTERNALDOMAIN: "${EXTERNAL_DOMAIN}"
       ZITADEL_TLS_ENABLED: false
 

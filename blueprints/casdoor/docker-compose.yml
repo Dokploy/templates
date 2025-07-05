@@ -6,7 +6,9 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DB_HOST=casdoor-db
+      - RUNNING_IN_DOCKER=true
+      - DATABASE_DRIVER=postgres
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@casdoor-db:5432/${DB_NAME}?sslmode=disable
     depends_on:
       casdoor-db:
         condition: service_healthy

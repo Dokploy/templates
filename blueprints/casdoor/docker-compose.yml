@@ -10,7 +10,7 @@ services:
       - RUNNING_IN_DOCKER=true
     volumes:
       - casdoor_data:/opt/casdoor/data
-      - ../files/casdoor.conf:/opt/casdoor/conf/app.conf
+      - ./files/casdoor.conf:/opt/casdoor/conf/app.conf
     depends_on:
       db:
         condition: service_healthy

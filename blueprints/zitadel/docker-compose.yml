@@ -6,7 +6,7 @@ services:
     networks:
       - 'zitadel'
     image: 'ghcr.io/zitadel/zitadel:latest'
-    command: 'start-from-init --masterkey "${ZITADEL_MASTERKEY}" --tlsMode disabled'
+    command: 'start-from-init --masterkey "${ZITADEL_MASTERKEY}" '
     environment:
       # Database Configuration
       ZITADEL_DATABASE_POSTGRES_HOST: db
@@ -20,7 +20,7 @@ services:
       ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE: disable
 
       # External Configuration
-      ZITADEL_EXTERNALSECURE: false
+      ZITADEL_EXTERNALSECURE: true
       ZITADEL_EXTERNALPORT: 8080
       ZITADEL_EXTERNALDOMAIN: "${EXTERNAL_DOMAIN}"
 

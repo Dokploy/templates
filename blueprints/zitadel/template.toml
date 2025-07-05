@@ -2,8 +2,8 @@
 main_domain = "${domain}"
 postgres_password = "${password:32}"
 zitadel_masterkey = "${password:32}"
-admin_username = "${text:admin}"
-admin_email = "${email:admin@example.com}"
+admin_username = "${username}"
+admin_email = "${email}"
 admin_password = "${password:16}"
 
 [config]

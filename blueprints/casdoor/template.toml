@@ -1,5 +1,4 @@
 [variables]
-main_domain = "${domain}"
 postgres_password = "${password:32}"
 admin_password = "${password:16}"
 jwt_secret = "${password:64}"
@@ -13,6 +12,7 @@ host = "${main_domain}"
 [config.env]
 POSTGRES_PASSWORD = "${postgres_password}"
 ADMIN_FIRST_LOGIN_PASSWD = "${admin_password}"
+MAIN_DOMAIN = "${domain}"
 
 [[config.mounts]]
 filePath = "app.conf"
@@ -35,7 +35,6 @@ verificationCodeTimeout = 10
 initData = "./init_data.json"
 logPostOnly = true
 isUsernameLowered = false
-proxyHeader = "X-Forwarded-Proto"
 origin = "https://${main_domain}"
 staticBaseUrl = "https://cdn.casbin.org"
 isDemoMode = false

@@ -2617,5 +2617,18 @@
       "queue",
       "rabbitmq"
     ]
+  },
+  {
+    "id": "wireguard-easy",
+    "name": "WireGuard Easy",
+    "version": "latest",
+    "description": "The easiest way to run WireGuard VPN + Web-based Admin UI",
+    "links": {
+      "github": "https://github.com/wg-easy/wg-easy",
+      "website": "https://wg-easy.github.io/wg-easy/latest/",
+      "docs": "https://wg-easy.github.io/wg-easy/latest/getting-started/"
+    },
+    "logo": "wireguard-easy.svg",
+    "tags": ["vpn", "self-hosted", "server", "panel", "security"]
   }
 ]

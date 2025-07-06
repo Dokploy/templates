@@ -1,0 +1,49 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+jwt_secret = "${password:64}"
+session_secret = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "casdoor"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}"
+
+[[config.mounts]]
+filePath = "app.conf"
+content = """
+appname = casdoor
+httpport = 8000
+runmode = prod
+SessionOn = true
+copyrequestbody = true
+driverName = postgres
+dataSourceName = user=casdoor password=${postgres_password} host=casdoor-db port=5432 sslmode=disable dbname=casdoor
+dbName = casdoor
+showSql = false
+redisEndpoint =
+defaultStorageProvider =
+isCloudIntranet = false
+authState = "casdoor"
+socks5Proxy = "127.0.0.1:10808"
+verificationCodeTimeout = 10
+initData = "./init_data.json"
+logPostOnly = true
+isUsernameLowered = false
+origin = "https://${main_domain}"
+staticBaseUrl = "https://cdn.casbin.org"
+isDemoMode = false
+batchSize = 100
+enableGzip = true
+ldapServerPort = 389
+radiusServerPort = 1812
+radiusSecret = "secret"
+quota = {"organization": -1, "user": -1, "application": -1, "provider": -1}
+logConfig = {"filename": "logs/casdoor.log", "maxdays":99999, "perm":"0770"}
+initDataFile = "./init_data.json"
+frontendBaseDir = "../web/build"
+"""

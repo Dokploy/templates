@@ -2,6 +2,7 @@
 postgres_password = "${password:32}"
 admin_password = "${password:16}"
 jwt_secret = "${password:64}"
+main_domain = "${domain}"
 
 [config]
 [[config.domains]]
@@ -12,7 +13,7 @@ host = "${main_domain}"
 [config.env]
 POSTGRES_PASSWORD = "${postgres_password}"
 ADMIN_FIRST_LOGIN_PASSWD = "${admin_password}"
-MAIN_DOMAIN = "${domain}"
+MAIN_DOMAIN = "${main_domain}"
 
 [[config.mounts]]
 filePath = "app.conf"

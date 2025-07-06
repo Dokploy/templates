@@ -36,7 +36,6 @@ initData = "./init_data.json"
 logPostOnly = true
 isUsernameLowered = false
 proxyHeader = "X-Forwarded-Proto"
-enableHttps = true
 origin = "https://${main_domain}"
 staticBaseUrl = "https://cdn.casbin.org"
 isDemoMode = false

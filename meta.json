@@ -660,6 +660,19 @@
     "tags": ["self-hosted", "storage"]
   },
   {
+    "id": "gitlab-ce",
+    "name": "GitLab Community Edition",
+    "version": "latest",
+    "description": "GitLab Community Edition is a complete DevOps platform that enables professionals to perform all the tasks in a project—from project planning and source code management to monitoring and security. It's the open source alternative to GitLab Enterprise Edition.",
+    "logo": "gitlab-ce.svg",
+    "links": {
+      "github": "https://github.com/gitlabhq/gitlabhq",
+      "website": "https://gitlab.com/",
+      "docs": "https://docs.gitlab.com/ee/install/docker.html"
+    },
+    "tags": ["git", "devops", "ci-cd", "self-hosted", "code-review"]
+  },
+  {
     "id": "gitea-mirror",
     "name": "Gitea Mirror",
     "version": "v2.11.2",
@@ -2583,7 +2596,7 @@
       "rating"
     ]
   },
-    {
+  {
     "id": "go-whatsapp-web-multidevice",
     "name": "WhatsApp API Multi Device Version",
     "version": "latest",
@@ -2594,12 +2607,7 @@
       "website": "https://github.com/aldinokemal/go-whatsapp-web-multidevice",
       "docs": "https://github.com/aldinokemal/go-whatsapp-web-multidevice"
     },
-    "tags": [
-      "whatsapp",
-      "self-hosted",
-      "open-source",
-      "api"
-    ]
+    "tags": ["whatsapp", "self-hosted", "open-source", "api"]
   },
   {
     "id": "rabbitmq",
@@ -2612,10 +2620,6 @@
       "website": "https://www.rabbitmq.com/",
       "docs": "https://www.rabbitmq.com/documentation.html"
     },
-    "tags": [
-      "message-broker",
-      "queue",
-      "rabbitmq"
-    ]
+    "tags": ["message-broker", "queue", "rabbitmq"]
   }
 ]

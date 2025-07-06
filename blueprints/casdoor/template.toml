@@ -12,6 +12,7 @@ host = "${main_domain}"
 
 [config.env]
 POSTGRES_PASSWORD = "${postgres_password}"
+ADMIN_FIRST_LOGIN_PASSWD = "${admin_password}"
 
 [[config.mounts]]
 filePath = "app.conf"

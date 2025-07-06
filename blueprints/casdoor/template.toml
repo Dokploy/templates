@@ -13,7 +13,6 @@ host = "${main_domain}"
 [config.env]
 POSTGRES_PASSWORD = "${postgres_password}"
 ADMIN_FIRST_LOGIN_PASSWD = "${admin_password}"
-HOST = "${main_domain}"
 
 [[config.mounts]]
 filePath = "app.conf"
@@ -36,7 +35,7 @@ verificationCodeTimeout = 10
 initData = "./init_data.json"
 logPostOnly = true
 isUsernameLowered = false
-origin = "https://${HOST}"
+origin = "https://${main_domain}"
 staticBaseUrl = "https://cdn.casbin.org"
 isDemoMode = false
 batchSize = 100
@@ -393,7 +392,7 @@ content = """
       "createdTime": "2021-01-01T00:00:00Z",
       "displayName": "Casdoor",
       "logo": "https://cdn.casbin.org/img/casbin/favicon.ico",
-      "homepageUrl": "https://${HOST}",
+      "homepageUrl": "https://${main_domain}",
       "description": "Casdoor - A UI-first Identity Access Management (IAM) / Single-Sign-On (SSO) platform",
       "organization": "built-in",
       "cert": "",
@@ -481,7 +480,7 @@ content = """
       "tags": [],
       "clientId": "${jwt_secret}",
       "clientSecret": "${jwt_secret}",
-      "redirectUris": ["https://${HOST}/callback"],
+      "redirectUris": ["https://${main_domain}/callback"],
       "tokenFormat": "JWT",
       "tokenFields": [],
       "expireInHours": 168,

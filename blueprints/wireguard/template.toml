@@ -6,6 +6,6 @@ env = {}
 mounts = []
 
 [[config.domains]]
-serviceName = "WireGuard"
+serviceName = "wireguard"
 port = 51820
 host = "${main_domain}"

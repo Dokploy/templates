@@ -1,10 +1,14 @@
-version: "3.8"
+volumes:
+  etc_wireguard:
+
 services:
   wg-easy:
-    environment:
-     - PORT=51821
-    #  - HOST=0.0.0.0 # insert your host IP or domain
-    #  - INSECURE=false # optional, if you want to access panel over HTTP(S)
+    #environment:
+    #  Optional:
+    #  - PORT=51821
+    #  - HOST=0.0.0.0
+    #  - INSECURE=false # change to true to allow login without HTTPS
+    # learn more about environment variables in docs
 
     image: ghcr.io/wg-easy/wg-easy:latest
     container_name: wg-easy
@@ -29,9 +33,6 @@ services:
       - net.ipv6.conf.all.disable_ipv6=0
       - net.ipv6.conf.all.forwarding=1
       - net.ipv6.conf.default.forwarding=1
-
-volumes:
-  etc_wireguard:
 
 networks:
   wg:

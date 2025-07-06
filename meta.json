@@ -2617,5 +2617,18 @@
       "queue",
       "rabbitmq"
     ]
+  },
+  {
+    "id": "wireguard",
+    "name": "WireGuard",
+    "version": "latest",
+    "description": "FAST, MODERN, SECURE VPN TUNNEL",
+    "links": {
+      "github": "https://github.com/WireGuard/",
+      "website": "https://www.wireguard.com/",
+      "docs": "https://www.wireguard.com/install/"
+    },
+    "logo": "wireguard.svg",
+    "tags": ["vpn", "self-hosted", "server", "panel", "security"]
   }
 ]

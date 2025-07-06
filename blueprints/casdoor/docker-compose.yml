@@ -3,9 +3,9 @@ services:
     image: casbin/casdoor:latest
     environment:
       - RUNNING_IN_DOCKER=true
-      - CASDOOR_ADMIN_PASSWORD=${CASDOOR_ADMIN_PASSWORD}
     volumes:
       - ../files/app.conf:/conf/app.conf
+      - ../files/init_data.json:/init_data.json
       - casdoor-data:/data
     depends_on:
       casdoor-db:

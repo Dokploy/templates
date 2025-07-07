@@ -3,8 +3,6 @@ version: '3.8'
 services:
   zitadel:
     restart: 'always'
-    networks:
-      - 'zitadel'
     image: 'ghcr.io/zitadel/zitadel:latest'
     command: 'start-from-init --masterkey "${ZITADEL_MASTERKEY}" --tlsMode disabled'
     environment:
@@ -51,8 +49,6 @@ services:
       PGUSER: postgres
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       POSTGRES_DB: zitadel
-    networks:
-      - 'zitadel'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -61,10 +57,6 @@ services:
       timeout: '30s'
       retries: 5
       start_period: '20s'
-
-networks:
-  zitadel:
-    driver: bridge
 
 volumes:
   postgres_data:

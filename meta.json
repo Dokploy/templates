@@ -3289,5 +3289,28 @@
       "queue",
       "rabbitmq"
     ]
+  },
+  {
+    "id": "zitadel",
+    "name": "Zitadel",
+    "version": "latest",
+    "description": "Open-source identity and access management platform with multi-tenancy, OpenID Connect, SAML, and OAuth 2.0 support.",
+    "logo": "zitadel.png",
+    "links": {
+      "github": "https://github.com/zitadel/zitadel",
+      "website": "https://zitadel.com/",
+      "docs": "https://zitadel.com/docs/"
+    },
+    "tags": [
+      "identity",
+      "authentication",
+      "authorization",
+      "iam",
+      "security",
+      "oauth",
+      "openid-connect",
+      "saml",
+      "multi-tenant"
+    ]
   }
 ]

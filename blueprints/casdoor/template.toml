@@ -1,0 +1,533 @@
+[variables]
+postgres_password = "${password:32}"
+admin_password = "${password:16}"
+jwt_secret = "${password:64}"
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "casdoor"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}"
+ADMIN_FIRST_LOGIN_PASSWD = "${admin_password}"
+
+[[config.mounts]]
+filePath = "app.conf"
+content = """
+appname = casdoor
+httpport = 8000
+runmode = prod
+SessionOn = true
+copyrequestbody = true
+driverName = postgres
+dataSourceName = user=casdoor password=${postgres_password} host=casdoor-db port=5432 sslmode=disable dbname=casdoor
+dbName = casdoor
+showSql = false
+redisEndpoint =
+defaultStorageProvider =
+isCloudIntranet = false
+authState = "casdoor"
+socks5Proxy = "127.0.0.1:10808"
+verificationCodeTimeout = 10
+initData = "./init_data.json"
+logPostOnly = true
+isUsernameLowered = false
+origin = "https://${main_domain}"
+staticBaseUrl = "https://cdn.casbin.org"
+isDemoMode = false
+batchSize = 100
+enableGzip = true
+ldapServerPort = 389
+radiusServerPort = 1812
+radiusSecret = "secret"
+quota = {"organization": -1, "user": -1, "application": -1, "provider": -1}
+logConfig = {"filename": "logs/casdoor.log", "maxdays":99999, "perm":"0770"}
+initDataFile = "./init_data.json"
+frontendBaseDir = "../web/build"
+"""
+
+[[config.mounts]]
+filePath = "init_data.json"
+content = """
+{
+  "organizations": [
+    {
+      "owner": "admin",
+      "name": "built-in",
+      "createdTime": "2021-01-01T00:00:00Z",
+      "displayName": "Built-in Organization",
+      "websiteUrl": "https://casdoor.org",
+      "favicon": "https://cdn.casbin.org/img/casbin/favicon.ico",
+      "passwordType": "plain",
+      "passwordOptions": ["AtLeast6"],
+      "countryCode": "US",
+      "defaultAvatar": "https://cdn.casbin.org/img/casbin/user.png",
+      "defaultApplication": "app-built-in",
+      "tags": [],
+      "languages": ["en"],
+      "themeData": {
+        "isCompact": false,
+        "isEnabled": false,
+        "themeType": "default",
+        "colorPrimary": "#1976d2",
+        "borderRadius": 6,
+        "isRoundedButton": false,
+        "isGradientButton": false,
+        "themeAlgorithm": "default"
+      },
+      "masterPassword": "",
+      "initScore": 2000,
+      "enableSoftDeletion": false,
+      "isProfilePublic": false,
+      "mfaItems": [],
+      "accountItems": [
+        {
+          "name": "Organization",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin"
+        },
+        {
+          "name": "ID",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Immutable"
+        },
+        {
+          "name": "Name",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin"
+        },
+        {
+          "name": "Display name",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Avatar",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "User type",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin"
+        },
+        {
+          "name": "Password",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Email",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Phone",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Country/Region",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Location",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Affiliation",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Title",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Homepage",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Bio",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Tag",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin"
+        },
+        {
+          "name": "Language",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Gender",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Birthday",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Education",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Score",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin"
+        },
+        {
+          "name": "Karma",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin"
+        },
+        {
+          "name": "Ranking",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin"
+        },
+        {
+          "name": "Signup application",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin"
+        },
+        {
+          "name": "Roles",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Immutable"
+        },
+        {
+          "name": "Permissions",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Immutable"
+        },
+        {
+          "name": "Groups",
+          "visible": true,
+          "viewRule": "Public",
+          "modifyRule": "Admin"
+        },
+        {
+          "name": "3rd-party logins",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Properties",
+          "visible": false,
+          "viewRule": "Admin",
+          "modifyRule": "Admin"
+        },
+        {
+          "name": "Is admin",
+          "visible": true,
+          "viewRule": "Admin",
+          "modifyRule": "Admin"
+        },
+        {
+          "name": "Is forbidden",
+          "visible": true,
+          "viewRule": "Admin",
+          "modifyRule": "Admin"
+        },
+        {
+          "name": "Is deleted",
+          "visible": true,
+          "viewRule": "Admin",
+          "modifyRule": "Admin"
+        },
+        {
+          "name": "Multi-factor authentication",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "WebAuthn credentials",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self"
+        },
+        {
+          "name": "Managed accounts",
+          "visible": true,
+          "viewRule": "Self",
+          "modifyRule": "Self"
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "owner": "built-in",
+      "name": "admin",
+      "createdTime": "2021-01-01T00:00:00Z",
+      "updatedTime": "2021-01-01T00:00:00Z",
+      "id": "admin",
+      "type": "normal-user",
+      "password": "${admin_password}",
+      "passwordSalt": "",
+      "displayName": "Admin",
+      "firstName": "",
+      "lastName": "",
+      "avatar": "https://cdn.casbin.org/img/casbin/user.png",
+      "permanentAvatar": "",
+      "email": "admin@example.com",
+      "emailVerified": true,
+      "phone": "",
+      "location": "",
+      "address": [],
+      "affiliation": "Example Inc.",
+      "title": "Administrator",
+      "idCardType": "",
+      "idCard": "",
+      "homepage": "",
+      "bio": "",
+      "tag": "staff",
+      "region": "US",
+      "language": "en",
+      "gender": "",
+      "birthday": "",
+      "education": "",
+      "score": 2000,
+      "karma": 0,
+      "ranking": 1,
+      "isDefaultAvatar": false,
+      "isOnline": false,
+      "isAdmin": true,
+      "isGlobalAdmin": true,
+      "isForbidden": false,
+      "isDeleted": false,
+      "signupApplication": "app-built-in",
+      "hash": "",
+      "preHash": "",
+      "createdIp": "",
+      "lastSigninTime": "",
+      "lastSigninIp": "",
+      "github": "",
+      "google": "",
+      "qq": "",
+      "wechat": "",
+      "facebook": "",
+      "dingtalk": "",
+      "weibo": "",
+      "gitee": "",
+      "linkedin": "",
+      "wecom": "",
+      "lark": "",
+      "gitlab": "",
+      "adfs": "",
+      "baidu": "",
+      "alipay": "",
+      "casdoor": "",
+      "infoflow": "",
+      "apple": "",
+      "azuread": "",
+      "slack": "",
+      "steam": "",
+      "bilibili": "",
+      "okta": "",
+      "douyin": "",
+      "custom": "",
+      "webauthnCredentials": [],
+      "preferredMfaType": "",
+      "recoveryCodes": [],
+      "totpSecret": "",
+      "mfaPhoneEnabled": false,
+      "mfaEmailEnabled": false,
+      "ldap": "",
+      "properties": {},
+      "roles": [],
+      "permissions": [],
+      "groups": [],
+      "lastSigninWrongTime": "",
+      "signinWrongTimes": 0,
+      "managedAccounts": []
+    }
+  ],
+  "applications": [
+    {
+      "owner": "built-in",
+      "name": "app-built-in",
+      "createdTime": "2021-01-01T00:00:00Z",
+      "displayName": "Casdoor",
+      "logo": "https://cdn.casbin.org/img/casbin/favicon.ico",
+      "homepageUrl": "https://${main_domain}",
+      "description": "Casdoor - A UI-first Identity Access Management (IAM) / Single-Sign-On (SSO) platform",
+      "organization": "built-in",
+      "cert": "",
+      "enablePassword": true,
+      "enableSignUp": true,
+      "enableSigninSession": false,
+      "enableAutoSignin": false,
+      "enableCodeSignin": false,
+      "enableSamlCompress": false,
+      "enableWebAuthn": false,
+      "enableLinkWithEmail": false,
+      "samlReplyUrl": "",
+      "providers": [],
+      "signupItems": [
+        {
+          "name": "ID",
+          "visible": false,
+          "required": true,
+          "prompted": false,
+          "rule": "Random"
+        },
+        {
+          "name": "Username",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "rule": "None"
+        },
+        {
+          "name": "Display name",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "rule": "None"
+        },
+        {
+          "name": "Password",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "rule": "None"
+        },
+        {
+          "name": "Confirm password",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "rule": "None"
+        },
+        {
+          "name": "Email",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "rule": "None"
+        },
+        {
+          "name": "Phone",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "rule": "None"
+        },
+        {
+          "name": "Agreement",
+          "visible": true,
+          "required": true,
+          "prompted": false,
+          "rule": "None"
+        }
+      ],
+      "grantTypes": [
+        "authorization_code",
+        "password",
+        "client_credentials",
+        "token",
+        "id_token"
+      ],
+      "organizationObj": {
+        "owner": "admin",
+        "name": "built-in",
+        "createdTime": "2021-01-01T00:00:00Z",
+        "displayName": "Built-in Organization"
+      },
+      "tags": [],
+      "clientId": "${jwt_secret}",
+      "clientSecret": "${jwt_secret}",
+      "redirectUris": ["https://${main_domain}/callback"],
+      "tokenFormat": "JWT",
+      "tokenFields": [],
+      "expireInHours": 168,
+      "refreshExpireInHours": 168,
+      "signupUrl": "",
+      "signinUrl": "",
+      "forgetUrl": "",
+      "affiliationUrl": "",
+      "termsOfUse": "",
+      "privacyPolicy": "",
+      "tokenFields": [],
+      "themeData": {
+        "isCompact": false,
+        "isEnabled": false,
+        "themeType": "default",
+        "colorPrimary": "#1976d2",
+        "borderRadius": 6,
+        "isRoundedButton": false,
+        "isGradientButton": false,
+        "themeAlgorithm": "default"
+      },
+      "formCss": "",
+      "formCssMobile": "",
+      "formOffset": 2,
+      "formSideHtml": "",
+      "formBackgroundUrl": ""
+    }
+  ],
+  "certs": [],
+  "providers": [],
+  "ldaps": [],
+  "models": [],
+  "permissions": [],
+  "roles": [],
+  "groups": [],
+  "enforcers": [],
+  "tokens": [],
+  "sessions": [],
+  "payments": [],
+  "products": [],
+  "resources": [],
+  "synceers": [],
+  "adapters": [],
+  "webhooks": [],
+  "subscriptions": [],
+  "plans": [],
+  "pricings": [],
+  "invitations": []
+}
+"""

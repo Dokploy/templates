@@ -2615,6 +2615,29 @@
     ]
   },
   {
+    "id": "casdoor",
+    "name": "Casdoor",
+    "version": "latest",
+    "description": "An open-source UI-first Identity and Access Management (IAM) / Single-Sign-On (SSO) platform with web UI supporting OAuth 2.0, OIDC, SAML, CAS, LDAP, SCIM, WebAuthn, TOTP, MFA, and more.",
+    "logo": "casdoor.png",
+    "links": {
+      "github": "https://github.com/casdoor/casdoor",
+      "website": "https://casdoor.org/",
+      "docs": "https://casdoor.org/docs/overview"
+    },
+    "tags": [
+      "authentication",
+      "authorization",
+      "oauth2",
+      "oidc",
+      "sso",
+      "saml",
+      "identity-management",
+      "access-management",
+      "security"
+    ]
+  },
+  {
     "id": "changedetection",
     "name": "Change Detection",
     "version": "0.49",
@@ -3265,28 +3288,6 @@
       "message-broker",
       "queue",
       "rabbitmq"
-    ]
-  },
-  {
-    "id": "zitadel",
-    "name": "Zitadel",
-    "version": "latest",
-    "description": "Identity and Access Management (IAM) platform that provides secure authentication and authorization services with OAuth 2.0, OpenID Connect, and SAML support.",
-    "logo": "zitadel.png",
-    "links": {
-      "github": "https://github.com/zitadel/zitadel",
-      "website": "https://zitadel.com/",
-      "docs": "https://zitadel.com/docs"
-    },
-    "tags": [
-      "identity",
-      "authentication",
-      "authorization",
-      "oauth",
-      "saml",
-      "oidc",
-      "iam",
-      "security"
     ]
   }
 ]

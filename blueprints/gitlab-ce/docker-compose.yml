@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   gitlab:
     image: gitlab/gitlab-ce:latest
@@ -33,8 +31,8 @@ services:
         nginx['listen_https'] = false
         prometheus_monitoring['enable'] = false
     ports:
-      - "8080:80"
-      - "2224:22"
+      - "80"
+      - "2224"
     volumes:
       - gitlab_config:/etc/gitlab
       - gitlab_logs:/var/log/gitlab
@@ -42,8 +40,6 @@ services:
     depends_on:
       - postgresql
       - redis
-    networks:
-      - gitlab_network
 
   postgresql:
     image: postgres:16-alpine
@@ -54,16 +50,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgresql_data:/var/lib/postgresql/data
-    networks:
-      - gitlab_network
 
   redis:
     image: redis:7-alpine
     restart: unless-stopped
     volumes:
       - redis_data:/data
-    networks:
-      - gitlab_network
 
 volumes:
   gitlab_config:
@@ -71,7 +63,3 @@ volumes:
   gitlab_data:
   postgresql_data:
   redis_data:
-
-networks:
-  gitlab_network:
-    driver: bridge

@@ -170,6 +170,56 @@ We have a few helpers that are very common when creating a template, these are:
 
 
 
+## General Suggestions when creating a template
+
+- Don't use this way in your docker compose file:
+
+```yaml
+services:
+  grafana:
+    image: grafana/grafana-enterprise:9.5.20
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+
+    # Instead use this way:
+    ports:
+      - 3000
+```
+
+- Don't use this way in your template.toml file, make sure to use the same service name as the one in the docker compose file:
+
+```toml
+[config]
+[[config.domains]]
+serviceName = "MyGrafanaService"
+# Instead use this way:
+serviceName = "grafana" # Make sure to use the same service name as the one in the docker compose file
+```
+
+- Don't use container_name in your docker compose file, make sure to use the same service name as the one in the template.toml file:
+
+```yaml
+services:
+  grafana:
+    container_name: grafana # ❌ Remove this
+```
+
+- Don't use dokploy-network in your docker compose file, by default all the templates have this flag enabled https://docs.dokploy.com/docs/core/docker-compose/utilities#isolated-deployments, so by default they have a internal network created, so you don't to create a new one or use the dokploy-network name.
+
+```yaml
+services:
+  grafana:
+    networks:
+      - dokploy-network # ❌ Remove this or any other network defined
+```
 
 
+- Please before submit a PR, make sure to test the template in your instance, so the maintainers don't spend time trying to figure out what's wrong.
 
+1. Everytime you submit a PR, it will display a Preview Link.
+2. Enter to the Preview Link and search the template you've submitted.
+3. Click on the Template Card, and click the Copy Button in the Base64 Configuration.
+4. Go to your instance, create a new Compose Service, go to Advanced Section -> Scroll Down -> Import Section -> Paste the Base64 Value -> Click on the Import Button
+5. If everything is correct and set, you should see a modal with all the details (Compose File, Environment Variables, Mounts, Domains, etc)
+6. Now you can click on the Deploy Button and wait for the deployment to finish, and try to access to the service, if everything is correct you should access to the service and see the template working.

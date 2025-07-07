@@ -1,0 +1,30 @@
+services:
+  freshrss:
+    image: freshrss/freshrss:${FRESHRSS_VERSION:-latest}
+    restart: unless-stopped
+    volumes:
+      # FreshRSS persistent data such as configuration and SQLite databases
+      - freshrss_data:/var/www/FreshRSS/data
+      # Optional volume for storing third-party extensions
+      - freshrss_extensions:/var/www/FreshRSS/extensions
+    ports:
+      - "80"
+    environment:
+      # Server timezone
+      TZ: ${TZ:-UTC}
+      # Cron job to refresh feeds at specified minutes
+      CRON_MIN: ${CRON_MIN:-13,43}
+      # Production or development mode
+      FRESHRSS_ENV: ${FRESHRSS_ENV:-production}
+      # Copy logs to syslog
+      COPY_LOG_TO_SYSLOG: ${COPY_LOG_TO_SYSLOG:-On}
+      # Copy syslog to stderr for docker logs
+      COPY_SYSLOG_TO_STDERR: ${COPY_SYSLOG_TO_STDERR:-On}
+      # Optional auto-install parameters
+      FRESHRSS_INSTALL: ${FRESHRSS_INSTALL:-}
+      # Optional auto-create user parameters
+      FRESHRSS_USER: ${FRESHRSS_USER:-}
+
+volumes:
+  freshrss_data:
+  freshrss_extensions:

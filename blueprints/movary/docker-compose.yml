@@ -1,0 +1,41 @@
+services:
+  movary:
+    image: leepeuker/movary:${MOVARY_VERSION:-latest}
+    restart: unless-stopped
+    ports:
+      - "8080"
+    environment:
+      # TMDB API configuration
+      TMDB_API_KEY: ${TMDB_API_KEY}
+      # Database configuration
+      DATABASE_MODE: "mysql"
+      DATABASE_MYSQL_HOST: "mysql"
+      DATABASE_MYSQL_NAME: "movary"
+      DATABASE_MYSQL_USER: "movary_user"
+      DATABASE_MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      # Application settings
+      APP_URL: ${APP_URL:-http://localhost:8080}
+      APP_ENV: ${APP_ENV:-production}
+    volumes:
+      - movary_storage:/app/storage
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:${MYSQL_VERSION:-8.0}
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: "movary"
+      MYSQL_USER: "movary_user"
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      # MySQL optimization
+      MYSQL_INNODB_BUFFER_POOL_SIZE: "128M"
+      MYSQL_INNODB_LOG_FILE_SIZE: "64M"
+    volumes:
+      - movary_db:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+volumes:
+  movary_db:
+  movary_storage:

@@ -1,6 +1,5 @@
 [variables]
 main_domain = "${domain}"
-encryption_key = "${password:32}"
 
 [config]
 [[config.domains]]
@@ -9,5 +8,6 @@ port = 5487
 host = "${main_domain}"
 
 [config.env]
+ENCRYPTION_KEY = ""
 
 [[config.mounts]] 

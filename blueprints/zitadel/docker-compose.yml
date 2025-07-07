@@ -40,7 +40,7 @@ services:
       db:
         condition: 'service_healthy'
     ports:
-      - '8080:8080'
+      - '8080'
     volumes:
       - zitadel_data:/app/data
 

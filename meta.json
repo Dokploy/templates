@@ -511,7 +511,7 @@
   {
     "id": "listmonk",
     "name": "Listmonk",
-    "version": "v3.0.0",
+    "version": "v5.0.3",
     "description": "High performance, self-hosted, newsletter and mailing list manager with a modern dashboard.",
     "logo": "listmonk.png",
     "links": {

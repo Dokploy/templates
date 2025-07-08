@@ -4,12 +4,12 @@ services:
     ports:
       - 5432
     environment:
-      - POSTGRES_USER=listmonk
-      - POSTGRES_PASSWORD=listmonk
-      - POSTGRES_DB=listmonk
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U listmonk" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
       interval: 10s
       timeout: 5s
       retries: 6
@@ -20,25 +20,23 @@ services:
     restart: unless-stopped
     image: listmonk/listmonk:v5.0.0
     environment:
-      - LISTMONK_app__address=0.0.0.0:9000
-      - LISTMONK_db__user=listmonk
-      - LISTMONK_db__password=listmonk
-      - LISTMONK_db__database=listmonk
-      - LISTMONK_db__host=db
-      - LISTMONK_db__port=5432
-      - LISTMONK_db__ssl_mode=disable
-      - LISTMONK_db__max_open=25
-      - LISTMONK_db__max_idle=25
-      - LISTMONK_db__max_lifetime=300s
-      - TZ=Etc/UTC
+      - LISTMONK_app__address=${LISTMONK_app__address}
+      - LISTMONK_db__user=${LISTMONK_db__user}
+      - LISTMONK_db__password=${LISTMONK_db__password}
+      - LISTMONK_db__database=${LISTMONK_db__database}
+      - LISTMONK_db__host=${LISTMONK_db__host}
+      - LISTMONK_db__port=${LISTMONK_db__port}
+      - LISTMONK_db__ssl_mode=${LISTMONK_db__ssl_mode}
+      - LISTMONK_db__max_open=${LISTMONK_db__max_open}
+      - LISTMONK_db__max_idle=${LISTMONK_db__max_idle}
+      - LISTMONK_db__max_lifetime=${LISTMONK_db__max_lifetime}
+      - LISTMONK_db__params=${LISTMONK_db__params}
+      - TZ=${TZ}
     depends_on:
-      - db
-    command: [ sh, -c, "./listmonk --install --idempotent --yes --config '' && ./listmonk --upgrade --yes --config '' && ./listmonk --config ''" ]
-      # --config (file) param is set to empty so that listmonk only uses the env vars (below) for config.
-      # --install --idempotent ensures that DB installation happens only once on an empty DB, on the first ever start.
-      # --upgrade automatically runs any DB migrations when a new image is pulled.
+      db:
+        condition: service_healthy
+    command: [ sh, -c, "./listmonk --install --idempotent --yes --config='' && ./listmonk --upgrade --yes --config='' && ./listmonk --config=''" ]
     volumes:
-      - ../files/config.toml:/listmonk/config.toml
       - listmonk-uploads:/listmonk/uploads
 
 volumes:

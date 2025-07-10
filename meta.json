@@ -3312,5 +3312,22 @@
       "saml",
       "multi-tenant"
     ]
+  },
+  {
+    "id": "filestash",
+    "name": "Filestash",
+    "version": "latest",
+    "description": "Filestash is the enterprise-grade file manager connecting your storage with your identity provider and authorisations.",
+    "logo": "filestash.svg",
+    "links": {
+      "github": "https://github.com/mickael-kerjean/filestash",
+      "website": "https://www.filestash.app/",
+      "docs": "https://www.filestash.app/docs/"
+    },
+    "tags": [
+      "file-manager",
+      "document-editor",
+      "self-hosted"
+    ]
   }
 ]

@@ -1,0 +1,31 @@
+[variables]
+main_domain = "${domain}"
+db_name = "ezbookkeeping"
+db_user = "ezbookkeeping"
+db_pass = "${password:32}"
+root_pass = "${password:32}"
+secret_key = "${password:64}"
+
+[config]
+[[config.domains]]
+serviceName = "ezbookkeeping"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+MYSQL_ROOT_PASSWORD = "${root_pass}"
+MYSQL_DATABASE = "${db_name}"
+MYSQL_USER = "${db_user}"
+MYSQL_PASSWORD = "${db_pass}"
+EBK_SERVER_DOMAIN = "${main_domain}"
+EBK_SERVER_ENABLE_GZIP = "true"
+EBK_DATABASE_TYPE = "mysql"
+EBK_DATABASE_HOST = "mysql:3306"
+EBK_DATABASE_NAME = "${db_name}"
+EBK_DATABASE_USER = "${db_user}"
+EBK_DATABASE_PASSWD = "${db_pass}"
+EBK_LOG_MODE = "file"
+# Security secret key used for application protection
+EBK_SECURITY_SECRET_KEY = "${secret_key}"
+
+[[config.mounts]] 

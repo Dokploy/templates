@@ -1,0 +1,55 @@
+[variables]
+main_domain = "${domain}"
+client_base_url = "https://${domain}"
+server_base_url = "https://${domain}"
+trusted_origins = ""
+database_encryption_key = "${base64:32}"
+auth_secret = "${base64:64}"
+
+# Authentication Settings
+registration_enabled = "true"
+password_reset_enabled = "true"
+email_verification_required = "false"
+
+# Storage Settings
+storage_driver = "filesystem"
+max_upload_size = "10485760"  # 10MB
+retention_days = "30"
+
+# Ingestion Settings
+folder_ingestion_enabled = "false"
+email_ingestion_enabled = "false"
+
+# Email Settings
+email_driver = "logger"
+from_email = "Papra <noreply@${domain}>"
+
+# Organization Settings
+max_organizations = "10"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "papra"
+port = 1_221
+host = "${main_domain}"
+
+[config.env]
+PORT = "${PORT}"
+CLIENT_BASE_URL = "${client_base_url}"
+SERVER_BASE_URL = "${server_base_url}"
+TRUSTED_ORIGINS = "${trusted_origins}"
+DATABASE_ENCRYPTION_KEY = "${database_encryption_key}"
+AUTH_SECRET = "${auth_secret}"
+REGISTRATION_ENABLED = "${registration_enabled}"
+PASSWORD_RESET_ENABLED = "${password_reset_enabled}"
+EMAIL_VERIFICATION_REQUIRED = "${email_verification_required}"
+STORAGE_DRIVER = "${storage_driver}"
+MAX_UPLOAD_SIZE = "${max_upload_size}"
+RETENTION_DAYS = "${retention_days}"
+FOLDER_INGESTION_ENABLED = "${folder_ingestion_enabled}"
+EMAIL_INGESTION_ENABLED = "${email_ingestion_enabled}"
+EMAIL_DRIVER = "${email_driver}"
+FROM_EMAIL = "${from_email}"
+MAX_ORGANIZATIONS = "${max_organizations}" 

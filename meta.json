@@ -829,19 +829,6 @@
     "tags": ["open-source"]
   },
   {
-    "id": "linkwarden",
-    "name": "Linkwarden",
-    "version": "2.9.3",
-    "description": "Self-hosted, open-source collaborative bookmark manager to collect, organize and archive webpages.",
-    "logo": "linkwarden.png",
-    "links": {
-      "github": "https://github.com/linkwarden/linkwarden",
-      "website": "https://linkwarden.app/",
-      "docs": "https://docs.linkwarden.app/"
-    },
-    "tags": ["bookmarks", "link-sharing"]
-  },
-  {
     "id": "hi-events",
     "name": "Hi.events",
     "version": "0.8.0-beta.1",
@@ -1048,19 +1035,6 @@
       "docs": "https://docs.blender.org/"
     },
     "tags": ["3d", "rendering", "animation"]
-  },
-  {
-    "id": "heyform",
-    "name": "HeyForm",
-    "version": "latest",
-    "description": "Allows anyone to create engaging conversational forms for surveys, questionnaires, quizzes, and polls. No coding skills required.",
-    "logo": "heyform.svg",
-    "links": {
-      "github": "https://github.com/heyform/heyform",
-      "website": "https://heyform.net",
-      "docs": "https://docs.heyform.net"
-    },
-    "tags": ["form", "builder", "questionnaire", "quiz", "survey"]
   },
   {
     "id": "chatwoot",
@@ -2538,6 +2512,29 @@
     "tags": ["file-sharing", "self-hosted", "open-source"]
   },
   {
+    "id": "papra",
+    "name": "Papra",
+    "version": "latest",
+    "description": "A minimalistic, open-source document management and archiving platform. Store, organize, and retrieve your documents effortlessly with features like full-text search, organizations, tags, email ingestion, and automated document processing.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/papra-hq/papra",
+      "website": "https://papra.app/",
+      "docs": "https://docs.papra.app/"
+    },
+    "tags": [
+      "document-management",
+      "archive",
+      "documents",
+      "organization",
+      "search",
+      "self-hosted",
+      "open-source",
+      "productivity",
+      "file-storage"
+    ]
+  },
+  {
     "id": "karakeep",
     "name": "KaraKeep",
     "version": "0.25.0",
@@ -2576,34 +2573,6 @@
       "self-hosted",
       "aggregator",
       "reader"
-    ]
-  },
-  {
-    "id": "movary",
-    "name": "Movary",
-    "version": "0.66.2",
-    "description": "Self-hosted web app to track, rate and explore your movie watch history. Offers detailed statistics, third-party integrations for platforms like Trakt, Letterboxd, Netflix, and automated play tracking for Plex, Jellyfin, Emby or Kodi.",
-    "logo": "movary.png",
-    "links": {
-      "github": "https://github.com/leepeuker/movary",
-      "website": "https://movary.org/",
-      "docs": "https://movary.org/docs/",
-      "demo": "https://demo.movary.org/"
-    },
-    "tags": [
-      "movies",
-      "movie-tracker",
-      "self-hosted",
-      "plex",
-      "jellyfin",
-      "emby",
-      "kodi",
-      "trakt",
-      "letterboxd",
-      "netflix",
-      "tmdb",
-      "statistics",
-      "rating"
     ]
   },
   {
@@ -2679,11 +2648,7 @@
       "website": "https://www.filestash.app/",
       "docs": "https://www.filestash.app/docs/"
     },
-    "tags": [
-      "file-manager",
-      "document-editor",
-      "self-hosted"
-    ]
+    "tags": ["file-manager", "document-editor", "self-hosted"]
   },
   {
     "id": "mazanoke",

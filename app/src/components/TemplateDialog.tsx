@@ -55,7 +55,7 @@ const TemplateDialog: React.FC<TemplateDialogProps> = ({
       config: templateFiles.config || "",
     };
 
-    return btoa(JSON.stringify(configObj, null, 2));
+    return btoa(encodeURIComponent(JSON.stringify(configObj, null, 2)));
   };
 
   return (

@@ -13,6 +13,19 @@
     "tags": ["database", "postgres", "self-hosted", "server"]
   },
   {
+    "id": "capso",
+    "name": "Cap.so",
+    "version": "latest",
+    "description": "Cap.so is a platform for web and desktop applications with MySQL and S3 storage. It provides a complete development environment with database and file storage capabilities.",
+    "links": {
+      "github": "https://github.com/CapSoftware/Cap",
+      "website": "https://cap.so/",
+      "docs": "https://cap.so/docs/"
+    },
+    "logo": "capso.png",
+    "tags": ["web", "s3", "mysql", "development", "self-hosted"]
+  },
+  {
     "id": "freescout",
     "name": "FreeScout",
     "version": "latest",
@@ -229,6 +242,19 @@
       "docs": "https://forgejo.org/docs/latest/"
     },
     "tags": ["self-hosted", "storage"]
+  },
+  {
+    "id": "gitlab-ce",
+    "name": "GitLab CE",
+    "version": "latest",
+    "description": "GitLab Community Edition is a free and open source platform for managing Git repositories, CI/CD pipelines, and project management.",
+    "logo": "gitlab-ce.svg",
+    "links": {
+      "github": "https://gitlab.com/gitlab-org/gitlab-ce",
+      "website": "https://gitlab.com/",
+      "docs": "https://docs.gitlab.com/ee/"
+    },
+    "tags": ["git", "ci-cd", "version-control", "project-management"]
   },
   {
     "id": "ghost",
@@ -2679,11 +2705,7 @@
       "website": "https://www.filestash.app/",
       "docs": "https://www.filestash.app/docs/"
     },
-    "tags": [
-      "file-manager",
-      "document-editor",
-      "self-hosted"
-    ]
+    "tags": ["file-manager", "document-editor", "self-hosted"]
   },
   {
     "id": "mazanoke",

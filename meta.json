@@ -231,6 +231,19 @@
     "tags": ["self-hosted", "storage"]
   },
   {
+    "id": "gitlab-ce",
+    "name": "GitLab CE",
+    "version": "latest",
+    "description": "GitLab Community Edition is a free and open source platform for managing Git repositories, CI/CD pipelines, and project management.",
+    "logo": "gitlab-ce.svg",
+    "links": {
+      "github": "https://gitlab.com/gitlab-org/gitlab-ce",
+      "website": "https://gitlab.com/",
+      "docs": "https://docs.gitlab.com/ee/"
+    },
+    "tags": ["git", "ci-cd", "version-control", "project-management"]
+  },
+  {
     "id": "ghost",
     "name": "Ghost",
     "version": "5.0.0",
@@ -2631,6 +2644,26 @@
       "docs": "https://www.rabbitmq.com/documentation.html"
     },
     "tags": ["message-broker", "queue", "rabbitmq"]
+  },
+  {
+    "id": "ezbookkeeping",
+    "name": "EZBookkeeping",
+    "version": "latest",
+    "description": "EZBookkeeping is a self-hosted bookkeeping application that helps you manage your personal and business finances. It provides features for tracking income, expenses, accounts, and generating financial reports.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/mayswind/ezbookkeeping",
+      "website": "https://github.com/mayswind/ezbookkeeping",
+      "docs": "https://github.com/mayswind/ezbookkeeping"
+    },
+    "tags": [
+      "bookkeeping",
+      "finance",
+      "accounting",
+      "self-hosted",
+      "personal-finance",
+      "business-finance"
+    ]
   },
   {
     "id": "zitadel",

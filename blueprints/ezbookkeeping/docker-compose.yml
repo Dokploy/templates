@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+  ezbookkeeping:
+    image: mayswind/ezbookkeeping
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    environment:
+      - EBK_SERVER_DOMAIN=${EBK_SERVER_DOMAIN}
+      - EBK_SERVER_ENABLE_GZIP=${EBK_SERVER_ENABLE_GZIP}
+      - EBK_DATABASE_TYPE=${EBK_DATABASE_TYPE}
+      - EBK_DATABASE_HOST=${EBK_DATABASE_HOST}
+      - EBK_DATABASE_NAME=${EBK_DATABASE_NAME}
+      - EBK_DATABASE_USER=${EBK_DATABASE_USER}
+      - EBK_DATABASE_PASSWD=${EBK_DATABASE_PASSWD}
+      - EBK_LOG_MODE=${EBK_LOG_MODE}
+      - EBK_SECURITY_SECRET_KEY=${EBK_SECURITY_SECRET_KEY}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - storage:/ezbookkeeping/storage
+      - logs:/ezbookkeeping/log
+volumes:
+  mysql-data: {}
+  storage: {}
+  logs: {}

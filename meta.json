@@ -855,6 +855,19 @@
     "tags": ["self-hosted", "open-source", "manager"]
   },
   {
+    "id": "habitica",
+    "name": "Habitica",
+    "version": "latest",
+    "description": "Habitica is a free habit and productivity app that treats your real life like a game. With in-game rewards and punishments to motivate you and a strong social network to inspire you, Habitica can help you achieve your goals to become healthy and hard-working.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/HabitRPG/habitica",
+      "website": "https://habitica.com/",
+      "docs": "https://habitica.fandom.com/wiki/Setting_up_Habitica_Locally"
+    },
+    "tags": ["productivity", "gamification", "habits", "self-hosted"]
+  },
+  {
     "id": "hoarder",
     "name": "Hoarder",
     "version": "0.22.0",
@@ -2679,11 +2692,7 @@
       "website": "https://www.filestash.app/",
       "docs": "https://www.filestash.app/docs/"
     },
-    "tags": [
-      "file-manager",
-      "document-editor",
-      "self-hosted"
-    ]
+    "tags": ["file-manager", "document-editor", "self-hosted"]
   },
   {
     "id": "mazanoke",

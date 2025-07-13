@@ -13,6 +13,27 @@
     "tags": ["database", "postgres", "self-hosted", "server"]
   },
   {
+    "id": "authentik",
+    "name": "Authentik",
+    "version": "2025.6.3",
+    "description": "Authentik is an open-source Identity Provider for authentication and authorization. It provides a comprehensive solution for managing user authentication, authorization, and identity federation with support for SAML, OAuth2, OIDC, and more.",
+    "links": {
+      "github": "https://github.com/goauthentik/authentik",
+      "website": "https://goauthentik.io/",
+      "docs": "https://goauthentik.io/docs/"
+    },
+    "logo": "authentik.svg",
+    "tags": [
+      "authentication",
+      "identity",
+      "sso",
+      "oidc",
+      "saml",
+      "oauth2",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "freescout",
     "name": "FreeScout",
     "version": "latest",
@@ -229,6 +250,19 @@
       "docs": "https://forgejo.org/docs/latest/"
     },
     "tags": ["self-hosted", "storage"]
+  },
+  {
+    "id": "gitlab-ce",
+    "name": "GitLab CE",
+    "version": "latest",
+    "description": "GitLab Community Edition is a free and open source platform for managing Git repositories, CI/CD pipelines, and project management.",
+    "logo": "gitlab-ce.svg",
+    "links": {
+      "github": "https://gitlab.com/gitlab-org/gitlab-ce",
+      "website": "https://gitlab.com/",
+      "docs": "https://docs.gitlab.com/ee/"
+    },
+    "tags": ["git", "ci-cd", "version-control", "project-management"]
   },
   {
     "id": "ghost",
@@ -2679,11 +2713,7 @@
       "website": "https://www.filestash.app/",
       "docs": "https://www.filestash.app/docs/"
     },
-    "tags": [
-      "file-manager",
-      "document-editor",
-      "self-hosted"
-    ]
+    "tags": ["file-manager", "document-editor", "self-hosted"]
   },
   {
     "id": "mazanoke",

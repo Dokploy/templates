@@ -231,6 +231,19 @@
     "tags": ["self-hosted", "storage"]
   },
   {
+    "id": "gitlab-ce",
+    "name": "GitLab CE",
+    "version": "latest",
+    "description": "GitLab Community Edition is a free and open source platform for managing Git repositories, CI/CD pipelines, and project management.",
+    "logo": "gitlab-ce.svg",
+    "links": {
+      "github": "https://gitlab.com/gitlab-org/gitlab-ce",
+      "website": "https://gitlab.com/",
+      "docs": "https://docs.gitlab.com/ee/"
+    },
+    "tags": ["git", "ci-cd", "version-control", "project-management"]
+  },
+  {
     "id": "ghost",
     "name": "Ghost",
     "version": "5.0.0",
@@ -2679,11 +2692,7 @@
       "website": "https://www.filestash.app/",
       "docs": "https://www.filestash.app/docs/"
     },
-    "tags": [
-      "file-manager",
-      "document-editor",
-      "self-hosted"
-    ]
+    "tags": ["file-manager", "document-editor", "self-hosted"]
   },
   {
     "id": "mazanoke",
@@ -2697,6 +2706,26 @@
       "docs": "https://github.com/civilblur/mazanoke"
     },
     "tags": ["image-hosting", "file-sharing", "self-hosted", "media", "gallery"]
+  },
+  {
+    "id": "ihatemoney",
+    "name": "I Hate Money",
+    "version": "latest",
+    "description": "I Hate Money is a web application for managing shared expenses among groups of people. It helps you track who owes what to whom, making it easy to split bills and manage group finances.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/spiral-project/ihatemoney",
+      "website": "https://ihatemoney.org/",
+      "docs": "https://ihatemoney.readthedocs.io/"
+    },
+    "tags": [
+      "budget",
+      "finance",
+      "expense-sharing",
+      "self-hosted",
+      "money-management",
+      "group-finances"
+    ]
   },
   {
     "id": "searxng",

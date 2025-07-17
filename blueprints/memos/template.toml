@@ -9,6 +9,6 @@ host = "${main_domain}"
 
 
 [config.env]
-MEMOS_MODE = "production"
+MEMOS_MODE = "prod"
 MEMOS_PORT = "5230"
 [[config.mounts]]

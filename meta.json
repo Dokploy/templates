@@ -2718,9 +2718,22 @@
     ]
   },
   {
+    "id": "gitlab-ce",
+    "name": "GitLab CE",
+    "version": "latest",
+    "description": "GitLab Community Edition is a free and open source platform for managing Git repositories, CI/CD pipelines, and project management.",
+    "logo": "gitlab-ce.svg",
+    "links": {
+      "github": "https://gitlab.com/gitlab-org/gitlab-ce",
+      "website": "https://gitlab.com/",
+      "docs": "https://docs.gitlab.com/ee/"
+    },
+    "tags": ["git", "ci-cd", "version-control", "project-management"]
+  },
+  {
     "id": "memos",
     "name": "Memos",
-    "version": "0.25.0",
+    "version": "latest",
     "description": "Memos is a self-hosted, open-source note-taking application that allows you to create, organize, and share notes with ease. It provides a simple and effective solution for managing your notes from anywhere.",
     "logo": "memos.png",
     "links": {

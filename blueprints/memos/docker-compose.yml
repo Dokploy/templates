@@ -8,8 +8,9 @@ services:
     volumes:
       - memos_data:/var/opt/memos
     environment:
-      - MEMOS_MODE=${MEMOS_MODE}
-      - MEMOS_PORT=${MEMOS_PORT}
-
+      MEMOS_MODE: ${MEMOS_MODE}
+      MEMOS_PORT: ${MEMOS_PORT}
+    ports:
+      - 5230
 volumes:
   memos_data:

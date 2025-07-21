@@ -345,7 +345,7 @@
   {
     "id": "n8n",
     "name": "n8n",
-    "version": "1.83.2",
+    "version": "1.104.0",
     "description": "n8n is an open source low-code platform for automating workflows and integrations.",
     "logo": "n8n.png",
     "links": {

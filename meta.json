@@ -694,7 +694,7 @@
   {
     "id": "listmonk",
     "name": "Listmonk",
-    "version": "v3.0.0",
+    "version": "v5.0.3",
     "description": "High performance, self-hosted, newsletter and mailing list manager with a modern dashboard.",
     "logo": "listmonk.png",
     "links": {
@@ -1036,6 +1036,19 @@
       "storage",
       "database"
     ]
+  },
+  {
+    "id": "inngest",
+    "name": "Inngest",
+    "version": "v1.8.1",
+    "description": "Inngest is a developer platform for serverless event-driven workflows. Build reliable, scalable background functions and workflows with built-in retries, scheduling, and observability.",
+    "logo": "inngest.svg",
+    "links": {
+      "github": "https://github.com/inngest/inngest",
+      "website": "https://www.inngest.com/",
+      "docs": "https://www.inngest.com/docs/self-hosting"
+    },
+    "tags": ["workflow", "automation", "self-hosted", "serverless", "events"]
   },
   {
     "id": "infisical",
@@ -1554,6 +1567,19 @@
       "event-driven",
       "applications"
     ]
+  },
+  {
+    "id": "triggerdotdev4",
+    "name": "Trigger.dev",
+    "version": "v4-beta",
+    "description": "Trigger is a platform for building event-driven applications.",
+    "logo": "triggerdotdev.svg",
+    "links": {
+      "github": "https://github.com/triggerdotdev/trigger.dev",
+      "website": "https://trigger.dev/",
+      "docs": "https://trigger.dev/docs"
+    },
+    "tags": ["event-driven", "applications"]
   },
   {
     "id": "browserless",

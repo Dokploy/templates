@@ -1,5 +1,6 @@
 [variables]
 main_domain = "${domain}"
+postgres_password = "${password:24}"
 
 [config]
 [[config.domains]]
@@ -7,23 +8,24 @@ serviceName = "app"
 port = 9_000
 host = "${main_domain}"
 
-[[config.mounts]]
-filePath = "config.toml"
-content = """
-[app]
-address = "0.0.0.0:9000"
+[config.env]
+# Database Configuration
+POSTGRES_DB = "listmonk"
+POSTGRES_USER = "listmonk" 
+POSTGRES_PASSWORD = "${postgres_password}"
 
-[db]
-host = "db"
-port = 5432
-user = "listmonk"
-password = "listmonk"
-database = "listmonk"
+# Listmonk Configuration
+LISTMONK_app__address = "0.0.0.0:9000"
+LISTMONK_db__host = "db"
+LISTMONK_db__port = "5432"
+LISTMONK_db__user = "listmonk"
+LISTMONK_db__password = "${postgres_password}"
+LISTMONK_db__database = "listmonk"
+LISTMONK_db__ssl_mode = "disable"
+LISTMONK_db__max_open = "25"
+LISTMONK_db__max_idle = "25"
+LISTMONK_db__max_lifetime = "300s"
+LISTMONK_db__params = ""
 
-ssl_mode = "disable"
-max_open = 25
-max_idle = 25
-max_lifetime = "300s"
-
-params = ""
-"""
+# Timezone
+TZ = "Etc/UTC"

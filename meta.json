@@ -2,7 +2,7 @@
   {
     "id": "autobase",
     "name": "Autobase",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "description": "Autobase for PostgreSQL® is an open-source alternative to cloud-managed databases (DBaaS) such as Amazon RDS, Google Cloud SQL, Azure Database, and more.",
     "links": {
       "github": "https://github.com/vitabaks/autobase",
@@ -13,8 +13,9 @@
     "tags": [
       "database",
       "postgres",
+      "automation",
       "self-hosted",
-      "server"
+      "dbaas"
     ]
   },
   {

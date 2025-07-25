@@ -3570,5 +3570,20 @@
       "oauth2",
       "openid-connect"
     ]
+  },
+  {
+    "id": "openpanel",
+    "name": "OpenPanel",
+    "version": "latest",
+    "description": "An open-source web and product analytics platform that combines the power of Mixpanel with the ease of Plausible and one of the best Google Analytics replacements.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/Openpanel-dev/openpanel",
+      "website": "https://openpanel.dev/",
+      "docs": "https://openpanel.dev/docs"
+    },
+    "tags": [
+      "analytics"
+    ]
   }
 ]

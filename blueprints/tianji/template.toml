@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+# API Key: Used for session security.
+jwt_secret = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "tianji"
+port = 12345
+host = "${main_domain}"
+
+[[config.mounts]]
+serviceName = "postgres"
+type = "volume"
+source = "tianji-db-data"
+target = "/var/lib/postgresql/data"

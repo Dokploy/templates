@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "dumbpad"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+NODE_ENV = "production"
+SITE_TITLE = "DumbPad"
+BASE_URL = "https://${main_domain}"
+# Set a PIN (4-10 digits) for access protection. Leave empty to disable.
+DUMBPAD_PIN = ""
+LOCKOUT_TIME = "15"
+MAX_ATTEMPTS = "5"
+COOKIE_MAX_AGE = "24"
+PAGE_HISTORY_COOKIE_AGE = "365"
+
+[[config.mounts]]

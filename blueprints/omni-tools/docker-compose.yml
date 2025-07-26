@@ -1,0 +1,6 @@
+services:
+  omni-tools:
+    image: iib0011/omni-tools:latest
+    restart: unless-stopped
+    ports:
+      - 80

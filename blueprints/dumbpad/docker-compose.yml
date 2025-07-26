@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  dumbpad:
+    image: dumbwareio/dumbpad:latest
+    restart: unless-stopped
+    ports:
+      - 3000
+    volumes:
+      - dumbpad-data:/app/data
+
+volumes:
+  dumbpad-data: {}

@@ -1,0 +1,28 @@
+[variables]
+main_domain = "${domain}"
+admin_email = "${email}"
+mysql_root_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "linkstack"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+TZ = "Europe/Berlin"
+SERVER_ADMIN = "${admin_email}"
+HTTP_SERVER_NAME = "${main_domain}"
+HTTPS_SERVER_NAME = "${main_domain}"
+LOG_LEVEL = "info"
+PHP_MEMORY_LIMIT = "256M"
+UPLOAD_MAX_FILESIZE = "8M"
+MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
+
+[[config.mounts]]
+volume = "linkstack-data"
+target = "/htdocs"
+
+[[config.mounts]]
+volume = "mysql-data"
+target = "/var/lib/mysql"

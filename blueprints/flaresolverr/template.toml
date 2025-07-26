@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "flaresolverr"
+port = 8191
+host = "${main_domain}"
+
+[config.env]
+LOG_LEVEL = "info"
+LOG_HTML = "false"
+CAPTCHA_SOLVER = "none"
+TZ = "Europe/London"
+
+[[config.mounts]]

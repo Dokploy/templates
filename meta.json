@@ -28,13 +28,7 @@
       "docs": "https://cap.so/docs/"
     },
     "logo": "capso.png",
-    "tags": [
-      "web",
-      "s3",
-      "mysql",
-      "development",
-      "self-hosted"
-    ]
+    "tags": ["web", "s3", "mysql", "development", "self-hosted"]
   },
   {
     "id": "authentik",
@@ -3322,16 +3316,16 @@
   {
     "id": "movary",
     "name": "Movary",
-    "version": "0.66.2",
-    "description": "Self-hosted web app to track, rate and explore your movie watch history. Offers detailed statistics, third-party integrations for platforms like Trakt, Letterboxd, Netflix, and automated play tracking for Plex, Jellyfin, Emby or Kodi.",
+    "version": "latest",
+    "description": "Movary is a self-hosted platform for tracking and managing your watched movies using TMDB.",
     "logo": "movary.png",
     "links": {
       "github": "https://github.com/leepeuker/movary",
       "website": "https://movary.org/",
-      "docs": "https://movary.org/docs/",
-      "demo": "https://demo.movary.org/"
+      "docs": "https://docs.movary.org/"
     },
     "tags": [
+      "media",
       "movies",
       "movie-tracker",
       "self-hosted",
@@ -3518,24 +3512,6 @@
     ]
   },
   {
-    "id": "gitlab-ce",
-    "name": "GitLab CE",
-    "version": "latest",
-    "description": "GitLab Community Edition is a free and open source platform for managing Git repositories, CI/CD pipelines, and project management.",
-    "logo": "gitlab-ce.svg",
-    "links": {
-      "github": "https://gitlab.com/gitlab-org/gitlab-ce",
-      "website": "https://gitlab.com/",
-      "docs": "https://docs.gitlab.com/ee/"
-    },
-    "tags": [
-      "git",
-      "ci-cd",
-      "version-control",
-      "project-management"
-    ]
-  },
-  {
     "id": "memos",
     "name": "Memos",
     "version": "latest",
@@ -3546,10 +3522,352 @@
       "website": "https://www.usememos.com/",
       "docs": "https://www.usememos.com/docs"
     },
+    "tags": ["productivity", "notes", "bookmarks"]
+  },
+  {
+    "id": "linkstack",
+    "name": "LinkStack",
+    "version": "latest",
+    "description": "LinkStack is an open-source link-in-bio platform for sharing multiple links using a customizable landing page.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/linkstackorg/linkstack",
+      "website": "https://linkstack.org/",
+      "docs": "https://docs.linkstack.org/"
+    },
+    "tags": ["bio", "personal", "cms", "php"]
+  },
+  {
+    "id": "opengist",
+    "name": "OpenGist",
+    "version": "1",
+    "description": "OpenGist is a self-hosted pastebin alternative.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/thomiceli/opengist",
+      "website": "https://github.com/thomiceli/opengist",
+      "docs": "https://github.com/thomiceli/opengist"
+    },
     "tags": [
-      "productivity",
-      "notes",
-      "bookmarks"
+      "pastebin",
+      "code",
+      "snippets",
+      "self-hosted"
+    ]
+  },
+  {
+    "id": "snapp",
+    "name": "Snapp",
+    "version": "0.9-rc-020",
+    "description": "Snapp is a self-hosted screenshot sharing service with user management and authentication.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/UraniaDev/snapp",
+      "website": "https://github.com/UraniaDev/snapp",
+      "docs": "https://github.com/UraniaDev/snapp"
+    },
+    "tags": [
+      "screenshot",
+      "sharing",
+      "self-hosted",
+      "authentication"
+    ]
+  },
+  {
+    "id": "commafeed",
+    "name": "CommaFeed",
+    "version": "latest",
+    "description": "CommaFeed is an open-source feed reader and news aggregator, designed to be lightweight and extensible, with PostgreSQL as its database.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/Athou/commafeed",
+      "website": "https://www.commafeed.com/",
+      "docs": "https://github.com/Athou/commafeed/wiki"
+    },
+    "tags": [
+      "feed-reader",
+      "news-aggregator",
+      "rss"
+    ]
+  },
+  {
+    "id": "convertx",
+    "name": "ConvertX",
+    "version": "latest",
+    "description": "ConvertX is a service for converting media files, with optional user registration and file management features.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/c4illin/ConvertX",
+      "website": "https://github.com/c4illin/ConvertX",
+      "docs": "https://github.com/c4illin/ConvertX#environment-variables"
+    },
+    "tags": [
+      "media",
+      "converter",
+      "ffmpeg"
+    ]
+  },
+  {
+    "id": "metube",
+    "name": "MeTube",
+    "version": "latest",
+    "description": "MeTube is a web-based YouTube downloader that allows downloading videos and audio using yt-dlp.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/alexta69/metube",
+      "website": "https://github.com/alexta69/metube",
+      "docs": "https://github.com/alexta69/metube/wiki"
+    },
+    "tags": [
+      "downloader",
+      "youtube",
+      "media"
+    ]
+  },
+  {
+    "id": "pinchflat",
+    "name": "Pinchflat",
+    "version": "latest",
+    "description": "Pinchflat is a self-hosted YouTube downloader that allows you to download videos and playlists with a simple web interface.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/kieraneglin/pinchflat",
+      "website": "https://github.com/kieraneglin/pinchflat",
+      "docs": "https://github.com/kieraneglin/pinchflat"
+    },
+    "tags": [
+      "youtube",
+      "downloader",
+      "media"
+    ]
+  },
+  {
+    "id": "yt-dlp-webui",
+    "name": "yt-dlp-webui",
+    "version": "latest",
+    "description": "yt-dlp-webui is a web interface for yt-dlp, allowing you to download videos and audio from various platforms with a simple web UI.",
+    "logo": "logo.ico",
+    "links": {
+      "github": "https://github.com/marcopiovanello/yt-dlp-web-ui",
+      "website": "https://github.com/marcopiovanello/yt-dlp-web-ui",
+      "docs": "https://github.com/marcopiovanello/yt-dlp-web-ui"
+    },
+    "tags": [
+      "downloader",
+      "youtube",
+      "media",
+      "webui"
+    ]
+  },
+  {
+    "id": "flaresolverr",
+    "name": "FlareSolverr",
+    "version": "latest",
+    "description": "FlareSolverr is a proxy server to bypass Cloudflare and DDoS-GUARD protection.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/FlareSolverr/FlareSolverr",
+      "website": "https://github.com/FlareSolverr/FlareSolverr",
+      "docs": "https://github.com/FlareSolverr/FlareSolverr"
+    },
+    "tags": [
+      "proxy",
+      "cloudflare",
+      "bypass",
+      "ddos-guard"
+    ]
+  },
+  {
+    "id": "neko",
+    "name": "Neko",
+    "version": "latest",
+    "description": "Neko is a self-hosted virtual browser that runs in Docker and allows you to share browser sessions with others.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/m1k1o/neko",
+      "website": "https://github.com/m1k1o/neko",
+      "docs": "https://github.com/m1k1o/neko"
+    },
+    "tags": [
+      "browser",
+      "virtual",
+      "sharing",
+      "remote"
+    ]
+  },
+  {
+    "id": "omni-tools",
+    "name": "Omni-Tools",
+    "version": "latest",
+    "description": "Omni-Tools is a collection of useful tools in a single self-hosted web application.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/iib0011/omni-tools",
+      "website": "https://github.com/iib0011/omni-tools",
+      "docs": "https://github.com/iib0011/omni-tools"
+    },
+    "tags": [
+      "tools",
+      "utilities",
+      "collection",
+      "self-hosted"
+    ]
+  },
+  {
+    "id": "openhands",
+    "name": "OpenHands",
+    "version": "0.1.1",
+    "description": "OpenHands is an open-source platform for running and managing AI agents.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/all-hands-ai/OpenHands",
+      "website": "https://github.com/all-hands-ai/OpenHands",
+      "docs": "https://github.com/all-hands-ai/OpenHands"
+    },
+    "tags": [
+      "ai",
+      "agents",
+      "llm",
+      "openai"
+    ]
+  },
+  {
+    "id": "web-check",
+    "name": "Web-Check",
+    "version": "latest",
+    "description": "Web-Check is a powerful all-in-one website analyzer that provides detailed insights into any website's security, performance, and functionality.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/lissy93/web-check",
+      "website": "https://github.com/lissy93/web-check",
+      "docs": "https://github.com/lissy93/web-check"
+    },
+    "tags": [
+      "website-analyzer",
+      "security",
+      "performance",
+      "seo"
+    ]
+  },
+  {
+    "id": "dumbdrop",
+    "name": "DumbDrop",
+    "version": "latest",
+    "description": "DumbDrop is a simple, self-hosted file sharing service with no database or authentication required.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/dumbwareio/dumbdrop",
+      "website": "https://www.dumbware.io/software/DumbDrop/",
+      "docs": "https://github.com/dumbwareio/dumbdrop"
+    },
+    "tags": [
+      "file-sharing",
+      "self-hosted",
+      "simple"
+    ]
+  },
+  {
+    "id": "dumbassets",
+    "name": "DumbAssets",
+    "version": "latest",
+    "description": "DumbAssets is a simple, self-hosted asset tracking service with no database or authentication required.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/dumbwareio/dumbassets",
+      "website": "https://www.dumbware.io/software/DumbAssets/",
+      "docs": "https://github.com/dumbwareio/dumbassets"
+    },
+    "tags": [
+      "asset-tracking",
+      "self-hosted",
+      "simple"
+    ]
+  },
+  {
+    "id": "dumbpad",
+    "name": "DumbPad",
+    "version": "latest",
+    "description": "DumbPad is a simple, self-hosted notepad service with PIN protection and no database required.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/dumbwareio/dumbpad",
+      "website": "https://www.dumbware.io/software/DumbPad/",
+      "docs": "https://github.com/dumbwareio/dumbpad"
+    },
+    "tags": [
+      "notepad",
+      "self-hosted",
+      "simple"
+    ]
+  },
+  {
+    "id": "dumbbudget",
+    "name": "DumbBudget",
+    "version": "latest",
+    "description": "DumbBudget is a simple, self-hosted budget tracking service with PIN protection and no database required.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/dumbwareio/dumbbudget",
+      "website": "https://www.dumbware.io/software/DumbBudget/",
+      "docs": "https://github.com/dumbwareio/dumbbudget"
+    },
+    "tags": [
+      "budget",
+      "finance",
+      "self-hosted",
+      "simple"
+    ]
+  },
+  {
+    "id": "tianji",
+    "name": "Tianji",
+    "version": "latest",
+    "description": "Tianji is a lightweight web analytic service and uptime monitoring tool.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/msgbyte/tianji",
+      "website": "https://github.com/msgbyte/tianji",
+      "docs": "https://github.com/msgbyte/tianji"
+    },
+    "tags": [
+      "analytics",
+      "monitoring",
+      "web",
+      "uptime"
+    ]
+  },
+  {
+    "id": "directory-lister",
+    "name": "Directory Lister",
+    "version": "latest",
+    "description": "Directory Lister is a simple PHP application that lists the contents of any web-accessible directory and allows navigation there within.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/DirectoryLister/DirectoryLister",
+      "website": "https://www.directorylister.com/",
+      "docs": "https://docs.directorylister.com/"
+    },
+    "tags": [
+      "file-manager",
+      "directory-listing",
+      "php"
+    ]
+  },
+  {
+    "id": "grimoire",
+    "name": "Grimoire",
+    "version": "latest",
+    "description": "Grimoire is a self-hosted bookmarking app designed for speed and simplicity.",
+    "logo": "logo.webp",
+    "links": {
+      "github": "https://github.com/goniszewski/grimoire",
+      "website": "https://github.com/goniszewski/grimoire",
+      "docs": "https://github.com/goniszewski/grimoire"
+    },
+    "tags": [
+      "bookmarks",
+      "self-hosted",
+      "knowledge-management"
     ]
   },
   {

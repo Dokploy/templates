@@ -1,0 +1,19 @@
+[variables]
+app_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "directory-lister" # Must match the service name in docker-compose.yml
+port = 80
+host = "${app_domain}"
+
+[config.env]
+# See configuration docs for additional variables: https://www.directorylister.com/docs/configuration
+APP_LANGUAGE = "en"
+DISPLAY_READMES = "true"
+READMES_FIRST = "false"
+ZIP_DOWNLOADS = "true"
+TIMEZONE = "UTC"
+
+
+[[config.mounts]]

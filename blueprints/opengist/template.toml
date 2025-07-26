@@ -1,0 +1,18 @@
+# template.toml
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "opengist"
+port = 6157
+host = "${main_domain}"
+
+[config.env]
+UID = "1001"
+GID = "1001"
+OG_LOG_LEVEL = "info"
+
+[[config.mounts]]
+# This template uses a named volume defined in the docker-compose.yml,
+# so no file mounts need to be configured here.

@@ -1,0 +1,24 @@
+version: '3'
+services:
+  tianji:
+    image: moonrailgun/tianji
+    ports:
+      - "12345"
+    environment:
+      DATABASE_URL: postgresql://tianji:tianji@postgres:5432/tianji
+      # API Key
+      JWT_SECRET: ${jwt_secret}
+      ALLOW_REGISTER: "false"
+      ALLOW_OPENAPI: "true"
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:15.4-alpine
+    environment:
+      POSTGRES_DB: tianji
+      POSTGRES_USER: tianji
+      POSTGRES_PASSWORD: tianji
+    volumes:
+      - tianji-db-data:/var/lib/postgresql/data
+volumes:
+  tianji-db-data: {}

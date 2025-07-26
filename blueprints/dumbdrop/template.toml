@@ -1,0 +1,24 @@
+[variables]
+main_domain = "https://${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "dumbdrop"
+port = 3000
+host = "${domain}"
+
+[config.env]
+UPLOAD_DIR = "/app/uploads"
+DUMBDROP_TITLE = "DumbDrop"
+MAX_FILE_SIZE = "1024"
+DUMBDROP_PIN = "${password:6}"
+AUTO_UPLOAD = "true"
+BASE_URL = "${main_domain}"
+ALLOWED_ORIGINS = ""
+
+APPRISE_URL = ""
+APPRISE_MESSAGE = "New file uploaded {filename} ({size}), Storage used {storage}"
+APPRISE_SIZE_UNIT = "Auto"
+ALLOWED_EXTENSIONS = ""
+
+[[config.mounts]]

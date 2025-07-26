@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "grimoire"
+port = 5173
+host = "${main_domain}"
+
+[config.env]
+PORT = "5173"
+PUBLIC_ORIGIN = "https://${main_domain}"
+PUBLIC_HTTPS_ONLY = "true"
+PUBLIC_SIGNUP_DISABLED = "false"
+
+[[config.mounts]]

@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "commafeed"
+port = 8082
+host = "${main_domain}"
+
+[config.env]
+# No environment variables specified for CommaFeed; add if needed
+# Example: COMMAFEED_ADMIN_USER = "${username}"
+# Example: COMMAFEED_ADMIN_PASSWORD = "${password:32}"
+
+[[config.mounts]]
+filePath = "/files/commafeed-data"
+content = ""

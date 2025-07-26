@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  linkstack:
+    image: linkstackorg/linkstack:latest
+    environment:
+      TZ: "Europe/Berlin"
+      SERVER_ADMIN: "${admin_email}"
+      HTTP_SERVER_NAME: "${main_domain}"
+      HTTPS_SERVER_NAME: "${main_domain}"
+      LOG_LEVEL: "info"
+      PHP_MEMORY_LIMIT: "256M"
+      UPLOAD_MAX_FILESIZE: "8M"
+    volumes:
+      - linkstack-data:/htdocs
+    restart: unless-stopped
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: ${mysql_root_password}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  linkstack-data: {}
+  mysql-data: {}

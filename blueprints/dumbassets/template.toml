@@ -1,0 +1,27 @@
+[variables]
+main_domain = "${domain}"
+default_pin = "${password:4}"
+
+[config]
+[[config.domains]]
+serviceName = "dumbassets"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+NODE_ENV = "production"
+DEBUG = "false"
+SITE_TITLE = "DumbAssets"
+BASE_URL = "https://${main_domain}"
+DUMBASSETS_PIN = "${default_pin}"
+ALLOWED_ORIGINS = "*"
+DEMO_MODE = "false"
+APPRISE_URL = ""
+CURRENCY_CODE = "USD"
+CURRENCY_LOCALE = "en-US"
+
+[[config.mounts]]
+serviceName = "dumbassets"
+type = "volume"
+source = "dumbassets-data"
+target = "/app/data"

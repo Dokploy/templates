@@ -1,0 +1,31 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "web-check"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+GOOGLE_CLOUD_API_KEY = ""
+TORRENT_IP_API_KEY = ""
+SECURITY_TRAILS_API_KEY = ""
+BUILT_WITH_API_KEY = ""
+URL_SCAN_API_KEY = ""
+TRANCO_USERNAME = ""
+TRANCO_API_KEY = ""
+CLOUDMERSIVE_API_KEY = ""
+
+REACT_APP_SHODAN_API_KEY = ""
+REACT_APP_WHO_API_KEY = ""
+
+# CHROME_PATH = "/usr/bin/chromium" 
+PORT = "3000"                    
+DISABLE_GUI = "false"             
+API_TIMEOUT_LIMIT = "10000"      
+API_CORS_ORIGIN = "*"            
+API_ENABLE_RATE_LIMIT = "true"    
+ENABLE_ANALYTICS = "false"       
+
+[[config.mounts]]

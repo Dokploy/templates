@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  snapp:
+    image: uraniadev/snapp:0.9-rc-020
+    ports:
+      - 3000
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_PROVIDER=${DATABASE_PROVIDER}
+      - TOKEN_SECRET=${TOKEN_SECRET} # API Key for authentication token
+      - ORIGIN=${ORIGIN}
+      - DISABLED_EMAIL_AND_PASSWORD=${DISABLED_EMAIL_AND_PASSWORD}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - PORT=${PORT}
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - ENABLE_SIGNUP=${ENABLE_SIGNUP}
+      - ENABLED_MFA=${ENABLED_MFA}
+      - PUBLIC_URL=${PUBLIC_URL}
+      - APPNAME=${APPNAME}
+      - PUBLIC_EXTRA_GROUPS_EDITABLE=${PUBLIC_EXTRA_GROUPS_EDITABLE}
+      - URLS_VIA_GROUPS_ONLY=${URLS_VIA_GROUPS_ONLY}
+      - HOST=${HOST}
+    volumes:
+      - ../files/snapp-db:/app/db.sqlite
+volumes:
+  snapp-db: {}

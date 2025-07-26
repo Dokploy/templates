@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "omni-tools"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+# API Key
+LOCIZE_API_KEY = ""
+
+[[config.mounts]]

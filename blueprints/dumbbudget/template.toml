@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+# PIN used to access the site
+dumbbudget_pin = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "dumbbudget"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+DUMBBUDGET_PIN = "${dumbbudget_pin}"
+BASE_URL = "${main_domain}"
+CURRENCY = "USD"
+SITE_TITLE = "DumbBudget"
+INSTANCE_NAME = ""
+# (OPTIONAL) Restrict origins - ex: https://subdomain.domain.tld
+ALLOWED_ORIGINS = "${main_domain}"
+
+# The named volume 'dumbbudget-data' is defined in the docker-compose.yml.
+# According to Dokploy's template examples, volumes declared in the compose
+# file are automatically managed and do not require a separate entry here.
+[[config.mounts]]

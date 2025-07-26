@@ -1,33 +1,24 @@
 [variables]
 main_domain = "${domain}"
-invite_only = "false"
-email_server_url = "mail.example.com"
-email_server_port = "587"
-email_server_auth_user = "mail_user"
-email_server_auth_password = "${password:32}" # Generates a random 32-character password for email server authentication
-admin_email = "mail@example.com"
+mail_password = "${password:32}"
 
 [config]
 [[config.domains]]
-serviceName = "server" # Matches the service name in docker-compose.yml
-port = 3000
-host = "${main_domain}"
+serviceName = "client"
+port = 80
+host = "habitica.${main_domain}"
 
 [config.env]
-NODE_DB_URI="mongodb://mongo/habitica",
-BASE_URL="http://${main_domain}:3000",
-INVITE_ONLY="${invite_only}",
-EMAIL_SERVER_URL="${email_server_url}",
-EMAIL_SERVER_PORT="${email_server_port}",
-EMAIL_SERVER_AUTH_USER="${email_server_auth_user}",
-EMAIL_SERVER_AUTH_PASSWORD="${email_server_auth_password}", # API key for email server authentication
-ADMIN_EMAIL="${admin_email}"
 
+BASE_URL="https://habitica.${main_domain}"
+INVITE_ONLY="false"
+EMAIL_SERVER_URL="mail.example.com"
+EMAIL_SERVER_PORT="587"
+EMAIL_SERVER_AUTH_USER="mail_user"
+EMAIL_SERVER_AUTH_PASSWORD="${mail_password}"
 
 [[config.mounts]]
-filePath = "/files/db"
-content = ""
-
-[[config.mounts]]
-filePath = "/files/dbconf"
-content = ""
+serviceName = "mongo"
+type = "volume"
+source = "habitica-mongo-data"
+target = "/data/db"

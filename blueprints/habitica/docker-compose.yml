@@ -1,4 +1,5 @@
 version: "3.8"
+
 services:
   server:
     image: docker.io/awinterstein/habitica-server:latest
@@ -7,30 +8,26 @@ services:
       - mongo
     environment:
       - NODE_DB_URI=mongodb://mongo/habitica
-      - BASE_URL=${BASE_URL}
-      - INVITE_ONLY=${INVITE_ONLY}
-      - EMAIL_SERVER_URL=${EMAIL_SERVER_URL}
-      - EMAIL_SERVER_PORT=${EMAIL_SERVER_PORT}
-      - EMAIL_SERVER_AUTH_USER=${EMAIL_SERVER_AUTH_USER}
-      - EMAIL_SERVER_AUTH_PASSWORD=${EMAIL_SERVER_AUTH_PASSWORD} # API key for email server authentication
-      - ADMIN_EMAIL=${ADMIN_EMAIL}
-    ports:
-      - 3000
-  mongo:
-    image: docker.io/mongo:8.0 # Replaced 'latest' with a specific version for stability
+
+  client:
+    image: docker.io/awinterstein/habitica-client:latest
     restart: unless-stopped
-    hostname: mongo
+    depends_on:
+      - server
+    ports:
+      - "80"
+
+  mongo:
+    image: docker.io/mongo:latest
+    restart: unless-stopped
     command: ["--replSet", "rs", "--bind_ip_all", "--port", "27017"]
     healthcheck:
       test: echo "try { rs.status() } catch (err) { rs.initiate() }" | mongosh --port 27017 --quiet
       interval: 10s
       timeout: 30s
-      start_period: 0s
-      start_interval: 1s
       retries: 30
     volumes:
-      - ../files/db:/data/db:rw
-      - ../files/dbconf:/data/configdb:rw
+      - habitica-mongo-data:/data/db
+
 volumes:
-  db:
-  dbconf:
+  habitica-mongo-data: {}

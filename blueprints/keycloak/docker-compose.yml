@@ -10,24 +10,46 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.0
     environment:
+      # Database configuration
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+
+      # Admin credentials (updated to new format)
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+
+      # Hostname configuration for reverse proxy (HTTPS aware)
       KC_HOSTNAME: ${KC_HOSTNAME}
-      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_PORT: 443
       KC_HTTP_ENABLED: true
       KC_HOSTNAME_STRICT_HTTPS: false
+
+      # Proxy configuration for HTTPS reverse proxy
+      KC_PROXY_HEADERS: xforwarded
+
+      # Health and metrics
       KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+
+      # Log level
+      KC_LOG_LEVEL: INFO
     depends_on:
-      - postgres
-    command: start-dev
+      postgres:
+        condition: service_healthy
+    ports:
+      - 8080
+    command: ["start"]
     restart: always
 
 volumes:

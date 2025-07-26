@@ -35,7 +35,7 @@ services:
       KC_HOSTNAME_STRICT_HTTPS: true
       
       # Proxy configuration for reverse proxy/load balancer
-      KC_PROXY_HEADERS: xforwarded
+      KC_PROXY_HEADERS: forwarded
       
       # HTTP configuration for edge TLS termination
       KC_HTTP_ENABLED: true

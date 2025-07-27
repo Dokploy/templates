@@ -25,15 +25,15 @@ services:
       - |
         echo 'Setting up providers directory...'
         mkdir -p /providers
-        echo 'Downloading Apple Identity Provider JAR v1.14.0...'
-        curl -L -f -o /providers/apple-identity-provider-keycloak-1.14.0.jar https://github.com/klausbetz/apple-identity-provider-keycloak/releases/download/1.14.0/apple-identity-provider-1.14.0.jar
+        echo 'Downloading Apple Identity Provider JAR v1.15.0...'
+        curl -L -f -o /providers/apple-identity-provider-keycloak-1.15.0.jar https://github.com/klausbetz/apple-identity-provider-keycloak/releases/download/1.15.0/apple-identity-provider-1.15.0.jar
         chmod 644 /providers/*.jar
         echo 'Provider setup complete'
         ls -la /providers/
     restart: "no"
 
   keycloak-build:
-    image: quay.io/keycloak/keycloak:26.0
+    image: quay.io/keycloak/keycloak:26.3.0
     environment:
       KC_DB: postgres
       KC_FEATURES: docker
@@ -47,7 +47,7 @@ services:
     restart: "no"
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.0
+    image: quay.io/keycloak/keycloak:26.3.0
     environment:
       # Database configuration
       KC_DB: postgres
@@ -85,8 +85,14 @@ services:
         condition: service_completed_successfully
     ports:
       - 8080
-    command: ["start"]
+    command: ["start", "--optimized"]
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
 
 volumes:
   postgres_data:

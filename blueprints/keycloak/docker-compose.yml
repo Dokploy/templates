@@ -37,13 +37,16 @@ services:
     environment:
       KC_DB: postgres
       KC_FEATURES: docker
+      # Build-time options
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
     volumes:
       - keycloak-providers:/opt/keycloak/providers:ro
       - keycloak-built:/opt/keycloak/lib/quarkus
     depends_on:
       keycloak-init:
         condition: service_completed_successfully
-    command: ["build", "--db=postgres"]
+    command: ["build", "--db=postgres", "--health-enabled=true", "--metrics-enabled=true"]
     restart: "no"
 
   keycloak:
@@ -55,7 +58,7 @@ services:
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
 
-      # Admin credentials (updated to new format)
+      # Admin credentials
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
 
@@ -67,10 +70,6 @@ services:
 
       # Proxy configuration for HTTPS reverse proxy
       KC_PROXY_HEADERS: xforwarded
-
-      # Health and metrics
-      KC_HEALTH_ENABLED: true
-      KC_METRICS_ENABLED: true
 
       # Log level
       KC_LOG_LEVEL: INFO

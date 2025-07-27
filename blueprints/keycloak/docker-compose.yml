@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16.2
@@ -15,6 +13,38 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  keycloak-init:
+    image: curlimages/curl:latest
+    user: "0:0"
+    volumes:
+      - keycloak-providers:/providers
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo 'Setting up providers directory...'
+        mkdir -p /providers
+        echo 'Downloading Apple Identity Provider JAR v1.14.0...'
+        curl -L -f -o /providers/apple-identity-provider-keycloak-1.14.0.jar https://github.com/klausbetz/apple-identity-provider-keycloak/releases/download/1.14.0/apple-identity-provider-1.14.0.jar
+        chmod 644 /providers/*.jar
+        echo 'Provider setup complete'
+        ls -la /providers/
+    restart: "no"
+
+  keycloak-build:
+    image: quay.io/keycloak/keycloak:26.0
+    environment:
+      KC_DB: postgres
+      KC_FEATURES: docker
+    volumes:
+      - keycloak-providers:/opt/keycloak/providers:ro
+      - keycloak-built:/opt/keycloak/lib/quarkus
+    depends_on:
+      keycloak-init:
+        condition: service_completed_successfully
+    command: ["build", "--db=postgres"]
+    restart: "no"
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.0
@@ -44,9 +74,15 @@ services:
 
       # Log level
       KC_LOG_LEVEL: INFO
+
+    volumes:
+      - keycloak-providers:/opt/keycloak/providers:ro
+      - keycloak-built:/opt/keycloak/lib/quarkus:ro
     depends_on:
       postgres:
         condition: service_healthy
+      keycloak-build:
+        condition: service_completed_successfully
     ports:
       - 8080
     command: ["start"]
@@ -54,3 +90,5 @@ services:
 
 volumes:
   postgres_data:
+  keycloak-providers:
+  keycloak-built:

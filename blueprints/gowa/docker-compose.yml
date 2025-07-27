@@ -1,5 +1,5 @@
 services:
-  whatsapp:
+  gowa:
     image: aldinokemal2104/go-whatsapp-web-multidevice
     restart: always
     ports:
@@ -15,5 +15,5 @@ services:
       - --account-validation=false
 
 volumes:
-  whatsapp:
+  gowa:
 

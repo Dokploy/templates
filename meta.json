@@ -3348,11 +3348,11 @@
     ]
   },
   {
-    "id": "go-whatsapp-web-multidevice",
-    "name": "WhatsApp API Multi Device Version",
+    "id": "gowa",
+    "name": "GOWA - Golang Whatsapp",
     "version": "latest",
-    "description": "WhatsApp API Multi Device Version the open-source, self-hosted whatsapp api. Send a chat, image and voice note with your own server.",
-    "logo": "go-whatsapp-web-multidevice.svg",
+    "description": "Golang WhatsApp - Built with Go for efficient memory use",
+    "logo": "gowa.svg",
     "links": {
       "github": "https://github.com/aldinokemal/go-whatsapp-web-multidevice",
       "website": "https://github.com/aldinokemal/go-whatsapp-web-multidevice",

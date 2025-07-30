@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  commafeed:
+    image: athou/commafeed:latest-h2
+    restart: unless-stopped
+    volumes:
+      - ../files/commafeed-data:/commafeed/data
+    ports:
+      - 8082

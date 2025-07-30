@@ -1,0 +1,43 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "metube"
+port = 8081
+host = "${main_domain}"
+
+[config.env]
+UID = "1000" 
+GID = "1000" 
+UMASK = "022"
+DEFAULT_THEME = "auto" 
+DOWNLOAD_DIR = "/downloads" 
+AUDIO_DOWNLOAD_DIR = "/downloads" 
+DOWNLOAD_DIRS_INDEXABLE = "false" 
+CUSTOM_DIRS = "true" 
+CREATE_CUSTOM_DIRS = "true"
+CUSTOM_DIRS_EXCLUDE_REGEX = "(^|/)[.@].*$" # Regex to exclude certain directories
+STATE_DIR = "/downloads/.metube" 
+TEMP_DIR = "/downloads" 
+DELETE_FILE_ON_TRASHCAN = "false" # Delete files when trashed from UI
+URL_PREFIX = "/" 
+PUBLIC_HOST_URL = "" # Base URL for download links (optional)
+HTTPS = "false" # Use HTTPS (requires CERTFILE and KEYFILE)
+CERTFILE = "" 
+KEYFILE = ""
+PUBLIC_HOST_AUDIO_URL = "" 
+OUTPUT_TEMPLATE = "%(title)s.%(ext)s" # Filename template for videos
+OUTPUT_TEMPLATE_CHAPTER = "%(title)s - %(section_number)s %(section_title)s.%(ext)s" 
+OUTPUT_TEMPLATE_PLAYLIST = "%(playlist_title)s/%(title)s.%(ext)s" 
+DEFAULT_OPTION_PLAYLIST_STRICT_MODE = "false" 
+DEFAULT_OPTION_PLAYLIST_ITEM_LIMIT = "0" 
+YTDL_OPTIONS = "{}" # Additional yt-dlp options in JSON format
+YTDL_OPTIONS_FILE = "" 
+ROBOTS_TXT = "" 
+DOWNLOAD_MODE = "limited" 
+MAX_CONCURRENT_DOWNLOADS = "3" 
+LOGLEVEL = "INFO" 
+ENABLE_ACCESSLOG = "false" 
+
+[[config.mounts]]

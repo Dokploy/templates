@@ -1,0 +1,22 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:16}"
+user_password = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "neko"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+NEKO_MEMBER_PROVIDER = "multiuser"
+NEKO_DESKTOP_SCREEN = "1920x1080@30"
+# API keys used for authentication
+NEKO_MEMBER_MULTIUSER_USER_PASSWORD = "${user_password}"
+# API keys used for authentication
+NEKO_MEMBER_MULTIUSER_ADMIN_PASSWORD = "${admin_password}"
+NEKO_WEBRTC_EPR = "52000-52100"
+NEKO_WEBRTC_ICELITE = "1"
+
+[[config.mounts]]

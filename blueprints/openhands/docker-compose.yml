@@ -1,0 +1,36 @@
+# The 'version' attribute is obsolete and has been removed.
+services:
+  openhands:
+    # Corrected the Docker image to what appears to be the official registry path.
+    # This was the cause of the "pull access denied" error.
+    image: docker.all-hands.dev/all-hands-ai/openhands:latest
+    restart: unless-stopped
+
+    # The port is exposed without mapping. Dokploy handles the routing via the domain.
+    ports:
+      - "3000"
+
+    # Environment variables are sourced from the template.toml file.
+    environment:
+      - SANDBOX_RUNTIME_CONTAINER_IMAGE=${SANDBOX_RUNTIME_CONTAINER_IMAGE}
+      - WORKSPACE_MOUNT_PATH=/opt/workspace_base
+
+    # Allows the container to communicate with the host's Docker daemon.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    # Volumes for persistent data. Named volumes are used instead of host mounts.
+    # The docker socket is mounted to allow OpenHands to manage other containers.
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - openhands-config:/.openhands
+      - openhands-workspace:/opt/workspace_base
+
+    # These flags are necessary for the interactive shell functionality of OpenHands.
+    stdin_open: true
+    tty: true
+
+# Named volumes are defined here to persist configuration and workspace data.
+volumes:
+  openhands-config: {}
+  openhands-workspace: {}

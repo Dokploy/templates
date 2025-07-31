@@ -1,0 +1,59 @@
+[variables]
+main_domain = "${domain}"
+surrealdb_port = "8000"
+open_notebook_port = "8502"
+
+[config]
+
+[[config.domains]]
+serviceName = "surrealdb"
+port = 8000
+host = "surrealdb-${main_domain}"
+
+[[config.domains]]
+serviceName = "open_notebook"
+port = 8502
+host = "${main_domain}"
+
+[config.env]
+SURREAL_URL = "ws://surrealdb:8000/rpc"
+SURREAL_USER = "root"
+SURREAL_PASSWORD = "root"
+SURREAL_NAMESPACE = "open_notebook"
+SURREAL_DATABASE = "staging"
+# OPEN_NOTEBOOK_PASSWORD = "" # Uncomment and set to protect Open Notebook with a password for public hosting
+# OPENAI_API_KEY = "" # API key for OpenAI integration
+# ANTHROPIC_API_KEY = "" # API key for Anthropic integration
+# GOOGLE_API_KEY = "" # API key for Google Gemini (best for long context and podcast generation)
+# VERTEX_PROJECT = "" # Google Cloud project name for Vertex AI
+# GOOGLE_APPLICATION_CREDENTIALS = "./google-credentials.json" # Path to Google credentials file
+# VERTEX_LOCATION = "us-east5" # Vertex AI location
+# MISTRAL_API_KEY = "" # API key for Mistral integration
+# DEEPSEEK_API_KEY = "" # API key for DeepSeek integration
+# OLLAMA_API_BASE = "http://10.20.30.20:11434" # Base URL for Ollama API
+# OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1" # Base URL for OpenRouter
+# OPENROUTER_API_KEY = "" # API key for OpenRouter
+# GROQ_API_KEY = "" # API key for Groq integration
+# XAI_API_KEY = "" # API key for xAI integration
+# ELEVENLABS_API_KEY = "" # API key for ElevenLabs (used for podcast feature)
+# VOYAGE_API_KEY = "" # API key for Voyage AI
+# OPENAI_COMPATIBLE_BASE_URL = "http://localhost:1234/v1" # Base URL for OpenAI-compatible endpoints
+# OPENAI_COMPATIBLE_API_KEY = "" # API key for OpenAI-compatible endpoints
+# AZURE_OPENAI_API_KEY = "" # API key for Azure OpenAI
+# AZURE_OPENAI_ENDPOINT = "" # Endpoint for Azure OpenAI
+# AZURE_OPENAI_API_VERSION = "2024-12-01-preview" # API version for Azure OpenAI
+# AZURE_OPENAI_DEPLOYMENT_NAME = "" # Deployment name for Azure OpenAI
+# LANGCHAIN_TRACING_V2 = "true" # Enable LangChain tracing for debugging
+# LANGCHAIN_ENDPOINT = "https://api.smith.langchain.com" # LangChain endpoint for debugging
+# LANGCHAIN_API_KEY = "" # API key for LangChain debugging
+# LANGCHAIN_PROJECT = "Open Notebook" # LangChain project name
+# FIRECRAWL_API_KEY = "" # API key for Firecrawl (obtain at https://firecrawl.dev/)
+# JINA_API_KEY = "" # API key for Jina (obtain at https://jina.ai/)
+
+[[config.mounts]]
+filePath = "/files/surreal_data"
+content = ""
+
+[[config.mounts]]
+filePath = "/files/notebook_data"
+content = ""

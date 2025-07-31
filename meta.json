@@ -2,7 +2,7 @@
   {
     "id": "autobase",
     "name": "Autobase",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "description": "Autobase for PostgreSQL® is an open-source alternative to cloud-managed databases (DBaaS) such as Amazon RDS, Google Cloud SQL, Azure Database, and more.",
     "links": {
       "github": "https://github.com/vitabaks/autobase",
@@ -787,7 +787,7 @@
   {
     "id": "plane",
     "name": "Plane",
-    "version": "v0.25.3",
+    "version": "v0.27.1",
     "description": "Easy, flexible, open source project management software",
     "logo": "plane.png",
     "links": {
@@ -913,6 +913,19 @@
       "docs": "https://hi.events/docs"
     },
     "tags": ["self-hosted", "open-source", "manager"]
+  },
+  {
+    "id": "habitica",
+    "name": "Habitica",
+    "version": "latest",
+    "description": "Habitica is a free habit and productivity app that treats your real life like a game. With in-game rewards and punishments to motivate you and a strong social network to inspire you, Habitica can help you achieve your goals to become healthy and hard-working.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/HabitRPG/habitica",
+      "website": "https://habitica.com/",
+      "docs": "https://habitica.fandom.com/wiki/Setting_up_Habitica_Locally"
+    },
+    "tags": ["productivity", "gamification", "habits", "self-hosted"]
   },
   {
     "id": "hoarder",
@@ -2654,16 +2667,16 @@
   {
     "id": "movary",
     "name": "Movary",
-    "version": "0.66.2",
-    "description": "Self-hosted web app to track, rate and explore your movie watch history. Offers detailed statistics, third-party integrations for platforms like Trakt, Letterboxd, Netflix, and automated play tracking for Plex, Jellyfin, Emby or Kodi.",
+    "version": "latest",
+    "description": "Movary is a self-hosted platform for tracking and managing your watched movies using TMDB.",
     "logo": "movary.png",
     "links": {
       "github": "https://github.com/leepeuker/movary",
       "website": "https://movary.org/",
-      "docs": "https://movary.org/docs/",
-      "demo": "https://demo.movary.org/"
+      "docs": "https://docs.movary.org/"
     },
     "tags": [
+      "media",
       "movies",
       "movie-tracker",
       "self-hosted",

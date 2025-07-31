@@ -55,12 +55,15 @@ services:
       KC_HOSTNAME: ${KEYCLOAK_HOSTNAME}
       KC_HOSTNAME_STRICT: false
       KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HOSTNAME_ADMIN: ${KEYCLOAK_HOSTNAME}
 
       # Enable HTTP for reverse proxy (TLS terminated at proxy)
       KC_HTTP_ENABLED: true
+      KC_HTTPS_PORT: 443
 
       # Proxy configuration - REQUIRED for Dokploy/reverse proxy
       KC_PROXY_HEADERS: xforwarded
+      KC_PROXY: edge
 
       # Log level
       KC_LOG_LEVEL: INFO
@@ -81,7 +84,7 @@ services:
         echo "Building Keycloak with providers..."
         /opt/keycloak/bin/kc.sh build --db=postgres --health-enabled=true --metrics-enabled=true
         echo "Starting Keycloak..."
-        exec /opt/keycloak/bin/kc.sh start --optimized --proxy-headers=xforwarded
+        exec /opt/keycloak/bin/kc.sh start --optimized --proxy=edge --proxy-headers=xforwarded --http-enabled=true --hostname-strict=false
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]

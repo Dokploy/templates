@@ -13,6 +13,7 @@ host = "${main_domain}"
 [config.env]
 POSTGRES_PASSWORD = "${postgres_password}"
 ADMIN_FIRST_LOGIN_PASSWD = "${admin_password}"
+ORIGIN = "https://yourdomain.com"
 
 [[config.mounts]]
 filePath = "app.conf"

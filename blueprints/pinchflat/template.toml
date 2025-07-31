@@ -1,0 +1,31 @@
+[variables]
+main_domain = "${domain}"
+basic_auth_password = "${password:32}" 
+
+[config]
+[[config.domains]]
+serviceName = "pinchflat" 
+port = 8945
+host = "${main_domain}"
+
+[config.env]
+TZ = "America/New_York"
+LOG_LEVEL = "debug"
+UMASK = "022"
+BASIC_AUTH_USERNAME = ""
+BASIC_AUTH_PASSWORD = "${basic_auth_password}" 
+EXPOSE_FEED_ENDPOINTS = "false"
+ENABLE_IPV6 = "false"
+JOURNAL_MODE = "wal"
+TZ_DATA_DIR = "/etc/elixir_tzdata_data"
+BASE_ROUTE_PATH = "/"
+YT_DLP_WORKER_CONCURRENCY = "2"
+ENABLE_PROMETHEUS = "false"
+
+[[config.mounts]]
+filePath = "/files/config"
+content = ""
+
+[[config.mounts]]
+filePath = "/files/downloads"
+content = ""

@@ -3429,91 +3429,22 @@
     ]
   },
   {
-    "id": "cyberchef",
-    "name": "CyberChef",
+    "id": "poke",
+    "name": "Poke",
     "version": "latest",
-    "description": "CyberChef is a web application for encryption, encoding, compression, and data analysis, developed by GCHQ.",
-    "logo": "cyberchef.svg",
-    "links": {
-      "github": "https://github.com/gchq/CyberChef",
-      "website": "https://gchq.github.io/CyberChef/",
-      "docs": "https://github.com/gchq/CyberChef/wiki"
-    },
-    "tags": [
-      "security",
-      "encryption",
-      "data-analysis"
-    ]
-  },
-  {
-    "id": "filestash",
-    "name": "Filestash",
-    "version": "latest",
-    "description": "Filestash is the enterprise-grade file manager connecting your storage with your identity provider and authorisations.",
-    "logo": "filestash.svg",
-    "links": {
-      "github": "https://github.com/mickael-kerjean/filestash",
-      "website": "https://www.filestash.app/",
-      "docs": "https://www.filestash.app/docs/"
-    },
-    "tags": ["file-manager", "document-editor", "self-hosted"]
-  },
-  {
-    "id": "mazanoke",
-    "name": "MAZANOKE",
-    "version": "latest",
-    "description": "MAZANOKE is a modern, self-hosted image hosting and sharing platform. Upload, organize, and share your images with a clean and intuitive interface.",
-    "logo": "mazanoke.svg",
-    "links": {
-      "github": "https://github.com/civilblur/mazanoke",
-      "website": "https://github.com/civilblur/mazanoke",
-      "docs": "https://github.com/civilblur/mazanoke"
-    },
-    "tags": [
-      "image-hosting",
-      "file-sharing",
-      "self-hosted",
-      "media",
-      "gallery"
-    ]
-  },
-  {
-    "id": "ihatemoney",
-    "name": "I Hate Money",
-    "version": "latest",
-    "description": "I Hate Money is a web application for managing shared expenses among groups of people. It helps you track who owes what to whom, making it easy to split bills and manage group finances.",
+    "description": "Poke is an open-source, self-hosted alternative to YouTube. A privacy-focused video platform that allows you to watch and share videos without tracking.",
     "logo": "image.png",
     "links": {
-      "github": "https://github.com/spiral-project/ihatemoney",
-      "website": "https://ihatemoney.org/",
-      "docs": "https://ihatemoney.readthedocs.io/"
+      "github": "https://codeberg.org/ashley/poke",
+      "website": "https://poketube.fun/",
+      "docs": "https://codeberg.org/ashley/poke"
     },
     "tags": [
-      "budget",
-      "finance",
-      "expense-sharing",
+      "video",
+      "youtube-alternative",
       "self-hosted",
-      "money-management",
-      "group-finances"
-    ]
-  },
-  {
-    "id": "searxng",
-    "name": "SearXNG",
-    "version": "latest",
-    "description": "SearXNG is a privacy-respecting, hackable metasearch engine that aggregates results from various search engines without tracking users.",
-    "logo": "searxng.png",
-    "links": {
-      "github": "https://github.com/searxng/searxng",
-      "website": "https://searxng.github.io/",
-      "docs": "https://docs.searxng.github.io/"
-    },
-    "tags": [
-      "search-engine",
-      "metasearch",
       "privacy",
-      "self-hosted",
-      "aggregator"
+      "streaming"
     ]
   },
   {

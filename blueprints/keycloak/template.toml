@@ -5,7 +5,6 @@ POSTGRES_USER = "keycloakuser"
 POSTGRES_PASSWORD = "${password:32}"
 KEYCLOAK_ADMIN = "admin"
 KEYCLOAK_ADMIN_PASSWORD = "${password:32}"
-KC_HOSTNAME = "${main_domain}"
 
 [config]
 [[config.domains]]
@@ -19,6 +18,5 @@ POSTGRES_USER = "${POSTGRES_USER}"
 POSTGRES_PASSWORD = "${POSTGRES_PASSWORD}"
 KEYCLOAK_ADMIN = "${KEYCLOAK_ADMIN}"
 KEYCLOAK_ADMIN_PASSWORD = "${KEYCLOAK_ADMIN_PASSWORD}"
-KC_HOSTNAME = "${KC_HOSTNAME}"
 
 [[config.mounts]]

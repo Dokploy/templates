@@ -265,19 +265,6 @@
     "tags": ["self-hosted", "storage"]
   },
   {
-    "id": "gitlab-ce",
-    "name": "GitLab CE",
-    "version": "latest",
-    "description": "GitLab Community Edition is a free and open source platform for managing Git repositories, CI/CD pipelines, and project management.",
-    "logo": "gitlab-ce.svg",
-    "links": {
-      "github": "https://gitlab.com/gitlab-org/gitlab-ce",
-      "website": "https://gitlab.com/",
-      "docs": "https://docs.gitlab.com/ee/"
-    },
-    "tags": ["git", "ci-cd", "version-control", "project-management"]
-  },
-  {
     "id": "ghost",
     "name": "Ghost",
     "version": "5.0.0",

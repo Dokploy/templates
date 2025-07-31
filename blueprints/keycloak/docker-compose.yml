@@ -42,9 +42,11 @@ services:
       KC_METRICS_ENABLED: true
       # Hostname configuration (needed for build optimization)
       KC_HOSTNAME: ${KC_HOSTNAME}
-      KC_HOSTNAME_PORT: 443
-      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT: false
       KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HTTP_ENABLED: true
+      # Proxy configuration
+      KC_PROXY: edge
       KC_PROXY_HEADERS: xforwarded
     volumes:
       - keycloak-providers:/opt/keycloak/providers:ro
@@ -70,11 +72,12 @@ services:
 
       # Hostname configuration for reverse proxy (HTTPS aware)
       KC_HOSTNAME: ${KC_HOSTNAME}
-      KC_HOSTNAME_PORT: 443
-      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT: false
       KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HTTP_ENABLED: true
 
       # Proxy configuration for HTTPS reverse proxy
+      KC_PROXY: edge
       KC_PROXY_HEADERS: xforwarded
 
       # Log level

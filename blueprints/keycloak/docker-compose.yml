@@ -14,8 +14,32 @@ services:
       timeout: 5s
       retries: 5
 
+  keycloak-init:
+    image: curlimages/curl:latest
+    user: "0:0"
+    volumes:
+      - keycloak_providers:/providers
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo 'Setting up providers directory...'
+        mkdir -p /providers
+        if [ ! -f /providers/apple-identity-provider-1.15.0.jar ]; then
+          echo 'Downloading Apple Identity Provider JAR v1.15.0...'
+          curl -L -f -o /providers/apple-identity-provider-1.15.0.jar \
+            https://github.com/klausbetz/apple-identity-provider-keycloak/releases/download/1.15.0/apple-identity-provider-1.15.0.jar
+          chmod 644 /providers/*.jar
+          echo 'Provider downloaded successfully'
+        else
+          echo 'Provider already exists, skipping download'
+        fi
+        ls -la /providers/
+    restart: "no"
+
   keycloak:
     image: quay.io/keycloak/keycloak:26.3.0
+    user: "0:0"
     environment:
       # Database configuration
       KC_DB: postgres
@@ -42,38 +66,20 @@ services:
       KC_LOG_LEVEL: INFO
 
     volumes:
-      - keycloak_data:/opt/keycloak/data
+      - keycloak_providers:/opt/keycloak/providers:ro
     depends_on:
       postgres:
         condition: service_healthy
+      keycloak-init:
+        condition: service_completed_successfully
     ports:
       - 8080
-    command:
-    
-      - /bin/bash
+    entrypoint:
+      - /bin/sh
       - -c
       - |
-        echo "Setting up Keycloak with Apple Identity Provider..."
-
-        # Create providers directory if it doesn't exist
-        mkdir -p /opt/keycloak/providers
-
-        # Download Apple Identity Provider if not already present
-        if [ ! -f /opt/keycloak/providers/apple-identity-provider-1.15.0.jar ]; then
-          echo "Downloading Apple Identity Provider..."
-          curl -L -f -o /opt/keycloak/providers/apple-identity-provider-1.15.0.jar \
-            https://github.com/klausbetz/apple-identity-provider-keycloak/releases/download/1.15.0/apple-identity-provider-1.15.0.jar
-          chmod 644 /opt/keycloak/providers/*.jar
-          echo "Apple Identity Provider downloaded successfully"
-        else
-          echo "Apple Identity Provider already exists"
-        fi
-
-        # Build Keycloak with the provider
-        echo "Building Keycloak..."
+        echo "Building Keycloak with providers..."
         /opt/keycloak/bin/kc.sh build --db=postgres --health-enabled=true --metrics-enabled=true
-
-        # Start Keycloak
         echo "Starting Keycloak..."
         exec /opt/keycloak/bin/kc.sh start --optimized --proxy-headers=xforwarded
     restart: always
@@ -82,8 +88,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 180s
+      start_period: 120s
 
 volumes:
   postgres_data:
-  keycloak_data:
+  keycloak_providers:

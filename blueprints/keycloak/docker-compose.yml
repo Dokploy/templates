@@ -32,6 +32,23 @@ services:
         ls -la /providers/
     restart: "no"
 
+  keycloak-build:
+    image: quay.io/keycloak/keycloak:26.3.0
+    environment:
+      KC_DB: postgres
+      KC_FEATURES: docker
+      # Build-time options
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+    volumes:
+      - keycloak-providers:/opt/keycloak/providers:ro
+      - keycloak-built:/opt/keycloak/lib/quarkus
+    depends_on:
+      keycloak-init:
+        condition: service_completed_successfully
+    command: ["build", "--db=postgres", "--health-enabled=true", "--metrics-enabled=true"]
+    restart: "no"
+
   keycloak:
     image: quay.io/keycloak/keycloak:26.3.0
     environment:
@@ -57,29 +74,26 @@ services:
       # Log level
       KC_LOG_LEVEL: INFO
 
-      # Build-time options
-      KC_FEATURES: docker
-      KC_HEALTH_ENABLED: true
-      KC_METRICS_ENABLED: true
-
     volumes:
       - keycloak-providers:/opt/keycloak/providers:ro
+      - keycloak-built:/opt/keycloak/lib/quarkus:ro
     depends_on:
       postgres:
         condition: service_healthy
-      keycloak-init:
+      keycloak-build:
         condition: service_completed_successfully
     ports:
       - 8080
-    command: ["sh", "-c", "echo 'Building Keycloak with providers...' && /opt/keycloak/bin/kc.sh build --db=postgres --health-enabled=true --metrics-enabled=true && echo 'Starting Keycloak...' && exec /opt/keycloak/bin/kc.sh start --optimized"]
+    command: ["start", "--optimized"]
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 180s
+      start_period: 120s
 
 volumes:
   postgres_data:
   keycloak-providers:
+  keycloak-built:

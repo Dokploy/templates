@@ -14,45 +14,6 @@ services:
       timeout: 5s
       retries: 5
 
-  keycloak-init:
-    image: curlimages/curl:latest
-    user: "0:0"
-    volumes:
-      - keycloak-providers:/providers
-    command:
-      - /bin/sh
-      - -c
-      - |
-        echo 'Setting up providers directory...'
-        mkdir -p /providers
-        echo 'Downloading Apple Identity Provider JAR v1.15.0...'
-        curl -L -f -o /providers/apple-identity-provider-keycloak-1.15.0.jar https://github.com/klausbetz/apple-identity-provider-keycloak/releases/download/1.15.0/apple-identity-provider-1.15.0.jar
-        chmod 644 /providers/*.jar
-        echo 'Provider setup complete'
-        ls -la /providers/
-    restart: "no"
-
-  keycloak-build:
-    image: quay.io/keycloak/keycloak:26.3.0
-    environment:
-      KC_DB: postgres
-      KC_FEATURES: docker
-      # Build-time options
-      KC_HEALTH_ENABLED: true
-      KC_METRICS_ENABLED: true
-      # Enable HTTP for reverse proxy
-      KC_HTTP_ENABLED: true
-      # Proxy configuration
-      KC_PROXY_HEADERS: xforwarded
-    volumes:
-      - keycloak-providers:/opt/keycloak/providers:ro
-      - keycloak-built:/opt/keycloak/lib/quarkus
-    depends_on:
-      keycloak-init:
-        condition: service_completed_successfully
-    command: ["build", "--db=postgres", "--health-enabled=true", "--metrics-enabled=true"]
-    restart: "no"
-
   keycloak:
     image: quay.io/keycloak/keycloak:26.3.0
     environment:
@@ -66,7 +27,7 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
 
-      # Hostname configuration - CRITICAL for reverse proxy
+      # Hostname configuration for reverse proxy
       KC_HOSTNAME: ${KEYCLOAK_HOSTNAME}
       KC_HOSTNAME_STRICT: false
       KC_HOSTNAME_STRICT_HTTPS: false
@@ -81,25 +42,48 @@ services:
       KC_LOG_LEVEL: INFO
 
     volumes:
-      - keycloak-providers:/opt/keycloak/providers:ro
-      - keycloak-built:/opt/keycloak/lib/quarkus:ro
+      - keycloak_data:/opt/keycloak/data
     depends_on:
       postgres:
         condition: service_healthy
-      keycloak-build:
-        condition: service_completed_successfully
     ports:
       - 8080
-    command: ["start", "--optimized", "--proxy-headers=xforwarded"]
+    command:
+    
+      - /bin/bash
+      - -c
+      - |
+        echo "Setting up Keycloak with Apple Identity Provider..."
+
+        # Create providers directory if it doesn't exist
+        mkdir -p /opt/keycloak/providers
+
+        # Download Apple Identity Provider if not already present
+        if [ ! -f /opt/keycloak/providers/apple-identity-provider-1.15.0.jar ]; then
+          echo "Downloading Apple Identity Provider..."
+          curl -L -f -o /opt/keycloak/providers/apple-identity-provider-1.15.0.jar \
+            https://github.com/klausbetz/apple-identity-provider-keycloak/releases/download/1.15.0/apple-identity-provider-1.15.0.jar
+          chmod 644 /opt/keycloak/providers/*.jar
+          echo "Apple Identity Provider downloaded successfully"
+        else
+          echo "Apple Identity Provider already exists"
+        fi
+
+        # Build Keycloak with the provider
+        echo "Building Keycloak..."
+        /opt/keycloak/bin/kc.sh build --db=postgres --health-enabled=true --metrics-enabled=true
+
+        # Start Keycloak
+        echo "Starting Keycloak..."
+        exec /opt/keycloak/bin/kc.sh start --optimized --proxy-headers=xforwarded
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 120s
+      retries: 5
+      start_period: 180s
 
 volumes:
   postgres_data:
-  keycloak-providers:
-  keycloak-built:
+  keycloak_data:

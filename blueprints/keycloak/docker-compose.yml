@@ -54,8 +54,7 @@ services:
       # Hostname configuration for reverse proxy
       KC_HOSTNAME: ${KEYCLOAK_HOSTNAME}
       KC_HOSTNAME_STRICT: false
-      KC_HOSTNAME_STRICT_HTTPS: false
-      KC_HOSTNAME_ADMIN: ${KEYCLOAK_HOSTNAME_ADMIN}
+      KC_HOSTNAME_ADMIN_URL: ${KEYCLOAK_HOSTNAME_ADMIN}
 
       # Enable HTTP for reverse proxy (TLS terminated at proxy)
       KC_HTTP_ENABLED: true

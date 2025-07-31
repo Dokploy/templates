@@ -71,12 +71,7 @@ services:
         condition: service_completed_successfully
     ports:
       - 8080
-    entrypoint: ["/bin/sh", "-c"]
-    command: |
-      echo "Building Keycloak with providers..."
-      /opt/keycloak/bin/kc.sh build --db=postgres --health-enabled=true --metrics-enabled=true
-      echo "Starting Keycloak..."
-      exec /opt/keycloak/bin/kc.sh start --optimized
+    command: ["sh", "-c", "echo 'Building Keycloak with providers...' && /opt/keycloak/bin/kc.sh build --db=postgres --health-enabled=true --metrics-enabled=true && echo 'Starting Keycloak...' && exec /opt/keycloak/bin/kc.sh start --optimized"]
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]

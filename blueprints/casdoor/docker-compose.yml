@@ -3,6 +3,7 @@ services:
     image: casbin/casdoor:latest
     environment:
       - RUNNING_IN_DOCKER=true
+      - origin=${ORIGIN}
     volumes:
       - ../files/app.conf:/conf/app.conf
       - ../files/init_data.json:/init_data.json

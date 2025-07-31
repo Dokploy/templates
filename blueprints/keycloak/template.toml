@@ -12,6 +12,7 @@ KEYCLOAK_HOSTNAME = "${main_domain}"
 serviceName = "keycloak"
 port = 8080
 host = "${main_domain}"
+path = "/"
 
 [config.env]
 POSTGRES_DB = "${POSTGRES_DB}"

@@ -5,6 +5,8 @@ POSTGRES_USER = "keycloakuser"
 POSTGRES_PASSWORD = "${password:32}"
 KEYCLOAK_ADMIN = "admin"
 KEYCLOAK_ADMIN_PASSWORD = "${password:32}"
+KEYCLOAK_HOSTNAME = "${main_domain}"
+KEYCLOAK_HOSTNAME_ADMIN = "${main_domain}"
 
 [config]
 [[config.domains]]

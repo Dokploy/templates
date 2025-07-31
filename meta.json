@@ -1083,8 +1083,8 @@
     "logo": "linkding.svg",
     "links": {
       "github": "https://github.com/sissbruecker/linkding",
-      "website": "https://sissbruecker.github.io/linkding/",
-      "docs": "https://github.com/sissbruecker/linkding/blob/master/docs/Options.md"
+      "website": "https://linkding.link/",
+      "docs": "https://github.com/sissbruecker/linkding/tree/master/docs"
     },
     "tags": [
       "bookmark-manager",
@@ -1777,8 +1777,8 @@
     "logo": "checkmate.png",
     "links": {
       "github": "https://github.com/bluewave-labs/checkmate",
-      "website": "https://bluewavelabs.ca",
-      "docs": "https://bluewavelabs.gitbook.io/checkmate"
+      "website": "https://checkmate.so/",
+      "docs": "https://docs.checkmate.so"
     },
     "tags": [
       "self-hosted",

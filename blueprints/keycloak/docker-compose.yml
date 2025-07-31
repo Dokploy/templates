@@ -40,6 +40,12 @@ services:
       # Build-time options
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
+      # Hostname configuration (needed for build optimization)
+      KC_HOSTNAME: ${KC_HOSTNAME}
+      KC_HOSTNAME_PORT: 443
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_PROXY_HEADERS: xforwarded
     volumes:
       - keycloak-providers:/opt/keycloak/providers:ro
       - keycloak-built:/opt/keycloak/lib/quarkus

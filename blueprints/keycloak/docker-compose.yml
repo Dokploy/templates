@@ -50,7 +50,7 @@ services:
     depends_on:
       keycloak-init:
         condition: service_completed_successfully
-    command: ["build", "--db=postgres", "--health-enabled=true", "--metrics-enabled=true", "--http-enabled=true", "--proxy-headers=xforwarded"]
+    command: ["build", "--db=postgres", "--health-enabled=true", "--metrics-enabled=true"]
     restart: "no"
 
   keycloak:

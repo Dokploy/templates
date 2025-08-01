@@ -84,7 +84,7 @@ services:
 
   # Schema migrator for synchronous migrations
   schema-migrator-sync:
-    image: signoz/signoz-schema-migrator:v0.129.0
+    image: signoz/signoz-schema-migrator:v0.128.2
     restart: on-failure
     networks:
       - signoz-net
@@ -139,7 +139,7 @@ services:
 
   # OpenTelemetry Collector for receiving telemetry data
   otel-collector:
-    image: signoz/signoz-otel-collector:v0.129.0
+    image: signoz/signoz-otel-collector:v0.128.2
     restart: unless-stopped
     networks:
       - signoz-net
@@ -164,7 +164,7 @@ services:
 
   # Schema migrator for asynchronous migrations
   schema-migrator-async:
-    image: signoz/signoz-schema-migrator:v0.129.0
+    image: signoz/signoz-schema-migrator:v0.128.2
     restart: on-failure
     networks:
       - signoz-net

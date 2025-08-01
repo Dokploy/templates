@@ -8,8 +8,6 @@ env = [
 ]
 
 [[config.domains]]
-serviceName = "signoz"
+serviceName = "frontend"
 port = 8080
 host = "${main_domain}"
-
-[[config.mounts]]

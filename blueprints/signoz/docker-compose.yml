@@ -59,11 +59,6 @@ services:
     networks:
       - signoz-net
     tty: true
-    environment:
-      - CLICKHOUSE_DB=signoz
-      - CLICKHOUSE_USER=signoz
-      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
-      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
     volumes:
       - signoz-clickhouse:/var/lib/clickhouse/
       - clickhouse-user-scripts:/var/lib/clickhouse/user_scripts/
@@ -89,7 +84,7 @@ services:
 
   # Schema migrator for synchronous migrations
   schema-migrator-sync:
-    image: signoz/signoz-schema-migrator:v0.128.2
+    image: signoz/signoz-schema-migrator:v0.129.0
     restart: on-failure
     networks:
       - signoz-net
@@ -108,7 +103,7 @@ services:
 
   # SigNoz main application
   signoz:
-    image: signoz/signoz:v0.90.1
+    image: signoz/signoz:v0.91.0
     restart: unless-stopped
     networks:
       - signoz-net
@@ -144,7 +139,7 @@ services:
 
   # OpenTelemetry Collector for receiving telemetry data
   otel-collector:
-    image: signoz/signoz-otel-collector:v0.128.2
+    image: signoz/signoz-otel-collector:v0.129.0
     restart: unless-stopped
     networks:
       - signoz-net
@@ -169,7 +164,7 @@ services:
 
   # Schema migrator for asynchronous migrations
   schema-migrator-async:
-    image: signoz/signoz-schema-migrator:v0.128.2
+    image: signoz/signoz-schema-migrator:v0.129.0
     restart: on-failure
     networks:
       - signoz-net

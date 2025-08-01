@@ -1,11 +1,7 @@
 [variables]
 main_domain = "${domain}"
-clickhouse_password = "${password:32}"
 
 [config]
-env = [
-    "CLICKHOUSE_PASSWORD=${clickhouse_password}"
-]
 
 [[config.domains]]
 serviceName = "signoz"

@@ -1,89 +1,193 @@
+networks:
+  signoz-net:
+
 services:
+  # Initialize ClickHouse with required scripts
+  init-clickhouse:
+    image: clickhouse/clickhouse-server:24.1.2-alpine
+    restart: on-failure
+    networks:
+      - signoz-net
+    command:
+      - bash
+      - -c
+      - |
+        version="v0.0.1"
+        node_os=$$(uname -s | tr '[:upper:]' '[:lower:]')
+        node_arch=$$(uname -m | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)
+        echo "Fetching histogram-binary for $${node_os}/$${node_arch}"
+        cd /tmp
+        wget -O histogram-quantile.tar.gz "https://github.com/SigNoz/signoz/releases/download/histogram-quantile%2F$${version}/histogram-quantile_$${node_os}_$${node_arch}.tar.gz"
+        tar -xvzf histogram-quantile.tar.gz
+        mv histogram-quantile /var/lib/clickhouse/user_scripts/histogramQuantile
+    volumes:
+      - clickhouse-user-scripts:/var/lib/clickhouse/user_scripts/
+    logging:
+      options:
+        max-size: 50m
+        max-file: "3"
+
+  # Zookeeper for ClickHouse coordination
+  zookeeper-1:
+    image: bitnami/zookeeper:3.7.1
+    restart: unless-stopped
+    networks:
+      - signoz-net
+    user: root
+    environment:
+      - ZOO_SERVER_ID=1
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ZOO_AUTOPURGE_INTERVAL=1
+      - ZOO_ENABLE_PROMETHEUS_METRICS=yes
+      - ZOO_PROMETHEUS_METRICS_PORT_NUMBER=9141
+    volumes:
+      - signoz-zookeeper-1:/bitnami/zookeeper
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -m 2 http://localhost:8080/commands/ruok | grep error | grep null"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      options:
+        max-size: 50m
+        max-file: "3"
+
   # ClickHouse database for storing observability data
   clickhouse:
     image: clickhouse/clickhouse-server:24.1.2-alpine
     restart: unless-stopped
+    networks:
+      - signoz-net
+    tty: true
     environment:
-      - CLICKHOUSE_DB=signoz
+      - CLICKHOUSE_DB=signoz_traces
       - CLICKHOUSE_USER=signoz
       - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
     volumes:
-      - clickhouse-data:/var/lib/clickhouse/
-      - clickhouse-logs:/var/log/clickhouse-server/
+      - signoz-clickhouse:/var/lib/clickhouse/
+      - clickhouse-user-scripts:/var/lib/clickhouse/user_scripts/
+    depends_on:
+      init-clickhouse:
+        condition: service_completed_successfully
+      zookeeper-1:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8123/ping"]
+      test: ["CMD", "wget", "--spider", "-q", "0.0.0.0:8123/ping"]
       interval: 30s
       timeout: 5s
       retries: 3
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 262144
+        hard: 262144
+    logging:
+      options:
+        max-size: 50m
+        max-file: "3"
 
-  # Zookeeper for ClickHouse coordination
-  zookeeper:
-    image: bitnami/zookeeper:3.7.1
-    restart: unless-stopped
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-      - ZOO_4LW_COMMANDS_WHITELIST=*
-    volumes:
-      - zookeeper-data:/bitnami/zookeeper
-    healthcheck:
-      test: ["CMD-SHELL", "echo ruok | nc localhost 2181"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-
-  # OpenTelemetry Collector for receiving telemetry data
-  otel-collector:
-    image: signoz/signoz-otel-collector:0.111.16
-    restart: unless-stopped
-    command: ["--config=/etc/otel-collector-config.yaml"]
-    ports:
-      - "4317:4317"  # OTLP gRPC receiver
-      - "4318:4318"  # OTLP HTTP receiver
-    environment:
-      - OTEL_RESOURCE_ATTRIBUTES=service.name=signoz-otel-collector,service.version=0.111.16
+  # Schema migrator for synchronous migrations
+  schema-migrator-sync:
+    image: signoz/signoz-schema-migrator:v0.128.2
+    restart: on-failure
+    networks:
+      - signoz-net
+    command:
+      - sync
+      - --dsn=tcp://clickhouse:9000
+      - --up=
     depends_on:
       clickhouse:
         condition: service_healthy
-      zookeeper:
-        condition: service_healthy
+    logging:
+      options:
+        max-size: 50m
+        max-file: "3"
 
-  # SigNoz Query Service (Backend API)
-  query-service:
-    image: signoz/query-service:0.64.0
+  # SigNoz main application
+  signoz:
+    image: signoz/signoz:v0.90.1
     restart: unless-stopped
-    command: ["-config=/root/config/prometheus.yml"]
+    networks:
+      - signoz-net
+    command: ["--config=/root/config/prometheus.yml"]
+    ports:
+      - "8080:8080"
     environment:
-      - ClickHouseUrl=tcp://clickhouse:9000
+      - SIGNOZ_ALERTMANAGER_PROVIDER=signoz
+      - SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN=tcp://clickhouse:9000
+      - SIGNOZ_SQLSTORE_SQLITE_PATH=/var/lib/signoz/signoz.db
+      - DASHBOARDS_PATH=/root/config/dashboards
       - STORAGE=clickhouse
       - GODEBUG=netdns=go
       - TELEMETRY_ENABLED=true
       - DEPLOYMENT_TYPE=docker-standalone-amd
+      - DOT_METRICS_ENABLED=true
     volumes:
-      - signoz-data:/var/lib/signoz/
+      - signoz-sqlite:/var/lib/signoz/
     depends_on:
       clickhouse:
         condition: service_healthy
-      otel-collector:
-        condition: service_started
+      schema-migrator-sync:
+        condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/v1/health"]
+      test: ["CMD", "wget", "--spider", "-q", "localhost:8080/api/v1/health"]
       interval: 30s
       timeout: 5s
       retries: 3
+    logging:
+      options:
+        max-size: 50m
+        max-file: "3"
 
-  # SigNoz Frontend (Web UI)
-  frontend:
-    image: signoz/frontend:0.64.0
+  # OpenTelemetry Collector for receiving telemetry data
+  otel-collector:
+    image: signoz/signoz-otel-collector:v0.128.2
     restart: unless-stopped
+    networks:
+      - signoz-net
+    command:
+      - --config=/etc/otel-collector-config.yaml
+      - --manager-config=/etc/manager-config.yaml
+      - --copy-path=/var/tmp/collector-config.yaml
+      - --feature-gates=-pkg.translator.prometheus.NormalizeName
     ports:
-      - "8080:3301"
+      - "4317:4317"  # OTLP gRPC receiver
+      - "4318:4318"  # OTLP HTTP receiver
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=host.name=signoz-host,os.type=linux
+      - LOW_CARDINAL_EXCEPTION_GROUPING=false
     depends_on:
-      query-service:
+      signoz:
         condition: service_healthy
+    logging:
+      options:
+        max-size: 50m
+        max-file: "3"
+
+  # Schema migrator for asynchronous migrations
+  schema-migrator-async:
+    image: signoz/signoz-schema-migrator:v0.128.2
+    restart: on-failure
+    networks:
+      - signoz-net
+    command:
+      - async
+      - --dsn=tcp://clickhouse:9000
+      - --up=
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+      schema-migrator-sync:
+        condition: service_completed_successfully
+    logging:
+      options:
+        max-size: 50m
+        max-file: "3"
 
 volumes:
-  clickhouse-data:
-  clickhouse-logs:
-  zookeeper-data:
-  signoz-data:
+  signoz-clickhouse:
+  signoz-sqlite:
+  signoz-zookeeper-1:
+  clickhouse-user-scripts:

@@ -2,6 +2,31 @@ networks:
   signoz-net:
 
 services:
+  # Initialize ClickHouse with required scripts
+  init-clickhouse:
+    image: clickhouse/clickhouse-server:24.1.2-alpine
+    restart: on-failure
+    networks:
+      - signoz-net
+    command:
+      - bash
+      - -c
+      - |
+        version="v0.0.1"
+        node_os=$$(uname -s | tr '[:upper:]' '[:lower:]')
+        node_arch=$$(uname -m | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)
+        echo "Fetching histogram-binary for $${node_os}/$${node_arch}"
+        cd /tmp
+        wget -O histogram-quantile.tar.gz "https://github.com/SigNoz/signoz/releases/download/histogram-quantile%2F$${version}/histogram-quantile_$${node_os}_$${node_arch}.tar.gz"
+        tar -xvzf histogram-quantile.tar.gz
+        mv histogram-quantile /var/lib/clickhouse/user_scripts/histogramQuantile
+    volumes:
+      - clickhouse-user-scripts:/var/lib/clickhouse/user_scripts/
+    logging:
+      options:
+        max-size: 50m
+        max-file: "3"
+
   # Zookeeper for ClickHouse coordination
   zookeeper-1:
     image: bitnami/zookeeper:3.7.1
@@ -38,10 +63,10 @@ services:
       - signoz-clickhouse:/var/lib/clickhouse/
       - clickhouse-user-scripts:/var/lib/clickhouse/user_scripts/
     depends_on:
+      init-clickhouse:
+        condition: service_completed_successfully
       zookeeper-1:
         condition: service_healthy
-    environment:
-      - CLICKHOUSE_DB=signoz_traces
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "0.0.0.0:8123/ping"]
       interval: 30s
@@ -57,40 +82,18 @@ services:
         max-size: 50m
         max-file: "3"
 
-  # Initialize ClickHouse with required scripts and databases
-  init-clickhouse:
-    image: signoz/signoz-schema-migrator:v0.91.0
+  # Schema migrator for synchronous migrations
+  schema-migrator-sync:
+    image: signoz/signoz-schema-migrator:v0.128.2
     restart: on-failure
     networks:
       - signoz-net
     command:
-      - bash
-      - -c
-      - |
-        echo "Creating databases..."
-        clickhouse-client --host clickhouse --port 9000 --query="CREATE DATABASE IF NOT EXISTS signoz_traces"
-        clickhouse-client --host clickhouse --port 9000 --query="CREATE DATABASE IF NOT EXISTS signoz_logs"
-        clickhouse-client --host clickhouse --port 9000 --query="CREATE DATABASE IF NOT EXISTS signoz_metrics"
-        echo "Databases created successfully"
+      - sync
+      - --dsn=tcp://clickhouse:9000
     depends_on:
       clickhouse:
         condition: service_healthy
-    logging:
-      options:
-        max-size: 50m
-        max-file: "3"
-
-  # Schema migrator for synchronous migrations
-  schema-migrator:
-    image: signoz/signoz-schema-migrator:v0.91.0
-    restart: on-failure
-    networks:
-      - signoz-net
-    command:
-      - -dsn=tcp://clickhouse:9000
-    depends_on:
-      init-clickhouse:
-        condition: service_completed_successfully
     logging:
       options:
         max-size: 50m
@@ -104,21 +107,23 @@ services:
       - signoz-net
     command: ["--config=/root/config/prometheus.yml"]
     ports:
-      - "3301:3301"
       - "8080:8080"
     environment:
-      - SIGNOZ_LOCAL_DB_PATH=/var/lib/signoz/signoz.db
+      - SIGNOZ_ALERTMANAGER_PROVIDER=signoz
+      - SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN=tcp://clickhouse:9000
+      - SIGNOZ_SQLSTORE_SQLITE_PATH=/var/lib/signoz/signoz.db
       - DASHBOARDS_PATH=/root/config/dashboards
       - STORAGE=clickhouse
       - GODEBUG=netdns=go
       - TELEMETRY_ENABLED=true
       - DEPLOYMENT_TYPE=docker-standalone-amd
+      - DOT_METRICS_ENABLED=true
     volumes:
       - signoz-sqlite:/var/lib/signoz/
     depends_on:
       clickhouse:
         condition: service_healthy
-      schema-migrator:
+      schema-migrator-sync:
         condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "localhost:8080/api/v1/health"]
@@ -132,12 +137,14 @@ services:
 
   # OpenTelemetry Collector for receiving telemetry data
   otel-collector:
-    image: signoz/signoz-otel-collector:v0.91.0
+    image: signoz/signoz-otel-collector:v0.128.2
     restart: unless-stopped
     networks:
       - signoz-net
     command:
       - --config=/etc/otel-collector-config.yaml
+      - --manager-config=/etc/manager-config.yaml
+      - --copy-path=/var/tmp/collector-config.yaml
       - --feature-gates=-pkg.translator.prometheus.NormalizeName
     ports:
       - "4317:4317"  # OTLP gRPC receiver
@@ -148,6 +155,25 @@ services:
     depends_on:
       signoz:
         condition: service_healthy
+    logging:
+      options:
+        max-size: 50m
+        max-file: "3"
+
+  # Schema migrator for asynchronous migrations
+  schema-migrator-async:
+    image: signoz/signoz-schema-migrator:v0.128.2
+    restart: on-failure
+    networks:
+      - signoz-net
+    command:
+      - async
+      - --dsn=tcp://clickhouse:9000
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+      schema-migrator-sync:
+        condition: service_completed_successfully
     logging:
       options:
         max-size: 50m

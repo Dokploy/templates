@@ -29,7 +29,13 @@
       "docs": "https://cap.so/docs/"
     },
     "logo": "capso.png",
-    "tags": ["web", "s3", "mysql", "development", "self-hosted"]
+    "tags": [
+      "web",
+      "s3",
+      "mysql",
+      "development",
+      "self-hosted"
+    ]
   },
   {
     "id": "authentik",
@@ -338,7 +344,12 @@
       "website": "https://gitlab.com/",
       "docs": "https://docs.gitlab.com/ee/"
     },
-    "tags": ["git", "ci-cd", "version-control", "project-management"]
+    "tags": [
+      "git",
+      "ci-cd",
+      "version-control",
+      "project-management"
+    ]
   },
   {
     "id": "ghost",
@@ -1135,7 +1146,12 @@
       "website": "https://habitica.com/",
       "docs": "https://habitica.fandom.com/wiki/Setting_up_Habitica_Locally"
     },
-    "tags": ["productivity", "gamification", "habits", "self-hosted"]
+    "tags": [
+      "productivity",
+      "gamification",
+      "habits",
+      "self-hosted"
+    ]
   },
   {
     "id": "hoarder",
@@ -3456,7 +3472,11 @@
       "website": "https://www.filestash.app/",
       "docs": "https://www.filestash.app/docs/"
     },
-    "tags": ["file-manager", "document-editor", "self-hosted"]
+    "tags": [
+      "file-manager",
+      "document-editor",
+      "self-hosted"
+    ]
   },
   {
     "id": "mazanoke",
@@ -3527,7 +3547,11 @@
       "website": "https://www.usememos.com/",
       "docs": "https://www.usememos.com/docs"
     },
-    "tags": ["productivity", "notes", "bookmarks"]
+    "tags": [
+      "productivity",
+      "notes",
+      "bookmarks"
+    ]
   },
   {
     "id": "linkstack",
@@ -3540,7 +3564,12 @@
       "website": "https://linkstack.org/",
       "docs": "https://docs.linkstack.org/"
     },
-    "tags": ["bio", "personal", "cms", "php"]
+    "tags": [
+      "bio",
+      "personal",
+      "cms",
+      "php"
+    ]
   },
   {
     "id": "opengist",
@@ -3907,6 +3936,25 @@
     },
     "tags": [
       "analytics"
+    ]
+  },
+  {
+    "id": "swetrix",
+    "name": "Swetrix",
+    "version": "latest",
+    "description": "Swetrix is a fully open source, privacy-focused and cookieless alternative to Google Analytics. It is a lightweight tool (tracking script is < 5 KB) that provides comprehensive website analytics without invading user privacy.",
+    "links": {
+      "github": "https://github.com/swetrix/swetrix",
+      "website": "https://swetrix.com/",
+      "docs": "https://docs.swetrix.com/"
+    },
+    "logo": "swetrix.png",
+    "tags": [
+      "analytics",
+      "privacy",
+      "self-hosted",
+      "web-analytics",
+      "gdpr-compliant"
     ]
   }
 ]

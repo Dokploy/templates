@@ -1,13 +1,9 @@
-networks:
-  signoz-net:
 
 services:
   # Zookeeper for ClickHouse coordination
   zookeeper-1:
     image: bitnami/zookeeper:3.7.1
     restart: unless-stopped
-    networks:
-      - signoz-net
     user: root
     environment:
       - ZOO_SERVER_ID=1
@@ -31,8 +27,6 @@ services:
   clickhouse:
     image: clickhouse/clickhouse-server:24.1.2-alpine
     restart: unless-stopped
-    networks:
-      - signoz-net
     tty: true
     volumes:
       - signoz-clickhouse:/var/lib/clickhouse/
@@ -58,8 +52,6 @@ services:
   init-signoz-db:
     image: clickhouse/clickhouse-server:24.1.2-alpine
     restart: on-failure
-    networks:
-      - signoz-net
     command:
       - bash
       - -c
@@ -126,11 +118,9 @@ services:
   signoz:
     image: signoz/signoz:v0.91.0
     restart: unless-stopped
-    networks:
-      - signoz-net
     command: ["--config=/root/config/prometheus.yml"]
     ports:
-      - "8080:8080"
+      - "8080"
     environment:
       - SIGNOZ_ALERTMANAGER_PROVIDER=signoz
       - SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN=tcp://clickhouse:9000
@@ -161,16 +151,14 @@ services:
   otel-collector:
     image: signoz/signoz-otel-collector:v0.128.2
     restart: unless-stopped
-    networks:
-      - signoz-net
     command:
       - --config=/etc/otel-collector-config.yaml
       - --manager-config=/etc/manager-config.yaml
       - --copy-path=/var/tmp/collector-config.yaml
       - --feature-gates=-pkg.translator.prometheus.NormalizeName
     ports:
-      - "4317:4317"  # OTLP gRPC receiver
-      - "4318:4318"  # OTLP HTTP receiver
+      - "4317"  # OTLP gRPC receiver
+      - "4318"  # OTLP HTTP receiver
     volumes:
       - ../files/etc/otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
       - ../files/etc/manager-config.yaml:/etc/manager-config.yaml:ro

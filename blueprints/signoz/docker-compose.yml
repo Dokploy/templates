@@ -2,31 +2,6 @@ networks:
   signoz-net:
 
 services:
-  # Initialize ClickHouse with required scripts
-  init-clickhouse:
-    image: clickhouse/clickhouse-server:24.1.2-alpine
-    restart: on-failure
-    networks:
-      - signoz-net
-    command:
-      - bash
-      - -c
-      - |
-        version="v0.0.1"
-        node_os=$$(uname -s | tr '[:upper:]' '[:lower:]')
-        node_arch=$$(uname -m | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)
-        echo "Fetching histogram-binary for $${node_os}/$${node_arch}"
-        cd /tmp
-        wget -O histogram-quantile.tar.gz "https://github.com/SigNoz/signoz/releases/download/histogram-quantile%2F$${version}/histogram-quantile_$${node_os}_$${node_arch}.tar.gz"
-        tar -xvzf histogram-quantile.tar.gz
-        mv histogram-quantile /var/lib/clickhouse/user_scripts/histogramQuantile
-    volumes:
-      - clickhouse-user-scripts:/var/lib/clickhouse/user_scripts/
-    logging:
-      options:
-        max-size: 50m
-        max-file: "3"
-
   # Zookeeper for ClickHouse coordination
   zookeeper-1:
     image: bitnami/zookeeper:3.7.1
@@ -61,10 +36,7 @@ services:
     tty: true
     volumes:
       - signoz-clickhouse:/var/lib/clickhouse/
-      - clickhouse-user-scripts:/var/lib/clickhouse/user_scripts/
     depends_on:
-      init-clickhouse:
-        condition: service_completed_successfully
       zookeeper-1:
         condition: service_healthy
     healthcheck:
@@ -82,8 +54,8 @@ services:
         max-size: 50m
         max-file: "3"
 
-  # Manual database initialization
-  init-databases:
+  # Manual database and table initialization
+  init-signoz-db:
     image: clickhouse/clickhouse-server:24.1.2-alpine
     restart: on-failure
     networks:
@@ -97,36 +69,54 @@ services:
           echo "ClickHouse not ready, waiting..."
           sleep 2
         done
+
         echo "Creating databases..."
         clickhouse-client --host clickhouse --port 9000 --query="CREATE DATABASE IF NOT EXISTS signoz_traces"
         clickhouse-client --host clickhouse --port 9000 --query="CREATE DATABASE IF NOT EXISTS signoz_logs"
         clickhouse-client --host clickhouse --port 9000 --query="CREATE DATABASE IF NOT EXISTS signoz_metrics"
-        echo "Databases created successfully"
+
+        echo "Creating basic tables for traces..."
+        clickhouse-client --host clickhouse --port 9000 --query="
+        CREATE TABLE IF NOT EXISTS signoz_traces.signoz_spans (
+          timestamp DateTime64(9) CODEC(DoubleDelta, LZ4),
+          traceID String CODEC(ZSTD(1)),
+          model String CODEC(ZSTD(1))
+        ) ENGINE = MergeTree()
+        PARTITION BY toDate(timestamp)
+        ORDER BY (timestamp, traceID)
+        TTL timestamp + toIntervalDay(7)
+        SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1"
+
+        echo "Creating basic tables for logs..."
+        clickhouse-client --host clickhouse --port 9000 --query="
+        CREATE TABLE IF NOT EXISTS signoz_logs.logs (
+          timestamp DateTime64(9) CODEC(DoubleDelta, LZ4),
+          body String CODEC(ZSTD(1)),
+          severity_text LowCardinality(String) CODEC(ZSTD(1)),
+          severity_number UInt8 CODEC(ZSTD(1))
+        ) ENGINE = MergeTree()
+        PARTITION BY toDate(timestamp)
+        ORDER BY timestamp
+        TTL timestamp + toIntervalDay(7)
+        SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1"
+
+        echo "Creating basic tables for metrics..."
+        clickhouse-client --host clickhouse --port 9000 --query="
+        CREATE TABLE IF NOT EXISTS signoz_metrics.samples (
+          metric_name LowCardinality(String) CODEC(ZSTD(1)),
+          fingerprint UInt64 CODEC(Delta, ZSTD(1)),
+          timestamp_ms Int64 CODEC(Delta, ZSTD(1)),
+          value Float64 CODEC(ZSTD(1))
+        ) ENGINE = MergeTree()
+        PARTITION BY toDate(timestamp_ms / 1000)
+        ORDER BY (metric_name, fingerprint, timestamp_ms)
+        TTL toDateTime(timestamp_ms / 1000) + toIntervalDay(7)
+        SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1"
+
+        echo "Database initialization completed successfully!"
     depends_on:
       clickhouse:
         condition: service_healthy
-    logging:
-      options:
-        max-size: 50m
-        max-file: "3"
-
-  # Schema migrator for synchronous migrations
-  schema-migrator-sync:
-    image: signoz/signoz-schema-migrator:v0.128.2
-    restart: on-failure
-    networks:
-      - signoz-net
-    command:
-      - sync
-      - --dsn=tcp://clickhouse:9000
-      - --replication=false
-      - --cluster-name=""
-    environment:
-      - SIGNOZ_MIGRATE_REPLICATION=false
-      - SIGNOZ_MIGRATE_CLUSTER_NAME=""
-    depends_on:
-      init-databases:
-        condition: service_completed_successfully
     logging:
       options:
         max-size: 50m
@@ -154,9 +144,7 @@ services:
     volumes:
       - signoz-sqlite:/var/lib/signoz/
     depends_on:
-      clickhouse:
-        condition: service_healthy
-      schema-migrator-sync:
+      init-signoz-db:
         condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "localhost:8080/api/v1/health"]
@@ -193,32 +181,7 @@ services:
         max-size: 50m
         max-file: "3"
 
-  # Schema migrator for asynchronous migrations
-  schema-migrator-async:
-    image: signoz/signoz-schema-migrator:v0.128.2
-    restart: on-failure
-    networks:
-      - signoz-net
-    command:
-      - async
-      - --dsn=tcp://clickhouse:9000
-      - --replication=false
-      - --cluster-name=""
-    environment:
-      - SIGNOZ_MIGRATE_REPLICATION=false
-      - SIGNOZ_MIGRATE_CLUSTER_NAME=""
-    depends_on:
-      clickhouse:
-        condition: service_healthy
-      schema-migrator-sync:
-        condition: service_completed_successfully
-    logging:
-      options:
-        max-size: 50m
-        max-file: "3"
-
 volumes:
   signoz-clickhouse:
   signoz-sqlite:
   signoz-zookeeper-1:
-  clickhouse-user-scripts:

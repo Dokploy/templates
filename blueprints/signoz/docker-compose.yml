@@ -96,6 +96,7 @@ services:
     command:
       - sync
       - --dsn=tcp://signoz:${CLICKHOUSE_PASSWORD}@clickhouse:9000
+      - --cluster-name=
       - --up=
     depends_on:
       clickhouse:
@@ -175,6 +176,7 @@ services:
     command:
       - async
       - --dsn=tcp://signoz:${CLICKHOUSE_PASSWORD}@clickhouse:9000
+      - --cluster-name=
       - --up=
     depends_on:
       clickhouse:

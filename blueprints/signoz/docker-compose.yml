@@ -91,7 +91,7 @@ services:
     command:
       - sync
       - --dsn=tcp://clickhouse:9000
-      - --cluster-name=
+      - --replication=false
     depends_on:
       clickhouse:
         condition: service_healthy
@@ -170,7 +170,7 @@ services:
     command:
       - async
       - --dsn=tcp://clickhouse:9000
-      - --cluster-name=
+      - --replication=false
     depends_on:
       clickhouse:
         condition: service_healthy

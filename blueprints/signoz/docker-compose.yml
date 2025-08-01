@@ -1,0 +1,87 @@
+version: "3.8"
+
+services:
+  # ClickHouse database for storing observability data
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.1.2-alpine
+    restart: unless-stopped
+    environment:
+      - CLICKHOUSE_DB=signoz
+      - CLICKHOUSE_USER=signoz
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse/
+      - clickhouse-logs:/var/log/clickhouse-server/
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8123/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Zookeeper for ClickHouse coordination
+  zookeeper:
+    image: bitnami/zookeeper:3.7.1
+    restart: unless-stopped
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ZOO_4LW_COMMANDS_WHITELIST=*
+    volumes:
+      - zookeeper-data:/bitnami/zookeeper
+    healthcheck:
+      test: ["CMD-SHELL", "echo ruok | nc localhost 2181"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # OpenTelemetry Collector for receiving telemetry data
+  otel-collector:
+    image: signoz/signoz-otel-collector:0.128.2
+    restart: unless-stopped
+    command: ["/signoz-collector", "--config=/etc/otel-collector-config.yaml"]
+    ports:
+      - "4317:4317"  # OTLP gRPC receiver
+      - "4318:4318"  # OTLP HTTP receiver
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=signoz-otel-collector,service.version=0.111.24
+      - CLICKHOUSE_HOST=clickhouse
+      - CLICKHOUSE_PORT=9000
+      - CLICKHOUSE_USER=signoz
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+      zookeeper:
+        condition: service_healthy
+
+  # Main SigNoz application
+  signoz:
+    image: signoz/signoz:0.91.0
+    restart: unless-stopped
+    command: ["/query-service", "--config=/root/config/prometheus.yml"]
+    ports:
+      - "8080:8080"
+    environment:
+      - STORAGE=clickhouse
+      - GODEBUG=netdns=go
+      - TELEMETRY_ENABLED=true
+      - DEPLOYMENT_TYPE=docker-standalone-amd
+      - CLICKHOUSE_HOST=clickhouse
+      - CLICKHOUSE_PORT=9000
+      - CLICKHOUSE_USER=signoz
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+      otel-collector:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/v1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  clickhouse-data:
+  clickhouse-logs:
+  zookeeper-data:

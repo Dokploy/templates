@@ -21,8 +21,6 @@ services:
       - CLICKHOUSE_USER=default
       - CLICKHOUSE_PASSWORD=
       - CLICKHOUSE_DATABASE=analytics
-    ports:
-      - "8080:8080"
 
   swetrix-fe:
     image: swetrix/swetrix-fe:latest
@@ -31,8 +29,6 @@ services:
       - swetrix-api
     environment:
       - API_URL=http://swetrix-api:8080
-    ports:
-      - "3000:3000"
 
   redis:
     image: redis:7-alpine

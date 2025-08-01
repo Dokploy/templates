@@ -1,5 +1,6 @@
 [variables]
 main_domain = "${domain}"
+api_domain = "${domain}"
 jwt_access_secret = "${base64:64}"
 jwt_refresh_secret = "${base64:64}"
 admin_email = "admin@example.com"
@@ -13,9 +14,14 @@ serviceName = "swetrix"
 port = 3000
 host = "${main_domain}"
 
+[[config.domains]]
+serviceName = "swetrix-api"
+port = 5005
+host = "${api_domain}"
+
 [config.env]
 # Swetrix Frontend configuration
-API_URL = "${main_domain}"
+API_URL = "https://${api_domain}"
 
 # Swetrix API configuration
 JWT_ACCESS_TOKEN_SECRET = "${jwt_access_secret}"

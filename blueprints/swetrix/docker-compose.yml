@@ -1,6 +1,6 @@
 services:
   swetrix:
-    image: swetrix/swetrix-fe:v3.3.1
+    image: swetrix/swetrix-fe:v3.3.0
     restart: always
     depends_on:
       - swetrix-api
@@ -12,7 +12,7 @@ services:
       start_period: 15s
 
   swetrix-api:
-    image: swetrix/swetrix-api:v3.3.1
+    image: swetrix/swetrix-api:v3.3.0
     restart: always
     container_name: swetrix-api
     environment:

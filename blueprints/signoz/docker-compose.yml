@@ -143,6 +143,7 @@ services:
       - DOT_METRICS_ENABLED=true
     volumes:
       - signoz-sqlite:/var/lib/signoz/
+      - ../files/root/config/prometheus.yml:/root/config/prometheus.yml:ro
     depends_on:
       init-signoz-db:
         condition: service_completed_successfully
@@ -170,6 +171,9 @@ services:
     ports:
       - "4317:4317"  # OTLP gRPC receiver
       - "4318:4318"  # OTLP HTTP receiver
+    volumes:
+      - ../files/etc/otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+      - ../files/etc/manager-config.yaml:/etc/manager-config.yaml:ro
     environment:
       - OTEL_RESOURCE_ATTRIBUTES=host.name=signoz-host,os.type=linux
       - LOW_CARDINAL_EXCEPTION_GROUPING=false

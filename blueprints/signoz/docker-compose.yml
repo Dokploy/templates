@@ -82,6 +82,34 @@ services:
         max-size: 50m
         max-file: "3"
 
+  # Manual database initialization
+  init-databases:
+    image: clickhouse/clickhouse-server:24.1.2-alpine
+    restart: on-failure
+    networks:
+      - signoz-net
+    command:
+      - bash
+      - -c
+      - |
+        echo "Waiting for ClickHouse to be ready..."
+        until clickhouse-client --host clickhouse --port 9000 --query="SELECT 1" > /dev/null 2>&1; do
+          echo "ClickHouse not ready, waiting..."
+          sleep 2
+        done
+        echo "Creating databases..."
+        clickhouse-client --host clickhouse --port 9000 --query="CREATE DATABASE IF NOT EXISTS signoz_traces"
+        clickhouse-client --host clickhouse --port 9000 --query="CREATE DATABASE IF NOT EXISTS signoz_logs"
+        clickhouse-client --host clickhouse --port 9000 --query="CREATE DATABASE IF NOT EXISTS signoz_metrics"
+        echo "Databases created successfully"
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    logging:
+      options:
+        max-size: 50m
+        max-file: "3"
+
   # Schema migrator for synchronous migrations
   schema-migrator-sync:
     image: signoz/signoz-schema-migrator:v0.128.2
@@ -92,9 +120,13 @@ services:
       - sync
       - --dsn=tcp://clickhouse:9000
       - --replication=false
+      - --cluster-name=""
+    environment:
+      - SIGNOZ_MIGRATE_REPLICATION=false
+      - SIGNOZ_MIGRATE_CLUSTER_NAME=""
     depends_on:
-      clickhouse:
-        condition: service_healthy
+      init-databases:
+        condition: service_completed_successfully
     logging:
       options:
         max-size: 50m
@@ -171,6 +203,10 @@ services:
       - async
       - --dsn=tcp://clickhouse:9000
       - --replication=false
+      - --cluster-name=""
+    environment:
+      - SIGNOZ_MIGRATE_REPLICATION=false
+      - SIGNOZ_MIGRATE_CLUSTER_NAME=""
     depends_on:
       clickhouse:
         condition: service_healthy

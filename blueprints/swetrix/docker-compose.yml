@@ -16,6 +16,7 @@ services:
       - CLOUDFLARE_PROXY_ENABLED=${CLOUDFLARE_PROXY_ENABLED}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - CLICKHOUSE_URL=http://clickhouse:8123
       - CLICKHOUSE_HOST=clickhouse
       - CLICKHOUSE_PORT=8123
       - CLICKHOUSE_USER=default

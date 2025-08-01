@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # ClickHouse database for storing observability data
   clickhouse:
@@ -36,14 +34,14 @@ services:
 
   # OpenTelemetry Collector for receiving telemetry data
   otel-collector:
-    image: signoz/signoz-otel-collector:0.128.2
+    image: signoz/signoz-otel-collector:0.111.16
     restart: unless-stopped
     command: ["/signoz-collector", "--config=/etc/otel-collector-config.yaml"]
     ports:
       - "4317:4317"  # OTLP gRPC receiver
       - "4318:4318"  # OTLP HTTP receiver
     environment:
-      - OTEL_RESOURCE_ATTRIBUTES=service.name=signoz-otel-collector,service.version=0.111.24
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=signoz-otel-collector,service.version=0.111.16
       - CLICKHOUSE_HOST=clickhouse
       - CLICKHOUSE_PORT=9000
       - CLICKHOUSE_USER=signoz

@@ -1,0 +1,23 @@
+[variables]
+main_domain = "${domain}"
+jwt_access_secret = "${base64:64}"
+jwt_refresh_secret = "${base64:64}"
+admin_email = "admin@example.com"
+admin_password = "${password:16}"
+api_key = "${base64:32}"
+
+[[config.domains]]
+serviceName = "swetrix-fe"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+# Swetrix API configuration
+JWT_ACCESS_TOKEN_SECRET = "${jwt_access_secret}"
+JWT_REFRESH_TOKEN_SECRET = "${jwt_refresh_secret}"
+EMAIL = "${admin_email}"
+PASSWORD = "${admin_password}"
+API_KEY = "${api_key}"
+IP_GEOLOCATION_DB_PATH = ""
+DEBUG_MODE = "false"
+CLOUDFLARE_PROXY_ENABLED = "false"

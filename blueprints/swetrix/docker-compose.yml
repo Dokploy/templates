@@ -1,0 +1,65 @@
+services:
+  swetrix-api:
+    image: swetrix/swetrix-api:latest
+    restart: always
+    depends_on:
+      - redis
+      - clickhouse
+    environment:
+      - JWT_ACCESS_TOKEN_SECRET=${JWT_ACCESS_TOKEN_SECRET}
+      - JWT_REFRESH_TOKEN_SECRET=${JWT_REFRESH_TOKEN_SECRET}
+      - EMAIL=${EMAIL}
+      - PASSWORD=${PASSWORD}
+      - API_KEY=${API_KEY}
+      - IP_GEOLOCATION_DB_PATH=${IP_GEOLOCATION_DB_PATH}
+      - DEBUG_MODE=${DEBUG_MODE}
+      - CLOUDFLARE_PROXY_ENABLED=${CLOUDFLARE_PROXY_ENABLED}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CLICKHOUSE_HOST=clickhouse
+      - CLICKHOUSE_PORT=8123
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=
+      - CLICKHOUSE_DATABASE=analytics
+    ports:
+      - "8080:8080"
+
+  swetrix-fe:
+    image: swetrix/swetrix-fe:latest
+    restart: always
+    depends_on:
+      - swetrix-api
+    environment:
+      - API_URL=http://swetrix-api:8080
+    ports:
+      - "3000:3000"
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    restart: always
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+      - clickhouse-logs:/var/log/clickhouse-server
+    environment:
+      - CLICKHOUSE_DB=analytics
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+volumes:
+  redis-data:
+    driver: local
+  clickhouse-data:
+    driver: local
+  clickhouse-logs:
+    driver: local

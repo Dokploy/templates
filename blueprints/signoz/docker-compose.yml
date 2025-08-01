@@ -95,7 +95,7 @@ services:
       - signoz-net
     command:
       - sync
-      - --dsn=tcp://clickhouse:9000
+      - --dsn=tcp://signoz:${CLICKHOUSE_PASSWORD}@clickhouse:9000
       - --up=
     depends_on:
       clickhouse:
@@ -116,7 +116,7 @@ services:
       - "8080:8080"
     environment:
       - SIGNOZ_ALERTMANAGER_PROVIDER=signoz
-      - SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN=tcp://clickhouse:9000
+      - SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN=tcp://signoz:${CLICKHOUSE_PASSWORD}@clickhouse:9000
       - SIGNOZ_SQLSTORE_SQLITE_PATH=/var/lib/signoz/signoz.db
       - DASHBOARDS_PATH=/root/config/dashboards
       - STORAGE=clickhouse
@@ -174,7 +174,7 @@ services:
       - signoz-net
     command:
       - async
-      - --dsn=tcp://clickhouse:9000
+      - --dsn=tcp://signoz:${CLICKHOUSE_PASSWORD}@clickhouse:9000
       - --up=
     depends_on:
       clickhouse:

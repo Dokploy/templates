@@ -29,6 +29,7 @@ receivers:
               - localhost:8888
             labels:
               job_name: otel-collector
+
 processors:
   batch:
     send_batch_size: 10000
@@ -59,22 +60,25 @@ processors:
       - name: host.name
       - name: host.type
       - name: container.name
+
 extensions:
   health_check:
     endpoint: 0.0.0.0:13133
   pprof:
     endpoint: 0.0.0.0:1777
+
 exporters:
   clickhousetraces:
     datasource: tcp://clickhouse:9000/signoz_traces
     low_cardinal_exception_grouping: ${env:LOW_CARDINAL_EXCEPTION_GROUPING}
-    use_new_schema: true
+    use_new_schema: false
   signozclickhousemetrics:
     dsn: tcp://clickhouse:9000/signoz_metrics
   clickhouselogsexporter:
     dsn: tcp://clickhouse:9000/signoz_logs
     timeout: 10s
-    use_new_schema: true
+    use_new_schema: false
+
 service:
   telemetry:
     logs:

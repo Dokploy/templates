@@ -1,10 +1,20 @@
 services:
-  swetrix-api:
-    image: swetrix/swetrix-api:latest
+  swetrix:
+    image: swetrix/swetrix-fe:v3.3.1
     restart: always
     depends_on:
-      - redis
-      - clickhouse
+      - swetrix-api
+    environment:
+      - API_URL=${API_URL}
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/ping || exit 1"]
+      interval: 30s
+      start_period: 15s
+
+  swetrix-api:
+    image: swetrix/swetrix-api:v3.3.1
+    restart: always
+    container_name: swetrix-api
     environment:
       - JWT_ACCESS_TOKEN_SECRET=${JWT_ACCESS_TOKEN_SECRET}
       - JWT_REFRESH_TOKEN_SECRET=${JWT_REFRESH_TOKEN_SECRET}
@@ -15,48 +25,54 @@ services:
       - DEBUG_MODE=${DEBUG_MODE}
       - CLOUDFLARE_PROXY_ENABLED=${CLOUDFLARE_PROXY_ENABLED}
       - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - CLICKHOUSE_URL=http://clickhouse:8123
-      - CLICKHOUSE_HOST=clickhouse
-      - CLICKHOUSE_PORT=8123
-      - CLICKHOUSE_USER=default
-      - CLICKHOUSE_PASSWORD=
-      - CLICKHOUSE_DATABASE=analytics
-
-  swetrix-fe:
-    image: swetrix/swetrix-fe:latest
-    restart: always
+      - CLICKHOUSE_HOST=http://clickhouse
+    links:
+      - redis
+      - clickhouse
     depends_on:
-      - swetrix-api
-    environment:
-      - API_URL=http://swetrix-api:8080
+      redis:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5005/ping || exit 1"]
+      interval: 30s
+      start_period: 15s
 
   redis:
-    image: redis:7-alpine
+    image: redis:7.2-alpine
     restart: always
-    volumes:
-      - redis-data:/data
-    command: redis-server --appendonly yes
+    environment:
+      - REDIS_PORT=6379
+      - REDIS_USER=default
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 30s
+      start_period: 1m
 
   clickhouse:
-    image: clickhouse/clickhouse-server:latest
-    restart: always
-    volumes:
-      - clickhouse-data:/var/lib/clickhouse
-      - clickhouse-logs:/var/log/clickhouse-server
+    image: clickhouse/clickhouse-server:24.10-alpine
+    container_name: clickhouse
     environment:
-      - CLICKHOUSE_DB=analytics
+      - CLICKHOUSE_DATABASE=analytics
       - CLICKHOUSE_USER=default
-      - CLICKHOUSE_PASSWORD=
+      - CLICKHOUSE_PORT=8123
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 -O - http://127.0.0.1:8123/ping || exit 1"]
+      interval: 30s
+      start_period: 1m
+    restart: always
+    cap_add:
+      - SYS_NICE
+    volumes:
+      - swetrix-events-data:/var/lib/clickhouse
     ulimits:
       nofile:
         soft: 262144
         hard: 262144
 
 volumes:
-  redis-data:
-    driver: local
-  clickhouse-data:
-    driver: local
-  clickhouse-logs:
+  swetrix-events-data:
     driver: local

@@ -74,7 +74,7 @@ services:
 
   # Query Service - SigNoz backend
   query-service:
-    image: signoz/query-service:0.88.0
+    image: signoz/query-service:latest
     restart: unless-stopped
     command:
       - -config=/root/config/prometheus.yml
@@ -154,7 +154,7 @@ services:
 
   # OpenTelemetry Collector for receiving telemetry data
   otel-collector:
-    image: signoz/signoz-otel-collector:0.88.0
+    image: signoz/signoz-otel-collector:latest
     restart: unless-stopped
     command:
       - --config=/etc/otel-collector-config.yaml

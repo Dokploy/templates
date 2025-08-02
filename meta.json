@@ -3150,5 +3150,31 @@
       "docs": "https://www.open-notebook.ai/get-started.html"
     },
     "tags": ["notebook", "ai", "database", "surrealdb"]
+  },
+  {
+    "id": "booklore",
+    "name": "Booklore",
+    "version": "latest",
+    "description": "Booklore is an application for managing and serving book-related data, backed by a MariaDB database.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/booklore-app/BookLore",
+      "website": "https://github.com/booklore-app/BookLore",
+      "docs": "https://github.com/booklore-app/BookLore/tree/develop/docs"
+    },
+    "tags": ["books", "library", "database", "mariadb"]
+  },
+  {
+    "id": "scrypted",
+    "name": "Scrypted",
+    "version": "latest",
+    "description": "Scrypted is a home automation platform that integrates with various smart home devices and provides NVR capabilities for video surveillance.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/koush/scrypted",
+      "website": "https://www.scrypted.app/",
+      "docs": "https://docs.scrypted.app/"
+    },
+    "tags": ["home-automation", "nvr", "smart-home", "surveillance"]
   }
 ]

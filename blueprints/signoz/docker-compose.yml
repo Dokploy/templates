@@ -107,7 +107,7 @@ services:
 
   # SigNoz Frontend
   frontend:
-    image: signoz/frontend:0.88.0
+    image: signoz/frontend:latest
     restart: unless-stopped
     depends_on:
       alertmanager:

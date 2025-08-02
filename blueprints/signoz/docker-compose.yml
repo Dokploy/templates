@@ -54,7 +54,7 @@ services:
 
   # SigNoz database schema initialization
   migrator:
-    image: signoz/migrate:0.88.0
+    image: signoz/migrate:latest
     restart: on-failure
     command:
       - -dir

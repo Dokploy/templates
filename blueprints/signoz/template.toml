@@ -106,16 +106,6 @@ service:
 """
 
 [[config.mounts]]
-filePath = "/etc/manager-config.yaml"
-content = """
-server_endpoint: ws://signoz:3301/api/v1/ws/agent
-agent:
-  opamp:
-    endpoint: ws://signoz:3301/api/v1/ws/agent
-    headers: {}
-"""
-
-[[config.mounts]]
 filePath = "/root/config/prometheus.yml"
 content = """
 global:

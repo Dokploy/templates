@@ -4,7 +4,7 @@ main_domain = "${domain}"
 [config]
 
 [[config.domains]]
-serviceName = "signoz"
+serviceName = "frontend"
 port = 3301
 host = "${main_domain}"
 

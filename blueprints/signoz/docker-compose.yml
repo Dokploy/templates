@@ -8,12 +8,10 @@ services:
       - ZOO_SERVER_ID=1
       - ALLOW_ANONYMOUS_LOGIN=yes
       - ZOO_AUTOPURGE_INTERVAL=1
-      - ZOO_ENABLE_PROMETHEUS_METRICS=yes
-      - ZOO_PROMETHEUS_METRICS_PORT_NUMBER=9141
     volumes:
       - signoz-zookeeper-1:/bitnami/zookeeper
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -m 2 http://localhost:8080/commands/ruok | grep error | grep null"]
+      test: ["CMD-SHELL", "curl -s -m 2 http://localhost:8080/commands/ruok | grep -v error"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -24,16 +22,18 @@ services:
 
   # ClickHouse database for storing observability data
   clickhouse:
-    image: clickhouse/clickhouse-server:24.1.2-alpine
+    image: clickhouse/clickhouse-server:latest-alpine
     restart: unless-stopped
     tty: true
-    volumes:
-      - signoz-clickhouse:/var/lib/clickhouse/
     depends_on:
       zookeeper-1:
         condition: service_healthy
+    volumes:
+      - signoz-clickhouse:/var/lib/clickhouse/
+    environment:
+      - CLICKHOUSE_DB=signoz_traces
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "0.0.0.0:8123/ping"]
+      test: ["CMD", "wget", "--spider", "-q", "localhost:8123/ping"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -48,62 +48,48 @@ services:
         max-file: "3"
 
   # SigNoz database schema initialization
-  init-signoz-db:
-    image: signoz/migrate:v0.91.0
+  migrator:
+    image: signoz/migrate:v0.70.5
     restart: on-failure
     command:
-      - bash
-      - -c
-      - |
-        echo "Waiting for ClickHouse to be ready..."
-        until clickhouse-client --host clickhouse --port 9000 --query="SELECT 1" > /dev/null 2>&1; do
-          echo "ClickHouse not ready, waiting..."
-          sleep 2
-        done
-
-        echo "Running SigNoz database migrations..."
-        # Use SigNoz's official migration tool for proper schema setup
-        export CLICKHOUSE_DSN="tcp://clickhouse:9000"
-        export STORAGE=clickhouse
-
-        # Run the official SigNoz migrations
-        ./migrate -dir /usr/src/app/migrations/clickhouse up
-
-        echo "Database initialization completed successfully!"
-    environment:
-      - CLICKHOUSE_DSN=tcp://clickhouse:9000
-      - STORAGE=clickhouse
+      - -dir
+      - migrations/clickhouse
+      - -datasource
+      - tcp://clickhouse:9000
+      - up
     depends_on:
       clickhouse:
         condition: service_healthy
+    environment:
+      - CLICKHOUSE_DSN=tcp://clickhouse:9000
     logging:
       options:
         max-size: 50m
         max-file: "3"
 
-  # SigNoz main application
-  signoz:
-    image: signoz/signoz:v0.91.0
+  # Query Service - SigNoz backend
+  query-service:
+    image: signoz/query-service:latest
     restart: unless-stopped
-    ports:
-      - "3301"
+    command:
+      - -config=/root/config/prometheus.yml
+      - -prefer-delta=true
     environment:
-      - SIGNOZ_ALERTMANAGER_PROVIDER=signoz
-      - SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN=tcp://clickhouse:9000
-      - SIGNOZ_SQLSTORE_SQLITE_PATH=/var/lib/signoz/signoz.db
+      - ClickHouseUrl=tcp://clickhouse:9000
+      - ALERTMANAGER_API_PREFIX=http://alertmanager:9093/api/v1
+      - SIGNOZ_LOCAL_DB_PATH=/var/lib/signoz/signoz.db
       - DASHBOARDS_PATH=/root/config/dashboards
       - STORAGE=clickhouse
       - GODEBUG=netdns=go
       - TELEMETRY_ENABLED=true
       - DEPLOYMENT_TYPE=docker-standalone-amd
-      - DOT_METRICS_ENABLED=true
     volumes:
-      - signoz-sqlite:/var/lib/signoz/
+      - signoz-query-service:/var/lib/signoz/
     depends_on:
-      init-signoz-db:
+      migrator:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "localhost:3301/api/v1/health"]
+      test: ["CMD", "wget", "--spider", "-q", "localhost:8085/api/v1/health"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -112,9 +98,42 @@ services:
         max-size: 50m
         max-file: "3"
 
+  # SigNoz Frontend
+  frontend:
+    image: signoz/frontend:latest
+    restart: unless-stopped
+    depends_on:
+      - alertmanager
+      - query-service
+    ports:
+      - "3301"
+    environment:
+      - FRONTEND_API_ENDPOINT=http://query-service:8085
+    logging:
+      options:
+        max-size: 50m
+        max-file: "3"
+
+  # AlertManager for handling alerts
+  alertmanager:
+    image: signoz/alertmanager:0.23.9
+    restart: unless-stopped
+    volumes:
+      - signoz-alertmanager:/data
+    depends_on:
+      query-service:
+        condition: service_healthy
+    command:
+      - --queryService.url=http://query-service:8085
+      - --storage.path=/data
+    logging:
+      options:
+        max-size: 50m
+        max-file: "3"
+
   # OpenTelemetry Collector for receiving telemetry data
   otel-collector:
-    image: signoz/signoz-otel-collector:v0.128.2
+    image: signoz/signoz-otel-collector:latest
     restart: unless-stopped
     command:
       - --config=/etc/otel-collector-config.yaml
@@ -128,7 +147,7 @@ services:
       - OTEL_RESOURCE_ATTRIBUTES=host.name=signoz-host,os.type=linux
       - LOW_CARDINAL_EXCEPTION_GROUPING=false
     depends_on:
-      signoz:
+      clickhouse:
         condition: service_healthy
     logging:
       options:
@@ -137,5 +156,6 @@ services:
 
 volumes:
   signoz-clickhouse:
-  signoz-sqlite:
+  signoz-query-service:
+  signoz-alertmanager:
   signoz-zookeeper-1:

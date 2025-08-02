@@ -108,10 +108,10 @@ service:
 [[config.mounts]]
 filePath = "/etc/manager-config.yaml"
 content = """
-server_endpoint: ws://signoz:3001/api/v1/ws/agent
+server_endpoint: ws://signoz:3301/api/v1/ws/agent
 agent:
   opamp:
-    endpoint: ws://signoz:3001/api/v1/ws/agent
+    endpoint: ws://signoz:3301/api/v1/ws/agent
     headers: {}
 """
 

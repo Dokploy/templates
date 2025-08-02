@@ -1,39 +1,29 @@
+version: "3.8"
 services:
-  client:
-    image: bluewaveuptime/uptime_client:latest
-    restart: always
-    environment:
-      UPTIME_APP_API_BASE_URL: "https://${DOMAIN}/api/v1"
-    depends_on:
-      - server
-
   server:
-    image: bluewaveuptime/uptime_server:latest
+    image: ghcr.io/bluewave-labs/checkmate-backend-mono:latest
     restart: always
-    depends_on:
-      - redis
-      - mongodb
+    ports:
+      - 52345
     environment:
-      - DB_CONNECTION_STRING=mongodb://checkmate-mongodb:27017/uptime_db
-      - REDIS_HOST=checkmate-redis
-      - SYSTEM_EMAIL_HOST=${EMAIL_HOST}
-      - SYSTEM_EMAIL_PORT=${EMAIL_PORT}
-      - SYSTEM_EMAIL_ADDRESS=${EMAIL_ADDRESS}
-      - SYSTEM_EMAIL_PASSWORD=${EMAIL_PASSWORD}
-    # volumes:
-    #   - /var/run/docker.sock:/var/run/docker.sock:ro
-
-  redis:
-    image: bluewaveuptime/uptime_redis:latest
-    restart: always
-    hostname: checkmate-redis
-    volumes:
-      - ../files/redis/data:/data
-  
+      - UPTIME_APP_API_BASE_URL=${UPTIME_APP_API_BASE_URL}
+      - UPTIME_APP_CLIENT_HOST=${UPTIME_APP_CLIENT_HOST}
+      - DB_CONNECTION_STRING=${DB_CONNECTION_STRING}
+      - REDIS_URL=${REDIS_URL}
+      - CLIENT_HOST=${CLIENT_HOST}
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - mongodb
   mongodb:
-    image: bluewaveuptime/uptime_database_mongo:latest
+    image: ghcr.io/bluewave-labs/checkmate-mongo:latest
     restart: always
-    hostname: checkmate-mongodb
+    command: ["mongod", "--quiet", "--replSet", "rs0", "--bind_ip_all"]
     volumes:
-      - ../files/mongo/data:/data/db
-    command: ["mongod", "--quiet"]
+      - ../files/mongo-data:/data/db
+    healthcheck:
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongodb:27017'}]}) }" | mongosh --port 27017 --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+      start_interval: 1s
+      retries: 30

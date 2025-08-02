@@ -1,4 +1,3 @@
-
 services:
   # Zookeeper for ClickHouse coordination
   zookeeper-1:
@@ -48,9 +47,9 @@ services:
         max-size: 50m
         max-file: "3"
 
-  # Manual database and table initialization
+  # SigNoz database schema initialization
   init-signoz-db:
-    image: clickhouse/clickhouse-server:24.1.2-alpine
+    image: signoz/migrate:v0.91.0
     restart: on-failure
     command:
       - bash
@@ -62,50 +61,18 @@ services:
           sleep 2
         done
 
-        echo "Creating databases..."
-        clickhouse-client --host clickhouse --port 9000 --query="CREATE DATABASE IF NOT EXISTS signoz_traces"
-        clickhouse-client --host clickhouse --port 9000 --query="CREATE DATABASE IF NOT EXISTS signoz_logs"
-        clickhouse-client --host clickhouse --port 9000 --query="CREATE DATABASE IF NOT EXISTS signoz_metrics"
+        echo "Running SigNoz database migrations..."
+        # Use SigNoz's official migration tool for proper schema setup
+        export CLICKHOUSE_DSN="tcp://clickhouse:9000"
+        export STORAGE=clickhouse
 
-        echo "Creating basic tables for traces..."
-        clickhouse-client --host clickhouse --port 9000 --query="
-        CREATE TABLE IF NOT EXISTS signoz_traces.signoz_spans (
-          timestamp DateTime64(9) CODEC(DoubleDelta, LZ4),
-          traceID String CODEC(ZSTD(1)),
-          model String CODEC(ZSTD(1))
-        ) ENGINE = MergeTree()
-        PARTITION BY toDate(timestamp)
-        ORDER BY (timestamp, traceID)
-        TTL timestamp + toIntervalDay(7)
-        SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1"
-
-        echo "Creating basic tables for logs..."
-        clickhouse-client --host clickhouse --port 9000 --query="
-        CREATE TABLE IF NOT EXISTS signoz_logs.logs (
-          timestamp DateTime64(9) CODEC(DoubleDelta, LZ4),
-          body String CODEC(ZSTD(1)),
-          severity_text LowCardinality(String) CODEC(ZSTD(1)),
-          severity_number UInt8 CODEC(ZSTD(1))
-        ) ENGINE = MergeTree()
-        PARTITION BY toDate(timestamp)
-        ORDER BY timestamp
-        TTL timestamp + toIntervalDay(7)
-        SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1"
-
-        echo "Creating basic tables for metrics..."
-        clickhouse-client --host clickhouse --port 9000 --query="
-        CREATE TABLE IF NOT EXISTS signoz_metrics.samples (
-          metric_name LowCardinality(String) CODEC(ZSTD(1)),
-          fingerprint UInt64 CODEC(Delta, ZSTD(1)),
-          timestamp_ms Int64 CODEC(Delta, ZSTD(1)),
-          value Float64 CODEC(ZSTD(1))
-        ) ENGINE = MergeTree()
-        PARTITION BY toDate(timestamp_ms / 1000)
-        ORDER BY (metric_name, fingerprint, timestamp_ms)
-        TTL toDateTime(timestamp_ms / 1000) + toIntervalDay(7)
-        SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1"
+        # Run the official SigNoz migrations
+        ./migrate -dir /usr/src/app/migrations/clickhouse up
 
         echo "Database initialization completed successfully!"
+    environment:
+      - CLICKHOUSE_DSN=tcp://clickhouse:9000
+      - STORAGE=clickhouse
     depends_on:
       clickhouse:
         condition: service_healthy
@@ -118,9 +85,8 @@ services:
   signoz:
     image: signoz/signoz:v0.91.0
     restart: unless-stopped
-    command: ["--config=/root/config/prometheus.yml"]
     ports:
-      - "8080"
+      - "3301"
     environment:
       - SIGNOZ_ALERTMANAGER_PROVIDER=signoz
       - SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN=tcp://clickhouse:9000
@@ -133,12 +99,11 @@ services:
       - DOT_METRICS_ENABLED=true
     volumes:
       - signoz-sqlite:/var/lib/signoz/
-      - ../files/root/config/prometheus.yml:/root/config/prometheus.yml:ro
     depends_on:
       init-signoz-db:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "localhost:8080/api/v1/health"]
+      test: ["CMD", "wget", "--spider", "-q", "localhost:3301/api/v1/health"]
       interval: 30s
       timeout: 5s
       retries: 3

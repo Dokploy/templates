@@ -18,10 +18,15 @@ receivers:
         endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins:
+            - "http://localhost:3001"
+            - "https://*.${main_domain}"
   prometheus:
     config:
       global:
         scrape_interval: 60s
+        evaluation_interval: 60s
       scrape_configs:
         - job_name: otel-collector
           static_configs:
@@ -29,19 +34,30 @@ receivers:
               - localhost:8888
             labels:
               job_name: otel-collector
+        - job_name: signoz-services
+          static_configs:
+          - targets:
+              - query-service:8085
+              - frontend:3001
+              - alertmanager:9093
 
 processors:
   batch:
     send_batch_size: 10000
     send_batch_max_size: 11000
     timeout: 10s
+  memory_limiter:
+    limit_mib: 1000
+    spike_limit_mib: 200
+    check_interval: 5s
   resourcedetection:
-    detectors: [env, system]
+    detectors: [env, system, docker]
     timeout: 2s
+    override: false
   signozspanmetrics/delta:
     metrics_exporter: signozclickhousemetrics
     metrics_flush_interval: 60s
-    latency_histogram_buckets: [100us, 1ms, 2ms, 6ms, 10ms, 50ms, 100ms, 250ms, 500ms, 1000ms, 1400ms, 2000ms, 5s, 10s, 20s, 40s, 60s ]
+    latency_histogram_buckets: [100us, 1ms, 2ms, 6ms, 10ms, 50ms, 100ms, 250ms, 500ms, 1000ms, 1400ms, 2000ms, 5s, 10s, 20s, 40s, 60s]
     dimensions_cache_size: 100000
     aggregation_temporality: AGGREGATION_TEMPORALITY_DELTA
     enable_exp_histogram: true
@@ -66,41 +82,109 @@ extensions:
     endpoint: 0.0.0.0:13133
   pprof:
     endpoint: 0.0.0.0:1777
+  zpages:
+    endpoint: 0.0.0.0:55679
 
 exporters:
   clickhousetraces:
-    datasource: tcp://clickhouse:9000/signoz_traces
+    datasource: tcp://clickhouse:9000/signoz_traces?sslmode=disable
     low_cardinal_exception_grouping: ${env:LOW_CARDINAL_EXCEPTION_GROUPING}
-    use_new_schema: false
-  signozclickhousemetrics:
-    dsn: tcp://clickhouse:9000/signoz_metrics
-  clickhouselogsexporter:
-    dsn: tcp://clickhouse:9000/signoz_logs
     timeout: 10s
-    use_new_schema: false
+    retry_on_failure:
+      enabled: true
+      initial_interval: 5s
+      max_interval: 30s
+      max_elapsed_time: 300s
+  signozclickhousemetrics:
+    dsn: tcp://clickhouse:9000/signoz_metrics?sslmode=disable
+    timeout: 10s
+    retry_on_failure:
+      enabled: true
+      initial_interval: 5s
+      max_interval: 30s
+      max_elapsed_time: 300s
+  clickhouselogsexporter:
+    dsn: tcp://clickhouse:9000/signoz_logs?sslmode=disable
+    timeout: 10s
+    retry_on_failure:
+      enabled: true
+      initial_interval: 5s
+      max_interval: 30s
+      max_elapsed_time: 300s
 
 service:
   telemetry:
     logs:
+      level: info
       encoding: json
+    metrics:
+      address: 0.0.0.0:8888
   extensions:
     - health_check
     - pprof
+    - zpages
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [signozspanmetrics/delta, batch]
+      processors: [memory_limiter, resourcedetection, signozspanmetrics/delta, batch]
       exporters: [clickhousetraces]
     metrics:
       receivers: [otlp]
-      processors: [batch]
+      processors: [memory_limiter, resourcedetection, batch]
       exporters: [signozclickhousemetrics]
     metrics/prometheus:
       receivers: [prometheus]
-      processors: [batch]
+      processors: [memory_limiter, resourcedetection, batch]
       exporters: [signozclickhousemetrics]
     logs:
       receivers: [otlp]
-      processors: [batch]
+      processors: [memory_limiter, resourcedetection, batch]
       exporters: [clickhouselogsexporter]
+"""
+
+[[config.mounts]]
+filePath = "/clickhouse-config.xml"
+content = """
+<clickhouse>
+    <logger>
+        <level>warning</level>
+        <console>1</console>
+        <log remove="remove"/>
+        <errorlog remove="remove"/>
+    </logger>
+    <query_log>
+        <database>system</database>
+        <table>query_log</table>
+        <partition_by>toYYYYMM(event_date)</partition_by>
+        <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+    </query_log>
+    <query_thread_log remove="remove"/>
+    <query_views_log remove="remove"/>
+    <part_log remove="remove"/>
+    <metric_log remove="remove"/>
+    <trace_log remove="remove"/>
+    <crash_log remove="remove"/>
+    <session_log remove="remove"/>
+</clickhouse>
+"""
+
+[[config.mounts]]
+filePath = "/config/prometheus.yml"
+content = """
+global:
+  scrape_interval: 60s
+  evaluation_interval: 60s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'signoz-query-service'
+    static_configs:
+      - targets: ['query-service:8085']
+
+  - job_name: 'signoz-otel-collector'
+    static_configs:
+      - targets: ['otel-collector:8888']
 """

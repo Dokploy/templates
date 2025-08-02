@@ -1,7 +1,7 @@
 services:
   # Zookeeper for ClickHouse coordination
   zookeeper-1:
-    image: bitnami/zookeeper:3.7.1
+    image: bitnami/zookeeper:3.9.2
     restart: unless-stopped
     user: root
     environment:
@@ -11,10 +11,11 @@ services:
     volumes:
       - signoz-zookeeper-1:/bitnami/zookeeper
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -m 2 http://localhost:8080/commands/ruok | grep -v error"]
+      test: ["CMD-SHELL", "curl -s -m 2 http://localhost:8080/commands/ruok | grep -v error || exit 1"]
       interval: 30s
-      timeout: 5s
-      retries: 3
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     logging:
       options:
         max-size: 50m
@@ -22,21 +23,9 @@ services:
 
   # ClickHouse database for storing observability data
   clickhouse:
-    image: clickhouse/clickhouse-server:latest-alpine
+    image: clickhouse/clickhouse-server:24.1.2-alpine
     restart: unless-stopped
     tty: true
-    depends_on:
-      zookeeper-1:
-        condition: service_healthy
-    volumes:
-      - signoz-clickhouse:/var/lib/clickhouse/
-    environment:
-      - CLICKHOUSE_DB=signoz_traces
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "localhost:8123/ping"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
     ulimits:
       nproc: 65535
       nofile:
@@ -46,22 +35,38 @@ services:
       options:
         max-size: 50m
         max-file: "3"
+    depends_on:
+      zookeeper-1:
+        condition: service_healthy
+    volumes:
+      - signoz-clickhouse:/var/lib/clickhouse/
+      - ../files/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
+    environment:
+      - CLICKHOUSE_DB=signoz_traces
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8123/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
   # SigNoz database schema initialization
   migrator:
-    image: signoz/migrate:v0.70.5
+    image: signoz/migrate:0.88.0
     restart: on-failure
     command:
       - -dir
       - migrations/clickhouse
       - -datasource
-      - tcp://clickhouse:9000
+      - tcp://clickhouse:9000?sslmode=disable
       - up
     depends_on:
       clickhouse:
         condition: service_healthy
     environment:
-      - CLICKHOUSE_DSN=tcp://clickhouse:9000
+      - CLICKHOUSE_DSN=tcp://clickhouse:9000?sslmode=disable
     logging:
       options:
         max-size: 50m
@@ -69,13 +74,13 @@ services:
 
   # Query Service - SigNoz backend
   query-service:
-    image: signoz/query-service:latest
+    image: signoz/query-service:0.88.0
     restart: unless-stopped
     command:
       - -config=/root/config/prometheus.yml
       - -prefer-delta=true
     environment:
-      - ClickHouseUrl=tcp://clickhouse:9000
+      - ClickHouseUrl=tcp://clickhouse:9000?sslmode=disable
       - ALERTMANAGER_API_PREFIX=http://alertmanager:9093/api/v1
       - SIGNOZ_LOCAL_DB_PATH=/var/lib/signoz/signoz.db
       - DASHBOARDS_PATH=/root/config/dashboards
@@ -85,14 +90,16 @@ services:
       - DEPLOYMENT_TYPE=docker-standalone-amd
     volumes:
       - signoz-query-service:/var/lib/signoz/
+      - ../files/config:/root/config
     depends_on:
       migrator:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "localhost:8085/api/v1/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8085/api/v1/health"]
       interval: 30s
-      timeout: 5s
-      retries: 3
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     logging:
       options:
         max-size: 50m
@@ -100,15 +107,23 @@ services:
 
   # SigNoz Frontend
   frontend:
-    image: signoz/frontend:latest
+    image: signoz/frontend:0.88.0
     restart: unless-stopped
     depends_on:
-      - alertmanager
-      - query-service
+      alertmanager:
+        condition: service_started
+      query-service:
+        condition: service_healthy
     ports:
       - "3301"
     environment:
       - FRONTEND_API_ENDPOINT=http://query-service:8085
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     logging:
       options:
         max-size: 50m
@@ -126,6 +141,12 @@ services:
     command:
       - --queryService.url=http://query-service:8085
       - --storage.path=/data
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9093/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     logging:
       options:
         max-size: 50m
@@ -133,7 +154,7 @@ services:
 
   # OpenTelemetry Collector for receiving telemetry data
   otel-collector:
-    image: signoz/signoz-otel-collector:latest
+    image: signoz/signoz-otel-collector:0.88.0
     restart: unless-stopped
     command:
       - --config=/etc/otel-collector-config.yaml
@@ -141,6 +162,7 @@ services:
     ports:
       - "4317"  # OTLP gRPC receiver
       - "4318"  # OTLP HTTP receiver
+      - "8888"  # Prometheus metrics
     volumes:
       - ../files/etc/otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
     environment:
@@ -149,6 +171,12 @@ services:
     depends_on:
       clickhouse:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:13133/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     logging:
       options:
         max-size: 50m
@@ -159,3 +187,4 @@ volumes:
   signoz-query-service:
   signoz-alertmanager:
   signoz-zookeeper-1:
+

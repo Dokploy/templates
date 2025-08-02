@@ -1,0 +1,25 @@
+[variables]
+main_domain = "${domain}"
+wg_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "wg-easy" # Matches the service name in docker-compose.yml
+port = 51821
+host = "${main_domain}"
+
+[config.env]
+# WG_HOST is required for the WG-Easy web interface to know the public hostname
+WG_HOST = "${main_domain}"
+# PASSWORD is used to secure the WG-Easy web interface
+PASSWORD = "${wg_password}"
+# Optional: PORT is set to match the exposed port
+PORT = "51821"
+# Optional: HOST ensures the service listens on all interfaces
+HOST = "${main_domain}"
+# Optional: INSECURE set to false for security
+INSECURE = "false"
+
+[[config.mounts]]
+filePath = "/etc/wireguard"
+content = ""

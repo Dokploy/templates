@@ -11,6 +11,8 @@ webhook_url = "https://${main_domain}"
 timezone = "Europe/Paris"
 
 [config]
+mounts = []
+
 [[config.domains]]
 serviceName = "n8n"
 port = 5678
@@ -27,3 +29,7 @@ N8N_HOST = "https://${main_domain}"
 N8N_PORT = "${n8n_port}"
 WEBHOOK_URL = "${webhook_url}"
 GENERIC_TIMEZONE = "${timezone}"
+
+[variables]
+main_domain = "${domain}"
+

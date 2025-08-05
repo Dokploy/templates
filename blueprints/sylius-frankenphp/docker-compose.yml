@@ -6,23 +6,23 @@ services:
         condition: service_healthy
     environment:
       # Caddy configuration (SSL automatique)
-      SERVER_NAME: ${SERVER_NAME}
+      SERVER_NAME: ${server_name}
       
       # FrankenPHP worker mode
       FRANKENPHP_CONFIG: worker ./public/index.php
       APP_RUNTIME: Runtime\FrankenPhpSymfony\Runtime
-      FRANKENPHP_WORKERS: ${FRANKENPHP_WORKERS}
+      FRANKENPHP_WORKERS: ${frankenphp_workers}
       
       # Sylius configuration
-      APP_ENV: ${APP_ENV}
-      APP_DEBUG: ${APP_DEBUG}
-      APP_SECRET: ${APP_SECRET}
+      APP_ENV: ${app_env}
+      APP_DEBUG: ${app_debug}
+      APP_SECRET: ${app_secret}
       
       # Database
-      DATABASE_URL: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@mysql/${MYSQL_DATABASE}
+      DATABASE_URL: mysql://${mysql_user}:${mysql_password}@mysql/${mysql_database}
       
       # Mail
-      MAILER_DSN: ${MAILER_DSN}
+      MAILER_DSN: ${mailer_dsn}
       
       # Messenger (queues)
       MESSENGER_TRANSPORT_DSN: doctrine://default
@@ -34,10 +34,14 @@ services:
       SYLIUS_MESSENGER_TRANSPORT_PAYMENT_REQUEST_FAILED_DSN: sync://
       
       # PHP Configuration
-      PHP_DATE_TIMEZONE: ${PHP_DATE_TIMEZONE}
+      PHP_DATE_TIMEZONE: ${php_date_timezone}
       PHP_INI_OPCACHE__MEMORY_CONSUMPTION: 256
       PHP_INI_OPCACHE__MAX_ACCELERATED_FILES: 20000
       PHP_INI_OPCACHE__REVALIDATE_FREQ: 60
+      
+      # Admin Sylius pour auto-install
+      SYLIUS_ADMIN_EMAIL: ${sylius_admin_email}
+      SYLIUS_ADMIN_PASSWORD: ${sylius_admin_password}
       
     volumes:
       - sylius_app:/srv/app:rw
@@ -60,7 +64,7 @@ services:
     platform: linux/amd64
     restart: unless-stopped
     healthcheck:
-      test: ['CMD', '/usr/bin/mysql', '--user=${MYSQL_USER}', '--password=${MYSQL_PASSWORD}', '--execute', 'SELECT 1']
+      test: ['CMD', '/usr/bin/mysql', '--user=${mysql_user}', '--password=${mysql_password}', '--execute', 'SELECT 1']
       start_period: 30s
       interval: 10s
       timeout: 5s
@@ -68,10 +72,10 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql:rw
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${mysql_root_password}
+      MYSQL_DATABASE: ${mysql_database}
+      MYSQL_USER: ${mysql_user}
+      MYSQL_PASSWORD: ${mysql_password}
     cap_add:
       - SYS_NICE
 

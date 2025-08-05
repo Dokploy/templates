@@ -8,24 +8,17 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    command: >
-      postgres
-        -c shared_buffers=512MB
-        -c effective_cache_size=1.5GB
-        -c max_connections=30
-        -c work_mem=4MB
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 20s
+      retries: 10
 
   n8n:
-    image: n8nio/n8n:latest
+    image: docker.n8n.io/n8nio/n8n:1.104.0
     restart: unless-stopped
     ports:
-      - ${N8N_PORT:-5678}
+      - "5678"
     environment:
       # Base de données
       - DB_TYPE=postgresdb
@@ -35,23 +28,13 @@ services:
       - DB_POSTGRESDB_USER=${POSTGRES_USER}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
       
-      # Sécurité
-      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}
-      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
-      
-      # Configuration
+      # Configuration réseau
       - N8N_HOST=${N8N_HOST}
-      - N8N_PORT=${N8N_PORT:-5678}
-      - WEBHOOK_URL=${WEBHOOK_URL}
-      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE:-Europe/Paris}
-      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      - WEBHOOK_URL=https://${N8N_HOST}
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
       
-      # Optimisation RAM (4GB serveur)
-      - NODE_OPTIONS=--max-old-space-size=1536
-      - EXECUTIONS_DATA_PRUNE=true
-      - EXECUTIONS_DATA_MAX_AGE=72
+      # Sécurité (optionnel - peut être retiré pour simplifier)
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
       
     volumes:
       - n8n_data:/home/node/.n8n

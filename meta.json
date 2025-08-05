@@ -3191,4 +3191,18 @@
     },
     "tags": ["home-automation", "nvr", "smart-home", "surveillance"]
   }
+
+  {
+  "id": "n8n-with-postgres",
+  "name": "n8n with Postgres", 
+  "version": "latest",
+  "description": "n8n + PostgreSQL optimisé pour serveurs 2 cores / 4GB RAM. Inclut authentification sécurisée, optimisations mémoire, et configuration production-ready avec mots de passe générés automatiquement.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/n8n-io/n8n",
+    "website": "https://n8n.io/",
+    "docs": "https://docs.n8n.io/"
+  },
+  "tags": ["automation", "workflow", "postgres", "optimized", "production"]
+}
 ]

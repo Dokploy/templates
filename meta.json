@@ -3197,7 +3197,7 @@
   "name": "n8n with Postgres", 
   "version": "latest",
   "description": "n8n + PostgreSQL optimisé pour serveurs 2 cores / 4GB RAM. Inclut authentification sécurisée, optimisations mémoire, et configuration production-ready avec mots de passe générés automatiquement.",
-  "logo": "image.png",
+  "logo": "n8n.png",
   "links": {
     "github": "https://github.com/n8n-io/n8n",
     "website": "https://n8n.io/",

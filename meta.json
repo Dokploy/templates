@@ -3190,5 +3190,18 @@
       "docs": "https://docs.scrypted.app/"
     },
     "tags": ["home-automation", "nvr", "smart-home", "surveillance"]
+  },
+  {
+    "id": "wallos",
+    "name": "Wallos",
+    "version": "latest",
+    "description": "Wallos is a self-hosted subscription tracking application that helps you manage and monitor your subscriptions, providing insights into your spending habits.",
+    "logo": "wallos.png",
+    "links": {
+      "github": "https://github.com/ellite/wallos",
+      "website": "https://wallosapp.com",
+      "docs": "https://github.com/ellite/wallos?tab=readme-ov-file#getting-started"
+    },
+    "tags": ["finance", "subscription", "budgeting", "expense-tracking", "spending"]
   }
 ]

@@ -1,3 +1,4 @@
+version: "3.8"
 services:
   postgres:
     image: postgres:17-alpine
@@ -15,12 +16,10 @@ services:
       retries: 10
 
   n8n:
-    image: docker.n8n.io/n8nio/n8n:1.104.0
-    restart: unless-stopped
-    ports:
-      - "5678"
+    image: n8nio/n8n:latest
+    restart: always
     environment:
-      # Base de données
+      # Configuration PostgreSQL (AJOUT)
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
       - DB_POSTGRESDB_PORT=5432
@@ -28,14 +27,14 @@ services:
       - DB_POSTGRESDB_USER=${POSTGRES_USER}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
       
-      # Configuration réseau
+      # Configuration existante (INCHANGÉE)
       - N8N_HOST=${N8N_HOST}
-      - WEBHOOK_URL=https://${N8N_HOST}
+      - N8N_PORT=${N8N_PORT}
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - WEBHOOK_URL=https://${N8N_HOST}/
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
-      
-      # Sécurité (optionnel - peut être retiré pour simplifier)
-      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
-      
+      - N8N_SECURE_COOKIE=false
     volumes:
       - n8n_data:/home/node/.n8n
     depends_on:
@@ -43,5 +42,5 @@ services:
         condition: service_healthy
 
 volumes:
-  postgres_data:
   n8n_data:
+  postgres_data:

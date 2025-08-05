@@ -1,0 +1,31 @@
+[variables]
+main_domain = "${domain}"
+postgres_user = "${username}"
+postgres_password = "${password:24}"
+postgres_db = "n8n"
+n8n_encryption_key = "${base64:64}"
+n8n_basic_auth_user = "${username}"
+n8n_basic_auth_password = "${password:24}"
+n8n_port = "5678"
+webhook_url = "https://${main_domain}"
+timezone = "Europe/Paris"
+
+[config]
+[[config.domains]]
+serviceName = "n8n"
+port = 5678
+host = "${main_domain}"
+
+[config.env]
+env = [
+    "POSTGRES_USER=${postgres_user}",
+    "POSTGRES_PASSWORD=${postgres_password}",
+    "POSTGRES_DB=${postgres_db}",
+    "N8N_ENCRYPTION_KEY=${n8n_encryption_key}",
+    "N8N_BASIC_AUTH_USER=${n8n_basic_auth_user}",
+    "N8N_BASIC_AUTH_PASSWORD=${n8n_basic_auth_password}",
+    "N8N_HOST=https://${main_domain}",
+    "N8N_PORT=${n8n_port}",
+    "WEBHOOK_URL=${webhook_url}",
+    "GENERIC_TIMEZONE=${timezone}"
+]

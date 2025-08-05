@@ -1,0 +1,104 @@
+services:
+  frankenphp:
+    image: louisbertin/sylius-frankenphp:latest
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # Caddy configuration (SSL automatique)
+      SERVER_NAME: ${SERVER_NAME}
+      
+      # FrankenPHP worker mode
+      FRANKENPHP_CONFIG: worker ./public/index.php
+      APP_RUNTIME: Runtime\FrankenPhpSymfony\Runtime
+      FRANKENPHP_WORKERS: ${FRANKENPHP_WORKERS}
+      
+      # Sylius configuration
+      APP_ENV: ${APP_ENV}
+      APP_DEBUG: ${APP_DEBUG}
+      APP_SECRET: ${APP_SECRET}
+      
+      # Database
+      DATABASE_URL: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@mysql/${MYSQL_DATABASE}
+      
+      # Mail
+      MAILER_DSN: ${MAILER_DSN}
+      
+      # Messenger (queues)
+      MESSENGER_TRANSPORT_DSN: doctrine://default
+      SYLIUS_MESSENGER_TRANSPORT_MAIN_DSN: doctrine://default
+      SYLIUS_MESSENGER_TRANSPORT_MAIN_FAILED_DSN: doctrine://default?queue_name=main_failed
+      SYLIUS_MESSENGER_TRANSPORT_CATALOG_PROMOTION_REMOVAL_DSN: doctrine://default?queue_name=catalog_promotion_removal
+      SYLIUS_MESSENGER_TRANSPORT_CATALOG_PROMOTION_REMOVAL_FAILED_DSN: doctrine://default?queue_name=catalog_promotion_removal_failed
+      SYLIUS_MESSENGER_TRANSPORT_PAYMENT_REQUEST_DSN: sync://
+      SYLIUS_MESSENGER_TRANSPORT_PAYMENT_REQUEST_FAILED_DSN: sync://
+      
+      # PHP Configuration
+      PHP_DATE_TIMEZONE: ${PHP_DATE_TIMEZONE}
+      PHP_INI_OPCACHE__MEMORY_CONSUMPTION: 256
+      PHP_INI_OPCACHE__MAX_ACCELERATED_FILES: 20000
+      PHP_INI_OPCACHE__REVALIDATE_FREQ: 60
+      
+    volumes:
+      - sylius_app:/srv/app:rw
+      - sylius_public:/srv/app/public:rw
+      - caddy_data:/data
+      - caddy_config:/config
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      start_period: 60s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mysql:
+    image: mysql:8.4
+    platform: linux/amd64
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', '/usr/bin/mysql', '--user=${MYSQL_USER}', '--password=${MYSQL_PASSWORD}', '--execute', 'SELECT 1']
+      start_period: 30s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - mysql_data:/var/lib/mysql:rw
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    cap_add:
+      - SYS_NICE
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    platform: linux/amd64
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+volumes:
+  mysql_data:
+  sylius_app:
+  sylius_public:
+  caddy_data:
+  caddy_config:

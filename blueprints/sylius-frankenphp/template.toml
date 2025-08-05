@@ -1,14 +1,3 @@
-name = "Sylius E-commerce (FrankenPHP)"
-description = "Shop e-commerce haute performance avec Sylius + FrankenPHP + Mercure"
-version = "1.0.0"
-logo = "https://sylius.com/assets/img/sylius-logo.svg"
-tags = ["ecommerce", "sylius", "frankenphp", "php", "shop"]
-links = [
-  { name = "Documentation", url = "https://docs.sylius.com/" },
-  { name = "Demo", url = "https://demo.sylius.com/" },
-  { name = "Repo Original", url = "https://github.com/LouisBertin/sylius-frankenphp" }
-]
-
 [variables]
 main_domain = "${domain}"
 mysql_root_password = "${password:32}"

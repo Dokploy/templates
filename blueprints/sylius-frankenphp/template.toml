@@ -10,27 +10,36 @@ links = [
 ]
 
 [variables]
-# Domaine et serveur
-SERVER_NAME = { description = "Nom de domaine (ex: boutique.com)", defaultValue = "localhost", required = true }
-MEMORY_LIMIT = { description = "Limite mémoire PHP", defaultValue = "512M", required = false }
+# Domaine principal
+server_name = "${domain}"
 
-# Base de données MySQL
-MYSQL_ROOT_PASSWORD = { description = "Mot de passe root MySQL", defaultValue = "", generate = "password" }
-MYSQL_DATABASE = { description = "Base de données", defaultValue = "sylius", required = true }
-MYSQL_USER = { description = "Utilisateur MySQL", defaultValue = "sylius", required = true }  
-MYSQL_PASSWORD = { description = "Mot de passe MySQL", defaultValue = "", generate = "password" }
+# Base de données MySQL  
+mysql_root_password = "${password:32}"
+mysql_database = "sylius"
+mysql_user = "sylius"
+mysql_password = "${password:32}"
 
 # Application Symfony
-APP_SECRET = { description = "Clé secrète Symfony", defaultValue = "", generate = "password" }
-APP_ENV = { description = "Environnement", defaultValue = "prod", required = true }
-APP_DEBUG = { description = "Mode debug", defaultValue = "0", required = true }
+app_secret = "${password:64}"
+app_env = "prod"
+app_debug = "0"
 
 # Configuration PHP
-PHP_DATE_TIMEZONE = { description = "Timezone PHP", defaultValue = "Europe/Paris", required = false }
-FRANKENPHP_WORKERS = { description = "Nombre de workers FrankenPHP", defaultValue = "4", required = false }
+memory_limit = "512M"
+php_date_timezone = "Europe/Paris"
+frankenphp_workers = "4"
 
 # Email
-MAILER_DSN = { description = "Configuration email (ex: smtp://user:pass@host:port)", defaultValue = "smtp://mailhog:1025", required = false }
+mailer_dsn = "smtp://mailhog:1025"
 
-# Node.js version (pour les assets)
-NODE_VERSION = { description = "Version Node.js", defaultValue = "22", required = false }
+# Node.js version
+node_version = "22"
+
+# Admin Sylius
+sylius_admin_email = "admin@example.com"
+sylius_admin_password = "${password:16}"
+
+[[config.domains]]
+serviceName = "frankenphp"
+port = 80
+host = "${server_name}"

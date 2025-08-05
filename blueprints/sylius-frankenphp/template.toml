@@ -1,0 +1,36 @@
+name = "Sylius E-commerce (FrankenPHP)"
+description = "Shop e-commerce haute performance avec Sylius + FrankenPHP + Mercure"
+version = "1.0.0"
+logo = "https://sylius.com/assets/img/sylius-logo.svg"
+tags = ["ecommerce", "sylius", "frankenphp", "php", "shop"]
+links = [
+  { name = "Documentation", url = "https://docs.sylius.com/" },
+  { name = "Demo", url = "https://demo.sylius.com/" },
+  { name = "Repo Original", url = "https://github.com/LouisBertin/sylius-frankenphp" }
+]
+
+[variables]
+# Domaine et serveur
+SERVER_NAME = { description = "Nom de domaine (ex: boutique.com)", defaultValue = "localhost", required = true }
+MEMORY_LIMIT = { description = "Limite mémoire PHP", defaultValue = "512M", required = false }
+
+# Base de données MySQL
+MYSQL_ROOT_PASSWORD = { description = "Mot de passe root MySQL", defaultValue = "", generate = "password" }
+MYSQL_DATABASE = { description = "Base de données", defaultValue = "sylius", required = true }
+MYSQL_USER = { description = "Utilisateur MySQL", defaultValue = "sylius", required = true }  
+MYSQL_PASSWORD = { description = "Mot de passe MySQL", defaultValue = "", generate = "password" }
+
+# Application Symfony
+APP_SECRET = { description = "Clé secrète Symfony", defaultValue = "", generate = "password" }
+APP_ENV = { description = "Environnement", defaultValue = "prod", required = true }
+APP_DEBUG = { description = "Mode debug", defaultValue = "0", required = true }
+
+# Configuration PHP
+PHP_DATE_TIMEZONE = { description = "Timezone PHP", defaultValue = "Europe/Paris", required = false }
+FRANKENPHP_WORKERS = { description = "Nombre de workers FrankenPHP", defaultValue = "4", required = false }
+
+# Email
+MAILER_DSN = { description = "Configuration email (ex: smtp://user:pass@host:port)", defaultValue = "smtp://mailhog:1025", required = false }
+
+# Node.js version (pour les assets)
+NODE_VERSION = { description = "Version Node.js", defaultValue = "22", required = false }

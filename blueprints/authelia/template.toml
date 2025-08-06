@@ -23,6 +23,8 @@ SESSION_SECRET = "${session_secret}"
 STORAGE_ENCRYPTION_KEY = "${storage_encryption_key}"
 REDIS_PASSWORD = "${redis_password}"
 POSTGRES_PASSWORD = "${postgres_password}"
+admin_username = "${admin_username}"
+admin_email = "${admin_email}"
 
 [[config.mounts]]
 filePath = "configuration.yml"

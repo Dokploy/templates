@@ -17,32 +17,32 @@ networks = ["dokploy_internal"]
 
 # Variables d'environnement
 env = [
-  # Database - Variables doubles pour compatibilité
+  # Database
   'DB_NAME=${db_name}',
   'DB_USER=wordpress',
   'DB_PASSWORD=${db_password}',
   'DB_HOST=wp_db',
   'DB_TABLE_PREFIX=wp_',
   
-  # Variables WordPress (nécessaires pour wp-config.php)
+  # Variables WordPress OBLIGATOIRES
   'WORDPRESS_DB_NAME=${db_name}',
   'WORDPRESS_DB_USER=wordpress',
   'WORDPRESS_DB_PASSWORD=${db_password}',
   'WORDPRESS_DB_HOST=wp_db',
   'WORDPRESS_TABLE_PREFIX=wp_',
   
-  # Configuration WordPress
-  'MAIN_DOMAIN=${main_domain}:${host_port}',
-  'WORDPRESS_DEBUG=false',
-  'FORCE_HTTPS=false',
-  'WORDPRESS_CONFIG_EXTRA=define("WP_HOME", "http://${main_domain}:${host_port}"); define("WP_SITEURL", "http://${main_domain}:${host_port}"); define("WP_DEBUG_LOG", true); define("WP_DEBUG_DISPLAY", false); define("WP_CACHE", false); define("FS_METHOD", "direct");',
+  # Debug - Laisser vide = false
+  'WORDPRESS_DEBUG=',
+  
+  # Configuration additionnelle SANS WP_DEBUG
+  'WORDPRESS_CONFIG_EXTRA=define("WP_HOME", "http://${main_domain}:${host_port}"); define("WP_SITEURL", "http://${main_domain}:${host_port}"); define("WP_CACHE", false); define("FS_METHOD", "direct"); define("WP_MEMORY_LIMIT", "256M"); define("WP_MAX_MEMORY_LIMIT", "512M");',
   
   # FrankenPHP
   'SERVER_NAME=:80',
   'CADDY_GLOBAL_OPTIONS=',
   'FRANKENPHP_CONFIG=worker { file /var/www/html/index.php; num 2 }',
   
-  # Cache - IMPORTANT: TTL avec valeur par défaut
+  # Cache avec TTL obligatoire
   'TTL=6000',
   'CACHE_LOC=/var/www/html/wp-content/cache',
   'CACHE_RESPONSE_CODES=200,404,405',
@@ -51,12 +51,16 @@ env = [
   'PURGE_KEY=${cache_purge_key}',
   'PURGE_PATH=/__cache/purge',
   
+  # Autres
+  'FORCE_HTTPS=false',
+  
   # MariaDB
   'MARIADB_ROOT_PASSWORD=${db_password}',
   'MARIADB_DATABASE=${db_name}',
   'MARIADB_USER=wordpress',
   'MARIADB_PASSWORD=${db_password}',
   
-  # Port configuration
+  # Port
   'HOST_PORT=${host_port}',
+  'MAIN_DOMAIN=${main_domain}:${host_port}',
 ]

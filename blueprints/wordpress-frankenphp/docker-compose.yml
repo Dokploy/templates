@@ -5,32 +5,33 @@ services:
       - wp_content:/var/www/html/wp-content
       - wp_cache:/var/www/html/wp-content/cache
     environment:
-      # Base de données
+      # Base de données - Variables simples
       DB_NAME: ${DB_NAME:-wordpress_franken}
       DB_USER: ${DB_USER:-wordpress}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: ${DB_HOST:-wp_db}
       DB_TABLE_PREFIX: ${DB_TABLE_PREFIX:-wp_}
       
-      # WordPress - Variables requises pour que wp-config.php soit créé correctement
+      # Variables WordPress REQUISES pour wp-config.php
       WORDPRESS_DB_NAME: ${DB_NAME:-wordpress_franken}
       WORDPRESS_DB_USER: ${DB_USER:-wordpress}
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
       WORDPRESS_DB_HOST: ${DB_HOST:-wp_db}
       WORDPRESS_TABLE_PREFIX: ${DB_TABLE_PREFIX:-wp_}
       
-      # WordPress Config
-      WORDPRESS_DEBUG: ${WP_DEBUG:-false}
-      FORCE_HTTPS: ${FORCE_HTTPS:-false}
+      # WordPress Debug - Une seule fois via WORDPRESS_DEBUG
+      WORDPRESS_DEBUG: ''  # Vide = false
+      
+      # Configuration additionnelle - SANS WP_DEBUG !
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_HOME', 'http://${MAIN_DOMAIN}');
         define('WP_SITEURL', 'http://${MAIN_DOMAIN}');
-        define('WP_DEBUG_LOG', true);
-        define('WP_DEBUG_DISPLAY', false);
         define('WP_CACHE', false);
         define('FS_METHOD', 'direct');
+        define('WP_MEMORY_LIMIT', '256M');
+        define('WP_MAX_MEMORY_LIMIT', '512M');
       
-      # FrankenPHP - Configuration importante
+      # FrankenPHP
       SERVER_NAME: ${SERVER_NAME:-:80}
       CADDY_GLOBAL_OPTIONS: ${CADDY_GLOBAL_OPTIONS:-}
       FRANKENPHP_CONFIG: |
@@ -39,14 +40,17 @@ services:
           num 2
         }
       
-      # Cache Sidekick - IMPORTANT: TTL doit avoir une valeur
+      # Cache Sidekick
+      TTL: "${TTL:-6000}"
       CACHE_LOC: ${CACHE_LOC:-/var/www/html/wp-content/cache}
       CACHE_RESPONSE_CODES: ${CACHE_RESPONSE_CODES:-200,404,405}
       BYPASS_PATH_PREFIX: ${BYPASS_PATH_PREFIX:-/wp-admin,/wp-json}
       BYPASS_HOME: ${BYPASS_HOME:-false}
       PURGE_KEY: ${PURGE_KEY}
       PURGE_PATH: ${PURGE_PATH:-/__cache/purge}
-      TTL: "${TTL:-6000}"  # IMPORTANT: Valeur par défaut pour éviter l'erreur
+      
+      # Force HTTPS
+      FORCE_HTTPS: ${FORCE_HTTPS:-false}
       
     depends_on:
       wp_db:

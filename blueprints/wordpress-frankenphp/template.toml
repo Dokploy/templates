@@ -4,43 +4,44 @@ db_name = "wordpress_franken"
 db_password = "${password:32}"
 cache_purge_key = "${password:16}"
 
+# PORT DIRECT - Bypass Traefik
 [[config.ports]]
-serviceName = "wordpress"  
+serviceName = "wordpress"
 hostPort = 8080
 containerPort = 80
 protocol = "http"
 
 [config]
+# RÉSEAU ISOLÉ
+networks = ["dokploy_internal"]
+
+# LABELS ANTI-TRAEFIK
+labels = {
+  "traefik.enable" = "false",
+  "traefik.docker.network" = "none"
+}
+
 env = [
-  # Database Configuration
+  # Database
   'DB_NAME=${db_name}',
   'DB_USER=wordpress',
   'DB_PASSWORD=${db_password}',
   'DB_HOST=wp_db',
-  'DB_TABLE_PREFIX=wp_',
   
-  # WordPress URLs - CRUCIAL !
-  'WORDPRESS_CONFIG_EXTRA=define("WP_HOME", "http://${main_domain}"); define("WP_SITEURL", "http://${main_domain}"); define("WP_DEBUG", false); define("WP_CACHE", true);',
+  # WordPress Config
+  'WORDPRESS_CONFIG_EXTRA=define("WP_HOME", "http://${main_domain}:8080"); define("WP_SITEURL", "http://${main_domain}:8080");',
   
-  # FrankenPHP Config
+  # FrankenPHP
   'SERVER_NAME=:80',
   'CADDY_GLOBAL_OPTIONS=auto_https off',
-  'FRANKENPHP_CONFIG=num_threads 100',
   
-  # MariaDB Config  
+  # ANTI-TRAEFIK FORCÉ
+  'TRAEFIK_ENABLE=false',
+  'traefik.enable=false',
+  
+  # MariaDB
   'MARIADB_ROOT_PASSWORD=${db_password}',
   'MARIADB_DATABASE=${db_name}',
   'MARIADB_USER=wordpress',
   'MARIADB_PASSWORD=${db_password}',
 ]
-
-[[config.mounts]]
-filePath = "uploads.ini"
-content = """
-upload_max_filesize = 128M
-post_max_size = 128M
-memory_limit = 512M
-max_execution_time = 300
-opcache.enable=1
-opcache.memory_consumption=256M
-"""

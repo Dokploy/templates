@@ -5,52 +5,25 @@ services:
       - wp_content:/var/www/html/wp-content
       - wp_cache:/var/www/html/wp-content/cache
     environment:
-      # Base de données - Variables simples
-      DB_NAME: ${DB_NAME:-wordpress_franken}
-      DB_USER: ${DB_USER:-wordpress}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: ${DB_HOST:-wp_db}
-      DB_TABLE_PREFIX: ${DB_TABLE_PREFIX:-wp_}
-      
-      # Variables WordPress REQUISES pour wp-config.php
+      # Base de données UNIQUEMENT avec WORDPRESS_DB_*
       WORDPRESS_DB_NAME: ${DB_NAME:-wordpress_franken}
       WORDPRESS_DB_USER: ${DB_USER:-wordpress}
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
       WORDPRESS_DB_HOST: ${DB_HOST:-wp_db}
       WORDPRESS_TABLE_PREFIX: ${DB_TABLE_PREFIX:-wp_}
       
-      # WordPress Debug - Une seule fois via WORDPRESS_DEBUG
-      WORDPRESS_DEBUG: ''  # Vide = false
-      
-      # Configuration additionnelle - SANS WP_DEBUG !
+      # Configuration MINIMALE - Seulement WP_HOME et WP_SITEURL
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_HOME', 'http://${MAIN_DOMAIN}');
         define('WP_SITEURL', 'http://${MAIN_DOMAIN}');
-        define('WP_CACHE', false);
-        define('FS_METHOD', 'direct');
         define('WP_MEMORY_LIMIT', '256M');
         define('WP_MAX_MEMORY_LIMIT', '512M');
       
       # FrankenPHP
       SERVER_NAME: ${SERVER_NAME:-:80}
-      CADDY_GLOBAL_OPTIONS: ${CADDY_GLOBAL_OPTIONS:-}
-      FRANKENPHP_CONFIG: |
-        worker {
-          file /var/www/html/index.php
-          num 2
-        }
       
-      # Cache Sidekick
-      TTL: "${TTL:-6000}"
-      CACHE_LOC: ${CACHE_LOC:-/var/www/html/wp-content/cache}
-      CACHE_RESPONSE_CODES: ${CACHE_RESPONSE_CODES:-200,404,405}
-      BYPASS_PATH_PREFIX: ${BYPASS_PATH_PREFIX:-/wp-admin,/wp-json}
-      BYPASS_HOME: ${BYPASS_HOME:-false}
-      PURGE_KEY: ${PURGE_KEY}
-      PURGE_PATH: ${PURGE_PATH:-/__cache/purge}
-      
-      # Force HTTPS
-      FORCE_HTTPS: ${FORCE_HTTPS:-false}
+      # Cache avec TTL obligatoire
+      TTL: "6000"
       
     depends_on:
       wp_db:
@@ -83,12 +56,6 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    command: >
-      --innodb-buffer-pool-size=256M
-      --innodb-log-file-size=64M
-      --max-connections=200
-      --query-cache-size=32M
-      --query-cache-type=1
     networks:
       - wordpress_net
 

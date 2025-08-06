@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   wordpress:
     image: wpeverywhere/frankenwp:latest-php8.3

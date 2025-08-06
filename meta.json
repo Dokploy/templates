@@ -3218,5 +3218,19 @@
     "sylius doc":"https://docs.sylius.com/"
     },
     "tags": ["sylius", "frankenphp"]
-  }
+  },
+  {
+  "id": "wordpress-frankenphp",
+  "name": "wordpress with frankenphp",
+  "version": "latest", 
+  "description": "Wordpress",
+  "logo": "elephant_cover.svg",
+  "links": {
+    "github Frankenphp": "https://github.com/php/frankenphp",
+    "frankenphp_docs": "https://frankenphp.dev/fr/docs/",
+    "github Sylius":"https://github.com/sylius/sylius",
+    "sylius doc":"https://docs.sylius.com/"
+    },
+    "tags": ["sylius", "frankenphp"]
+  }  
 ]

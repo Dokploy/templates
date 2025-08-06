@@ -4,40 +4,63 @@ services:
     volumes:
       - wp_content:/var/www/html/wp-content
       - wp_cache:/var/www/html/wp-content/cache
-      - ../files/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     environment:
       # Base de données
-      DB_NAME: $DB_NAME
-      DB_USER: $DB_USER
-      DB_PASSWORD: $DB_PASSWORD
-      DB_HOST: $DB_HOST
-      DB_TABLE_PREFIX: $DB_TABLE_PREFIX
+      DB_NAME: ${DB_NAME:-wordpress_franken}
+      DB_USER: ${DB_USER:-wordpress}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST:-wp_db}
+      DB_TABLE_PREFIX: ${DB_TABLE_PREFIX:-wp_}
       
-      # WordPress
-      WP_DEBUG: $WP_DEBUG
-      FORCE_HTTPS: $FORCE_HTTPS
-      WORDPRESS_CONFIG_EXTRA: $WORDPRESS_CONFIG_EXTRA
+      # WordPress - Variables requises pour que wp-config.php soit créé correctement
+      WORDPRESS_DB_NAME: ${DB_NAME:-wordpress_franken}
+      WORDPRESS_DB_USER: ${DB_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_DB_HOST: ${DB_HOST:-wp_db}
+      WORDPRESS_TABLE_PREFIX: ${DB_TABLE_PREFIX:-wp_}
       
-      # FrankenPHP
-      SERVER_NAME: $SERVER_NAME
-      CADDY_GLOBAL_OPTIONS: $CADDY_GLOBAL_OPTIONS
-      FRANKENPHP_CONFIG: $FRANKENPHP_CONFIG
+      # WordPress Config
+      WP_DEBUG: ${WP_DEBUG:-false}
+      FORCE_HTTPS: ${FORCE_HTTPS:-false}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', 'http://${MAIN_DOMAIN}');
+        define('WP_SITEURL', 'http://${MAIN_DOMAIN}');
+        define('WP_DEBUG', false);
+        define('WP_DEBUG_LOG', true);
+        define('WP_DEBUG_DISPLAY', false);
       
-      # Cache Sidekick
-      CACHE_LOC: $CACHE_LOC
-      CACHE_RESPONSE_CODES: $CACHE_RESPONSE_CODES
-      BYPASS_PATH_PREFIX: $BYPASS_PATH_PREFIX
-      BYPASS_HOME: $BYPASS_HOME
-      PURGE_KEY: $PURGE_KEY
-      PURGE_PATH: $PURGE_PATH
-      TTL: $TTL
+      # FrankenPHP - Configuration importante
+      SERVER_NAME: ${SERVER_NAME:-:80}
+      CADDY_GLOBAL_OPTIONS: ${CADDY_GLOBAL_OPTIONS:-}
+      FRANKENPHP_CONFIG: |
+        worker {
+          file /var/www/html/index.php
+          num 2
+        }
+      
+      # Cache Sidekick - IMPORTANT: TTL doit avoir une valeur
+      CACHE_LOC: ${CACHE_LOC:-/var/www/html/wp-content/cache}
+      CACHE_RESPONSE_CODES: ${CACHE_RESPONSE_CODES:-200,404,405}
+      BYPASS_PATH_PREFIX: ${BYPASS_PATH_PREFIX:-/wp-admin,/wp-json}
+      BYPASS_HOME: ${BYPASS_HOME:-false}
+      PURGE_KEY: ${PURGE_KEY}
+      PURGE_PATH: ${PURGE_PATH:-/__cache/purge}
+      TTL: "${TTL:-6000}"  # IMPORTANT: Valeur par défaut pour éviter l'erreur
+      
     depends_on:
       wp_db:
         condition: service_healthy
     restart: unless-stopped
-    labels:
-      - "traefik.enable=false"
-      - "frankenwp.cache.enabled=true"
+    ports:
+      - "${HOST_PORT:-8080}:80"
+    networks:
+      - wordpress_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   wp_db:
     image: mariadb:11.5
@@ -45,10 +68,10 @@ services:
     volumes:
       - wp_data:/var/lib/mysql
     environment:
-      MARIADB_ROOT_PASSWORD: $DB_PASSWORD
-      MARIADB_DATABASE: $DB_NAME
-      MARIADB_USER: wordpress
-      MARIADB_PASSWORD: $DB_PASSWORD
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME:-wordpress_franken}
+      MARIADB_USER: ${DB_USER:-wordpress}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
     healthcheck:
       test: ["CMD-SHELL", "healthcheck.sh --connect --innodb_initialized"]
       interval: 10s
@@ -61,8 +84,14 @@ services:
       --max-connections=200
       --query-cache-size=32M
       --query-cache-type=1
+    networks:
+      - wordpress_net
 
 volumes:
   wp_data:
   wp_content:
   wp_cache:
+
+networks:
+  wordpress_net:
+    driver: bridge

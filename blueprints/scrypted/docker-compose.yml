@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  scrypted:
+    image: ghcr.io/koush/scrypted:latest
+    environment:
+      - SCRYPTED_WEBHOOK_UPDATE_AUTHORIZATION=${SCRYPTED_WEBHOOK_UPDATE_AUTHORIZATION}
+      - SCRYPTED_WEBHOOK_UPDATE=http://${main_domain}:10444/v1/update
+    volumes:
+      - ../files/scrypted-volume:/server/volume
+      # Optional NVR volume, uncomment if needed
+      # - ../files/nvr:/nvr
+    restart: unless-stopped
+    logging:
+      driver: "none"

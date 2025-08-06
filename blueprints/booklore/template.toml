@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+app_password = "${password:32}"
+db_root_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "booklore"
+port = 6060
+host = "${main_domain}"
+
+[config.env]
+BOOKLORE_IMAGE_TAG = "latest"
+PUID = "1000"
+PGID = "1000"
+TZ = "Etc/UTC"
+MYSQL_DATABASE = "booklore"
+MYSQL_USER = "booklore"
+# API Key
+MYSQL_PASSWORD = "${app_password}"
+# API Key
+MYSQL_ROOT_PASSWORD = "${db_root_password}"
+
+[[config.mounts]]

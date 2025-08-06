@@ -1,60 +1,33 @@
 [variables]
 main_domain = "${domain}"
-mysql_root_password = "${password:32}"
+mysql_root_password = "${password:24}"
 mysql_database = "sylius"
-mysql_user = "sylius"
-mysql_password = "${password:32}"
+mysql_user = "${username}"
+mysql_password = "${password:24}"
 app_secret = "${base64:64}"
-memory_limit = "512M"
+server_name = "${domain}"
 frankenphp_workers = "4"
-sylius_admin_email = "admin@example.com"
-sylius_admin_password = "${password:16}"
+php_date_timezone = "Europe/Paris"
+mailer_dsn = "null://null"
 
+[config]
 [[config.domains]]
 serviceName = "frankenphp"
 port = 80
 host = "${main_domain}"
 
-[config]
-env = [
-  # Caddy & FrankenPHP
-  "SERVER_NAME=${main_domain}",
-  "FRANKENPHP_CONFIG=worker ./public/index.php",
-  "APP_RUNTIME=Runtime\\FrankenPhpSymfony\\Runtime",
-  "FRANKENPHP_WORKERS=${frankenphp_workers}",
-  
-  # Sylius App
-  "APP_ENV=prod",
-  "APP_DEBUG=0",
-  "APP_SECRET=${app_secret}",
-  
-  # Database
-  "DATABASE_URL=mysql://${mysql_user}:${mysql_password}@mysql/${mysql_database}",
-  "MYSQL_ROOT_PASSWORD=${mysql_root_password}",
-  "MYSQL_DATABASE=${mysql_database}",
-  "MYSQL_USER=${mysql_user}",
-  "MYSQL_PASSWORD=${mysql_password}",
-  
-  # Mail
-  "MAILER_DSN=smtp://mailhog:1025",
-  
-  # Messenger queues
-  "MESSENGER_TRANSPORT_DSN=doctrine://default",
-  "SYLIUS_MESSENGER_TRANSPORT_MAIN_DSN=doctrine://default",
-  "SYLIUS_MESSENGER_TRANSPORT_MAIN_FAILED_DSN=doctrine://default?queue_name=main_failed",
-  "SYLIUS_MESSENGER_TRANSPORT_CATALOG_PROMOTION_REMOVAL_DSN=doctrine://default?queue_name=catalog_promotion_removal",
-  "SYLIUS_MESSENGER_TRANSPORT_CATALOG_PROMOTION_REMOVAL_FAILED_DSN=doctrine://default?queue_name=catalog_promotion_removal_failed",
-  "SYLIUS_MESSENGER_TRANSPORT_PAYMENT_REQUEST_DSN=sync://",
-  "SYLIUS_MESSENGER_TRANSPORT_PAYMENT_REQUEST_FAILED_DSN=sync://",
-  
-  # PHP Config
-  "PHP_DATE_TIMEZONE=Europe/Paris",
-  "PHP_INI_OPCACHE__MEMORY_CONSUMPTION=256",
-  "PHP_INI_OPCACHE__MAX_ACCELERATED_FILES=20000",
-  "PHP_INI_OPCACHE__REVALIDATE_FREQ=60",
-  "MEMORY_LIMIT=${memory_limit}",
-  
-  # Admin auto-install
-  "SYLIUS_ADMIN_EMAIL=${sylius_admin_email}",
-  "SYLIUS_ADMIN_PASSWORD=${sylius_admin_password}"
-]
+[[config.domains]]
+serviceName = "phpmyadmin"
+port = 8080
+host = "pma.${main_domain}"
+
+[config.env]
+MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
+MYSQL_DATABASE = "${mysql_database}"
+MYSQL_USER = "${mysql_user}"
+MYSQL_PASSWORD = "${mysql_password}"
+APP_SECRET = "${app_secret}"
+SERVER_NAME = "${server_name}"
+FRANKENPHP_WORKERS = "${frankenphp_workers}"
+PHP_DATE_TIMEZONE = "${php_date_timezone}"
+MAILER_DSN = "${mailer_dsn}"

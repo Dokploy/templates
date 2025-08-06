@@ -3,8 +3,8 @@ main_domain = "${domain}"
 db_name = "wordpress_franken"
 db_password = "${password:32}"
 cache_purge_key = "${password:16}"
+host_port = 8080
 
-# PORT DIRECT - Bypass Traefik
 [[config.ports]]
 serviceName = "wordpress"
 hostPort = 8080
@@ -12,36 +12,51 @@ containerPort = 80
 protocol = "http"
 
 [config]
-# RÉSEAU ISOLÉ
+# Réseau interne
 networks = ["dokploy_internal"]
 
-# LABELS ANTI-TRAEFIK
-labels = {
-  "traefik.enable" = "false",
-  "traefik.docker.network" = "none"
-}
-
+# Variables d'environnement
 env = [
-  # Database
+  # Database - Variables doubles pour compatibilité
   'DB_NAME=${db_name}',
   'DB_USER=wordpress',
   'DB_PASSWORD=${db_password}',
   'DB_HOST=wp_db',
+  'DB_TABLE_PREFIX=wp_',
   
-  # WordPress Config
-  'WORDPRESS_CONFIG_EXTRA=define("WP_HOME", "http://${main_domain}:8080"); define("WP_SITEURL", "http://${main_domain}:8080");',
+  # Variables WordPress (nécessaires pour wp-config.php)
+  'WORDPRESS_DB_NAME=${db_name}',
+  'WORDPRESS_DB_USER=wordpress',
+  'WORDPRESS_DB_PASSWORD=${db_password}',
+  'WORDPRESS_DB_HOST=wp_db',
+  'WORDPRESS_TABLE_PREFIX=wp_',
+  
+  # Configuration WordPress
+  'MAIN_DOMAIN=${main_domain}:${host_port}',
+  'WP_DEBUG=false',
+  'FORCE_HTTPS=false',
+  'WORDPRESS_CONFIG_EXTRA=define("WP_HOME", "http://${main_domain}:${host_port}"); define("WP_SITEURL", "http://${main_domain}:${host_port}"); define("WP_DEBUG", false); define("WP_DEBUG_LOG", true); define("WP_DEBUG_DISPLAY", false);',
   
   # FrankenPHP
   'SERVER_NAME=:80',
-  'CADDY_GLOBAL_OPTIONS=auto_https off',
+  'CADDY_GLOBAL_OPTIONS=',
+  'FRANKENPHP_CONFIG=worker { file /var/www/html/index.php; num 2 }',
   
-  # ANTI-TRAEFIK FORCÉ
-  'TRAEFIK_ENABLE=false',
-  'traefik.enable=false',
+  # Cache - IMPORTANT: TTL avec valeur par défaut
+  'TTL=6000',
+  'CACHE_LOC=/var/www/html/wp-content/cache',
+  'CACHE_RESPONSE_CODES=200,404,405',
+  'BYPASS_PATH_PREFIX=/wp-admin,/wp-json',
+  'BYPASS_HOME=false',
+  'PURGE_KEY=${cache_purge_key}',
+  'PURGE_PATH=/__cache/purge',
   
   # MariaDB
   'MARIADB_ROOT_PASSWORD=${db_password}',
   'MARIADB_DATABASE=${db_name}',
   'MARIADB_USER=wordpress',
   'MARIADB_PASSWORD=${db_password}',
+  
+  # Port configuration
+  'HOST_PORT=${host_port}',
 ]

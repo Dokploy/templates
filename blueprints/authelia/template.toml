@@ -5,12 +5,10 @@ session_secret = "${password:64}"
 storage_encryption_key = "${password:64}"
 redis_password = "${password:32}"
 postgres_password = "${password:32}"
-smtp_password = ""
-ldap_password = ""
-duo_secret_key = ""
 admin_username = "${username}"
 admin_email = "${email}"
-admin_password_hash = "$argon2id$v=19$m=65536,t=3,p=4$BpLnfgDsc2WD8F2q$o/vzA4myCqZZ36bUGsDY//8mKUYNZZaR0t4MFFSs+iM"
+admin_password = "AdminPass123!"
+admin_password_hash = "$argon2id$v=19$m=65536,t=3,p=4$sDOzc8/xnVQ5Gj9L8YrChT2n6t8V9mXN$VhxLlQe5eEf0wdZr2a1qYF4sQd6kEa7+3vGjRxP1rH8"
 
 [config]
 [[config.domains]]
@@ -25,9 +23,6 @@ SESSION_SECRET = "${session_secret}"
 STORAGE_ENCRYPTION_KEY = "${storage_encryption_key}"
 REDIS_PASSWORD = "${redis_password}"
 POSTGRES_PASSWORD = "${postgres_password}"
-SMTP_PASSWORD = "${smtp_password}"
-LDAP_PASSWORD = "${ldap_password}"
-DUO_SECRET_KEY = "${duo_secret_key}"
 
 [[config.mounts]]
 filePath = "configuration.yml"
@@ -36,10 +31,16 @@ content = """
 #                   Authelia configuration                    #
 ###############################################################
 
+# DEFAULT ADMIN CREDENTIALS:
+# Username: (auto-generated, check users_database.yml)
+# Password: AdminPass123!
+# Email: (auto-generated)
+#
+# IMPORTANT: Change the password after first login!
+
 # Server Configuration
 server:
   address: 'tcp://0.0.0.0:9091'
-  asset_path: '/config/assets'
   headers:
     csp_template: ''
 
@@ -168,6 +169,15 @@ content = """
 ###############################################################
 #                         Users Database                     #
 ###############################################################
+
+# DEFAULT LOGIN CREDENTIALS:
+# Username: (generated from username helper)
+# Password: AdminPass123!
+# Email: (generated from email helper)
+#
+# IMPORTANT: Change the default password after first login!
+# To generate a new password hash, run:
+# docker run authelia/authelia:latest authelia hash-password 'your-new-password'
 
 users:
   ${admin_username}:

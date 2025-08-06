@@ -8,7 +8,7 @@ postgres_password = "${password:32}"
 admin_username = "${username}"
 admin_email = "${email}"
 admin_password = "AdminPass123!"
-admin_password_hash = "$argon2id$v=19$m=65536,t=3,p=4$sDOzc8/xnVQ5Gj9L8YrChT2n6t8V9mXN$VhxLlQe5eEf0wdZr2a1qYF4sQd6kEa7+3vGjRxP1rH8"
+admin_password_hash = "$argon2id$v=19$m=65536,t=3,p=4$170PGJ1MskQyxfFknfBPFQ$VqD1/pqC3fBHo+Zk58bC2xQm1ltOFTr0w2wx93vJgC4"
 
 [config]
 [[config.domains]]

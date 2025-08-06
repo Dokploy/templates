@@ -4,7 +4,6 @@ db_name = "wordpress_franken"
 db_password = "${password:32}"
 cache_purge_key = "${password:16}"
 
-SOLUTION B - Port fixe (si Domain ne marche pas)
 [[config.ports]]
 serviceName = "wordpress"  
 hostPort = 8080

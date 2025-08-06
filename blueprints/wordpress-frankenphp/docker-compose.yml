@@ -20,14 +20,15 @@ services:
       WORDPRESS_TABLE_PREFIX: ${DB_TABLE_PREFIX:-wp_}
       
       # WordPress Config
-      WP_DEBUG: ${WP_DEBUG:-false}
+      WORDPRESS_DEBUG: ${WP_DEBUG:-false}
       FORCE_HTTPS: ${FORCE_HTTPS:-false}
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_HOME', 'http://${MAIN_DOMAIN}');
         define('WP_SITEURL', 'http://${MAIN_DOMAIN}');
-        define('WP_DEBUG', false);
         define('WP_DEBUG_LOG', true);
         define('WP_DEBUG_DISPLAY', false);
+        define('WP_CACHE', false);
+        define('FS_METHOD', 'direct');
       
       # FrankenPHP - Configuration importante
       SERVER_NAME: ${SERVER_NAME:-:80}

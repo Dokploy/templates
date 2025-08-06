@@ -44,13 +44,15 @@ env = [
   # Configuration Extra - SEULEMENT les URLs
   'WORDPRESS_CONFIG_EXTRA=define("WP_SITEURL", "http://${main_domain}:${host_port}"); define("WP_HOME", "http://${main_domain}:${host_port}");',
   
-  # MariaDB
-  'MYSQL_DATABASE=${db_name}',
-  'MYSQL_USER=wordpress',
-  'MYSQL_PASSWORD=${db_password}',
-  'MYSQL_ROOT_PASSWORD=${db_root_password}',
+  # MariaDB - IMPORTANT: Utiliser MARIADB_ pas MYSQL_
+  'MARIADB_DATABASE=${db_name}',
+  'MARIADB_USER=wordpress',
+  'MARIADB_PASSWORD=${db_password}',
+  'MARIADB_ROOT_PASSWORD=${db_root_password}',
   
-  # Variables supplémentaires
+  # Variables pour docker-compose
+  'DB_PASSWORD=${db_password}',
+  'DB_NAME=${db_name}',
   'HOST_PORT=${host_port}',
   'MAIN_DOMAIN=${main_domain}:${host_port}',
 ]

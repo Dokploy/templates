@@ -2,6 +2,8 @@
 main_domain = "${domain}"
 db_name = "wordpress_franken"
 db_password = "${password:32}"
+db_root_password = "${password:32}"
+cache_purge_key = "${password:16}"
 host_port = 8080
 
 [[config.ports]]
@@ -14,25 +16,41 @@ protocol = "http"
 networks = ["dokploy_internal"]
 
 env = [
-  # Database - Seulement les variables WORDPRESS_*
-  'WORDPRESS_DB_NAME=${db_name}',
-  'WORDPRESS_DB_USER=wordpress',
-  'WORDPRESS_DB_PASSWORD=${db_password}',
-  'WORDPRESS_DB_HOST=wp_db',
-  'WORDPRESS_TABLE_PREFIX=wp_',
-  
-  # Configuration MINIMALE
-  'WORDPRESS_CONFIG_EXTRA=define("WP_HOME", "http://${main_domain}:${host_port}"); define("WP_SITEURL", "http://${main_domain}:${host_port}");',
-  
   # FrankenPHP
   'SERVER_NAME=:80',
   
-  # Cache TTL obligatoire
+  # Base de données WordPress
+  'WORDPRESS_DB_HOST=wp_db',
+  'WORDPRESS_DB_USER=wordpress',
+  'WORDPRESS_DB_PASSWORD=${db_password}',
+  'WORDPRESS_DB_NAME=${db_name}',
+  'WORDPRESS_TABLE_PREFIX=wp_',
+  
+  # Debug WordPress (variable directe, pas dans CONFIG_EXTRA)
+  'WORDPRESS_DEBUG=false',
+  
+  # Configuration Cache
+  'CACHE_LOC=/var/www/html/wp-content/cache',
   'TTL=6000',
+  'PURGE_PATH=/__cache/purge',
+  'PURGE_KEY=${cache_purge_key}',
+  'BYPASS_HOME=false',
+  'BYPASS_PATH_PREFIXES=/wp-admin,/wp-json',
+  'CACHE_RESPONSE_CODES=200,404,405',
+  
+  # Caddy Options
+  'CADDY_GLOBAL_OPTIONS=auto_https disable_redirects',
+  
+  # Configuration Extra - SEULEMENT les URLs
+  'WORDPRESS_CONFIG_EXTRA=define("WP_SITEURL", "http://${main_domain}:${host_port}"); define("WP_HOME", "http://${main_domain}:${host_port}");',
   
   # MariaDB
-  'MARIADB_ROOT_PASSWORD=${db_password}',
-  'MARIADB_DATABASE=${db_name}',
-  'MARIADB_USER=wordpress',
-  'MARIADB_PASSWORD=${db_password}',
+  'MYSQL_DATABASE=${db_name}',
+  'MYSQL_USER=wordpress',
+  'MYSQL_PASSWORD=${db_password}',
+  'MYSQL_ROOT_PASSWORD=${db_root_password}',
+  
+  # Variables supplémentaires
+  'HOST_PORT=${host_port}',
+  'MAIN_DOMAIN=${main_domain}:${host_port}',
 ]

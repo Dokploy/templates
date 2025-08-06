@@ -5,38 +5,35 @@ services:
     image: wpeverywhere/frankenwp:latest-php8.3
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "${HOST_PORT:-8080}:80"
     environment:
       # FrankenPHP
-      SERVER_NAME: ":80"
+      SERVER_NAME: "${SERVER_NAME:-:80}"
       
-      # Base de données WordPress - Variables avec valeurs par défaut
-      WORDPRESS_DB_HOST: wp_db
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: "${DB_PASSWORD:-defaultpass123}"
-      WORDPRESS_DB_NAME: "${DB_NAME:-wordpress_franken}"
-      WORDPRESS_TABLE_PREFIX: "wp_"
+      # Base de données WordPress
+      WORDPRESS_DB_HOST: "${WORDPRESS_DB_HOST:-wp_db}"
+      WORDPRESS_DB_USER: "${WORDPRESS_DB_USER:-wordpress}"
+      WORDPRESS_DB_PASSWORD: "${WORDPRESS_DB_PASSWORD}"
+      WORDPRESS_DB_NAME: "${WORDPRESS_DB_NAME}"
+      WORDPRESS_TABLE_PREFIX: "${WORDPRESS_TABLE_PREFIX:-wp_}"
       
       # Debug WordPress
-      WORDPRESS_DEBUG: "false"
+      WORDPRESS_DEBUG: "${WORDPRESS_DEBUG:-false}"
       
       # Configuration Cache
-      CACHE_LOC: "/var/www/html/wp-content/cache"
-      TTL: "6000"
-      PURGE_PATH: "/__cache/purge"
-      PURGE_KEY: "${PURGE_KEY:-}"
-      BYPASS_HOME: "false"
-      BYPASS_PATH_PREFIXES: "/wp-admin,/wp-json"
-      CACHE_RESPONSE_CODES: "200,404,405"
+      CACHE_LOC: "${CACHE_LOC:-/var/www/html/wp-content/cache}"
+      TTL: "${TTL:-6000}"
+      PURGE_PATH: "${PURGE_PATH:-/__cache/purge}"
+      PURGE_KEY: "${PURGE_KEY}"
+      BYPASS_HOME: "${BYPASS_HOME:-false}"
+      BYPASS_PATH_PREFIXES: "${BYPASS_PATH_PREFIXES:-/wp-admin,/wp-json}"
+      CACHE_RESPONSE_CODES: "${CACHE_RESPONSE_CODES:-200,404,405}"
       
       # Caddy Options
-      CADDY_GLOBAL_OPTIONS: |
-        auto_https disable_redirects
+      CADDY_GLOBAL_OPTIONS: "${CADDY_GLOBAL_OPTIONS:-auto_https disable_redirects}"
       
-      # Configuration Extra - SEULEMENT les URLs
-      WORDPRESS_CONFIG_EXTRA: |
-        define('WP_SITEURL', 'http://${MAIN_DOMAIN:-46.62.143.210:8080}');
-        define('WP_HOME', 'http://${MAIN_DOMAIN:-46.62.143.210:8080}');
+      # Configuration Extra
+      WORDPRESS_CONFIG_EXTRA: "${WORDPRESS_CONFIG_EXTRA}"
         
     volumes:
       - wp_content:/var/www/html/wp-content
@@ -45,17 +42,16 @@ services:
         condition: service_healthy
     tty: true
     networks:
-      - wp_net
+      - dokploy_internal
 
   wp_db:
     image: mariadb:11.5
     restart: unless-stopped
     environment:
-      # IMPORTANT: Variables avec valeurs par défaut pour éviter l'erreur
-      MARIADB_ROOT_PASSWORD: "${DB_PASSWORD:-defaultpass123}"
-      MARIADB_DATABASE: "${DB_NAME:-wordpress_franken}"
-      MARIADB_USER: wordpress
-      MARIADB_PASSWORD: "${DB_PASSWORD:-defaultpass123}"
+      MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD}"
+      MARIADB_DATABASE: "${MARIADB_DATABASE}"
+      MARIADB_USER: "${MARIADB_USER:-wordpress}"
+      MARIADB_PASSWORD: "${MARIADB_PASSWORD}"
     volumes:
       - wp_data:/var/lib/mysql
     healthcheck:
@@ -65,12 +61,12 @@ services:
       retries: 5
       start_period: 30s
     networks:
-      - wp_net
+      - dokploy_internal
 
 volumes:
   wp_data:
   wp_content:
 
 networks:
-  wp_net:
-    driver: bridge
+  dokploy_internal:
+    external: true

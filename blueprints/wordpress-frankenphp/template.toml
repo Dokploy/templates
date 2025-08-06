@@ -4,7 +4,6 @@ db_name = "wordpress_franken"
 db_password = "${password:32}"
 db_root_password = "${password:32}"
 cache_purge_key = "${password:16}"
-host_port = 8080
 
 [[config.ports]]
 serviceName = "wordpress"
@@ -13,9 +12,12 @@ containerPort = 80
 protocol = "http"
 
 [config]
-networks = ["dokploy_internal"]
+# PAS de networks = ["dokploy_internal"] car le réseau n'existe pas
 
 env = [
+  # Variables pour docker-compose
+  'HOST_PORT=8080',
+  
   # FrankenPHP
   'SERVER_NAME=:80',
   
@@ -26,7 +28,7 @@ env = [
   'WORDPRESS_DB_NAME=${db_name}',
   'WORDPRESS_TABLE_PREFIX=wp_',
   
-  # Debug WordPress (variable directe, pas dans CONFIG_EXTRA)
+  # Debug WordPress
   'WORDPRESS_DEBUG=false',
   
   # Configuration Cache
@@ -42,17 +44,14 @@ env = [
   'CADDY_GLOBAL_OPTIONS=auto_https disable_redirects',
   
   # Configuration Extra - SEULEMENT les URLs
-  'WORDPRESS_CONFIG_EXTRA=define("WP_SITEURL", "http://${main_domain}:${host_port}"); define("WP_HOME", "http://${main_domain}:${host_port}");',
+  'WORDPRESS_CONFIG_EXTRA=define("WP_SITEURL", "http://${main_domain}:8080"); define("WP_HOME", "http://${main_domain}:8080");',
   
-  # MariaDB - IMPORTANT: Utiliser MARIADB_ pas MYSQL_
+  # MariaDB
   'MARIADB_DATABASE=${db_name}',
   'MARIADB_USER=wordpress',
   'MARIADB_PASSWORD=${db_password}',
   'MARIADB_ROOT_PASSWORD=${db_root_password}',
   
-  # Variables pour docker-compose
-  'DB_PASSWORD=${db_password}',
-  'DB_NAME=${db_name}',
-  'HOST_PORT=${host_port}',
-  'MAIN_DOMAIN=${main_domain}:${host_port}',
+  # Variable pour que le domaine soit accessible
+  'MAIN_DOMAIN=${main_domain}:8080',
 ]

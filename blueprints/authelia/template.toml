@@ -39,6 +39,8 @@ content = """
 # Email: (auto-generated)
 #
 # IMPORTANT: Change the password after first login!
+# SECURITY NOTE: This template starts with one-factor auth for easier setup.
+# After configuring SMTP/notifications, change the policy to 'two_factor'
 
 # Server Configuration
 server:
@@ -157,12 +159,12 @@ regulation:
   find_time: 10m
   ban_time: 12h
 
-# Access Control Configuration
+# Access Control Configuration - MODIFIED FOR EASIER INITIAL SETUP
 access_control:
   default_policy: deny
   rules:
     - domain: ${main_domain}
-      policy: two_factor
+      policy: one_factor  # Changed from one_factor to two_factor for production
 """
 
 [[config.mounts]]

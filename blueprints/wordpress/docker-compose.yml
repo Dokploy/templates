@@ -2,7 +2,7 @@ services:
   wordpress:
     image: wordpress:latest
     volumes:
-      - ../files/wp-app:/var/www/html
+      - wp_app:/var/www/html
       - ../files/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     environment:
       WORDPRESS_DB_HOST: wp_db
@@ -10,6 +10,9 @@ services:
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: $DB_PASSWORD
       WORDPRESS_DEBUG: ${WORDPRESS_DEBUG:-0}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_MEMORY_LIMIT', '256M');
+        define('DISALLOW_FILE_EDIT', true);
     depends_on:
       wp_db:
         condition: service_healthy
@@ -31,4 +34,5 @@ services:
       start_period: 30s
 
 volumes:
-  wp_data: 
+  wp_app:
+  wp_data:

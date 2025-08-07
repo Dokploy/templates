@@ -1115,8 +1115,8 @@
     "logo": "linkding.svg",
     "links": {
       "github": "https://github.com/sissbruecker/linkding",
-      "website": "https://sissbruecker.github.io/linkding/",
-      "docs": "https://github.com/sissbruecker/linkding/blob/master/docs/Options.md"
+      "website": "https://linkding.link/",
+      "docs": "https://github.com/sissbruecker/linkding/tree/master/docs"
     },
     "tags": [
       "bookmark-manager",
@@ -1814,8 +1814,8 @@
     "logo": "checkmate.png",
     "links": {
       "github": "https://github.com/bluewave-labs/checkmate",
-      "website": "https://bluewavelabs.ca",
-      "docs": "https://bluewavelabs.gitbook.io/checkmate"
+      "website": "https://checkmate.so/",
+      "docs": "https://docs.checkmate.so"
     },
     "tags": [
       "self-hosted",
@@ -4037,5 +4037,18 @@
       "docs": "https://github.com/ellite/wallos?tab=readme-ov-file#getting-started"
     },
     "tags": ["finance", "subscription", "budgeting", "expense-tracking", "spending"]
+  },
+  {
+    "id": "statping-ng",
+    "name": "Statping-NG",
+    "version": "latest",
+    "description": "Statping-NG is an easy-to-use status page for monitoring websites and applications with beautiful metrics, analytics, and health checks.",
+    "logo": "statping-ng.png",
+    "links": {
+      "github": "https://github.com/adamboutcher/statping-ng",
+      "website": "https://statping-ng.github.io/",
+      "docs": "https://statping-ng.github.io/install.html"
+    },
+    "tags": ["monitoring", "status-page"]
   }
 ]

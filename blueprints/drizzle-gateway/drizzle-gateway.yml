@@ -1,0 +1,20 @@
+services:
+  drizzle-gateway:
+    image: ghcr.io/drizzle-team/gateway:latest
+    container_name: drizzle-gate
+    restart: always
+    ports: ["4983:4983"]
+    environment:
+      PORT: "4983"
+      STORE_PATH: "/app"
+    volumes:
+      - drizzle-gateway:/app
+    networks:
+      - dokploy-network
+
+volumes:
+  drizzle-gateway:
+
+networks:
+  dokploy-network:
+    external: true

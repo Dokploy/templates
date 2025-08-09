@@ -4026,6 +4026,48 @@
     "tags": ["home-automation", "nvr", "smart-home", "surveillance"]
   },
   {
+  "id": "n8n-with-postgres",
+  "name": "n8n with Postgres",
+  "version": "latest", 
+  "description": "n8n is an open source low-code platform for automating workflows and integrations with PostgreSQL database for better performance and scalability.",
+  "logo": "n8n.png",
+  "links": {
+    "github": "https://github.com/n8n-io/n8n",
+    "website": "https://n8n.io/",
+    "docs": "https://docs.n8n.io/",
+    "postgres_docs": "https://www.postgresql.org/docs/"
+    },
+    "tags": ["automation", "workflow", "low-code", "postgres"]
+  },
+  {
+  "id": "sylius-frankenphp",
+  "name": "sylius with frankenphp",
+  "version": "latest", 
+  "description": "Sylius",
+  "logo": "sylius.png",
+  "links": {
+    "github Frankenphp": "https://github.com/php/frankenphp",
+    "frankenphp_docs": "https://frankenphp.dev/fr/docs/",
+    "github Sylius":"https://github.com/sylius/sylius",
+    "sylius doc":"https://docs.sylius.com/"
+    },
+    "tags": ["sylius", "frankenphp"]
+  },
+  {
+  "id": "wordpress-frankenphp",
+  "name": "wordpress with frankenphp",
+  "version": "latest", 
+  "description": "Wordpress",
+  "logo": "elephant_cover.svg",
+  "links": {
+    "github Frankenphp": "https://github.com/php/frankenphp",
+    "frankenphp_docs": "https://frankenphp.dev/fr/docs/",
+    "github Sylius":"https://github.com/sylius/sylius",
+    "sylius doc":"https://docs.sylius.com/"
+    },
+    "tags": ["sylius", "frankenphp"]
+  },
+  {  
     "id": "statping-ng",
     "name": "Statping-NG",
     "version": "latest",
@@ -4039,3 +4081,4 @@
     "tags": ["monitoring", "status-page"]
   }
 ]
+

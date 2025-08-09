@@ -1,0 +1,55 @@
+services:
+  authelia:
+    image: authelia/authelia:latest
+    restart: unless-stopped
+    volumes:
+      - authelia_config:/config
+      - ../files/configuration.yml:/config/configuration.yml:ro
+      - ../files/users_database.yml:/config/users_database.yml
+    environment:
+      AUTHELIA_JWT_SECRET: $JWT_SECRET
+      AUTHELIA_SESSION_SECRET: $SESSION_SECRET
+      AUTHELIA_STORAGE_ENCRYPTION_KEY: $STORAGE_ENCRYPTION_KEY
+      AUTHELIA_STORAGE_POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    ports:
+      - 9091
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    command: redis-server --save 60 1 --loglevel warning --requirepass $REDIS_PASSWORD
+    environment:
+      REDIS_PASSWORD: $REDIS_PASSWORD
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: authelia
+      POSTGRES_USER: authelia
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U authelia -d authelia"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  authelia_config:
+  redis_data:
+  postgres_data:

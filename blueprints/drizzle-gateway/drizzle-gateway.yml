@@ -3,10 +3,10 @@ services:
     image: ghcr.io/drizzle-team/gateway:latest
     container_name: drizzle-gate
     restart: always
-    ports: ["4983:4983"]
     environment:
       PORT: "4983"
       STORE_PATH: "/app"
+      MASTERPASS: ${MASTERPASS}
     volumes:
       - drizzle-gateway:/app
     networks:

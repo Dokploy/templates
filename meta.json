@@ -3421,7 +3421,12 @@
       "website": "https://www.scrypted.app/",
       "docs": "https://docs.scrypted.app/"
     },
-    "tags": ["home-automation", "nvr", "smart-home", "surveillance"]
+    "tags": [
+      "home-automation",
+      "nvr",
+      "smart-home",
+      "surveillance"
+    ]
   },
   {
     "id": "wallos",
@@ -3460,7 +3465,25 @@
       "website": "https://statping-ng.github.io/",
       "docs": "https://statping-ng.github.io/install.html"
     },
-    "tags": ["monitoring", "status-page"]
+    "tags": [
+      "monitoring",
+      "status-page"
+    ]
+  },
+  {
+    "id": "typesense",
+    "name": "Typesense",
+    "version": "29.0",
+    "description": "Typesense is a fast, open-source search engine for building modern search experiences.",
+    "logo": "typesense.png",
+    "links": {
+      "github": "https://github.com/typesense/typesense",
+      "website": "https://typesense.org/",
+      "docs": "https://typesense.org/docs"
+    },
+    "tags": [
+      "search"
+    ]
   }
 ]
 

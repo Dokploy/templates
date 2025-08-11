@@ -4038,19 +4038,6 @@
     },
     "tags": ["automation", "workflow", "low-code", "postgres"]
   },
-  {
-  "id": "wordpress-frankenphp",
-  "name": "wordpress with frankenphp",
-  "version": "latest", 
-  "description": "Wordpress",
-  "logo": "elephant_cover.svg",
-  "links": {
-    "github": "https://github.com/php/frankenphp",
-    "docs": "https://frankenphp.dev/fr/docs/",
-    "website": "https://wordpress.org/"
-    },
-    "tags": ["wordpress", "frankenphp"]
-  },
   {  
     "id": "statping-ng",
     "name": "Statping-NG",

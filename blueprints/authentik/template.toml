@@ -1,0 +1,26 @@
+[variables]
+main_domain = "${domain}"
+main_domain_1 = "${domain}"
+pg_user = "authentik"
+pg_db = "authentik"
+
+[config]
+[[config.domains]]
+serviceName = "server"
+port = 9000
+host = "${main_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "server"
+port = 9443
+host = "${main_domain_1}"
+path = "/"
+
+[config.env]
+PG_USER = "${pg_user}"
+PG_DB = "${pg_db}"
+PG_PASS = "${password:32}" # Password for PostgreSQL authentication
+AUTHENTIK_SECRET_KEY = "${password:64}" # Secret key for Authentik authentication
+AUTHENTIK_IMAGE = "ghcr.io/goauthentik/server"
+AUTHENTIK_TAG = "2025.6.3"

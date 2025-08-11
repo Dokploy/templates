@@ -1,0 +1,28 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+zitadel_masterkey = "${password:32}"
+admin_username = "${username}"
+admin_email = "${email}"
+admin_password = "AdminPassword123!"
+
+[config]
+[[config.domains]]
+serviceName = "zitadel"
+port = 8080
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}"
+ZITADEL_MASTERKEY = "${zitadel_masterkey}"
+EXTERNAL_DOMAIN = "${main_domain}"
+
+# Custom Admin User Configuration
+ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME = "${admin_username}"
+ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD = "${admin_password}"
+ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS = "${admin_email}"
+ZITADEL_FIRSTINSTANCE_ORG_HUMAN_FIRSTNAME = "Admin"
+ZITADEL_FIRSTINSTANCE_ORG_HUMAN_LASTNAME = "User"
+
+[[config.mounts]]

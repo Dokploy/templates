@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  yt-dlp-webui:
+    image: marcobaobao/yt-dlp-webui
+    ports:
+      - 3033
+    volumes:
+      - downloads:/downloads
+      - config:/config
+    healthcheck:
+      test: curl -f http://localhost:3033 || exit 1
+    restart: unless-stopped
+
+volumes:
+  downloads: {}
+  config: {}

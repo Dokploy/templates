@@ -1,0 +1,33 @@
+[variables]
+main_domain = "${domain}"
+jwt_secret = "${jwt:32}"
+account_registration = "false"
+http_allowed = "true"
+allow_unauthenticated = "false"
+auto_delete_every_n_hours = "24"
+webroot = ""
+ffmpeg_args = ""
+hide_history = "false"
+language = "en"
+
+[config]
+[[config.domains]]
+serviceName = "convertx" 
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+JWT_SECRET = "${jwt_secret}"
+ACCOUNT_REGISTRATION = "${account_registration}"
+HTTP_ALLOWED = "${http_allowed}"
+ALLOW_UNAUTHENTICATED = "${allow_unauthenticated}"
+AUTO_DELETE_EVERY_N_HOURS = "${auto_delete_every_n_hours}"
+WEBROOT = "${webroot}"
+FFMPEG_ARGS = "${ffmpeg_args}"
+HIDE_HISTORY = "${hide_history}"
+LANGUAGE = "${language}"
+
+[[config.mounts]]
+source = "../files/data"
+target = "/app/data"
+type = "bind"

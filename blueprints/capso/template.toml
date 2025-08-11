@@ -1,0 +1,46 @@
+ [variables]
+main_domain = "${domain}"
+minio_domain_1 = "${domain}"
+minio_domain_2 = "${domain}"
+mysql_database = "planetscale"
+mysql_user = "root"
+cap_aws_bucket = "capso"
+cap_aws_region = "us-east-1"
+
+[config]
+[[config.domains]]
+serviceName = "cap-web"
+port = 3000
+host = "${main_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "minio"
+port = 3902
+host = "minio_domain_1"
+path = "/"
+
+[[config.domains]]
+serviceName = "minio"
+port = 3903
+host = "minio_domain_2"
+path = "/"
+
+[config.env]
+DOMAIN = "${main_domain}"
+MYSQL_DATABASE = "${mysql_database}"
+MYSQL_USER = "${mysql_user}"
+MYSQL_PASSWORD = "${password:32}" # Password for MySQL user
+MYSQL_ROOT_PASSWORD = "${password:32}" # Password for MySQL root user
+DATABASE_ENCRYPTION_KEY = "${password:32}" # Encryption key for database
+NEXTAUTH_SECRET = "${password:32}" # Secret for NextAuth authentication
+CAP_AWS_ACCESS_KEY = "${password:16}" # Access key for S3/MinIO
+CAP_AWS_SECRET_KEY = "${password:16}" # Secret key for S3/MinIO
+CAP_AWS_BUCKET = "${cap_aws_bucket}"
+CAP_AWS_REGION = "${cap_aws_region}"
+MINIO_ROOT_USER = "${password:16}" # MinIO root user
+MINIO_ROOT_PASSWORD = "${password:16}" # MinIO root password
+
+[[config.mounts]]
+filePath = "/certs"
+content = ""

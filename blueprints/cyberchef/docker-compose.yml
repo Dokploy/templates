@@ -1,0 +1,5 @@
+version: "3.8"
+services:
+  cyberchef:
+    image: ghcr.io/gchq/cyberchef:latest
+    restart: unless-stopped

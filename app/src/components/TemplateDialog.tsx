@@ -55,7 +55,9 @@ const TemplateDialog: React.FC<TemplateDialogProps> = ({
       config: templateFiles.config || "",
     };
 
-    return btoa(JSON.stringify(configObj, null, 2));
+    // Use encodeURIComponent to handle Unicode characters properly
+    const jsonString = JSON.stringify(configObj, null, 2);
+    return btoa(unescape(encodeURIComponent(jsonString)));
   };
 
   return (

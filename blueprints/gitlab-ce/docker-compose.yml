@@ -1,0 +1,65 @@
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    restart: unless-stopped
+    hostname: gitlab.example.com
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://${GITLAB_HOST}'
+        gitlab_rails['gitlab_ssh_host'] = '${GITLAB_HOST}'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2224
+        gitlab_rails['db_adapter'] = 'postgresql'
+        gitlab_rails['db_host'] = 'postgresql'
+        gitlab_rails['db_port'] = '5432'
+        gitlab_rails['db_database'] = '${POSTGRES_DB}'
+        gitlab_rails['db_username'] = '${POSTGRES_USER}'
+        gitlab_rails['db_password'] = '${POSTGRES_PASSWORD}'
+        # Redis config for external TCP connection
+        gitlab_rails['redis_url'] = 'redis://redis:6379/0'
+        gitlab_rails['redis_host'] = 'redis'
+        gitlab_rails['redis_port'] = 6379
+        gitlab_rails['redis_socket'] = nil
+        gitlab_rails['gitlab_email_enabled'] = false
+        gitlab_rails['gitlab_default_can_create_group'] = true
+        gitlab_rails['gitlab_username_changing_enabled'] = false
+        unicorn['worker_processes'] = 2
+        unicorn['worker_timeout'] = 60
+        postgresql['enable'] = false
+        redis['enable'] = false
+        nginx['enable'] = true
+        nginx['listen_port'] = 80
+        nginx['listen_https'] = false
+        prometheus_monitoring['enable'] = false
+    ports:
+      - "80"
+      - "2224"
+    volumes:
+      - gitlab_config:/etc/gitlab
+      - gitlab_logs:/var/log/gitlab
+      - gitlab_data:/var/opt/gitlab
+    depends_on:
+      - postgresql
+      - redis
+
+  postgresql:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+volumes:
+  gitlab_config:
+  gitlab_logs:
+  gitlab_data:
+  postgresql_data:
+  redis_data:

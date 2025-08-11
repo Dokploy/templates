@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "cyberchef"
+port = 80
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+# No environment variables required for basic CyberChef setup 

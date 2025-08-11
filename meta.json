@@ -4034,24 +4034,9 @@
   "links": {
     "github": "https://github.com/n8n-io/n8n",
     "website": "https://n8n.io/",
-    "docs": "https://docs.n8n.io/",
-    "postgres_docs": "https://www.postgresql.org/docs/"
+    "docs": "https://docs.n8n.io/"
     },
     "tags": ["automation", "workflow", "low-code", "postgres"]
-  },
-  {
-  "id": "sylius-frankenphp",
-  "name": "sylius with frankenphp",
-  "version": "latest", 
-  "description": "Sylius",
-  "logo": "sylius.png",
-  "links": {
-    "github Frankenphp": "https://github.com/php/frankenphp",
-    "frankenphp_docs": "https://frankenphp.dev/fr/docs/",
-    "github Sylius":"https://github.com/sylius/sylius",
-    "sylius doc":"https://docs.sylius.com/"
-    },
-    "tags": ["sylius", "frankenphp"]
   },
   {
   "id": "wordpress-frankenphp",
@@ -4060,12 +4045,11 @@
   "description": "Wordpress",
   "logo": "elephant_cover.svg",
   "links": {
-    "github Frankenphp": "https://github.com/php/frankenphp",
-    "frankenphp_docs": "https://frankenphp.dev/fr/docs/",
-    "github Sylius":"https://github.com/sylius/sylius",
-    "sylius doc":"https://docs.sylius.com/"
+    "github": "https://github.com/php/frankenphp",
+    "docs": "https://frankenphp.dev/fr/docs/",
+    "website": "https://wordpress.org/"
     },
-    "tags": ["sylius", "frankenphp"]
+    "tags": ["wordpress", "frankenphp"]
   },
   {  
     "id": "statping-ng",

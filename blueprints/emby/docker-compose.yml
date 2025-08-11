@@ -1,0 +1,20 @@
+version: "2.3"
+services:
+  emby:
+    image: emby/embyserver
+    # Uncomment to enable DLNA and Wake-on-Lan
+    # network_mode: host
+    environment:
+      - UID=1000 # The UID to run emby as (default: 2)
+      - GID=100 # The GID to run emby as (default 2)
+      - GIDLIST=100 # A comma-separated list of additional GIDs to run emby as (default: 2)
+    volumes:
+      - /emby/programdata:/config # Configuration directory
+      - /emby/series:/mnt/share1 # Media directory
+      - /emby/movies:/mnt/share2 # Media directory
+    ports:
+      - 8096 # HTTP port
+      - 8920 # HTTPS port
+    devices:
+      - /dev/dri:/dev/dri # VAAPI/NVDEC/NVENC render nodes
+    restart: on-failure

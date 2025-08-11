@@ -3461,6 +3461,22 @@
       "docs": "https://statping-ng.github.io/install.html"
     },
     "tags": ["monitoring", "status-page"]
+  },
+  {
+    "id": "emby",
+    "name": "Emby",
+    "version": "4.9.1.17",
+    "description": "Emby Server is a personal media server with apps on just about every device.",
+    "logo": "emby.png",
+    "links": {
+      "github": "https://github.com/MediaBrowser/Emby",
+      "website": "https://emby.media/",
+      "docs": "https://emby.media/support/articles/Home.html"
+    },
+    "tags": [
+      "media",
+      "media system"
+    ]
   }
 ]
 

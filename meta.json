@@ -3461,6 +3461,19 @@
       "docs": "https://statping-ng.github.io/install.html"
     },
     "tags": ["monitoring", "status-page"]
+  },
+  {
+  "id": "rutorrent",
+  "name": "ruTorrent",
+  "version": "latest",
+  "description": "ruTorrent + rTorrent BitTorrent client (crazy-max image). Web UI on 8080, XMLRPC on 8000, with P2P ports exposed for seeding.",
+  "logo": "rutorrent.svg",
+  "links": {
+    "github": "https://github.com/crazy-max/docker-rtorrent-rutorrent",
+    "website": "https://crazymax.dev/",
+    "docs": "https://github.com/crazy-max/docker-rtorrent-rutorrent"
+  },
+  "tags": ["torrent", "rtorrent", "webui", "downloader"]
   }
 ]
 

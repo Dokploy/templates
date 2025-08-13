@@ -3242,6 +3242,19 @@
     "tags": ["analytics"]
   },
   {
+    "id": "obsidian-livesync",
+    "name": "Obsidian LiveSync",
+    "version": "latest",
+    "description": "Obsidian LiveSync with CouchDB for real-time note synchronization.",
+    "logo": "obsidian.png",
+    "links": {
+      "github": "https://github.com/apache/couchdb",
+      "website": "https://couchdb.apache.org/",
+      "docs": "https://docs.couchdb.apache.org/"
+    },
+    "tags": ["database", "sync", "obsidian"]
+  },
+  {   
     "id": "wg-easy",
     "name": "WG-Easy",
     "version": "15",

@@ -1,0 +1,22 @@
+[variables]
+main_domain = "${domain}"
+COUCHDB_USER = "${username}"
+COUCHDB_PASSWORD = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "couchdb"
+port = 5984
+host = "${main_domain}"
+
+[config.env]
+COUCHDB_USER = "${COUCHDB_USER}"
+# Defines the password for the CouchDB admin user. Treat this like an API key.
+COUCHDB_PASSWORD = "${COUCHDB_PASSWORD}"
+
+[[config.mounts]]
+filePath = "local.ini"
+content = """
+[chttpd]
+bind_address = 0.0.0.0
+"""

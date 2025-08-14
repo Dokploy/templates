@@ -3,6 +3,7 @@ services:
     image: ghcr.io/browserless/chromium:v2.23.0
     environment:
       TOKEN: ${BROWSERLESS_TOKEN}
+      ENABLE_DEBUG_VIEWER: "true"
     expose:
       - 3000
     healthcheck:
@@ -14,3 +15,14 @@ services:
       interval: 2s
       timeout: 10s
       retries: 15
+
+  browserless-debugger:
+    image: ghcr.io/browserless/debugger:latest
+    environment:
+      BROWSERLESS_URL: http://browserless:3000
+      BROWSERLESS_TOKEN: ${BROWSERLESS_TOKEN}
+    expose:
+      - 3001
+    depends_on:
+      browserless:
+        condition: service_healthy

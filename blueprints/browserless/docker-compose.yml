@@ -3,8 +3,6 @@ services:
     image: ghcr.io/browserless/chromium:v2.23.0
     environment:
       TOKEN: ${BROWSERLESS_TOKEN}
-      ENABLE_DEBUG_VIEWER: "true"
-      DEBUG: "browserless*"
     expose:
       - 3000
     healthcheck:
@@ -16,5 +14,31 @@ services:
       interval: 2s
       timeout: 10s
       retries: 15
+
+  browserless-debugger:
+    image: node:22-alpine
+    working_dir: /app
+    expose:
+      - 8080
+    environment:
+      BROWSERLESS_URL: http://browserless:3000
+      BROWSERLESS_TOKEN: ${BROWSERLESS_TOKEN}
     command: >
-      sh -c "npm run install:debugger && npm start"
+      sh -c "
+        apk add --no-cache git nginx &&
+        git clone https://github.com/browserless/debugger.git . &&
+        npm install &&
+        npm run build &&
+        echo 'server {
+          listen 8080;
+          root /app/static;
+          index index.html;
+          location / {
+            try_files \$uri \$uri/ /index.html;
+          }
+        }' > /etc/nginx/http.d/default.conf &&
+        nginx -g 'daemon off;'
+      "
+    depends_on:
+      browserless:
+        condition: service_healthy

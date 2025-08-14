@@ -1,22 +1,14 @@
 [variables]
 main_domain = "${domain}"
-debugger_domain = "${domain}"
 browserless_token = "${password:16}"
 
 [config]
 env = [
   "BROWSERLESS_HOST=${main_domain}",
   "BROWSERLESS_TOKEN=${browserless_token}",
-  "BROWSERLESS_DEBUGGER_HOST=${debugger_domain}",
 ]
 
 [[config.domains]]
 serviceName = "browserless"
 port = 3000
 host = "${main_domain}"
-
-[[config.domains]]
-serviceName = "browserless-debugger"
-port = 3001
-host = "${debugger_domain}"
-path = "/"

@@ -1,0 +1,23 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "gitea"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+USER_UID = "1000"
+USER_GID = "1000"
+
+# Optional: enable SMTP (or set later in UI)
+# GITEA__mailer__ENABLED = "true"
+# GITEA__mailer__FROM = "gitea@${username}.example.com"
+# GITEA__mailer__PROTOCOL = "smtps"
+# GITEA__mailer__SMTP_ADDR = "smtp.example.com"
+# GITEA__mailer__SMTP_PORT = "465"
+# GITEA__mailer__USER = "apikey"
+# GITEA__mailer__PASSWD = "${password:32}"
+
+[[config.mounts]]

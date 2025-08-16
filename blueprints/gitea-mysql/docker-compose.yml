@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  gitea:
+    image: docker.gitea.com/gitea:1.24.4
+    restart: unless-stopped
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=mysql
+      - GITEA__database__HOST=mysql:3306
+      - GITEA__database__NAME=gitea
+      - GITEA__database__USER=gitea
+      - GITEA__database__PASSWD=${GITEA_DB_PASSWORD:-gitea}
+    volumes:
+      - gitea-data:/data
+    expose:
+      - "3000"
+      - "22"
+    depends_on:
+      - mysql
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  mysql:
+    image: docker.io/library/mysql:8
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-gitea}
+      - MYSQL_USER=gitea
+      - MYSQL_PASSWORD=${GITEA_DB_PASSWORD:-gitea}
+      - MYSQL_DATABASE=gitea
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    volumes:
+      - mysql-data:/var/lib/mysql
+    expose:
+      - "3306"
+
+volumes:
+  gitea-data: {}
+  mysql-data: {}

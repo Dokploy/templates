@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  rutorrent:
+    image: crazymax/rtorrent-rutorrent:latest
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      # Optional: keep defaults, Dokploy will route 8080 via domain
+      - RUTORRENT_PORT=8080
+      - XMLRPC_PORT=8000
+      # You can customize these if you like:
+      - RT_DHT_PORT=${DHT_PORT:-6881}
+      - RT_INC_PORT=${INCOMING_PORT:-50000}
+    volumes:
+      - rutorrent-data:/data
+      - rutorrent-downloads:/downloads
+      - rutorrent-passwd:/passwd
+    # Expose only P2P-related ports; Dokploy domain will handle the web UI.
+    ports:
+      - "${INCOMING_PORT:-50000}:50000/tcp"
+      - "${DHT_PORT:-6881}:6881/udp"
+
+volumes:
+  rutorrent-data: {}
+  rutorrent-downloads: {}
+  rutorrent-passwd: {}

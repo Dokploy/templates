@@ -1,0 +1,80 @@
+name: Validate and Process Meta.json
+
+on:
+  push:
+    branches: [main, master, develop]
+    paths: ["meta.json"]
+  pull_request:
+    branches: [main, master]
+    paths: ["meta.json"]
+  workflow_dispatch:
+
+jobs:
+  validate-meta:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Validate meta.json structure
+        run: |
+          echo "🔍 Validating meta.json structure..."
+          node -e "
+            const fs = require('fs');
+            const data = JSON.parse(fs.readFileSync('meta.json', 'utf8'));
+            if (!Array.isArray(data)) throw new Error('meta.json must be an array');
+            console.log('✅ meta.json structure is valid');
+            console.log('📊 Found', data.length, 'entries');
+          "
+
+      - name: Check for duplicates and sort order
+        run: |
+          echo "🔍 Checking for duplicates and sort order..."
+          node build-scripts/process-meta.js --verbose --output /tmp/meta-test.json
+
+      - name: Compare with original
+        run: |
+          echo "🔍 Comparing processed file with original..."
+          if ! diff -q meta.json /tmp/meta-test.json > /dev/null; then
+            echo "⚠️ meta.json needs processing (duplicates found or not sorted)"
+            echo "Original entries:"
+            node -e "console.log(JSON.parse(require('fs').readFileSync('meta.json', 'utf8')).length)"
+            echo "Processed entries:"
+            node -e "console.log(JSON.parse(require('fs').readFileSync('/tmp/meta-test.json', 'utf8')).length)"
+            echo ""
+            echo "To fix this, run: npm run process-meta"
+            exit 1
+          else
+            echo "✅ meta.json is properly deduplicated and sorted"
+          fi
+
+      - name: Validate required fields
+        run: |
+          echo "🔍 Validating required fields..."
+          node -e "
+            const fs = require('fs');
+            const data = JSON.parse(fs.readFileSync('meta.json', 'utf8'));
+            const required = ['id', 'name', 'version', 'description', 'links', 'logo', 'tags'];
+            let issues = 0;
+            
+            data.forEach((item, index) => {
+              const missing = required.filter(field => !item[field]);
+              if (missing.length > 0) {
+                console.log('❌ Entry', index, '(' + item.id + '):', 'Missing fields:', missing.join(', '));
+                issues++;
+              }
+            });
+            
+            if (issues > 0) {
+              console.log('🚨 Found', issues, 'entries with missing required fields');
+              process.exit(1);
+            } else {
+              console.log('✅ All entries have required fields');
+            }
+          "

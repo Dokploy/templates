@@ -34,27 +34,6 @@
     ]
   },
   {
-    "id": "authelia",
-    "name": "Authelia",
-    "version": "latest",
-    "description": "The Single Sign-On Multi-Factor portal for web apps. An open-source authentication and authorization server providing 2FA and SSO via web portal.",
-    "logo": "authelia.png",
-    "links": {
-      "github": "https://github.com/authelia/authelia",
-      "website": "https://www.authelia.com/",
-      "docs": "https://www.authelia.com/overview/prologue/introduction/"
-    },
-    "tags": [
-      "authentication",
-      "authorization",
-      "2fa",
-      "sso",
-      "security",
-      "reverse-proxy",
-      "ldap"
-    ]
-  },
-  {
     "id": "capso",
     "name": "Cap.so",
     "version": "latest",
@@ -2787,19 +2766,6 @@
       "website": "https://livekit.io/",
       "docs": "https://docs.livekit.io/"
     },
-    "tags": ["Video", "Audio", "Real-time", "Streaming", "Webrtc"]
-  },
-  {
-    "id": "livekit",
-    "name": "Livekit",
-    "version": "v1.9.0",
-    "description": "LiveKit is an open source platform for developers building realtime media applications.",
-    "logo": "livekit.svg",
-    "links": {
-      "github": "https://github.com/livekit/livekit",
-      "website": "https://livekit.io/",
-      "docs": "https://docs.livekit.io/"
-    },
     "tags": [
       "Video",
       "Audio",
@@ -3242,19 +3208,6 @@
     "tags": ["analytics"]
   },
   {
-    "id": "wg-easy",
-    "name": "WG-Easy",
-    "version": "15",
-    "description": "WG-Easy is a simple and user-friendly WireGuard VPN server with a web interface for easy management.",
-    "logo": "image.png",
-    "links": {
-      "github": "https://github.com/wg-easy/wg-easy",
-      "website": "https://wg-easy.github.io/",
-      "docs": "https://github.com/wg-easy/wg-easy/wiki"
-    },
-    "tags": ["vpn", "wireguard", "networking"]
-  },
-  {
     "id": "open_notebook",
     "name": "Open Notebook",
     "version": "latest",
@@ -3292,38 +3245,6 @@
       "docs": "https://docs.scrypted.app/"
     },
     "tags": ["home-automation", "nvr", "smart-home", "surveillance"]
-  },
-  {
-    "id": "wallos",
-    "name": "Wallos",
-    "version": "latest",
-    "description": "Wallos is a self-hosted subscription tracking application that helps you manage and monitor your subscriptions, providing insights into your spending habits.",
-    "logo": "wallos.png",
-    "links": {
-      "github": "https://github.com/ellite/wallos",
-      "website": "https://wallosapp.com",
-      "docs": "https://github.com/ellite/wallos?tab=readme-ov-file#getting-started"
-    },
-    "tags": [
-      "finance",
-      "subscription",
-      "budgeting",
-      "expense-tracking",
-      "spending"
-    ]
-  },
-  {
-    "id": "n8n-with-postgres",
-    "name": "n8n with Postgres",
-    "version": "latest",
-    "description": "n8n is an open source low-code platform for automating workflows and integrations with PostgreSQL database for better performance and scalability.",
-    "logo": "n8n.png",
-    "links": {
-      "github": "https://github.com/n8n-io/n8n",
-      "website": "https://n8n.io/",
-      "docs": "https://docs.n8n.io/"
-    },
-    "tags": ["automation", "workflow", "low-code", "postgres"]
   },
   {
     "id": "statping-ng",
@@ -3373,55 +3294,6 @@
       "wireguard",
       "networking"
     ]
-  },
-  {
-    "id": "open_notebook",
-    "name": "Open Notebook",
-    "version": "latest",
-    "description": "Open Notebook with SurrealDB for data storage and AI-powered features.",
-    "logo": "open_notebook.svg",
-    "links": {
-      "github": "https://github.com/lfnovo/open_notebook",
-      "website": "https://www.open-notebook.ai/",
-      "docs": "https://www.open-notebook.ai/get-started.html"
-    },
-    "tags": [
-      "notebook",
-      "ai",
-      "database",
-      "surrealdb"
-    ]
-  },
-  {
-    "id": "booklore",
-    "name": "Booklore",
-    "version": "latest",
-    "description": "Booklore is an application for managing and serving book-related data, backed by a MariaDB database.",
-    "logo": "image.png",
-    "links": {
-      "github": "https://github.com/booklore-app/BookLore",
-      "website": "https://github.com/booklore-app/BookLore",
-      "docs": "https://github.com/booklore-app/BookLore/tree/develop/docs"
-    },
-    "tags": [
-      "books",
-      "library",
-      "database",
-      "mariadb"
-    ]
-  },
-  {
-    "id": "scrypted",
-    "name": "Scrypted",
-    "version": "latest",
-    "description": "Scrypted is a home automation platform that integrates with various smart home devices and provides NVR capabilities for video surveillance.",
-    "logo": "image.png",
-    "links": {
-      "github": "https://github.com/koush/scrypted",
-      "website": "https://www.scrypted.app/",
-      "docs": "https://docs.scrypted.app/"
-    },
-    "tags": ["home-automation", "nvr", "smart-home", "surveillance"]
   },
   {
     "id": "wallos",

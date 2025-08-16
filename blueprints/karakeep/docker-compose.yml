@@ -1,54 +1,33 @@
+version: "3.8"
 services:
   web:
     image: ghcr.io/karakeep-app/karakeep:${KARAKEEP_VERSION:-release}
     restart: unless-stopped
     volumes:
-      # By default, the data is stored in a docker volume called "karakeep_data".
-      # If you want to mount a custom directory, change the volume mapping to:
-      # - /path/to/your/directory:/data
-      - karakeep_data:/data
-    ports:
-      - "3000"
+      - data:/data
     environment:
-      DATA_DIR: ${DATA_DIR:-/data}
-      DISABLE_SIGNUPS: ${DISABLE_SIGNUPS:-false}
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-      NEXTAUTH_URL: ${NEXTAUTH_URL}
-      # Meilisearch config
-      MEILI_ADDR: ${MEILI_ADDR:-http://meilisearch:7700}
-      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
-      # Chrome config
-      BROWSER_WEB_URL: ${BROWSER_WEB_URL:-ws://chrome:3000}
-      BROWSER_CONNECT_ONDEMAND: ${BROWSER_CONNECT_ONDEMAND:-true}
-    depends_on:
-      - chrome
-      - meilisearch
-
+      MEILI_ADDR: http://meilisearch:7700
+      BROWSER_WEB_URL: http://chrome:9222
+      DATA_DIR: /data
+      NEXTAUTH_SECRET: your_secure_key
   chrome:
-    image: browserless/chrome:1-chrome-stable
+    image: gcr.io/zenika-hub/alpine-chrome:124
     restart: unless-stopped
-    ports:
-      - "3000"
-    environment:
-      - DEBUG=browserless*
-      - MAX_CONCURRENT_SESSIONS=10
-      - CONNECTION_TIMEOUT=60000
-      - MAX_QUEUE_LENGTH=10
-      - PORT=3000
-      - CHROME_REFRESH_TIME=2147483647
-
+    command:
+      - --no-sandbox
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --remote-debugging-address=0.0.0.0
+      - --remote-debugging-port=9222
+      - --hide-scrollbars
   meilisearch:
-    image: getmeili/meilisearch:v1.10
+    image: getmeili/meilisearch:v1.13.3
     restart: unless-stopped
-    ports:
-      - "7700"
     environment:
-      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
-      MEILI_NO_ANALYTICS: true
-      MEILI_ENV: production
+      MEILI_NO_ANALYTICS: "true"
     volumes:
-      - meilisearch_data:/meili_data
+      - meilisearch:/meili_data
 
 volumes:
-  karakeep_data:
-  meilisearch_data:
+  meilisearch:
+  data:

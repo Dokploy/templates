@@ -1,5 +1,18 @@
 [
   {
+    "id": "xsshunter",
+    "name": "XSSHunter",
+    "version": "latest",
+    "description": "XSSHunter is an open-source platform designed to identify and exploit blind Cross-Site Scripting (XSS) vulnerabilities. It provides security researchers, bug bounty hunters, and penetration testers with a comprehensive toolkit for detecting XSS flaws that are otherwise difficult to discover through traditional testing methods.",
+    "logo": "xsshunter.png",
+    "links": {
+      "github": "https://github.com/rs-loves-bugs/xsshunter",
+      "website": "https://github.com/rs-loves-bugs/xsshunter",
+      "docs": "https://github.com/rs-loves-bugs/xsshunter#requirements"
+    },
+    "tags": ["self-hosted", "open-source", "xss", "penetration-testing", "bug-hunting"]
+  },
+  {
     "id": "autobase",
     "name": "Autobase",
     "version": "2.3.0",

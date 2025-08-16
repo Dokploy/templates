@@ -3,7 +3,6 @@ version: "3.8"
 services:
   rutorrent:
     image: crazymax/rtorrent-rutorrent:latest
-    container_name: rutorrent
     restart: unless-stopped
     environment:
       - PUID=${PUID:-1000}

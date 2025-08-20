@@ -53,8 +53,8 @@ services:
       - NET_BIND_SERVICE
     volumes:
       - dovecot-conf:/etc/dovecot/conf.d
-      - dovecot-main-conf:/etc/dovecot/dovecot.conf
-      - dovecot-rsyslog:/etc/rsyslog.conf
+      - dovecot-main-conf:/etc/dovecot
+      - dovecot-rsyslog:/etc/rsyslog
       - dovecot-logs:/var/log/mail
       - ssl-certs:/etc/ssl/mail
       - ssl-self-signed:/etc/ssl/ssl-self-signed
@@ -87,11 +87,11 @@ services:
     depends_on:
       - pgsql-billionmail
     volumes:
-      - postfix-main:/etc/postfix/main.cf
-      - postfix-master:/etc/postfix/master.cf
+      - postfix-main:/etc/postfix/config
+      - postfix-master:/etc/postfix/templates
       - postfix-conf:/etc/postfix/conf
       - postfix-sql:/etc/postfix/sql
-      - postfix-rsyslog:/etc/rsyslog.conf
+      - postfix-rsyslog:/etc/rsyslog
       - postfix-logs:/var/log/mail
       - ssl-certs:/etc/ssl/mail
       - postfix-data:/var/spool/postfix
@@ -122,7 +122,7 @@ services:
       - postfix-billionmail
     volumes:
       - webmail-data:/var/www/html
-      - webmail-mime:/var/roundcube/config/mime.types
+      - webmail-mime:/var/roundcube/config/mime
       - webmail-config:/var/roundcube/config
       - php-config:/usr/local/etc
       - php-sock:/var/run/
@@ -155,7 +155,7 @@ services:
       - php-sock:/opt/billionmail/php-sock
       - rspamd-data:/opt/billionmail/rspamd-data
       - webmail-data:/opt/billionmail/webmail-data
-      - billionmail-env:/opt/billionmail/.env
+      - billionmail-env:/opt/billionmail/env
       - billionmail-conf:/opt/billionmail/conf
       - billionmail-logs:/opt/billionmail/logs
       - core-logs:/opt/billionmail/core/logs

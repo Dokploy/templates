@@ -1,0 +1,38 @@
+[variables]
+main_domain = "${domain}"
+tz = "UTC"
+db_name = "billionmail"
+db_user = "billionmail"
+db_pass = "${password:32}"
+redis_pass = "${password:16}"
+billionmail_hostname = "${main_domain}"
+retention_days = "7"
+fail2ban_init = "y"
+
+[config]
+[[config.domains]]
+serviceName = "core-billionmail"
+port = 80
+host = "${main_domain}"
+
+env = [
+    "TZ=${tz}",
+    "DBNAME=${db_name}",
+    "DBUSER=${db_user}",
+    "DBPASS=${db_pass}",
+    "REDISPASS=${redis_pass}",
+    "BILLIONMAIL_HOSTNAME=${billionmail_hostname}",
+    "RETENTION_DAYS=${retention_days}",
+    "FAIL2BAN_INIT=${fail2ban_init}"
+]
+
+[[config.mounts]]
+filePath = "/redis-conf.sh"
+content = """
+#!/bin/sh
+if [ ! -z "$REDISPASS" ]; then
+    echo "requirepass $REDISPASS" > /usr/local/etc/redis/redis.conf
+    echo "masterauth $REDISPASS" >> /usr/local/etc/redis/redis.conf
+fi
+redis-server /usr/local/etc/redis/redis.conf
+"""

@@ -1,0 +1,212 @@
+services:
+  pgsql-billionmail:
+    image: postgres:17.4-alpine
+    hostname: pgsql
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+      - postgresql-socket:/var/run/postgresql
+    environment:
+      - TZ=${TZ}
+      - POSTGRES_DB=${DBNAME}
+      - POSTGRES_USER=${DBUSER}
+      - POSTGRES_PASSWORD=${DBPASS}
+    restart: always
+
+  redis-billionmail:
+    image: redis:7.4.2-alpine
+    hostname: redis
+    entrypoint: ["/bin/sh","/redis-conf.sh"]
+    volumes:
+      - redis-data:/data
+      - redis-conf:/redis-conf.sh
+    restart: always
+    environment:
+      - TZ=${TZ}
+      - REDISPASS=${REDISPASS}
+    sysctls:
+      - net.core.somaxconn=4096
+
+  rspamd-billionmail:
+    image: billionmail/rspamd:1.2
+    hostname: rspamd
+    depends_on:
+      - redis-billionmail
+    environment:
+      - TZ=${TZ}
+      - REDISPASS=${REDISPASS}
+      - RETENTION_DAYS=${RETENTION_DAYS}
+    volumes:
+      - rspamd-local:/etc/rspamd/local.d
+      - rspamd-statistic:/etc/rspamd/statistic.conf
+      - rspamd-conf:/etc/rspamd/rspamd.conf
+      - rspamd-data:/var/lib/rspamd
+      - rspamd-logs:/var/log/rspamd
+    restart: always
+
+  dovecot-billionmail:
+    image: billionmail/dovecot:1.5
+    hostname: dovecot
+    depends_on:
+      - pgsql-billionmail
+      - redis-billionmail
+    cap_add:
+      - NET_BIND_SERVICE
+    volumes:
+      - dovecot-conf:/etc/dovecot/conf.d
+      - dovecot-main-conf:/etc/dovecot/dovecot.conf
+      - dovecot-rsyslog:/etc/rsyslog.conf
+      - dovecot-logs:/var/log/mail
+      - ssl-certs:/etc/ssl/mail
+      - ssl-self-signed:/etc/ssl/ssl-self-signed
+      - vmail-data:/var/vmail
+      - rspamd-data:/var/lib/rspamd
+      - postgresql-socket:/var/run/postgresql
+    environment:
+      - DBNAME=${DBNAME}
+      - DBUSER=${DBUSER}
+      - DBPASS=${DBPASS}
+      - TZ=${TZ}
+      - BILLIONMAIL_HOSTNAME=${BILLIONMAIL_HOSTNAME}
+      - REDISPASS=${REDISPASS}
+      - RETENTION_DAYS=${RETENTION_DAYS}
+    ports:
+      - 143
+      - 993
+      - 110
+      - 995
+    restart: always
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+
+  postfix-billionmail:
+    image: billionmail/postfix:1.6
+    hostname: postfix
+    depends_on:
+      - pgsql-billionmail
+    volumes:
+      - postfix-main:/etc/postfix/main.cf
+      - postfix-master:/etc/postfix/master.cf
+      - postfix-conf:/etc/postfix/conf
+      - postfix-sql:/etc/postfix/sql
+      - postfix-rsyslog:/etc/rsyslog.conf
+      - postfix-logs:/var/log/mail
+      - ssl-certs:/etc/ssl/mail
+      - postfix-data:/var/spool/postfix
+      - rspamd-data:/var/lib/rspamd
+      - postgresql-socket:/var/run/postgresql
+    environment:
+      - TZ=${TZ}
+      - DBNAME=${DBNAME}
+      - DBUSER=${DBUSER}
+      - DBPASS=${DBPASS}
+      - REDISPASS=${REDISPASS}
+      - BILLIONMAIL_HOSTNAME=${BILLIONMAIL_HOSTNAME}
+      - RETENTION_DAYS=${RETENTION_DAYS}
+    cap_add:
+      - NET_BIND_SERVICE
+    ports:
+      - 25
+      - 465
+      - 587
+    restart: always
+
+  webmail-billionmail:
+    image: roundcube/roundcubemail:1.6.10-fpm-alpine
+    hostname: roundcube
+    depends_on:
+      - pgsql-billionmail
+      - dovecot-billionmail
+      - postfix-billionmail
+    volumes:
+      - webmail-data:/var/www/html
+      - webmail-mime:/var/roundcube/config/mime.types
+      - webmail-config:/var/roundcube/config
+      - php-config:/usr/local/etc
+      - php-sock:/var/run/
+    environment:
+      - TZ=${TZ}
+      - ROUNDCUBEMAIL_DB_TYPE=pgsql
+      - ROUNDCUBEMAIL_DB_HOST=pgsql
+      - ROUNDCUBEMAIL_DB_NAME=${DBNAME}
+      - ROUNDCUBEMAIL_DB_USER=${DBUSER}
+      - ROUNDCUBEMAIL_DB_PASSWORD=${DBPASS}
+      - ROUNDCUBEMAIL_DEFAULT_HOST=dovecot
+      - ROUNDCUBEMAIL_DEFAULT_PORT=143
+      - ROUNDCUBEMAIL_SMTP_SERVER=postfix
+      - ROUNDCUBEMAIL_SMTP_PORT=25
+      - ROUNDCUBEMAIL_REQUEST_PATH=/roundcube
+    restart: always
+
+  core-billionmail:
+    image: billionmail/core:4.2.1
+    hostname: core-manage
+    depends_on:
+      - pgsql-billionmail
+    volumes:
+      - ssl-certs:/etc/ssl/mail
+      - ssl-self-signed:/etc/ssl/ssl-self-signed
+      - fail2ban-filter:/etc/fail2ban/filter.d
+      - fail2ban-jail:/etc/fail2ban/jail.d
+      - fail2ban-logs:/var/log/fail2ban
+      - postgresql-socket:/opt/billionmail/postgresql-socket
+      - php-sock:/opt/billionmail/php-sock
+      - rspamd-data:/opt/billionmail/rspamd-data
+      - webmail-data:/opt/billionmail/webmail-data
+      - billionmail-env:/opt/billionmail/.env
+      - billionmail-conf:/opt/billionmail/conf
+      - billionmail-logs:/opt/billionmail/logs
+      - core-logs:/opt/billionmail/core/logs
+      - core-data:/opt/billionmail/core/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - TZ=${TZ}
+      - FAIL2BAN_INIT=${FAIL2BAN_INIT}
+    cap_add:
+      - NET_BIND_SERVICE
+      - NET_ADMIN
+      - NET_RAW
+    ports:
+      - 80
+      - 443
+    restart: always
+
+volumes:
+  postgresql-data:
+  postgresql-socket:
+  redis-data:
+  redis-conf:
+  rspamd-local:
+  rspamd-statistic:
+  rspamd-conf:
+  rspamd-data:
+  rspamd-logs:
+  dovecot-conf:
+  dovecot-main-conf:
+  dovecot-rsyslog:
+  dovecot-logs:
+  ssl-certs:
+  ssl-self-signed:
+  vmail-data:
+  postfix-main:
+  postfix-master:
+  postfix-conf:
+  postfix-sql:
+  postfix-rsyslog:
+  postfix-logs:
+  postfix-data:
+  webmail-data:
+  webmail-mime:
+  webmail-config:
+  php-config:
+  php-sock:
+  fail2ban-filter:
+  fail2ban-jail:
+  fail2ban-logs:
+  billionmail-env:
+  billionmail-conf:
+  billionmail-logs:
+  core-logs:
+  core-data:

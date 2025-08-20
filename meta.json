@@ -3320,6 +3320,19 @@
     "docs": "https://docs.n8n.io/"
     },
     "tags": ["automation", "workflow", "low-code", "postgres"]
+  },
+  {
+    "id": "billionmail",
+    "name": "BillionMail",
+    "version": "4.2.1",
+    "description": "BillionMail is a comprehensive email server solution that includes Postfix for SMTP, Dovecot for IMAP/POP3, Rspamd for spam filtering, Redis for caching, PostgreSQL for data storage, Roundcube webmail client, and a management web interface with fail2ban protection.",
+    "logo": "billionmail.svg",
+    "links": {
+      "github": "https://github.com/aaPanel/BillionMail",
+      "website": "https://billionmail.org/",
+      "docs": "https://github.com/aaPanel/BillionMail/wiki"
+    },
+    "tags": ["email", "smtp", "imap", "webmail", "mail-server", "self-hosted"]
   }
 ]
 

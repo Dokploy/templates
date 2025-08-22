@@ -3309,17 +3309,30 @@
     "tags": ["finance", "subscription", "budgeting", "expense-tracking", "spending"]
   },
   {
-  "id": "n8n-with-postgres",
-  "name": "n8n with Postgres",
-  "version": "latest", 
-  "description": "n8n is an open source low-code platform for automating workflows and integrations with PostgreSQL database for better performance and scalability.",
-  "logo": "n8n.png",
-  "links": {
-    "github": "https://github.com/n8n-io/n8n",
-    "website": "https://n8n.io/",
-    "docs": "https://docs.n8n.io/"
+    "id": "n8n-with-postgres",
+    "name": "n8n with Postgres",
+    "version": "latest",
+    "description": "n8n is an open source low-code platform for automating workflows and integrations with PostgreSQL database for better performance and scalability.",
+    "logo": "n8n.png",
+    "links": {
+      "github": "https://github.com/n8n-io/n8n",
+      "website": "https://n8n.io/",
+      "docs": "https://docs.n8n.io/"
     },
     "tags": ["automation", "workflow", "low-code", "postgres"]
+  },
+  {
+    "id": "garage-with-ui",
+    "name": "Garage S3 with Web UI",
+    "version": "latest",
+    "description": "Garage is an open-source distributed object storage service tailored for self-hosting",
+    "logo": "garage.svg",
+    "links": {
+      "github": "https://git.deuxfleurs.fr/Deuxfleurs/garage",
+      "website": "https://garagehq.deuxfleurs.fr",
+      "docs": "https://garagehq.deuxfleurs.fr/documentation/quick-start/"
+    },
+    "tags": ["storage", "object-storage"]
   }
 ]
 

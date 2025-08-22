@@ -1,0 +1,25 @@
+services:
+  garage:
+    image: dxflrs/garage:v1.0.1
+    volumes:
+      - ../files/garage.toml:/etc/garage.toml
+      - /etc/dokploy/templates/${HASH}/meta:/var/lib/garage/meta
+      - /etc/dokploy/templates/${HASH}/data:/var/lib/garage/data
+    restart: unless-stopped
+    ports:
+      - 3900
+      - 3901
+      - 3902
+      - 3903
+
+  garage-webui:
+    image: khairul169/garage-webui:latest
+    restart: unless-stopped
+    volumes:
+      - ../files/garage.toml:/etc/garage.toml:ro
+    ports:
+      - 3909
+    environment:
+      AUTH_USER_PASS: "admin:$2y$10$2yUKvIyvyY8uhNnBPxJwvOkOymgBP8eQc1r0IkjCXHkL2H9H16oeK"
+      API_BASE_URL: "http://garage:3903"
+      S3_ENDPOINT_URL: "http://garage:3900"

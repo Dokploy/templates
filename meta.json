@@ -34,6 +34,25 @@
     ]
   },
   {
+    "id": "appflowy",
+    "name": "App Flowy",
+    "version": "0.9.3",
+    "description": "AppFlowy is an open-source alternative to Notion. You are in charge of your data and customizations.",
+    "links": {
+      "github": "https://github.com/AppFlowy-IO/AppFlowy",
+      "website": "https://appflowy.io/",
+      "docs": "https://docs.appflowy.io/docs"
+    },
+    "logo": "appflowy.png",
+    "tags": [
+      "productivity",
+      "self-hosted",
+      "notes",
+      "knowledge-base",
+      "notion-alternative"
+    ]
+  },
+  {
     "id": "capso",
     "name": "Cap.so",
     "version": "latest",

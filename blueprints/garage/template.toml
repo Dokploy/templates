@@ -17,9 +17,9 @@ port = 3909
 host = "${main_domain}"
 
 env = [
-    AUTH_USER_PASS: "${ht_username}:${ht_password}"
-    API_BASE_URL: "http://garage:3903"
-    S3_ENDPOINT_URL: "http://garage:3900"
+    "AUTH_USER_PASS=${ht_username}:${ht_password}"
+    "API_BASE_URL=http://garage:3903"
+    "S3_ENDPOINT_URL=http://garage:3900"
 ]
 
 [[config.mounts]]

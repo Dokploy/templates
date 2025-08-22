@@ -1,10 +1,16 @@
 [variables]
 main_domain = "${domain}"
+webui_domain = "web-ui.${domain}"
 ht_username = "${username}"
 ht_password = "${password:16}"
 
 
 [config]
+env = [
+    "AUTH_USER_PASS=",
+    "API_BASE_URL=http://garage:3903",
+    "S3_ENDPOINT_URL=http://garage:3900"
+]
 
 [[config.domains]]
 serviceName = "garage"
@@ -14,16 +20,12 @@ host = "${main_domain}"
 [[config.domains]]
 serviceName = "garage-webui"
 port = 3909
-host = "${main_domain}"
+host = "${webui_domain}"
 
-env = [
-    "AUTH_USER_PASS=${ht_username}:${ht_password}",
-    "API_BASE_URL=http://garage:3903",
-    "S3_ENDPOINT_URL=http://garage:3900"
-]
+
 
 [[config.mounts]]
-filePath = "/etc/garage.toml"
+filePath = "garage.toml"
 content = """
 
 metadata_dir = "/var/lib/garage/meta"
@@ -36,16 +38,16 @@ compression_level = 2
 
 rpc_bind_addr = "[::]:3901"
 rpc_public_addr = "localhost:3901" # Required
-rpc_secret = "${hash:32}"
+rpc_secret = "${hash:64}"
 
 [s3_api]
 s3_region = "garage"
 api_bind_addr = "[::]:3900"
-root_domain = ".s3.${main_domain}"
+root_domain = ".s3.domain.com"
 
 [s3_web] # Optional, if you want to expose bucket as web
 bind_addr = "[::]:3902"
-root_domain = ".web.${main_domain}"
+root_domain = ".web.domain.com"
 index = "index.html"
 
 [admin] # Required

@@ -20,6 +20,6 @@ services:
     ports:
       - 3909
     environment:
-      AUTH_USER_PASS: "admin:$2y$10$2yUKvIyvyY8uhNnBPxJwvOkOymgBP8eQc1r0IkjCXHkL2H9H16oeK"
-      API_BASE_URL: "http://garage:3903"
-      S3_ENDPOINT_URL: "http://garage:3900"
+      - AUTH_USER_PASS
+      - API_BASE_URL
+      - S3_ENDPOINT_URL

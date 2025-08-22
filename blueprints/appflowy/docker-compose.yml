@@ -11,8 +11,6 @@ services:
       - APPFLOWY_S3_SECRET_KEY=${APPFLOWY_S3_SECRET_KEY}
     volumes:
       - minio_data:/data
-    networks:
-      - dokploy-network
 
   postgres:
     image: pgvector/pgvector:pg17
@@ -28,14 +26,10 @@ services:
       retries: 12
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - dokploy-network
 
   redis:
     image: redis:latest
     restart: on-failure
-    networks:
-      - dokploy-network
 
   gotrue:
     image: appflowyinc/gotrue:${GOTRUE_VERSION:-latest}
@@ -99,8 +93,6 @@ services:
       - "traefik.http.routers.gotrue.tls=true"
       - "traefik.http.routers.gotrue.tls.certresolver=letsencrypt"
       - "traefik.http.services.gotrue.loadbalancer.server.port=9999"
-    networks:
-      - dokploy-network
 
   appflowy_cloud:
     image: appflowyinc/appflowy_cloud:${APPFLOWY_CLOUD_VERSION:-latest}
@@ -150,8 +142,6 @@ services:
       - "traefik.http.routers.appflowy_cloud.tls=true"
       - "traefik.http.routers.appflowy_cloud.tls.certresolver=letsencrypt"
       - "traefik.http.services.appflowy_cloud.loadbalancer.server.port=8000"
-    networks:
-      - dokploy-network
 
   admin_frontend:
     image: appflowyinc/admin_frontend:${APPFLOWY_ADMIN_FRONTEND_VERSION:-latest}
@@ -185,8 +175,6 @@ services:
       - "traefik.http.routers.admin_frontend.tls=true"
       - "traefik.http.routers.admin_frontend.tls.certresolver=letsencrypt"
       - "traefik.http.services.admin_frontend.loadbalancer.server.port=3000"
-    networks:
-      - dokploy-network
 
   ai:
     image: appflowyinc/appflowy_ai:${APPFLOWY_AI_VERSION:-latest}
@@ -199,8 +187,6 @@ services:
       - APPFLOWY_AI_SERVER_PORT=${APPFLOWY_AI_SERVER_PORT}
       - APPFLOWY_AI_DATABASE_URL=${APPFLOWY_AI_DATABASE_URL}
       - APPFLOWY_AI_REDIS_URL=${APPFLOWY_AI_REDIS_URL}
-    networks:
-      - dokploy-network
 
   appflowy_worker:
     image: appflowyinc/appflowy_worker:${APPFLOWY_WORKER_VERSION:-latest}
@@ -230,8 +216,6 @@ services:
       - APPFLOWY_MAILER_SMTP_EMAIL=${APPFLOWY_MAILER_SMTP_EMAIL}
       - APPFLOWY_MAILER_SMTP_PASSWORD=${APPFLOWY_MAILER_SMTP_PASSWORD}
       - APPFLOWY_MAILER_SMTP_TLS_KIND=${APPFLOWY_MAILER_SMTP_TLS_KIND}
-    networks:
-      - dokploy-network
 
   appflowy_web:
     image: appflowyinc/appflowy_web:${APPFLOWY_WEB_VERSION:-latest}
@@ -245,14 +229,9 @@ services:
       - "traefik.http.routers.appflowy_web.tls=true"
       - "traefik.http.routers.appflowy_web.tls.certresolver=letsencrypt"
       - "traefik.http.services.appflowy_web.loadbalancer.server.port=80"
-    networks:
-      - dokploy-network
 
 volumes:
   postgres_data:
   minio_data:
   letsencrypt:
 
-networks:
-  dokploy-network:
-    driver: bridge

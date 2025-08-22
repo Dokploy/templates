@@ -17,7 +17,7 @@ env = [
   # GoTrue variables
   "GOTRUE_ADMIN_EMAIL=",
   "GOTRUE_ADMIN_PASSWORD=${password:32}",
-  "GOTRUE_JWT_SECRET=${password:32}",
+  "GOTRUE_JWT_SECRET=${jwt:GOTRUE_JWT_SECRET}",
   "GOTRUE_JWT_EXP=3600",
   "GOTRUE_DB_DRIVER=postgres",
   "GOTRUE_SITE_URL=appflowy-flutter://",

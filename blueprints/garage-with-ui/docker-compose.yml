@@ -3,8 +3,8 @@ services:
     image: dxflrs/garage:v1.0.1
     volumes:
       - ../files/garage.toml:/etc/garage.toml
-      - /etc/dokploy/templates/${HASH}/meta:/var/lib/garage/meta
-      - /etc/dokploy/templates/${HASH}/data:/var/lib/garage/data
+      - garage-storage:/var/lib/garage
+      - garage-storage:/var/lib/garage
     restart: unless-stopped
     ports:
       - 3900
@@ -23,3 +23,6 @@ services:
       - AUTH_USER_PASS
       - API_BASE_URL
       - S3_ENDPOINT_URL
+
+volumes:
+  garage-storage: {}

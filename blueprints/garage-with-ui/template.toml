@@ -4,7 +4,6 @@ webui_domain = "web-ui.${domain}"
 ht_username = "${username}"
 ht_password = "${password:16}"
 
-
 [config]
 env = [
     "AUTH_USER_PASS=",
@@ -21,8 +20,6 @@ host = "${main_domain}"
 serviceName = "garage-webui"
 port = 3909
 host = "${webui_domain}"
-
-
 
 [[config.mounts]]
 filePath = "garage.toml"

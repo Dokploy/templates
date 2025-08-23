@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  gitea:
+    image: docker.gitea.com/gitea:1.24.4
+    restart: unless-stopped
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      # SQLite (default) lives at /data/gitea
+      # Example optional overrides (set in template.toml env or UI):
+      # - GITEA__mailer__ENABLED=true
+    volumes:
+      - gitea-data:/data
+    expose:
+      - "3000" # Web UI
+      - "22" # SSH (internal only)
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  gitea-data: {}

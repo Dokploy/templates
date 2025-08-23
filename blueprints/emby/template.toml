@@ -1,11 +1,12 @@
 [variables]
 main_domain = "${domain}"
+api_domain = "${domain}"
 
 [config]
-env = ["USER_UID=1000", "USER_GID=1000"]
+env = []
 mounts = []
 
 [[config.domains]]
-serviceName = "gitea"
-port = 3_000
+serviceName = "emby"
+port = 8096
 host = "${main_domain}"

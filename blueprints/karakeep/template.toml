@@ -1,25 +1,118 @@
 [variables]
 main_domain = "${domain}"
-nextauth_secret = "${password:64}"
-meili_master_key = "${password:32}"
-
-[config.env]
-KARAKEEP_VERSION = "release"
-NEXTAUTH_SECRET = "${nextauth_secret}"
-MEILI_MASTER_KEY = "${meili_master_key}"
-NEXTAUTH_URL = "http://${main_domain}"
-DATA_DIR = "/data"
-DISABLE_SIGNUPS = "false"
-# Meilisearch config
-MEILI_ADDR = "http://meilisearch:7700"
-# Chrome config  
-BROWSER_WEB_URL = "ws://chrome:9222"
-BROWSER_CONNECT_ONDEMAND = "true"
+karakeep_version = "release"
 
 [config]
-mounts = []
-
 [[config.domains]]
 serviceName = "web"
 port = 3000
-host = "${main_domain}" 
+host = "${main_domain}"
+
+[config.env]
+# Core required configuration
+"NEXTAUTH_URL" = "http://${main_domain}"
+# "NEXTAUTH_SECRET" = "${password:36}"
+
+# DATA_DIR is already set to /data by default in docker-compose
+# "DATA_DIR" = "/data"
+
+# Optional: common configs
+# "ASSETS_DIR" = ""
+"MEILI_MASTER_KEY" = "${password:36}"
+# "MAX_ASSET_SIZE_MB" = "50"
+# "DISABLE_NEW_RELEASE_CHECK" = "false"
+# "PROMETHEUS_AUTH_TOKEN" = ""
+# "RATE_LIMITING_ENABLED" = "false"
+# "DB_WAL_MODE" = "false"
+# "SEARCH_NUM_WORKERS" = "1"
+# "WEBHOOK_NUM_WORKERS" = "1"
+# "ASSET_PREPROCESSING_NUM_WORKERS" = "1"
+# "RULE_ENGINE_NUM_WORKERS" = "1"
+
+# --- Asset Storage (S3) ---
+# "ASSET_STORE_S3_ENDPOINT" = ""
+# "ASSET_STORE_S3_REGION" = ""
+# "ASSET_STORE_S3_BUCKET" = ""
+# "ASSET_STORE_S3_ACCESS_KEY_ID" = ""
+# "ASSET_STORE_S3_SECRET_ACCESS_KEY" = ""
+# "ASSET_STORE_S3_FORCE_PATH_STYLE" = "false"
+
+# --- Authentication / Signup ---
+# "DISABLE_SIGNUPS" = "false"
+# "DISABLE_PASSWORD_AUTH" = "false"
+# "EMAIL_VERIFICATION_REQUIRED" = "false"
+# "OAUTH_WELLKNOWN_URL" = ""
+# "OAUTH_CLIENT_SECRET" = ""
+# "OAUTH_CLIENT_ID" = ""
+# "OAUTH_SCOPE" = "openid email profile"
+# "OAUTH_PROVIDER_NAME" = "Custom Provider"
+# "OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING" = "false"
+# "OAUTH_TIMEOUT" = "3500"
+
+# --- Inference Configs ---
+# "OPENAI_API_KEY" = ""
+# "OPENAI_BASE_URL" = ""
+# "OLLAMA_BASE_URL" = ""
+# "OLLAMA_KEEP_ALIVE" = ""
+# "INFERENCE_TEXT_MODEL" = "gpt-4.1-mini"
+# "INFERENCE_IMAGE_MODEL" = "gpt-4o-mini"
+# "EMBEDDING_TEXT_MODEL" = "text-embedding-3-small"
+# "INFERENCE_CONTEXT_LENGTH" = "2048"
+# "INFERENCE_LANG" = "english"
+# "INFERENCE_NUM_WORKERS" = "1"
+# "INFERENCE_ENABLE_AUTO_TAGGING" = "true"
+# "INFERENCE_ENABLE_AUTO_SUMMARIZATION" = "false"
+# "INFERENCE_JOB_TIMEOUT_SEC" = "30"
+# "INFERENCE_FETCH_TIMEOUT_SEC" = "300"
+# "INFERENCE_OUTPUT_SCHEMA" = "structured"
+
+# --- Crawler Configs ---
+# "CRAWLER_NUM_WORKERS" = "1"
+# "BROWSER_WEB_URL" = "http://chrome:9222"
+# "BROWSER_WEBSOCKET_URL" = ""
+# "BROWSER_CONNECT_ONDEMAND" = "false"
+# "CRAWLER_DOWNLOAD_BANNER_IMAGE" = "true"
+# "CRAWLER_STORE_SCREENSHOT" = "true"
+# "CRAWLER_FULL_PAGE_SCREENSHOT" = "false"
+# "CRAWLER_SCREENSHOT_TIMEOUT_SEC" = "5"
+# "CRAWLER_FULL_PAGE_ARCHIVE" = "false"
+# "CRAWLER_JOB_TIMEOUT_SEC" = "60"
+# "CRAWLER_NAVIGATE_TIMEOUT_SEC" = "30"
+# "CRAWLER_VIDEO_DOWNLOAD" = "false"
+# "CRAWLER_VIDEO_DOWNLOAD_MAX_SIZE" = "50"
+# "CRAWLER_VIDEO_DOWNLOAD_TIMEOUT_SEC" = "600"
+# "CRAWLER_ENABLE_ADBLOCKER" = "true"
+# "CRAWLER_YTDLP_ARGS" = "[]"
+
+# --- OCR Configs ---
+# "OCR_CACHE_DIR" = ""
+# "OCR_LANGS" = "eng"
+# "OCR_CONFIDENCE_THRESHOLD" = "50"
+
+# --- Webhook Configs ---
+# "WEBHOOK_TIMEOUT_SEC" = "5"
+# "WEBHOOK_RETRY_TIMES" = "3"
+# "WEBHOOK_TOKEN" = ""
+
+# --- SMTP Configuration ---
+# "SMTP_HOST" = ""
+# "SMTP_PORT" = "587"
+# "SMTP_SECURE" = "false"
+# "SMTP_USER" = ""
+# "SMTP_PASSWORD" = ""
+# "SMTP_FROM" = ""
+
+# --- Proxy Configuration ---
+# "CRAWLER_HTTP_PROXY" = ""
+# "CRAWLER_HTTPS_PROXY" = ""
+# "CRAWLER_NO_PROXY" = ""
+
+[[config.mounts]]
+# Persistent data directory for Karakeep
+volumeName = "data"
+mountPath = "/data"
+
+[[config.mounts]]
+# Meilisearch data directory
+volumeName = "meilisearch"
+mountPath = "/meili_data"

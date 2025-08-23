@@ -1453,6 +1453,22 @@
     ]
   },
   {
+    "id": "drizzle-gateway",
+    "name": "drizzle gateway",
+    "version": "latest",
+    "description": "Drizzle Gateway is a self-hosted database gateway that allows you to connect to your databases from anywhere.",
+    "logo": "drizzle-gateway.svg",
+    "links": {
+      "github": "https://github.com/drizzle-team/drizzle-gateway",
+      "website": "https://drizzle-team.github.io/",
+      "docs": "https://drizzle-team.github.io/docs"
+    },
+    "tags": [
+      "database",
+      "gateway"
+    ]
+  },
+  {
     "id": "dumbassets",
     "name": "DumbAssets",
     "version": "latest",
@@ -1535,6 +1551,22 @@
     "tags": [
       "search",
       "analytics"
+    ]
+  },
+  {
+    "id": "emby",
+    "name": "Emby",
+    "version": "4.9.1.17",
+    "description": "Emby Server is a personal media server with apps on just about every device.",
+    "logo": "emby.png",
+    "links": {
+      "github": "https://github.com/MediaBrowser/Emby",
+      "website": "https://emby.media/",
+      "docs": "https://emby.media/support/articles/Home.html"
+    },
+    "tags": [
+      "media",
+      "media system"
     ]
   },
   {
@@ -1786,22 +1818,6 @@
     ]
   },
   {
-    "id": "garage-with-ui",
-    "name": "Garage S3 with Web UI",
-    "version": "latest",
-    "description": "Garage is an open-source distributed object storage service tailored for self-hosting",
-    "logo": "garage.svg",
-    "links": {
-      "github": "https://git.deuxfleurs.fr/Deuxfleurs/garage",
-      "website": "https://garagehq.deuxfleurs.fr",
-      "docs": "https://garagehq.deuxfleurs.fr/documentation/quick-start/"
-    },
-    "tags": [
-      "storage",
-      "object-storage"
-    ]
-  },
-  {
     "id": "ghost",
     "name": "Ghost",
     "version": "6.0.0",
@@ -1814,22 +1830,6 @@
     },
     "tags": [
       "cms"
-    ]
-  },
-  {
-    "id": "gitea",
-    "name": "Gitea",
-    "version": "1.22.3",
-    "description": "Git with a cup of tea! Painless self-hosted all-in-one software development service, including Git hosting, code review, team collaboration, package registry and CI/CD.",
-    "logo": "gitea.png",
-    "links": {
-      "github": "https://github.com/go-gitea/gitea.git",
-      "website": "https://gitea.com/",
-      "docs": "https://docs.gitea.com/installation/install-with-docker"
-    },
-    "tags": [
-      "self-hosted",
-      "storage"
     ]
   },
   {
@@ -1850,6 +1850,62 @@
       "gitea",
       "self-hosted",
       "automation"
+    ]
+  },
+  {
+    "id": "gitea-mysql",
+    "name": "Gitea (MySQL)",
+    "version": "1.24.4",
+    "description": "Gitea bundled with MySQL 8.",
+    "logo": "gitea.png",
+    "links": {
+      "github": "https://github.com/go-gitea/gitea",
+      "website": "https://gitea.io/",
+      "docs": "https://docs.gitea.com/"
+    },
+    "tags": [
+      "git",
+      "scm",
+      "mysql",
+      "developer-tools",
+      "self-hosted"
+    ]
+  },
+  {
+    "id": "gitea-postgres",
+    "name": "Gitea (PostgreSQL)",
+    "version": "1.24.4",
+    "description": "Gitea bundled with PostgreSQL.",
+    "logo": "gitea.png",
+    "links": {
+      "github": "https://github.com/go-gitea/gitea",
+      "website": "https://gitea.io/",
+      "docs": "https://docs.gitea.com/"
+    },
+    "tags": [
+      "git",
+      "scm",
+      "postgres",
+      "developer-tools",
+      "self-hosted"
+    ]
+  },
+  {
+    "id": "gitea-sqlite",
+    "name": "Gitea (SQLite)",
+    "version": "1.24.4",
+    "description": "Self-hosted Git service using SQLite for a simple one-container setup.",
+    "logo": "gitea.png",
+    "links": {
+      "github": "https://github.com/go-gitea/gitea",
+      "website": "https://gitea.io/",
+      "docs": "https://docs.gitea.com/"
+    },
+    "tags": [
+      "git",
+      "scm",
+      "developer-tools",
+      "self-hosted"
     ]
   },
   {
@@ -2801,6 +2857,23 @@
     ]
   },
   {
+    "id": "obsidian-livesync",
+    "name": "Obsidian LiveSync",
+    "version": "latest",
+    "description": "Obsidian LiveSync with CouchDB for real-time note synchronization.",
+    "logo": "obsidian.png",
+    "links": {
+      "github": "https://github.com/apache/couchdb",
+      "website": "https://couchdb.apache.org/",
+      "docs": "https://docs.couchdb.apache.org/"
+    },
+    "tags": [
+      "database",
+      "sync",
+      "obsidian"
+    ]
+  },
+  {
     "id": "odoo",
     "name": "Odoo",
     "version": "16.0",
@@ -3405,6 +3478,24 @@
     ]
   },
   {
+    "id": "rutorrent",
+    "name": "ruTorrent",
+    "version": "latest",
+    "description": "ruTorrent + rTorrent BitTorrent client (crazy-max image). Web UI on 8080, XMLRPC on 8000, with P2P ports exposed for seeding.",
+    "logo": "rutorrent.svg",
+    "links": {
+      "github": "https://github.com/crazy-max/docker-rtorrent-rutorrent",
+      "website": "https://crazymax.dev/",
+      "docs": "https://github.com/crazy-max/docker-rtorrent-rutorrent"
+    },
+    "tags": [
+      "torrent",
+      "rtorrent",
+      "webui",
+      "downloader"
+    ]
+  },
+  {
     "id": "rybbit",
     "name": "Rybbit",
     "version": "v1.5.1",
@@ -3864,6 +3955,21 @@
       "blog",
       "cms",
       "php"
+    ]
+  },
+  {
+    "id": "typesense",
+    "name": "Typesense",
+    "version": "29.0",
+    "description": "Typesense is a fast, open-source search engine for building modern search experiences.",
+    "logo": "typesense.png",
+    "links": {
+      "github": "https://github.com/typesense/typesense",
+      "website": "https://typesense.org/",
+      "docs": "https://typesense.org/docs"
+    },
+    "tags": [
+      "search"
     ]
   },
   {

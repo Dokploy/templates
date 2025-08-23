@@ -204,6 +204,25 @@
     ]
   },
   {
+    "id": "appflowy",
+    "name": "App Flowy",
+    "version": "0.9.3",
+    "description": "AppFlowy is an open-source alternative to Notion. You are in charge of your data and customizations.",
+    "links": {
+      "github": "https://github.com/AppFlowy-IO/AppFlowy",
+      "website": "https://appflowy.io/",
+      "docs": "https://docs.appflowy.io/docs"
+    },
+    "logo": "appflowy.png",
+    "tags": [
+      "productivity",
+      "self-hosted",
+      "notes",
+      "knowledge-base",
+      "notion-alternative"
+    ]
+  },
+  {
     "id": "apprise-api",
     "name": "Apprise API",
     "version": "latest",
@@ -337,44 +356,6 @@
       "security",
       "reverse-proxy",
       "ldap"
-    ]
-  },
-  {
-    "id": "appflowy",
-    "name": "App Flowy",
-    "version": "0.9.3",
-    "description": "AppFlowy is an open-source alternative to Notion. You are in charge of your data and customizations.",
-    "links": {
-      "github": "https://github.com/AppFlowy-IO/AppFlowy",
-      "website": "https://appflowy.io/",
-      "docs": "https://docs.appflowy.io/docs"
-    },
-    "logo": "appflowy.png",
-    "tags": [
-      "productivity",
-      "self-hosted",
-      "notes",
-      "knowledge-base",
-      "notion-alternative"
-    ]
-  },
-  {
-    "id": "capso",
-    "name": "Cap.so",
-    "version": "latest",
-    "description": "Cap.so is a platform for web and desktop applications with MySQL and S3 storage. It provides a complete development environment with database and file storage capabilities.",
-    "links": {
-      "github": "https://github.com/CapSoftware/Cap",
-      "website": "https://cap.so/",
-      "docs": "https://cap.so/docs/"
-    },
-    "logo": "capso.png",
-    "tags": [
-      "web",
-      "s3",
-      "mysql",
-      "development",
-      "self-hosted"
     ]
   },
   {

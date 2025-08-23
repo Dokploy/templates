@@ -1538,6 +1538,22 @@
     ]
   },
   {
+    "id": "emby",
+    "name": "Emby",
+    "version": "4.9.1.17",
+    "description": "Emby Server is a personal media server with apps on just about every device.",
+    "logo": "emby.png",
+    "links": {
+      "github": "https://github.com/MediaBrowser/Emby",
+      "website": "https://emby.media/",
+      "docs": "https://emby.media/support/articles/Home.html"
+    },
+    "tags": [
+      "media",
+      "media system"
+    ]
+  },
+  {
     "id": "erpnext",
     "name": "ERPNext",
     "version": "version-15",
@@ -2785,6 +2801,23 @@
     ]
   },
   {
+    "id": "obsidian-livesync",
+    "name": "Obsidian LiveSync",
+    "version": "latest",
+    "description": "Obsidian LiveSync with CouchDB for real-time note synchronization.",
+    "logo": "obsidian.png",
+    "links": {
+      "github": "https://github.com/apache/couchdb",
+      "website": "https://couchdb.apache.org/",
+      "docs": "https://docs.couchdb.apache.org/"
+    },
+    "tags": [
+      "database",
+      "sync",
+      "obsidian"
+    ]
+  },
+  {
     "id": "odoo",
     "name": "Odoo",
     "version": "16.0",
@@ -3866,6 +3899,21 @@
       "blog",
       "cms",
       "php"
+    ]
+  },
+  {
+    "id": "typesense",
+    "name": "Typesense",
+    "version": "29.0",
+    "description": "Typesense is a fast, open-source search engine for building modern search experiences.",
+    "logo": "typesense.png",
+    "links": {
+      "github": "https://github.com/typesense/typesense",
+      "website": "https://typesense.org/",
+      "docs": "https://typesense.org/docs"
+    },
+    "tags": [
+      "search"
     ]
   },
   {

@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  couchdb:
+    image: couchdb:latest
+    user: "0:0"
+    environment:
+      - COUCHDB_USER=${COUCHDB_USER}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+    volumes:
+      - couchdb-data:/opt/couchdb/data
+      - ../files/local.ini:/opt/couchdb/etc/local.ini
+    ports:
+      - 5984
+
+volumes:
+  couchdb-data: {}

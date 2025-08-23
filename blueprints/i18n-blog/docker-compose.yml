@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  kuno:
+    image: ictrun/kuno:latest
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      DB_PATH: /app/data/blog.db
+      UPLOAD_DIR: /app/data/uploads
+      GIN_MODE: release
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET}
+      RECOVERY_MODE: ${RECOVERY_MODE}
+    volumes:
+      - kuno-data:/app/data
+
+volumes:
+  kuno-data: {}

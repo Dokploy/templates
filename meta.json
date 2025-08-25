@@ -2974,7 +2974,7 @@
   "description": "Nginx is an High performance web server",
   "logo": "nginx.png",
   "links": {
-    "github": "https://github.com/nginx/nginx"
+    "github": "https://github.com/nginx/nginx",
     "website": "https://nginx.org/",
     "docs": "https://nginx.org/en/docs/"
   },

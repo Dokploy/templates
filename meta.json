@@ -807,6 +807,24 @@
     ]
   },
   {
+    "id": "calibre-web",
+    "name": "Calibre-Web",
+    "version": "latest",
+    "description": "Calibre-Web is a web app providing a clean interface for browsing, reading, and managing your eBooks library using an existing Calibre database.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/janeczku/calibre-web",
+      "website": "https://github.com/janeczku/calibre-web",
+      "docs": "https://github.com/janeczku/calibre-web/wiki"
+    },
+    "tags": [
+      "ebooks",
+      "media",
+      "library",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "capso",
     "name": "Cap.so",
     "version": "latest",

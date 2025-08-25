@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  akaunting:
+    image: docker.io/akaunting/akaunting:latest
+    restart: unless-stopped
+    depends_on:
+      akaunting-db:
+        condition: service_healthy
+    environment:
+      # App config
+      APP_URL: ${APP_URL}
+      LOCALE: ${LOCALE}
+
+      # Database connection
+      DB_HOST: akaunting-db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PREFIX: ${DB_PREFIX}
+
+      # First-run bootstrap (company + admin)
+      COMPANY_NAME: ${COMPANY_NAME}
+      COMPANY_EMAIL: ${COMPANY_EMAIL}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+
+    # Expose only to internal network; domain routing handled by Dokploy/Traefik
+    expose:
+      - "80"
+
+    volumes:
+      - akaunting-data:/var/www/html
+
+  akaunting-db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      # Randomizes root password on each deployment (recommended)
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - akaunting-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  akaunting-data: {}
+  akaunting-db: {}

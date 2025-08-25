@@ -86,6 +86,25 @@
     ]
   },
   {
+    "id": "adventurelog",
+    "name": "AdventureLog",
+    "version": "latest",
+    "description": "AdventureLog is an open-source activity tracker with maps, journaling, and Strava integration.",
+    "logo": "adventurelog.svg",
+    "links": {
+      "github": "https://github.com/seanmorley15/adventurelog",
+      "website": "https://adventurelog.app/",
+      "docs": "https://adventurelog.app/docs/"
+    },
+    "tags": [
+      "activity",
+      "maps",
+      "django",
+      "react",
+      "postgres"
+    ]
+  },
+  {
     "id": "affinepro",
     "name": "Affine Pro",
     "version": "stable-780dd83",
@@ -101,6 +120,25 @@
       "self-hosted",
       "productivity",
       "project-management"
+    ]
+  },
+  {
+    "id": "akaunting",
+    "name": "Akaunting",
+    "version": "latest",
+    "description": "Akaunting is a self-hosted, open-source accounting app for small businesses.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/akaunting/akaunting",
+      "website": "https://akaunting.com",
+      "docs": "https://akaunting.com/docs"
+    },
+    "tags": [
+      "finance",
+      "accounting",
+      "php",
+      "mariadb",
+      "self-hosted"
     ]
   },
   {
@@ -201,6 +239,25 @@
       "ai",
       "llm",
       "chatbot"
+    ]
+  },
+  {
+    "id": "appflowy",
+    "name": "App Flowy",
+    "version": "0.9.3",
+    "description": "AppFlowy is an open-source alternative to Notion. You are in charge of your data and customizations.",
+    "links": {
+      "github": "https://github.com/AppFlowy-IO/AppFlowy",
+      "website": "https://appflowy.io/",
+      "docs": "https://docs.appflowy.io/docs"
+    },
+    "logo": "appflowy.png",
+    "tags": [
+      "productivity",
+      "self-hosted",
+      "notes",
+      "knowledge-base",
+      "notion-alternative"
     ]
   },
   {
@@ -1818,6 +1875,22 @@
     ]
   },
   {
+    "id": "garage-with-ui",
+    "name": "Garage S3 with Web UI",
+    "version": "latest",
+    "description": "Garage is an open-source distributed object storage service tailored for self-hosting",
+    "logo": "garage.svg",
+    "links": {
+      "github": "https://git.deuxfleurs.fr/Deuxfleurs/garage",
+      "website": "https://garagehq.deuxfleurs.fr",
+      "docs": "https://garagehq.deuxfleurs.fr/documentation/quick-start/"
+    },
+    "tags": [
+      "storage",
+      "object-storage"
+    ]
+  },
+  {
     "id": "ghost",
     "name": "Ghost",
     "version": "6.0.0",
@@ -2187,6 +2260,25 @@
     ]
   },
   {
+    "id": "i18n-blog",
+    "name": "i18n Blog (Kuno)",
+    "version": "latest",
+    "description": "Kuno is an internationalized blogging platform with a backend built in Go and a frontend in Next.js.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/ictrun/kuno",
+      "website": "https://kuno.zli.li",
+      "docs": "https://github.com/ictrun/kuno#readme"
+    },
+    "tags": [
+      "blog",
+      "i18n",
+      "nextjs",
+      "go",
+      "web"
+    ]
+  },
+  {
     "id": "ihatemoney",
     "name": "I Hate Money",
     "version": "latest",
@@ -2492,6 +2584,25 @@
       "email",
       "newsletter",
       "mailing-list"
+    ]
+  },
+  {
+    "id": "litellm",
+    "name": "LiteLLM",
+    "version": "main-stable",
+    "description": "LiteLLM is a lightweight OpenAI API-compatible proxy for managing multiple LLM providers with a single endpoint.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/BerriAI/litellm",
+      "website": "https://docs.litellm.ai",
+      "docs": "https://docs.litellm.ai/docs/proxy/quick_start"
+    },
+    "tags": [
+      "ai",
+      "proxy",
+      "llm",
+      "openai-compatible",
+      "monitoring"
     ]
   },
   {

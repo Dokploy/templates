@@ -1,0 +1,67 @@
+[variables]
+main_domain = "${domain}"
+
+# Database
+postgres_db = "litellm"
+postgres_user = "litellm"
+postgres_password = "${password:32}"
+
+# LiteLLM UI + Master Key
+ui_username = "${username}"
+ui_password = "${password:32}"
+litellm_master_key = "${password:64}"
+
+# Provider API Keys (empty by default)
+openai_api_key = ""
+openai_base_url = ""
+cohere_api_key = ""
+or_site_url = ""
+or_app_name = "LiteLLM Example app"
+or_api_key = ""
+azure_api_base = ""
+azure_api_version = ""
+azure_api_key = ""
+replicate_api_key = ""
+replicate_api_token = ""
+anthropic_api_key = ""
+infisical_token = ""
+novita_api_key = ""
+infinity_api_key = ""
+
+[config]
+[[config.domains]]
+serviceName = "litellm"
+port = 4000
+host = "${main_domain}"
+
+[config.env]
+# Database
+DATABASE_URL = "postgresql://${postgres_user}:${postgres_password}@litellm-db:5432/${postgres_db}"
+POSTGRES_DB = "${postgres_db}"
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_PASSWORD = "${postgres_password}"
+
+# LiteLLM
+UI_USERNAME = "${ui_username}"
+UI_PASSWORD = "${ui_password}"
+LITELLM_MASTER_KEY = "${litellm_master_key}"
+STORE_MODEL_IN_DB = "True"
+
+# Providers
+OPENAI_API_KEY = "${openai_api_key}"
+OPENAI_BASE_URL = "${openai_base_url}"
+COHERE_API_KEY = "${cohere_api_key}"
+OR_SITE_URL = "${or_site_url}"
+OR_APP_NAME = "${or_app_name}"
+OR_API_KEY = "${or_api_key}"
+AZURE_API_BASE = "${azure_api_base}"
+AZURE_API_VERSION = "${azure_api_version}"
+AZURE_API_KEY = "${azure_api_key}"
+REPLICATE_API_KEY = "${replicate_api_key}"
+REPLICATE_API_TOKEN = "${replicate_api_token}"
+ANTHROPIC_API_KEY = "${anthropic_api_key}"
+INFISICAL_TOKEN = "${infisical_token}"
+NOVITA_API_KEY = "${novita_api_key}"
+INFINITY_API_KEY = "${infinity_api_key}"
+
+[[config.mounts]]

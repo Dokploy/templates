@@ -2950,20 +2950,20 @@
     ]
   },
   {
-  "id": "nginx",
-  "name": "Nginx",
-  "version": "latest",
-  "description": "Nginx is an High performance web server",
-  "logo": "nginx.png",
-  "links": {
-    "github": "https://github.com/nginx/nginx",
-    "website": "https://nginx.org/",
-    "docs": "https://nginx.org/en/docs/"
+    "id": "nginx",
+    "name": "Nginx",
+    "version": "latest",
+    "description": "Nginx is an High performance web server",
+    "logo": "nginx.png",
+    "links": {
+      "github": "https://github.com/nginx/nginx",
+      "website": "https://nginx.org/",
+      "docs": "https://nginx.org/en/docs/"
+    },
+    "tags": [
+      "webserver"
+    ]
   },
-  "tags": [
-    "webserver"
-  ]
-},
   {
     "id": "nocodb",
     "name": "NocoDB",

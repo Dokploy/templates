@@ -9,4 +9,4 @@ services:
       - domain=${DOMAIN}
       - username=${USERNAME}
       - password=${PASSWORD}
-      - extra_params=--o:ssl.enable=false 
+      - extra_params=--o:ssl.enable=false

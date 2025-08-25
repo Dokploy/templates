@@ -16,7 +16,7 @@ services:
       test:
         - CMD
         - wait-for-it
-        - '0.0.0.0:8000'
+        - "0.0.0.0:8000"
       interval: 2s
       timeout: 10s
       retries: 30
@@ -44,12 +44,12 @@ services:
 
     networks:
       - bench-network
-    
+
     healthcheck:
       test:
         - CMD
         - wait-for-it
-        - '0.0.0.0:8080'
+        - "0.0.0.0:8080"
       interval: 2s
       timeout: 30s
       retries: 30
@@ -69,7 +69,7 @@ services:
       test:
         - CMD
         - wait-for-it
-        - 'redis-queue:6379'
+        - "redis-queue:6379"
       interval: 2s
       timeout: 10s
       retries: 30
@@ -93,7 +93,7 @@ services:
       test:
         - CMD
         - wait-for-it
-        - 'redis-queue:6379'
+        - "redis-queue:6379"
       interval: 2s
       timeout: 10s
       retries: 30
@@ -117,7 +117,7 @@ services:
       test:
         - CMD
         - wait-for-it
-        - 'redis-queue:6379'
+        - "redis-queue:6379"
       interval: 2s
       timeout: 10s
       retries: 30
@@ -132,7 +132,7 @@ services:
       test:
         - CMD
         - wait-for-it
-        - 'redis-queue:6379'
+        - "redis-queue:6379"
       interval: 2s
       timeout: 10s
       retries: 30
@@ -154,7 +154,7 @@ services:
       test:
         - CMD
         - wait-for-it
-        - '0.0.0.0:9000'
+        - "0.0.0.0:9000"
       interval: 2s
       timeout: 10s
       retries: 30

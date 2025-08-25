@@ -30,7 +30,6 @@ services:
     depends_on:
       - unifi-db
 
-
   unifi-db:
     image: mongo:4.4
     volumes:
@@ -39,7 +38,6 @@ services:
     ports:
       - 27017
     restart: unless-stopped
-
 
 networks:
   dokploy-network:

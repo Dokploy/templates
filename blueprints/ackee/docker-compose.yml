@@ -9,7 +9,7 @@ services:
       - ACKEE_USERNAME=${ACKEE_USERNAME}
       - ACKEE_PASSWORD=${ACKEE_PASSWORD}
       - ACKEE_MONGODB=${ACKEE_MONGODB}
-  
+
   mongo:
     image: mongo:4
     environment:
@@ -17,7 +17,5 @@ services:
     volumes:
       - mongo-data:/data/db
 
-
 volumes:
   mongo-data:
-     

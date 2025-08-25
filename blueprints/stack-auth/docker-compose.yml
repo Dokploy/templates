@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   stack-auth-db:
@@ -15,7 +15,7 @@ services:
       timeout: 60s
       retries: 5
       start_period: 80s
-      
+
   stack-auth:
     image: stackauth/server:latest
     container_name: stack-auth
@@ -37,6 +37,5 @@ services:
       stack-auth-db:
         condition: service_healthy
 
-    
 volumes:
   stack-auth-db-data:

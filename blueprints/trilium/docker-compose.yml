@@ -8,7 +8,7 @@ services:
     restart: always
     volumes:
       - /root/trilium-backups:/home/node/trilium-data/backup
-  
+
 networks:
   dokploy-network:
     external: true

@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   agent:
@@ -7,7 +7,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/volumes:/var/lib/docker/volumes
 
-    
     deploy:
       mode: global
       placement:
@@ -23,7 +22,5 @@ services:
       placement:
         constraints: [node.role == manager]
 
-
 volumes:
   portainer-data:
-  

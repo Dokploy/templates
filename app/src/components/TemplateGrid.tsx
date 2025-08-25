@@ -49,10 +49,10 @@ const TemplateGrid: React.FC<TemplateGridProps> = ({ view }) => {
   const { addSelectedTag } = useStore();
 
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
-    null
+    null,
   );
   const [templateFiles, setTemplateFiles] = useState<TemplateFiles | null>(
-    null
+    null,
   );
   const [modalLoading, setModalLoading] = useState(false);
 
@@ -179,7 +179,7 @@ const TemplateGrid: React.FC<TemplateGridProps> = ({ view }) => {
                   {
                     "flex-col": view === "grid",
                     "flex-row gap-0": view === "rows",
-                  }
+                  },
                 )}
               >
                 <CardHeader

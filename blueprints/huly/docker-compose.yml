@@ -2,7 +2,6 @@ name: ${DOCKER_NAME}
 version: "3"
 services:
   nginx:
-
     image: "nginx:1.21.3"
     ports:
       - 80
@@ -11,7 +10,6 @@ services:
     restart: unless-stopped
 
   mongodb:
-
     image: "mongo:7-jammy"
     environment:
       - PUID=1000
@@ -21,7 +19,6 @@ services:
     restart: unless-stopped
 
   minio:
-
     image: "minio/minio:RELEASE.2024-11-07T00-52-20Z"
     command: server /data --address ":9000" --console-address ":9001"
     volumes:
@@ -29,7 +26,6 @@ services:
     restart: unless-stopped
 
   elastic:
-
     image: "elasticsearch:7.14.2"
     command: |
       /bin/sh -c "./bin/elasticsearch-plugin list | grep -q ingest-attachment || yes | ./bin/elasticsearch-plugin install --silent ingest-attachment;
@@ -50,7 +46,6 @@ services:
     restart: unless-stopped
 
   rekoni:
-
     image: hardcoreeng/rekoni-service:${HULY_VERSION}
     environment:
       - SECRET=${SECRET}
@@ -61,7 +56,6 @@ services:
     restart: unless-stopped
 
   transactor:
-
     image: hardcoreeng/transactor:${HULY_VERSION}
     environment:
       - SERVER_PORT=3333
@@ -78,7 +72,6 @@ services:
     restart: unless-stopped
 
   collaborator:
-
     image: hardcoreeng/collaborator:${HULY_VERSION}
     environment:
       - COLLABORATOR_PORT=3078
@@ -90,7 +83,6 @@ services:
     restart: unless-stopped
 
   account:
-
     image: hardcoreeng/account:${HULY_VERSION}
     environment:
       - SERVER_PORT=3000
@@ -107,7 +99,6 @@ services:
     restart: unless-stopped
 
   workspace:
-
     image: hardcoreeng/workspace:${HULY_VERSION}
     environment:
       - SERVER_SECRET=${SECRET}
@@ -121,7 +112,6 @@ services:
     restart: unless-stopped
 
   front:
-
     image: hardcoreeng/front:${HULY_VERSION}
     environment:
       - SERVER_PORT=8080
@@ -146,7 +136,6 @@ services:
     restart: unless-stopped
 
   fulltext:
-
     image: hardcoreeng/fulltext:${HULY_VERSION}
     environment:
       - SERVER_SECRET=${SECRET}
@@ -160,7 +149,6 @@ services:
     restart: unless-stopped
 
   stats:
-
     image: hardcoreeng/stats:${HULY_VERSION}
     environment:
       - PORT=4900

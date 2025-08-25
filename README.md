@@ -4,7 +4,6 @@ This is the official repository for the Dokploy Open Source Templates.
 
 ### How to add a new template
 
-
 1. Fork the repository
 2. Create a new branch
 3. Add the template to the `blueprints` folder (`docker-compose.yml`, `template.toml`)
@@ -14,7 +13,7 @@ This is the official repository for the Dokploy Open Source Templates.
 7. Create a pull request (PR)
 8. Every PR will automatically deploy a preview of the template to Dokploy.
 9. if anyone want to test the template before merging it, you can enter to the preview URL in the PR description, and search the template, click on the Template Card, scroll down and then copy the BASE64 value, and paste in the advanced section of your compose service, in the Import section or optional you can use the preview URL and paste in the
-BASE URL when creating a template.
+   BASE URL when creating a template.
 
 #### Optional
 
@@ -45,6 +44,7 @@ services:
 volumes:
   grafana-storage: {}
 ```
+
 3. Add the `template.toml` file to the folder, this is where we specify the domains, mounts and env variables, to understand more the structure of `template.toml` you can read here [Template.toml structure](#template.toml-structure)
 
 ```toml
@@ -62,6 +62,7 @@ host = "${main_domain}"
 
 [[config.mounts]]
 ```
+
 4. Add meta information to the `meta.json` file in the root folder
 
 ```json
@@ -81,6 +82,7 @@ host = "${main_domain}"
   ]
 },
 ```
+
 5. Add the logo to the folder
 6. Commit and push your changes
 7. Create a pull request
@@ -168,8 +170,6 @@ We have a few helpers that are very common when creating a template, these are:
     jwt = "${jwt:mysecret:mypayload}"
     ```
 
-
-
 ## General Suggestions when creating a template
 
 - Don't use this way in your docker compose file:
@@ -213,7 +213,6 @@ services:
     networks:
       - dokploy-network # ❌ Remove this or any other network defined
 ```
-
 
 - Please before submit a PR, make sure to test the template in your instance, so the maintainers don't spend time trying to figure out what's wrong.
 

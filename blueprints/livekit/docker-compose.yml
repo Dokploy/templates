@@ -10,7 +10,8 @@ services:
       - "${TURN_UDP_PORT}:${TURN_UDP_PORT}/udp"
       - "${LIVEKIT_UDP_PORT}:${LIVEKIT_UDP_PORT}/udp"
     healthcheck:
-      test: [ "CMD-SHELL", "wget -qO- http://localhost:${LIVEKIT_PORT} || exit 1" ]
+      test:
+        ["CMD-SHELL", "wget -qO- http://localhost:${LIVEKIT_PORT} || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 6
@@ -25,7 +26,7 @@ services:
     volumes:
       - ../files/redis.conf:/etc/redis.conf
     healthcheck:
-      test: [ "CMD-SHELL", "redis-cli ping || exit 1" ]
+      test: ["CMD-SHELL", "redis-cli ping || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 6

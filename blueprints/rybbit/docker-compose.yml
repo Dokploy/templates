@@ -1,7 +1,7 @@
 # https://www.rybbit.io/docs/self-hosting-advanced
 
 # NOTE: there are two sample HTTP traefik domain entries created:
-# - rybbit_backend (port 3001, path /api), 
+# - rybbit_backend (port 3001, path /api),
 # - rybbit_client (port 3002, path /)
 #
 # You should treat these as placeholders - Rybbit only supports HTTPS.
@@ -72,7 +72,15 @@ services:
       rybbit_postgres:
         condition: service_started
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3001/api/health"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://127.0.0.1:3001/api/health",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3

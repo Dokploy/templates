@@ -15,9 +15,9 @@ services:
       PHOTOPRISM_SITE_URL: "http://localhost:2342/"
       PHOTOPRISM_DISABLE_TLS: "false"
       PHOTOPRISM_DEFAULT_TLS: "false"
-      PHOTOPRISM_ORIGINALS_LIMIT: 5000               # file size limit for originals in MB (increase for high-res video)
+      PHOTOPRISM_ORIGINALS_LIMIT: 5000 # file size limit for originals in MB (increase for high-res video)
       PHOTOPRISM_HTTP_COMPRESSION: "gzip"
-      PHOTOPRISM_LOG_LEVEL: "info"                   # log level: trace, debug, info, warning, error, fatal, or panic
+      PHOTOPRISM_LOG_LEVEL: "info" # log level: trace, debug, info, warning, error, fatal, or panic
       PHOTOPRISM_READONLY: "false"
       PHOTOPRISM_EXPERIMENTAL: "false"
       PHOTOPRISM_DISABLE_CHOWN: "false"
@@ -46,8 +46,7 @@ services:
       PHOTOPRISM_SITE_CAPTION: "AI-Powered Photos App"
       PHOTOPRISM_SITE_DESCRIPTION: ""
       PHOTOPRISM_SITE_AUTHOR: ""
-    working_dir:
-      "/photoprism"
+    working_dir: "/photoprism"
     volumes:
       - pictures:/photoprism/originals
       - storage-data:/photoprism/storage

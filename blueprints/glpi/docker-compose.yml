@@ -5,7 +5,6 @@ services:
     volumes:
       - glpi-mysql-data:/var/lib/mysql
 
-
   glpi-web:
     image: elestio/glpi:10.0.16
     restart: always
@@ -15,7 +14,6 @@ services:
       - glpi-www-data:/var/www/html/glpi
     environment:
       - TIMEZONE=Europe/Brussels
-
 
 volumes:
   glpi-mysql-data:

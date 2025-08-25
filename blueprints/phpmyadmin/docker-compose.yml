@@ -11,7 +11,6 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
-
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:5.2.1
     environment:

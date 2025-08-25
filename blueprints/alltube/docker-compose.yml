@@ -9,4 +9,4 @@ services:
       - TITLE=${TITLE}
       - CONVERT=${CONVERT}
       - STREAM=${STREAM}
-      - REMUX=${REMUX} 
+      - REMUX=${REMUX}

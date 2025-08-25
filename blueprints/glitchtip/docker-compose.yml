@@ -49,7 +49,6 @@ services:
     command: "./manage.py migrate"
     environment: *default-environment
 
-
 volumes:
   pg-data:
   uploads:

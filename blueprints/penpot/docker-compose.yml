@@ -31,7 +31,6 @@ volumes:
   # penpot_minio:
 
 services:
-
   penpot-frontend:
     image: "penpotapp/frontend:2.6.1"
     restart: always
@@ -46,8 +45,6 @@ services:
       - penpot-backend
       - penpot-exporter
 
-
-
     environment:
       PENPOT_FLAGS: disable-email-verification enable-smtp enable-prepl-server disable-secure-session-cookies
 
@@ -61,8 +58,6 @@ services:
     depends_on:
       - penpot-postgres
       - penpot-redis
-
-
 
     ## Configuration envronment variables for the backend
     ## container.
@@ -142,7 +137,6 @@ services:
     image: "penpotapp/exporter:2.6.1"
     restart: always
 
-
     environment:
       # Don't touch it; this uses an internal docker network to
       # communicate with the frontend.
@@ -159,8 +153,6 @@ services:
     volumes:
       - penpot_postgres_v15:/var/lib/postgresql/data
 
-
-
     environment:
       - POSTGRES_INITDB_ARGS=--data-checksums
       - POSTGRES_DB=penpot
@@ -171,7 +163,6 @@ services:
     image: redis:7.2
     restart: always
 
-
   ## A mailcatch service, used as temporal SMTP server. You can access via HTTP to the
   ## port 1080 for read all emails the penpot platform has sent. Should be only used as a
   ## temporal solution while no real SMTP provider is configured.
@@ -180,10 +171,9 @@ services:
     image: sj26/mailcatcher:latest
     restart: always
     expose:
-      - '1025'
+      - "1025"
     ports:
       - 1080
-
 
   ## Example configuration of MiniIO (S3 compatible object storage service); If you don't
   ## have preference, then just use filesystem, this is here just for the completeness.
@@ -203,5 +193,3 @@ services:
   #   ports:
   #     - 9000:9000
   #     - 9001:9001
-
-

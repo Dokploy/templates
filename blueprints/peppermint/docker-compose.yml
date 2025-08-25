@@ -35,4 +35,4 @@ networks:
     external: true
 
 volumes:
-  peppermint-postgres-data: 
+  peppermint-postgres-data:

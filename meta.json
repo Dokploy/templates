@@ -1463,6 +1463,24 @@
     ]
   },
   {
+    "id": "domain-locker",
+    "name": "Domain Locker",
+    "version": "latest",
+    "description": "Domain Locker is an open-source tool for tracking domain expirations and sending renewal reminders.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/Lissy93/domain-locker",
+      "website": "https://domain-locker.com/",
+      "docs": "https://github.com/Lissy93/domain-locker#readme"
+    },
+    "tags": [
+      "domains",
+      "monitoring",
+      "utilities",
+      "postgres"
+    ]
+  },
+  {
     "id": "doublezero",
     "name": "Double Zero",
     "version": "v0.2.1",

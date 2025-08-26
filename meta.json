@@ -3464,15 +3464,15 @@
     ]
   },
   {
-    "id": "keneo",
-    "name": "Keneo",
+    "id": "kaneo",
+    "name": "Kaneo",
     "version": "latest",
-    "description": "Keneo - an open source project management platform focused on simplicity and efficiency. Self-host it, customize it, make it yours.",
-    "logo": "keneo.png",
+    "description": "Kaneo - an open source project management platform focused on simplicity and efficiency. Self-host it, customize it, make it yours.",
+    "logo": "kaneo.png",
     "links": {
       "github": "https://github.com/usekaneo/kaneo",
-      "website": "https://keneo.app/",
-      "docs": "https://keneo.app/docs/"
+      "website": "https://kaneo.app/",
+      "docs": "https://kaneo.app/docs/"
     },
     "tags": ["Task Tracking"]
   }

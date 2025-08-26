@@ -15,7 +15,7 @@ host = "${backend_domain}"
 
 [config.env]
 BACKEND_HOST = "${backend_domain}"
-KENEO_DB = "keneo"
-KENEO_DB_USER = "${username}"
-KENEO_DB_PASSWORD = "${password}"
-KENEO_JWT_ACCESS = "${hash:64}"
+KANEO_DB = "kaneo"
+KANEO_DB_USER = "${username}"
+KANEO_DB_PASSWORD = "${password}"
+KANEO_JWT_ACCESS = "${hash:64}"

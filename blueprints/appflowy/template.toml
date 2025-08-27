@@ -207,22 +207,15 @@ env = [
   "APPFLOWY_WEB_VERSION=latest",
 ]
 
-mounts = [
-  "postgres_data:/var/lib/postgresql/data",
-  "minio_data:/data",
-  "letsencrypt:/etc/letsencrypt"
-]
-
 [[config.domains]]
 serviceName = "nginx"
 port = 80
 host = "${main_domain}"
 
 
-[[config.mount]]
-filePath = "nginx/nginx.conf"
-content = """
-# Minimal nginx configuration for AppFlowy-Cloud
+[[config.mounts]]
+filePath = "/nginx/nginx.conf"
+content = """# Minimal nginx configuration for AppFlowy-Cloud
 # Self Hosted AppFlowy Cloud user should alter this file to suit their needs,
 # or use the appflowy.site.conf in external_proxy_config/nginx if they are using
 # an external proxy.

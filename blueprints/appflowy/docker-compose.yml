@@ -1,4 +1,10 @@
 services:
+  nginx:
+    restart: on-failure
+    image: nginx
+    volumes:
+      - ../files/nginx/nginx.conf:/etc/nginx/nginx.conf
+
   minio:
     restart: on-failure
     image: minio/minio

@@ -2399,6 +2399,21 @@
     ]
   },
   {
+    "id": "kaneo",
+    "name": "Kaneo",
+    "version": "latest",
+    "description": "Kaneo - an open source project management platform focused on simplicity and efficiency. Self-host it, customize it, make it yours.",
+    "logo": "kaneo.png",
+    "links": {
+      "github": "https://github.com/usekaneo/kaneo",
+      "website": "https://kaneo.app/",
+      "docs": "https://kaneo.app/docs/"
+    },
+    "tags": [
+      "Task Tracking"
+    ]
+  },
+  {
     "id": "karakeep",
     "name": "KaraKeep",
     "version": "0.25.0",
@@ -4353,18 +4368,5 @@
       "saml",
       "multi-tenant"
     ]
-  },
-  {
-    "id": "kaneo",
-    "name": "Kaneo",
-    "version": "latest",
-    "description": "Kaneo - an open source project management platform focused on simplicity and efficiency. Self-host it, customize it, make it yours.",
-    "logo": "kaneo.png",
-    "links": {
-      "github": "https://github.com/usekaneo/kaneo",
-      "website": "https://kaneo.app/",
-      "docs": "https://kaneo.app/docs/"
-    },
-    "tags": ["Task Tracking"]
   }
 ]

@@ -1,7 +1,7 @@
 # the webserver can take a while to start up, so don't be alarmed if it takes a few minutes to get a response
 services:
   vaultwarden:
-    image: vaultwarden/server:1.33.2
+    image: vaultwarden/server:1.34.3
     restart: always
     environment:
       DOMAIN: ${DOMAIN}

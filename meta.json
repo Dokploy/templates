@@ -4433,7 +4433,7 @@
   {
     "id": "vaultwarden",
     "name": "Vaultwarden",
-    "version": "1.33.2",
+    "version": "1.34.3",
     "description": "Unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs",
     "logo": "vaultwarden.svg",
     "links": {

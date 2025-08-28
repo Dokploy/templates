@@ -50,27 +50,6 @@
     ]
   },
   {
-    "id": "signoz",
-    "name": "SigNoz",
-    "version": "v0.92.1",
-    "description": "SigNoz is an open-source Datadog or New Relic alternative. Get APM, logs,traces, metrics, exceptions, & alerts in a single tool.",
-    "logo": "signoz.svg",
-    "links": {
-      "github": "https://github.com/SigNoz/signoz",
-      "website": "https://signoz.io/",
-      "docs": "https://signoz.io/docs/"
-    },
-    "tags": [
-      "monitoring",
-      "observability",
-      "metrics",
-      "traces",
-      "logs",
-      "opentelemetry",
-      "apm"
-    ]
-  },
-  {
     "id": "adguardhome",
     "name": "AdGuard Home",
     "version": "latest",
@@ -3728,6 +3707,27 @@
       "sharing",
       "shortener",
       "url"
+    ]
+  },
+  {
+    "id": "signoz",
+    "name": "SigNoz",
+    "version": "v0.92.1",
+    "description": "SigNoz is an open-source Datadog or New Relic alternative. Get APM, logs,traces, metrics, exceptions, & alerts in a single tool.",
+    "logo": "signoz.svg",
+    "links": {
+      "github": "https://github.com/SigNoz/signoz",
+      "website": "https://signoz.io/",
+      "docs": "https://signoz.io/docs/"
+    },
+    "tags": [
+      "monitoring",
+      "observability",
+      "metrics",
+      "traces",
+      "logs",
+      "opentelemetry",
+      "apm"
     ]
   },
   {

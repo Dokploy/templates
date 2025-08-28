@@ -54,7 +54,6 @@ make build
 ### Core Scripts
 
 1. **`dedupe-and-sort-meta.js`** - Simple, standalone script
-
    - Removes duplicates (keeps first occurrence)
    - Sorts alphabetically by ID
    - Creates automatic backup
@@ -76,6 +75,53 @@ make build
   "validate-meta": "Validate structure without changes",
   "build": "Full production build process"
 }
+```
+
+## Code Formatting
+
+This project uses **Prettier** for consistent code formatting across all file types.
+
+### Format Commands
+
+```bash
+# Format all files in the project
+npm run format
+
+# Check formatting without making changes
+npm run format:check
+
+# Format only the app directory
+npm run format:app
+
+# Check app formatting without changes
+npm run format:check:app
+```
+
+### Supported File Types
+
+The Prettier configuration supports comprehensive formatting for:
+
+- **JavaScript/TypeScript** - `.js`, `.jsx`, `.ts`, `.tsx`
+- **Web Technologies** - `.html`, `.css`, `.scss`, `.sass`, `.less`, `.vue`
+- **Configuration Files** - `.json`, `.yaml`, `.yml`, `.toml`
+- **Documentation** - `.svg`, `.xml`
+- **Build Files** - `Dockerfile`, `Makefile`, `.sh`, `.bash`
+- **Programming Languages** - `.php`, `.py`, `.rb`, `.go`, `.rs`, `.java`, `.c`, `.cpp`, `.sql`
+
+### Integration with Development Workflow
+
+```bash
+# Before committing changes
+npm run format
+
+# In CI/CD pipeline
+npm run format:check  # Fails if files aren't formatted
+
+# App-specific development
+cd app
+npm run format
+npm run lint:fix
+npm run typecheck
 ```
 
 ### Make Targets

@@ -87,7 +87,7 @@ const dockerComposeServiceOptions = [
 }));
 
 function dockerComposeComplete(
-  context: CompletionContext
+  context: CompletionContext,
 ): CompletionResult | null {
   const word = context.matchBefore(/\w*/);
   if (!word) return null;
@@ -149,10 +149,10 @@ export const CodeEditor = ({
           language === "yaml"
             ? yaml()
             : language === "json"
-            ? json()
-            : language === "shell"
-            ? StreamLanguage.define(shell)
-            : StreamLanguage.define(properties),
+              ? json()
+              : language === "shell"
+                ? StreamLanguage.define(shell)
+                : StreamLanguage.define(properties),
           props.lineWrapping ? EditorView.lineWrapping : [],
           language === "yaml"
             ? autocompletion({
@@ -165,7 +165,7 @@ export const CodeEditor = ({
         className={cn(
           "w-full h-full text-sm leading-relaxed",
           `cm-theme-${theme}`,
-          className
+          className,
         )}
       />
       {props.disabled && (

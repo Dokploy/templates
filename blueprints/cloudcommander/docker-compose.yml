@@ -12,4 +12,4 @@ services:
       - CLOUDCMD_PASSWORD=${PASSWORD}
     volumes:
       - /root:/root
-      - /:/mnt/fs 
+      - /:/mnt/fs

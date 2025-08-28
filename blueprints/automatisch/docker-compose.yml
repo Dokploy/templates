@@ -70,4 +70,4 @@ services:
 volumes:
   storage: {}
   postgres_data: {}
-  redis_data: {} 
+  redis_data: {}

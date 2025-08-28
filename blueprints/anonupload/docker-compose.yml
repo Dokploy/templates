@@ -13,4 +13,4 @@ services:
       - uploads:/var/www/html/uploads
 
 volumes:
-  uploads: {} 
+  uploads: {}

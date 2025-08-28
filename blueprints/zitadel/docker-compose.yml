@@ -1,9 +1,9 @@
-version: '3.8'
+version: "3.8"
 
 services:
   zitadel:
-    restart: 'always'
-    image: 'ghcr.io/zitadel/zitadel:latest'
+    restart: "always"
+    image: "ghcr.io/zitadel/zitadel:latest"
     command: 'start-from-init --masterkey "${ZITADEL_MASTERKEY}" --tlsMode disabled'
     environment:
       # Database Configuration
@@ -36,14 +36,14 @@ services:
 
     depends_on:
       db:
-        condition: 'service_healthy'
+        condition: "service_healthy"
     ports:
-      - '8080'
+      - "8080"
     volumes:
       - zitadel_data:/app/data
 
   db:
-    restart: 'always'
+    restart: "always"
     image: postgres:17-alpine
     environment:
       PGUSER: postgres
@@ -53,10 +53,10 @@ services:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready", "-d", "zitadel", "-U", "postgres"]
-      interval: '10s'
-      timeout: '30s'
+      interval: "10s"
+      timeout: "30s"
       retries: 5
-      start_period: '20s'
+      start_period: "20s"
 
 volumes:
   postgres_data:

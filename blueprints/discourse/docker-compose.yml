@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   discourse-db:
@@ -87,4 +87,4 @@ volumes:
   discourse-postgresql-data:
   discourse-redis-data:
   discourse-data:
-  discourse-sidekiq-data: 
+  discourse-sidekiq-data:

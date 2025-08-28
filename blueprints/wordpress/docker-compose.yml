@@ -27,7 +27,11 @@ services:
       MYSQL_ROOT_PASSWORD: $DB_PASSWORD
       MYSQL_DATABASE: $DB_NAME
     healthcheck:
-      test: ["CMD-SHELL", "exit | mysql -h localhost -P 3306 -u root -p$$MYSQL_ROOT_PASSWORD"]
+      test:
+        [
+          "CMD-SHELL",
+          "exit | mysql -h localhost -P 3306 -u root -p$$MYSQL_ROOT_PASSWORD",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5

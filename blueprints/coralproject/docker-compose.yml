@@ -30,4 +30,4 @@ services:
 
 volumes:
   mongo-data:
-  redis-data: 
+  redis-data:

@@ -9,7 +9,7 @@ body:
       placeholder: "e.g: Supabase, Appwrite, etc."
     validations:
       required: true
-      
+
   - type: input
     attributes:
       label: Template URL
@@ -17,7 +17,7 @@ body:
       placeholder: "https://github.com/username/repo"
     validations:
       required: true
-      
+
   - type: input
     attributes:
       label: Docker Compose Link

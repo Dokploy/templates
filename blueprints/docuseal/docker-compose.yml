@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-docuseal}:${POSTGRES_PASSWORD}@docu-postgres:5432/${POSTGRES_DB:-docuseal}
-      
+
   docu-postgres:
     image: postgres:latest
     volumes:
@@ -20,18 +20,21 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-docuseal} -d ${POSTGRES_DB:-docuseal}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-docuseal} -d ${POSTGRES_DB:-docuseal}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
-      
+
   docu-redis:
     image: redis:alpine
     restart: always
     volumes:
       - docuseal-redis-data:/data
-      
-    
+
 volumes:
   docuseal:
   docuseal-db:

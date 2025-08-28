@@ -17,5 +17,5 @@ services:
       - /:/userdata:ro # we mount /mnt/data to /userdata (that we want to backup)
 
 volumes:
-  backrest: 
-  backrest-cache: 
+  backrest:
+  backrest-cache:

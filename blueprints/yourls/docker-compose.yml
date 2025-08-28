@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   yourls-app:
@@ -30,7 +30,16 @@ services:
     volumes:
       - yourls-mysql-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u$$MYSQL_USER", "-p$$MYSQL_PASSWORD"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u$$MYSQL_USER",
+          "-p$$MYSQL_PASSWORD",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -38,4 +47,4 @@ services:
 
 volumes:
   yourls-data:
-  yourls-mysql-data: 
+  yourls-mysql-data:

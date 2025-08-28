@@ -74,4 +74,4 @@ volumes:
   argilladata: {}
   elasticdata: {}
   dbdata: {}
-  redisdata: {} 
+  redisdata: {}

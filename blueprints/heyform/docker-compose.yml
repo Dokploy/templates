@@ -13,7 +13,7 @@ services:
     env_file:
       - .env
     environment:
-      MONGO_URI: 'mongodb://mongo:27017/heyform'
+      MONGO_URI: "mongodb://mongo:27017/heyform"
       REDIS_HOST: redis
       REDIS_PORT: 6379
     networks:

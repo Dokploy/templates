@@ -35,7 +35,7 @@ services:
       - mattermostplugsin:/mattermost/plugins:rw
       - mattermostclientplugins:/mattermost/client/plugins:rw
       - mattermostBleveIndexes:/mattermost/bleve-indexes:rw
-      
+
     environment:
       - DOMAIN
       - TZ
@@ -47,7 +47,6 @@ services:
       - MM_BLEVESETTINGS_INDEXDIR
       - MM_SERVICESETTINGS_SITEURL
       - APP_PORT
-
 
 volumes:
   mattermostDbData:

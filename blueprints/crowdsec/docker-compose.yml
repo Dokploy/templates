@@ -8,7 +8,6 @@
 services:
   crowdsec:
     image: crowdsecurity/crowdsec:latest
-    container_name: crowdsec
     environment:
       GID: "${GID-1000}"
       COLLECTIONS: "crowdsecurity/linux crowdsecurity/traefik crowdsecurity/http-cve"

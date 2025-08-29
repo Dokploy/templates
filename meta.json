@@ -1333,6 +1333,22 @@
     ]
   },
   {
+    "id": "crowdsec",
+    "name": "Crowdsec",
+    "version": "latest",
+    "description": "CrowdSec provides open source solution for detecting and blocking malicious IPs, safeguarding both infrastructure and application security.",
+    "logo": "crowdsec_logo.png",
+    "links": {
+      "github": "https://github.com/crowdsecurity/crowdsec",
+      "website": "https://crowdsec.net/",
+      "docs": "https://docs.crowdsec.net"
+    },
+    "tags": [
+      "security",
+      "firewall"
+    ]
+  },
+  {
     "id": "cyberchef",
     "name": "CyberChef",
     "version": "latest",

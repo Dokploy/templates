@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  silverbullet:
+    image: ghcr.io/silverbulletmd/silverbullet:v2
+    restart: unless-stopped
+    environment:
+      - SB_USER=${SB_USER}
+    volumes:
+      - silverbullet-space:/space
+    expose:
+      - 3000
+
+  watchtower:
+    image: containrrr/watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  silverbullet-space: {}

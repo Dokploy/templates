@@ -3976,6 +3976,24 @@
     ]
   },
   {
+    "id": "silverbullet",
+    "name": "SilverBullet",
+    "version": "v2",
+    "description": "SilverBullet is a personal knowledge base and collaborative note-taking platform.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/silverbulletmd/silverbullet",
+      "website": "https://silverbullet.md",
+      "docs": "https://silverbullet.md/docs"
+    },
+    "tags": [
+      "notes",
+      "knowledge-base",
+      "productivity",
+      "markdown"
+    ]
+  },
+  {
     "id": "slash",
     "name": "Slash",
     "version": "latest",

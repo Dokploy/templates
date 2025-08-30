@@ -1350,24 +1350,6 @@
     ]
   },
   {
-    "id": "datalens",
-    "name": "DataLens",
-    "version": "1.23.0",
-    "description": "A modern, scalable business intelligence and data visualization system.",
-    "logo": "datalens.svg",
-    "links": {
-      "github": "https://github.com/datalens-tech/datalens",
-      "website": "https://datalens.tech/",
-      "docs": "https://datalens.tech/docs/"
-    },
-    "tags": [
-      "analytics",
-      "self-hosted",
-      "bi",
-      "monitoring"
-    ]
-  },
-  {
     "id": "dashy",
     "name": "Dashy",
     "version": "latest",
@@ -1383,6 +1365,24 @@
       "monitoring",
       "self-hosted",
       "homelab"
+    ]
+  },
+  {
+    "id": "datalens",
+    "name": "DataLens",
+    "version": "1.23.0",
+    "description": "A modern, scalable business intelligence and data visualization system.",
+    "logo": "datalens.svg",
+    "links": {
+      "github": "https://github.com/datalens-tech/datalens",
+      "website": "https://datalens.tech/",
+      "docs": "https://datalens.tech/docs/"
+    },
+    "tags": [
+      "analytics",
+      "self-hosted",
+      "bi",
+      "monitoring"
     ]
   },
   {

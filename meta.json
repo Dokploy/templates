@@ -1350,6 +1350,24 @@
     ]
   },
   {
+    "id": "dashy",
+    "name": "Dashy",
+    "version": "latest",
+    "description": "A self-hostable personal dashboard built for you. Includes status-checking, widgets, themes, icon packs, a UI editor and tons more!",
+    "logo": "dashy.png",
+    "links": {
+      "github": "https://github.com/Lissy93/dashy",
+      "website": "https://dashy.to/",
+      "docs": "https://github.com/Lissy93/dashy/tree/master/docs"
+    },
+    "tags": [
+      "dashboard",
+      "monitoring",
+      "self-hosted",
+      "homelab"
+    ]
+  },
+  {
     "id": "datalens",
     "name": "DataLens",
     "version": "1.23.0",

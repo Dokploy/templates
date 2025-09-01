@@ -471,6 +471,24 @@
     ]
   },
   {
+    "id": "azuracast",
+    "name": "AzuraCast",
+    "version": "latest",
+    "description": "A self-hosted, all-in-one web radio management suite. Using its easy installer and powerful but intuitive web interface, you can start up a fully working web radio station in a few quick minutes.",
+    "logo": "azuracast.png",
+    "links": {
+      "github": "https://github.com/AzuraCast/AzuraCast",
+      "website": "https://www.azuracast.com/",
+      "docs": "https://docs.azuracast.com/"
+    },
+    "tags": [
+      "radio",
+      "streaming",
+      "media",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "babybuddy",
     "name": "BabyBuddy",
     "version": "2.7.0",

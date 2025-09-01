@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+mysql_password = "${password:16}"
+
+[config]
+env = [
+  "APPLICATION_ENV=production",
+  "MYSQL_PASSWORD=${mysql_password}",
+  "MYSQL_RANDOM_ROOT_PASSWORD=yes"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "web"
+port = 80
+host = "${main_domain}"

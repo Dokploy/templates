@@ -3193,6 +3193,25 @@
     ]
   },
   {
+    "id": "ntfy",
+    "name": "NTFY",
+    "version": "latest",
+    "description": "ntfy lets you send push notifications to your phone or desktop via scripts from any computer, using simple HTTP PUT or POST requests.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/binwiederhier/ntfy",
+      "website": "https://ntfy.sh/",
+      "docs": "https://docs.ntfy.sh/"
+    },
+    "tags": [
+      "alerting",
+      "alerts",
+      "api",
+      "notifications",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "obsidian-livesync",
     "name": "Obsidian LiveSync",
     "version": "latest",

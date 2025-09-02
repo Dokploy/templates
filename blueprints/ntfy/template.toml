@@ -11,6 +11,7 @@ port = 443
 path = "/"
 
 [config.env]
+HTTP_PORT = "${ntfy_http_port}"
 HTTPS_PORT = "${ntfy_https_port}"
 
 # This is an example, you'll need to add manually any templates you want to use
@@ -55,7 +56,7 @@ base-url: https://${ntfy_domain}
 # To listen on all interfaces, you may omit the IP address, e.g. ":443".
 # To disable HTTP, set "listen-http" to "-".
 #
-listen-http: "-"
+listen-http: ":${ntfy_http_port}"
 listen-https: ":${ntfy_https_port}"
 
 # Listen on a Unix socket, e.g. /var/lib/ntfy/ntfy.sock

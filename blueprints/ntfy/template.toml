@@ -1,20 +1,20 @@
 [variables]
 ntfy_domain = "${domain}"
-ntfy_http_port = "3080"
-ntfy_https_port = "3443"
+ntfy_http_port = "80"
+ntfy_https_port = "443"
 certs_domain_name = "your.domain.name.with.certs"
 
 [config]
 [[config.domains]]
 serviceName = "ntfy"
 host = "${ntfy_domain}"
-port = 3080
+port = 80
 path = "/"
 
 [[config.domains]]
 serviceName = "ntfy"
 host = "${ntfy_domain}"
-port = 3443
+port = 443
 path = "/"
 
 [config.env]

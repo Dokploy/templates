@@ -76,13 +76,13 @@ NTFY_METRICS_LISTEN_HTTP = "9090"
 [[config.domains]]
 serviceName = "ntfy"
 host = "http://${domain}"
-port = ${NTFY_LISTEN_HTTP}
+port = 3080
 path = "${NTFY_WEB_ROOT}"
 
 [[config.domains]]
 serviceName = "ntfy"
 host = "https://${domain}"
-port = ${NTFY_LISTEN_HTTPS}
+port = 3443
 path = "${NTFY_WEB_ROOT}"
 
 [config.env]

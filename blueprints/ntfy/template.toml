@@ -7,13 +7,13 @@ ntfy_https_port = "3443"
 [[config.domains]]
 serviceName = "ntfy"
 host = "http://${ntfy_domain}"
-port = "${ntfy_http_port}"
+port = 3080
 path = "/"
 
 [[config.domains]]
 serviceName = "ntfy"
 host = "https://${ntfy_domain}"
-port = "${ntfy_https_port}"
+port = 3443
 path = "/"
 
 [config.env]

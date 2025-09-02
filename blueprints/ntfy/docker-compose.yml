@@ -26,7 +26,7 @@ services:
     image: ldez/traefik-certs-dumper:v2.8.1
     command: >
       file --watch
-           --domain ${CERTS_DOMAIN_NAME}
+           --domain "${CERTS_DOMAIN_NAME}"
            --dest /output
            --version v2
     volumes:

@@ -7,13 +7,13 @@ certs_domain_name = "your.domain.name.with.certs"
 [config]
 [[config.domains]]
 serviceName = "ntfy"
-host = "http://${ntfy_domain}"
+host = "${ntfy_domain}"
 port = 3080
 path = "/"
 
 [[config.domains]]
 serviceName = "ntfy"
-host = "https://${ntfy_domain}"
+host = "${ntfy_domain}"
 port = 3443
 path = "/"
 

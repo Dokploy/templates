@@ -1,33 +1,29 @@
 [variables]
 ntfy_domain = "${domain}"
-ntfy_http_port = "3080"
-ntfy_https_port = "3443"
+ntfy_http_port = "80"
+ntfy_https_port = "443"
+certs_domain_name = "your.domain.name.with.certs"
 
 [config]
 [[config.domains]]
 serviceName = "ntfy"
 host = "http://${ntfy_domain}"
-port = 3080
+port = 80
 path = "/"
 
 [[config.domains]]
 serviceName = "ntfy"
 host = "https://${ntfy_domain}"
-port = 3443
+port = 443
 path = "/"
 
 [config.env]
 HTTP_PORT = "${ntfy_http_port}"
 HTTPS_PORT = "${ntfy_https_port}"
+CERTS_DOMAIN_NAME = "${certs_domain_name}"
 
-[[config.mounts]]
-filePath = "/certs/privkey.pem"
-content = ""
-
-[[config.mounts]]
-filePath = "/certs/fullchain.pem"
-content = ""
-
+# This is an example, you'll need to add manually any templates you want to use
+# Should be preserved as we use the ../files/templates solution
 [[config.mounts]]
 filePath = "/templates/myapp.yml"
 content = """
@@ -79,8 +75,8 @@ listen-https: ":${ntfy_https_port}"
 
 # Path to the private key & cert file for the HTTPS web server. Not used if "listen-https" is not set.
 #
-key-file: /certs/privkey.pem
-cert-file: /certs/fullchain.pem
+key-file: /certs/${certs_domain_name}/privkey.pem
+cert-file: /certs/${certs_domain_name}/fullchain.pem
 
 # If set, also publish messages to a Firebase Cloud Messaging (FCM) topic for your app.
 # This is optional and only required to save battery when using the Android app.

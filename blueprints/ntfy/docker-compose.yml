@@ -5,11 +5,10 @@ services:
     command:
       - serve
     ports:
-      - "${HTTPS_PORT}"
+      - "${HTTP_PORT}"
     volumes:
       - ntfy-data:/var/lib/ntfy
       - ntfy-cache:/var/cache/ntfy
-      - certs:/certs:ro
       - ../files/server.yml:/etc/ntfy/server.yml:ro
       - ../files/templates:/etc/ntfy/templates:ro
     healthcheck:
@@ -19,25 +18,6 @@ services:
       retries: 3
       start_period: 40s
 
-  certs-dumper:
-    # Helper container that generates the cert files from the dokploy acme.json file
-    # the pem files are required by ntfy for websockets functionalities
-    image: ldez/traefik-certs-dumper:v2.8.1
-    command: >
-      file --watch \
-           --version v2 \
-           --source /acme.json \
-           --dest /output \
-           --domain-subdir \
-           --crt-name fullchain \
-           --crt-ext .pem \
-           --key-name privkey \
-           --key-ext .pem
-    volumes:
-      - /etc/dokploy/traefik/dynamic/acme.json:/acme.json:ro
-      - certs:/output
-
 volumes:
   ntfy-data:
   ntfy-cache:
-  certs:

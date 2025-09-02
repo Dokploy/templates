@@ -1,18 +1,15 @@
 [variables]
 ntfy_domain = "${domain}"
 ntfy_http_port = "80"
-ntfy_https_port = "443"
-certs_domain_name = "your.domain.name.with.certs"
 
 [[config.domains]]
 serviceName = "ntfy"
 host = "${ntfy_domain}"
-port = 443
+port = 80
 path = "/"
 
 [config.env]
 HTTP_PORT = "${ntfy_http_port}"
-HTTPS_PORT = "${ntfy_https_port}"
 
 # This is an example, you'll need to add manually any templates you want to use
 # Should be preserved as we use the ../files/templates solution
@@ -57,7 +54,7 @@ base-url: https://${ntfy_domain}
 # To disable HTTP, set "listen-http" to "-".
 #
 listen-http: ":${ntfy_http_port}"
-listen-https: ":${ntfy_https_port}"
+# listen-https: ":443"
 
 # Listen on a Unix socket, e.g. /var/lib/ntfy/ntfy.sock
 # This can be useful to avoid port issues on local systems, and to simplify permissions.
@@ -67,8 +64,8 @@ listen-https: ":${ntfy_https_port}"
 
 # Path to the private key & cert file for the HTTPS web server. Not used if "listen-https" is not set.
 #
-key-file: /certs/${certs_domain_name}/privkey.pem
-cert-file: /certs/${certs_domain_name}/fullchain.pem
+# key-file: ""
+# cert-file: ""
 
 # If set, also publish messages to a Firebase Cloud Messaging (FCM) topic for your app.
 # This is optional and only required to save battery when using the Android app.

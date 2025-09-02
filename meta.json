@@ -2719,9 +2719,9 @@
     "version": "latest",
     "description": "Open source, self-hosted customer support desk. Single binary app.",
     "links": {
-      "github": "https://git.deuxfleurs.fr/Deuxfleurs/garage",
-      "website": "https://garagehq.deuxfleurs.fr",
-      "docs": "https://garagehq.deuxfleurs.fr/documentation/quick-start/"
+      "github": "https://github.com/abhinavxd/libredesk",
+      "website": "https://libredesk.io",
+      "docs": "https://docs.libredesk.io/introduction"
     },
     "tags": [
       "storage",

@@ -25,10 +25,15 @@ services:
     # the pem files are required by ntfy for websockets functionalities
     image: ldez/traefik-certs-dumper:v2.8.1
     command: >
-      file --watch
-           --domain "${CERTS_DOMAIN_NAME}"
-           --dest /output
-           --version v2
+      file --watch \
+           --version v2 \
+           --source /acme.json \
+           --dest /output \
+           --domain-subdir \
+           --crt-name fullchain \
+           --crt-ext .pem \
+           --key-name privkey \
+           --key-ext .pem
     volumes:
       - /etc/dokploy/traefik/dynamic/acme.json:/acme.json:ro
       - certs:/output

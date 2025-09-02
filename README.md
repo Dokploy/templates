@@ -205,7 +205,7 @@ services:
     container_name: grafana # ❌ Remove this
 ```
 
-- Don't use dokploy-network in your docker compose file, by default all the templates have this flag enabled https://docs.dokploy.com/docs/core/docker-compose/utilities#isolated-deployments, so by default they have a internal network created, so you don't to create a new one or use the dokploy-network name.
+- Don't use dokploy-network in your docker compose file, by default all the templates have this flag enabled https://docs.dokploy.com/docs/core/docker-compose/utilities#isolated-deployments, so by default they have a internal network created, so you don't need to create a new one or use the dokploy-network name.
 
 ```yaml
 services:

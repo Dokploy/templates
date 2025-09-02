@@ -5,7 +5,6 @@ services:
     command:
       - serve
     ports:
-      - "${HTTP_PORT}"
       - "${HTTPS_PORT}"
     volumes:
       - ntfy-data:/var/lib/ntfy

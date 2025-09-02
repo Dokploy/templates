@@ -4,13 +4,6 @@ ntfy_http_port = "80"
 ntfy_https_port = "443"
 certs_domain_name = "your.domain.name.with.certs"
 
-[config]
-[[config.domains]]
-serviceName = "ntfy"
-host = "${ntfy_domain}"
-port = 80
-path = "/"
-
 [[config.domains]]
 serviceName = "ntfy"
 host = "${ntfy_domain}"
@@ -18,7 +11,6 @@ port = 443
 path = "/"
 
 [config.env]
-HTTP_PORT = "${ntfy_http_port}"
 HTTPS_PORT = "${ntfy_https_port}"
 
 # This is an example, you'll need to add manually any templates you want to use
@@ -63,7 +55,7 @@ base-url: https://${ntfy_domain}
 # To listen on all interfaces, you may omit the IP address, e.g. ":443".
 # To disable HTTP, set "listen-http" to "-".
 #
-listen-http: ":${ntfy_http_port}"
+listen-http: "-"
 listen-https: ":${ntfy_https_port}"
 
 # Listen on a Unix socket, e.g. /var/lib/ntfy/ntfy.sock

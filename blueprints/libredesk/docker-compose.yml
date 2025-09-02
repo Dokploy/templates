@@ -1,0 +1,54 @@
+services:
+  libredesk:
+    image: libredesk/libredesk:latest
+    restart: unless-stopped
+    ports:
+      - 9000
+    environment:
+      # If the password is set during first docker-compose up, the system user password will be set to this value.
+      # You can always set system user password later by running `docker exec -it libredesk_app ./libredesk --set-system-user-password`.
+      LIBREDESK_SYSTEM_USER_PASSWORD: ${LIBREDESK_SYSTEM_USER_PASSWORD:-}
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ../files/uploads:/libredesk/uploads:rw
+      - ../files/config.toml:/libredesk/config.toml
+    command: [ sh, -c, "./libredesk --install --idempotent-install --yes --config /libredesk/config.toml && ./libredesk --upgrade --yes --config /libredesk/config.toml && ./libredesk --config /libredesk/config.toml" ]
+
+  # PostgreSQL database
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    ports:
+      # Only bind on the local interface. To connect to Postgres externally, change this to 0.0.0.0
+      - 5432
+    environment:
+      # Set these environment variables to configure the database, defaults to libredesk.
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-libredesk} -d ${POSTGRES_DB:-libredesk}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      # Only bind on the local interface.
+      - 6379
+    volumes:
+      - redis-data:/data
+
+networks:
+  libredesk:
+
+volumes:
+  postgres-data:
+  redis-data:

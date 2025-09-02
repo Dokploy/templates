@@ -2713,6 +2713,22 @@
     ]
   },
   {
+    "id": "libredesk",
+    "name": "Libredesk",
+    "logo": "libredesk.svg",
+    "version": "latest",
+    "description": "Open source, self-hosted customer support desk. Single binary app.",
+    "links": {
+      "github": "https://git.deuxfleurs.fr/Deuxfleurs/garage",
+      "website": "https://garagehq.deuxfleurs.fr",
+      "docs": "https://garagehq.deuxfleurs.fr/documentation/quick-start/"
+    },
+    "tags": [
+      "storage",
+      "object-storage"
+    ]
+  },
+  {
     "id": "linkding",
     "name": "Linkding",
     "version": "latest",

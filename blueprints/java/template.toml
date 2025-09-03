@@ -1,5 +1,5 @@
 [variables]
-java_version = "21"  # Default to Java 21
+java_version = "21"
 server_port = "25565"
 startup_command = "java -Xmx1024M -Xms512M -jar server.jar nogui"
 server_jarfile = "server.jar"
@@ -7,7 +7,7 @@ server_jarfile = "server.jar"
 [config]
 [[config.domains]]
 serviceName = "java-app"
-port = ${server_port}
+port = 25565
 host = "${domain}"
 
 [config.env]
@@ -20,8 +20,8 @@ SERVER_JARFILE = "${server_jarfile}"
 filePath = "/home/container/server.properties"
 content = """
 # Minecraft server properties
-server-port=${server_port}
-motd=Java ${java_version} Server powered by Dokploy
+server-port=25565
+motd=Java Server powered by Dokploy
 online-mode=true
 difficulty=easy
 gamemode=survival

@@ -16,6 +16,24 @@
     ]
   },
   {
+    "id": "java",
+    "name": "Java Runtime (Multi-Version)",
+    "version": "8-21",
+    "description": "Configurable Java runtime environment supporting versions 8, 11, 16, 17, and 21. Perfect for Minecraft servers, Spring Boot apps, and custom Java applications.",
+    "logo": "java.png",
+    "links": {
+      "github": "https://github.com/pterodactyl/yolks",
+      "website": "https://java.com/",
+      "docs": "https://docs.oracle.com/en/java/"
+    },
+    "tags": [
+      "java",
+      "minecraft",
+      "runtime",
+      "pterodactyl"
+    ]
+  },
+  {
     "id": "activepieces",
     "name": "Activepieces",
     "version": "0.35.0",

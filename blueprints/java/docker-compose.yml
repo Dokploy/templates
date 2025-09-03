@@ -1,0 +1,19 @@
+services:
+  java-app:
+    image: ghcr.io/pterodactyl/yolks:java_${JAVA_VERSION}
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    volumes:
+      - app-data:/home/container
+    working_dir: /home/container
+    environment:
+      - STARTUP=${STARTUP_COMMAND}
+      - SERVER_JARFILE=${SERVER_JARFILE}
+      - JAVA_VERSION=${JAVA_VERSION}
+    ports:
+      - ${SERVER_PORT}
+    user: container
+
+volumes:
+  app-data: {}

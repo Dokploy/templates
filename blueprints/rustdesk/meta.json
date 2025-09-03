@@ -1,0 +1,17 @@
+{
+  "id": "rustdesk",
+  "name": "RustDesk",
+  "version": "latest",
+  "description": "RustDesk is a full-featured open source remote control alternative for self-hosting and security with minimal configuration.",
+  "logo": "rustdesk.svg",
+  "links": {
+    "github": "https://github.com/rustdesk/rustdesk-server",
+    "website": "https://rustdesk.com/",
+    "docs": "https://rustdesk.com/docs/"
+  },
+  "tags": [
+    "remote-desktop",
+    "self-hosted",
+    "productivity"
+  ]
+}

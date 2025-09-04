@@ -1,0 +1,23 @@
+[variables]
+server_domain = "${domain}"
+
+[config]
+
+[config.env]
+OVPN_SERVER_URL = "udp://${server_domain}:1194"
+EASYRSA_BATCH = "1"
+EASYRSA_REQ_CN = "OpenVPN-CA"
+
+[[config.mounts]]
+filePath = "/opt/get-client-config.sh"
+content = """
+#!/bin/bash
+echo "To get the client configuration file (.ovpn), run:"
+echo "docker exec <container_name> ovpn_getclient client > client.ovpn"
+echo ""
+echo "To create additional clients, run:"
+echo "docker exec <container_name> easyrsa build-client-full CLIENTNAME nopass"
+echo "docker exec <container_name> ovpn_getclient CLIENTNAME > CLIENTNAME.ovpn"
+echo ""
+echo "Replace <container_name> with your actual container name."
+"""

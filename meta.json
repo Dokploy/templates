@@ -3451,6 +3451,25 @@
     ]
   },
   {
+    "id": "openvpn",
+    "name": "OpenVPN",
+    "version": "latest",
+    "description": "OpenVPN is a robust and highly flexible VPN daemon. This Docker image provides a secure VPN server with easy client management.",
+    "logo": "openvpn.png",
+    "links": {
+      "github": "https://github.com/kylemanna/docker-openvpn",
+      "website": "https://openvpn.net/",
+      "docs": "https://github.com/kylemanna/docker-openvpn/blob/master/README.md"
+    },
+    "tags": [
+      "vpn",
+      "security",
+      "networking",
+      "privacy",
+      "tunnel"
+    ]
+  },
+  {
     "id": "otterwiki",
     "name": "Otter Wiki",
     "version": "2",

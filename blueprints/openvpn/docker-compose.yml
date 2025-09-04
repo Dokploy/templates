@@ -1,0 +1,17 @@
+services:
+  openvpn:
+    image: kylemanna/openvpn:latest
+    restart: unless-stopped
+    ports:
+      - 1194/udp
+    volumes:
+      - openvpn-data:/etc/openvpn
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - OVPN_SERVER_URL=${OVPN_SERVER_URL}
+      - OVPN_DEFROUTE=${OVPN_DEFROUTE:-1}
+      - OVPN_DNS=${OVPN_DNS:-1}
+
+volumes:
+  openvpn-data: {}

@@ -123,6 +123,26 @@
     ]
   },
   {
+    "id": "agentdvr",
+    "name": "Agent DVR",
+    "version": "latest",
+    "description": "Agent DVR is a comprehensive video surveillance software with motion detection, alerts, and remote access capabilities.",
+    "logo": "agentdvr.png",
+    "links": {
+      "github": "https://github.com/ispysoftware/AgentDVR",
+      "website": "https://www.ispyconnect.com/",
+      "docs": "https://www.ispyconnect.com/userguide-agent-dvr.aspx"
+    },
+    "tags": [
+      "surveillance",
+      "security",
+      "video",
+      "monitoring",
+      "dvr",
+      "camera"
+    ]
+  },
+  {
     "id": "akaunting",
     "name": "Akaunting",
     "version": "latest",

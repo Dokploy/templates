@@ -3808,7 +3808,7 @@
     "id": "qbittorrent",
     "name": "qBittorrent",
     "version": "latest",
-    "description": "A free and open-source BitTorrent client with web interface for remote management.",
+    "description": "A free and open-source BitTorrent client with web interface for remote management. Default login: admin (check container logs for temporary password on first startup).",
     "logo": "logo.svg",
     "links": {
       "github": "https://github.com/qbittorrent/qBittorrent",

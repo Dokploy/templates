@@ -1,4 +1,11 @@
 # docker-compose.yml
+# 
+# IMPORTANT: First-time setup information
+# - Default username: admin
+# - Password: Check container logs for temporary password on first startup
+# - Access via your configured domain (HTTPS) after deployment
+# - Change the default password immediately after first login
+#
 services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest

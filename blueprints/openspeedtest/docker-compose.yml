@@ -1,0 +1,6 @@
+services:
+  openspeedtest:
+    image: openspeedtest/latest:latest
+    restart: unless-stopped
+    ports:
+      - 3000

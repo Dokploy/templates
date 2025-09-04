@@ -1,0 +1,39 @@
+# docker-compose.yml
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+    volumes:
+      - qb_config:/config
+      - qb_downloads:/downloads
+    expose:
+      - "8080"  # WebUI (internal; Traefik will route HTTPS to this)
+    ports:
+      - "6881:6881"         # BitTorrent TCP (external -> internal)
+      - "6881:6881/udp"     # BitTorrent UDP
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=dokploy-network"
+
+      # Router (HTTPS)
+      - "traefik.http.routers.qbit.rule=Host(`${QBIT_DOMAIN}`)"
+      - "traefik.http.routers.qbit.entrypoints=websecure"
+      - "traefik.http.routers.qbit.tls.certresolver=letsencrypt"
+
+      # Service (send traffic to container port 8080)
+      - "traefik.http.services.qbit.loadbalancer.server.port=8080"
+
+networks:
+  dokploy-network:
+    external: true
+
+volumes:
+  qb_config:
+  qb_downloads:

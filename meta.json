@@ -3805,6 +3805,23 @@
     ]
   },
   {
+    "id": "qbittorrent",
+    "name": "qBittorrent",
+    "version": "latest",
+    "description": "A free and open-source BitTorrent client with web interface for remote management.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/qbittorrent/qBittorrent",
+      "website": "https://www.qbittorrent.org/",
+      "docs": "https://github.com/qbittorrent/qBittorrent/wiki"
+    },
+    "tags": [
+      "torrent",
+      "download",
+      "file-sharing"
+    ]
+  },
+  {
     "id": "qdrant",
     "name": "Qdrant",
     "version": "latest",

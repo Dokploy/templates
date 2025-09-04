@@ -3,7 +3,7 @@ services:
     image: ghcr.io/azuracast/azuracast:latest
     restart: unless-stopped
     ports:
-      - 8080
+      - 80
     volumes:
       - azuracast-station-data:/var/azuracast/stations
       - azuracast-data:/var/azuracast/www_tmp

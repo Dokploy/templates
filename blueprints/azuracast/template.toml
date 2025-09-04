@@ -6,7 +6,7 @@ mysql_password = "${password:16}"
 [config]
 [[config.domains]]
 serviceName = "azuracast"
-port = 8080
+port = 80
 host = "${main_domain}"
 
 [config.env]

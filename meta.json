@@ -475,7 +475,7 @@
     "name": "AzuraCast",
     "version": "latest",
     "description": "AzuraCast is a self-hosted, all-in-one web radio management suite. Easily manage your online radio stations with a powerful web interface.",
-    "logo": "azuracast.svg",
+    "logo": "azuracast.png",
     "links": {
       "github": "https://github.com/AzuraCast/AzuraCast",
       "website": "https://www.azuracast.com/",

@@ -1,6 +1,7 @@
 [variables]
 main_domain = "${domain}"
-admin_password = "${password:16}"
+mysql_root_password = "${password:32}"
+mysql_password = "${password:16}"
 
 [config]
 [[config.domains]]
@@ -11,5 +12,11 @@ host = "${main_domain}"
 [config.env]
 LANG = "en_US.UTF-8"
 AZURACAST_DC_REVISION = "1"
+MYSQL_HOST = "mariadb"
+MYSQL_PORT = "3306"
+MYSQL_USER = "azuracast"
+MYSQL_PASSWORD = "${mysql_password}"
+MYSQL_DATABASE = "azuracast"
+MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
 
 [[config.mounts]]

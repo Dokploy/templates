@@ -1,0 +1,32 @@
+[variables]
+server_domain = "${domain}"
+
+[config]
+
+[config.env]
+OVPN_SERVER_URL = "udp://${server_domain}:1194"
+OVPN_DEFROUTE = "1"
+OVPN_DNS = "1"
+
+[[config.mounts]]
+filePath = "/opt/setup-vpn.sh"
+content = """
+#!/bin/bash
+echo "OpenVPN Setup Instructions:"
+echo "=========================="
+echo ""
+echo "1. Initialize the OpenVPN configuration:"
+echo "   docker exec -it <container_name> ovpn_genconfig -u udp://${server_domain}:1194"
+echo ""
+echo "2. Initialize the PKI (Certificate Authority):"
+echo "   docker exec -it <container_name> ovpn_initpki"
+echo ""
+echo "3. Create a client certificate:"
+echo "   docker exec -it <container_name> easyrsa build-client-full CLIENTNAME nopass"
+echo ""
+echo "4. Generate client configuration file:"
+echo "   docker exec -it <container_name> ovpn_getclient CLIENTNAME > CLIENTNAME.ovpn"
+echo ""
+echo "Replace <container_name> with your actual container name and CLIENTNAME with desired client name."
+echo "The .ovpn file can be imported into OpenVPN clients."
+"""

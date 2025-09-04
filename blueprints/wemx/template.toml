@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+app_key = "${base64:32}"
+db_password = "${password:16}"
+root_password = "${password:20}"
+
+[config]
+[[config.domains]]
+serviceName = "wemx"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+APP_URL = "https://${main_domain}"
+APP_KEY = "base64:${app_key}"
+DB_PASSWORD = "${db_password}"
+MARIADB_ROOT_PASSWORD = "${root_password}"
+DB_DATABASE = "wemx"
+DB_USERNAME = "wemx"
+
+[[config.mounts]]

@@ -4608,6 +4608,26 @@
     ]
   },
   {
+    "id": "wemx",
+    "name": "WemX",
+    "version": "latest",
+    "description": "WemX is a modern client area and billing system for hosting providers, built on Laravel with advanced automation features.",
+    "logo": "wemx.png",
+    "links": {
+      "github": "https://github.com/WemXPro/wemx",
+      "website": "https://wemx.net/",
+      "docs": "https://docs.wemx.net/"
+    },
+    "tags": [
+      "billing",
+      "client-area",
+      "hosting",
+      "laravel",
+      "automation",
+      "business"
+    ]
+  },
+  {
     "id": "wg-easy",
     "name": "WG-Easy",
     "version": "15",

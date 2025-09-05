@@ -3722,9 +3722,9 @@
   {
     "id": "portainer",
     "name": "Portainer",
-    "version": "2.21.4",
+    "version": "latest",
     "description": "Portainer is a container management tool for deploying, troubleshooting, and securing applications across cloud, data centers, and IoT.",
-    "logo": "portainer.svg",
+    "logo": "portainer.png",
     "links": {
       "github": "https://github.com/portainer/portainer",
       "website": "https://www.portainer.io/",

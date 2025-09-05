@@ -6,10 +6,10 @@ mounts = []
 
 [[config.domains]]
 serviceName = "pocket-id"
-port = 80
+port = 1411
 host = "${main_domain}"
 
 [config.env]
-PUBLIC_UI_CONFIG_DISABLED = "false"
-PUBLIC_APP_URL = "http://${main_domain}"
+ENCRYPTION_KEY = "CHANGEME: openssl rand -base64 32"
+APP_URL = "http://${main_domain}"
 TRUST_PROXY = "true"

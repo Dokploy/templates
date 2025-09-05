@@ -6,8 +6,6 @@ services:
       - APP_URL
       - TRUST_PROXY
       - ENCRYPTION_KEY
-    ports:
-      - 1411
     volumes:
       - pocket-id-data:/app/data
     healthcheck:

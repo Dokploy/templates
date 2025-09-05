@@ -209,6 +209,24 @@
     ]
   },
   {
+    "id": "anse",
+    "name": "Anse",
+    "version": "latest",
+    "description": "Anse is an open-source alternative to ChatGPT web UI, supporting OpenAI-compatible APIs.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/ddiu8081/anse",
+      "website": "https://anse.app/",
+      "docs": "https://github.com/ddiu8081/anse#readme"
+    },
+    "tags": [
+      "ai",
+      "chatbot",
+      "openai",
+      "ui"
+    ]
+  },
+  {
     "id": "answer",
     "name": "Answer",
     "version": "v1.4.1",

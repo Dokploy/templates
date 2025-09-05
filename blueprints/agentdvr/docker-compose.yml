@@ -1,0 +1,22 @@
+services:
+  agentdvr:
+    image: mekayelanik/ispyagentdvr:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TIMEZONE:-America/New_York}
+      - AGENTDVR_WEBUI_PORT=8090
+    volumes:
+      - agentdvr-config:/AgentDVR/Media/XML/
+      - agentdvr-media:/AgentDVR/Media/WebServerRoot/Media/
+      - agentdvr-commands:/AgentDVR/Commands/
+    ports:
+      - 8090
+      - 3478/udp
+      - 50000-50100/udp
+
+volumes:
+  agentdvr-config: {}
+  agentdvr-media: {}
+  agentdvr-commands: {}

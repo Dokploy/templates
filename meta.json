@@ -3709,7 +3709,7 @@
   {
     "id": "pocket-id",
     "name": "Pocket ID",
-    "version": "1",
+    "version": "v1",
     "description": "A simple and easy-to-use OIDC provider that allows users to authenticate with their passkeys to your services.",
     "logo": "pocket-id.svg",
     "links": {

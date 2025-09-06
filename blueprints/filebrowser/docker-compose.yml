@@ -6,9 +6,8 @@ services:
       - filebrowser-config:/config
     environment:
       - FB_BASEURL=${FB_BASEURL}
-    restart: always 
+    restart: always
 
 volumes:
   filebrowser-data:
   filebrowser-config:
-    

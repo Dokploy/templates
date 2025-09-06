@@ -62,4 +62,4 @@ volumes:
   postiz-postgres-data:
   postiz-redis-data:
   postiz-config:
-  postiz-uploads: 
+  postiz-uploads:

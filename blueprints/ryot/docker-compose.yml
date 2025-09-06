@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   ryot-app:
@@ -34,4 +34,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  ryot-postgres-data: 
+  ryot-postgres-data:

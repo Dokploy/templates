@@ -19,7 +19,6 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgres
 
-
   formbricks:
     restart: always
     image: ghcr.io/formbricks/formbricks:v3.1.5

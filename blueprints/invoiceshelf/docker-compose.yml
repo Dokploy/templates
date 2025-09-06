@@ -54,4 +54,4 @@ networks:
 volumes:
   invoiceshelf-postgres-data:
   invoiceshelf-app-data:
-  invoiceshelf-app-conf: 
+  invoiceshelf-app-conf:

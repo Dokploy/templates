@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         Before opening a new issue, please search existing issues to see if this bug has already been reported.
-        
+
         This template is specifically for bugs in our open source templates like Supabase, Appwrite, and others.
 
   - type: input
@@ -25,7 +25,7 @@ body:
         Please be clear and include the full error message. You can also paste text logs here.
       placeholder: |
         Please attach a clear screenshot of the error logs from the logs tab.
-        
+
         If you're pasting text logs, include them here:
         ```
         [Your error logs here]
@@ -45,7 +45,7 @@ body:
         3. Navigate to [specific page/section]
         4. Perform [specific action]
         5. Error occurs at [specific point]
-        
+
         **Expected behavior:** What should happen
         **Actual behavior:** What actually happens
     validations:
@@ -97,4 +97,4 @@ body:
         - "No"
         - "Maybe, need help"
     validations:
-      required: true 
+      required: true

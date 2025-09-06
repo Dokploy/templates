@@ -8,7 +8,7 @@ const Tags = () => {
 
   // Get all unique tags
   const uniqueTags = Array.from(
-    new Set(templates.flatMap((template) => template.tags))
+    new Set(templates.flatMap((template) => template.tags)),
   ).sort();
 
   return (

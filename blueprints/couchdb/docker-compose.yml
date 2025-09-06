@@ -1,10 +1,10 @@
-version: '3.8'
+version: "3.8"
 
 services:
   couchdb:
     image: couchdb:latest
     ports:
-      - '5984'
+      - "5984"
     volumes:
       - couchdb-data:/opt/couchdb/data
     environment:

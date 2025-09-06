@@ -14,7 +14,7 @@ services:
     deploy: # Please adjust the resource according to your usecase
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 2G
     depends_on:
       - postgres
@@ -29,7 +29,7 @@ services:
     deploy: # Please adjust the resource according to your usecase
       resources:
         limits:
-          cpus: '2'
+          cpus: "2"
           memory: 3G
     volumes:
       - ../files/postgres:/var/lib/postgresql/data

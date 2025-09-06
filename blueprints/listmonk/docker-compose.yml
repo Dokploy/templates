@@ -9,7 +9,7 @@ services:
       - POSTGRES_DB=listmonk
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U listmonk" ]
+      test: ["CMD-SHELL", "pg_isready -U listmonk"]
       interval: 10s
       timeout: 5s
       retries: 6
@@ -33,7 +33,12 @@ services:
       - TZ=Etc/UTC
     depends_on:
       - db
-    command: [ sh, -c, "./listmonk --install --idempotent --yes --config '' && ./listmonk --upgrade --yes --config '' && ./listmonk --config ''" ]
+    command:
+      [
+        sh,
+        -c,
+        "./listmonk --install --idempotent --yes --config '' && ./listmonk --upgrade --yes --config '' && ./listmonk --config ''",
+      ]
       # --config (file) param is set to empty so that listmonk only uses the env vars (below) for config.
       # --install --idempotent ensures that DB installation happens only once on an empty DB, on the first ever start.
       # --upgrade automatically runs any DB migrations when a new image is pulled.

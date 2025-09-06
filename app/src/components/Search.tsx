@@ -19,8 +19,15 @@ import SelectedTags from "./SelectedTags";
 import { useSearchParams } from "react-router-dom";
 
 const Search = () => {
-  const { templates, searchQuery, setSearchQuery, setView, templatesCount, setFilteredTemplates, setTemplatesCount } =
-    useStore();
+  const {
+    templates,
+    searchQuery,
+    setSearchQuery,
+    setView,
+    templatesCount,
+    setFilteredTemplates,
+    setTemplatesCount,
+  } = useStore();
   const selectedTags = useStore((state) => state.selectedTags);
   const addSelectedTag = useStore((state) => state.addSelectedTag);
   const removeSelectedTag = useStore((state) => state.removeSelectedTag);
@@ -33,7 +40,7 @@ const Search = () => {
   const uniqueTags = React.useMemo(() => {
     if (!templates || templates.length === 0) return [];
     return Array.from(
-      new Set(templates.flatMap((template) => template.tags || []))
+      new Set(templates.flatMap((template) => template.tags || [])),
     ).sort();
   }, [templates]);
 
@@ -41,7 +48,7 @@ const Search = () => {
   const filteredTags = React.useMemo(() => {
     if (!tagSearch) return uniqueTags;
     return uniqueTags.filter((tag) =>
-      tag.toLowerCase().includes(tagSearch.toLowerCase())
+      tag.toLowerCase().includes(tagSearch.toLowerCase()),
     );
   }, [uniqueTags, tagSearch]);
 
@@ -71,7 +78,14 @@ const Search = () => {
       setFilteredTemplates(filtered);
       setTemplatesCount(filtered.length);
     }
-  }, [searchParams, templates, selectedTags, setSearchQuery, setFilteredTemplates, setTemplatesCount]);
+  }, [
+    searchParams,
+    templates,
+    selectedTags,
+    setSearchQuery,
+    setFilteredTemplates,
+    setTemplatesCount,
+  ]);
 
   // Update URL params when search query changes
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -180,7 +194,7 @@ const Search = () => {
                             "mr-2 h-4 w-4",
                             selectedTags.includes(tag)
                               ? "opacity-100"
-                              : "opacity-0"
+                              : "opacity-0",
                           )}
                         />
                         {tag}

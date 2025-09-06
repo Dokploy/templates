@@ -33,12 +33,21 @@ services:
       - --innodb-buffer-pool-size=256M
       - --innodb-flush-log-at-trx-commit=2
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "kimai", "-p${KI_MYSQL_PASSWORD}"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "kimai",
+          "-p${KI_MYSQL_PASSWORD}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
-
 
 networks:
   dokploy-network:

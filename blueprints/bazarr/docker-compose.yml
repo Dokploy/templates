@@ -15,4 +15,4 @@ services:
       - ${TV_PATH}:/tv
 
 volumes:
-  config: {} 
+  config: {}

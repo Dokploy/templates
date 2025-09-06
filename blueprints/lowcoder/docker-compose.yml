@@ -29,5 +29,5 @@ services:
     volumes:
       - ../files/volumes/lowcoder-stacks:/lowcoder-stacks
     restart: unless-stopped
-    expose: 
+    expose:
       - 3000

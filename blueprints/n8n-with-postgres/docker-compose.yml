@@ -26,10 +26,10 @@ services:
       - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
       - DB_POSTGRESDB_USER=${POSTGRES_USER}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
-      
+
       # SÉCURITÉ - Encryption (IMPORTANT)
       - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
-      
+
       # Configuration réseau
       - N8N_HOST=${N8N_HOST}
       - N8N_PORT=${N8N_PORT}
@@ -38,7 +38,7 @@ services:
       - WEBHOOK_URL=https://${N8N_HOST}/
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
       - N8N_SECURE_COOKIE=false
-      
+
     volumes:
       - n8n_data:/home/node/.n8n
     depends_on:

@@ -36,4 +36,4 @@ networks:
 
 volumes:
   slash-app-data:
-  slash-postgres-data: 
+  slash-postgres-data:

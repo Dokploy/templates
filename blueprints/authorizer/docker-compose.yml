@@ -37,4 +37,4 @@ services:
 
 volumes:
   db_data: {}
-  redis_data: {} 
+  redis_data: {}

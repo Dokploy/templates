@@ -5,9 +5,9 @@ services:
       test:
         - CMD
         - wget
-        - '--spider'
-        - '--quiet'
-        - 'http://localhost'
+        - "--spider"
+        - "--quiet"
+        - "http://localhost"
       interval: 30s
       timeout: 5s
       retries: 3

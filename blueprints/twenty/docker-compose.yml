@@ -96,4 +96,4 @@ volumes:
   twenty-docker-data:
   twenty-postgres-data:
   twenty-server-local-data:
-  twenty-redis-data: 
+  twenty-redis-data:

@@ -2,7 +2,7 @@ services:
   macos:
     image: dockurr/macos:1.14
     volumes:
-    - macos-storage:/storage
+      - macos-storage:/storage
     environment:
       - VERSION
     devices:

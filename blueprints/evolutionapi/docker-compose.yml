@@ -47,7 +47,6 @@ services:
     volumes:
       - evolution-redis-data:/data
 
-
 networks:
   dokploy-network:
     external: true

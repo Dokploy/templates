@@ -11,4 +11,4 @@ services:
       - data:/var/lib/arangodb3
 
 volumes:
-  data: {} 
+  data: {}

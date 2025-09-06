@@ -73,7 +73,7 @@ jobs:
 
           # Get all entries at once and process them
           TOTAL_INDEX=$(($TOTAL_ENTRIES - 1))
-          
+
           for i in $(seq 0 $TOTAL_INDEX); do
             entry=$(jq -c ".[$i]" meta.json)
             INDEX=$((i + 1))

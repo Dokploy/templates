@@ -15,4 +15,4 @@ services:
       - CATALINA_CONNECTOR_SECURE=true
 
 volumes:
-  confluence-data: 
+  confluence-data:

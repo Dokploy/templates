@@ -7,6 +7,6 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "onedev-data:/opt/onedev"
-    
+
 volumes:
   onedev-data:

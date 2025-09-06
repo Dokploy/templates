@@ -26,7 +26,6 @@ services:
       start_interval: 5s
       start_period: 30s
 
-
   directus:
     image: directus/directus:11.0.2
     ports:

@@ -14,4 +14,4 @@ services:
 volumes:
   config: {}
   log: {}
-  mysql: {} 
+  mysql: {}

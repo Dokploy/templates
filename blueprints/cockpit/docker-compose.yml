@@ -27,4 +27,4 @@ services:
 volumes:
   html:
   data:
-  mongo-data: 
+  mongo-data:

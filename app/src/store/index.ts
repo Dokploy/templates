@@ -42,8 +42,7 @@ export const useStore = create<TemplateStore>()(
       templatesCount: 0,
       setTemplatesCount: (templatesCount) => set({ templatesCount }),
       filteredTemplates: [],
-      setFilteredTemplates: (filteredTemplates) =>
-        set({ filteredTemplates }),
+      setFilteredTemplates: (filteredTemplates) => set({ filteredTemplates }),
       searchQuery: "",
       setSearchQuery: (searchQuery) => set({ searchQuery }),
       selectedTags: [],
@@ -65,6 +64,6 @@ export const useStore = create<TemplateStore>()(
     {
       name: "template-store",
       partialize: (state) => ({ view: state.view }), // Only persist the view preference
-    }
-  )
+    },
+  ),
 );

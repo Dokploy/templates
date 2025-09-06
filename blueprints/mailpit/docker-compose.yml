@@ -3,9 +3,9 @@ services:
     image: axllent/mailpit:v1.22.3
     restart: unless-stopped
     ports:
-      - '1025:1025'
+      - "1025:1025"
     volumes:
-      - 'mailpit-data:/data'
+      - "mailpit-data:/data"
     environment:
       - MP_SMTP_AUTH_ALLOW_INSECURE=true
       - MP_MAX_MESSAGES=5000

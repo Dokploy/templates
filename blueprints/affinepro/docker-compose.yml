@@ -62,4 +62,4 @@ volumes:
   affine-storage: {}
   affine-config: {}
   postgres-data: {}
-  redis-data: {} 
+  redis-data: {}

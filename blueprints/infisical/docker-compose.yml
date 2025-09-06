@@ -20,7 +20,6 @@ services:
     command: npm run migration:latest
     pull_policy: always
 
-
   backend:
     restart: unless-stopped
     depends_on:
@@ -45,7 +44,6 @@ services:
       - SMTP_USERNAME
       - SMTP_PASSWORD
       - SMTP_SECURE=true
-
 
   redis:
     image: redis:7.4.1
@@ -80,4 +78,3 @@ volumes:
 networks:
   dokploy-network:
     external: true
-

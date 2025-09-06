@@ -28,4 +28,4 @@ services:
 volumes:
   uploads:
   db:
-  mongo-data: 
+  mongo-data:

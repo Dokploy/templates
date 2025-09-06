@@ -11,7 +11,7 @@ services:
     volumes:
       - op-db-data:/var/lib/postgresql/data
     healthcheck:
-      test: [ 'CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}' ]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -57,19 +57,19 @@ services:
           sleep 1
         done
         echo 'PostgreSQL is ready'
-      
+
         echo 'Waiting for ClickHouse to be ready...'
         while ! nc -z op-ch 8123; do
           sleep 1
         done
         echo 'ClickHouse is ready'
-      
+
         echo 'Running migrations...'
         
         echo '$DATABASE_URL'
-      
+
         CI=true pnpm -r run migrate:deploy
-      
+
         pnpm start
       "
     environment:
@@ -89,7 +89,7 @@ services:
       RESEND_API_KEY: ${RESEND_API_KEY}
       <<: *x-database
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1" ]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -118,7 +118,8 @@ services:
       NEXT_PUBLIC_DASHBOARD_URL: $SERVICE_FQDN_OPDASHBOARD
       <<: *x-database
     healthcheck:
-      test: [ 'CMD-SHELL', 'curl -f http://localhost:3000/api/healthcheck || exit 1' ]
+      test:
+        ["CMD-SHELL", "curl -f http://localhost:3000/api/healthcheck || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -139,7 +140,7 @@ services:
       NEXT_PUBLIC_API_URL: $SERVICE_FQDN_OPAPI
       <<: *x-database
     healthcheck:
-      test: [ 'CMD-SHELL', 'curl -f http://localhost:3000/healthcheck || exit 1' ]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5

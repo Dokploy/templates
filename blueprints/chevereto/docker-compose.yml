@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   chevereto:
@@ -35,4 +35,4 @@ services:
 
 volumes:
   storage:
-  mysql: 
+  mysql:

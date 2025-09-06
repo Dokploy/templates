@@ -16,4 +16,4 @@ services:
       - config:/config
 
 volumes:
-  config: {} 
+  config: {}

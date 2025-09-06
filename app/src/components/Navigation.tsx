@@ -10,7 +10,7 @@ const Navigation = () => {
     const fetchGithubStars = async () => {
       try {
         const response = await fetch(
-          "https://api.github.com/repos/dokploy/dokploy"
+          "https://api.github.com/repos/dokploy/dokploy",
         );
         const data = await response.json();
         setGithubStars(data.stargazers_count);
@@ -26,14 +26,16 @@ const Navigation = () => {
     <div className="flex sticky top-0 bg-background/80 backdrop-blur-xs z-10 justify-between items-center p-2 py-4 lg:p-4 border-b">
       <div className="flex flex-row gap-2 justify-center items-center">
         <DokployLogo className="size-7 lg:size-10 text-black dark:text-white" />
-        <h1 className="text-2xl font-bold hidden lg:block">Dokploy Templates</h1>
+        <h1 className="text-2xl font-bold hidden lg:block">
+          Dokploy Templates
+        </h1>
       </div>
       <div className="flex flex-row gap-2 justify-center items-center">
         <Button
           onClick={() => {
             window.open(
               "https://github.com/Dokploy/templates/issues/new",
-              "_blank"
+              "_blank",
             );
           }}
         >

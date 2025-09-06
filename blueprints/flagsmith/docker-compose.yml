@@ -4,7 +4,6 @@
 volumes:
   pgdata:
 
-
 services:
   postgres:
     image: postgres:15.5-alpine

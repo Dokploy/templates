@@ -7,9 +7,9 @@ services:
       - "8090"
     volumes:
       - "/etc/dokploy/templates/${HASH}/data:/app/pb_data"
-      - "/etc/dokploy/templates/${HASH}/migrations:/app/pb_migrations" 
-      - "/etc/dokploy/templates/${HASH}/hooks:/app/pb_hooks" 
-      - "/etc/dokploy/templates/${HASH}/public:/app/pb_public" 
+      - "/etc/dokploy/templates/${HASH}/migrations:/app/pb_migrations"
+      - "/etc/dokploy/templates/${HASH}/hooks:/app/pb_hooks"
+      - "/etc/dokploy/templates/${HASH}/public:/app/pb_public"
     healthcheck:
       test: wget -q --spider http://localhost:8090/api/health || exit 1
       interval: 60s

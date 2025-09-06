@@ -7,6 +7,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const { execSync } = require("child_process");
 
 class MetaProcessor {
   constructor(options = {}) {
@@ -52,7 +53,7 @@ class MetaProcessor {
     if (missing.length > 0) {
       this.log(
         `Item at index ${index} missing required fields: ${missing.join(", ")}`,
-        "warning"
+        "warning",
       );
       return false;
     }
@@ -66,7 +67,7 @@ class MetaProcessor {
     if (!Array.isArray(item.tags)) {
       this.log(
         `Item "${item.id}" has invalid tags (should be array)`,
-        "warning"
+        "warning",
       );
     }
 
@@ -90,13 +91,13 @@ class MetaProcessor {
         data = JSON.parse(fileContent);
       } catch (parseError) {
         throw new Error(
-          `Invalid JSON in ${this.options.inputFile}: ${parseError.message}`
+          `Invalid JSON in ${this.options.inputFile}: ${parseError.message}`,
         );
       }
 
       if (!Array.isArray(data)) {
         throw new Error(
-          `Expected array in ${this.options.inputFile}, got ${typeof data}`
+          `Expected array in ${this.options.inputFile}, got ${typeof data}`,
         );
       }
 
@@ -114,8 +115,21 @@ class MetaProcessor {
 
       // Write output
       const outputFile = this.options.outputFile || this.options.inputFile;
-      const newContent = this.formatJSON(results.unique) + "\n";
+      const newContent = this.formatJSON(results.unique);
       fs.writeFileSync(outputFile, newContent, "utf8");
+
+      // Apply Prettier formatting to match local workflow
+      try {
+        execSync(`npx prettier --write "${outputFile}"`, {
+          stdio: this.options.verbose ? "inherit" : "pipe",
+        });
+        this.log(`Applied Prettier formatting to ${outputFile}`, "debug");
+      } catch (error) {
+        this.log(
+          `Warning: Could not apply Prettier formatting: ${error.message}`,
+          "warning",
+        );
+      }
 
       // Report results
       const duration = Date.now() - startTime;
@@ -161,7 +175,7 @@ class MetaProcessor {
           `Skipping item without ID at index ${index}: ${
             item.name || "Unknown"
           }`,
-          "warning"
+          "warning",
         );
         schemaViolations++;
         return;
@@ -183,7 +197,7 @@ class MetaProcessor {
         });
         this.log(
           `Duplicate ID found: "${item.id}" (${item.name || "Unknown"})`,
-          "warning"
+          "warning",
         );
       } else {
         seenIds.add(item.id);
@@ -209,23 +223,7 @@ class MetaProcessor {
   }
 
   formatJSON(data) {
-    // Custom JSON formatter that keeps small arrays compact
-    return JSON.stringify(
-      data,
-      (key, value) => {
-        if (Array.isArray(value)) {
-          // Keep arrays compact if they're small and contain only strings
-          if (
-            value.length <= 5 &&
-            value.every((item) => typeof item === "string" && item.length < 50)
-          ) {
-            return value;
-          }
-        }
-        return value;
-      },
-      2
-    );
+    return JSON.stringify(data) + "\n";
   }
 }
 

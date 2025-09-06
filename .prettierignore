@@ -1,0 +1,91 @@
+# === Prettier ignore for Dokploy/templates ===
+
+# VCS
+.git/
+
+# Node / package caches
+node_modules/
+**/node_modules/
+.pnpm-store/
+.npm/
+.turbo/
+.cache/
+
+# Build outputs & tool caches
+dist/
+build/
+.out/
+.next/
+.nuxt/
+.vite/
+.vitepress/cache/
+.vitepress/dist/
+
+# Coverage
+coverage/
+*.lcov
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Package manager locks (don’t format)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# Env files (but keep samples)
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+!.env.sample
+!.env.template
+
+# Generated/minified/bundled
+*.min.js
+*.min.css
+*.map
+
+# Binaries / archives / media (Prettier can’t format these)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.ico
+*.pdf
+*.zip
+*.tar
+*.gz
+*.tgz
+*.br
+*.7z
+*.mp4
+*.mp3
+*.mov
+*.wasm
+
+# Language build trash (some templates might include these)
+__pycache__/
+*.pyc
+.venv/
+venv/
+target/
+bin/
+obj/
+
+# NOTE: We intentionally DO NOT ignore:
+# - blueprints/**/docker-compose.yml
+# - blueprints/**/template.toml
+# - blueprints/**/meta.json
+# - **/*.yml, **/*.yaml, **/*.json, **/*.md, **/*.svg
+# so Prettier will format your actual template files.

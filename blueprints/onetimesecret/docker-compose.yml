@@ -13,7 +13,7 @@ services:
       retries: 3
 
   onetimesecret:
-    image: 'onetimesecret/onetimesecret:latest'
+    image: "onetimesecret/onetimesecret:latest"
     restart: unless-stopped
     environment:
       # To see all available environment variables, visit:
@@ -37,8 +37,8 @@ services:
       test:
         - CMD
         - ruby
-        - '-rnet/http'
-        - '-e'
+        - "-rnet/http"
+        - "-e"
         - "exit(Net::HTTP.get_response(URI('http://localhost:3000')).is_a?(Net::HTTPSuccess) ? 0 : 1)"
       interval: 30s
       timeout: 10s

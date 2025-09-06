@@ -2751,6 +2751,23 @@
     ]
   },
   {
+    "id": "letterfeed",
+    "name": "Letterfeed",
+    "version": "latest",
+    "description": "Convert email newsletters into RSS feeds",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/leonmuscoden/letterfeed",
+      "website": "https://github.com/leonmuscoden/letterfeed",
+      "docs": "https://github.com/leonmuscoden/letterfeed"
+    },
+    "tags": [
+      "email",
+      "self-hosted",
+      "productivity"
+    ]
+  },
+  {
     "id": "linkding",
     "name": "Linkding",
     "version": "latest",

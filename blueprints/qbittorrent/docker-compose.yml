@@ -18,16 +18,12 @@ services:
     volumes:
       - qb_config:/config
       - qb_downloads:/downloads
-    expose:
-      - "8080"  # WebUI (internal; Traefik will route HTTPS to this)
     ports:
-      - "6881:6881"         # BitTorrent TCP (external -> internal)
-      - "6881:6881/udp"     # BitTorrent UDP
-    networks:
-      - dokploy-network
+      - 8080
+      - 6881:6881
+      - 6881:6881/udp
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=dokploy-network"
 
       # Router (HTTPS)
       - "traefik.http.routers.qbit.rule=Host(`${QBIT_DOMAIN}`)"
@@ -36,10 +32,6 @@ services:
 
       # Service (send traffic to container port 8080)
       - "traefik.http.services.qbit.loadbalancer.server.port=8080"
-
-networks:
-  dokploy-network:
-    external: true
 
 volumes:
   qb_config:

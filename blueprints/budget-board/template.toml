@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"  
+
+[config]
+[[config.domains]]
+serviceName = "budget-board-client" 
+port = 6253  
+host = "${main_domain}"  
+path = "/"
+
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}" 
+
+
+[[config.mounts]]
+source = "../files/db-data"  
+target = "/var/lib/postgresql/data"  
+type = "bind"  

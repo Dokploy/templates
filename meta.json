@@ -766,6 +766,25 @@
     ]
   },
   {
+    "id": "budget-board",
+    "name": "Budget Board",
+    "version": "release",
+    "description": "Self-hosted budgeting app with a web UI and a server backed by PostgreSQL.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/teelur/budget-board",
+      "website": "https://budgetboard.net/",
+      "docs": "https://budgetboard.net/"
+    },
+    "tags": [
+      "finance",
+      "postgres",
+      "self-hosted",
+      "docker",
+      "compose"
+    ]
+  },
+  {
     "id": "budibase",
     "name": "Budibase",
     "version": "3.5.3",

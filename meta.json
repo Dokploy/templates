@@ -4582,20 +4582,21 @@
     ]
   },
   {
-    "id": "unsend",
-    "name": "Unsend",
-    "version": "v1.3.2",
-    "description": "Open source alternative to Resend,Sendgrid, Postmark etc. ",
-    "logo": "unsend.png",
+    "id": "usesend",
+    "name": "useSend",
+    "version": "latest",
+    "description": "Open source alternative to Resend, Sendgrid, Postmark etc.",
+    "logo": "usesend.png",
     "links": {
-      "github": "https://github.com/unsend-dev/unsend",
-      "website": "https://unsend.dev/",
-      "docs": "https://docs.unsend.dev/get-started/"
+      "github": "https://github.com/usesend/usesend",
+      "website": "https://usesend.com/",
+      "docs": "https://docs.usesend.com/introduction"
     },
     "tags": [
       "e-mail",
       "marketing",
-      "business"
+      "business",
+      "self-hosted"
     ]
   },
   {

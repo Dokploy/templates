@@ -2149,9 +2149,9 @@
     "description": "Gitingest is an application that supports Prometheus metrics, Sentry integration, and S3-backed storage.",
     "logo": "image.png",
     "links": {
-      "github": "https://github.com/<your-org>/gitingest",
+      "github": "https://github.com/coderamp-labs/gitingest",
       "website": "https://gitingest.com",
-      "docs": "https://github.com/<your-org>/gitingest#readme"
+      "docs": "https://github.com/coderamp-labs/gitingest#readme"
     },
     "tags": [
       "analytics",

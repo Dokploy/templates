@@ -1,0 +1,37 @@
+[variables]
+main_domain = "${domain}"
+KENER_SECRET_KEY = "${password:64}"
+POSTGRES_PASSWORD = "${password:32}"
+MYSQL_PASSWORD = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "kener"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+TZ = "Etc/UTC"
+KENER_SECRET_KEY = "${KENER_SECRET_KEY}" # 🔐 API key / secret
+DATABASE_URL = "sqlite://./database/kener.sqlite.db"
+KENER_BASE_PATH = ""
+ORIGIN = "http://localhost:3000"
+RESEND_API_KEY = ""
+RESEND_SENDER_EMAIL = "Accounts <accounts@resend.dev>"
+POSTGRES_USER = "user"
+POSTGRES_DB = "kener_db"
+MYSQL_USER = "user"
+MYSQL_DATABASE = "kener_db"
+MYSQL_RANDOM_ROOT_PASSWORD = "true"
+MYSQL_PASSWORD = "${MYSQL_PASSWORD}" # 🔐 DB password
+POSTGRES_PASSWORD = "${POSTGRES_PASSWORD}" # 🔐 DB password
+
+[[config.mounts]]
+type = "volume"
+source = "kener_db"
+target = "/app/database"
+
+[[config.mounts]]
+type = "bind"
+source = "../files/uploads"
+target = "/app/uploads"

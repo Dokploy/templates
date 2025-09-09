@@ -1,0 +1,17 @@
+# docker-compose.yml
+version: "3.8"
+services:
+  opengist:
+    image: ghcr.io/thomiceli/opengist:1
+    restart: unless-stopped
+    ports:
+      - 6157 # HTTP port
+      - 2222 # SSH port (optional)
+    volumes:
+      - opengist-data:/opengist
+    environment:
+      - UID=${UID}
+      - GID=${GID}
+      - OG_LOG_LEVEL=${OG_LOG_LEVEL}
+volumes:
+  opengist-data: {}

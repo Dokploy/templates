@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  gitingest:
+    image: elestio/gitingest:${SOFTWARE_VERSION_TAG}
+    restart: unless-stopped
+    expose:
+      - 8000
+    environment:
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}

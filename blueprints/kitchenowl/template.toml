@@ -1,0 +1,33 @@
+[variables]
+main_domain = "${domain}"
+app_password = "${password:32}"
+db_password = "${password:24}"
+db_user = "kitchenowl"
+db_name = "kitchenowl"
+
+[config]
+
+[[config.domains]]
+serviceName = "web"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+JWT_SECRET_KEY = "${app_password}"
+DB_DRIVER = "postgresql"
+DB_HOST = "db"
+DB_NAME = "${db_name}"
+DB_USER = "${db_user}"
+DB_PASSWORD = "${db_password}"
+
+# Persist uploads/attachments
+[[config.mounts]]
+serviceName = "web"
+volumeName = "kitchenowl_files"
+mountPath = "/data"
+
+# Persist Postgres data
+[[config.mounts]]
+serviceName = "db"
+volumeName = "kitchenowl_db"
+mountPath = "/var/lib/postgresql/data"

@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+mail_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "client"
+port = 80
+host = "habitica.${main_domain}"
+
+[config.env]
+
+BASE_URL="https://habitica.${main_domain}"
+INVITE_ONLY="false"
+EMAIL_SERVER_URL="mail.example.com"
+EMAIL_SERVER_PORT="587"
+EMAIL_SERVER_AUTH_USER="mail_user"
+EMAIL_SERVER_AUTH_PASSWORD="${mail_password}"
+
+[[config.mounts]]
+serviceName = "mongo"
+type = "volume"
+source = "habitica-mongo-data"
+target = "/data/db"

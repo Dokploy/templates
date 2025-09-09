@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+
+[[config.domains]]
+serviceName = "calibre-web"
+port = 8083
+host = "${main_domain}"
+
+[config.env]
+PUID = "1000"
+PGID = "1000"
+TZ = "Etc/UTC"
+DOCKER_MODS = "linuxserver/mods:universal-calibre"
+OAUTHLIB_RELAX_TOKEN_SCOPE = "1"
+
+[[config.mounts]]
+name = "calibre-config"
+mountPath = "/config"
+
+[[config.mounts]]
+name = "calibre-books"
+mountPath = "/books"

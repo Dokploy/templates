@@ -1,0 +1,461 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+  # =============================================================================
+  # 🌐 CORE DOMAIN CONFIGURATION
+  # =============================================================================
+  "FQDN=${main_domain}",
+  "SCHEME=https",
+  "WS_SCHEME=wss",
+  "APPFLOWY_BASE_URL=https://${main_domain}",
+  "APPFLOWY_WEBSOCKET_BASE_URL=wss://${main_domain}/ws/v2",
+  "APPFLOWY_WEB_URL=https://${main_domain}",
+  "API_EXTERNAL_URL=https://${main_domain}/gotrue",
+  "TZ=UTC",
+
+  # Admin Configuration
+  "GOTRUE_ADMIN_EMAIL=${email}",
+  "GOTRUE_ADMIN_PASSWORD=${password:16}",
+  "GOTRUE_DISABLE_SIGNUP=false",
+
+  # =============================================================================
+  # 🗄️ DATABASE & CACHE CONFIGURATION
+  # =============================================================================
+  "POSTGRES_HOST=postgres",
+  "POSTGRES_USER=appflowy",
+  "POSTGRES_PASSWORD=${password:64}",
+  "POSTGRES_PORT=5432",
+  "POSTGRES_DB=appflowy",
+  "REDIS_HOST=redis",
+  "REDIS_PORT=6379",
+
+  # =============================================================================
+  # 🔐 GOTRUE AUTHENTICATION CONFIGURATION
+  # =============================================================================
+
+  # JWT Configuration
+  "GOTRUE_JWT_SECRET=${password:64}",
+  "GOTRUE_JWT_EXP=7200",
+  "GOTRUE_JWT_ADMIN_GROUP_NAME=supabase_admin",
+
+  # Database Configuration
+  "GOTRUE_DB_DRIVER=postgres",
+  "GOTRUE_DATABASE_URL=postgres://appflowy:${POSTGRES_PASSWORD}@postgres:5432/appflowy?search_path=auth",
+  "PORT=9999",
+
+  # Site Configuration
+  "GOTRUE_SITE_URL=appflowy-flutter://",
+  "GOTRUE_URI_ALLOW_LIST=**",
+
+  # Email Configuration (SMTP - Configure for production)
+  "GOTRUE_SMTP_HOST=",
+  "GOTRUE_SMTP_PORT=465",
+  "GOTRUE_SMTP_USER=",
+  "GOTRUE_SMTP_PASS=",
+  "GOTRUE_SMTP_ADMIN_EMAIL=${GOTRUE_ADMIN_EMAIL}",
+  "GOTRUE_SMTP_MAX_FREQUENCY=1ns",
+  "GOTRUE_RATE_LIMIT_EMAIL_SENT=100",
+  "GOTRUE_MAILER_AUTOCONFIRM=true",
+
+  # Email Templates
+  "GOTRUE_MAILER_URLPATHS_CONFIRMATION=/gotrue/verify",
+  "GOTRUE_MAILER_URLPATHS_INVITE=/gotrue/verify",
+  "GOTRUE_MAILER_URLPATHS_RECOVERY=/gotrue/verify",
+  "GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE=/gotrue/verify",
+  "GOTRUE_MAILER_TEMPLATES_MAGIC_LINK=",
+
+  # OAuth Providers (Configure as needed)
+  "GOTRUE_EXTERNAL_GOOGLE_ENABLED=false",
+  "GOTRUE_EXTERNAL_GOOGLE_CLIENT_ID=",
+  "GOTRUE_EXTERNAL_GOOGLE_SECRET=",
+  "GOTRUE_EXTERNAL_GOOGLE_REDIRECT_URI=https://${main_domain}/gotrue/callback",
+
+  "GOTRUE_EXTERNAL_GITHUB_ENABLED=false",
+  "GOTRUE_EXTERNAL_GITHUB_CLIENT_ID=",
+  "GOTRUE_EXTERNAL_GITHUB_SECRET=",
+  "GOTRUE_EXTERNAL_GITHUB_REDIRECT_URI=https://${main_domain}/gotrue/callback",
+
+  "GOTRUE_EXTERNAL_DISCORD_ENABLED=false",
+  "GOTRUE_EXTERNAL_DISCORD_CLIENT_ID=",
+  "GOTRUE_EXTERNAL_DISCORD_SECRET=",
+  "GOTRUE_EXTERNAL_DISCORD_REDIRECT_URI=https://${main_domain}/gotrue/callback",
+
+  # SAML Configuration
+  "GOTRUE_SAML_ENABLED=false",
+  "GOTRUE_SAML_PRIVATE_KEY=",
+
+  # =============================================================================
+  # ☁️ APPFLOWY CLOUD SERVICE CONFIGURATION
+  # =============================================================================
+  # Core Configuration
+  "RUST_LOG=info",
+  "APPFLOWY_ENVIRONMENT=production",
+  "APPFLOWY_DATABASE_URL=postgres://appflowy:${POSTGRES_PASSWORD}@postgres:5432/appflowy",
+  "APPFLOWY_REDIS_URI=redis://redis:6379",
+
+  # Authentication Integration
+  "APPFLOWY_GOTRUE_JWT_SECRET=${GOTRUE_JWT_SECRET}",
+  "APPFLOWY_GOTRUE_JWT_EXP=7200",
+  "APPFLOWY_GOTRUE_BASE_URL=http://gotrue:9999",
+
+  # Access Control and Performance
+  "APPFLOWY_ACCESS_CONTROL=true",
+  "APPFLOWY_DATABASE_MAX_CONNECTIONS=40",
+  "APPFLOWY_WEBSOCKET_MAILBOX_SIZE=6000",
+
+  # Email Configuration (SMTP)
+  "APPFLOWY_MAILER_SMTP_HOST=",
+  "APPFLOWY_MAILER_SMTP_PORT=465",
+  "APPFLOWY_MAILER_SMTP_USERNAME=",
+  "APPFLOWY_MAILER_SMTP_EMAIL=",
+  "APPFLOWY_MAILER_SMTP_PASSWORD=",
+  "APPFLOWY_MAILER_SMTP_TLS_KIND=wrapper",
+
+  # =============================================================================
+  # 💾 FILE STORAGE CONFIGURATION (MinIO/S3)
+  # =============================================================================
+  # MinIO Configuration
+  "MINIO_HOST=minio",
+  "MINIO_PORT=9000",
+  "APPFLOWY_S3_USE_MINIO=true",
+  "APPFLOWY_S3_CREATE_BUCKET=true",
+  "APPFLOWY_S3_MINIO_URL=http://minio:9000",
+
+  # Storage Credentials
+  "APPFLOWY_S3_ACCESS_KEY=${password:16}",
+  "APPFLOWY_S3_SECRET_KEY=${password:32}",
+
+  # Storage Configuration
+  "APPFLOWY_S3_BUCKET=appflowy",
+  "APPFLOWY_S3_REGION=us-east-1",
+  "APPFLOWY_S3_PRESIGNED_URL_ENDPOINT=https://${main_domain}/minio-api",
+
+  # AWS S3 Configuration (Alternative to MinIO)
+  # "APPFLOWY_S3_USE_MINIO=false",
+  # "APPFLOWY_S3_REGION=us-east-1",
+
+  # =============================================================================
+  # 🎛️ ADMIN FRONTEND CONFIGURATION
+  # =============================================================================
+  "ADMIN_FRONTEND_REDIS_URL=redis://redis:6379",
+  "ADMIN_FRONTEND_GOTRUE_URL=http://gotrue:9999",
+  "ADMIN_FRONTEND_APPFLOWY_CLOUD_URL=http://appflowy_cloud:8000",
+  "ADMIN_FRONTEND_PATH_PREFIX=/console",
+
+  # =============================================================================
+  # 🤖 AI FEATURES CONFIGURATION (Optional)
+  # =============================================================================
+  # OpenAI Configuration
+  "AI_OPENAI_API_KEY=",
+  "DEFAULT_AI_MODEL=gpt-4o-mini",
+  "DEFAULT_AI_COMPLETION_MODEL=gpt-4o-mini",
+
+  # Azure OpenAI (Alternative)
+  "AZURE_OPENAI_API_KEY=",
+  "AZURE_OPENAI_ENDPOINT=",
+  "AZURE_OPENAI_API_VERSION=",
+
+  # AI Service Configuration
+  "AI_SERVER_HOST=ai",
+  "AI_SERVER_PORT=5001",
+  "AI_DATABASE_URL=postgresql+psycopg://appflowy:${POSTGRES_PASSWORD}@postgres:5432/appflowy",
+  "AI_REDIS_URL=redis://redis:6379",
+  "AI_USE_MINIO=true",
+  "AI_MINIO_URL=http://minio:9000",
+  "AI_APPFLOWY_HOST=https://${main_domain}",
+
+  # Embedding Configuration
+  "APPFLOWY_EMBEDDING_CHUNK_SIZE=2000",
+  "APPFLOWY_EMBEDDING_CHUNK_OVERLAP=200",
+
+  # =============================================================================
+  # ⚙️ WORKER SERVICES CONFIGURATION
+  # =============================================================================
+  # AppFlowy Worker
+  "APPFLOWY_WORKER_REDIS_URL=redis://redis:6379",
+  "APPFLOWY_WORKER_ENVIRONMENT=production",
+  "APPFLOWY_WORKER_DATABASE_URL=postgres://appflowy:${POSTGRES_PASSWORD}@postgres:5432/appflowy",
+  "APPFLOWY_WORKER_DATABASE_NAME=appflowy",
+  "APPFLOWY_WORKER_IMPORT_TICK_INTERVAL=30",
+
+  # Indexer Configuration
+  "APPFLOWY_INDEXER_ENABLED=true",
+  "APPFLOWY_INDEXER_DATABASE_URL=postgres://appflowy:${POSTGRES_PASSWORD}@postgres:5432/appflowy",
+  "APPFLOWY_INDEXER_REDIS_URL=redis://redis:6379",
+  "APPFLOWY_INDEXER_EMBEDDING_BUFFER_SIZE=5000",
+
+  # Collaboration Service
+  "APPFLOWY_COLLABORATE_MULTI_THREAD=false",
+  "APPFLOWY_COLLABORATE_REMOVE_BATCH_SIZE=100",
+
+  # =============================================================================
+  # 🌐 NGINX CONFIGURATION
+  # =============================================================================
+  "NGINX_PORT=80",
+  "NGINX_TLS_PORT=443",
+
+  # =============================================================================
+  # 🛠️ VERSION TAGS (Easily Configurable)
+  # =============================================================================
+  "GOTRUE_VERSION=latest",
+  "APPFLOWY_CLOUD_VERSION=latest",
+  "APPFLOWY_ADMIN_FRONTEND_VERSION=latest",
+  "APPFLOWY_AI_VERSION=latest",
+  "APPFLOWY_WORKER_VERSION=latest",
+  "APPFLOWY_WEB_VERSION=latest",
+]
+
+[[config.domains]]
+serviceName = "nginx"
+port = 80
+host = "${main_domain}"
+
+
+[[config.mounts]]
+filePath = "/nginx/nginx.conf"
+content = """# Minimal nginx configuration for AppFlowy-Cloud
+# Self Hosted AppFlowy Cloud user should alter this file to suit their needs,
+# or use the appflowy.site.conf in external_proxy_config/nginx if they are using
+# an external proxy.
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    # docker dns resolver
+    resolver 127.0.0.11 valid=10s;
+    #error_log /var/log/nginx/error.log debug;
+
+    map $http_upgrade $connection_upgrade {
+        default upgrade;
+        '' close;
+    }
+
+    map $http_origin $cors_origin {
+        # AppFlowy Web origin
+        "~^http://localhost:3000$" $http_origin;
+        default "null";
+    }
+
+    server {
+        listen 8080;
+
+        # https://github.com/nginxinc/nginx-prometheus-exporter
+        location = /stub_status {
+            stub_status;
+        }
+    }
+
+
+    server {
+
+        listen 80;
+        client_max_body_size 10M;
+
+        underscores_in_headers on;
+        set $appflowy_cloud_backend "http://appflowy_cloud:8000";
+        set $gotrue_backend "http://gotrue:9999";
+        set $admin_frontend_backend "http://admin_frontend:3000";
+        set $appflowy_web_backend "http://appflowy_web:80";
+        set $minio_backend "http://minio:9001";
+        set $minio_api_backend "http://minio:9000";
+        # Host name for minio, used internally within docker compose
+        set $minio_internal_host "minio:9000";
+        set $pgadmin_backend "http://pgadmin:80";
+
+        # GoTrue
+        location /gotrue/ {
+            if ($request_method = 'OPTIONS') {
+                add_header 'Access-Control-Allow-Origin' $cors_origin always;
+                add_header 'Access-Control-Allow-Credentials' 'true' always;
+                add_header 'Access-Control-Allow-Headers' '*' always;
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, PATCH, OPTIONS' always;
+                add_header 'Access-Control-Max-Age' 3600 always;
+                add_header 'Content-Type' 'text/plain charset=UTF-8' always;
+                add_header 'Content-Length' 0 always;
+                return 204;
+            }
+
+            proxy_pass $gotrue_backend;
+
+            rewrite ^/gotrue(/.*)$ $1 break;
+
+            # Allow headers like redirect_to to be handed over to the gotrue
+            # for correct redirecting
+            proxy_set_header Host $http_host;
+            proxy_pass_request_headers on;
+        }
+
+        # WebSocket
+        location /ws {
+            proxy_pass $appflowy_cloud_backend;
+
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "Upgrade";
+            proxy_set_header Host $host;
+            proxy_read_timeout 86400s;
+        }
+
+        location /api {
+            proxy_pass $appflowy_cloud_backend;
+            proxy_set_header X-Request-Id $request_id;
+            proxy_set_header Host $http_host;
+
+            # Set CORS headers for other requests
+            if ($request_method = 'OPTIONS') {
+                add_header 'Access-Control-Allow-Origin' $cors_origin always;
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, PATCH, OPTIONS' always;
+                add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization, Accept, Client-Version, Device-Id' always;
+                add_header 'Access-Control-Max-Age' 3600 always;
+                return 204;
+            }
+
+            add_header 'Access-Control-Allow-Origin' $cors_origin always;
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, PATCH, OPTIONS' always;
+            add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization, Accept, Client-Version, Device-Id' always;
+            add_header 'Access-Control-Max-Age' 3600 always;
+
+            location ~* ^/api/workspace/([a-zA-Z0-9_-]+)/publish$ {
+                proxy_pass $appflowy_cloud_backend;
+                proxy_request_buffering off;
+                client_max_body_size 256M;
+                if ($request_method = 'OPTIONS') {
+                    add_header 'Access-Control-Allow-Origin' $cors_origin always;
+                    add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, PATCH, OPTIONS' always;
+                    add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization, Accept, Client-Version, Device-Id' always;
+                    add_header 'Access-Control-Max-Age' 3600 always;
+                    return 204;
+                }
+
+                add_header 'Access-Control-Allow-Origin' $cors_origin always;
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, PATCH, OPTIONS' always;
+                add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization, Accept, Client-Version, Device-Id' always;
+                add_header 'Access-Control-Max-Age' 3600 always;
+            }
+
+            # AppFlowy-Cloud
+            location /api/chat {
+                proxy_pass $appflowy_cloud_backend;
+
+                proxy_http_version 1.1;
+                proxy_set_header Connection "";
+                chunked_transfer_encoding on;
+                proxy_buffering off;
+                proxy_cache off;
+
+                proxy_read_timeout 600s;
+                proxy_connect_timeout 600s;
+                proxy_send_timeout 600s;
+            }
+
+            location /api/import {
+                proxy_pass $appflowy_cloud_backend;
+
+                # Set headers
+                proxy_set_header X-Request-Id $request_id;
+                proxy_set_header Host $http_host;
+
+                # Handle CORS
+                add_header 'Access-Control-Allow-Origin' $cors_origin always;
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, PATCH, OPTIONS' always;
+                add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization, Accept, Device-Id' always;
+                add_header 'Access-Control-Max-Age' 3600 always;
+
+                # Timeouts
+                proxy_read_timeout 600s;
+                proxy_connect_timeout 600s;
+                proxy_send_timeout 600s;
+
+                # Disable buffering for large file uploads
+                proxy_request_buffering off;
+                proxy_buffering off;
+                proxy_cache off;
+                client_max_body_size 2G;
+            }
+        }
+
+        # Minio Web UI
+        # Derive from: https://min.io/docs/minio/linux/integrations/setup-nginx-proxy-with-minio.html
+        # Optional Module, comment this section if you did not deploy minio in docker-compose.yml
+        # This endpoint is meant to be used for the MinIO Web UI, accessible via the admin portal
+        location /minio/ {
+            proxy_pass $minio_backend;
+
+            rewrite ^/minio/(.*) /$1 break;
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-NginX-Proxy true;
+
+            ## This is necessary to pass the correct IP to be hashed
+            real_ip_header X-Real-IP;
+
+            proxy_connect_timeout 300s;
+
+            ## To support websockets in MinIO versions released after January 2023
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            # Some environments may encounter CORS errors (Kubernetes + Nginx Ingress)
+            # Uncomment the following line to set the Origin request to an empty string
+            # proxy_set_header Origin '';
+
+            chunked_transfer_encoding off;
+        }
+
+        # Optional Module, comment this section if you did not deploy minio in docker-compose.yml
+        # This is used for presigned url, which is needs to be exposed to the AppFlowy client application.
+        location /minio-api/ {
+            proxy_pass $minio_api_backend;
+
+            # Set the host to internal host because the presigned url was signed against the internal host
+            proxy_set_header Host $minio_internal_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            rewrite ^/minio-api/(.*) /$1 break;
+
+            proxy_connect_timeout 300s;
+            # Default is HTTP/1, keepalive is only enabled in HTTP/1.1
+            proxy_http_version 1.1;
+            proxy_set_header Connection "";
+            chunked_transfer_encoding off;
+        }
+
+        # PgAdmin
+        # Optional Module, comment this section if you did not deploy pgadmin in docker-compose.yml
+        location /pgadmin/ {
+            set $pgadmin pgadmin;
+            proxy_pass $pgadmin_backend;
+
+            proxy_set_header X-Script-Name /pgadmin;
+            proxy_set_header X-Scheme $scheme;
+            proxy_set_header Host $host;
+            proxy_redirect off;
+        }
+
+        # Admin Frontend
+        # Optional Module, comment this section if you did not deploy admin_frontend in docker-compose.yml
+        location /console {
+            proxy_pass $admin_frontend_backend;
+
+            proxy_set_header X-Scheme $scheme;
+            proxy_set_header Host $host;
+        }
+
+        # AppFlowy Web
+        location / {
+            proxy_pass $appflowy_web_backend;
+            proxy_set_header X-Scheme $scheme;
+            proxy_set_header Host $host;
+        }
+    }
+
+}
+"""

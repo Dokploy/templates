@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+SCRYPTED_WEBHOOK_UPDATE_AUTHORIZATION = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "scrypted"
+port = 11080
+host = "${main_domain}"
+
+[config.env]
+# Scrypted service environment variables
+# SCRYPTED_WEBHOOK_UPDATE_AUTHORIZATION: API key for Scrypted webhook updates
+SCRYPTED_WEBHOOK_UPDATE_AUTHORIZATION = "${SCRYPTED_WEBHOOK_UPDATE_AUTHORIZATION}"
+SCRYPTED_WEBHOOK_UPDATE = "http://${main_domain}:10444/v1/update"
+
+[[config.mounts]]
+filePath = "/files/scrypted-volume"
+content = ""
+
+# Optional NVR volume, uncomment if needed
+# [[config.mounts]]
+# filePath = "/files/nvr"
+# content = ""

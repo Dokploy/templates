@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  zitadel:
+    restart: 'always'
+    image: 'ghcr.io/zitadel/zitadel:latest'
+    command: 'start-from-init --masterkey "${ZITADEL_MASTERKEY}" --tlsMode disabled'
+    environment:
+      # Database Configuration
+      ZITADEL_DATABASE_POSTGRES_HOST: db
+      ZITADEL_DATABASE_POSTGRES_PORT: 5432
+      ZITADEL_DATABASE_POSTGRES_DATABASE: zitadel
+      ZITADEL_DATABASE_POSTGRES_USER_USERNAME: zitadel
+      ZITADEL_DATABASE_POSTGRES_USER_PASSWORD: "${POSTGRES_PASSWORD}"
+      ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE: disable
+      ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME: postgres
+      ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD: "${POSTGRES_PASSWORD}"
+      ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE: disable
+
+      # External Configuration for HTTP only - TLS mode disabled
+      ZITADEL_EXTERNALSECURE: false
+      ZITADEL_EXTERNALPORT: 8080
+      ZITADEL_EXTERNALDOMAIN: "${EXTERNAL_DOMAIN}"
+      ZITADEL_TLS_ENABLED: false
+
+      # Disable Email Notifications
+      ZITADEL_NOTIFICATIONS_SMTP_HOST: ""
+      ZITADEL_NOTIFICATIONS_SMTP_PORT: ""
+
+      # Custom Admin User Configuration
+      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME}"
+      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD}"
+      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS}"
+      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_FIRSTNAME: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_FIRSTNAME}"
+      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_LASTNAME: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_LASTNAME}"
+
+    depends_on:
+      db:
+        condition: 'service_healthy'
+    ports:
+      - '8080'
+    volumes:
+      - zitadel_data:/app/data
+
+  db:
+    restart: 'always'
+    image: postgres:17-alpine
+    environment:
+      PGUSER: postgres
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: zitadel
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "zitadel", "-U", "postgres"]
+      interval: '10s'
+      timeout: '30s'
+      retries: 5
+      start_period: '20s'
+
+volumes:
+  postgres_data:
+  zitadel_data:

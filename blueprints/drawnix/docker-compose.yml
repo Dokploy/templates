@@ -1,0 +1,5 @@
+version: "3.8"
+services:
+  drawnix:
+    image: pubuzhixing/drawnix:latest
+    restart: unless-stopped

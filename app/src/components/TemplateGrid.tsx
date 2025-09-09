@@ -120,7 +120,6 @@ const TemplateGrid: React.FC<TemplateGridProps> = ({ view }) => {
       return matchesSearch && matchesTags;
     });
 
-    console.log("ffiltered tem", filtered.length);
     setTemplatesCount(filtered.length);
     setFilteredTemplates(filtered);
   }, [searchQuery, selectedTags]);

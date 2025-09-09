@@ -1,0 +1,33 @@
+[variables]
+main_domain = "${domain}"
+pg_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "app"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+NODE_ENV = "production"
+DL_ENV_TYPE = "selfHosted"
+DL_PG_HOST = "postgres"
+DL_PG_PORT = "5432"
+DL_PG_USER = "postgres"
+DL_PG_PASSWORD = "${pg_password}"
+DL_PG_NAME = "domain_locker"
+
+# OPTIONAL ENV VARS (uncomment as needed)
+# DL_BASE_URL = "http://localhost:3000"
+# DL_TURNSTILE_KEY = ""
+# DL_GLITCHTIP_DSN = ""
+# DL_PLAUSIBLE_URL = ""
+# DL_PLAUSIBLE_SITE = ""
+# DL_DOMAIN_INFO_API = ""
+# DL_DOMAIN_SUBS_API = ""
+# DL_DISABLE_WRITE_METHODS = "false"
+
+[[config.mounts]]
+# Example mount for PostgreSQL persistence (already defined in compose volumes)
+# filePath = "/var/lib/postgresql/data"
+# content = ""

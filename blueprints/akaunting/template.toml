@@ -1,0 +1,54 @@
+[variables]
+# Domain & UI
+main_domain = "${domain}"
+locale = "en-US"
+
+# DB credentials (safe defaults; user can override in UI)
+db_name = "akaunting"
+db_user = "admin"
+mysql_password = "${password:24}"
+
+# Akaunting setup variables
+company_name = "My Company"
+company_email = "${email}"
+admin_email = "${email}"
+admin_password = "${password:24}"
+
+# Akaunting table prefix: 3 hex chars + underscore (e.g., "a1f_")
+db_prefix = "${hash:3}_"
+
+# Domain routing for the web UI
+[[config.domains]]
+serviceName = "akaunting"
+port = 80
+host = "${main_domain}"
+
+[config]
+env = [
+  # App
+  "APP_URL=${main_domain}",
+  "LOCALE=${locale}",
+
+  # Database (app)
+  "DB_HOST=akaunting-db",
+  "DB_PORT=3306",
+  "DB_NAME=${db_name}",
+  "DB_USERNAME=${db_user}",
+  "DB_PASSWORD=${mysql_password}",
+  "DB_PREFIX=${db_prefix}",
+
+  # First-run bootstrap (app)
+  "COMPANY_NAME=${company_name}",
+  "COMPANY_EMAIL=${company_email}",
+  "ADMIN_EMAIL=${admin_email}",
+  "ADMIN_PASSWORD=${admin_password}",
+
+  # Database (server)
+  "MYSQL_DATABASE=${db_name}",
+  "MYSQL_USER=${db_user}",
+  "MYSQL_PASSWORD=${mysql_password}",
+  "MYSQL_RANDOM_ROOT_PASSWORD=yes"
+]
+
+# No custom mounts needed; volumes are already defined in compose.
+[[config.mounts]]

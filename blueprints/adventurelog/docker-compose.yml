@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  web:
+    image: ghcr.io/seanmorley15/adventurelog-frontend:latest
+    restart: unless-stopped
+    depends_on:
+      - server
+    environment:
+      # Frontend needs to know where the backend is
+      PUBLIC_SERVER_URL: ${PUBLIC_SERVER_URL}
+      ORIGIN: ${ORIGIN}
+      BODY_SIZE_LIMIT: ${BODY_SIZE_LIMIT}
+
+  db:
+    image: postgis/postgis:16-3.5
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  server:
+    image: ghcr.io/seanmorley15/adventurelog-backend:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+    volumes:
+      - adventurelog_media:/code/media/
+    environment:
+      # DB settings for Django
+      PGHOST: ${PGHOST}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+      # Django app settings
+      SECRET_KEY: ${SECRET_KEY}
+      DJANGO_ADMIN_USERNAME: ${DJANGO_ADMIN_USERNAME}
+      DJANGO_ADMIN_PASSWORD: ${DJANGO_ADMIN_PASSWORD}
+      DJANGO_ADMIN_EMAIL: ${DJANGO_ADMIN_EMAIL}
+      DEBUG: ${DEBUG}
+      CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS}
+      FRONTEND_URL: ${FRONTEND_URL}
+      PUBLIC_URL: ${PUBLIC_URL}
+
+volumes:
+  postgres_data: {}
+  adventurelog_media: {}

@@ -1,0 +1,34 @@
+[variables]
+main_domain = "${domain}"
+token_secret = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "snapp" 
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+DATABASE_URL = "file:./db.sqlite"
+DATABASE_PROVIDER = "sqlite" # Options: postgres | mysql | sqlite
+DISABLED_EMAIL_AND_PASSWORD = "false"
+LOG_LEVEL = "debug"
+ORIGIN = "http://${main_domain}"
+PORT = "3000"
+ADMIN_USERNAME = "admin"
+ADMIN_EMAIL = "info@example.org"
+ADMIN_PASSWORD = "${password:16}"
+TOKEN_SECRET = "${token_secret}" # API Key for authentication token
+ENABLE_SIGNUP = "true"
+ENABLED_MFA = "false"
+PUBLIC_URL = "${main_domain}"
+APPNAME = "Snapp"
+PUBLIC_EXTRA_GROUPS_EDITABLE = "true"
+URLS_VIA_GROUPS_ONLY = "false"
+HOST = "0.0.0.0"
+
+[[config.mounts]]
+filePath = "/files/snapp-db/db.sqlite"
+content = """
+# SQLite database file for Snapp
+"""

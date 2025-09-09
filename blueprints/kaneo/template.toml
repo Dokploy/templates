@@ -1,0 +1,21 @@
+[variables]
+backend_domain = "${domain}"
+frontend_domain = "${domain}"
+
+
+[[config.domains]]
+serviceName = "frontend"
+port = 5_173
+host = "${frontend_domain}"
+
+[[config.domains]]
+serviceName = "backend"
+port = 1_337
+host = "${backend_domain}"
+
+[config.env]
+BACKEND_HOST = "${backend_domain}"
+KANEO_DB = "kaneo"
+KANEO_DB_USER = "${username}"
+KANEO_DB_PASSWORD = "${password}"
+KANEO_JWT_ACCESS = "${hash:64}"

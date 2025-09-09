@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  convertx:
+    image: ghcr.io/c4illin/convertx
+    restart: unless-stopped
+    ports:
+      - 3000
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - ACCOUNT_REGISTRATION=${ACCOUNT_REGISTRATION}
+      - HTTP_ALLOWED=${HTTP_ALLOWED}
+      - ALLOW_UNAUTHENTICATED=${ALLOW_UNAUTHENTICATED}
+      - AUTO_DELETE_EVERY_N_HOURS=${AUTO_DELETE_EVERY_N_HOURS}
+      - WEBROOT=${WEBROOT}
+      - FFMPEG_ARGS=${FFMPEG_ARGS}
+      - HIDE_HISTORY=${HIDE_HISTORY}
+      - LANGUAGE=${LANGUAGE}
+    volumes:
+      - ../files/data:/app/data

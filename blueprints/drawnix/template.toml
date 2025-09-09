@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "drawnix"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+
+[[config.mounts]]
+# No specific mounts required based on available documentation; added a placeholder for potential configuration file if needed in future
+filePath = "/app/config.txt"
+content = """
+# Placeholder content - customize if the application requires persistent configuration
+"""

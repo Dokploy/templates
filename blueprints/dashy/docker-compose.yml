@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  dashy:
+    image: lissy93/dashy:latest
+    restart: unless-stopped
+    ports:
+      - 8080
+    volumes:
+      - dashy-config:/app/user-data
+volumes:
+  dashy-config: {}

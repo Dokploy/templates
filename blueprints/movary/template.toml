@@ -19,4 +19,4 @@ mounts = []
 [[config.domains]]
 serviceName = "movary"
 port = 8080
-host = "${main_domain}" 
+host = "${main_domain}"

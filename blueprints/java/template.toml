@@ -1,0 +1,29 @@
+[variables]
+java_version = "21"
+server_port = "25565"
+startup_command = "java -Xmx1024M -Xms512M -jar server.jar nogui"
+server_jarfile = "server.jar"
+
+[config]
+[[config.domains]]
+serviceName = "java-app"
+port = 25565
+host = "${domain}"
+
+[config.env]
+JAVA_VERSION = "${java_version}"
+SERVER_PORT = "${server_port}"
+STARTUP_COMMAND = "${startup_command}"
+SERVER_JARFILE = "${server_jarfile}"
+
+[[config.mounts]]
+filePath = "/home/container/server.properties"
+content = """
+# Minecraft server properties
+server-port=25565
+motd=Java Server powered by Dokploy
+online-mode=true
+difficulty=easy
+gamemode=survival
+max-players=20
+"""

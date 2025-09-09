@@ -1,0 +1,31 @@
+[variables]
+main_domain = "${domain}"
+mysql_root_password = "${password:32}"
+mysql_password = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "azuracast"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+LANG = "en_US.UTF-8"
+AZURACAST_DC_REVISION = "1"
+MYSQL_HOST = "mariadb"
+MYSQL_PORT = "3306"
+MYSQL_USER = "azuracast"
+MYSQL_PASSWORD = "${mysql_password}"
+MYSQL_DATABASE = "azuracast"
+MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
+LETSENCRYPT_HOST = "${main_domain}"
+VIRTUAL_HOST = "${main_domain}"
+DISABLE_LETSENCRYPT = "true"
+AUTO_ASSIGN_PORT_HTTP = "80"
+AUTO_ASSIGN_PORT_HTTPS = "443"
+NGINX_RADIO_PORTS = "8000,8010,8020,8030,8040,8050"
+PREFER_RELEASE_BUILDS = "true"
+COMPOSER_PLUGIN_MODE = "false"
+ADDITIONAL_MEDIA_SYNC_WORKER_COUNT = "0"
+
+[[config.mounts]]

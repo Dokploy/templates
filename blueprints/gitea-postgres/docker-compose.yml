@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  gitea:
+    image: docker.gitea.com/gitea:1.24.4
+    restart: unless-stopped
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=postgres:5432
+      - GITEA__database__NAME=gitea
+      - GITEA__database__USER=gitea
+      - GITEA__database__PASSWD=${GITEA_DB_PASSWORD:-gitea}
+    volumes:
+      - gitea-data:/data
+    expose:
+      - "3000"
+      - "22"
+    depends_on:
+      - postgres
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  postgres:
+    image: docker.io/library/postgres:14
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=gitea
+      - POSTGRES_PASSWORD=${GITEA_DB_PASSWORD:-gitea}
+      - POSTGRES_DB=gitea
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    expose:
+      - "5432"
+
+volumes:
+  gitea-data: {}
+  pg-data: {}

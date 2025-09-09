@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+
+[[config.domains]]
+serviceName = "app"
+port = 8334
+host = "${main_domain}"
+
+[config.env]
+APPLICATION_URL = "${main_domain}"
+CANARY = "true"
+OFFICE_URL = "http://wopi_server:9980"
+OFFICE_FILESTASH_URL = "http://app:8334"
+OFFICE_REWRITE_URL = "http://127.0.0.1:9980"

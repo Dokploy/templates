@@ -1,0 +1,33 @@
+services:
+  casdoor:
+    image: casbin/casdoor:latest
+    environment:
+      - RUNNING_IN_DOCKER=true
+    volumes:
+      - ../files/app.conf:/conf/app.conf
+      - ../files/init_data.json:/init_data.json
+      - casdoor-data:/data
+    depends_on:
+      casdoor-db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  casdoor-db:
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=casdoor
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=casdoor
+    volumes:
+      - casdoor-postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U casdoor -d casdoor"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  casdoor-postgres-data:
+  casdoor-data:

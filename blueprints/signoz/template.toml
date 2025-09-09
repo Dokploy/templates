@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+jwt_secret = "${password:64}"
+
+[config]
+[[config.domains]]
+serviceName = "signoz"
+port = 8080
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+SIGNOZ_JWT_SECRET = "${jwt_secret}"

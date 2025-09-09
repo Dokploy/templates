@@ -1,0 +1,46 @@
+[variables]
+main_domain = "${domain}"
+meili_master_key = "${password:32}"
+pocketbase_key = "${password:32}"
+upload_user = "${username}"
+upload_password = "${password:16}"
+
+[config]
+
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "db"
+port = 8090
+host = "db.${main_domain}"
+
+[[config.domains]]
+serviceName = "search"
+port = 7700
+host = "search.${main_domain}"
+
+[config.env]
+MEILI_MASTER_KEY = "${meili_master_key}"
+POCKETBASE_ENCRYPTION_KEY = "${pocketbase_key}"
+UPLOAD_USER = "${upload_user}"
+UPLOAD_PASSWORD = "${upload_password}"
+ORIGIN = "http://${main_domain}"
+
+
+[[config.mounts]]
+serviceName = "search"
+volumeName = "search-data"
+mountPath = "/meili_data/data.ms"
+
+[[config.mounts]]
+serviceName = "db"
+volumeName = "db-data"
+mountPath = "/pb_data"
+
+[[config.mounts]]
+serviceName = "web"
+volumeName = "uploads"
+mountPath = "/app/uploads"

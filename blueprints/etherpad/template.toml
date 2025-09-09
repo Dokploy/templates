@@ -1,0 +1,28 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:32}"
+postgres_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "app"
+port = 9001
+host = "${main_domain}"
+
+[config.env]
+NODE_ENV = "production"
+ADMIN_PASSWORD = "${admin_password}"
+DB_CHARSET = "utf8mb4"
+DB_HOST = "postgres"
+DB_NAME = "etherpad"
+DB_PASS = "${postgres_password}"
+DB_PORT = "5432"
+DB_TYPE = "postgres"
+DB_USER = "admin"
+DEFAULT_PAD_TEXT = " "
+DISABLE_IP_LOGGING = "false"
+SOFFICE = "null"
+TRUST_PROXY = "true"
+POSTGRES_DB = "etherpad"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_USER = "admin"

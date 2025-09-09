@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    restart: unless-stopped
+    depends_on:
+      litellm-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY}
+      UI_USERNAME: ${UI_USERNAME}
+      UI_PASSWORD: ${UI_PASSWORD}
+      STORE_MODEL_IN_DB: "True"
+
+      # Provider Keys
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL}
+      COHERE_API_KEY: ${COHERE_API_KEY}
+      OR_SITE_URL: ${OR_SITE_URL}
+      OR_APP_NAME: ${OR_APP_NAME}
+      OR_API_KEY: ${OR_API_KEY}
+      AZURE_API_BASE: ${AZURE_API_BASE}
+      AZURE_API_VERSION: ${AZURE_API_VERSION}
+      AZURE_API_KEY: ${AZURE_API_KEY}
+      REPLICATE_API_KEY: ${REPLICATE_API_KEY}
+      REPLICATE_API_TOKEN: ${REPLICATE_API_TOKEN}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      INFISICAL_TOKEN: ${INFISICAL_TOKEN}
+      NOVITA_API_KEY: ${NOVITA_API_KEY}
+      INFINITY_API_KEY: ${INFINITY_API_KEY}
+
+    expose:
+      - 4000
+
+  litellm-db:
+    image: postgres:16-alpine
+    restart: on-failure:5
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - litellm-db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+volumes:
+  litellm-db: {}

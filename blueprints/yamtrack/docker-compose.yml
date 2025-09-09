@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  yamtrack:
+    image: ghcr.io/fuzzygrim/yamtrack
+    restart: unless-stopped
+    depends_on:
+      - redis
+    environment:
+      - TZ=Europe/Berlin
+      - SECRET=${SECRET}
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - yamtrack-db:/yamtrack/db
+    expose:
+      - 8000
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+volumes:
+  yamtrack-db: {}
+  redis_data: {}

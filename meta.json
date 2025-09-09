@@ -2466,9 +2466,9 @@
     "description": "Kuno is an internationalized blogging platform with a backend built in Go and a frontend in Next.js.",
     "logo": "image.png",
     "links": {
-      "github": "https://github.com/ictrun/kuno",
-      "website": "https://kuno.zli.li",
-      "docs": "https://github.com/ictrun/kuno#readme"
+      "github": "https://github.com/xuemian168/kuno",
+      "website": "https://qut.edu.kg/",
+      "docs": "https://github.com/xuemian168/kuno#readme"
     },
     "tags": [
       "blog",

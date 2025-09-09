@@ -4373,8 +4373,8 @@
     "logo": "logo.svg",
     "links": {
       "github": "https://github.com/msgbyte/tianji",
-      "website": "https://github.com/msgbyte/tianji",
-      "docs": "https://github.com/msgbyte/tianji"
+      "website": "https://tianji.dev/",
+      "docs": "https://tianji.dev/docs/intro"
     },
     "tags": [
       "analytics",

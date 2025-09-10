@@ -1,6 +1,8 @@
 services:
   web:
     image: wger/server:latest
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy
@@ -19,8 +21,23 @@ services:
       retries: 5
     restart: unless-stopped
 
+  nginx:
+    image: nginx:stable
+    env_file:
+      - .env
+    depends_on:
+      - web
+    volumes:
+      - static:/wger/static:ro
+      - media:/wger/media:ro
+    expose:
+      - 80
+    restart: unless-stopped
+
   db:
     image: postgres:15-alpine
+    env_file:
+      - .env
     volumes:
       - postgres-data:/var/lib/postgresql/data/
     expose:
@@ -35,6 +52,8 @@ services:
 
   cache:
     image: redis
+    env_file:
+      - .env
     expose:
       - 6379
     volumes:
@@ -49,6 +68,8 @@ services:
 
   celery_worker:
     image: wger/server:latest
+    env_file:
+      - .env
     command: /start-worker
     volumes:
       - media:/home/wger/media
@@ -64,6 +85,8 @@ services:
 
   celery_beat:
     image: wger/server:latest
+    env_file:
+      - .env
     command: /start-beat
     volumes:
       - celery-beat:/home/wger/beat/

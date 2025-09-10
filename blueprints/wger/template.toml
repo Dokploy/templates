@@ -175,11 +175,11 @@ REFRESH_TOKEN_LIFETIME="24" # The lifetime duration of the refresh token, in hou
 #
 # Please read the documentation before enabling this feature:
 # https://wger.readthedocs.io/en/latest/administration/auth_proxy.html
-AUTH_PROXY_HEADER="${auth_proxy_header}"
-AUTH_PROXY_TRUSTED_IPS="${auth_proxy_trusted_ips}"
-AUTH_PROXY_CREATE_UNKNOWN_USER="${auth_proxy_create_unknown_user}"
-AUTH_PROXY_USER_EMAIL_HEADER="${auth_proxy_user_email_header}"
-AUTH_PROXY_USER_NAME_HEADER="${auth_proxy_user_name_header}"
+AUTH_PROXY_HEADER=""
+AUTH_PROXY_TRUSTED_IPS=""
+AUTH_PROXY_CREATE_UNKNOWN_USER=""
+AUTH_PROXY_USER_EMAIL_HEADER=""
+AUTH_PROXY_USER_NAME_HEADER=""
 
 #
 # Other possible settings
@@ -205,7 +205,7 @@ ENABLE_EMAIL="${enable_email}"
 EMAIL_HOST="${email_host}"
 EMAIL_PORT="${email_port}"
 EMAIL_HOST_USER="${email_host_user}"
-EMAIL_HOST_PASSWORD="${email_host_password}"
+EMAIL_HOST_PASSWORD=""
 EMAIL_USE_TLS="${email_use_tls}"
 # EMAIL_USE_SSL=False
 FROM_EMAIL="wger Workout Manager <${from_email}>"

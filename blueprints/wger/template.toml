@@ -31,24 +31,29 @@ flower_password = "${password:16}"
 
 #-- Email Settings (Optional) --#
 enable_email = "False"
-email_host = "smtp.gmail.com"
+email_host = ""
 email_port = "587"
-email_host_user = "noreply@wger.de"
+email_host_user = ""
 email_use_tls = "True"
-from_email = "noreply@wger.de"
+from_email = "noreply@${domain}"
 
 [config]
 [[config.domains]]
-serviceName = "nginx"
-port = 80
+serviceName = "web"
+port = 8000
 host = "${main_domain}"
 
 [config.env]
-# Django's secret key, change to a 50 character random string if you are running
-# this instance publicly. For an online generator, see e.g. https://djecrety.ir/
+# ⬇️ ADDED THIS SECTION FOR THE DATABASE CONTAINER ⬇️
+# PostgreSQL Container Settings
+POSTGRES_DB="${postgres_db}"
+POSTGRES_USER="${postgres_user}"
+POSTGRES_PASSWORD="${postgres_password}"
+
+# Django's secret key
 SECRET_KEY="${secret_key}"
 
-# Signing key used for JWT, use something different than the secret key
+# Signing key used for JWT
 SIGNING_KEY="${signing_key}"
 
 # The server's timezone
@@ -56,6 +61,8 @@ TIME_ZONE="${timezone}"
 TZ="${timezone}"
 
 # Application Settings
+ALLOWED_HOSTS="${main_domain}"
+CSRF_TRUSTED_ORIGINS="https://${main_domain}"
 WGER_INSTANCE="https://wger.de"
 ALLOW_REGISTRATION="${allow_registration}"
 ALLOW_GUEST_USERS="${allow_guest_users}"
@@ -73,7 +80,7 @@ CELERY_BROKER="redis://cache:6379/2"
 CELERY_BACKEND="redis://cache:6379/2"
 CELERY_FLOWER_PASSWORD="${flower_password}"
 
-# Database
+# Database (for the Wger App)
 DJANGO_DB_ENGINE="django.db.backends.postgresql"
 DJANGO_DB_DATABASE="${postgres_db}"
 DJANGO_DB_USER="${postgres_user}"
@@ -101,14 +108,17 @@ AXES_IPWARE_META_PRECEDENCE_ORDER="HTTP_X_FORWARDED_FOR,REMOTE_ADDR"
 DJANGO_DEBUG="False"
 WGER_USE_GUNICORN="True"
 EXERCISE_CACHE_TTL="18000"
-SITE_URL="http://localhost"
+SITE_URL="https://${main_domain}"
 ACCESS_TOKEN_LIFETIME="10"
 REFRESH_TOKEN_LIFETIME="24"
 LOG_LEVEL_PYTHON="INFO"
 USE_RECAPTCHA="False"
 DJANGO_CLEAR_STATIC_FIRST="False"
 NUMBER_OF_PROXIES="1"
-GUNICORN_CMD_ARGS="--workers 3 --threads 2 --worker-class gthread --proxy-protocol True --timeout 240"
+GUNICORN_CMD_ARGS="--workers 3 --threads 2 --worker-class gthread"
+SECURE_PROXY_SSL_HEADER="HTTP_X_FORWARDED_PROTO,https"
+MEDIA_URL="/media/"
+STATIC_URL="/static/"
 
 # Email
 ENABLE_EMAIL="${enable_email}"
@@ -118,67 +128,3 @@ EMAIL_HOST_USER="${email_host_user}"
 EMAIL_HOST_PASSWORD=""
 EMAIL_USE_TLS="${email_use_tls}"
 FROM_EMAIL="wger Workout Manager <${from_email}>"
-
-[[config.mounts]]
-serviceName = "nginx"
-filePath = "/etc/nginx/conf.d/default.conf"
-content = """
-upstream wger {
-    server web:8000;
-}
-
-server {
-    listen 80;
-    server_name ${main_domain};
-    client_max_body_size 50M;
-
-    location / {
-        proxy_pass http://wger;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_redirect off;
-    }
-
-    location /static/ {
-        alias /wger/static/;
-        expires 30d;
-        add_header Cache-Control "public, immutable";
-    }
-
-    location /media/ {
-        alias /wger/media/;
-        expires 7d;
-        add_header Cache-Control "public";
-    }
-}
-"""
-
-[[config.mounts]]
-serviceName = "cache"
-filePath = "/usr/local/etc/redis/redis.conf"
-content = """
-# Wger-specific Redis Configuration
-bind 0.0.0.0
-protected-mode no
-port 6379
-
-# Set a 1GB memory limit to prevent runaway RAM usage
-maxmemory 1gb
-
-# IMPORTANT: Evict only keys with an expiration set (LRU)
-maxmemory-policy volatile-lru
-
-# Persistence settings from official Wger config
-save 3600 1 300 100 60 10000
-
-# Standard Redis settings for persistence
-stop-writes-on-bgsave-error yes
-rdbcompression yes
-rdbchecksum yes
-dbfilename dump.rdb
-dir /data
-loglevel notice
-logfile ""
-"""

@@ -1,7 +1,6 @@
 services:
   web:
     image: wger/server:latest
-    env_file: .env
     depends_on:
       db:
         condition: service_healthy
@@ -20,32 +19,8 @@ services:
       retries: 5
     restart: unless-stopped
 
-  nginx:
-    image: nginx:stable
-    depends_on:
-      - web
-    volumes:
-      - static:/wger/static:ro
-      - media:/wger/media:ro
-    expose:
-      - 80
-    ports:
-      - 80
-    healthcheck:
-      test: service nginx status
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    restart: unless-stopped
-
   db:
     image: postgres:15-alpine
-    environment:
-      # This is correct because it maps specific variables
-      - POSTGRES_USER=${DJANGO_DB_USER}
-      - POSTGRES_PASSWORD=${DJANGO_DB_PASSWORD}
-      - POSTGRES_DB=${DJANGO_DB_DATABASE} # Fixed to use the correct variable
     volumes:
       - postgres-data:/var/lib/postgresql/data/
     expose:
@@ -64,7 +39,6 @@ services:
       - 6379
     volumes:
       - redis-data:/data
-    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     healthcheck:
       test: redis-cli ping
       interval: 10s
@@ -75,7 +49,6 @@ services:
 
   celery_worker:
     image: wger/server:latest
-    env_file: .env # ⬅️ ADD THIS
     command: /start-worker
     volumes:
       - media:/home/wger/media
@@ -91,7 +64,6 @@ services:
 
   celery_beat:
     image: wger/server:latest
-    env_file: .env
     command: /start-beat
     volumes:
       - celery-beat:/home/wger/beat/

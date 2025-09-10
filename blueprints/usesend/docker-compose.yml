@@ -30,7 +30,7 @@ services:
     command: ["redis-server", "--maxmemory-policy", "noeviction"]
 
   usesend-storage-prod:
-    image: minio/minio:RELEASE.2024-11-07T00-52-20Z
+    image: minio/minio:latest
 
     ports:
       - 9002

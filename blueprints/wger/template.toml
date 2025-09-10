@@ -34,16 +34,8 @@ enable_email = "False"
 email_host = "smtp.gmail.com"
 email_port = "587"
 email_host_user = "noreply@wger.de"
-email_host_password = ""
 email_use_tls = "True"
 from_email = "noreply@wger.de"
-
-#-- Auth Proxy (Optional) --#
-auth_proxy_header = ""
-auth_proxy_trusted_ips = ""
-auth_proxy_create_unknown_user = "False"
-auth_proxy_user_email_header = ""
-auth_proxy_user_name_header = ""
 
 [config]
 [[config.domains]]

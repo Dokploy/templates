@@ -31,9 +31,9 @@ flower_password = "${password:16}"
 
 #-- Email Settings (Optional) --#
 enable_email = "False"
-email_host = ""
+email_host = "none"
 email_port = "587"
-email_host_user = ""
+email_host_user = "none"
 email_use_tls = "True"
 from_email = "noreply@${domain}"
 
@@ -44,7 +44,7 @@ port = 80
 host = "${main_domain}"
 
 [config.env]
-# PostgreSQL Container Settings
+# PostgreSQL Container Settings (for initialization and health check)
 POSTGRES_DB="${postgres_db}"
 POSTGRES_USER="${postgres_user}"
 POSTGRES_PASSWORD="${postgres_password}"
@@ -97,7 +97,7 @@ AXES_COOLOFF_TIME="30"
 AXES_HANDLER="axes.handlers.cache.AxesCacheHandler"
 AXES_LOCKOUT_PARAMETERS="ip_address"
 AXES_IPWARE_PROXY_COUNT="1"
-AXES_IPWARE_META_PRECEDENCE_ORDER="HTTP_X_FORWARDED_FOR,REMOTE_ADDR"
+AXES_IPWARE_META_PRECEDDENN_ORDER="HTTP_X_FORWARDED_FOR,REMOTE_ADDR"
 
 # Others
 DJANGO_DEBUG="False"
@@ -120,36 +120,31 @@ ENABLE_EMAIL="${enable_email}"
 EMAIL_HOST="${email_host}"
 EMAIL_PORT="${email_port}"
 EMAIL_HOST_USER="${email_host_user}"
-EMAIL_HOST_PASSWORD=""
+EMAIL_HOST_PASSWORD="none"
 EMAIL_USE_TLS="${email_use_tls}"
 FROM_EMAIL="wger Workout Manager <${from_email}>"
 
 [[config.mounts]]
-serviceName = "nginx"
-filePath = "/etc/nginx/conf.d/default.conf"
+filePath = "nginx.conf"
 content = """
 upstream wger {
     server web:8000;
 }
-
 server {
     listen 80;
     server_name ${main_domain};
     client_max_body_size 50M;
-
     # Handle static and media files directly
     location /static/ {
         alias /wger/static/;
         expires 30d;
         add_header Cache-Control "public, immutable";
     }
-
     location /media/ {
         alias /wger/media/;
         expires 7d;
         add_header Cache-Control "public";
     }
-
     # Proxy all other requests to the Django app
     location / {
         proxy_pass http://wger;

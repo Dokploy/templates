@@ -6,8 +6,6 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
-    env_file:
-      - ./config/prod.env
     volumes:
       - static:/home/wger/static
       - media:/home/wger/media
@@ -30,6 +28,8 @@ services:
       - static:/wger/static:ro
       - media:/wger/media:ro
     expose:
+      - 80
+    ports:
       - 80
     healthcheck:
       test: service nginx status
@@ -77,8 +77,6 @@ services:
   celery_worker:
     image: wger/server:latest
     command: /start-worker
-    env_file:
-      - ./config/prod.env
     volumes:
       - media:/home/wger/media
     depends_on:
@@ -96,8 +94,6 @@ services:
     command: /start-beat
     volumes:
       - celery-beat:/home/wger/beat/
-    env_file:
-      - ./config/prod.env
     depends_on:
       celery_worker:
         condition: service_healthy

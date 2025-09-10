@@ -4719,6 +4719,25 @@
     ]
   },
   {
+    "id": "wger",
+    "name": "WGER",
+    "version": "latest",
+    "description": "WGER is a free, open-source web application that manages your exercises, workouts and nutrition. Track your progress, create custom workouts, and manage your fitness journey.",
+    "logo": "wger.png",
+    "links": {
+      "github": "https://github.com/wger-project/wger",
+      "website": "https://wger.de/",
+      "docs": "https://wger.readthedocs.io/"
+    },
+    "tags": [
+      "fitness",
+      "health",
+      "workout",
+      "exercise",
+      "nutrition"
+    ]
+  },
+  {
     "id": "wikijs",
     "name": "Wiki.js",
     "version": "2.5",

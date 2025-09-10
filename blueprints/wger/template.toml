@@ -1,0 +1,132 @@
+[variables]
+main_domain = "${domain}"
+postgres_user = "wger"
+postgres_password = "${password:32}"
+postgres_db = "wger"
+timezone = "Europe/Berlin"
+django_secret_key = "${password:64}"
+redis_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "nginx"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "${postgres_db}"
+TIMEZONE = "${timezone}"
+
+[[config.mounts]]
+filePath = "config/prod.env"
+content = """
+# Django configuration
+DEBUG=False
+SECRET_KEY=${django_secret_key}
+ALLOWED_HOSTS=${main_domain},localhost,127.0.0.1
+CSRF_TRUSTED_ORIGINS=https://${main_domain},http://${main_domain}
+
+# Database configuration
+DATABASE_URL=postgresql://${postgres_user}:${postgres_password}@db:5432/${postgres_db}
+
+# Cache configuration
+CACHE_URL=redis://cache:6379/1
+
+# Celery configuration
+CELERY_BROKER_URL=redis://cache:6379/2
+CELERY_RESULT_BACKEND=redis://cache:6379/3
+
+# Email configuration (optional - configure for password reset functionality)
+# EMAIL_HOST=
+# EMAIL_PORT=587
+# EMAIL_HOST_USER=
+# EMAIL_HOST_PASSWORD=
+# EMAIL_USE_TLS=True
+# FROM_EMAIL=noreply@${main_domain}
+
+# Media and static files
+MEDIA_URL=/media/
+STATIC_URL=/static/
+
+# Application settings
+TIME_ZONE=${timezone}
+LANGUAGE_CODE=en-us
+USE_TZ=True
+
+# Security settings
+SECURE_SSL_REDIRECT=False
+SECURE_PROXY_SSL_HEADER=HTTP_X_FORWARDED_PROTO,https
+"""
+
+[[config.mounts]]
+filePath = "config/nginx.conf"
+content = """
+upstream wger {
+    server web:8000;
+}
+
+server {
+    listen 80;
+    server_name ${main_domain};
+    client_max_body_size 50M;
+
+    location / {
+        proxy_pass http://wger;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_redirect off;
+    }
+
+    location /static/ {
+        alias /wger/static/;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+
+    location /media/ {
+        alias /wger/media/;
+        expires 7d;
+        add_header Cache-Control "public";
+    }
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+}
+"""
+
+[[config.mounts]]
+filePath = "config/redis.conf"
+content = """
+# Redis configuration for WGER
+bind 0.0.0.0
+port 6379
+timeout 0
+tcp-keepalive 300
+
+# Memory and persistence
+save 900 1
+save 300 10
+save 60 10000
+stop-writes-on-bgsave-error yes
+rdbcompression yes
+rdbchecksum yes
+dbfilename dump.rdb
+dir /data
+
+# Logging
+loglevel notice
+logfile ""
+
+# Security
+protected-mode no
+
+# Memory management
+maxmemory-policy allkeys-lru
+"""

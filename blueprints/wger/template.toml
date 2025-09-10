@@ -235,7 +235,7 @@ NUMBER_OF_PROXIES="1"
 GUNICORN_CMD_ARGS="--workers 3 --threads 2 --worker-class gthread --proxy-protocol True --timeout 240"
 
 [[config.mounts]]
-filePath = "config/nginx.conf"
+filePath = "/etc/nginx/conf.d/default.conf"
 content = """
 upstream wger {
     server web:8000;
@@ -270,7 +270,7 @@ server {
 """
 
 [[config.mounts]]
-filePath = "config/redis.conf"
+filePath = "/usr/local/etc/redis/redis.conf"
 content = """
 # Redis configuration for WGER
 bind 0.0.0.0
@@ -298,4 +298,3 @@ protected-mode no
 # Memory management
 maxmemory-policy allkeys-lru
 """
-

@@ -13,7 +13,7 @@ services:
       - ./data:/data
       - ./logs:/app/logs
     environment:
-      - SQL_DSN=${MYSQL_USERNAME}:${MYSQL_PASSWWORD}@tcp(mysql:3306)/{MYSQL_DATABASE}  # Point to the mysql service
+      - SQL_DSN=${MYSQL_USERNAME}:${MYSQL_PASSWORD}@tcp(mysql:3306)/{MYSQL_DATABASE}  # Point to the mysql service
       - REDIS_CONN_STRING=redis://redis
       - TZ=${GENERIC_TIMEZONE}
       - ERROR_LOG_ENABLED=true # 是否启用错误日志记录
@@ -42,7 +42,7 @@ services:
     container_name: mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWWORD}  # Ensure this matches the password in SQL_DSN
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}  # Ensure this matches the password in SQL_DSN
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - mysql_data:/var/lib/mysql

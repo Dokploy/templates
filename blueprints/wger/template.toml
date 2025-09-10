@@ -51,81 +51,28 @@ SECRET_KEY="${secret_key}"
 # Signing key used for JWT, use something different than the secret key
 SIGNING_KEY="${signing_key}"
 
-# The server's timezone, for a list of possible names:
-# https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+# The server's timezone
 TIME_ZONE="${timezone}"
 TZ="${timezone}"
 
-#
-# If you get CSRF errors set your domain here
-# Consult the docs for more details:
-# https://wger.readthedocs.io/en/latest/production/docker.html#if-you-get-csrf-errors
-# CSRF_TRUSTED_ORIGINS=https://my.domain.example.com,https://118.999.881.119
-# X_FORWARDED_PROTO_HEADER_SET=True
-
-#
-# Static files
-# If you are running the application behind a reverse proxy or changed the port, the
-# links for some images *might* break (specially in the mobile app). Also note that
-# the API response is cached and contains the host, if you change this setting, just run
-# docker compose exec web python3 manage.py warmup-exercise-api-cache --force
-# MEDIA_URL=https://your-domain.example.com/media/
-# STATIC_URL=https://your-domain.example.com/static/
-
-#
-# Application
-WGER_INSTANCE="https://wger.de" # Wger instance from which to sync exercises, images, etc.
+# Application Settings
+WGER_INSTANCE="https://wger.de"
 ALLOW_REGISTRATION="${allow_registration}"
 ALLOW_GUEST_USERS="${allow_guest_users}"
 ALLOW_UPLOAD_VIDEOS="${allow_upload_videos}"
-
-# Users won't be able to contribute to exercises if their account age is
-# lower than this amount in days.
 MIN_ACCOUNT_AGE_TO_TRUST="${min_account_age_to_trust}"
-
-# Synchronzing exercises
-# It is recommended to keep the local database synchronized with the wger
-# instance specified in WGER_INSTANCE since there are new added or translations
-# improved. For this you have different possibilities:
-# - Sync exercises on startup:
-# SYNC_EXERCISES_ON_STARTUP=True
-# DOWNLOAD_EXERCISE_IMAGES_ON_STARTUP=True
-# - Sync them in the background with celery. This will setup a job that will run
-#   once a week at a random time (this time is selected once when starting the server)
 SYNC_EXERCISES_CELERY="${sync_exercises_celery}"
 SYNC_EXERCISE_IMAGES_CELERY="${sync_exercise_images_celery}"
 SYNC_EXERCISE_VIDEOS_CELERY="${sync_exercise_videos_celery}"
-# - Manually trigger the process as needed:
-#   docker compose exec web python3 manage.py sync-exercises
-#   docker compose exec web python3 manage.py download-exercise-images
-#   docker compose exec web python3 manage.py download-exercise-videos
-
-# Synchronzing ingredients
-# You can also syncronize the ingredients from a remote wger instance, and have
-# basically the same options as for the ingredients:
-# - Sync them in the background with celery. This will setup a job that will run
-#   once a week at a random time (this time is selected once when starting the server)
 SYNC_INGREDIENTS_CELERY="${sync_ingredients_celery}"
-# - Manually trigger the process as needed:
-#   docker compose exec web python3 manage.py sync-ingredients
-
-# This option controls whether to download ingredients and their images from the
-# configured wger instance. When scanning products with the barcode scanner, it is
-# possible to dynamically fetch the ingredient if it is not known in the local database.
-# Possible values: WGER or None. Requires USE_CELERY to be set to true.
 DOWNLOAD_INGREDIENTS_FROM="${download_ingredients_from}"
-
-# Whether celery is configured and should be used. Can be left to true with
-# this setup but can be deactivated if you are using the app in some other way
 USE_CELERY="${use_celery}"
 
-#
 # Celery
 CELERY_BROKER="redis://cache:6379/2"
 CELERY_BACKEND="redis://cache:6379/2"
 CELERY_FLOWER_PASSWORD="${flower_password}"
 
-#
 # Database
 DJANGO_DB_ENGINE="django.db.backends.postgresql"
 DJANGO_DB_DATABASE="${postgres_db}"
@@ -133,108 +80,47 @@ DJANGO_DB_USER="${postgres_user}"
 DJANGO_DB_PASSWORD="${postgres_password}"
 DJANGO_DB_HOST="db"
 DJANGO_DB_PORT="5432"
-DJANGO_PERFORM_MIGRATIONS="True" # Perform any new database migrations on startup
+DJANGO_PERFORM_MIGRATIONS="True"
 
-#
 # Cache
 DJANGO_CACHE_BACKEND="django_redis.cache.RedisCache"
 DJANGO_CACHE_LOCATION="redis://cache:6379/1"
-DJANGO_CACHE_TIMEOUT="1296000" # in seconds - 60*60*24*15, 15 Days
+DJANGO_CACHE_TIMEOUT="1296000"
 DJANGO_CACHE_CLIENT_CLASS="django_redis.client.DefaultClient"
-# DJANGO_CACHE_CLIENT_PASSWORD=abcde... # Only if you changed the redis config
-# DJANGO_CACHE_CLIENT_SSL_KEYFILE=/path/to/ssl_keyfile # Path to an ssl private key.
-# DJANGO_CACHE_CLIENT_SSL_CERTFILE=/path/to/ssl_certfile # Path to an ssl certificate.
-# DJANGO_CACHE_CLIENT_SSL_CERT_REQS=<none | optional | required> # The string value for the verify_mode.
-# DJANGO_CACHE_CLIENT_SSL_CHECK_HOSTNAME=False # If set, match the hostname during the SSL handshake.
 
-#
 # Brute force login attacks
-# https://django-axes.readthedocs.io/en/latest/index.html
 AXES_ENABLED="True"
 AXES_FAILURE_LIMIT="10"
-AXES_COOLOFF_TIME="30" # in minutes
+AXES_COOLOFF_TIME="30"
 AXES_HANDLER="axes.handlers.cache.AxesCacheHandler"
 AXES_LOCKOUT_PARAMETERS="ip_address"
 AXES_IPWARE_PROXY_COUNT="1"
 AXES_IPWARE_META_PRECEDENCE_ORDER="HTTP_X_FORWARDED_FOR,REMOTE_ADDR"
 
-#
 # Others
 DJANGO_DEBUG="False"
 WGER_USE_GUNICORN="True"
-EXERCISE_CACHE_TTL="18000" # in seconds - 5*60*60, 5 hours
+EXERCISE_CACHE_TTL="18000"
 SITE_URL="http://localhost"
-
-#
-# JWT auth
-ACCESS_TOKEN_LIFETIME="10" # The lifetime duration of the access token, in minutes
-REFRESH_TOKEN_LIFETIME="24" # The lifetime duration of the refresh token, in hours
-
-#
-# Auth Proxy Authentication
-#
-# Please read the documentation before enabling this feature:
-# https://wger.readthedocs.io/en/latest/administration/auth_proxy.html
-AUTH_PROXY_HEADER=""
-AUTH_PROXY_TRUSTED_IPS=""
-AUTH_PROXY_CREATE_UNKNOWN_USER=""
-AUTH_PROXY_USER_EMAIL_HEADER=""
-AUTH_PROXY_USER_NAME_HEADER=""
-
-#
-# Other possible settings
-# Log level: possible values: DEBUG, INFO, WARNING, ERROR, CRITICAL
+ACCESS_TOKEN_LIFETIME="10"
+REFRESH_TOKEN_LIFETIME="24"
 LOG_LEVEL_PYTHON="INFO"
-
-# Recaptcha keys. You will need to create an account and register your domain
-# https://www.google.com/recaptcha/
-# RECAPTCHA_PUBLIC_KEY=abcde...
-# RECAPTCHA_PRIVATE_KEY=abcde...
 USE_RECAPTCHA="False"
-
-# Clears the static files before copying the new ones (i.e. just calls collectstatic
-# with the appropriate flag: "manage.py collectstatic --no-input --clear"). Usually
-# This can be left like this but if you have problems and new static files are not
-# being copied correctly, clearing everything might help
 DJANGO_CLEAR_STATIC_FIRST="False"
+NUMBER_OF_PROXIES="1"
+GUNICORN_CMD_ARGS="--workers 3 --threads 2 --worker-class gthread --proxy-protocol True --timeout 240"
 
-#
 # Email
-# https://docs.djangoproject.com/en/4.1/topics/email/#smtp-backend
 ENABLE_EMAIL="${enable_email}"
 EMAIL_HOST="${email_host}"
 EMAIL_PORT="${email_port}"
 EMAIL_HOST_USER="${email_host_user}"
 EMAIL_HOST_PASSWORD=""
 EMAIL_USE_TLS="${email_use_tls}"
-# EMAIL_USE_SSL=False
 FROM_EMAIL="wger Workout Manager <${from_email}>"
 
-# Set your name and email to be notified if an internal server error occurs.
-# Needs a working email configuration
-# DJANGO_ADMINS=your name,email@example.com
-
-# Whether to compress css and js files into one (of each)
-# COMPRESS_ENABLED=True
-
-#
-# Django Rest Framework
-# The number of proxies in front of the application. In the default configuration
-# only nginx is. Change as approtriate if your setup differs. Also note that this
-# is only used when throttling API requests.
-NUMBER_OF_PROXIES="1"
-
-#
-# Gunicorn
-#
-# Additional gunicorn options, change as needed.
-# For the number of workers to spawn, a usually recommended value is (2 x $num_cores) + 1
-# see:
-#   - https://docs.gunicorn.org/en/stable/settings.html
-#   - https://github.com/wger-project/wger/blob/master/extras/docker/production/entrypoint.sh#L95
-GUNICORN_CMD_ARGS="--workers 3 --threads 2 --worker-class gthread --proxy-protocol True --timeout 240"
-
 [[config.mounts]]
+serviceName = "nginx"
 filePath = "/etc/nginx/conf.d/default.conf"
 content = """
 upstream wger {
@@ -270,31 +156,29 @@ server {
 """
 
 [[config.mounts]]
+serviceName = "cache"
 filePath = "/usr/local/etc/redis/redis.conf"
 content = """
-# Redis configuration for WGER
+# Wger-specific Redis Configuration
 bind 0.0.0.0
+protected-mode no
 port 6379
-timeout 0
-tcp-keepalive 300
 
-# Memory and persistence
-save 900 1
-save 300 10
-save 60 10000
+# Set a 1GB memory limit to prevent runaway RAM usage
+maxmemory 1gb
+
+# IMPORTANT: Evict only keys with an expiration set (LRU)
+maxmemory-policy volatile-lru
+
+# Persistence settings from official Wger config
+save 3600 1 300 100 60 10000
+
+# Standard Redis settings for persistence
 stop-writes-on-bgsave-error yes
 rdbcompression yes
 rdbchecksum yes
 dbfilename dump.rdb
 dir /data
-
-# Logging
 loglevel notice
 logfile ""
-
-# Security
-protected-mode no
-
-# Memory management
-maxmemory-policy allkeys-lru
 """

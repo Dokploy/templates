@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+jwt_secret = "${password:32}"
+jwt_refresh_secret = "${password:32}"
+express_secret = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "flowise"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+JWT_AUTH_TOKEN_SECRET = "${jwt_secret}"
+JWT_REFRESH_TOKEN_SECRET = "${jwt_refresh_secret}"
+EXPRESS_SESSION_SECRET = "${express_secret}"
+
+[[config.mounts]]
+name = "flowise_data"
+mountPath = "/root/.flowise"
+
+[[config.mounts]]
+name = "redis_data"
+mountPath = "/data"

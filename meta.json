@@ -1930,6 +1930,24 @@
     ]
   },
   {
+    "id": "flowise",
+    "name": "Flowise",
+    "version": "latest",
+    "description": "Flowise is an open-source UI visual tool to build and run LLM-powered applications.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/FlowiseAI/Flowise",
+      "website": "https://flowiseai.com/",
+      "docs": "https://docs.flowiseai.com/"
+    },
+    "tags": [
+      "AI",
+      "LLM",
+      "workflow",
+      "automation"
+    ]
+  },
+  {
     "id": "focalboard",
     "name": "Focalboard",
     "version": "8.0.0",

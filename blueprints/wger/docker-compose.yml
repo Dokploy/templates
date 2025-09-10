@@ -28,6 +28,7 @@ services:
     depends_on:
       - web
     volumes:
+      - ../files/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - static:/wger/static:ro
       - media:/wger/media:ro
     expose:

@@ -1407,6 +1407,25 @@
     ]
   },
   {
+    "id": "cup",
+    "name": "Cup",
+    "version": "latest",
+    "description": "Cup is a self-hosted Docker container management UI.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/sergi0g/cup",
+      "website": "https://cup.sh",
+      "docs": "https://github.com/sergi0g/cup"
+    },
+    "tags": [
+      "docker",
+      "container",
+      "management",
+      "ui",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "cyberchef",
     "name": "CyberChef",
     "version": "latest",

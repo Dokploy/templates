@@ -1,36 +1,27 @@
+x-custom-image: &custom_image
+  image: calciumion/new-api:latest
+  pull_policy: ${PULL_POLICY:-always}
+  deploy:
+    restart_policy:
+      condition: always
 services:
   new-api:
-    image: calciumion/new-api:latest
-    container_name: new-api
-
-##          - "traefik.http.routers.new-api.entrypoints=websecure"
-##          - "traefik.http.services.new-api.loadbalancer.server.port=3000" # Port your app listens on
-    restart: always
-    command: --log-dir /app/logs
+    <<: *custom_image
+    command: --port 4000 --log-dir /app/logs
     ports:
-      - "3000"
+      - "4000:4000"
     volumes:
       - ./data:/data
       - ./logs:/app/logs
     environment:
-      - SQL_DSN=${MYSQL_USERNAME}:${MYSQL_PASSWORD}@tcp(mysql:3306)/{MYSQL_DATABASE}  # Point to the mysql service
+      - SQL_DSN=${MYSQL_USERNAME}:${MYSQL_PASSWORD}@tcp(mysql:3306)/${MYSQL_DATABASE}  # Point to the mysql service
       - REDIS_CONN_STRING=redis://redis
       - TZ=${GENERIC_TIMEZONE}
-      - ERROR_LOG_ENABLED=true # 是否启用错误日志记录
-    #      - STREAMING_TIMEOUT=120  # 流模��无响应超时时间，单位秒，默认120秒，如果出现空补全可以尝试改为更大值
-    #      - SESSION_SECRET=random_string  # 多机部署时设置，必须修改这个随机字符串！！！！！！�����
-    #      - NODE_TYPE=slave  # Uncomment for slave node in multi-node deployment
-    #      - SYNC_FREQUENCY=60  # Uncomment if regular database syncing is needed
-    #      - FRONTEND_BASE_URL=https://openai.justsong.cn  # Uncomment for multi-node deployment with front-end URL
-
+      - ERROR_LOG_ENABLED=true 
     depends_on:
       - redis
       - mysql
-    healthcheck:
-      test: ["CMD-SHELL", "wget -q -O - http://localhost:3000/api/status | grep -o '\"success\":\\s*true' | awk -F: '{print $$2}'"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    
   redis:
     image: redis:latest
     container_name: redis

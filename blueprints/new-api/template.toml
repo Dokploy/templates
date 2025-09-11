@@ -1,13 +1,22 @@
 [variables]
 main_domain = "${domain}"
-
+mysql_username = "root"
+mysql_database = "newapi"
+mysql_password = "SeekGPTMySQL3036"
+generic_timezone = "Asia/Kolkata"
 [config]
 [[config.domains]]
 serviceName = "new-api"
-port = 3000
+port = 4000
 host = "${main_domain}"
 
 
 [config.env]
-
+env = [
+  "SITE_NAME=${main_domain}",
+  "MYSQL_PASSWORD=${mysql_password}",
+  "MYSQL_USERNAME=${mysql_username}",
+  "MYSQL_DATABASE=${mysql_database}",
+  "GENERIC_TIMEZONE=${generic_timezone}"
+]
 [[config.mounts]]

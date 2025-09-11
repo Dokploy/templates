@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "new-api"
+port = 3000
+host = "${main_domain}"
+
+
+[config.env]
+
+[[config.mounts]]

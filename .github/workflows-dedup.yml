@@ -13,10 +13,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate blueprint folders and files
-        run: |
-          echo "🔍 Validating blueprints folder structure..."
-          node dedupe-and-sort-meta.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        working-directory: ./
+        run: pnpm install
+
+      - name: Build
+        working-directory: ./
+        run: node dedupe-and-sort-meta.js

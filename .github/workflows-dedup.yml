@@ -1,0 +1,22 @@
+name: Validate Blueprints Structure and Meta
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate blueprint folders and files
+        run: |
+          echo "🔍 Validating blueprints folder structure..."
+          node dedupe-and-sort-meta.js

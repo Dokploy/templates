@@ -3241,7 +3241,7 @@
     "name": "New API Service",
     "version": "0.9.0",
     "description": "New API Service for various applications.",
-    "logo": "newapi.png",
+    "logo": "new-api.png",
     "links": {
       "github": "https://github.com/QuantumNous/new-api",
       "website": "https://ai.seekgpt.org",

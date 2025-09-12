@@ -1,0 +1,43 @@
+x-custom-image: &custom_image
+  image: calciumion/new-api:latest
+  pull_policy: ${PULL_POLICY:-always}
+  deploy:
+    restart_policy:
+      condition: always
+services:
+  new-api:
+    <<: *custom_image
+    command: --port 4000 --log-dir /app/logs
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - SQL_DSN=${MYSQL_USERNAME}:${MYSQL_PASSWORD}@tcp(mysql:3306)/${MYSQL_DATABASE}  # Point to the mysql service
+      - REDIS_CONN_STRING=redis://redis
+      - TZ=${GENERIC_TIMEZONE}
+      - ERROR_LOG_ENABLED=true 
+    depends_on:
+      - redis
+      - mysql
+    
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+   
+
+  mysql:
+    image: mysql:8.2
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}  # Ensure this matches the password in SQL_DSN
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306"  # If you want to access MySQL from outside Docker, uncomment
+volumes:
+  mysql_data:

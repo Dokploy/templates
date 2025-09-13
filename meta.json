@@ -1391,6 +1391,25 @@
     ]
   },
   {
+    "id": "crawl4ai",
+    "name": "Crawl4AI",
+    "version": "0.7.3",
+    "description": "Crawl4AI is a modern AI-powered web crawler with support for screenshots, PDFs, JavaScript execution, and LLM-based extraction. Includes an interactive playground and MCP (Model Context Protocol) integration.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/unclecode/crawl4ai",
+      "website": "https://crawl4ai.com",
+      "docs": "https://github.com/unclecode/crawl4ai#readme"
+    },
+    "tags": [
+      "crawler",
+      "scraping",
+      "AI",
+      "LLM",
+      "API"
+    ]
+  },
+  {
     "id": "crowdsec",
     "name": "Crowdsec",
     "version": "latest",

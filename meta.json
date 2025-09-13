@@ -3270,7 +3270,7 @@
   {
     "id": "nocodb",
     "name": "NocoDB",
-    "version": "0.257.2",
+    "version": "latest",
     "description": "NocoDB is an opensource Airtable alternative that turns any MySQL, PostgreSQL, SQL Server, SQLite & MariaDB into a smart spreadsheet.",
     "links": {
       "github": "https://github.com/nocodb/nocodb",

@@ -1,0 +1,43 @@
+name = "ojs-dokploy-template"
+version = "1.0"
+description = "A Docker Compose template to deploy Open Journal Systems (OJS) with MariaDB using Dokploy."
+author = "Shardul Vanage"
+
+[environment]
+COMPOSE_PROJECT_NAME = "ojs"
+PROJECT_DOMAIN = "yourdomain.com"
+SERVERNAME = "yourdomain.com"
+
+OJS_IMAGE = "ojs"
+OJS_VERSION = "3_3_0-21"
+
+HTTP_PORT = "8081"
+HTTPS_PORT = "8481"
+
+MYSQL_ROOT_PASSWORD = "strongpassword"
+OJS_DB_HOST = "db"
+OJS_DB_DRIVER = "mysqli"
+OJS_DB_USER = "ojs"
+OJS_DB_PASSWORD = "strongpassword"
+OJS_DB_NAME = "ojs"
+
+[template]
+startup_command = "docker-compose up -d"
+docker_compose_file = "docker-compose.yml"
+
+[ports]
+"http" = "8081"
+"https" = "8481"
+
+[volumes]
+"volumes/db" = "persistent"
+"volumes/config" = "persistent"
+"volumes/public" = "persistent"
+"volumes/private" = "persistent"
+"volumes/db-import" = "persistent"
+"volumes/logs/app" = "persistent"
+"volumes/logs/db" = "persistent"
+
+[networks]
+"inside" = "bridge"
+"proxy" = "external"

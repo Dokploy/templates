@@ -3747,6 +3747,23 @@
     ]
   },
   {
+    "id": "plark",
+    "name": "Plark",
+    "version": "latest",
+    "description": "Self-hosted Website Builder",
+    "logo": "plark.svg",
+    "links": {
+      "github": "https://github.com/plark-inc/render",
+      "website": "https://plark.com",
+      "docs": "https://plark.com/get-started"
+    },
+    "tags": [
+      "cms",
+      "content-management",
+      "blog"
+    ]
+  },
+  {
     "id": "plausible",
     "name": "Plausible",
     "version": "v2.1.5",

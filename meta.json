@@ -3732,6 +3732,22 @@
     ]
   },
   {
+    "id": "plark",
+    "name": "Plark",
+    "version": "latest",
+    "description": "Self-hosted Website Builder",
+    "logo": "plark.svg",
+    "links": {
+      "website": "https://plark.com",
+      "docs": "https://plark.com/get-started"
+    },
+    "tags": [
+      "cms",
+      "content-management",
+      "blog"
+    ]
+  },
+  {
     "id": "plane",
     "name": "Plane",
     "version": "v0.27.1",

@@ -3738,6 +3738,7 @@
     "description": "Self-hosted Website Builder",
     "logo": "plark.svg",
     "links": {
+      "github":"https://github.com/plark-inc/render",
       "website": "https://plark.com",
       "docs": "https://plark.com/get-started"
     },

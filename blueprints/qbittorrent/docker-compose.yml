@@ -24,15 +24,6 @@ services:
       - 6881:6881/udp
     labels:
       - "traefik.enable=true"
-
-      # Router (HTTPS)
-      - "traefik.http.routers.qbit.rule=Host(`${QBIT_DOMAIN}`)"
-      - "traefik.http.routers.qbit.entrypoints=websecure"
-      - "traefik.http.routers.qbit.tls.certresolver=letsencrypt"
-
-      # Service (send traffic to container port 8080)
-      - "traefik.http.services.qbit.loadbalancer.server.port=8080"
-
 volumes:
   qb_config:
   qb_downloads:

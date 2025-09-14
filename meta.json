@@ -123,6 +123,26 @@
     ]
   },
   {
+    "id": "agentdvr",
+    "name": "Agent DVR",
+    "version": "latest",
+    "description": "Agent DVR is a comprehensive video surveillance software with motion detection, alerts, and remote access capabilities.",
+    "logo": "agentdvr.png",
+    "links": {
+      "github": "https://github.com/ispysoftware/AgentDVR",
+      "website": "https://www.ispyconnect.com/",
+      "docs": "https://www.ispyconnect.com/userguide-agent-dvr.aspx"
+    },
+    "tags": [
+      "surveillance",
+      "security",
+      "video",
+      "monitoring",
+      "dvr",
+      "camera"
+    ]
+  },
+  {
     "id": "akaunting",
     "name": "Akaunting",
     "version": "latest",
@@ -206,6 +226,24 @@
     "tags": [
       "file-sharing",
       "privacy"
+    ]
+  },
+  {
+    "id": "anse",
+    "name": "Anse",
+    "version": "latest",
+    "description": "Anse is an open-source alternative to ChatGPT web UI, supporting OpenAI-compatible APIs.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/ddiu8081/anse",
+      "website": "https://anse.app/",
+      "docs": "https://github.com/ddiu8081/anse#readme"
+    },
+    "tags": [
+      "ai",
+      "chatbot",
+      "openai",
+      "ui"
     ]
   },
   {
@@ -471,6 +509,26 @@
     ]
   },
   {
+    "id": "azuracast",
+    "name": "AzuraCast",
+    "version": "latest",
+    "description": "AzuraCast is a self-hosted, all-in-one web radio management suite. Easily manage your online radio stations with a powerful web interface.",
+    "logo": "azuracast.png",
+    "links": {
+      "github": "https://github.com/AzuraCast/AzuraCast",
+      "website": "https://www.azuracast.com/",
+      "docs": "https://docs.azuracast.com/"
+    },
+    "tags": [
+      "radio",
+      "streaming",
+      "media",
+      "broadcasting",
+      "music",
+      "entertainment"
+    ]
+  },
+  {
     "id": "babybuddy",
     "name": "BabyBuddy",
     "version": "2.7.0",
@@ -705,6 +763,25 @@
     "tags": [
       "browser",
       "automation"
+    ]
+  },
+  {
+    "id": "budget-board",
+    "name": "Budget Board",
+    "version": "release",
+    "description": "Self-hosted budgeting app with a web UI and a server backed by PostgreSQL.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/teelur/budget-board",
+      "website": "https://budgetboard.net/",
+      "docs": "https://budgetboard.net/"
+    },
+    "tags": [
+      "finance",
+      "postgres",
+      "self-hosted",
+      "docker",
+      "compose"
     ]
   },
   {
@@ -1333,6 +1410,25 @@
     ]
   },
   {
+    "id": "crawl4ai",
+    "name": "Crawl4AI",
+    "version": "0.7.3",
+    "description": "Crawl4AI is a modern AI-powered web crawler with support for screenshots, PDFs, JavaScript execution, and LLM-based extraction. Includes an interactive playground and MCP (Model Context Protocol) integration.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/unclecode/crawl4ai",
+      "website": "https://crawl4ai.com",
+      "docs": "https://github.com/unclecode/crawl4ai#readme"
+    },
+    "tags": [
+      "crawler",
+      "scraping",
+      "AI",
+      "LLM",
+      "API"
+    ]
+  },
+  {
     "id": "crowdsec",
     "name": "Crowdsec",
     "version": "latest",
@@ -1346,6 +1442,25 @@
     "tags": [
       "security",
       "firewall"
+    ]
+  },
+  {
+    "id": "cup",
+    "name": "Cup",
+    "version": "latest",
+    "description": "Cup is a self-hosted Docker container management UI.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/sergi0g/cup",
+      "website": "https://cup.sh",
+      "docs": "https://github.com/sergi0g/cup"
+    },
+    "tags": [
+      "docker",
+      "container",
+      "management",
+      "ui",
+      "self-hosted"
     ]
   },
   {
@@ -1872,6 +1987,24 @@
     ]
   },
   {
+    "id": "flowise",
+    "name": "Flowise",
+    "version": "latest",
+    "description": "Flowise is an open-source UI visual tool to build and run LLM-powered applications.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/FlowiseAI/Flowise",
+      "website": "https://flowiseai.com/",
+      "docs": "https://docs.flowiseai.com/"
+    },
+    "tags": [
+      "AI",
+      "LLM",
+      "workflow",
+      "automation"
+    ]
+  },
+  {
     "id": "focalboard",
     "name": "Focalboard",
     "version": "8.0.0",
@@ -2091,9 +2224,9 @@
     "description": "Gitingest is an application that supports Prometheus metrics, Sentry integration, and S3-backed storage.",
     "logo": "image.png",
     "links": {
-      "github": "https://github.com/<your-org>/gitingest",
+      "github": "https://github.com/coderamp-labs/gitingest",
       "website": "https://gitingest.com",
-      "docs": "https://github.com/<your-org>/gitingest#readme"
+      "docs": "https://github.com/coderamp-labs/gitingest#readme"
     },
     "tags": [
       "analytics",
@@ -2408,9 +2541,9 @@
     "description": "Kuno is an internationalized blogging platform with a backend built in Go and a frontend in Next.js.",
     "logo": "image.png",
     "links": {
-      "github": "https://github.com/ictrun/kuno",
-      "website": "https://kuno.zli.li",
-      "docs": "https://github.com/ictrun/kuno#readme"
+      "github": "https://github.com/xuemian168/kuno",
+      "website": "https://qut.edu.kg/",
+      "docs": "https://github.com/xuemian168/kuno#readme"
     },
     "tags": [
       "blog",
@@ -2523,6 +2656,24 @@
     "tags": [
       "developer",
       "tools"
+    ]
+  },
+  {
+    "id": "java",
+    "name": "Java Runtime (Multi-Version)",
+    "version": "8-21",
+    "description": "Configurable Java runtime environment supporting versions 8, 11, 16, 17, and 21. Perfect for Minecraft servers, Spring Boot apps, and custom Java applications.",
+    "logo": "java.png",
+    "links": {
+      "github": "https://github.com/pterodactyl/yolks",
+      "website": "https://java.com/",
+      "docs": "https://docs.oracle.com/en/java/"
+    },
+    "tags": [
+      "java",
+      "minecraft",
+      "runtime",
+      "pterodactyl"
     ]
   },
   {
@@ -2726,6 +2877,22 @@
     "tags": [
       "storage",
       "object-storage"
+      ]
+    {
+    "id": "letterfeed",
+    "name": "Letterfeed",
+    "version": "latest",
+    "description": "Convert email newsletters into RSS feeds",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/leonmuscoden/letterfeed",
+      "website": "https://github.com/leonmuscoden/letterfeed",
+      "docs": "https://github.com/leonmuscoden/letterfeed"
+    },
+    "tags": [
+      "email",
+      "self-hosted",
+      "productivity"
     ]
   },
   {
@@ -3209,6 +3376,25 @@
     ]
   },
   {
+    "id": "ntfy",
+    "name": "NTFY",
+    "version": "latest",
+    "description": "ntfy lets you send push notifications to your phone or desktop via scripts from any computer, using simple HTTP PUT or POST requests.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/binwiederhier/ntfy",
+      "website": "https://ntfy.sh/",
+      "docs": "https://docs.ntfy.sh/"
+    },
+    "tags": [
+      "alerting",
+      "alerts",
+      "api",
+      "notifications",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "obsidian-livesync",
     "name": "Obsidian LiveSync",
     "version": "latest",
@@ -3430,6 +3616,25 @@
     ]
   },
   {
+    "id": "openspeedtest",
+    "name": "OpenSpeedTest",
+    "version": "latest",
+    "description": "OpenSpeedTest is a 100% browser-based HTML5 network performance estimation tool for accurately measuring network speed.",
+    "logo": "openspeedtest.png",
+    "links": {
+      "github": "https://github.com/openspeedtest/Speed-Test",
+      "website": "https://openspeedtest.com/",
+      "docs": "https://github.com/openspeedtest/Speed-Test/wiki"
+    },
+    "tags": [
+      "network",
+      "testing",
+      "performance",
+      "monitoring",
+      "bandwidth"
+    ]
+  },
+  {
     "id": "otterwiki",
     "name": "Otter Wiki",
     "version": "2",
@@ -3632,6 +3837,23 @@
     ]
   },
   {
+    "id": "plark",
+    "name": "Plark",
+    "version": "latest",
+    "description": "Self-hosted Website Builder",
+    "logo": "plark.svg",
+    "links": {
+      "github": "https://github.com/plark-inc/render",
+      "website": "https://plark.com",
+      "docs": "https://plark.com/get-started"
+    },
+    "tags": [
+      "cms",
+      "content-management",
+      "blog"
+    ]
+  },
+  {
     "id": "plausible",
     "name": "Plausible",
     "version": "v2.1.5",
@@ -3701,9 +3923,9 @@
   {
     "id": "portainer",
     "name": "Portainer",
-    "version": "2.21.4",
+    "version": "latest",
     "description": "Portainer is a container management tool for deploying, troubleshooting, and securing applications across cloud, data centers, and IoT.",
-    "logo": "portainer.svg",
+    "logo": "portainer.png",
     "links": {
       "github": "https://github.com/portainer/portainer",
       "website": "https://www.portainer.io/",
@@ -4258,8 +4480,8 @@
     "logo": "logo.svg",
     "links": {
       "github": "https://github.com/msgbyte/tianji",
-      "website": "https://github.com/msgbyte/tianji",
-      "docs": "https://github.com/msgbyte/tianji"
+      "website": "https://tianji.dev/",
+      "docs": "https://tianji.dev/docs/intro"
     },
     "tags": [
       "analytics",
@@ -4357,7 +4579,7 @@
   {
     "id": "trmnl-byos-laravel",
     "name": "TRMNL BYOS Laravel",
-    "version": "0.3.2",
+    "version": "0.14.0",
     "description": "TRMNL BYOS Laravel is a self-hosted application to manage TRMNL e-ink devices.",
     "logo": "byos-laravel.svg",
     "links": {

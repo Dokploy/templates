@@ -3,8 +3,8 @@ main_domain = "${domain}"
 
 [config]
 [[config.domains]]
-serviceName = "portainer"
-port = 9000
+serviceName = "openspeedtest"
+port = 3000
 host = "${main_domain}"
 
 [config.env]

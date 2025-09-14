@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${password:32}"
+site_password = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "anse-demo"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+OPENAI_API_KEY = ""
+OPENAI_API_BASE_URL = "https://api.openai.com"
+HEAD_SCRIPTS = ""
+SECRET_KEY = "${secret_key}"
+SITE_PASSWORD = "${site_password}"
+OPENAI_API_MODEL = "gpt-4o-mini"

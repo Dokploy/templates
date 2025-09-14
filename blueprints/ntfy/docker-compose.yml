@@ -1,0 +1,23 @@
+services:
+  ntfy:
+    image: binwiederhier/ntfy
+    restart: unless-stopped
+    command:
+      - serve
+    ports:
+      - "${HTTP_PORT}"
+    volumes:
+      - ntfy-data:/var/lib/ntfy
+      - ntfy-cache:/var/cache/ntfy
+      - ../files/server.yml:/etc/ntfy/server.yml:ro
+      - ../files/templates:/etc/ntfy/templates:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --tries=1 http://localhost:${HTTP_PORT}/v1/health -O - | grep -Eo '\"healthy\"\\s*:\\s*true' || exit 1"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  ntfy-data:
+  ntfy-cache:

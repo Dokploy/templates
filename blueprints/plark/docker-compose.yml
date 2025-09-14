@@ -1,0 +1,10 @@
+services:
+  plark:
+    image: plarkinc/plark:latest
+    restart: unless-stopped
+    ports:
+      - "80"
+    volumes:
+      - plark-data:/var/data
+volumes:
+  plark-data:

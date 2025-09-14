@@ -3,8 +3,8 @@ main_domain = "${domain}"
 
 [config]
 [[config.domains]]
-serviceName = "portainer"
-port = 9000
+serviceName = "plark"
+port = 80
 host = "${main_domain}"
 
 [config.env]

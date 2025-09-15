@@ -31,6 +31,7 @@ services:
       - paymenter-public:/app/storage/app/public
     environment:
       - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=false
       - APP_KEY=${APP_KEY}
       - APP_URL=${APP_URL}
       - DB_CONNECTION=mysql
@@ -42,6 +43,7 @@ services:
       - CACHE_STORE=redis
       - REDIS_HOST=cache
       - REDIS_PORT=6379
+      - TRUSTED_PROXIES=*
 
 volumes:
   paymenter-database: {}

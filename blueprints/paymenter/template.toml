@@ -9,6 +9,7 @@ mysql_root_password = "${password:20}"
 serviceName = "paymenter"
 port = 80
 host = "${main_domain}"
+path = "/"
 
 [config.env]
 APP_URL = "https://${main_domain}"

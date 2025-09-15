@@ -3690,6 +3690,27 @@
     ]
   },
   {
+    "id": "paymenter",
+    "name": "Paymenter",
+    "version": "latest",
+    "description": "Paymenter is a modern billing and payment management system for hosting providers, with automation, invoicing, and client management features.",
+    "logo": "paymenter.png",
+    "links": {
+      "github": "https://github.com/Paymenter/Paymenter",
+      "website": "https://paymenter.org/",
+      "docs": "https://paymenter.org/docs/"
+    },
+    "tags": [
+      "billing",
+      "payment",
+      "hosting",
+      "invoicing",
+      "business",
+      "automation",
+      "client-management"
+    ]
+  },
+  {
     "id": "penpot",
     "name": "Penpot",
     "version": "2.3.2",

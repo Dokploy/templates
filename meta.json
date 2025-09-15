@@ -3164,6 +3164,26 @@
     ]
   },
   {
+    "id": "navidrome",
+    "name": "Navidrome",
+    "version": "latest",
+    "description": "Navidrome is a modern music server and streamer compatible with Subsonic/Airsonic. Stream your music collection anywhere.",
+    "logo": "navidrome.png",
+    "links": {
+      "github": "https://github.com/navidrome/navidrome",
+      "website": "https://www.navidrome.org/",
+      "docs": "https://www.navidrome.org/docs/"
+    },
+    "tags": [
+      "music",
+      "streaming",
+      "media-server",
+      "subsonic",
+      "self-hosted",
+      "audio"
+    ]
+  },
+  {
     "id": "neko",
     "name": "Neko",
     "version": "latest",

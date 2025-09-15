@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  navidrome:
+    image: deluan/navidrome:latest
+    restart: unless-stopped
+    user: 1000:1000
+    environment:
+      - ND_SCANSCHEDULE=1h
+      - ND_LOGLEVEL=info
+      - ND_SESSIONTIMEOUT=24h
+      - ND_BASEURL=""
+    volumes:
+      - navidrome-data:/data
+      - navidrome-music:/music:ro
+    ports:
+      - 4533
+
+volumes:
+  navidrome-data: {}
+  navidrome-music: {}

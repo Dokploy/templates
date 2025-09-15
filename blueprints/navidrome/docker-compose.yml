@@ -1,10 +1,7 @@
-version: "3.8"
-
 services:
   navidrome:
     image: deluan/navidrome:latest
     restart: unless-stopped
-    user: 1000:1000
     environment:
       - ND_SCANSCHEDULE=1h
       - ND_LOGLEVEL=info

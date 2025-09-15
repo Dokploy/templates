@@ -3525,6 +3525,26 @@
     ]
   },
   {
+    "id": "owncast",
+    "name": "Owncast",
+    "version": "latest",
+    "description": "Owncast is a self-hosted live video streaming and chat server for use with existing broadcasting software.",
+    "logo": "owncast.png",
+    "links": {
+      "github": "https://github.com/owncast/owncast",
+      "website": "https://owncast.online/",
+      "docs": "https://owncast.online/docs/"
+    },
+    "tags": [
+      "streaming",
+      "live-video",
+      "chat",
+      "broadcasting",
+      "self-hosted",
+      "rtmp"
+    ]
+  },
+  {
     "id": "palmr",
     "name": "Palmr",
     "version": "latest",

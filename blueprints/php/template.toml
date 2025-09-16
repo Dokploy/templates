@@ -1,5 +1,9 @@
 [variables]
 main_domain = "${domain}"
+mysql_root_password = "${password:16}"
+mysql_database = "appdb"
+mysql_user = "appuser"
+mysql_password = "${password:16}"
 
 [config]
 
@@ -11,5 +15,15 @@ host = "${main_domain}"
 [[config.mounts]]
 filePath = "/var/www/html/index.php"
 content = """<?php
-echo "Hello from Dokploy PHP Template!";
-"""
+$servername = "db";
+$username = getenv("MYSQL_USER");
+$password = getenv("MYSQL_PASSWORD");
+$database = getenv("MYSQL_DATABASE");
+
+$conn = new mysqli($servername, $username, $password, $database);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+echo "Connected successfully to MySQL!";
+?>"""

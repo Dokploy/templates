@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+
+[[config.domains]]
+serviceName = "php"
+port = 80
+host = "${main_domain}"
+
+[[config.mounts]]
+filePath = "/var/www/html/index.php"
+content = """<?php
+echo "Hello from Dokploy PHP Template!";
+"""

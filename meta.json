@@ -3363,24 +3363,6 @@
     ]
   },
   {
-    "id": "notifuse",
-    "name": "Notifuse",
-    "version": "latest",
-    "description": "Open-source newsletter and notification platform that empowers teams to create, send, and track communications at scale.",
-    "logo": "logo.png",
-    "links": {
-      "github": "https://github.com/notifuse/notifuse",
-      "website": "https://notifuse.com/",
-      "docs": "https://docs.notifuse.com/"
-    },
-    "tags": [
-      "newsletter",
-      "email",
-      "communication",
-      "notifications"
-    ]
-  },
-  {
     "id": "nocodb",
     "name": "NocoDB",
     "version": "0.257.2",
@@ -3396,6 +3378,24 @@
       "spreadsheet",
       "low-code",
       "nocode"
+    ]
+  },
+  {
+    "id": "notifuse",
+    "name": "Notifuse",
+    "version": "latest",
+    "description": "Open-source newsletter and notification platform that empowers teams to create, send, and track communications at scale.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/notifuse/notifuse",
+      "website": "https://notifuse.com/",
+      "docs": "https://docs.notifuse.com/"
+    },
+    "tags": [
+      "newsletter",
+      "email",
+      "communication",
+      "notifications"
     ]
   },
   {

@@ -3332,6 +3332,23 @@
     ]
   },
   {
+    "id": "new-api",
+    "name": "New API Service",
+    "version": "0.9.0",
+    "description": "New API Service for various applications.",
+    "logo": "new-api.png",
+    "links": {
+      "github": "https://github.com/QuantumNous/new-api",
+      "website": "https://ai.seekgpt.org",
+      "docs": "https://www.newapi.ai/en/getting-started/"
+    },
+    "tags": [
+      "api",
+      "ai",
+      "llm"
+    ]
+  },
+  {
     "id": "nextcloud-aio",
     "name": "Nextcloud All in One",
     "version": "30.0.2",

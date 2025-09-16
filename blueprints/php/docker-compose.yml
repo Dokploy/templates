@@ -3,6 +3,7 @@ version: "3.8"
 services:
   php:
     image: php:8.2-apache
+    container_name: lamp-php
     restart: unless-stopped
     volumes:
       - ./app:/var/www/html
@@ -10,3 +11,20 @@ services:
       APACHE_DOCUMENT_ROOT: /var/www/html
     ports:
       - "8080:80"
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: lamp-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${mysql_root_password}
+      MYSQL_DATABASE: ${mysql_database}
+      MYSQL_USER: ${mysql_user}
+      MYSQL_PASSWORD: ${mysql_password}
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:

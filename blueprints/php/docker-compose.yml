@@ -1,1 +1,12 @@
+version: "3.8"
 
+services:
+  php:
+    image: php:8.2-apache
+    restart: unless-stopped
+    volumes:
+      - ./app:/var/www/html
+    environment:
+      APACHE_DOCUMENT_ROOT: /var/www/html
+    ports:
+      - "8080:80"

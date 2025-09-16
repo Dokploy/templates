@@ -2111,10 +2111,26 @@
     ]
   },
   {
+    "id": "garage",
+    "name": "Garage S3",
+    "version": "latest",
+    "description": "Garage is an open-source distributed object storage service tailored for self-hosting.",
+    "logo": "garage.svg",
+    "links": {
+      "github": "https://git.deuxfleurs.fr/Deuxfleurs/garage",
+      "website": "https://garagehq.deuxfleurs.fr",
+      "docs": "https://garagehq.deuxfleurs.fr/documentation/quick-start/"
+    },
+    "tags": [
+      "storage",
+      "object-storage"
+    ]
+  },
+  {
     "id": "garage-with-ui",
     "name": "Garage S3 with Web UI",
     "version": "latest",
-    "description": "Garage is an open-source distributed object storage service tailored for self-hosting",
+    "description": "Garage is an open-source distributed object storage service tailored for self-hosting. For authentication in the web-ui please go to https://github.com/khairul169/garage-webui?tab=readme-ov-file#authentication",
     "logo": "garage.svg",
     "links": {
       "github": "https://git.deuxfleurs.fr/Deuxfleurs/garage",

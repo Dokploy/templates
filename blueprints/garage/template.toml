@@ -4,26 +4,16 @@ webui_domain = "web-ui.${domain}"
 admin_token = "${base64:32}"
 metrics_token = "${base64:32}"
 
-
 [config]
 env = [
     "API_BASE_URL=http://garage:3903",
     "S3_ENDPOINT_URL=http://garage:3900",
-    "",
-    "# To set up auth for the web-ui please go here: https://github.com/khairul169/garage-webui?tab=readme-ov-file#authentication",
-    "# or run this command: htpasswd -nbBC 10 'YOUR_USERNAME' 'YOUR_PASSWORD' and paste the output in here.",
-    "AUTH_USER_PASS=",
 ]
 
 [[config.domains]]
 serviceName = "garage"
 port = 3900
 host = "${main_domain}"
-
-[[config.domains]]
-serviceName = "garage-webui"
-port = 3909
-host = "${webui_domain}"
 
 [[config.mounts]]
 filePath = "garage.toml"

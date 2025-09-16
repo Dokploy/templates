@@ -2864,6 +2864,24 @@
     ]
   },
   {
+  "id": "lamp",
+  "name": "LAMP Stack",
+  "version": "8.2",
+  "description": "A PHP + MySQL template (LAMP stack) for running web applications.",
+  "logo": "lamp.svg",
+  "links": {
+    "website": "https://www.php.net/",
+    "docs": "https://www.php.net/docs.php",
+    "github": "https://github.com/php/php-src"
+  },
+  "tags": [
+    "php",
+    "mysql",
+    "lamp",
+    "backend"
+  ]
+},
+  {
     "id": "letterfeed",
     "name": "Letterfeed",
     "version": "latest",

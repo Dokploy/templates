@@ -1,6 +1,7 @@
 services:
   plark:
     image: plarkinc/plark:latest
+    pull_policy: always
     restart: unless-stopped
     ports:
       - "80"

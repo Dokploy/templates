@@ -3722,7 +3722,12 @@
       "website": "https://www.passbolt.com/",
       "docs": "https://www.passbolt.com/docs/"
     },
-    "tags": ["password-manager", "security", "team-collaboration", "encryption"]
+    "tags": [
+      "password-manager",
+      "security",
+      "team-collaboration",
+      "encryption"
+    ]
   },
   {
     "id": "pastefy",

@@ -1,11 +1,19 @@
 [variables]
 main_domain = "${domain}"
+admin_email = "${email}"
+admin_password = "${password:32}"
 
 [config]
-env = {}
-mounts = []
-
 [[config.domains]]
 serviceName = "pocketbase"
 port = 8090
 host = "${main_domain}"
+
+[config.env]
+SOFTWARE_VERSION_TAG = "latest"
+EMAIL = "${admin_email}"
+ADMIN_PASSWORD = "${admin_password}"
+
+[[config.mounts]]
+name = "pocketbase-data"
+mountPath = "/pb_data"

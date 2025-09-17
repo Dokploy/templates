@@ -1,0 +1,32 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+db_root_password = "${password:32}"
+email_host = "${email_host}"
+email_user = "${email_user}"
+email_pass = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "passbolt"
+port = 80
+host = "${main_domain}"
+
+env = [
+  "PASSBOLT_APP_FULL_BASE_URL=https://${main_domain}",
+  "PASSBOLT_DB_HOST=mariadb",
+  "PASSBOLT_DB_PORT=3306",
+  "PASSBOLT_DB_NAME=passbolt",
+  "PASSBOLT_DB_USER=passbolt",
+  "PASSBOLT_DB_PASSWORD=${db_password}",
+  "PASSBOLT_DB_ROOT_PASSWORD=${db_root_password}",
+  "PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED=false",
+  "PASSBOLT_EMAIL_FROM=passbolt@${main_domain}",
+  "PASSBOLT_EMAIL_HOST=${email_host}",
+  "PASSBOLT_EMAIL_PORT=587",
+  "PASSBOLT_EMAIL_USER=${email_user}",
+  "PASSBOLT_EMAIL_PASS=${email_pass}",
+  "PASSBOLT_EMAIL_TLS=true"
+]
+
+[[config.mounts]]

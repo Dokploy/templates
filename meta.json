@@ -3712,6 +3712,19 @@
     ]
   },
   {
+    "id": "passbolt",
+    "name": "Passbolt",
+    "version": "latest-ce",
+    "description": "Passbolt is an open source credential platform for modern teams. A versatile, battle-tested solution to manage and collaborate on passwords, accesses, and secrets. All in one.",
+    "logo": "passbolt.svg",
+    "links": {
+      "github": "https://github.com/passbolt/passbolt_api",
+      "website": "https://www.passbolt.com/",
+      "docs": "https://www.passbolt.com/docs/"
+    },
+    "tags": ["password-manager", "security", "team-collaboration", "encryption"]
+  },
+  {
     "id": "pastefy",
     "name": "Pastefy",
     "version": "latest",

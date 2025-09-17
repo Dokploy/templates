@@ -1,0 +1,60 @@
+services:
+  passbolt:
+    image: passbolt/passbolt:latest-ce
+    environment:
+      APP_FULL_BASE_URL: ${PASSBOLT_APP_FULL_BASE_URL}
+      DATASOURCES_DEFAULT_HOST: ${PASSBOLT_DB_HOST}
+      DATASOURCES_DEFAULT_PORT: ${PASSBOLT_DB_PORT}
+      DATASOURCES_DEFAULT_USERNAME: ${PASSBOLT_DB_USER}
+      DATASOURCES_DEFAULT_PASSWORD: ${PASSBOLT_DB_PASSWORD}
+      DATASOURCES_DEFAULT_DATABASE: ${PASSBOLT_DB_NAME}
+      PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED: ${PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED}
+
+      EMAIL_DEFAULT_FROM: ${PASSBOLT_EMAIL_FROM}
+      EMAIL_TRANSPORT_DEFAULT_HOST: ${PASSBOLT_EMAIL_HOST}
+      EMAIL_TRANSPORT_DEFAULT_PORT: ${PASSBOLT_EMAIL_PORT}
+      EMAIL_TRANSPORT_DEFAULT_USERNAME: ${PASSBOLT_EMAIL_USER}
+      EMAIL_TRANSPORT_DEFAULT_PASSWORD: ${PASSBOLT_EMAIL_PASS}
+      EMAIL_TRANSPORT_DEFAULT_TLS: ${PASSBOLT_EMAIL_TLS}
+
+    volumes:
+      - gpg_volume:/etc/passbolt/gpg
+      - jwt_volume:/etc/passbolt/jwt
+
+    command:
+      - /usr/bin/wait-for.sh
+      - "-t"
+      - "0"
+      - "${PASSBOLT_DB_HOST}:${PASSBOLT_DB_PORT}"
+      - "--"
+      - /docker-entrypoint.sh
+
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:80"]
+      interval: 5s
+      timeout: 20s
+      retries: 10
+
+  mariadb:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: ${PASSBOLT_DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${PASSBOLT_DB_NAME}
+      MARIADB_USER: ${PASSBOLT_DB_USER}
+      MARIADB_PASSWORD: ${PASSBOLT_DB_PASSWORD}
+    volumes:
+      - passbolt_mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
+      interval: 5s
+      timeout: 20s
+      retries: 10
+
+volumes:
+  gpg_volume: {}
+  jwt_volume: {}
+  passbolt_mariadb_data: {}

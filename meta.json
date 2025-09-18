@@ -1517,6 +1517,27 @@
     ]
   },
   {
+    "id": "dia-tts-server",
+    "name": "Dia TTS Server",
+    "version": "1.4.0",
+    "description": "FastAPI-based Dia TTS Server with OpenAI-compatible /v1/audio/speech endpoint, large-text chunking, predefined voices and voice-cloning. Uses prebuilt image (ghcr.io/devnen/dia-tts-server) and supports GPU acceleration.",
+    "logo": "dia.svg",
+    "links": {
+      "github": "https://github.com/devnen/Dia-TTS-Server?tab=readme-ov-file",
+      "website": "https://diaai.org/",
+      "docs": "http://localhost:PORT/docs"
+    },
+    "tags": [
+      "tts",
+      "speech",
+      "ai",
+      "fastapi",
+      "gradio",
+      "ml",
+      "cuda"
+    ]
+  },
+  {
     "id": "directory-lister",
     "name": "Directory Lister",
     "version": "latest",

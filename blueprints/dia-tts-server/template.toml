@@ -1,0 +1,29 @@
+[variables]
+main_domain = "${domain}"
+IMAGE = "ghcr.io/devnen/dia-tts-server:latest"
+PORT = "8003"
+HF_HUB_ENABLE_HF_TRANSFER = "1"
+NVIDIA_VISIBLE_DEVICES = "all"
+NVIDIA_DRIVER_CAPABILITIES = "compute,utility"
+CUDA_VISIBLE_DEVICES = ""
+
+[config]
+
+[[config.domains]]
+serviceName = "dia-tts-server"
+port = 8003
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+
+[[config.env]]
+env = [
+  "PORT=${PORT}",
+  "IMAGE=${IMAGE}",
+  "HF_HUB_ENABLE_HF_TRANSFER=${HF_HUB_ENABLE_HF_TRANSFER}",
+  "NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES}",
+  "NVIDIA_DRIVER_CAPABILITIES=${NVIDIA_DRIVER_CAPABILITIES}",
+  "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES}",
+  "HF_TOKEN=${HF_TOKEN}"
+]

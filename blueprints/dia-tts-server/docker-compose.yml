@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  dia-tts-server:
+    image: ${IMAGE:-ghcr.io/devnen/dia-tts-server:latest}
+    restart: unless-stopped
+
+    ports:
+      - ${PORT:-8003}
+
+    env_file:
+      - .env
+
+    environment:
+      - PORT=${PORT:-8003}
+      - HF_HUB_ENABLE_HF_TRANSFER=${HF_HUB_ENABLE_HF_TRANSFER:-1}
+      - NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES:-all}
+      - NVIDIA_DRIVER_CAPABILITIES=${NVIDIA_DRIVER_CAPABILITIES:-compute,utility}
+      - CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-}
+      - HF_TOKEN=${HF_TOKEN}
+
+    volumes:
+      - model_cache:/app/model_cache
+      - reference_audio:/app/reference_audio
+      - outputs:/app/outputs
+      - voices:/app/voices
+
+    devices:
+      - nvidia.com/gpu=all
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:${PORT:-8003}/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  model_cache: {}
+  reference_audio: {}
+  outputs: {}
+  voices: {}

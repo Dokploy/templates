@@ -1,0 +1,67 @@
+[variables]
+main_domain = "${domain}"
+# Optional: customize web port (default 8082)
+web_port = 8082
+# UDP ports used by DST (you can change in the panel later if needed)
+udp_master_port = 10888
+udp_caves_port = 10998
+udp_forest_port = 10999
+
+[config]
+# Domain routing for the admin panel UI
+[[config.domains]]
+serviceName = "dst-admin-go"
+port = "${web_port}"
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+TZ = "UTC"
+
+# Persistent volumes
+[[config.mounts]]
+name = "dst_steamcmd"
+mountPath = "/app/steamcmd"
+
+[[config.mounts]]
+name = "dst_server"
+mountPath = "/app/dst-dedicated-server"
+
+[[config.mounts]]
+name = "dst_klei"
+mountPath = "/root/.klei/DoNotStarveTogether"
+
+[[config.mounts]]
+name = "dst_backup"
+mountPath = "/app/backup"
+
+[[config.mounts]]
+name = "dst_mod"
+mountPath = "/app/mod"
+
+[[config.mounts]]
+name = "dst_data"
+mountPath = "/app/data"
+
+# Provide a config.yml that persists DB to /app/data and binds the chosen port
+[[config.mounts]]
+filePath = "/app/config.yml"
+content = """
+# bind address (empty means all)
+bindAddress: ""
+# web port
+port: ${web_port}
+# windows cli port (unused in Linux)
+dstCliPort: 8102
+# database file path (persisted via /app/data)
+database: /app/data/dst-db
+# auto checks in minutes
+autoCheck:
+  masterInterval: 5
+  cavesInterval: 5
+  masterModInterval: 10
+  cavesIModInterval: 10
+  gameUpdateInterval: 20
+  modUpdatePrompt: ""
+  gameUpdatePrompt: ""
+"""

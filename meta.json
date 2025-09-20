@@ -1727,6 +1727,25 @@
     ]
   },
   {
+    "id": "dst-admin-go",
+    "name": "DST Admin (Don't Starve Together)",
+    "version": "1.5.1",
+    "description": "Self-hosted Don't Starve Together dedicated server management panel with multi-instance, mods, and backups.",
+    "logo": "icon.png",
+    "links": {
+      "github": "https://github.com/carrot-hu23/dst-admin-go",
+      "website": "https://carrot-hu23.github.io/dst-admin-go-preview/",
+      "docs": "https://carrot-hu23.github.io/dst-admin-go-docs/"
+    },
+    "tags": [
+      "games",
+      "server",
+      "dst",
+      "steam",
+      "udp"
+    ]
+  },
+  {
     "id": "dumbassets",
     "name": "DumbAssets",
     "version": "latest",

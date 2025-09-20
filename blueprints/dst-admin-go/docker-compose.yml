@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  dst-admin-go:
+    # Option A: Use prebuilt image (recommended)
+    image: hujinbo23/dst-admin-go:1.5.1
+    # Option B: Build from source (uncomment to build latest from GitHub)
+    # build:
+    #   context: https://github.com/carrot-hu23/dst-admin-go.git#main
+    #   dockerfile: Dockerfile
+    restart: unless-stopped
+    # Expose the web UI for reverse proxy (Dokploy will route HTTP via domain)
+    expose:
+      - 8082
+    # UDP ports for DST master/caves/world communication
+    ports:
+      - 10888/udp
+      - 10998/udp
+      - 10999/udp
+    volumes:
+      - dst_steamcmd:/app/steamcmd
+      - dst_server:/app/dst-dedicated-server
+      - dst_klei:/root/.klei/DoNotStarveTogether
+      - dst_backup:/app/backup
+      - dst_mod:/app/mod
+      - dst_data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8082"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+volumes:
+  dst_steamcmd:
+  dst_server:
+  dst_klei:
+  dst_backup:
+  dst_mod:
+  dst_data:

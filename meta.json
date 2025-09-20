@@ -2005,6 +2005,24 @@
     ]
   },
   {
+    "id": "fmd-server",
+    "name": "FMD Server",
+    "version": "0.11.0",
+    "description": "A server to communicate with the FMD Android app, to locate and control your devices.",
+    "logo": "fmd-server.svg",
+    "links": {
+      "github": "https://gitlab.com/fmd-foss/fmd-server",
+      "website": "https://fmd-foss.org",
+      "docs": "https://fmd-foss.org/docs/fmd-server/overview"
+    },
+    "tags": [
+      "phone",
+      "security",
+      "gps",
+      "location"
+    ]
+  },
+  {
     "id": "focalboard",
     "name": "Focalboard",
     "version": "8.0.0",

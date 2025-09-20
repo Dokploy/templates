@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   dst-admin-go:
     # Option A: Use prebuilt image (recommended)

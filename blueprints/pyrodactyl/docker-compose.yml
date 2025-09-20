@@ -25,6 +25,7 @@ services:
       - "pterocerts:/etc/letsencrypt/"
       - "pterologs:/app/storage/logs"
     environment:
+      APP_URL: "https://${APP_DOMAIN}"
       APP_ENV: "production"
       APP_ENVIRONMENT_ONLY: "false"
       CACHE_DRIVER:
@@ -34,8 +35,6 @@ services:
       DB_HOST:
       DB_PORT:
       DB_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_PASSWORD:
-      MYSQL_ROOT_PASSWORD:
       RECAPTCHA_ENABLED:
       DB_CONNECTION: "mariadb"
 

@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+  dst-server:
+    image: ${DST_IMAGE}
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    ports:
+      - "${MASTER_PORT}:${MASTER_PORT}/udp"
+      - "${CAVES_PORT}:${CAVES_PORT}/udp"
+      - "${SHARD_PORT}:${SHARD_PORT}/tcp"
+    volumes:
+      - dst-data:/home/steam/.klei
+      - dst-mods:/home/steam/steamapps/common/dontstarvetogether_dedicated_server/mods
+    environment:
+      # Server Configuration
+      - CLUSTER_TOKEN=${CLUSTER_TOKEN}
+      - CLUSTER_NAME=${CLUSTER_NAME}
+      - CLUSTER_DESCRIPTION=${CLUSTER_DESCRIPTION}
+      - CLUSTER_PASSWORD=${CLUSTER_PASSWORD}
+      - MAX_PLAYERS=${MAX_PLAYERS}
+      - GAME_MODE=${GAME_MODE}
+      - SERVER_INTENTION=${SERVER_INTENTION}
+      - PVP_ENABLED=${PVP_ENABLED}
+      - PAUSE_WHEN_EMPTY=${PAUSE_WHEN_EMPTY}
+      - VOTE_KICK_ENABLED=${VOTE_KICK_ENABLED}
+      - AUTOSAVER_ENABLED=${AUTOSAVER_ENABLED}
+      - TICK_RATE=${TICK_RATE}
+      
+      # Port Configuration
+      - MASTER_PORT=${MASTER_PORT}
+      - CAVES_PORT=${CAVES_PORT}
+      - SHARD_PORT=${SHARD_PORT}
+      
+      # World Generation
+      - WORLD_SIZE=${WORLD_SIZE}
+      - SEASON_START=${SEASON_START}
+      - WORLD_PRESET=${WORLD_PRESET}
+      
+      # Mod Configuration
+      - ENABLE_MODS=${ENABLE_MODS}
+      - MOD_LIST=${MOD_LIST}
+      
+      # Advanced Settings
+      - ENABLE_CAVES=${ENABLE_CAVES}
+      - CONSOLE_ENABLED=${CONSOLE_ENABLED}
+      - LAN_ONLY=${LAN_ONLY}
+      - STEAM_GROUP_ID=${STEAM_GROUP_ID}
+      - STEAM_GROUP_ONLY=${STEAM_GROUP_ONLY}
+      - STEAM_GROUP_ADMINS=${STEAM_GROUP_ADMINS}
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f dontstarve_dedicated_server_nullrenderer || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+volumes:
+  dst-data:
+  dst-mods:

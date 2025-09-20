@@ -1648,6 +1648,25 @@
     ]
   },
   {
+    "id": "dont-starve-together",
+    "name": "Don't Starve Together",
+    "version": "latest",
+    "description": "Don't Starve Together is a standalone multiplayer expansion of the uncompromising wilderness survival game, Don't Starve. Supports multiple Docker image sources and full server configuration.",
+    "logo": "icon.png",
+    "links": {
+      "github": "https://github.com/kleientertainment/ds_mod_tools",
+      "docker": "https://hub.docker.com/r/jamesits/dst-server/",
+      "website": "https://www.klei.com/games/dont-starve-together",
+      "docs": "https://dontstarve.fandom.com/wiki/Guides/Don%27t_Starve_Together_Dedicated_Servers"
+    },
+    "tags": [
+      "game-server",
+      "survival",
+      "multiplayer",
+      "steam"
+    ]
+  },
+  {
     "id": "doublezero",
     "name": "Double Zero",
     "version": "v0.2.1",

@@ -1,0 +1,198 @@
+[variables]
+# Image Selection - Multiple sources available
+dst_image = "jamesits/don-t-starve-together:latest"  # Default to Jamesits image
+cluster_token = ""  # Required: Get from https://accounts.klei.com/account/game/servers?game=DontStarveTogether
+cluster_name = "Dokploy DST Server"
+cluster_description = "Don't Starve Together server powered by Dokploy"
+cluster_password = ""  # Optional: Leave empty for public server
+max_players = "128"
+game_mode = "endless"  # survival, endless, wilderness
+server_intention = "cooperative"  # cooperative, social, competitive, madness
+pvp_enabled = "false"
+pause_when_empty = "true"
+vote_kick_enabled = "false"
+autosaver_enabled = "true"
+tick_rate = "15"  # 10, 15, 30, 60
+
+# Port Configuration
+master_port = "10999"
+caves_port = "11000"
+shard_port = "11001"
+
+# World Generation
+world_size = "default"  # small, medium, default, large, huge
+season_start = "default"  # default, autumn, winter, spring, summer, random
+world_preset = "default"  # default, classic, cave_default
+
+# Mod Configuration
+enable_mods = "false"
+mod_list = ""  # Comma-separated Steam Workshop IDs
+
+# Advanced Settings
+enable_caves = "true"
+console_enabled = "true"
+lan_only = "false"
+steam_group_id = ""
+steam_group_only = "false"
+steam_group_admins = "false"
+
+[config]
+# Network configuration for UDP game ports
+[[config.domains]]
+serviceName = "dst-server"
+port = 10999
+host = "${domain}"
+protocol = "udp"
+
+[config.env]
+# Image Selection
+DST_IMAGE = "${dst_image}"
+
+# Core Server Settings
+CLUSTER_TOKEN = "${cluster_token}"
+CLUSTER_NAME = "${cluster_name}"
+CLUSTER_DESCRIPTION = "${cluster_description}"
+CLUSTER_PASSWORD = "${cluster_password}"
+MAX_PLAYERS = "${max_players}"
+GAME_MODE = "${game_mode}"
+SERVER_INTENTION = "${server_intention}"
+PVP_ENABLED = "${pvp_enabled}"
+PAUSE_WHEN_EMPTY = "${pause_when_empty}"
+VOTE_KICK_ENABLED = "${vote_kick_enabled}"
+AUTOSAVER_ENABLED = "${autosaver_enabled}"
+TICK_RATE = "${tick_rate}"
+
+# Port Configuration
+MASTER_PORT = "${master_port}"
+CAVES_PORT = "${caves_port}"
+SHARD_PORT = "${shard_port}"
+
+# World Generation
+WORLD_SIZE = "${world_size}"
+SEASON_START = "${season_start}"
+WORLD_PRESET = "${world_preset}"
+
+# Mod Configuration
+ENABLE_MODS = "${enable_mods}"
+MOD_LIST = "${mod_list}"
+
+# Advanced Settings
+ENABLE_CAVES = "${enable_caves}"
+CONSOLE_ENABLED = "${console_enabled}"
+LAN_ONLY = "${lan_only}"
+STEAM_GROUP_ID = "${steam_group_id}"
+STEAM_GROUP_ONLY = "${steam_group_only}"
+STEAM_GROUP_ADMINS = "${steam_group_admins}"
+
+# Configuration files for DST server
+[[config.mounts]]
+filePath = "/home/steam/.klei/DoNotStarveTogether/Cluster_1/cluster.ini"
+content = """
+[GAMEPLAY]
+game_mode = ${game_mode}
+max_players = ${max_players}
+pvp = ${pvp_enabled}
+pause_when_empty = ${pause_when_empty}
+vote_kick_enabled = ${vote_kick_enabled}
+
+[NETWORK]
+cluster_name = ${cluster_name}
+cluster_description = ${cluster_description}
+cluster_password = ${cluster_password}
+cluster_intention = ${server_intention}
+autosaver_enabled = ${autosaver_enabled}
+enable_snapshots = false
+tick_rate = ${tick_rate}
+whitelist_slots = 0
+
+[MISC]
+console_enabled = ${console_enabled}
+max_snapshots = 6
+
+[SHARD]
+shard_enabled = true
+bind_ip = 127.0.0.1
+master_ip = 127.0.0.1
+master_port = ${shard_port}
+cluster_key = supersecretkey
+"""
+
+[[config.mounts]]
+filePath = "/home/steam/.klei/DoNotStarveTogether/Cluster_1/Master/server.ini"
+content = """
+[NETWORK]
+server_port = ${master_port}
+
+[SHARD]
+is_master = true
+name = Master
+id = 1
+
+[STEAM]
+steam_group_id = ${steam_group_id}
+steam_group_only = ${steam_group_only}
+steam_group_admins = ${steam_group_admins}
+"""
+
+[[config.mounts]]
+filePath = "/home/steam/.klei/DoNotStarveTogether/Cluster_1/Caves/server.ini"
+content = """
+[NETWORK]
+server_port = ${caves_port}
+
+[SHARD]
+is_master = false
+name = Caves
+id = 2
+
+[STEAM]
+steam_group_id = ${steam_group_id}
+steam_group_only = ${steam_group_only}
+steam_group_admins = ${steam_group_admins}
+"""
+
+[[config.mounts]]
+filePath = "/home/steam/.klei/DoNotStarveTogether/Cluster_1/Master/worldgenoverride.lua"
+content = """
+return {
+    override_enabled = true,
+    preset = "${world_preset}",
+    misc = {
+        world_size = "${world_size}",
+        season_start = "${season_start}",
+        day = "default",
+        weather = "default",
+        season = "default"
+    }
+}
+"""
+
+[[config.mounts]]
+filePath = "/home/steam/.klei/DoNotStarveTogether/Cluster_1/Caves/worldgenoverride.lua"
+content = """
+return {
+    override_enabled = true,
+    preset = "DST_CAVE",
+    misc = {
+        world_size = "${world_size}",
+        task_set = "cave_default"
+    }
+}
+"""
+
+# Optional admin list - uncomment and modify as needed
+# [[config.mounts]]
+# filePath = "/home/steam/.klei/DoNotStarveTogether/Cluster_1/adminlist.txt"
+# content = """
+# # Add Klei User IDs (KU_xxxxxxxx) one per line
+# # KU_12345678
+# """
+
+# Mod configuration - enabled when mods are requested
+# [[config.mounts]]
+# filePath = "/home/steam/steamapps/common/dontstarvetogether_dedicated_server/mods/dedicated_server_mods_setup.lua"
+# content = """
+# -- Mod setup for dedicated server
+# -- Add Workshop mod IDs here
+# -- ServerModSetup("123456789")
+# """

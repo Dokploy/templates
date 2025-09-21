@@ -1,15 +1,26 @@
 [variables]
 main_domain = "${domain}"
-jwt_secret = "${base64:64}"
+postgres_user = "postgres"
+postgres_password = "${password:32}"
+postgres_db = "root_db"
 
 [config]
-mounts = []
-
 [[config.domains]]
 serviceName = "nocodb"
-port = 8_000
+port = 8080
 host = "${main_domain}"
 
 [config.env]
-NOCODB_PORT = "8000"
-NC_AUTH_JWT_SECRET = "${jwt_secret}"
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "${postgres_db}"
+
+[[config.mounts]]
+serviceName = "nocodb"
+volumeName = "nc_data"
+mountPath = "/usr/app/data"
+
+[[config.mounts]]
+serviceName = "root_db"
+volumeName = "db_data"
+mountPath = "/var/lib/postgresql/data"

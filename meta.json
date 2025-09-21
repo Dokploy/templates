@@ -2882,22 +2882,6 @@
     ]
   },
   {
-    "id": "libredesk",
-    "name": "Libredesk",
-    "logo": "libredesk.svg",
-    "version": "latest",
-    "description": "Open source, self-hosted customer support desk. Single binary app.",
-    "links": {
-      "github": "https://github.com/abhinavxd/libredesk",
-      "website": "https://libredesk.io",
-      "docs": "https://docs.libredesk.io/introduction"
-    },
-    "tags": [
-      "storage",
-      "object-storage"
-      ]
-  },
-    {
     "id": "letterfeed",
     "name": "Letterfeed",
     "version": "latest",
@@ -2912,6 +2896,22 @@
       "email",
       "self-hosted",
       "productivity"
+    ]
+  },
+  {
+    "id": "libredesk",
+    "name": "Libredesk",
+    "logo": "libredesk.svg",
+    "version": "latest",
+    "description": "Open source, self-hosted customer support desk. Single binary app.",
+    "links": {
+      "github": "https://github.com/abhinavxd/libredesk",
+      "website": "https://libredesk.io",
+      "docs": "https://docs.libredesk.io/introduction"
+    },
+    "tags": [
+      "storage",
+      "object-storage"
     ]
   },
   {

@@ -2005,6 +2005,24 @@
     ]
   },
   {
+    "id": "fmd-server",
+    "name": "FMD Server",
+    "version": "0.11.0",
+    "description": "A server to communicate with the FMD Android app, to locate and control your devices.",
+    "logo": "fmd-server.svg",
+    "links": {
+      "github": "https://gitlab.com/fmd-foss/fmd-server",
+      "website": "https://fmd-foss.org",
+      "docs": "https://fmd-foss.org/docs/fmd-server/overview"
+    },
+    "tags": [
+      "phone",
+      "security",
+      "gps",
+      "location"
+    ]
+  },
+  {
     "id": "focalboard",
     "name": "Focalboard",
     "version": "8.0.0",
@@ -3310,6 +3328,26 @@
     ]
   },
   {
+    "id": "navidrome",
+    "name": "Navidrome",
+    "version": "latest",
+    "description": "Navidrome is a modern music server and streamer compatible with Subsonic/Airsonic. Stream your music collection anywhere.",
+    "logo": "navidrome.png",
+    "links": {
+      "github": "https://github.com/navidrome/navidrome",
+      "website": "https://www.navidrome.org/",
+      "docs": "https://www.navidrome.org/docs/"
+    },
+    "tags": [
+      "music",
+      "streaming",
+      "media-server",
+      "subsonic",
+      "self-hosted",
+      "audio"
+    ]
+  },
+  {
     "id": "neko",
     "name": "Neko",
     "version": "latest",
@@ -3374,6 +3412,24 @@
       "spreadsheet",
       "low-code",
       "nocode"
+    ]
+  },
+  {
+    "id": "notifuse",
+    "name": "Notifuse",
+    "version": "latest",
+    "description": "Open-source newsletter and notification platform that empowers teams to create, send, and track communications at scale.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/notifuse/notifuse",
+      "website": "https://notifuse.com/",
+      "docs": "https://docs.notifuse.com/"
+    },
+    "tags": [
+      "newsletter",
+      "email",
+      "communication",
+      "notifications"
     ]
   },
   {
@@ -3671,6 +3727,26 @@
     ]
   },
   {
+    "id": "owncast",
+    "name": "Owncast",
+    "version": "latest",
+    "description": "Owncast is a self-hosted live video streaming and chat server for use with existing broadcasting software.",
+    "logo": "owncast.png",
+    "links": {
+      "github": "https://github.com/owncast/owncast",
+      "website": "https://owncast.online/",
+      "docs": "https://owncast.online/docs/"
+    },
+    "tags": [
+      "streaming",
+      "live-video",
+      "chat",
+      "broadcasting",
+      "self-hosted",
+      "rtmp"
+    ]
+  },
+  {
     "id": "palmr",
     "name": "Palmr",
     "version": "latest",
@@ -3703,6 +3779,27 @@
       "text-sharing",
       "collaboration",
       "oauth2"
+    ]
+  },
+  {
+    "id": "paymenter",
+    "name": "Paymenter",
+    "version": "latest",
+    "description": "Paymenter is a modern billing and payment management system for hosting providers, with automation, invoicing, and client management features.",
+    "logo": "paymenter.png",
+    "links": {
+      "github": "https://github.com/Paymenter/Paymenter",
+      "website": "https://paymenter.org/",
+      "docs": "https://paymenter.org/docs/"
+    },
+    "tags": [
+      "billing",
+      "payment",
+      "hosting",
+      "invoicing",
+      "business",
+      "automation",
+      "client-management"
     ]
   },
   {
@@ -3872,7 +3969,7 @@
   {
     "id": "pocket-id",
     "name": "Pocket ID",
-    "version": "0.35.1",
+    "version": "v1",
     "description": "A simple and easy-to-use OIDC provider that allows users to authenticate with their passkeys to your services.",
     "logo": "pocket-id.svg",
     "links": {
@@ -4690,23 +4787,6 @@
     ]
   },
   {
-    "id": "unsend",
-    "name": "Unsend",
-    "version": "v1.3.2",
-    "description": "Open source alternative to Resend,Sendgrid, Postmark etc. ",
-    "logo": "unsend.png",
-    "links": {
-      "github": "https://github.com/unsend-dev/unsend",
-      "website": "https://unsend.dev/",
-      "docs": "https://docs.unsend.dev/get-started/"
-    },
-    "tags": [
-      "e-mail",
-      "marketing",
-      "business"
-    ]
-  },
-  {
     "id": "uptime-kuma",
     "name": "Uptime Kuma",
     "version": "1.23.15",
@@ -4719,6 +4799,24 @@
     },
     "tags": [
       "monitoring"
+    ]
+  },
+  {
+    "id": "usesend",
+    "name": "useSend",
+    "version": "latest",
+    "description": "Open source alternative to Resend, Sendgrid, Postmark etc.",
+    "logo": "usesend.png",
+    "links": {
+      "github": "https://github.com/usesend/usesend",
+      "website": "https://usesend.com/",
+      "docs": "https://docs.usesend.com/introduction"
+    },
+    "tags": [
+      "e-mail",
+      "marketing",
+      "business",
+      "self-hosted"
     ]
   },
   {

@@ -1,14 +1,14 @@
-name: unsend-prod
+name: usesend-prod
 
 services:
-  unsend-db-prod:
+  usesend-db-prod:
     image: postgres:16
 
     restart: always
     environment:
-      - POSTGRES_USER=${POSTGRES_USER:?err}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?err}
-      - POSTGRES_DB=${POSTGRES_DB:?err}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 10s
@@ -19,7 +19,7 @@ services:
     volumes:
       - database:/var/lib/postgresql/data
 
-  unsend-redis-prod:
+  usesend-redis-prod:
     image: redis:7
 
     restart: always
@@ -29,8 +29,8 @@ services:
       - cache:/data
     command: ["redis-server", "--maxmemory-policy", "noeviction"]
 
-  unsend-storage-prod:
-    image: minio/minio:RELEASE.2024-11-07T00-52-20Z
+  usesend-storage-prod:
+    image: minio/minio:latest
 
     ports:
       - 9002
@@ -38,33 +38,33 @@ services:
     volumes:
       - storage:/data
     environment:
-      MINIO_ROOT_USER: unsend
+      MINIO_ROOT_USER: usesend
       MINIO_ROOT_PASSWORD: password
     entrypoint: sh
-    command: -c 'mkdir -p /data/unsend && minio server /data --console-address ":9001" --address ":9002"'
+    command: -c 'mkdir -p /data/usesend && minio server /data --console-address ":9001" --address ":9002"'
 
-  unsend:
-    image: unsend/unsend:v1.3.2
+  usesend:
+    image: usesend/usesend:latest
     restart: always
     ports:
       - ${PORT:-3000}
     environment:
       - PORT=${PORT:-3000}
-      - DATABASE_URL=${DATABASE_URL:?err}
-      - NEXTAUTH_URL=${NEXTAUTH_URL:?err}
-      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:?err}
-      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY:?err}
-      - AWS_SECRET_KEY=${AWS_SECRET_KEY:?err}
-      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:?err}
-      - GITHUB_ID=${GITHUB_ID:?err}
-      - GITHUB_SECRET=${GITHUB_SECRET:?err}
-      - REDIS_URL=${REDIS_URL:?err}
+      - DATABASE_URL=${DATABASE_URL}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      - AWS_SECRET_KEY=${AWS_SECRET_KEY}
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+      - GITHUB_ID=${GITHUB_ID}
+      - GITHUB_SECRET=${GITHUB_SECRET}
+      - REDIS_URL=${REDIS_URL}
       - NEXT_PUBLIC_IS_CLOUD=${NEXT_PUBLIC_IS_CLOUD:-false}
       - API_RATE_LIMIT=${API_RATE_LIMIT:-1}
     depends_on:
-      unsend-db-prod:
+      usesend-db-prod:
         condition: service_healthy
-      unsend-redis-prod:
+      usesend-redis-prod:
         condition: service_started
 
 volumes:

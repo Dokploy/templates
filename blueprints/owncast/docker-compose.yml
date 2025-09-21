@@ -1,0 +1,15 @@
+
+version: "3.8"
+
+services:
+  owncast:
+    image: owncast/owncast:latest
+    restart: unless-stopped
+    volumes:
+      - owncast-data:/app/data
+    ports:
+      - 8080
+      - 1935
+
+volumes:
+  owncast-data: {}

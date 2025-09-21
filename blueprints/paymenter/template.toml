@@ -1,0 +1,22 @@
+[variables]
+main_domain = "${domain}"
+app_key = "${base64:32}"
+mysql_password = "${password:16}"
+mysql_root_password = "${password:20}"
+
+[config]
+[[config.domains]]
+serviceName = "paymenter"
+port = 80
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+APP_URL = "https://${main_domain}"
+APP_KEY = "base64:${app_key}"
+MYSQL_PASSWORD = "${mysql_password}"
+MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
+MYSQL_DATABASE = "paymenter"
+MYSQL_USER = "paymenter"
+
+[[config.mounts]]

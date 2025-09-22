@@ -1,3 +1,22 @@
+# =============================================================================
+# PASSBOLT TEMPLATE - SETUP INSTRUCTIONS
+# =============================================================================
+#
+# After successful deployment, you need to create an admin user:
+#
+# 1. Go to your Dokploy dashboard
+# 2. Navigate to your Passbolt application
+# 3. Wait for both containers to be healthy - check the "Monitoring" tab
+# 4. Go to the "General" tab and click "Open Terminal" button
+# 5. In the terminal, run this command to create admin user:
+#    su -s /bin/bash -c "/usr/share/php/passbolt/bin/cake passbolt register_user -u youremail@example.com -f FirstName -l LastName -r admin" www-data
+# 6. Replace youremail@example.com, FirstName, LastName with your actual details
+# 7. The command will output a registration link - copy and paste it in your browser to complete setup
+#
+# NOTE: If you change the domain after deployment, you will need to manually
+# update the PASSBOLT_APP_FULL_BASE_URL environment variable in the "Environment" tab.
+# =============================================================================
+
 services:
   passbolt:
     image: passbolt/passbolt:latest-ce
@@ -49,10 +68,10 @@ services:
     volumes:
       - passbolt_mariadb_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
-      interval: 5s
-      timeout: 20s
-      retries: 10
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   gpg_volume: {}

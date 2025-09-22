@@ -154,11 +154,13 @@ port = 80
 host = "${main_domain}"
 path = "/"
 
+[[config.domains]]
 serviceName = "appwrite"
 port = 80
 host = "${sites_domain}"
 path = "/"
 
+[[config.domains]]
 serviceName = "appwrite"
 port = 80
 host = "${functions_domain}"

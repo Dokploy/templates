@@ -1,13 +1,14 @@
 [variables]
-main_domain = "${domain}"
+frontend_domain = "${domain}"
+api_domain = "${domain}"
 
 [config]
 env = [
   # ------------------------------
   # Common Variables
   # ------------------------------
-  "CONSOLE_API_URL=", # Required
-  "CONSOLE_WEB_URL=", # Required
+  "CONSOLE_API_URL=${frontend_domain}", # Required
+  "CONSOLE_WEB_URL=${api_domain}", # Required
   "INIT_PASSWORD=", # Required
   "SERVICE_API_URL=",
   "APP_API_URL=",
@@ -702,12 +703,12 @@ mounts = []
 
 [[config.domains]]
 serviceName = "api"
-port = 5001
-host = "${main_domain}"
+port = 5_001
+host = "${api_domain}"
 path = "/"
 
 [[config.domains]]
 serviceName = "web"
-port = 3000
-host = "${main_domain}"
+port = 3_000
+host = "${frontend_domain}"
 path = "/"

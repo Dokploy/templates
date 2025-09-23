@@ -3,9 +3,9 @@ txadmin_domain = "${domain}"
 
 [config]
 env = [
-    { name = "LICENSE_KEY", description = "FiveM server license key (obtain free from https://forum.fivem.net/)", required = true },
+    { name = "LICENSE_KEY", description = "FiveM server license key (obtain free from https://forum.fivem.net/) - ONLY for standard mode, leave empty if using txAdmin", required = false },
     { name = "RCON_PASSWORD", description = "RCON password for server management (optional)", required = false },
-    { name = "NO_DEFAULT_CONFIG", description = "Set to '1' to enable txAdmin web interface", required = false }
+    { name = "NO_DEFAULT_CONFIG", description = "Set to '1' to enable txAdmin web interface (license configured via web UI), leave empty for standard FiveM server (requires LICENSE_KEY)", required = false }
 ]
 mounts = []
 

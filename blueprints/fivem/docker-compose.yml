@@ -1,0 +1,31 @@
+# docker-compose.yml
+# 
+# IMPORTANT: First-time setup information
+# - Obtain a FREE license key from: https://forum.fivem.net/t/explained-how-to-make-add-a-server-key/56120
+# - Configure your server in the mounted /config directory after first run
+# - txAdmin web interface available at port 40120 (if enabled)
+# - Default game server port: 30120
+#
+services:
+  fivem:
+    image: spritsail/fivem:latest
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    environment:
+      - LICENSE_KEY=${LICENSE_KEY}
+      - RCON_PASSWORD=${RCON_PASSWORD:-}
+      - NO_DEFAULT_CONFIG=${NO_DEFAULT_CONFIG:-}
+    volumes:
+      - fivem_config:/config
+      - fivem_txdata:/txData
+    ports:
+      - 30120:30120
+      - 30120:30120/udp
+      - 40120
+    labels:
+      - "traefik.enable=true"
+
+volumes:
+  fivem_config:
+  fivem_txdata:

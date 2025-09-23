@@ -1951,6 +1951,24 @@
     ]
   },
   {
+    "id": "fivem",
+    "name": "FiveM Server",
+    "version": "latest",
+    "description": "A modded GTA V multiplayer server with optional txAdmin web interface for easy server management.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/spritsail/fivem",
+      "website": "https://fivem.net/",
+      "docs": "https://docs.fivem.net/docs/server-manual/"
+    },
+    "tags": [
+      "gaming",
+      "gta",
+      "multiplayer",
+      "server"
+    ]
+  },
+  {
     "id": "flagsmith",
     "name": "Flagsmith",
     "version": "2.177.1",

@@ -1,0 +1,15 @@
+[variables]
+txadmin_domain = "${domain}"
+
+[config]
+env = [
+    { name = "LICENSE_KEY", description = "FiveM server license key (obtain free from https://forum.fivem.net/)", required = true },
+    { name = "RCON_PASSWORD", description = "RCON password for server management (optional)", required = false },
+    { name = "NO_DEFAULT_CONFIG", description = "Set to '1' to enable txAdmin web interface", required = false }
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "fivem"
+port = 40120
+host = "${txadmin_domain}"

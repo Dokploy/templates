@@ -24,7 +24,7 @@ services:
   frontend:
     image: ghcr.io/usekaneo/web:latest
     environment:
-      KANEO_API_URL: "http://${BACKEND_HOST}:1337"
+      KANEO_API_URL: "http://${BACKEND_HOST}"
     ports:
       - 5173
     depends_on:

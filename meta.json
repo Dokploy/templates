@@ -839,12 +839,10 @@
     "id": "bytestash",
     "name": "ByteStash",
     "version": "latest",
-    "description": "ByteStash is a self-hosted file storage solution that allows you to store and share files with ease. It provides a simple and effective solution for storing and accessing files from anywhere.",
+    "description": "ByteStash is a self-hosted web application designed to store, organise, and manage your code snippets efficiently. With support for creating, editing, and filtering snippets, ByteStash helps you keep track of your code in one secure place.",
     "logo": "logo.png",
     "links": {
-      "github": "https://github.com/bytestash/bytestash",
-      "website": "https://bytestash.com",
-      "docs": "https://bytestash.com/docs"
+      "github": "https://github.com/jordan-dalby/ByteStash"
     },
     "tags": [
       "file-storage",

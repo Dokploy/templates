@@ -1,0 +1,18 @@
+{
+  "id": "libretranslate",
+  "name": "LibreTranslate",
+  "version": "1.7.3",
+  "description": "LibreTranslate is a free and open-source machine translation API, powered by Argos Translate. Self-hosted, no external dependencies, and supports multiple languages.",
+  "logo": "libretranslate.svg",
+  "links": {
+    "github": "https://github.com/LibreTranslate/LibreTranslate",
+    "website": "https://libretranslate.com/",
+    "docs": "https://docs.libretranslate.com/"
+  },
+  "tags": [
+    "translation",
+    "api",
+    "nlp",
+    "language"
+  ]
+}

@@ -5,7 +5,7 @@ services:
     image: libretranslate/libretranslate:latest
     restart: unless-stopped
     ports:
-      - "5001:5000"
+      - "5000"
     environment:
       # Enables the API key system
       - LT_API_KEYS=true

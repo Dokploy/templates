@@ -1,17 +1,17 @@
 [variables]
-txadmin_domain = "${domain}"
+main_domain = "${domain}"
+license_key = "${password:32}"
+rcon_password = "${password:16}"
 
 [config]
 env = [
-    { name = "LICENSE_KEY", description = "FiveM server license key (obtain free from https://forum.fivem.net/) - ONLY for standard mode, leave empty if using txAdmin", required = false },
-    { name = "RCON_PASSWORD", description = "RCON password for server management (optional - random 16 char password assigned if not specified)", required = false },
-    { name = "NO_DEFAULT_CONFIG", description = "Set to '1' to enable txAdmin web interface (license configured via web UI), leave empty for standard FiveM server (requires LICENSE_KEY)", required = false },
-    { name = "NO_LICENSE_KEY", description = "Set to '1' to disable license key in environment (useful if license is in config file)", required = false },
-    { name = "NO_ONESYNC", description = "Set to '1' to disable OneSync being added to default configs", required = false }
+    "LICENSE_KEY=${license_key}",
+    "RCON_PASSWORD=${rcon_password}",
+    "NO_DEFAULT_CONFIG=${NO_DEFAULT_CONFIG:-}"
 ]
 mounts = []
 
 [[config.domains]]
 serviceName = "fivem"
 port = 40120
-host = "${txadmin_domain}"
+host = "${main_domain}"

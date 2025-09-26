@@ -23,11 +23,9 @@ services:
     tty: true
     stdin_open: true
     environment:
-      - LICENSE_KEY=${LICENSE_KEY}
-      - RCON_PASSWORD=${RCON_PASSWORD:-}
+      - LICENSE_KEY=${license_key}
+      - RCON_PASSWORD=${rcon_password}
       - NO_DEFAULT_CONFIG=${NO_DEFAULT_CONFIG:-}
-      - NO_LICENSE_KEY=${NO_LICENSE_KEY:-}
-      - NO_ONESYNC=${NO_ONESYNC:-}
     volumes:
       - fivem_config:/config
       - fivem_txdata:/txData

@@ -1994,7 +1994,7 @@
     "links": {
       "github": "https://github.com/firecrawl/firecrawl",
       "website": "https://firecrawl.dev",
-      "documentation": "https://github.com/firecrawl/firecrawl"
+      "docs": "https://docs.firecrawl.dev/introduction"
     },
     "tags": [
       "api",

@@ -55,10 +55,11 @@ const Search = () => {
     // Apply filters whenever templates, search query or selected tags change
     if (templates) {
       const filtered = templates.filter((template) => {
-        // Filter by search query
-        const matchesSearch = template.name
-          .toLowerCase()
-          .includes(queryFromUrl.toLowerCase());
+        // Filter by search query - search across name and description
+        const searchTerm = queryFromUrl.toLowerCase();
+        const matchesSearch =
+          template.name.toLowerCase().includes(searchTerm) ||
+          template.description.toLowerCase().includes(searchTerm);
 
         // Filter by selected tags
         const matchesTags =

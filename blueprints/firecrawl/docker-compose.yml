@@ -63,6 +63,7 @@ services:
       BLOCK_MEDIA: ${BLOCK_MEDIA}
     networks:
       - backend
+      - dokploy-network
 
   api:
     <<: *common-service
@@ -75,8 +76,9 @@ services:
     depends_on:
       - redis
       - playwright-service
-    ports:
-      - "${PORT:-3002}:${INTERNAL_PORT:-3002}"
+    networks:
+      - backend
+      - dokploy-network
     command: node dist/src/harness.js --start-docker
 
   redis:
@@ -100,9 +102,10 @@ services:
       POSTGRES_DB: postgres
     networks:
       - backend
-    ports:
-      - "5432:5432"
+      - dokploy-network
 
 networks:
   backend:
     driver: bridge
+  dokploy-network:
+    external: true

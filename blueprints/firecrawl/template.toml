@@ -72,5 +72,5 @@ POSTHOG_API_KEY = "${posthog_api_key}"
 POSTHOG_HOST = "${posthog_host}"
 
 ## System resource thresholds (optional)
-MAX_CPU = "${max_cpu}"
-MAX_RAM = "${max_ram}"
+MAX_CPU = "0.8"
+MAX_RAM = "0.8"

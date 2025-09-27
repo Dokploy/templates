@@ -5,8 +5,8 @@ x-common-service: &common-service
   # uncomment the build: statement and comment out the image: statement
   # image: ghcr.io/firecrawl/firecrawl
   build:
-    context: https://github.com/firecrawl/firecrawl.git#main
-    dockerfile: apps/api/Dockerfile
+    context: "https://github.com/firecrawl/firecrawl.git#main:apps/api"
+    dockerfile: Dockerfile
 
   ulimits:
     nofile:
@@ -53,8 +53,8 @@ services:
     # uncomment the build: statement and comment out the image: statement
     # image: ghcr.io/firecrawl/playwright-service:latest
     build:
-      context: https://github.com/firecrawl/firecrawl.git#main
-      dockerfile: apps/playwright-service-ts/Dockerfile
+      context: "https://github.com/firecrawl/firecrawl.git#main:apps/playwright-service-ts"
+      dockerfile: Dockerfile
     environment:
       PORT: 3000
       PROXY_SERVER: ${PROXY_SERVER}
@@ -92,8 +92,8 @@ services:
 
   nuq-postgres:
     build:
-      context: https://github.com/firecrawl/firecrawl.git#main
-      dockerfile: apps/nuq-postgres/Dockerfile
+      context: "https://github.com/firecrawl/firecrawl.git#main:apps/nuq-postgres"
+      dockerfile: Dockerfile
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

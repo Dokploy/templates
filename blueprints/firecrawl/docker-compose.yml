@@ -4,9 +4,7 @@ x-common-service: &common-service
   # NOTE: If you don't want to build the service locally,
   # uncomment the build: statement and comment out the image: statement
   # image: ghcr.io/firecrawl/firecrawl
-  build:
-    context: "https://github.com/firecrawl/firecrawl.git#main:apps/api"
-    dockerfile: Dockerfile
+  image: ghcr.io/firecrawl/firecrawl:latest
 
   ulimits:
     nofile:
@@ -51,10 +49,9 @@ services:
   playwright-service:
     # NOTE: If you don't want to build the service locally,
     # uncomment the build: statement and comment out the image: statement
-    # image: ghcr.io/firecrawl/playwright-service:latest
-    build:
-      context: "https://github.com/firecrawl/firecrawl.git#main:apps/playwright-service-ts"
-      dockerfile: Dockerfile
+    image: ghcr.io/firecrawl/playwright-service:latest
+    shm_size: "1g"
+    restart: unless-stopped
     environment:
       PORT: 3000
       PROXY_SERVER: ${PROXY_SERVER}
@@ -67,6 +64,7 @@ services:
 
   api:
     <<: *common-service
+    restart: unless-stopped
     environment:
       <<: *common-env
       HOST: "0.0.0.0"
@@ -76,6 +74,7 @@ services:
     depends_on:
       - redis
       - playwright-service
+      - nuq-postgres
     networks:
       - backend
       - dokploy-network
@@ -90,6 +89,7 @@ services:
 
     networks:
       - backend
+      - dokploy-network
     command: redis-server --bind 0.0.0.0
 
   nuq-postgres:

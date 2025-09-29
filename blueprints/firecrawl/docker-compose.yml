@@ -10,8 +10,6 @@ x-common-service: &common-service
     nofile:
       soft: 65535
       hard: 65535
-  networks:
-    - backend
   extra_hosts:
     - "host.docker.internal:host-gateway"
 
@@ -58,9 +56,6 @@ services:
       PROXY_USERNAME: ${PROXY_USERNAME}
       PROXY_PASSWORD: ${PROXY_PASSWORD}
       BLOCK_MEDIA: ${BLOCK_MEDIA}
-    networks:
-      - backend
-      - dokploy-network
 
   api:
     <<: *common-service
@@ -78,9 +73,6 @@ services:
         condition: service_started
       nuq-postgres:
         condition: service_healthy
-    networks:
-      - backend
-      - dokploy-network
     command: node dist/src/harness.js --start-docker
 
   redis:
@@ -90,15 +82,10 @@ services:
     image: redis:alpine
     # image: valkey/valkey:alpine
 
-    networks:
-      - backend
-      - dokploy-network
     command: redis-server --bind 0.0.0.0
 
   nuq-postgres:
-    build:
-      context: "https://github.com/firecrawl/firecrawl.git#main:apps/nuq-postgres"
-      dockerfile: Dockerfile
+    image: ghcr.io/firecrawl/nuq-postgres:latest
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres

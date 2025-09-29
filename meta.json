@@ -2958,6 +2958,25 @@
     ]
   },
   {
+    "id": "kokoro-tts",
+    "name": "Kokoro TTS",
+    "version": "latest",
+    "description": "Dockerized FastAPI wrapper for the Kokoro-82M text-to-speech model with multi-language support and OpenAI-compatible endpoints.",
+    "logo": "kokoro-tts.svg",
+    "links": {
+      "github": "https://github.com/remsky/Kokoro-FastAPI",
+      "website": "https://github.com/remsky/Kokoro-FastAPI",
+      "docs": "https://github.com/remsky/Kokoro-FastAPI#readme"
+    },
+    "tags": [
+      "text-to-speech",
+      "ai",
+      "voice",
+      "fastapi",
+      "openai-compatible"
+    ]
+  },
+  {
     "id": "kutt",
     "name": "Kutt",
     "version": "latest",

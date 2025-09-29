@@ -1,0 +1,25 @@
+[variables]
+main_domain = "${domain}"
+ojs_password = "${password:16}"
+mysql_root_password = "${password:16}"
+ojs_db_password = "${password:16}"
+
+[config]
+env = [
+    "COMPOSE_PROJECT_NAME=ojs",
+    "MYSQL_ROOT_PASSWORD=${mysql_root_password}",
+    "OJS_DB_NAME=ojs",
+    "OJS_DB_USER=ojs",
+    "OJS_DB_PASSWORD=${ojs_db_password}",
+    "OJS_DB_HOST=db",
+    "OJS_DB_DRIVER=mysqli",
+    "OJS_CLI_INSTALL=0"
+]
+
+[[config.domains]]
+serviceName = "ojs"
+port = 80
+host = "${main_domain}"
+
+# OJS will create its own config.inc.php during installation
+# No custom mounts needed - OJS handles configuration through the web installer

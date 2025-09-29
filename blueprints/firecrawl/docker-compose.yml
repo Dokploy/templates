@@ -87,7 +87,9 @@ services:
     command: redis-server --bind 0.0.0.0
 
   nuq-postgres:
-    image: ghcr.io/firecrawl/nuq-postgres:latest
+    build:
+      context: "https://github.com/firecrawl/firecrawl.git#main:apps/nuq-postgres"
+      dockerfile: Dockerfile
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres

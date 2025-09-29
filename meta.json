@@ -3624,6 +3624,24 @@
     ]
   },
   {
+    "id": "ojs",
+    "name": "Open Journal Systems",
+    "version": "3.3.0-21",
+    "description": "Open Journal Systems (OJS) is a journal management and publishing system that has been developed by the Public Knowledge Project through its federally funded efforts to expand and improve access to research.",
+    "logo": "ojs.svg",
+    "links": {
+      "github": "https://github.com/pkp/docker-ojs",
+      "website": "https://pkp.sfu.ca/ojs/",
+      "docs": "https://pkp.sfu.ca/ojs/docs/"
+    },
+    "tags": [
+      "publishing",
+      "journal",
+      "research",
+      "academic"
+    ]
+  },
+  {
     "id": "omni-tools",
     "name": "Omni-Tools",
     "version": "latest",
@@ -3688,24 +3706,6 @@
     },
     "tags": [
       "event"
-    ]
-  },
-  {
-    "id": "ojs",
-    "name": "Open Journal Systems",
-    "version": "3.3.0-21",
-    "description": "Open Journal Systems (OJS) is a journal management and publishing system that has been developed by the Public Knowledge Project through its federally funded efforts to expand and improve access to research.",
-    "logo": "ojs.svg",
-    "links": {
-      "github": "https://github.com/pkp/docker-ojs",
-      "website": "https://pkp.sfu.ca/ojs/",
-      "docs": "https://pkp.sfu.ca/ojs/docs/"
-    },
-    "tags": [
-      "publishing",
-      "journal",
-      "research",
-      "academic"
     ]
   },
   {

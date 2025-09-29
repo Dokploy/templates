@@ -2940,24 +2940,6 @@
     ]
   },
   {
-    "id": "kokoro-web",
-    "name": "Kokoro Web",
-    "version": "latest",
-    "description": "Kokoro Web provides an interface for text-to-speech using advanced AI voice synthesis. It allows model caching and API integration with authentication.",
-    "logo": "image.png",
-    "links": {
-      "github": "https://github.com/eduardolat/kokoro-web",
-      "website": "https://github.com/eduardolat/kokoro-web",
-      "docs": "https://github.com/eduardolat/kokoro-web#readme"
-    },
-    "tags": [
-      "text-to-speech",
-      "ai",
-      "voice",
-      "web"
-    ]
-  },
-  {
     "id": "kokoro-tts",
     "name": "Kokoro TTS",
     "version": "latest",
@@ -2974,6 +2956,24 @@
       "voice",
       "fastapi",
       "openai-compatible"
+    ]
+  },
+  {
+    "id": "kokoro-web",
+    "name": "Kokoro Web",
+    "version": "latest",
+    "description": "Kokoro Web provides an interface for text-to-speech using advanced AI voice synthesis. It allows model caching and API integration with authentication.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/eduardolat/kokoro-web",
+      "website": "https://github.com/eduardolat/kokoro-web",
+      "docs": "https://github.com/eduardolat/kokoro-web#readme"
+    },
+    "tags": [
+      "text-to-speech",
+      "ai",
+      "voice",
+      "web"
     ]
   },
   {

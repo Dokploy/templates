@@ -3594,21 +3594,6 @@
     ]
   },
   {
-    "id": "odoo",
-    "name": "Odoo",
-    "version": "16.0",
-    "description": "Odoo is a free and open source business management software that helps you manage your company's operations.",
-    "logo": "odoo.png",
-    "links": {
-      "github": "https://github.com/odoo/odoo",
-      "website": "https://odoo.com/",
-      "docs": "https://www.odoo.com/documentation/"
-    },
-    "tags": [
-      "cms"
-    ]
-  },
-  {
     "id": "odoo_19",
     "name": "Odoo",
     "version": "19.0",

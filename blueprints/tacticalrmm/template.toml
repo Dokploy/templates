@@ -13,7 +13,17 @@ admin_password = "${password:16}"
 [[config.domains]]
 serviceName = "tactical-nginx"
 port = 8080
-host = "${main_domain}"
+host = "${app_subdomain}"
+
+[[config.domains]]
+serviceName = "tactical-nginx"
+port = 8080
+host = "${api_subdomain}"
+
+[[config.domains]]
+serviceName = "tactical-nginx"
+port = 8080
+host = "${mesh_subdomain}"
 
 [config.env]
 IMAGE_REPO = "ghcr.io/amidaware/"

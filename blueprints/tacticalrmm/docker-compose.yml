@@ -1,0 +1,188 @@
+networks:
+  proxy:
+    driver: bridge
+  api-db: {}
+  redis: {}
+  mesh-db: {}
+
+volumes:
+  tactical_data: {}
+  postgres_data: {}
+  mongo_data: {}
+  mesh_data: {}
+  redis_data: {}
+
+services:
+  tactical-postgres:
+    image: postgres:13-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tacticalrmm
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASS}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - api-db
+
+  tactical-redis:
+    image: redis:6.0-alpine
+    command: redis-server
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - redis
+
+  tactical-mongodb:
+    image: mongo:4.4
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+      MONGO_INITDB_DATABASE: meshcentral
+    networks:
+      - mesh-db
+    volumes:
+      - mongo_data:/data/db
+
+  tactical-meshcentral:
+    image: ${IMAGE_REPO:-ghcr.io/amidaware/}tactical-meshcentral:${VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      MESH_HOST: ${MESH_HOST}
+      MESH_USER: ${MESH_USER}
+      MESH_PASS: ${MESH_PASS}
+      MONGODB_USER: ${MONGODB_USER}
+      MONGODB_PASSWORD: ${MONGODB_PASSWORD}
+      MESH_PERSISTENT_CONFIG: ${MESH_PERSISTENT_CONFIG:-1}
+    networks:
+      proxy:
+        aliases:
+          - ${MESH_HOST}
+      mesh-db: {}
+    volumes:
+      - tactical_data:/opt/tactical
+      - mesh_data:/home/node/app/meshcentral-data
+    depends_on:
+      - tactical-mongodb
+
+  tactical-init:
+    image: ${IMAGE_REPO:-ghcr.io/amidaware/}tactical:${VERSION:-latest}
+    restart: on-failure
+    command: ["tactical-init"]
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASS: ${POSTGRES_PASS}
+      APP_HOST: ${APP_HOST}
+      API_HOST: ${API_HOST}
+      MESH_USER: ${MESH_USER}
+      MESH_HOST: ${MESH_HOST}
+      TRMM_USER: ${TRMM_USER}
+      TRMM_PASS: ${TRMM_PASS}
+    depends_on:
+      - tactical-postgres
+      - tactical-meshcentral
+      - tactical-redis
+    networks:
+      - api-db
+      - proxy
+      - redis
+    volumes:
+      - tactical_data:/opt/tactical
+      - mesh_data:/meshcentral-data
+      - mongo_data:/mongo/data/db
+      - redis_data:/redis/data
+
+  tactical-nats:
+    image: ${IMAGE_REPO:-ghcr.io/amidaware/}tactical-nats:${VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      API_HOST: ${API_HOST}
+    volumes:
+      - tactical_data:/opt/tactical
+    networks:
+      api-db: {}
+      proxy:
+        aliases:
+          - ${API_HOST}
+
+  tactical-frontend:
+    image: ${IMAGE_REPO:-ghcr.io/amidaware/}tactical-frontend:${VERSION:-latest}
+    restart: unless-stopped
+    networks:
+      - proxy
+    volumes:
+      - tactical_data:/opt/tactical
+    environment:
+      API_HOST: ${API_HOST}
+
+  tactical-backend:
+    image: ${IMAGE_REPO:-ghcr.io/amidaware/}tactical:${VERSION:-latest}
+    command: ["tactical-backend"]
+    restart: unless-stopped
+    networks:
+      - proxy
+      - api-db
+      - redis
+    volumes:
+      - tactical_data:/opt/tactical
+    depends_on:
+      - tactical-postgres
+
+  tactical-websockets:
+    image: ${IMAGE_REPO:-ghcr.io/amidaware/}tactical:${VERSION:-latest}
+    command: ["tactical-websockets"]
+    restart: unless-stopped
+    networks:
+      - proxy
+      - api-db
+      - redis
+    volumes:
+      - tactical_data:/opt/tactical
+    depends_on:
+      - tactical-postgres
+      - tactical-backend
+
+  tactical-nginx:
+    image: ${IMAGE_REPO:-ghcr.io/amidaware/}tactical-nginx:${VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      APP_HOST: ${APP_HOST}
+      API_HOST: ${API_HOST}
+      MESH_HOST: ${MESH_HOST}
+    networks:
+      - proxy
+    ports:
+      - 8080
+      - 4443
+    volumes:
+      - tactical_data:/opt/tactical
+
+  tactical-celery:
+    image: ${IMAGE_REPO:-ghcr.io/amidaware/}tactical:${VERSION:-latest}
+    command: ["tactical-celery"]
+    restart: unless-stopped
+    networks:
+      - redis
+      - proxy
+      - api-db
+    volumes:
+      - tactical_data:/opt/tactical
+    depends_on:
+      - tactical-postgres
+      - tactical-redis
+
+  tactical-celerybeat:
+    image: ${IMAGE_REPO:-ghcr.io/amidaware/}tactical:${VERSION:-latest}
+    command: ["tactical-celerybeat"]
+    restart: unless-stopped
+    networks:
+      - proxy
+      - redis
+      - api-db
+    volumes:
+      - tactical_data:/opt/tactical
+    depends_on:
+      - tactical-postgres
+      - tactical-redis

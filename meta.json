@@ -4425,6 +4425,26 @@
     ]
   },
   {
+    "id": "tacticalrmm",
+    "name": "Tactical RMM",
+    "version": "latest",
+    "description": "Tactical RMM is a powerful remote monitoring and management tool for Windows, Linux, and macOS. Built with Django, Vue, and Go, it integrates with MeshCentral for remote access.",
+    "logo": "logo.jpg",
+    "links": {
+      "github": "https://github.com/amidaware/tacticalrmm",
+      "website": "https://tacticalrmm.com/",
+      "docs": "https://docs.tacticalrmm.com/"
+    },
+    "tags": [
+      "monitoring",
+      "remote-access",
+      "rmm",
+      "management",
+      "it-tools",
+      "meshcentral"
+    ]
+  },
+  {
     "id": "tailscale-exitnode",
     "name": "Tailscale Exit nodes",
     "version": "1.0.0",

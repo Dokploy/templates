@@ -1,0 +1,34 @@
+[variables]
+main_domain = "${domain}"
+app_subdomain = "rmm.${domain}"
+api_subdomain = "api.${domain}"
+mesh_subdomain = "mesh.${domain}"
+postgres_password = "${password:20}"
+mongodb_password = "${password:20}"
+mesh_password = "${password:16}"
+admin_username = "admin"
+admin_password = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "tactical-nginx"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+IMAGE_REPO = "ghcr.io/amidaware/"
+VERSION = "latest"
+APP_HOST = "${app_subdomain}"
+API_HOST = "${api_subdomain}"
+MESH_HOST = "${mesh_subdomain}"
+POSTGRES_USER = "tactical"
+POSTGRES_PASS = "${postgres_password}"
+MONGODB_USER = "mongouser"
+MONGODB_PASSWORD = "${mongodb_password}"
+MESH_USER = "meshuser"
+MESH_PASS = "${mesh_password}"
+MESH_PERSISTENT_CONFIG = "1"
+TRMM_USER = "${admin_username}"
+TRMM_PASS = "${admin_password}"
+
+[[config.mounts]]

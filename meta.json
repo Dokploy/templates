@@ -4304,7 +4304,7 @@
       "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
       "docs": "https://docs.reef.io/"
     },
-    "logo": "reef.png",
+    "logo": "reef.svg",
     "tags": [
       "reef-chain",
       "validator",
@@ -4322,7 +4322,7 @@
       "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
       "docs": "https://docs.reef.io/"
     },
-    "logo": "reef.png",
+    "logo": "reef.svg",
     "tags": [
       "reef-chain",
       "rpc",

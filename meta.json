@@ -4302,7 +4302,7 @@
     "links": {
       "github": "https://github.com/reef-chain/chain-upgrade",
       "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
-      "docs":"https://docs.reef.io/"
+      "docs": "https://docs.reef.io/"
     },
     "logo": "reef.svg",
     "tags": [
@@ -4320,7 +4320,7 @@
     "links": {
       "github": "https://github.com/reef-chain/chain-upgrade",
       "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
-      "docs":"https://docs.reef.io/"
+      "docs": "https://docs.reef.io/"
     },
     "logo": "reef.svg",
     "tags": [

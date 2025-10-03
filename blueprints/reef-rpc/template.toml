@@ -1,19 +1,19 @@
 [variables]
-NODE_NAME = "${node_name}"
-P2P_PORT = ${p2p_port}
-RPC_PORT = ${rpc_port}
-CHAIN_SPEC_URL = "${chain_spec_url}"
-BOOTNODE_ADDR = "${bootnode_addr}"
+NODE_NAME = "rpc-node"
+P2P_PORT = 30334
+RPC_PORT = 9945
+CHAIN_SPEC_URL = "https://raw.githubusercontent.com/anukulpandey/reef-pelagia-testnet-customSpec.json/main/customSpec.json"
+BOOTNODE_ADDR = "/ip4/72.60.35.83/tcp/30933/p2p/12D3KooWFUtxzdPEziCEHCNHpVNLPyuVKhKfVoEHyiGZWktJA4ES"
 
 [[config.domains]]
 serviceName = "reef-rpc"
-port = ${RPC_PORT}
+port = 9945
 host = "localhost"
 path = "/"
 
 [config.env]
-NODE_NAME = "${NODE_NAME}"
-P2P_PORT = "${P2P_PORT}"
-RPC_PORT = "${RPC_PORT}"
-CHAIN_SPEC_URL = "${CHAIN_SPEC_URL}"
-BOOTNODE_ADDR = "${BOOTNODE_ADDR}"
+NODE_NAME = "rpc-node"
+P2P_PORT = 30334
+RPC_PORT = 9945
+CHAIN_SPEC_URL = "https://raw.githubusercontent.com/anukulpandey/reef-pelagia-testnet-customSpec.json/main/customSpec.json"
+BOOTNODE_ADDR = "/ip4/72.60.35.83/tcp/30933/p2p/12D3KooWFUtxzdPEziCEHCNHpVNLPyuVKhKfVoEHyiGZWktJA4ES"

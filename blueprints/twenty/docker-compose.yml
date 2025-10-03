@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   twenty-change-vol-ownership:
-    image: ubuntu
+    image: ubuntu:22.04
     user: root
 
     volumes:
@@ -10,8 +10,11 @@ services:
       - twenty-docker-data:/tmp/docker-data
     command: >
       bash -c "
-      chown -R 1000:1000 /tmp/server-local-data
-      && chown -R 1000:1000 /tmp/docker-data"
+      mkdir -p /tmp/server-local-data /tmp/docker-data
+      && chown -R 1000:1000 /tmp/server-local-data
+      && chown -R 1000:1000 /tmp/docker-data
+      && chmod -R 755 /tmp/server-local-data
+      && chmod -R 755 /tmp/docker-data"
 
   twenty-server:
     image: twentycrm/twenty:latest
@@ -34,11 +37,14 @@ services:
         condition: service_completed_successfully
       twenty-postgres:
         condition: service_healthy
+      twenty-redis:
+        condition: service_healthy
     healthcheck:
-      test: curl --fail http://localhost:3000/healthz
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/healthz || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 60s
     restart: always
 
   twenty-worker:
@@ -55,6 +61,8 @@ services:
       APP_SECRET: ${APP_SECRET}
     depends_on:
       twenty-postgres:
+        condition: service_healthy
+      twenty-redis:
         condition: service_healthy
       twenty-server:
         condition: service_healthy

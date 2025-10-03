@@ -1,16 +1,20 @@
 services:
   browserless:
-    image: ghcr.io/browserless/chromium:v2.23.0
+    image: ghcr.io/browserless/chromium:latest
     environment:
       TOKEN: ${BROWSERLESS_TOKEN}
-    expose:
-      - 3000
+      BROWSERLESS_HOST: ${BROWSERLESS_HOST}
+      ENABLE_CORS: true
+      ENABLE_XVFB: true
+      KEEP_ALIVE: true
+    ports:
+      - "8080:3000"
     healthcheck:
       test:
         - CMD
         - curl
         - '-f'
-        - 'http://127.0.0.1:3000/docs'
-      interval: 2s
+        - 'http://127.0.0.1:3000/health'
+      interval: 30s
       timeout: 10s
-      retries: 15
+      retries: 3

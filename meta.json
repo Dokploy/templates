@@ -4301,7 +4301,8 @@
     "description": "Runs bootstrap validator for a custom Reef Chain cluster",
     "links": {
       "github": "https://github.com/reef-chain/chain-upgrade",
-      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node"
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "docs":"https://docs.reef.io/"
     },
     "logo": "reef.svg",
     "tags": [

@@ -4,12 +4,12 @@ browserless_token = "${password:16}"
 
 [config]
 env = [
-  "BROWERLESS_HOST=${main_domain}",
+  "BROWSERLESS_HOST=${main_domain}",
   "BROWSERLESS_TOKEN=${browserless_token}",
 ]
 mounts = []
 
 [[config.domains]]
 serviceName = "browserless"
-port = 3_000
+port = 3000
 host = "${main_domain}"

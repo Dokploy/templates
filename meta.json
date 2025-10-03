@@ -4322,7 +4322,7 @@
       "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
       "docs": "https://docs.reef.io/"
     },
-    "logo": "reef.svg",
+    "logo": "reef.png",
     "tags": [
       "reef-chain",
       "rpc",

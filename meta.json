@@ -4295,6 +4295,23 @@
     ]
   },
   {
+    "id": "reef",
+    "name": "Reef Bootnode Validator",
+    "version": "1",
+    "description": "Runs bootstrap validator for a custom Reef Chain cluster",
+    "links": {
+      "github": "https://github.com/reef-chain/chain-upgrade",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node"
+    },
+    "logo": "reef.svg",
+    "tags": [
+      "reef-chain",
+      "validator",
+      "self-hosted",
+      "evm"
+    ]
+  },
+  {
     "id": "registry",
     "name": "Docker Registry",
     "version": "2",

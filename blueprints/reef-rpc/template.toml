@@ -24,7 +24,3 @@ env = [
     "CHAIN_SPEC_URL=${CHAIN_SPEC_URL}",
     "BOOTNODE_ADDR=${BOOTNODE_ADDR}"
 ]
-
-[[config.mounts]]
-filePath = "/reef-data"
-content = ""

@@ -1,28 +1,23 @@
-[metadata]
-name = "reef-bootnode"
-version = "1.0"
-description = "Reef Bootnode template for Dokploy"
-
 [variables]
-NODE_NAME = { description = "Node name", default = "bootnode" }
-P2P_PORT = { description = "P2P port for the node", default = "30333" }
-RPC_PORT = { description = "RPC/WebSocket port for the node", default = "9944" }
-CHAIN_SPEC_URL = { description = "URL to fetch the custom chain spec", default = "https://raw.githubusercontent.com/anukulpandey/reef-pelagia-testnet-customSpec.json/main/customSpec.json" }
+NODE_NAME = "bootnode"
+P2P_PORT = 30333
+RPC_PORT = 9944
+CHAIN_SPEC_URL = "https://raw.githubusercontent.com/anukulpandey/reef-pelagia-testnet-customSpec.json/main/customSpec.json"
 
-[config]
 [[config.domains]]
 serviceName = "reef-bootnode"
-port = "${RPC_PORT}"
-host = "localhost"
+port = 30333
+host = "0.0.0.0"
 path = "/"
 
-env = [
-    "NODE_NAME=${NODE_NAME}",
-    "P2P_PORT=${P2P_PORT}",
-    "RPC_PORT=${RPC_PORT}",
-    "CHAIN_SPEC_URL=${CHAIN_SPEC_URL}"
-]
+[[config.domains]]
+serviceName = "reef-bootnode-rpc"
+port = 9944
+host = "0.0.0.0"
+path = "/"
 
-[[config.mounts]]
-filePath = "/reef-data"
-content = ""
+[config.env]
+NODE_NAME = "bootnode"
+P2P_PORT = 30333
+RPC_PORT = 9944
+CHAIN_SPEC_URL = "https://raw.githubusercontent.com/anukulpandey/reef-pelagia-testnet-customSpec.json/main/customSpec.json"

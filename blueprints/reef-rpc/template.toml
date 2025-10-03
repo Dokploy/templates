@@ -1,0 +1,30 @@
+[metadata]
+name = "reef-rpc"
+version = "1.0"
+description = "Reef RPC Node template for Dokploy"
+
+[variables]
+NODE_NAME = { description = "RPC node name", default = "rpc-node" }
+P2P_PORT = { description = "P2P port for the RPC node", default = "30334" }
+RPC_PORT = { description = "RPC/WebSocket port for the RPC node", default = "9945" }
+CHAIN_SPEC_URL = { description = "URL to fetch the custom chain spec", default = "https://raw.githubusercontent.com/anukulpandey/reef-pelagia-testnet-customSpec.json/main/customSpec.json" }
+BOOTNODE_ADDR = { description = "Bootnode multiaddr to connect with", default = "/ip4/72.60.35.83/tcp/30933/p2p/12D3KooWFUtxzdPEziCEHCNHpVNLPyuVKhKfVoEHyiGZWktJA4ES" }
+
+[config]
+[[config.domains]]
+serviceName = "reef-rpc"
+port = "${RPC_PORT}"
+host = "localhost"
+path = "/"
+
+env = [
+    "NODE_NAME=${NODE_NAME}",
+    "P2P_PORT=${P2P_PORT}",
+    "RPC_PORT=${RPC_PORT}",
+    "CHAIN_SPEC_URL=${CHAIN_SPEC_URL}",
+    "BOOTNODE_ADDR=${BOOTNODE_ADDR}"
+]
+
+[[config.mounts]]
+filePath = "/reef-data"
+content = ""

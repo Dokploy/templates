@@ -1986,6 +1986,25 @@
     ]
   },
   {
+    "id": "firecrawl",
+    "name": "Firecrawl",
+    "version": "latest",
+    "description": "Firecrawl is an API service that takes a URL, crawls it, and converts it into clean markdown or structured data. It can crawl all accessible subpages and provide clean data for each.",
+    "logo": "firecrawl.svg",
+    "links": {
+      "github": "https://github.com/firecrawl/firecrawl",
+      "website": "https://firecrawl.dev",
+      "docs": "https://github.com/firecrawl/firecrawl"
+    },
+    "tags": [
+      "api",
+      "crawler",
+      "scraping",
+      "data-extraction",
+      "llm"
+    ]
+  },
+  {
     "id": "fivem",
     "name": "FiveM Server",
     "version": "latest",

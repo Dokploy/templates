@@ -5,7 +5,7 @@ main_domain = "${domain}"
 [[config.domains]]
 serviceName = "storyden"
 port = 8000
-host = "{main_domain}"
+host = "${main_domain}"
 
 [config.env]
 STORYDEN_FQDN = "http://${main_domain}"

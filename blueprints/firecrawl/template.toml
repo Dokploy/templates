@@ -1,0 +1,65 @@
+[variables]
+main_domain = "${domain}"
+openai_api_key = "${OPENAI_API_KEY}"
+openai_base_url = "${OPENAI_BASE_URL}"
+ollama_base_url = "${OLLAMA_BASE_URL}"
+model_name = "${MODEL_NAME}"
+model_embedding_name = "${MODEL_EMBEDDING_NAME}"
+proxy_server = "${PROXY_SERVER}"
+proxy_username = "${PROXY_USERNAME}"
+proxy_password = "${PROXY_PASSWORD}"
+searxng_endpoint = "${SEARXNG_ENDPOINT}"
+searxng_engines = "${SEARXNG_ENGINES}"
+searxng_categories = "${SEARXNG_CATEGORIES}"
+supabase_anon_token = "${SUPABASE_ANON_TOKEN}"
+supabase_url = "${SUPABASE_URL}"
+supabase_service_token = "${SUPABASE_SERVICE_TOKEN}"
+test_api_key = "${TEST_API_KEY}"
+bull_auth_key = "${password:32}"
+llamaparse_api_key = "${LLAMAPARSE_API_KEY}"
+slack_webhook_url = "${SLACK_WEBHOOK_URL}"
+posthog_api_key = "${POSTHOG_API_KEY}"
+posthog_host = "${POSTHOG_HOST}"
+max_cpu = "${MAX_CPU}"
+max_ram = "${MAX_RAM}"
+
+[config]
+env = [
+  "PORT=3002",
+  "HOST=0.0.0.0",
+  "USE_DB_AUTHENTICATION=false",
+  "BULL_AUTH_KEY=${bull_auth_key}",
+  "PLAYWRIGHT_MICROSERVICE_URL=http://playwright-service:3000/scrape",
+  "REDIS_URL=redis://redis:6379",
+  "REDIS_RATE_LIMIT_URL=redis://redis:6379",
+  "OPENAI_API_KEY=${openai_api_key}",
+  "OPENAI_BASE_URL=${openai_base_url}",
+  "OLLAMA_BASE_URL=${ollama_base_url}",
+  "MODEL_NAME=${model_name}",
+  "MODEL_EMBEDDING_NAME=${model_embedding_name}",
+  "PROXY_SERVER=${proxy_server}",
+  "PROXY_USERNAME=${proxy_username}",
+  "PROXY_PASSWORD=${proxy_password}",
+  "SEARXNG_ENDPOINT=${searxng_endpoint}",
+  "SEARXNG_ENGINES=${searxng_engines}",
+  "SEARXNG_CATEGORIES=${searxng_categories}",
+  "SUPABASE_ANON_TOKEN=${supabase_anon_token}",
+  "SUPABASE_URL=${supabase_url}",
+  "SUPABASE_SERVICE_TOKEN=${supabase_service_token}",
+  "TEST_API_KEY=${test_api_key}",
+  "LLAMAPARSE_API_KEY=${llamaparse_api_key}",
+  "SLACK_WEBHOOK_URL=${slack_webhook_url}",
+  "POSTHOG_API_KEY=${posthog_api_key}",
+  "POSTHOG_HOST=${posthog_host}",
+  "MAX_CPU=0.8",
+  "MAX_RAM=0.8"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "api"
+port = 3002
+host = "${main_domain}"
+path = "/"
+
+ 

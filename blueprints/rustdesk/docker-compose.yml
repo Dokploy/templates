@@ -1,0 +1,27 @@
+services:
+  hbbs:
+    image: rustdesk/rustdesk-server:latest
+    command: hbbs
+    restart: unless-stopped
+    volumes:
+      - rustdesk-data:/root
+    ports:
+      - 21115
+      - 21116
+      - 21116/udp
+    depends_on:
+      - hbbr
+
+  hbbr:
+    image: rustdesk/rustdesk-server:latest
+    command: hbbr
+    restart: unless-stopped
+    volumes:
+      - rustdesk-data:/root
+    ports:
+      - 21117
+      - 21118
+      - 21119
+
+volumes:
+  rustdesk-data: {}

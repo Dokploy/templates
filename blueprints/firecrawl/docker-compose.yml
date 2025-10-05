@@ -57,7 +57,7 @@ services:
     <<: *common-service
     restart: unless-stopped
     ports:
-      - "3002:3002"
+      - "3002"
     environment:
       <<: *common-env
       HOST: "0.0.0.0"

@@ -1,0 +1,36 @@
+volumes:
+  storyden_data:
+
+services:
+  storyden:
+    image: ghcr.io/southclaws/storyden:latest
+    expose:
+      - 8000
+    volumes:
+      - storyden_data:/storyden/data
+    environment:
+      # https://www.storyden.org/docs/operation/configuration#core-configuration
+      PUBLIC_WEB_ADDRESS: ${STORYDEN_FQDN}
+      PUBLIC_API_ADDRESS: ${STORYDEN_FQDN}
+
+      # https://www.storyden.org/docs/operation/configuration#email
+      # EMAIL_PROVIDER: ${EMAIL_PROVIDER}
+      # SENDGRID_FROM_NAME: ${SENDGRID_FROM_NAME}
+      # SENDGRID_FROM_ADDRESS: ${SENDGRID_FROM_ADDRESS}
+      # SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+
+      # https://www.storyden.org/docs/operation/configuration#authentication
+      # JWT_SECRET: ${JWT_SECRET}
+      # OAUTH_GOOGLE_ENABLED: ${OAUTH_GOOGLE_ENABLED}
+      # OAUTH_GOOGLE_CLIENT_ID: ${OAUTH_GOOGLE_CLIENT_ID}
+      # OAUTH_GOOGLE_CLIENT_SECRET: ${OAUTH_GOOGLE_CLIENT_SECRET}
+      # OAUTH_GITHUB_ENABLED: ${OAUTH_GITHUB_ENABLED}
+      # OAUTH_GITHUB_CLIENT_ID: ${OAUTH_GITHUB_CLIENT_ID}
+      # OAUTH_GITHUB_CLIENT_SECRET: ${OAUTH_GITHUB_CLIENT_SECRET}
+      # OAUTH_DISCORD_ENABLED: ${OAUTH_DISCORD_ENABLED}
+      # OAUTH_DISCORD_CLIENT_ID: ${OAUTH_DISCORD_CLIENT_ID}
+      # OAUTH_DISCORD_CLIENT_SECRET: ${OAUTH_DISCORD_CLIENT_SECRET}
+      # OAUTH_KEYCLOAK_ENABLED: ${OAUTH_KEYCLOAK_ENABLED}
+      # OAUTH_KEYCLOAK_CLIENT_ID: ${OAUTH_KEYCLOAK_CLIENT_ID}
+      # OAUTH_KEYCLOAK_CLIENT_SECRET: ${OAUTH_KEYCLOAK_CLIENT_SECRET}
+      # OAUTH_KEYCLOAK_ISSUER_URL: ${OAUTH_KEYCLOAK_ISSUER_URL}

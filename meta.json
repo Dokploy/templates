@@ -1986,6 +1986,25 @@
     ]
   },
   {
+    "id": "firecrawl",
+    "name": "Firecrawl",
+    "version": "latest",
+    "description": "Firecrawl is an API service that takes a URL, crawls it, and converts it into clean markdown or structured data. It can crawl all accessible subpages and provide clean data for each.",
+    "logo": "firecrawl.svg",
+    "links": {
+      "github": "https://github.com/firecrawl/firecrawl",
+      "website": "https://firecrawl.dev",
+      "docs": "https://github.com/firecrawl/firecrawl"
+    },
+    "tags": [
+      "api",
+      "crawler",
+      "scraping",
+      "data-extraction",
+      "llm"
+    ]
+  },
+  {
     "id": "fivem",
     "name": "FiveM Server",
     "version": "latest",
@@ -3295,6 +3314,23 @@
     ]
   },
   {
+    "id": "mealie",
+    "name": "Mealie (sqlite version)",
+    "version": "latest",
+    "description": " Mealie is an intuitive and easy to use recipe management app. It's designed to make your life easier by being the best recipes management experience on the web and providing you with an easy to use interface to manage your growing collection of recipes. ",
+    "logo": "mealie.png",
+    "links": {
+      "github": "https://github.com/mealie-recipes/mealie",
+      "website": "https://mealie.io/",
+      "docs": "https://docs.mealie.io/"
+    },
+    "tags": [
+      "recipes",
+      "shopping-list",
+      "meal-planning"
+    ]
+  },
+  {
     "id": "meilisearch",
     "name": "Meilisearch",
     "version": "v1.8.3",
@@ -3624,6 +3660,21 @@
     ]
   },
   {
+    "id": "odoo_18",
+    "name": "Odoo",
+    "version": "18.0",
+    "description": "Odoo is a free and open source business management software that helps you manage your company's operations.",
+    "logo": "odoo.png",
+    "links": {
+      "github": "https://github.com/odoo/odoo",
+      "website": "https://odoo.com/",
+      "docs": "https://www.odoo.com/documentation/"
+    },
+    "tags": [
+      "erp"
+    ]
+  },
+  {
     "id": "odoo_19",
     "name": "Odoo",
     "version": "19.0",
@@ -3635,7 +3686,7 @@
       "docs": "https://www.odoo.com/documentation/"
     },
     "tags": [
-      "crm"
+      "erp"
     ]
   },
   {
@@ -4688,6 +4739,25 @@
     "tags": [
       "pdf",
       "tools"
+    ]
+  },
+  {
+    "id": "storyden",
+    "name": "Storyden",
+    "version": "latest",
+    "description": "With a fresh new take on traditional bulletin board forum software, Storyden is a modern, secure and extensible platform for building communities.",
+    "logo": "storyden.png",
+    "links": {
+      "github": "https://github.com/Southclaws/storyden",
+      "discord": "https://discord.gg/XF6ZBGF9XF",
+      "docs": "https://www.storyden.org/docs/introduction",
+      "website": "https://www.storyden.org/"
+    },
+    "tags": [
+      "forum",
+      "discussion",
+      "community",
+      "open-source"
     ]
   },
   {

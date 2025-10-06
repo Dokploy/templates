@@ -8,7 +8,7 @@ BOOTNODE_ADDR = "/ip4/72.60.35.83/tcp/30933/p2p/12D3KooWFUtxzdPEziCEHCNHpVNLPyuV
 [[config.domains]]
 serviceName = "reef-rpc"
 port = 9945
-host = "localhost"
+host = "${domain}"
 path = "/"
 
 [config.env]

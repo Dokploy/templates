@@ -7,13 +7,13 @@ CHAIN_SPEC_URL = "https://raw.githubusercontent.com/anukulpandey/reef-pelagia-te
 [[config.domains]]
 serviceName = "reef-bootnode"
 port = 30333
-host = "0.0.0.0"
+host = "${domain}"
 path = "/"
 
 [[config.domains]]
 serviceName = "reef-bootnode-rpc"
 port = 9944
-host = "0.0.0.0"
+host = "${domain}"
 path = "/"
 
 [config.env]

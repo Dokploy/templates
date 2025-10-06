@@ -4854,7 +4854,7 @@
   {
     "id": "tolgee",
     "name": "Tolgee",
-    "version": "v3.80.4",
+    "version": "latest",
     "description": "Developer & translator friendly web-based localization platform",
     "logo": "tolgee.svg",
     "links": {

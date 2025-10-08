@@ -11,7 +11,7 @@ host = "${domain}"
 path = "/"
 
 [[config.domains]]
-serviceName = "reef-bootnode-rpc"
+serviceName = "reef-bootnode"
 port = 9944
 host = "${domain}"
 path = "/"

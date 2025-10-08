@@ -1,19 +1,37 @@
+# Trigger.dev self-hosting environment variables
+# - These are the default values for the self-hosting stack
+# - You should change them to suit your needs, especially the secrets
+# - See the docs for more information: https://trigger.dev/docs/self-hosting/overview
+
 [variables]
 main_domain = "${domain}"
+# Secrets
+# - Do NOT use these defaults in production
+# - Generate your own by running `openssl rand -hex 16` for each secret
 session_secret = "${hash:32}"
 magic_link_secret = "${hash:32}"
 encryption_key = "${hash:32}"
 managed_worker_secret = "${hash:32}"
-db_password = "${password:24}"
+# Postgres
+# - Do NOT use these defaults in production
+# - Especially if you decide to expose the database to the internet
 db_user = "postgres"
+db_password = "${password:24}"
 db_name = "triggerdb"
+# ClickHouse
+# - Do NOT use these defaults in production
 clickhouse_user = "default"
 clickhouse_password = "${password:16}"
+# Docker Registry
 docker_registry_username = "registry-user"
 docker_registry_password = "${password:16}"
 docker_registry_namespace = "trigger"
+# Object Store
 object_store_access_key_id = "${username}"
 object_store_secret_access_key = "${password:24}"
+# Minio
+# - You should change these credentials and not use them for the `OBJECT_STORE_` env vars above
+# - Instead, setup a non-root user with access the "packets" bucket
 minio_root_user = "admin"
 minio_root_password = "${password:24}"
 
@@ -26,44 +44,135 @@ port = 3000
 host = "${main_domain}"
 
 [config.env]
-# Webapp origins
-APP_ORIGIN = "http://${main_domain}"
-LOGIN_ORIGIN = "http://${main_domain}"
-API_ORIGIN = "http://${main_domain}"
-DEV_OTEL_EXPORTER_OTLP_ENDPOINT = "http://${main_domain}/otel"
-
 # Secrets
+# - Do NOT use these defaults in production
+# - Generate your own by running `openssl rand -hex 16` for each secret
 SESSION_SECRET = "${session_secret}"
 MAGIC_LINK_SECRET = "${magic_link_secret}"
 ENCRYPTION_KEY = "${encryption_key}"
 MANAGED_WORKER_SECRET = "${managed_worker_secret}"
 
+# Worker token
+# - This is the token for the worker to connect to the webapp
+# - When running the combined stack, this is set automatically during bootstrap
+# - For the split setup, you will have to set this manually. The token is available in the webapp logs but will only be shown once.
+# - See the docs for more information: https://trigger.dev/docs/self-hosting/docker
+# TRIGGER_WORKER_TOKEN =
+
+# Worker URLs
+# - In split setups, uncomment and set to the public URL of your webapp
+# TRIGGER_API_URL = "https://trigger.example.com"
+# OTEL_EXPORTER_OTLP_ENDPOINT = "https://trigger.example.com/otel"
+
 # Postgres
+# - Do NOT use these defaults in production
+# - Especially if you decide to expose the database to the internet
+# POSTGRES_USER = "${db_user}"
 POSTGRES_USER = "${db_user}"
 POSTGRES_PASSWORD = "${db_password}"
+# POSTGRES_DB = "${db_name}"
 POSTGRES_DB = "${db_name}"
 DATABASE_URL = "postgresql://${db_user}:${db_password}@postgres:5432/${db_name}?schema=public&sslmode=disable"
 DIRECT_URL = "postgresql://${db_user}:${db_password}@postgres:5432/${db_name}?schema=public&sslmode=disable"
 
+# Trigger image tag
+# - This is the version of the webapp and worker images to use, they should be locked to a specific version in production
+# - For example: TRIGGER_IMAGE_TAG=v4.0.0-v4-beta.21
+TRIGGER_IMAGE_TAG = "v4-beta"
+
+# Webapp
+# - These should generally be set to the same value
+# - In production, these should be set to the public URL of your webapp, e.g. https://trigger.example.com
+APP_ORIGIN = "http://${main_domain}"
+LOGIN_ORIGIN = "http://${main_domain}"
+API_ORIGIN = "http://${main_domain}"
+DEV_OTEL_EXPORTER_OTLP_ENDPOINT = "http://${main_domain}/otel"
+# You may need to set this when testing locally or when using the combined setup
+# API_ORIGIN = "http://webapp:3000"
+
+# Webapp - memory management
+# - This sets the maximum memory allocation for Node.js heap in MiB (e.g. "4096" for 4GB)
+# - It should be set according to your total webapp machine's memory or any container limits you have set
+# - Setting this too high or low WILL cause crashes, inefficient memory utilization and high CPU usage
+# - You should allow for some memory overhead, we suggest at least 20%, for example:
+#   - 2GB machine: NODE_MAX_OLD_SPACE_SIZE=1600
+#   - 4GB machine: NODE_MAX_OLD_SPACE_SIZE=3200
+#   - 6GB machine: NODE_MAX_OLD_SPACE_SIZE=4800
+#   - 8GB machine: NODE_MAX_OLD_SPACE_SIZE=6400
+# NODE_MAX_OLD_SPACE_SIZE = "8192"
+
 # ClickHouse
+# - Do NOT use these defaults in production
 CLICKHOUSE_USER = "${clickhouse_user}"
 CLICKHOUSE_PASSWORD = "${clickhouse_password}"
 CLICKHOUSE_URL = "http://${clickhouse_user}:${clickhouse_password}@clickhouse:8123?secure=false"
 RUN_REPLICATION_CLICKHOUSE_URL = "http://${clickhouse_user}:${clickhouse_password}@clickhouse:8123"
 
 # Docker Registry
+# - When testing locally, the default values should be fine
+# - When deploying to production, you will have to change these, especially the password and URL
+# - See the docs for more information: https://trigger.dev/docs/self-hosting/docker#registry-setup
 DOCKER_REGISTRY_URL = "registry:5000"
 DOCKER_REGISTRY_USERNAME = "${docker_registry_username}"
 DOCKER_REGISTRY_PASSWORD = "${docker_registry_password}"
+# When using an external registry you will have to change this
+# On Docker Hub it should generally be the same as your username
 DOCKER_REGISTRY_NAMESPACE = "${docker_registry_namespace}"
 
-# Object Store
+# Object store
+# - You need to log into the Minio dashboard and create a bucket called "packets" 
+# - See the docs for more information: https://trigger.dev/docs/self-hosting/docker#object-storage
 OBJECT_STORE_ACCESS_KEY_ID = "${object_store_access_key_id}"
 OBJECT_STORE_SECRET_ACCESS_KEY = "${object_store_secret_access_key}"
-
-# Minio
+# You will have to uncomment and configure this for production
+# OBJECT_STORE_BASE_URL = "http://localhost:9000"
+# Credentials to access the Minio dashboard at http://localhost:9001
+# - You should change these credentials and not use them for the `OBJECT_STORE_` env vars above
+# - Instead, setup a non-root user with access the "packets" bucket
+# MINIO_ROOT_USER = "${minio_root_user}"
+# MINIO_ROOT_PASSWORD = "${minio_root_password}"
 MINIO_ROOT_USER = "${minio_root_user}"
 MINIO_ROOT_PASSWORD = "${minio_root_password}"
 
-# Trigger image version
-TRIGGER_IMAGE_TAG = "v4-beta"
+# Other image tags
+# - These are the versions of the other images to use
+# - You should lock these to a specific version in production
+# POSTGRES_IMAGE_TAG = "14"
+# REDIS_IMAGE_TAG = "7"
+# ELECTRIC_IMAGE_TAG = "1.0.13"
+# CLICKHOUSE_IMAGE_TAG = "latest"
+# REGISTRY_IMAGE_TAG = "2"
+# MINIO_IMAGE_TAG = "latest"
+# DOCKER_PROXY_IMAGE_TAG = "latest"
+# TRAEFIK_IMAGE_TAG = "v3.4"
+
+# Publish IPs
+# - These are the IPs to publish the services to
+# - Setting to 127.0.0.1 makes the service only accessible locally
+# - When deploying to production, you will have to change these, depending on your setup
+# WEBAPP_PUBLISH_IP = "0.0.0.0"
+# POSTGRES_PUBLISH_IP = "127.0.0.1"
+# REDIS_PUBLISH_IP = "127.0.0.1"
+# ELECTRIC_PUBLISH_IP = "127.0.0.1"
+# CLICKHOUSE_PUBLISH_IP = "127.0.0.1"
+# REGISTRY_PUBLISH_IP = "127.0.0.1"
+# MINIO_PUBLISH_IP = "127.0.0.1"
+
+# Restart policy
+# - Applies to all services, adjust as needed
+# RESTART_POLICY = "unless-stopped"
+
+# Docker logging
+# - See the official docs: https://docs.docker.com/engine/logging/configure/
+# LOGGING_DRIVER = "local"
+# LOGGING_MAX_SIZE = "20m"
+# LOGGING_MAX_FILES = "5"
+# LOGGING_COMPRESS = "true"
+
+# Traefik
+# - Reverse proxy settings only serve as an example and require further configuration
+# - See the partial overrides in docker-compose.traefik.yml for more details
+# TRAEFIK_ENTRYPOINT = "websecure"
+# TRAEFIK_HTTP_PUBLISH_IP = "0.0.0.0"
+# TRAEFIK_HTTPS_PUBLISH_IP = "0.0.0.0"
+# TRAEFIK_DASHBOARD_PUBLISH_IP = "127.0.0.1"

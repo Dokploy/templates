@@ -1,0 +1,14 @@
+[variables]
+app_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "dozzle" # Must match the service name in docker-compose.yml
+port = 8080
+host = "${app_domain}"
+
+[config.env]
+# Dozzle doesn't require env vars for basic usage; add if needed
+
+[[config.mounts]]
+

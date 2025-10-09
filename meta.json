@@ -2356,6 +2356,26 @@
     ]
   },
   {
+    "id": "guacamole",
+    "name": "Apache Guacamole",
+    "version": "latest",
+    "description": "Apache Guacamole is a clientless remote desktop gateway. It supports standard protocols like VNC, RDP, SSH, and Kubernetes. Access your desktops from anywhere using just a web browser.",
+    "logo": "apache-guacamole.png",
+    "links": {
+      "github": "https://github.com/apache/guacamole-server",
+      "website": "https://guacamole.apache.org/",
+      "docs": "https://guacamole.apache.org/doc/gug/"
+    },
+    "tags": [
+      "remote-desktop",
+      "vnc",
+      "rdp",
+      "ssh",
+      "gateway",
+      "remote-access"
+    ]
+  },
+  {
     "id": "grimoire",
     "name": "Grimoire",
     "version": "latest",

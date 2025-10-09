@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  reef-rpc:
+    image: anukulpandey/reef-node:latest
+    platform: linux/amd64
+    restart: unless-stopped
+    environment:
+      - P2P_PORT=${P2P_PORT}
+      - RPC_PORT=${RPC_PORT}
+      - NODE_NAME=${NODE_NAME}
+      - CHAIN_SPEC_URL=${CHAIN_SPEC_URL}
+      - BOOTNODE_ADDR=${BOOTNODE_ADDR}
+    volumes:
+      - ./rpc-db:/reef-data
+    entrypoint: sh -c
+    command: >
+      "wget -qO /reef-data/customSpec.json $CHAIN_SPEC_URL &&
+      reef-node build-spec --disable-default-bootnode --chain /reef-data/customSpec.json --raw > /reef-data/customSpecRaw.json &&
+      reef-node --base-path /reef-data --chain /reef-data/customSpecRaw.json --port $P2P_PORT --rpc-port $RPC_PORT --no-telemetry --name $NODE_NAME --rpc-cors all --rpc-external --rpc-methods Unsafe --rpc-max-connections 10000 --pruning=archive --bootnodes $BOOTNODE_ADDR"
+    ports:
+      - "${P2P_PORT}:${P2P_PORT}"
+      - "${RPC_PORT}:${RPC_PORT}"

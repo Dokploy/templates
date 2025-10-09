@@ -176,3 +176,28 @@ MINIO_ROOT_PASSWORD = "${minio_root_password}"
 # TRAEFIK_HTTP_PUBLISH_IP = "0.0.0.0"
 # TRAEFIK_HTTPS_PUBLISH_IP = "0.0.0.0"
 # TRAEFIK_DASHBOARD_PUBLISH_IP = "127.0.0.1"
+
+# Email Transport (options: smtp, resend, aws-ses, or leave empty to log magic links to console)
+EMAIL_TRANSPORT=
+
+# Email addresses (required if using email transport)
+FROM_EMAIL=
+REPLY_TO_EMAIL=
+
+# ---- SMTP Configuration (only if EMAIL_TRANSPORT=smtp) ----
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=
+SMTP_PASSWORD=
+
+# ---- Resend Configuration (only if EMAIL_TRANSPORT=resend) ----
+RESEND_API_KEY=
+
+# ---- GitHub OAuth (optional, for GitHub login) ----
+AUTH_GITHUB_CLIENT_ID=
+AUTH_GITHUB_CLIENT_SECRET=
+
+# ---- Email Whitelisting (optional, applies to all auth methods) ----
+# Use regex pattern, e.g.: "user@example\.com|admin@company\.com"
+WHITELISTED_EMAILS=

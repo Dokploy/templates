@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   guacd:
     image: guacamole/guacd:latest
@@ -25,7 +27,7 @@ services:
       GUACD_HOSTNAME: guacd
       POSTGRESQL_HOSTNAME: postgres
       POSTGRESQL_DATABASE: ${POSTGRES_DB:-guacamole}
-      POSTGRESQL_USER: ${POSTGRES_USER:-guacamole}
+      POSTGRESQL_USERNAME: ${POSTGRES_USER:-guacamole}
       POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD}
     depends_on:
       - guacd

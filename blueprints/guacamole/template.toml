@@ -14,16 +14,3 @@ POSTGRES_USER = "guacamole"
 POSTGRES_PASSWORD = "${postgres_password}"
 
 [[config.mounts]]
-filePath = "/initdb.sql"
-content = """
---
--- PostgreSQL database initialization script for Apache Guacamole
--- This SQL will be automatically run on first startup to create the schema
---
-
--- Run this to get the actual initdb.sql from the guacamole container:
--- docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --postgresql
-
--- Create the guacamole schema tables
--- This is a minimal placeholder - the actual schema will be created by guacamole on first run
-"""

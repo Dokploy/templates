@@ -2356,6 +2356,23 @@
     ]
   },
   {
+    "id": "grimoire",
+    "name": "Grimoire",
+    "version": "latest",
+    "description": "Grimoire is a self-hosted bookmarking app designed for speed and simplicity.",
+    "logo": "logo.webp",
+    "links": {
+      "github": "https://github.com/goniszewski/grimoire",
+      "website": "https://github.com/goniszewski/grimoire",
+      "docs": "https://github.com/goniszewski/grimoire"
+    },
+    "tags": [
+      "bookmarks",
+      "self-hosted",
+      "knowledge-management"
+    ]
+  },
+  {
     "id": "guacamole",
     "name": "Apache Guacamole",
     "version": "latest",
@@ -2373,23 +2390,6 @@
       "ssh",
       "gateway",
       "remote-access"
-    ]
-  },
-  {
-    "id": "grimoire",
-    "name": "Grimoire",
-    "version": "latest",
-    "description": "Grimoire is a self-hosted bookmarking app designed for speed and simplicity.",
-    "logo": "logo.webp",
-    "links": {
-      "github": "https://github.com/goniszewski/grimoire",
-      "website": "https://github.com/goniszewski/grimoire",
-      "docs": "https://github.com/goniszewski/grimoire"
-    },
-    "tags": [
-      "bookmarks",
-      "self-hosted",
-      "knowledge-management"
     ]
   },
   {

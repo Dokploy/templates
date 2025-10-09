@@ -1,7 +1,6 @@
-version: "3.8"
 services:
   web:
-    image: odoo:16.0
+    image: odoo:18.0
     depends_on:
       - db
     environment:
@@ -14,8 +13,7 @@ services:
       - ../files/addons:/mnt/extra-addons
 
   db:
-    image: postgres:13
-
+    image: postgres:17
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=odoo

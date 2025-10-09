@@ -24,53 +24,42 @@ max_cpu = "${MAX_CPU}"
 max_ram = "${MAX_RAM}"
 
 [config]
+env = [
+  "PORT=3002",
+  "HOST=0.0.0.0",
+  "USE_DB_AUTHENTICATION=false",
+  "BULL_AUTH_KEY=${bull_auth_key}",
+  "PLAYWRIGHT_MICROSERVICE_URL=http://playwright-service:3000/scrape",
+  "REDIS_URL=redis://redis:6379",
+  "REDIS_RATE_LIMIT_URL=redis://redis:6379",
+  "OPENAI_API_KEY=${openai_api_key}",
+  "OPENAI_BASE_URL=${openai_base_url}",
+  "OLLAMA_BASE_URL=${ollama_base_url}",
+  "MODEL_NAME=${model_name}",
+  "MODEL_EMBEDDING_NAME=${model_embedding_name}",
+  "PROXY_SERVER=${proxy_server}",
+  "PROXY_USERNAME=${proxy_username}",
+  "PROXY_PASSWORD=${proxy_password}",
+  "SEARXNG_ENDPOINT=${searxng_endpoint}",
+  "SEARXNG_ENGINES=${searxng_engines}",
+  "SEARXNG_CATEGORIES=${searxng_categories}",
+  "SUPABASE_ANON_TOKEN=${supabase_anon_token}",
+  "SUPABASE_URL=${supabase_url}",
+  "SUPABASE_SERVICE_TOKEN=${supabase_service_token}",
+  "TEST_API_KEY=${test_api_key}",
+  "LLAMAPARSE_API_KEY=${llamaparse_api_key}",
+  "SLACK_WEBHOOK_URL=${slack_webhook_url}",
+  "POSTHOG_API_KEY=${posthog_api_key}",
+  "POSTHOG_HOST=${posthog_host}",
+  "MAX_CPU=0.8",
+  "MAX_RAM=0.8"
+]
+mounts = []
+
 [[config.domains]]
 serviceName = "api"
 port = 3002
 host = "${main_domain}"
 path = "/"
 
-[config.env]
-PORT = "3002"
-HOST = "0.0.0.0"
-USE_DB_AUTHENTICATION = "false"
-## Required/always-on
-BULL_AUTH_KEY = "${bull_auth_key}"
-PLAYWRIGHT_MICROSERVICE_URL = "http://playwright-service:3000/scrape"
-REDIS_URL = "redis://redis:6379"
-REDIS_RATE_LIMIT_URL = "redis://redis:6379"
-
-## Optional AI features
-OPENAI_API_KEY = "${openai_api_key}"
-OPENAI_BASE_URL = "${openai_base_url}"
-OLLAMA_BASE_URL = "${ollama_base_url}"
-MODEL_NAME = "${model_name}"
-MODEL_EMBEDDING_NAME = "${model_embedding_name}"
-
-## Proxy (optional)
-PROXY_SERVER = "${proxy_server}"
-PROXY_USERNAME = "${proxy_username}"
-PROXY_PASSWORD = "${proxy_password}"
-
-## /search API (optional)
-SEARXNG_ENDPOINT = "${searxng_endpoint}"
-SEARXNG_ENGINES = "${searxng_engines}"
-SEARXNG_CATEGORIES = "${searxng_categories}"
-
-## Supabase (optional, for DB auth and logging)
-SUPABASE_ANON_TOKEN = "${supabase_anon_token}"
-SUPABASE_URL = "${supabase_url}"
-SUPABASE_SERVICE_TOKEN = "${supabase_service_token}"
-
-## Testing (optional)
-TEST_API_KEY = "${test_api_key}"
-
-## Integrations (optional)
-LLAMAPARSE_API_KEY = "${llamaparse_api_key}"
-SLACK_WEBHOOK_URL = "${slack_webhook_url}"
-POSTHOG_API_KEY = "${posthog_api_key}"
-POSTHOG_HOST = "${posthog_host}"
-
-## System resource thresholds (optional)
-MAX_CPU = "0.8"
-MAX_RAM = "0.8"
+ 

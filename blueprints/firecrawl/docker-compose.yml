@@ -1,18 +1,14 @@
 name: firecrawl
-
+ 
 x-common-service: &common-service
-  # NOTE: If you don't want to build the service locally,
-  # uncomment the build: statement and comment out the image: statement
-  # image: ghcr.io/firecrawl/firecrawl
   image: ghcr.io/firecrawl/firecrawl:latest
-
   ulimits:
     nofile:
       soft: 65535
       hard: 65535
   extra_hosts:
     - "host.docker.internal:host-gateway"
-
+ 
 x-common-env: &common-env
   REDIS_URL: ${REDIS_URL:-redis://redis:6379}
   REDIS_RATE_LIMIT_URL: ${REDIS_RATE_LIMIT_URL:-redis://redis:6379}
@@ -43,11 +39,9 @@ x-common-env: &common-env
   SEARXNG_ENDPOINT: ${SEARXNG_ENDPOINT:-}
   SEARXNG_ENGINES: ${SEARXNG_ENGINES:-}
   SEARXNG_CATEGORIES: ${SEARXNG_CATEGORIES:-}
-
+ 
 services:
   playwright-service:
-    # NOTE: If you don't want to build the service locally,
-    # uncomment the build: statement and comment out the image: statement
     image: ghcr.io/firecrawl/playwright-service:latest
     shm_size: "1g"
     restart: unless-stopped
@@ -58,15 +52,17 @@ services:
       PROXY_PASSWORD: ${PROXY_PASSWORD:-}
       BLOCK_MEDIA: ${BLOCK_MEDIA:-}
       NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,redis,nuq-postgres,playwright-service,host.docker.internal}
-
+ 
   api:
     <<: *common-service
     restart: unless-stopped
+    ports:
+      - "3002"
     environment:
       <<: *common-env
       HOST: "0.0.0.0"
-      PORT: ${INTERNAL_PORT:-3002}
-      WORKER_PORT: ${WORKER_PORT:-3005}
+      PORT: 3002
+      WORKER_PORT: 3005
       ENV: local
     depends_on:
       redis:
@@ -75,17 +71,42 @@ services:
         condition: service_started
       nuq-postgres:
         condition: service_healthy
-    command: node dist/src/harness.js --start-docker
-
+    command: node --import ./dist/src/otel.js dist/src/index.js
+ 
+  worker:
+    <<: *common-service
+    restart: unless-stopped
+    environment:
+      <<: *common-env
+      HOST: "0.0.0.0"
+      PORT: 3005
+      ENV: local
+    depends_on:
+      redis:
+        condition: service_started
+      nuq-postgres:
+        condition: service_healthy
+    command: node --import ./dist/src/otel.js dist/src/services/queue-worker.js
+ 
+  extract-worker:
+    <<: *common-service
+    restart: unless-stopped
+    environment:
+      <<: *common-env
+      HOST: "0.0.0.0"
+      PORT: 3004
+      ENV: local
+    depends_on:
+      redis:
+        condition: service_started
+      nuq-postgres:
+        condition: service_healthy
+    command: node --import ./dist/src/otel.js dist/src/services/extract-worker.js
+ 
   redis:
-    # NOTE: If you want to use Valkey (open source) instead of Redis (source available),
-    # uncomment the Valkey statement and comment out the Redis statement.
-    # Using Valkey with Firecrawl is untested and not guaranteed to work. Use with caution.
     image: redis:alpine
-    # image: valkey/valkey:alpine
-
     command: redis-server --bind 0.0.0.0
-
+ 
   nuq-postgres:
     build:
       context: "https://github.com/firecrawl/firecrawl.git#main:apps/nuq-postgres"
@@ -106,12 +127,12 @@ services:
     networks:
       - backend
       - dokploy-network
-
+ 
 networks:
   backend:
     driver: bridge
   dokploy-network:
     external: true
-
+ 
 volumes:
   nuq_pg_data:

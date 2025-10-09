@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  db:
+    image: mariadb:11.4
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${OJS_DB_NAME}"
+      MYSQL_USER: "${OJS_DB_USER}"
+      MYSQL_PASSWORD: "${OJS_DB_PASSWORD}"
+    volumes:
+      - ojs-db-data:/var/lib/mysql
+    restart: unless-stopped
+
+  ojs:
+    image: "pkpofficial/ojs:3_3_0-21"
+    hostname: "${COMPOSE_PROJECT_NAME}"
+    ports:
+      - 80
+      - 443
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ojs-private-files:/var/www/files
+      - ojs-public-files:/var/www/html/public
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  ojs-db-data: {}
+  ojs-private-files: {}
+  ojs-public-files: {}

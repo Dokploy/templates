@@ -1994,7 +1994,7 @@
     "links": {
       "github": "https://github.com/firecrawl/firecrawl",
       "website": "https://firecrawl.dev",
-      "docs": "https://docs.firecrawl.dev/introduction"
+      "docs": "https://github.com/firecrawl/firecrawl"
     },
     "tags": [
       "api",
@@ -3314,6 +3314,23 @@
     ]
   },
   {
+    "id": "mealie",
+    "name": "Mealie (sqlite version)",
+    "version": "latest",
+    "description": " Mealie is an intuitive and easy to use recipe management app. It's designed to make your life easier by being the best recipes management experience on the web and providing you with an easy to use interface to manage your growing collection of recipes. ",
+    "logo": "mealie.png",
+    "links": {
+      "github": "https://github.com/mealie-recipes/mealie",
+      "website": "https://mealie.io/",
+      "docs": "https://docs.mealie.io/"
+    },
+    "tags": [
+      "recipes",
+      "shopping-list",
+      "meal-planning"
+    ]
+  },
+  {
     "id": "meilisearch",
     "name": "Meilisearch",
     "version": "v1.8.3",
@@ -3543,7 +3560,7 @@
   {
     "id": "nocodb",
     "name": "NocoDB",
-    "version": "0.257.2",
+    "version": "latest",
     "description": "NocoDB is an opensource Airtable alternative that turns any MySQL, PostgreSQL, SQL Server, SQLite & MariaDB into a smart spreadsheet.",
     "links": {
       "github": "https://github.com/nocodb/nocodb",
@@ -3613,9 +3630,9 @@
     ]
   },
   {
-    "id": "odoo",
+    "id": "odoo_17",
     "name": "Odoo",
-    "version": "16.0",
+    "version": "17.0",
     "description": "Odoo is a free and open source business management software that helps you manage your company's operations.",
     "logo": "odoo.png",
     "links": {
@@ -3624,7 +3641,22 @@
       "docs": "https://www.odoo.com/documentation/"
     },
     "tags": [
-      "cms"
+      "erp"
+    ]
+  },
+  {
+    "id": "odoo_18",
+    "name": "Odoo",
+    "version": "18.0",
+    "description": "Odoo is a free and open source business management software that helps you manage your company's operations.",
+    "logo": "odoo.png",
+    "links": {
+      "github": "https://github.com/odoo/odoo",
+      "website": "https://odoo.com/",
+      "docs": "https://www.odoo.com/documentation/"
+    },
+    "tags": [
+      "erp"
     ]
   },
   {
@@ -3639,7 +3671,25 @@
       "docs": "https://www.odoo.com/documentation/"
     },
     "tags": [
-      "crm"
+      "erp"
+    ]
+  },
+  {
+    "id": "ojs",
+    "name": "Open Journal Systems",
+    "version": "3.3.0-21",
+    "description": "Open Journal Systems (OJS) is a journal management and publishing system that has been developed by the Public Knowledge Project through its federally funded efforts to expand and improve access to research.",
+    "logo": "ojs.svg",
+    "links": {
+      "github": "https://github.com/pkp/docker-ojs",
+      "website": "https://pkp.sfu.ca/ojs/",
+      "docs": "https://pkp.sfu.ca/ojs/docs/"
+    },
+    "tags": [
+      "publishing",
+      "journal",
+      "research",
+      "academic"
     ]
   },
   {
@@ -4695,6 +4745,25 @@
     ]
   },
   {
+    "id": "storyden",
+    "name": "Storyden",
+    "version": "latest",
+    "description": "With a fresh new take on traditional bulletin board forum software, Storyden is a modern, secure and extensible platform for building communities.",
+    "logo": "storyden.png",
+    "links": {
+      "github": "https://github.com/Southclaws/storyden",
+      "discord": "https://discord.gg/XF6ZBGF9XF",
+      "docs": "https://www.storyden.org/docs/introduction",
+      "website": "https://www.storyden.org/"
+    },
+    "tags": [
+      "forum",
+      "discussion",
+      "community",
+      "open-source"
+    ]
+  },
+  {
     "id": "supabase",
     "name": "SupaBase",
     "version": "1.25.04 / dokploy >= 0.22.5",
@@ -5182,6 +5251,23 @@
     },
     "tags": [
       "cms"
+    ]
+  },
+  {
+    "id": "xsshunter",
+    "name": "XSSHunter",
+    "version": "latest",
+    "description": "XSSHunter is an open-source platform designed to identify and exploit blind Cross-Site Scripting (XSS) vulnerabilities. It provides security researchers, bug bounty hunters, and penetration testers with a comprehensive toolkit for detecting XSS flaws that are otherwise difficult to discover through traditional testing methods.",
+    "logo": "xsshunter.png",
+    "links": {
+      "github": "https://github.com/rs-loves-bugs/xsshunter",
+      "website": "https://github.com/rs-loves-bugs/xsshunter",
+      "docs": "https://github.com/rs-loves-bugs/xsshunter#requirements"
+    },
+    "tags": [
+      "pentest",
+      "xsshunter",
+      "bugbounty"
     ]
   },
   {

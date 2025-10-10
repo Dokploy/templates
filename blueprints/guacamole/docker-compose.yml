@@ -17,6 +17,14 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - init-data:/docker-entrypoint-initdb.d
+
+  init-db:
+    image: guacamole/guacamole:latest
+    command: /bin/sh -c "/opt/guacamole/bin/initdb.sh --postgresql > /initdb/initdb.sql"
+    volumes:
+      - init-data:/initdb
+    restart: "no"
 
   guacamole:
     image: guacamole/guacamole:latest
@@ -37,3 +45,4 @@ volumes:
   postgres-data: {}
   guacd-drive: {}
   guacd-record: {}
+  init-data: {}

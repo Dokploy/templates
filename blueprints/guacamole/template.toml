@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:20}"
+
+[config]
+[[config.domains]]
+serviceName = "guacamole"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_DB = "guacamole"
+POSTGRES_USER = "guacamole"
+POSTGRES_PASSWORD = "${postgres_password}"
+
+[[config.mounts]]

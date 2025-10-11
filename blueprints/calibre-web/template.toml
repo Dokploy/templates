@@ -16,9 +16,24 @@ DOCKER_MODS = "linuxserver/mods:universal-calibre"
 OAUTHLIB_RELAX_TOKEN_SCOPE = "1"
 
 [[config.mounts]]
-name = "calibre-config"
-mountPath = "/config"
+filePath = "startup-scripts/metadata-db-generator.sh"
+content = """
+#!/bin/bash
 
-[[config.mounts]]
-name = "calibre-books"
-mountPath = "/books"
+FILE=/books/metadata.db
+PUID=1000
+PGID=1000
+
+if test -f "$FILE"; then
+    echo "$FILE already exists, skipping generation."
+else
+    echo "$FILE does not exists, downloading..."
+    # download empty database from the calibre-web repo
+    curl -L -O --output-dir /books https://github.com/janeczku/calibre-web/raw/refs/heads/master/library/metadata.db
+    echo "$FILE downloaded, setting permissions..."
+    chmod a+w $FILE
+    # this is needed for uploads, you can remove it if you don't want to allow uploads
+    chown $PUID:$PGID /books
+    echo "Permissions fixed, use /books as library path"
+fi
+"""

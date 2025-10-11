@@ -91,11 +91,11 @@ services:
   clickhouse:
     <<: *clickhouse-defaults
     volumes:
-      - ./clickhouse/config.xml:/etc/clickhouse-server/config.xml
-      - ./clickhouse/users.xml:/etc/clickhouse-server/users.xml
-      - ./clickhouse/custom-function.xml:/etc/clickhouse-server/custom-function.xml
+      - ./clickhouse-config.xml:/etc/clickhouse-server/config.xml
+      - ./clickhouse-users.xml:/etc/clickhouse-server/users.xml
+      - ./clickhouse-custom-function.xml:/etc/clickhouse-server/custom-function.xml
       - clickhouse-user-scripts:/var/lib/clickhouse/user_scripts/
-      - ./clickhouse/cluster.xml:/etc/clickhouse-server/config.d/cluster.xml
+      - ./clickhouse-cluster.xml:/etc/clickhouse-server/config.d/cluster.xml
       - clickhouse:/var/lib/clickhouse/
   signoz:
     <<: *db-depend
@@ -105,8 +105,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./signoz/prometheus.yml:/root/config/prometheus.yml
-      - ./signoz/dashboards:/root/config/dashboards
+      - ./signoz-prometheus.yml:/root/config/prometheus.yml
+      - signoz-dashboards:/root/config/dashboards
       - sqlite:/var/lib/signoz/
     environment:
       - SIGNOZ_ALERTMANAGER_PROVIDER=signoz
@@ -138,7 +138,7 @@ services:
       - --feature-gates=-pkg.translator.prometheus.NormalizeName
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
-      - ./signoz/opamp-config.yaml:/etc/manager-config.yaml
+      - ./signoz-opamp-config.yaml:/etc/manager-config.yaml
     environment:
       - OTEL_RESOURCE_ATTRIBUTES=host.name=signoz-host,os.type=linux
       - LOW_CARDINAL_EXCEPTION_GROUPING=false
@@ -181,5 +181,7 @@ volumes:
     name: signoz-clickhouse-user-scripts
   sqlite:
     name: signoz-sqlite
+  signoz-dashboards:
+    name: signoz-dashboards
   zookeeper-1:
     name: signoz-zookeeper-1

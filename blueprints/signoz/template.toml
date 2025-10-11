@@ -9,7 +9,7 @@ host = "${main_domain}"
 path = "/"
 
 [[config.mounts]]
-filePath = "/files/clickhouse/config.xml"
+filePath = "./clickhouse/config.xml"
 content = """
 <?xml version=\"1.0\"?>
 <clickhouse>
@@ -38,7 +38,7 @@ content = """
 """
 
 [[config.mounts]]
-filePath = "/files/clickhouse/users.xml"
+filePath = "./clickhouse/users.xml"
 content = """
 <?xml version=\"1.0\"?>
 <clickhouse>
@@ -77,7 +77,7 @@ content = """
 """
 
 [[config.mounts]]
-filePath = "/files/clickhouse/custom-function.xml"
+filePath = "./clickhouse/custom-function.xml"
 content = """
 <functions>
   <function>
@@ -103,7 +103,7 @@ content = """
 """
 
 [[config.mounts]]
-filePath = "/files/clickhouse/cluster.xml"
+filePath = "./clickhouse/cluster.xml"
 content = """
 <?xml version=\"1.0\"?>
 <clickhouse>
@@ -127,7 +127,7 @@ content = """
 """
 
 [[config.mounts]]
-filePath = "/files/signoz/prometheus.yml"
+filePath = "./signoz/prometheus.yml"
 content = """
 global:
   scrape_interval: 5s
@@ -144,7 +144,7 @@ remote_read:
 """
 
 [[config.mounts]]
-filePath = "/files/collector/otel-collector-config.yaml"
+filePath = "./collector/otel-collector-config.yaml"
 content = """
 receivers:
   otlp:
@@ -238,7 +238,7 @@ service:
 
 
 [[config.mounts]]
-filePath = "/files/collector/signoz-opamp-config.yaml"
+filePath = "./collector/signoz-opamp-config.yaml"
 content = """
 server_endpoint: ws://signoz:4320/v1/opamp
 """

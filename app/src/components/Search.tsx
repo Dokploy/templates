@@ -13,14 +13,22 @@ import {
 } from "./ui/command";
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
-import React from "react";
+import React, { useDeferredValue } from "react";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import SelectedTags from "./SelectedTags";
 import { useSearchParams } from "react-router-dom";
+import { useFuseSearch } from "@/hooks/useFuseSearch";
 
 const Search = () => {
-  const { templates, searchQuery, setSearchQuery, setView, templatesCount, setFilteredTemplates, setTemplatesCount } =
-    useStore();
+  const {
+    templates,
+    searchQuery,
+    setSearchQuery,
+    setView,
+    templatesCount,
+    setFilteredTemplates,
+    setTemplatesCount,
+  } = useStore();
   const selectedTags = useStore((state) => state.selectedTags);
   const addSelectedTag = useStore((state) => state.addSelectedTag);
   const removeSelectedTag = useStore((state) => state.removeSelectedTag);
@@ -28,6 +36,12 @@ const Search = () => {
   const [tagSearch, setTagSearch] = React.useState("");
   const view = useStore((state) => state.view);
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Local input state for immediate UI updates
+  const [inputValue, setInputValue] = React.useState("");
+
+  // Initialize Fuse.js fuzzy search
+  const { search: fuseSearch } = useFuseSearch(templates);
 
   // Get all unique tags, safely handle empty templates
   const uniqueTags = React.useMemo(() => {
@@ -45,52 +59,71 @@ const Search = () => {
     );
   }, [uniqueTags, tagSearch]);
 
-  // Initialize search query from URL params and apply filters
+  // Initialize input value from URL params on mount
   React.useEffect(() => {
     const queryFromUrl = searchParams.get("q") || "";
-    if (queryFromUrl !== searchQuery) {
-      setSearchQuery(queryFromUrl);
+    setInputValue(queryFromUrl);
+    setSearchQuery(queryFromUrl);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount
+
+  // Debounce URL updates (500ms delay)
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchQuery) {
+        setSearchParams({ q: searchQuery }, { replace: true });
+      } else {
+        searchParams.delete("q");
+        setSearchParams(searchParams, { replace: true });
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Debounce search query for performance (200ms delay)
+  const deferredSearchQuery = useDeferredValue(searchQuery);
+
+  // Apply filters whenever templates, deferred search query or selected tags change
+  React.useEffect(() => {
+    if (!templates) return;
+
+    let filtered = templates;
+
+    // Apply fuzzy search if there's a search query
+    if (deferredSearchQuery.trim()) {
+      filtered = fuseSearch(deferredSearchQuery);
     }
 
-    // Apply filters whenever templates, search query or selected tags change
-    if (templates) {
-      const filtered = templates.filter((template) => {
-        // Filter by search query - search across name and description
-        const searchTerm = queryFromUrl.toLowerCase();
-        const matchesSearch =
-          template.name.toLowerCase().includes(searchTerm) ||
-          template.description.toLowerCase().includes(searchTerm);
-
-        // Filter by selected tags
-        const matchesTags =
-          selectedTags.length === 0 ||
-          selectedTags.every((tag) => template.tags.includes(tag));
-
-        return matchesSearch && matchesTags;
-      });
-
-      setFilteredTemplates(filtered);
-      setTemplatesCount(filtered.length);
+    // Filter by selected tags
+    if (selectedTags.length > 0) {
+      filtered = filtered.filter((template) =>
+        selectedTags.every((tag) => template.tags.includes(tag))
+      );
     }
-  }, [searchParams, templates, selectedTags, setSearchQuery, setFilteredTemplates, setTemplatesCount]);
 
-  // Update URL params when search query changes
+    setFilteredTemplates(filtered);
+    setTemplatesCount(filtered.length);
+  }, [
+    templates,
+    deferredSearchQuery,
+    selectedTags,
+    fuseSearch,
+    setFilteredTemplates,
+    setTemplatesCount,
+  ]);
+
+  // Handle input change - update both local state and search query immediately
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = e.target.value;
-    setSearchQuery(newQuery);
-    if (newQuery) {
-      setSearchParams({ q: newQuery });
-    } else {
-      searchParams.delete("q");
-      setSearchParams(searchParams);
-    }
+    setInputValue(newQuery);
+    setSearchQuery(newQuery); // Update search query immediately for instant filtering
   };
 
   // Clear search and URL params
   const handleClearSearch = () => {
+    setInputValue("");
     setSearchQuery("");
-    searchParams.delete("q");
-    setSearchParams(searchParams);
   };
 
   return (
@@ -112,11 +145,11 @@ const Search = () => {
           <Input
             type="text"
             placeholder="Search templates..."
-            value={searchQuery}
+            value={inputValue}
             onChange={handleSearchChange}
             className="w-full p-6"
           />
-          {searchQuery.length > 0 ? (
+          {inputValue.length > 0 ? (
             <div className="cursor-pointer" onClick={handleClearSearch}>
               <XIcon className="absolute end-3 translate-y-3.5 top-1/2 h-5 w-5 text-gray-400" />
             </div>

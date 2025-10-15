@@ -15,6 +15,7 @@ import {
   type Completion,
 } from "@codemirror/autocomplete";
 import { useTheme } from "@/theme-provider";
+
 // Docker Compose completion options
 const dockerComposeServices = [
   { label: "services", type: "keyword", info: "Define services" },
@@ -25,18 +26,8 @@ const dockerComposeServices = [
   { label: "secrets", type: "keyword", info: "Define secrets" },
 ].map((opt) => ({
   ...opt,
-  apply: (view: EditorView, completion: Completion) => {
-    const insert = `${completion.label}:`;
-    view.dispatch({
-      changes: {
-        from: view.state.selection.main.from,
-        to: view.state.selection.main.to,
-        insert,
-      },
-      selection: { anchor: view.state.selection.main.from + insert.length },
-    });
-  },
-}));
+  apply: `${opt.label}:`,
+})) as Completion[];
 
 const dockerComposeServiceOptions = [
   {
@@ -73,18 +64,8 @@ const dockerComposeServiceOptions = [
   { label: "networks", type: "keyword", info: "Networks to join" },
 ].map((opt) => ({
   ...opt,
-  apply: (view: EditorView, completion: Completion) => {
-    const insert = `${completion.label}: `;
-    view.dispatch({
-      changes: {
-        from: view.state.selection.main.from,
-        to: view.state.selection.main.to,
-        insert,
-      },
-      selection: { anchor: view.state.selection.main.from + insert.length },
-    });
-  },
-}));
+  apply: `${opt.label}: `,
+})) as Completion[];
 
 function dockerComposeComplete(
   context: CompletionContext
@@ -151,8 +132,8 @@ export const CodeEditor = ({
             : language === "json"
             ? json()
             : language === "shell"
-            ? StreamLanguage.define(shell)
-            : StreamLanguage.define(properties),
+            ? StreamLanguage.define(shell as any)
+            : StreamLanguage.define(properties as any),
           props.lineWrapping ? EditorView.lineWrapping : [],
           language === "yaml"
             ? autocompletion({

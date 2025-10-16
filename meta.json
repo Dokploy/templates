@@ -3465,6 +3465,23 @@
     ]
   },
   {
+    "id": "mixpost",
+    "name": "Mixpost",
+    "version": "latest",
+    "description": "Mixpost is an open-source social media management tool that allows you to create, schedule, and publish posts across multiple social media platforms from a single interface.",
+    "logo": "mixpost.png",
+    "links": {
+      "github": "https://github.com/inovector/mixpost",
+      "website": "https://mixpost.app/",
+      "docs": "https://docs.mixpost.app/"
+    },
+    "tags": [
+      "social-media",
+      "management",
+      "scheduling"
+    ]
+  },
+  {
     "id": "morphos",
     "name": "Morphos",
     "version": "latest",

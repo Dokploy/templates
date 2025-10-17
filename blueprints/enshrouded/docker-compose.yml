@@ -1,0 +1,18 @@
+services:
+  enshrouded:
+    image: sknnr/enshrouded-dedicated-server:latest
+    restart: unless-stopped
+    ports:
+      - "15637:15637/udp"
+      - "27015:27015/udp"
+    environment:
+      - SERVER_NAME=${SERVER_NAME}
+      - SERVER_PASSWORD=${SERVER_PASSWORD}
+      - PORT=15637
+      - SERVER_SLOTS=6
+      - SERVER_IP=0.0.0.0
+    volumes:
+      - enshrouded-persistent-data:/home/steam/enshrouded/savegame
+
+volumes:
+  enshrouded-persistent-data:

@@ -28,7 +28,7 @@ services:
 
 
   directus:
-    image: directus/directus:11.0.2
+    image: directus/directus:11.12.0
     ports:
       - 8055
     volumes:

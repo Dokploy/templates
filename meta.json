@@ -3525,6 +3525,26 @@
     ]
   },
   {
+    "id": "n8n-runner-postgres-ollama",
+    "name": "n8n + Worker + Runner with Redis/Postgres and Ollama",
+    "version": "latest",
+    "description": "n8n is an open source low-code platform for automating workflows and integrations with PostgreSQL database and Ollama AI model.",
+    "logo": "n8n.png",
+    "links": {
+      "github": "https://github.com/n8n-io/n8n",
+      "website": "https://n8n.io/",
+      "docs": "https://docs.n8n.io/"
+    },
+    "tags": [
+      "ai",
+      "automation",
+      "workflow",
+      "low-code",
+      "postgres",
+      "ollama"
+    ]
+  },
+  {
     "id": "n8n-with-postgres",
     "name": "n8n with Postgres",
     "version": "latest",

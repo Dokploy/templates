@@ -1,0 +1,158 @@
+[variables]
+#-- General Settings --#
+main_domain = "${domain}"
+timezone = "Europe/Berlin"
+min_account_age_to_trust = "21"
+download_ingredients_from = "WGER"
+
+#-- Application Behavior --#
+allow_registration = "True"
+allow_guest_users = "True"
+allow_upload_videos = "True"
+
+#-- Sync Settings (Celery) --#
+sync_exercises_celery = "True"
+sync_exercise_images_celery = "True"
+sync_exercise_videos_celery = "True"
+sync_ingredients_celery = "True"
+
+#-- Celery --#
+use_celery = "True"
+
+#-- Database Credentials (Auto-generated) --#
+postgres_user = "wger"
+postgres_password = "${password:32}"
+postgres_db = "wger"
+
+#-- Security Keys (Auto-generated) --#
+secret_key = "${password:64}"
+signing_key = "${password:64}"
+flower_password = "${password:16}"
+
+#-- Email Settings (Optional) --#
+enable_email = "False"
+email_host = "none"
+email_port = "587"
+email_host_user = "none"
+email_use_tls = "True"
+from_email = "noreply@${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "nginx"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+# PostgreSQL Container Settings (for initialization and health check)
+POSTGRES_DB="${postgres_db}"
+POSTGRES_USER="${postgres_user}"
+POSTGRES_PASSWORD="${postgres_password}"
+
+# Django's secret key & Signing key
+SECRET_KEY="${secret_key}"
+SIGNING_KEY="${signing_key}"
+
+# Timezone
+TIME_ZONE="${timezone}"
+TZ="${timezone}"
+
+# Application Settings
+ALLOWED_HOSTS="${main_domain}"
+CSRF_TRUSTED_ORIGINS="https://${main_domain}"
+WGER_INSTANCE="https://wger.de"
+ALLOW_REGISTRATION="${allow_registration}"
+ALLOW_GUEST_USERS="${allow_guest_users}"
+ALLOW_UPLOAD_VIDEOS="${allow_upload_videos}"
+MIN_ACCOUNT_AGE_TO_TRUST="${min_account_age_to_trust}"
+SYNC_EXERCISES_CELERY="${sync_exercises_celery}"
+SYNC_EXERCISE_IMAGES_CELERY="${sync_exercise_images_celery}"
+SYNC_EXERCISE_VIDEOS_CELERY="${sync_exercise_videos_celery}"
+SYNC_INGREDIENTS_CELERY="${sync_ingredients_celery}"
+DOWNLOAD_INGREDIENTS_FROM="${download_ingredients_from}"
+USE_CELERY="${use_celery}"
+CELERY_BROKER="redis://cache:6379/2"
+CELERY_BACKEND="redis://cache:6379/2"
+CELERY_FLOWER_PASSWORD="${flower_password}"
+
+# Database (for the Wger App)
+DJANGO_DB_ENGINE="django.db.backends.postgresql"
+DJANGO_DB_DATABASE="${postgres_db}"
+DJANGO_DB_USER="${postgres_user}"
+DJANGO_DB_PASSWORD="${postgres_password}"
+DJANGO_DB_HOST="db"
+DJANGO_DB_PORT="5432"
+DJANGO_PERFORM_MIGRATIONS="True"
+
+# Cache
+DJANGO_CACHE_BACKEND="django_redis.cache.RedisCache"
+DJANGO_CACHE_LOCATION="redis://cache:6379/1"
+DJANGO_CACHE_TIMEOUT="1296000"
+DJANGO_CACHE_CLIENT_CLASS="django_redis.client.DefaultClient"
+
+# Brute force login attacks
+AXES_ENABLED="True"
+AXES_FAILURE_LIMIT="10"
+AXES_COOLOFF_TIME="30"
+AXES_HANDLER="axes.handlers.cache.AxesCacheHandler"
+AXES_LOCKOUT_PARAMETERS="ip_address"
+AXES_IPWARE_PROXY_COUNT="1"
+AXES_IPWARE_META_PRECEDDENN_ORDER="HTTP_X_FORWARDED_FOR,REMOTE_ADDR"
+
+# Others
+DJANGO_DEBUG="False"
+WGER_USE_GUNICORN="True"
+EXERCISE_CACHE_TTL="18000"
+SITE_URL="https://${main_domain}"
+ACCESS_TOKEN_LIFETIME="10"
+REFRESH_TOKEN_LIFETIME="24"
+LOG_LEVEL_PYTHON="INFO"
+USE_RECAPTCHA="False"
+DJANGO_CLEAR_STATIC_FIRST="False"
+NUMBER_OF_PROXIES="1"
+GUNICORN_CMD_ARGS="--workers 3 --threads 2 --worker-class gthread"
+SECURE_PROXY_SSL_HEADER="HTTP_X_FORWARDED_PROTO,https"
+MEDIA_URL="/media/"
+STATIC_URL="/static/"
+
+# Email
+ENABLE_EMAIL="${enable_email}"
+EMAIL_HOST="${email_host}"
+EMAIL_PORT="${email_port}"
+EMAIL_HOST_USER="${email_host_user}"
+EMAIL_HOST_PASSWORD="none"
+EMAIL_USE_TLS="${email_use_tls}"
+FROM_EMAIL="wger Workout Manager <${from_email}>"
+
+[[config.mounts]]
+filePath = "nginx.conf"
+content = """
+upstream wger {
+    server web:8000;
+}
+server {
+    listen 80;
+    server_name ${main_domain};
+    client_max_body_size 50M;
+    # Handle static and media files directly
+    location /static/ {
+        alias /wger/static/;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+    location /media/ {
+        alias /wger/media/;
+        expires 7d;
+        add_header Cache-Control "public";
+    }
+    # Proxy all other requests to the Django app
+    location / {
+        proxy_pass http://wger;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+        proxy_redirect off;
+    }
+}
+"""

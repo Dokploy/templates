@@ -1,0 +1,51 @@
+version: "3.8"
+services:
+  parseable:
+    image: parseable/parseable:latest
+    command: parseable s3-store
+    restart: unless-stopped
+    volumes:
+      - parseable-staging:/parseable/staging
+    environment:
+      - P_ADDR=0.0.0.0:8000
+      - P_USERNAME=admin
+      - P_PASSWORD=admin
+      - P_STAGING_DIR=/parseable/staging
+      - P_S3_URL=${S3_URL}
+      - P_S3_REGION=${S3_REGION}
+      - P_S3_BUCKET=${S3_BUCKET}
+      - P_S3_ACCESS_KEY=${S3_ACCESS_KEY}
+      - P_S3_SECRET_KEY=${S3_SECRET_KEY}
+    ports:
+      - 8000
+      - 8001
+      - 8002
+volumes:
+  parseable-staging: {}
+
+###########################################################################################
+## If you prefer to not use an S3 compatible storage option for your logs/metrics/traces,##
+## use the local store mode docker compose setup below:                                  ##
+###########################################################################################
+#version: "3.8"
+#services:
+#  parseable:
+#    image: parseable/parseable:latest
+#    command: parseable local-store
+#    restart: unless-stopped
+#    volumes:
+#      - parseable-staging:/parseable/staging
+#      - parseable-data:/parseable/data
+#    environment:
+#      - P_ADDR=0.0.0.0:8000
+#      - P_USERNAME=admin
+#      - P_PASSWORD=admin
+#      - P_STAGING_DIR=/parseable/staging
+#      - P_FS_DIR=/parseable/data
+#    ports:
+#      - 8000
+#      - 8001
+#      - 8002
+#volumes:
+#  parseable-staging: {}
+#  parseable-data: {}

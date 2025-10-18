@@ -3973,6 +3973,24 @@
     ]
   },
   {
+    "id": "parseable",
+    "name": "Parseable",
+    "version": "v1.6.5",
+    "description": "Fast observability and log analytics platform on object storage",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/parseablehq/parseable",
+      "website": "https://www.parseable.com/",
+      "docs": "https://www.parseable.com/docs"
+    },
+    "tags": [
+      "observability",
+      "logging",
+      "analytics",
+      "monitoring"
+    ]
+  },
+  {
     "id": "pastefy",
     "name": "Pastefy",
     "version": "latest",

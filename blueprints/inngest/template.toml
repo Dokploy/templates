@@ -1,0 +1,38 @@
+[variables]
+main_domain = "${domain}"
+event_key = "${jwt:32}" # Must be hex string with even number of chars
+signing_key = "${jwt:32}" # Must be hex string with even number of chars
+postgres_password = "${password:24}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "inngest"
+port = 8_288
+host = "${main_domain}"
+
+[config.env]
+# Production Inngest Authentication Keys
+INNGEST_EVENT_KEY = "${event_key}"
+INNGEST_SIGNING_KEY = "${signing_key}"
+
+# Database Configuration
+INNGEST_POSTGRES_URI = "postgresql://inngest:${postgres_password}@postgres:5432/inngest?sslmode=disable"
+POSTGRES_DB = "inngest"
+POSTGRES_USER = "inngest"
+POSTGRES_PASSWORD = "${postgres_password}"
+
+# Redis Configuration
+INNGEST_REDIS_URI = "redis://redis:6379"
+
+# Performance & Scaling Configuration
+INNGEST_POLL_INTERVAL = "60"
+INNGEST_QUEUE_WORKERS = "100"
+INNGEST_RETRY_INTERVAL = "1"
+INNGEST_TICK = "150"
+
+# Logging Configuration
+INNGEST_LOG_LEVEL = "info"
+INNGEST_JSON = "true"
+INNGEST_VERBOSE = "false"

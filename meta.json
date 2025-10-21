@@ -1619,6 +1619,27 @@
     ]
   },
   {
+    "id": "docling-serve",
+    "name": "Docling Serve",
+    "version": "latest",
+    "description": "Running Docling as an API service for document processing and conversion with AI-powered capabilities.",
+    "logo": "docling-serve.png",
+    "links": {
+      "github": "https://github.com/docling-project/docling-serve",
+      "website": "https://docling-project.github.io/docling-serve/",
+      "docs": "https://docling-project.github.io/docling-serve/",
+      "dockerhub": "https://quay.io/repository/docling-project/docling-serve"
+    },
+    "tags": [
+      "document-processing",
+      "api",
+      "ai",
+      "conversion",
+      "pdf",
+      "office"
+    ]
+  },
+  {
     "id": "discourse",
     "name": "Discourse",
     "version": "3.3.2",

@@ -113,9 +113,6 @@ services:
     depends_on:
       ch-conf:
         condition: service_completed_successfully
-    environment:
-      - CLICKHOUSE_USER=${CLICKHOUSE_USER}
-      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
     ulimits:
       nproc: 65535
       nofile:

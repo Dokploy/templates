@@ -1,11 +1,14 @@
 services:
   otel-conf:
     image: alpine:3.20
+    environment:
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
     command:
       - /bin/sh
       - -lc
       - |
-        cat > /otel/config.yaml <<'YAML'
+        cat > /otel/config.yaml <<YAML
         receivers:
           otlp:
             protocols:
@@ -19,22 +22,22 @@ services:
 
         exporters:
           clickhousetraces:
-            datasource: tcp://clickhouse:9000/signoz_traces
+            datasource: tcp://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:9000/signoz_traces
             use_new_schema: true
 
           clickhousemetricswrite:
-            endpoint: tcp://clickhouse:9000/signoz_metrics
+            endpoint: tcp://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:9000/signoz_metrics
             timeout: 15s
             resource_to_telemetry_conversion:
               enabled: true
 
           clickhouselogsexporter:
-            dsn: tcp://clickhouse:9000/signoz_logs
+            dsn: tcp://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:9000/signoz_logs
             timeout: 10s
             use_new_schema: true
 
           metadataexporter:
-            dsn: tcp://clickhouse:9000/signoz_metadata
+            dsn: tcp://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:9000/signoz_metadata
             timeout: 10s
 
         service:
@@ -91,7 +94,7 @@ services:
     restart: "no"
 
   zookeeper-1:
-    image: bitnami/zookeeper:3.9
+    image: zookeeper:3.9
     restart: unless-stopped
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
@@ -105,11 +108,14 @@ services:
       - zookeeper-data:/bitnami/zookeeper
 
   clickhouse:
-    image: clickhouse/clickhouse-server:24.1.2-alpine
+    image: clickhouse/clickhouse-server:25.3-alpine
     restart: unless-stopped
     depends_on:
       ch-conf:
         condition: service_completed_successfully
+    environment:
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
     ulimits:
       nproc: 65535
       nofile:
@@ -123,18 +129,19 @@ services:
     volumes:
       - clickhouse-data:/var/lib/clickhouse
       - ch-config:/etc/clickhouse-server/config.d
+      - ../files/clickhouse/users.xml:/etc/clickhouse-server/users.d/users.xml:ro
 
   schema-migrator-sync:
-    image: signoz/signoz-schema-migrator:v0.129.0
-    command: ["sync","--dsn=tcp://clickhouse:9000","--cluster-name=cluster","--up="]
+    image: signoz/signoz-schema-migrator:v0.129.7
+    command: ["sync","--dsn=tcp://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:9000","--cluster-name=cluster","--up="]
     depends_on:
       clickhouse:
         condition: service_healthy
     restart: "no"
 
   schema-migrator-async:
-    image: signoz/signoz-schema-migrator:v0.129.0
-    command: ["async","--dsn=tcp://clickhouse:9000","--cluster-name=cluster","--up="]
+    image: signoz/signoz-schema-migrator:v0.129.7
+    command: ["async","--dsn=tcp://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:9000","--cluster-name=cluster","--up="]
     depends_on:
       clickhouse:
         condition: service_healthy
@@ -143,7 +150,7 @@ services:
     restart: unless-stopped
 
   signoz:
-    image: signoz/signoz:v0.92.1
+    image: signoz/signoz:v0.98.0
     depends_on:
       clickhouse:
         condition: service_healthy
@@ -152,7 +159,7 @@ services:
     environment:
       - SIGNOZ_ALERTMANAGER_PROVIDER=signoz
       - STORAGE=clickhouse
-      - SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN=tcp://clickhouse:9000
+      - SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN=tcp://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:9000
       - SIGNOZ_ANALYTICS_ENABLED=false
       - SIGNOZ_JWT_SECRET=${SIGNOZ_JWT_SECRET}
     ports:
@@ -162,7 +169,7 @@ services:
       - signoz-data:/var/lib/signoz
 
   signoz-otel-collector:
-    image: signoz/signoz-otel-collector:v0.129.0
+    image: signoz/signoz-otel-collector:v0.129.7
     depends_on:
       clickhouse:
         condition: service_healthy

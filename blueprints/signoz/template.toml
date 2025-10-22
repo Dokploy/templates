@@ -1,6 +1,8 @@
 [variables]
 main_domain = "${domain}"
 jwt_secret = "${password:64}"
+clickhouse_user = "signoz"
+clickhouse_password = "${password:32}"
 
 [config]
 [[config.domains]]
@@ -11,3 +13,23 @@ path = "/"
 
 [config.env]
 SIGNOZ_JWT_SECRET = "${jwt_secret}"
+CLICKHOUSE_USER = "${clickhouse_user}"
+CLICKHOUSE_PASSWORD = "${clickhouse_password}"
+
+[[config.mounts]]
+filePath = "/clickhouse/users.xml"
+content = """
+<?xml version="1.0"?>
+<clickhouse>
+  <users>
+    <${clickhouse_user}>
+      <password>${clickhouse_password}</password>
+      <networks>
+        <ip>::/0</ip>
+      </networks>
+      <profile>default</profile>
+      <quota>default</quota>
+    </${clickhouse_user}>
+  </users>
+</clickhouse>
+"""

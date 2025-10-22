@@ -1,6 +1,8 @@
 [variables]
 main_domain = "${domain}"
 jwt_secret = "${password:64}"
+clickhouse_user = "signoz"
+clickhouse_password = "${password:32}"
 
 [config]
 [[config.domains]]
@@ -11,3 +13,48 @@ path = "/"
 
 [config.env]
 SIGNOZ_JWT_SECRET = "${jwt_secret}"
+CLICKHOUSE_USER = "${clickhouse_user}"
+CLICKHOUSE_PASSWORD = "${clickhouse_password}"
+
+[[config.mounts]]
+filePath = "/clickhouse/users.xml"
+content = """
+<?xml version="1.0"?>
+<clickhouse>
+  <users>
+    <signoz>
+      <password>${clickhouse_password}</password>
+      <networks>
+        <ip>::/0</ip>
+      </networks>
+      <profile>default</profile>
+      <quota>default</quota>
+      <access_management>1</access_management>
+      <named_collection_control>1</named_collection_control>
+      <show_named_collections>1</show_named_collections>
+      <show_named_collections_secrets>1</show_named_collections_secrets>
+    </signoz>
+    <default>
+      <password></password>
+      <networks>
+        <ip>127.0.0.1</ip>
+      </networks>
+      <profile>default</profile>
+      <quota>default</quota>
+    </default>
+  </users>
+</clickhouse>
+"""
+
+[[config.mounts]]
+filePath = "/clickhouse/json-config.xml"
+content = """
+<?xml version="1.0"?>
+<clickhouse>
+  <profiles>
+    <default>
+      <allow_experimental_json_type>1</allow_experimental_json_type>
+    </default>
+  </profiles>
+</clickhouse>
+"""

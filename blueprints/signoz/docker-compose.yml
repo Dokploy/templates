@@ -25,11 +25,9 @@ services:
             datasource: tcp://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:9000/signoz_traces
             use_new_schema: true
 
-          clickhousemetricswrite:
-            endpoint: tcp://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:9000/signoz_metrics
+          signozclickhousemetrics:
+            dsn: tcp://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:9000/signoz_metrics
             timeout: 15s
-            resource_to_telemetry_conversion:
-              enabled: true
 
           clickhouselogsexporter:
             dsn: tcp://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:9000/signoz_logs
@@ -49,7 +47,7 @@ services:
             metrics:
               receivers: [otlp]
               processors: [batch]
-              exporters: [clickhousemetricswrite, metadataexporter]
+              exporters: [signozclickhousemetrics, metadataexporter]
             logs:
               receivers: [otlp]
               processors: [batch]
@@ -108,7 +106,7 @@ services:
       - zookeeper-data:/bitnami/zookeeper
 
   clickhouse:
-    image: clickhouse/clickhouse-server:25.3-alpine
+    image: clickhouse/clickhouse-server:24.8-alpine
     restart: unless-stopped
     depends_on:
       ch-conf:
@@ -127,6 +125,7 @@ services:
       - clickhouse-data:/var/lib/clickhouse
       - ch-config:/etc/clickhouse-server/config.d
       - ../files/clickhouse/users.xml:/etc/clickhouse-server/users.d/users.xml:ro
+      - ../files/clickhouse/json-config.xml:/etc/clickhouse-server/config.d/json-config.xml:ro
 
   schema-migrator-sync:
     image: signoz/signoz-schema-migrator:v0.129.7
@@ -178,8 +177,8 @@ services:
     volumes:
       - otel-config:/etc/otelcol:ro
     ports:
-      - 4317
-      - 4318
+      - 4317:4317
+      - 4318:4318
     restart: unless-stopped
 
 volumes:

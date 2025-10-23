@@ -1,29 +1,24 @@
 [variables]
 main_domain = "${domain}"
+admin_user = "${username}"
+admin_password = "${password:32}"
+db_user = "listmonk"
+db_password = "${password:32}"
+db_name = "listmonk"
 
 [config]
 [[config.domains]]
 serviceName = "app"
-port = 9_000
+port = 9000
 host = "${main_domain}"
 
+[config.env]
+POSTGRES_USER = "${db_user}"
+POSTGRES_PASSWORD = "${db_password}"
+POSTGRES_DB = "${db_name}"
+LISTMONK_ADMIN_USER = "${admin_user}"
+LISTMONK_ADMIN_PASSWORD = "${admin_password}"
+
 [[config.mounts]]
-filePath = "config.toml"
-content = """
-[app]
-address = "0.0.0.0:9000"
-
-[db]
-host = "db"
-port = 5432
-user = "listmonk"
-password = "listmonk"
-database = "listmonk"
-
-ssl_mode = "disable"
-max_open = 25
-max_idle = 25
-max_lifetime = "300s"
-
-params = ""
-"""
+source = "uploads"
+target = "/listmonk/uploads"

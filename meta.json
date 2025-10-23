@@ -5075,7 +5075,7 @@
   {
     "id": "umami",
     "name": "Umami",
-    "version": "v2.16.1",
+    "version": "v2.19.0",
     "description": "Umami is a simple, fast, privacy-focused alternative to Google Analytics.",
     "logo": "umami.png",
     "links": {

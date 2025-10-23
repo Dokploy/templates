@@ -4,11 +4,11 @@ services:
     image: dockeriddonuts/automatisch:2.0
     restart: unless-stopped
     ports:
-      - 443
+      - 3000
     environment:
       - HOST=${DOMAIN}
       - PROTOCOL=http
-      - PORT=443
+      - PORT=3000
       - APP_ENV=production
       - REDIS_HOST=automatisch-redis
       - REDIS_USERNAME=default

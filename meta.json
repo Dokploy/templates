@@ -4298,6 +4298,29 @@
     ]
   },
   {
+    "id": "poste.io",
+    "name": "Poste.io",
+    "version": "latest",
+    "description": "Complete mail server solution with SMTP, IMAP, POP3, antispam, antivirus, web administration and webmail client.",
+    "logo": "poste.io.svg",
+    "links": {
+      "github": "https://bitbucket.org/analogic/mailserver",
+      "website": "https://poste.io/",
+      "docs": "https://poste.io/doc/",
+      "docker": "https://hub.docker.com/r/analogic/poste.io"
+    },
+    "tags": [
+      "email",
+      "mail-server",
+      "smtp",
+      "imap",
+      "pop3",
+      "antispam",
+      "antivirus",
+      "webmail"
+    ]
+  },
+  {
     "id": "postiz",
     "name": "Postiz",
     "version": "latest",
@@ -4312,28 +4335,6 @@
       "cms",
       "content-management",
       "publishing"
-    ]
-  },
-  {
-    "id": "poste.io",
-    "name": "Poste.io",
-    "version": "latest",
-    "description": "Complete mail server solution with SMTP, IMAP, POP3, antispam, antivirus, web administration and webmail client.",
-    "logo": "poste.io.svg",
-    "links": {
-      "website": "https://poste.io/",
-      "docs": "https://poste.io/doc/",
-      "docker": "https://hub.docker.com/r/analogic/poste.io"
-    },
-    "tags": [
-      "email",
-      "mail-server",
-      "smtp",
-      "imap",
-      "pop3",
-      "antispam",
-      "antivirus",
-      "webmail"
     ]
   },
   {

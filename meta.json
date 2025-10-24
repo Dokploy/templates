@@ -4315,6 +4315,28 @@
     ]
   },
   {
+    "id": "poste.io",
+    "name": "Poste.io",
+    "version": "latest",
+    "description": "Complete mail server solution with SMTP, IMAP, POP3, antispam, antivirus, web administration and webmail client.",
+    "logo": "poste.io.svg",
+    "links": {
+      "website": "https://poste.io/",
+      "docs": "https://poste.io/doc/",
+      "docker": "https://hub.docker.com/r/analogic/poste.io"
+    },
+    "tags": [
+      "email",
+      "mail-server",
+      "smtp",
+      "imap",
+      "pop3",
+      "antispam",
+      "antivirus",
+      "webmail"
+    ]
+  },
+  {
     "id": "pre0.22.5-supabase",
     "name": "SupaBase",
     "version": "1.25.04 / dokploy < 0.22.5",

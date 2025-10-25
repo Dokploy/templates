@@ -10,14 +10,14 @@ host = "${main_domain}"
 
 
 [config.env]
-APP_NAME=Mixpost
-APP_KEY=base64:ygtEUxD0fB3vUchihbUYqUzN57rfNi9ER5alJ98dWiA=
-APP_DEBUG=false
-APP_DOMAIN=${main_domain}
-APP_URL=https://${APP_DOMAIN}
-DB_DATABASE=mixpost_db
-DB_USERNAME=mixpost_user
-DB_PASSWORD=${mx_password}
+APP_NAME="Mixpost"
+APP_KEY="base64:ygtEUxD0fB3vUchihbUYqUzN57rfNi9ER5alJ98dWiA="
+APP_DEBUG="false"
+APP_DOMAIN="${main_domain}"
+APP_URL="https://${APP_DOMAIN}"
+DB_DATABASE="mixpost_db"
+DB_USERNAME="mixpost_user"
+DB_PASSWORD="${mx_password}"
 
 
 [[config.mounts]]

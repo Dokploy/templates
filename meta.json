@@ -1758,16 +1758,16 @@
     "id": "dozzle",
     "name": "Dozzle",
     "version": "latest",
-    "description": "Dozzle is a lightweight, real-time log viewer for Docker containers.",
-    "logo": "image.png",
+    "description": "Dozzle is a lightweight log viewer for Docker containers. It provides a simple web UI to tail container logs in real time.",
+    "logo": "logo.svg",
     "links": {
       "github": "https://github.com/amir20/dozzle",
-      "website": "https://dozzle.dev",
-      "docs": "https://dozzle.dev/docs"
+      "website": "https://dozzle.dev/",
+      "docs": "https://github.com/amir20/dozzle#readme"
     },
     "tags": [
+      "logging",
       "monitoring",
-      "logs",
       "docker"
     ]
   },

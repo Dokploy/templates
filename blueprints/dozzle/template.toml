@@ -1,18 +1,15 @@
 [variables]
-main_domain = "${domain}"
-docker_socket = "/var/run/docker.sock"
+
+app_domain = "${domain}"
 
 [config]
 [[config.domains]]
-serviceName = "dozzle"
+serviceName = "dozzle" # Must match the service name in docker-compose.yml
 port = 8080
-host = "${main_domain}"
+host = "${app_domain}"
 
 [config.env]
-DOZZLE_USERNAME = "${username}"
-DOZZLE_PASSWORD = "${password:16}"
+# Dozzle doesn't require env vars for basic usage; add if needed
 
 [[config.mounts]]
-source = "${docker_socket}"
-target = "/var/run/docker.sock"
-read_only = true
+

@@ -57,6 +57,9 @@ env = [
 'SERVICE_ROLE_KEY=${jwt:jwt_secret:service_role_key_payload}',
 'DASHBOARD_USERNAME=supabase',
 'DASHBOARD_PASSWORD=${dashboard_password}',
+'KONG_ADMIN_USERNAME=${DASHBOARD_USERNAME}'
+'KONG_ADMIN_PASSWORD=${DASHBOARD_PASSWORD}'
+
 'SECRET_KEY_BASE=${secret_key_base}',
 'VAULT_ENC_KEY=${vault_enc_key}',
 '',

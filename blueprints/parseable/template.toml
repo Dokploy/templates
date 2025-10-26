@@ -1,0 +1,23 @@
+[variables]
+main_domain = "${domain}"
+s3_url = "https://s3.amazonaws.com"
+s3_region = "your-region"
+s3_bucket = "your-bucket"
+s3_access_key = "your-access-key"
+s3_secret_key = "your-secret-key"
+
+[config]
+
+[[config.domains]]
+serviceName = "parseable"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+S3_URL = "${s3_url}"
+S3_REGION = "${s3_region}"
+S3_BUCKET = "${s3_bucket}"
+S3_ACCESS_KEY = "${s3_access_key}"
+S3_SECRET_KEY = "${s3_secret_key}"
+
+[[config.mounts]]

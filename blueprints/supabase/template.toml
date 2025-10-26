@@ -211,7 +211,7 @@ basicauth_credentials:
 services:
   ## Open Auth routes
   - name: auth-v1-open
-    url: http://auth:9999/verify
+    url: http://${APP_NAME}-supabase-auth:9999/verify
     routes:
       - name: auth-v1-open
         strip_path: true
@@ -220,7 +220,7 @@ services:
     plugins:
       - name: cors
   - name: auth-v1-open-callback
-    url: http://auth:9999/callback
+    url: http://${APP_NAME}-supabase-auth:9999/callback
     routes:
       - name: auth-v1-open-callback
         strip_path: true
@@ -229,7 +229,7 @@ services:
     plugins:
       - name: cors
   - name: auth-v1-open-authorize
-    url: http://auth:9999/authorize
+    url: http://${APP_NAME}-supabase-auth:9999/authorize
     routes:
       - name: auth-v1-open-authorize
         strip_path: true
@@ -240,8 +240,8 @@ services:
 
   ## Secure Auth routes
   - name: auth-v1
-    _comment: 'GoTrue: /auth/v1/* -> http://auth:9999/*'
-    url: http://auth:9999/
+    _comment: 'GoTrue: /auth/v1/* -> http://${APP_NAME}-supabase-auth:9999/*'
+    url: http://${APP_NAME}-supabase-auth:9999/
     routes:
       - name: auth-v1-all
         strip_path: true
@@ -261,8 +261,8 @@ services:
 
   ## Secure REST routes
   - name: rest-v1
-    _comment: 'PostgREST: /rest/v1/* -> http://rest:3000/*'
-    url: http://rest:3000/
+    _comment: 'PostgREST: /rest/v1/* -> http://${APP_NAME}-supabase-rest:3000/*'
+    url: http://${APP_NAME}-supabase-rest:3000/
     routes:
       - name: rest-v1-all
         strip_path: true
@@ -282,8 +282,8 @@ services:
 
   ## Secure GraphQL routes
   - name: graphql-v1
-    _comment: 'PostgREST: /graphql/v1/* -> http://rest:3000/rpc/graphql'
-    url: http://rest:3000/rpc/graphql
+    _comment: 'PostgREST: /graphql/v1/* -> http://${APP_NAME}-supabase-rest:3000/rpc/graphql'
+    url: http://${APP_NAME}-supabase-rest:3000/rpc/graphql
     routes:
       - name: graphql-v1-all
         strip_path: true
@@ -309,7 +309,7 @@ services:
   ## Secure Realtime routes
   - name: realtime-v1-ws
     _comment: 'Realtime: /realtime/v1/* -> ws://realtime:4000/socket/*'
-    url: http://realtime-dev.supabase-realtime:4000/socket
+    url: http://realtime-dev.${APP_NAME}-supabase-realtime:4000/socket
     protocol: ws
     routes:
       - name: realtime-v1-ws
@@ -329,7 +329,7 @@ services:
             - anon
   - name: realtime-v1-rest
     _comment: 'Realtime: /realtime/v1/* -> ws://realtime:4000/socket/*'
-    url: http://realtime-dev.supabase-realtime:4000/api
+    url: http://realtime-dev.${APP_NAME}-supabase-realtime:4000/api
     protocol: http
     routes:
       - name: realtime-v1-rest
@@ -349,8 +349,8 @@ services:
             - anon
   ## Storage routes: the storage server manages its own auth
   - name: storage-v1
-    _comment: 'Storage: /storage/v1/* -> http://storage:5000/*'
-    url: http://storage:5000/
+    _comment: 'Storage: /storage/v1/* -> http://${APP_NAME}-supabase-storage:5000/*'
+    url: http://${APP_NAME}-supabase-storage:5000/
     routes:
       - name: storage-v1-all
         strip_path: true
@@ -361,8 +361,8 @@ services:
 
   ## Edge Functions routes
   - name: functions-v1
-    _comment: 'Edge Functions: /functions/v1/* -> http://functions:9000/*'
-    url: http://functions:9000/
+    _comment: 'Edge Functions: /functions/v1/* -> http://${APP_NAME}-supabase-functions:9000/*'
+    url: http://${APP_NAME}-supabase-functions:9000/
     routes:
       - name: functions-v1-all
         strip_path: true
@@ -373,8 +373,8 @@ services:
 
   ## Analytics routes
   - name: analytics-v1
-    _comment: 'Analytics: /analytics/v1/* -> http://logflare:4000/*'
-    url: http://analytics:4000/
+    _comment: 'Analytics: /analytics/v1/* -> http://${APP_NAME}-supabase-logflare:4000/*'
+    url: http://${APP_NAME}-supabase-logflare:4000/
     routes:
       - name: analytics-v1-all
         strip_path: true
@@ -383,8 +383,8 @@ services:
 
   ## Secure Database routes
   - name: meta
-    _comment: 'pg-meta: /pg/* -> http://pg-meta:8080/*'
-    url: http://meta:8080/
+    _comment: 'pg-meta: /pg/* -> http://${APP_NAME}-supabase-pg-meta:8080/*'
+    url: http://${APP_NAME}-supabase-pg-meta:8080/
     routes:
       - name: meta-all
         strip_path: true
@@ -402,8 +402,8 @@ services:
 
   ## Protected Dashboard - catch all remaining routes
   - name: dashboard
-    _comment: 'Studio: /* -> http://studio:3000/*'
-    url: http://studio:3000/
+    _comment: 'Studio: /* -> http://${APP_NAME}-supabase-studio:3000/*'
+    url: http://${APP_NAME}-supabase-studio:3000/
     routes:
       - name: dashboard-all
         strip_path: true
@@ -847,13 +847,13 @@ transforms:
     inputs:
       - project_logs
     route:
-      kong: '.appname == "supabase-kong"'
-      auth: '.appname == "supabase-auth"'
-      rest: '.appname == "supabase-rest"'
-      realtime: '.appname == "realtime-dev.supabase-realtime"'
-      storage: '.appname == "supabase-storage"'
-      functions: '.appname == "supabase-edge-functions"'
-      db: '.appname == "supabase-db"'
+      kong: '.appname == "${APP_NAME}-supabase-kong"'
+      auth: '.appname == "${APP_NAME}-supabase-auth"'
+      rest: '.appname == "${APP_NAME}-supabase-rest"'
+      realtime: '.appname == "${APP_NAME}-realtime-dev.supabase-realtime"'
+      storage: '.appname == "${APP_NAME}-supabase-storage"'
+      functions: '.appname == "${APP_NAME}-supabase-edge-functions"'
+      db: '.appname == "${APP_NAME}-supabase-db"'
   # Ignores non nginx errors since they are related with kong booting up
   kong_logs:
     type: remap
@@ -982,7 +982,7 @@ sinks:
     method: 'post'
     request:
       retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=gotrue.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+    uri: 'http://${APP_NAME}-supabase-analytics:4000/api/logs?source_name=gotrue.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
   logflare_realtime:
     type: 'http'
     inputs:
@@ -992,7 +992,7 @@ sinks:
     method: 'post'
     request:
       retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=realtime.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+    uri: 'http://${APP_NAME}-supabase-analytics:4000/api/logs?source_name=realtime.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
   logflare_rest:
     type: 'http'
     inputs:
@@ -1002,7 +1002,7 @@ sinks:
     method: 'post'
     request:
       retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=postgREST.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+    uri: 'http://${APP_NAME}-supabase-analytics:4000/api/logs?source_name=postgREST.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
   logflare_db:
     type: 'http'
     inputs:
@@ -1015,7 +1015,7 @@ sinks:
     # We must route the sink through kong because ingesting logs before logflare is fully initialised will
     # lead to broken queries from studio. This works by the assumption that containers are started in the
     # following order: vector > db > logflare > kong
-    uri: 'http://kong:8000/analytics/v1/api/logs?source_name=postgres.logs&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+    uri: 'http://${APP_NAME}-supabase-kong:8000/analytics/v1/api/logs?source_name=postgres.logs&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
   logflare_functions:
     type: 'http'
     inputs:
@@ -1025,7 +1025,7 @@ sinks:
     method: 'post'
     request:
       retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=deno-relay-logs&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+    uri: 'http://${APP_NAME}-supabase-analytics:4000/api/logs?source_name=deno-relay-logs&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
   logflare_storage:
     type: 'http'
     inputs:
@@ -1035,7 +1035,7 @@ sinks:
     method: 'post'
     request:
       retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=storage.logs.prod.2&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+    uri: 'http://${APP_NAME}-supabase-analytics:4000/api/logs?source_name=storage.logs.prod.2&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
   logflare_kong:
     type: 'http'
     inputs:
@@ -1046,7 +1046,7 @@ sinks:
     method: 'post'
     request:
       retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=cloudflare.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+    uri: 'http://${APP_NAME}-supabase-analytics:4000/api/logs?source_name=cloudflare.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
 """
 
 [[config.mounts]]

@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  reef-faucet:
+    image: node:20-alpine
+    restart: unless-stopped
+    environment:
+      - MNEMONIC=${MNEMONIC}
+      - RPC_URL=${RPC_URL}
+      - TARGET_ADDRESS=${TARGET_ADDRESS}
+      - AMOUNT=${AMOUNT}
+    volumes:
+      - ./faucet-data:/faucet
+    working_dir: /faucet
+    entrypoint: sh -c
+    command: >
+      "apk add --no-cache curl git &&
+      echo '>>> Downloading faucet.js...' &&
+      curl -sL https://raw.githubusercontent.com/anukulpandey/reef-cluster-registration-script/main/faucet.js -o faucet.js &&
+      echo '>>> Running faucet.js...' &&
+      node faucet.js \"$MNEMONIC\" \"$RPC_URL\" \"$TARGET_ADDRESS\" ${AMOUNT:-1000}"

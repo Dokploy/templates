@@ -1,0 +1,74 @@
+version: "3.8"
+
+services:
+  hoppscotch:
+    image: hoppscotch/hoppscotch:latest
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    expose:
+      - 80
+    environment:
+      # Database
+      DATABASE_URL: "${DATABASE_URL}"
+      DATA_ENCRYPTION_KEY: "${DATA_ENCRYPTION_KEY}"
+      HOPP_AIO_ALTERNATE_PORT: "${HOPP_AIO_ALTERNATE_PORT}"
+      WHITELISTED_ORIGINS: "${WHITELISTED_ORIGINS}"
+
+      # Frontend config
+      VITE_BASE_URL: "${VITE_BASE_URL}"
+      VITE_SHORTCODE_BASE_URL: "${VITE_SHORTCODE_BASE_URL}"
+      VITE_ADMIN_URL: "${VITE_ADMIN_URL}"
+
+      # Backend config
+      VITE_BACKEND_GQL_URL: "${VITE_BACKEND_GQL_URL}"
+      VITE_BACKEND_WS_URL: "${VITE_BACKEND_WS_URL}"
+      VITE_BACKEND_API_URL: "${VITE_BACKEND_API_URL}"
+
+      # Optional UI links
+      VITE_APP_TOS_LINK: "${VITE_APP_TOS_LINK}"
+      VITE_APP_PRIVACY_POLICY_LINK: "${VITE_APP_PRIVACY_POLICY_LINK}"
+
+      # Subpath access
+      ENABLE_SUBPATH_BASED_ACCESS: "true"
+
+    volumes:
+      - hoppscotch-data:/app/data
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    expose:
+      - 5432
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    volumes:
+      - hoppscotch-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  migrate:
+    image: hoppscotch/hoppscotch:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Running database migrations..."
+        pnpm dlx prisma migrate deploy && echo "Migration complete!"
+    environment:
+      DATABASE_URL: "${DATABASE_URL}"
+    restart: "no"
+
+volumes:
+  hoppscotch-data:
+  hoppscotch-postgres:

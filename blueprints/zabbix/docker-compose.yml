@@ -1,0 +1,85 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - zabbix-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  zabbix-java-gateway:
+    image: zabbix/zabbix-java-gateway:alpine-7.4-latest
+    restart: unless-stopped
+
+  zabbix-snmptraps:
+    image: zabbix/zabbix-snmptraps:alpine-7.4-latest
+    restart: unless-stopped
+    volumes:
+      - zabbix-snmptraps:/var/lib/zabbix/snmptraps
+      - zabbix-mibs:/var/lib/zabbix/mibs
+
+  zabbix-server-pgsql:
+    image: zabbix/zabbix-server-pgsql:alpine-7.4-latest
+    restart: unless-stopped
+    environment:
+      DB_SERVER_HOST: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      ZBX_ENABLE_SNMP_TRAPS: "true"
+      ZBX_JAVAGATEWAY: zabbix-java-gateway
+    depends_on:
+      postgres:
+        condition: service_healthy
+      zabbix-java-gateway:
+        condition: service_started
+      zabbix-snmptraps:
+        condition: service_started
+    volumes:
+      - zabbix-server-data:/var/lib/zabbix
+      - zabbix-snmptraps:/var/lib/zabbix/snmptraps
+      - zabbix-mibs:/var/lib/zabbix/mibs
+    expose:
+      - 10051
+    healthcheck:
+      test: ["CMD", "pgrep", "zabbix_server"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  zabbix-web-nginx-pgsql:
+    image: zabbix/zabbix-web-nginx-pgsql:alpine-7.4-latest
+    restart: unless-stopped
+    environment:
+      DB_SERVER_HOST: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      ZBX_SERVER_HOST: zabbix-server-pgsql
+      PHP_TZ: ${PHP_TZ}
+      ZBX_SERVER_NAME: ${ZBX_SERVER_NAME}
+    depends_on:
+      zabbix-server-pgsql:
+        condition: service_healthy
+    expose:
+      - 8080
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  zabbix-postgres-data:
+  zabbix-server-data:
+  zabbix-snmptraps:
+  zabbix-mibs:

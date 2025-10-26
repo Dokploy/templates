@@ -1,4 +1,5 @@
 [variables]
+
 app_domain = "${domain}"
 
 [config]

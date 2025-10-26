@@ -1,0 +1,9 @@
+[variables]
+server_domain = "${domain}"
+
+[config]
+
+[config.env]
+RUSTDESK_RELAY_SERVER = "${server_domain}:21117"
+
+[[config.mounts]]

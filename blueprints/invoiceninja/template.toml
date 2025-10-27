@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+db_host = "mysql"
+db_port = "3306"
+db_database = "invoiceninja"
+db_username = "ninja"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "nginx"
+port = 80
+host = "${main_domain}"

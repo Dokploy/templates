@@ -8,7 +8,7 @@ db_port = "5432"
 [config]
 
 [[config.domains]]
-serviceName = "evershop"
+serviceName = "evershop-app"
 port = 3_000
 host = "${main_domain}"
 

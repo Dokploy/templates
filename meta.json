@@ -1975,6 +1975,22 @@
     ]
   },
   {
+    "id": "evershop",
+    "name": "Evershop",
+    "version": "latest",
+    "description": "Your All-in-One open source ecommerce solution.",
+    "logo": "evershop.svg",
+    "links": {
+      "github": "https://github.com/evershopcommerce/evershop",
+      "website": "https://evershop.io/",
+      "docs": "https://evershop.io/docs/development/getting-started/introduction"
+    },
+    "tags": [
+      "E-Commerce",
+      "shopping"
+    ]
+  },
+  {
     "id": "evolutionapi",
     "name": "Evolution API",
     "version": "v2.1.2",

@@ -2882,6 +2882,23 @@
     ]
   },
   {
+    "id": "invoiceninja",
+    "name": "Invoice Ninja",
+    "version": "latest",
+    "description": "Invoice Ninja is a modern, open-source invoicing solution designed to simplify your financial operations. It offers a clean, user-friendly interface and seamless integration with popular payment gateways, making it easy to manage your invoices and payments.",
+    "logo": "invoiceninja.svg",
+    "links": {
+      "github": "https://github.com/invoiceninja/invoiceninja",
+      "website": "https://invoiceninja.com",
+      "docs": "https://invoiceninja.github.io/"
+    },
+    "tags": [
+      "invoice",
+      "business",
+      "finance"
+    ]
+  },
+  {
     "id": "invoiceshelf",
     "name": "InvoiceShelf",
     "version": "latest",

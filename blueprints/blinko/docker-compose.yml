@@ -1,6 +1,6 @@
 services:
   blinko-website:
-    image: blinkospace/blinko:latest
+    image: blinkospace/blinko:1.6.3
     environment:
       NODE_ENV: production
       # API Key for NextAuth

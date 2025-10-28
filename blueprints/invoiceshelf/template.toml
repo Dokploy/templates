@@ -1,19 +1,29 @@
 [variables]
 main_domain = "${domain}"
-db_password = "${password}"
-db_username = "invoiceshelf"
-db_database = "invoiceshelf"
 
 [config]
-mounts = []
-
 [[config.domains]]
-serviceName = "invoiceshelf-app"
+serviceName = "webapp"
 port = 8080
 host = "${main_domain}"
 
 [config.env]
-INVOICESHELF_HOST = "${main_domain}"
-DB_PASSWORD = "${db_password}"
-DB_USERNAME = "${db_username}"
-DB_DATABASE = "${db_database}"
+APP_NAME = "InvoiceShelf"
+APP_ENV = "production"
+APP_DEBUG = "false"
+APP_URL = "http://${main_domain}"
+SESSION_LIFETIME = "240"
+SESSION_DOMAIN = "${main_domain}"
+SANCTUM_STATEFUL_DOMAINS = "${main_domain}"
+
+# Mail defaults (user can override in UI)
+MAIL_DRIVER = "smtp"
+MAIL_HOST = "smtp.mailtrap.io"
+MAIL_PORT = "2525"
+MAIL_USERNAME = ""
+MAIL_PASSWORD = ""
+MAIL_ENCRYPTION = "null"
+
+[[config.mounts]]
+name = "invoiceshelf_storage"
+mountPath = "/var/www/html/storage"

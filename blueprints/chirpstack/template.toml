@@ -1,0 +1,131 @@
+[variables]
+main_domain = "${domain}"
+api_secret = "${base64:32}"
+postgres_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "chirpstack"
+port = 8080
+host = "${main_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "chirpstack-rest-api"
+port = 8090
+host = "api-${main_domain}"
+path = "/"
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}"
+
+[[config.mounts]]
+serviceName = "chirpstack"
+filePath = "/etc/chirpstack/chirpstack.toml"
+content = """
+# Logging.
+[logging]
+  level="info"
+
+# PostgreSQL configuration.
+[postgresql]
+  dsn="postgres://chirpstack:${postgres_password}@postgres/chirpstack?sslmode=disable"
+  max_open_connections=10
+  min_idle_connections=0
+
+# Redis configuration.
+[redis]
+  servers=[
+    "redis://redis/",
+  ]
+  tls_enabled=false
+  cluster=false
+
+# Network related configuration.
+[network]
+  net_id="000000"
+
+  # Enabled regions - modify based on your deployment location
+  enabled_regions=[
+    "eu868",
+  ]
+
+# API interface configuration.
+[api]
+  bind="0.0.0.0:8080"
+  secret="${api_secret}"
+
+[integration]
+  enabled=["mqtt"]
+
+  [integration.mqtt]
+    server="tcp://mosquitto:1883/"
+    json=true
+"""
+
+[[config.mounts]]
+serviceName = "chirpstack-gateway-bridge"
+filePath = "/etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge.toml"
+content = """
+[general]
+log_level="info"
+
+[integration.mqtt]
+  event_topic_template="eu868/gateway/{{ .GatewayID }}/event/{{ .EventType }}"
+  state_topic_template="eu868/gateway/{{ .GatewayID }}/state/{{ .StateType }}"
+  command_topic_template="eu868/gateway/{{ .GatewayID }}/command/#"
+
+  [integration.mqtt.auth]
+    type="generic"
+    [integration.mqtt.auth.generic]
+      servers=["tcp://mosquitto:1883"]
+
+[backend]
+  type="semtech_udp"
+  [backend.semtech_udp]
+    udp_bind = "0.0.0.0:1700"
+"""
+
+[[config.mounts]]
+serviceName = "chirpstack-gateway-bridge-basicstation"
+filePath = "/etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge-basicstation.toml"
+content = """
+[general]
+log_level="info"
+
+[integration.mqtt]
+  event_topic_template="eu868/gateway/{{ .GatewayID }}/event/{{ .EventType }}"
+  state_topic_template="eu868/gateway/{{ .GatewayID }}/state/{{ .StateType }}"
+  command_topic_template="eu868/gateway/{{ .GatewayID }}/command/#"
+
+  [integration.mqtt.auth]
+    type="generic"
+    [integration.mqtt.auth.generic]
+      servers=["tcp://mosquitto:1883"]
+
+[backend]
+  type="basic_station"
+  [backend.basic_station]
+    bind=":3001"
+"""
+
+[[config.mounts]]
+serviceName = "mosquitto"
+filePath = "/mosquitto/config/mosquitto.conf"
+content = """
+listener 1883
+allow_anonymous true
+"""
+
+[[config.mounts]]
+serviceName = "postgres"
+filePath = "/docker-entrypoint-initdb.d/001-chirpstack_extensions.sh"
+content = """
+#!/bin/bash
+set -e
+
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname="$POSTGRES_DB" <<-EOSQL
+    create extension pg_trgm;
+    create extension hstore;
+EOSQL
+"""

@@ -1121,6 +1121,25 @@
     ]
   },
   {
+    "id": "chirpstack",
+    "name": "ChirpStack",
+    "version": "4",
+    "description": "Open-source LoRaWAN Network Server for IoT applications. Complete stack with gateway bridges, REST API, and web interface for managing LoRaWAN devices and gateways.",
+    "logo": "chirpstack.png",
+    "links": {
+      "github": "https://github.com/chirpstack/chirpstack",
+      "website": "https://www.chirpstack.io/",
+      "docs": "https://www.chirpstack.io/docs/"
+    },
+    "tags": [
+      "iot",
+      "lorawan",
+      "network-server",
+      "gateway",
+      "monitoring"
+    ]
+  },
+  {
     "id": "chromium",
     "name": "Chromium",
     "version": "5f5dd27e-ls102",

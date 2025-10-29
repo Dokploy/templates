@@ -2,8 +2,6 @@
 main_domain = "${domain}"
 admin_email = "${email}"
 admin_password = "${password:32}"
-# Optional: Uncomment for production to encrypt app settings
-# encryption_key = "${base64:32}"
 
 [config]
 [[config.domains]]
@@ -14,8 +12,6 @@ host = "${main_domain}"
 [config.env]
 ADMIN_EMAIL = "${admin_email}"
 ADMIN_PASSWORD = "${admin_password}"
-# Optional: Uncomment to enable encryption
-# ENCRYPTION_KEY = "${encryption_key}"
 
 [[config.mounts]]
 name = "pocketbase-data"

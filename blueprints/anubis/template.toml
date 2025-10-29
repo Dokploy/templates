@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+
+[config.env]
+COOKIE_DOMAIN = "${main_domain}"
+TARGET = "YOURLOCALHOST:PORT"
+DIFFICULTY = "5"
+OG_PASSTHROUGH = true
+OG_EXPIRY_TIME = "1h"
+OG_CACHE_CONSIDER_HOST = true
+SERVE_ROBOTS_TXT = false
+mounts = []
+
+[[config.domains]]
+serviceName = "anubis"
+port = 8923
+host = "${main_domain}"

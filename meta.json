@@ -263,6 +263,22 @@
     ]
   },
   {
+    "id": "anubis",
+    "name": "Anubis",
+    "version": "latest",
+    "description": "Anubis is a bot protector, It will block bots from accessing your website.",
+    "logo": "anubis.webp",
+    "links": {
+      "github": "https://github.com/TecharoHQ/anubis",
+      "website": "https://anubis.techaro.lol",
+      "docs": "https://anubis.techaro.lol/docs/"
+    },
+    "tags": [
+      "self-hosted",
+      "bot-protection"
+    ]
+  },
+  {
     "id": "anythingllm",
     "name": "AnythingLLM",
     "version": "latest",

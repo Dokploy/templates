@@ -3585,6 +3585,25 @@
     ]
   },
   {
+    "id": "mulesoft-esb",
+    "name": "MuleSoft ESB",
+    "version": "4.0.0",
+    "description": "MuleSoft ESB (Enterprise Service Bus) is a lightweight, Java-based integration platform that allows you to easily integrate applications, data sources, and APIs. It provides powerful connectors and data transformation capabilities for building robust integration solutions.",
+    "logo": "mulesoft_logo.png",
+    "links": {
+      "github": "https://github.com/mulesoft",
+      "website": "https://www.mulesoft.com/",
+      "docs": "https://docs.mulesoft.com/"
+    },
+    "tags": [
+      "integration",
+      "api",
+      "esb",
+      "enterprise",
+      "java"
+    ]
+  },
+  {
     "id": "n8n",
     "name": "n8n",
     "version": "1.104.0",

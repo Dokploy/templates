@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  mule:
+    image: ivankrizsan/mule-docker:latest
+    restart: unless-stopped
+    ports:
+      - 8081
+    volumes:
+      - mule-logs:/opt/mule-standalone/logs
+      - mule-conf:/opt/mule-standalone/conf
+      - mule-apps:/opt/mule-standalone/apps
+      - mule-domains:/opt/mule-standalone/domains
+    environment:
+      - MULE_HOME=/opt/mule-standalone
+      - MULE_BASE=/opt/mule-standalone
+      - TZ=UTC
+      - MULE_VERBOSE_EXCEPTIONS=true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 120s
+
+volumes:
+  mule-logs: {}
+  mule-conf: {}
+  mule-apps: {}
+  mule-domains: {}
+

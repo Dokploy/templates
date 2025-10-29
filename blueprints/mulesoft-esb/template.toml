@@ -1,0 +1,32 @@
+[variables]
+main_domain = "${domain}"
+timezone = "UTC"
+
+[config]
+[[config.domains]]
+serviceName = "mule"
+port = 8081
+host = "${main_domain}"
+
+[config.env]
+MULE_HOME = "/opt/mule-standalone"
+MULE_BASE = "/opt/mule-standalone"
+TZ = "${timezone}"
+MULE_VERBOSE_EXCEPTIONS = "true"
+
+[[config.mounts]]
+filePath = "/opt/mule-standalone/logs"
+content = ""
+
+[[config.mounts]]
+filePath = "/opt/mule-standalone/conf"
+content = ""
+
+[[config.mounts]]
+filePath = "/opt/mule-standalone/apps"
+content = ""
+
+[[config.mounts]]
+filePath = "/opt/mule-standalone/domains"
+content = ""
+

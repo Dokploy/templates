@@ -1,0 +1,69 @@
+services:
+  seatable:
+    image: seatable/seatable-enterprise:latest
+    restart: unless-stopped
+    ports:
+      - 80
+    volumes:
+      - seatable_data:/shared
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DB_HOST=mariadb
+      - DB_ROOT_PASSWD=${MARIADB_PASSWORD}
+      - SEATABLE_SERVER_LETSENCRYPT=False
+      - TIME_ZONE=${TIME_ZONE}
+      - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME}
+      - SEATABLE_ADMIN_EMAIL=${SEATABLE_ADMIN_EMAIL}
+      - SEATABLE_ADMIN_PASSWORD=${SEATABLE_ADMIN_PASSWORD}
+      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/api2/ping/"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  mariadb:
+    image: mariadb:11.8.3
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MARIADB_PASSWORD}
+      - MYSQL_LOG_CONSOLE=true
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    command:
+      - --transaction-isolation=READ-COMMITTED
+      - --log-bin=binlog
+      - --binlog-format=ROW
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  redis:
+    image: redis:8.2.2-alpine
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  seatable_data:
+  mariadb_data:
+  redis_data:

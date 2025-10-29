@@ -4776,6 +4776,25 @@
     ]
   },
   {
+    "id": "seatable",
+    "name": "SeaTable",
+    "version": "6.0.6",
+    "description": "A powerful online collaborative table and information management system with an easy-to-use interface. SeaTable combines the features of databases, spreadsheets, and lightweight CRM systems.",
+    "logo": "seatable.svg",
+    "links": {
+      "github": "https://github.com/seatable/seatable",
+      "website": "https://seatable.io",
+      "docs": "https://admin.seatable.io"
+    },
+    "tags": [
+      "database",
+      "spreadsheet",
+      "collaboration",
+      "no-code",
+      "crm"
+    ]
+  },
+  {
     "id": "shlink",
     "name": "Shlink",
     "version": "stable",

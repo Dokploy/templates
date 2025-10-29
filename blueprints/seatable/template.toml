@@ -1,0 +1,28 @@
+name = "SeaTable"
+version = "6.0.6"
+description = "A powerful online collaborative table and information management system with an easy-to-use interface. SeaTable combines the features of databases, spreadsheets, and lightweight CRM systems."
+logo = "seatable.svg"
+
+[variables]
+seatable_domain = "${domain}"
+admin_email = "${email}"
+admin_password = "${password:45}"
+mariadb_password = "${password:32}"
+redis_password = "${password:32}"
+jwt_private_key = "${password:64}"
+
+[[config.domains]]
+serviceName = "seatable"
+port = 80
+host = "${seatable_domain}"
+
+[config]
+env = [
+    "SEATABLE_SERVER_HOSTNAME=${seatable_domain}",
+    "SEATABLE_ADMIN_EMAIL=${admin_email}",
+    "SEATABLE_ADMIN_PASSWORD=${admin_password}",
+    "MARIADB_PASSWORD=${mariadb_password}",
+    "REDIS_PASSWORD=${redis_password}",
+    "JWT_PRIVATE_KEY=${jwt_private_key}",
+    "TIME_ZONE=UTC"
+]

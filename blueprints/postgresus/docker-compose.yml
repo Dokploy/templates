@@ -1,0 +1,29 @@
+services:
+  postgresus:
+    image: rostislavdugin/postgresus:latest
+    container_name: postgresus
+    ports:
+      - "4005:4005"
+    volumes:
+      # Persistent data storage
+      - postgresus-data:/postgresus-data
+    restart: unless-stopped
+    environment:
+      # Optional: Set timezone
+      - TZ=UTC
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:4005" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - dokploy-network
+
+volumes:
+  postgresus-data:
+    driver: local
+
+networks:
+  dokploy-network:
+    external: true

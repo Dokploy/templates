@@ -6,8 +6,8 @@
 #
 # You should treat these as placeholders - Rybbit only supports HTTPS.
 #
-# You should also update the `BASE_URL` environment variable when
-# updating the domain entries with your custom domain.
+# You should also update the `BASE_URL`, and `DOMAIN_NAME` environment
+# variable when updating the domain entries with your custom domain.
 
 services:
   rybbit_clickhouse:
@@ -65,6 +65,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - BASE_URL=${BASE_URL}
+      - DOMAIN_NAME=${DOMAIN_NAME}
       - DISABLE_SIGNUP=${DISABLE_SIGNUP}
     depends_on:
       rybbit_clickhouse:
@@ -84,6 +85,7 @@ services:
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_BACKEND_URL=${BASE_URL}
+      - DOMAIN_NAME=${DOMAIN_NAME}
       - NEXT_PUBLIC_DISABLE_SIGNUP=${DISABLE_SIGNUP}
     depends_on:
       - rybbit_backend

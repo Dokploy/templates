@@ -4343,6 +4343,24 @@
     ]
   },
   {
+    "id": "plunk",
+    "name": "Plunk",
+    "version": "latest",
+    "description": "Plunk is the open-source, affordable email platform that brings together marketing, transactional and broadcast emails into one single, complete solution",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/useplunk/plunk",
+      "website": "https://www.useplunk.com/",
+      "docs": "https://docs.useplunk.com"
+    },
+    "tags": [
+      "email",
+      "newsletter",
+      "mailing-list",
+      "marketing"
+    ]
+  },
+  {
     "id": "pocket-id",
     "name": "Pocket ID",
     "version": "v1",

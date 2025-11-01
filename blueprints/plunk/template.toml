@@ -1,0 +1,30 @@
+[variables]
+main_domain = "${domain}"
+postgres_user = "plunk"
+postgres_db = "plunk"
+
+[config]
+isolated = true
+
+[[config.domains]]
+serviceName = "plunk"
+port = 3000
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_DB = "${postgres_db}"
+POSTGRES_PASSWORD = "${password:32}"
+
+REDIS_URL = "redis://redis:6379"
+
+JWT_SECRET = "${password:64}"
+APP_URI = "https://${main_domain}"
+
+AWS_REGION = "<your-aws-region>"
+AWS_ACCESS_KEY_ID = "<your-aws-access-key-id>"
+AWS_SECRET_ACCESS_KEY = "<your-aws-secret-access-key>"
+AWS_SES_CONFIGURATION_SET = "<your-ses-configuration-set>"
+
+DISABLE_SIGNUPS = "False"

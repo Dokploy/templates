@@ -5040,6 +5040,24 @@
     ]
   },
   {
+    "id": "tautulli",
+    "name": "Tautulli",
+    "version": "2.16.0",
+    "description": "A python based web application for monitoring, analytics and notifications for Plex Media Server.",
+    "logo": "logo-tautulli.png",
+    "links": {
+      "github": "https://github.com/Tautulli/Tautulli",
+      "website": "https://tautulli.com/",
+      "docs": "https://github.com/Tautulli/Tautulli/wiki"
+    },
+    "tags": [
+      "alerting",
+      "analytics",
+      "media",
+      "monitoring"
+    ]
+  },
+  {
     "id": "teable",
     "name": "teable",
     "version": "v1.3.1-alpha-build.460",

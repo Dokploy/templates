@@ -1,0 +1,12 @@
+version: '3'
+services:
+  tautulli:
+    image: ghcr.io/tautulli/tautulli:latest
+    restart: unless-stopped
+    volumes:
+      - tautulli_data:/config
+    ports:
+      - 8181
+
+volumes:
+  tautulli_data:

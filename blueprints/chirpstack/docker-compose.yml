@@ -4,7 +4,7 @@ services:
     command: -c /etc/chirpstack
     restart: unless-stopped
     volumes:
-      - ./files/etc/chirpstack:/etc/chirpstack
+      - ./files/chirpstack:/etc/chirpstack
     depends_on:
       - postgres
       - mosquitto
@@ -20,7 +20,7 @@ services:
     image: chirpstack/chirpstack-gateway-bridge:4
     restart: unless-stopped
     volumes:
-      - ./files/etc/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
+      - ./files/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
     ports:
       - 1700/udp
     environment:
@@ -35,7 +35,7 @@ services:
     command: -c /etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge-basicstation-eu868.toml
     restart: unless-stopped
     volumes:
-      - ./files/etc/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
+      - ./files/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
     ports:
       - 3001
     depends_on:
@@ -55,7 +55,7 @@ services:
     restart: unless-stopped
     volumes:
       - postgresqldata:/var/lib/postgresql/data
-      - ./files/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./files/postgresql/initdb:/docker-entrypoint-initdb.d
     environment:
       - POSTGRES_USER=chirpstack
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

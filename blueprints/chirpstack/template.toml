@@ -21,7 +21,7 @@ POSTGRES_PASSWORD = "${postgres_password}"
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/chirpstack.toml"
+filePath = "/chirpstack/chirpstack.toml"
 content = """
 # Logging.
 [logging]
@@ -132,7 +132,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_as923_2.toml"
+filePath = "/chirpstack/region_as923_2.toml"
 content = """
 # This file contains an example AS923_2 configuration.
 [[regions]]
@@ -342,7 +342,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_as923_3.toml"
+filePath = "/chirpstack/region_as923_3.toml"
 content = """
 # This file contains an example AS923_3 configuration.
 [[regions]]
@@ -552,7 +552,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_as923_4.toml"
+filePath = "/chirpstack/region_as923_4.toml"
 content = """
 # This file contains an example AS923_4 configuration.
 [[regions]]
@@ -762,7 +762,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_as923.toml"
+filePath = "/chirpstack/region_as923.toml"
 content = """
 # This file contains an example AS923 configuration.
 [[regions]]
@@ -972,7 +972,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_au915_0.toml"
+filePath = "/chirpstack/region_au915_0.toml"
 content = """
 # This file contains an example AU915 example (channels 0-7 + 64).
 [[regions]]
@@ -1231,7 +1231,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_au915_1.toml"
+filePath = "/chirpstack/region_au915_1.toml"
 content = """
 # This file contains an example AU915 example (channels 8-15 + 65).
 [[regions]]
@@ -1490,7 +1490,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_au915_2.toml"
+filePath = "/chirpstack/region_au915_2.toml"
 content = """
 # This file contains an example AU915 example (channels 16-23 + 66).
 [[regions]]
@@ -1749,7 +1749,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_au915_3.toml"
+filePath = "/chirpstack/region_au915_3.toml"
 content = """
 # This file contains an example AU915 example (channels 24-31 + 67).
 [[regions]]
@@ -2008,7 +2008,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_au915_4.toml"
+filePath = "/chirpstack/region_au915_4.toml"
 content = """
 # This file contains an example AU915 example (channels 32-39 + 68).
 [[regions]]
@@ -2267,7 +2267,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_au915_5.toml"
+filePath = "/chirpstack/region_au915_5.toml"
 content = """
 # This file contains an example AU915 example (channels 40-47 + 69).
 [[regions]]
@@ -2526,7 +2526,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_au915_6.toml"
+filePath = "/chirpstack/region_au915_6.toml"
 content = """
 # This file contains an example AU915 example (channels 48-55 + 70).
 [[regions]]
@@ -2785,7 +2785,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_au915_7.toml"
+filePath = "/chirpstack/region_au915_7.toml"
 content = """
 # This file contains an example AU915 example (channels 56-63 + 71).
 [[regions]]
@@ -3044,7 +3044,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_cn470_0.toml"
+filePath = "/chirpstack/region_cn470_0.toml"
 content = """
 # This file contains an example CN470 example (channels 0-7).
 [[regions]]
@@ -3297,7 +3297,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_cn470_10.toml"
+filePath = "/chirpstack/region_cn470_10.toml"
 content = """
 # This file contains an example CN470 example (channels 80-87).
 [[regions]]
@@ -3550,7 +3550,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_cn470_11.toml"
+filePath = "/chirpstack/region_cn470_11.toml"
 content = """
 # This file contains an example CN470 example (channels 88-95).
 [[regions]]
@@ -3803,7 +3803,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_cn470_1.toml"
+filePath = "/chirpstack/region_cn470_1.toml"
 content = """
 # This file contains an example CN470 example (channels 8-15).
 [[regions]]
@@ -4056,7 +4056,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_cn470_2.toml"
+filePath = "/chirpstack/region_cn470_2.toml"
 content = """
 # This file contains an example CN470 example (channels 16-23).
 [[regions]]
@@ -4309,7 +4309,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_cn470_3.toml"
+filePath = "/chirpstack/region_cn470_3.toml"
 content = """
 # This file contains an example CN470 example (channels 24-31).
 [[regions]]
@@ -4562,7 +4562,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_cn470_4.toml"
+filePath = "/chirpstack/region_cn470_4.toml"
 content = """
 # This file contains an example CN470 example (channels 32-39).
 [[regions]]
@@ -4815,7 +4815,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_cn470_5.toml"
+filePath = "/chirpstack/region_cn470_5.toml"
 content = """
 # This file contains an example CN470 example (channels 40-47).
 [[regions]]
@@ -5068,7 +5068,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_cn470_6.toml"
+filePath = "/chirpstack/region_cn470_6.toml"
 content = """
 # This file contains an example CN470 example (channels 48-55).
 [[regions]]
@@ -5321,7 +5321,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_cn470_7.toml"
+filePath = "/chirpstack/region_cn470_7.toml"
 content = """
 # This file contains an example CN470 example (channels 56-63).
 [[regions]]
@@ -5574,7 +5574,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_cn470_8.toml"
+filePath = "/chirpstack/region_cn470_8.toml"
 content = """
 # This file contains an example CN470 example (channels 64-71).
 [[regions]]
@@ -5827,7 +5827,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_cn470_9.toml"
+filePath = "/chirpstack/region_cn470_9.toml"
 content = """
 # This file contains an example CN470 example (channels 72-79).
 [[regions]]
@@ -6080,7 +6080,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_cn779.toml"
+filePath = "/chirpstack/region_cn779.toml"
 content = """
 # This file contains an example CN779 configuration.
 [[regions]]
@@ -6296,7 +6296,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_eu433.toml"
+filePath = "/chirpstack/region_eu433.toml"
 content = """
 # This file contains an example EU433 configuration.
 [[regions]]
@@ -6512,7 +6512,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_eu868.toml"
+filePath = "/chirpstack/region_eu868.toml"
 content = """
 # This file contains an example EU868 configuration.
 [[regions]]
@@ -6798,7 +6798,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_in865.toml"
+filePath = "/chirpstack/region_in865.toml"
 content = """
 # This file contains an example IN865 configuration.
 [[regions]]
@@ -7014,7 +7014,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_ism2400.toml"
+filePath = "/chirpstack/region_ism2400.toml"
 content = """
 # This file contains an example ISM2400 configuration.
 [[regions]]
@@ -7230,7 +7230,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_kr920.toml"
+filePath = "/chirpstack/region_kr920.toml"
 content = """
 # This file contains an example KR920 configuration.
 [[regions]]
@@ -7446,7 +7446,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_ru864.toml"
+filePath = "/chirpstack/region_ru864.toml"
 content = """
 # This file contains an example RU864 configuration.
 [[regions]]
@@ -7656,7 +7656,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_us915_0.toml"
+filePath = "/chirpstack/region_us915_0.toml"
 content = """
 # This file contains an example US915 example (channels 0-7 + 64).
 [[regions]]
@@ -7915,7 +7915,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_us915_1.toml"
+filePath = "/chirpstack/region_us915_1.toml"
 content = """
 # This file contains an example US915 example (channels 8-15 + 65).
 [[regions]]
@@ -8174,7 +8174,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_us915_2.toml"
+filePath = "/chirpstack/region_us915_2.toml"
 content = """
 # This file contains an example US915 example (channels 16-23 + 66).
 [[regions]]
@@ -8433,7 +8433,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_us915_3.toml"
+filePath = "/chirpstack/region_us915_3.toml"
 content = """
 # This file contains an example US915 example (channels 24-31 + 67).
 [[regions]]
@@ -8692,7 +8692,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_us915_4.toml"
+filePath = "/chirpstack/region_us915_4.toml"
 content = """
 # This file contains an example US915 example (channels 32-39 + 68).
 [[regions]]
@@ -8951,7 +8951,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_us915_5.toml"
+filePath = "/chirpstack/region_us915_5.toml"
 content = """
 # This file contains an example US915 example (channels 40-47 + 69).
 [[regions]]
@@ -9210,7 +9210,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_us915_6.toml"
+filePath = "/chirpstack/region_us915_6.toml"
 content = """
 # This file contains an example US915 example (channels 48-55 + 70).
 [[regions]]
@@ -9469,7 +9469,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack"
-filePath = "/etc/chirpstack/region_us915_7.toml"
+filePath = "/chirpstack/region_us915_7.toml"
 content = """
 # This file contains an example US915 example (channels 56-63 + 71).
 [[regions]]
@@ -9728,7 +9728,7 @@ content = """
 
 [[config.mounts]]
 serviceName = "chirpstack-gateway-bridge"
-filePath = "/etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge.toml"
+filePath = "/chirpstack-gateway-bridge/chirpstack-gateway-bridge.toml"
 content = """
 # See https://www.chirpstack.io/gateway-bridge/install/config/ for a full
 # configuration example and documentation.
@@ -9741,7 +9741,7 @@ password=""
 
 [[config.mounts]]
 serviceName = "chirpstack-gateway-bridge-basicstation"
-filePath = "/etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge-basicstation-eu868.toml"
+filePath = "/chirpstack-gateway-bridge/chirpstack-gateway-bridge-basicstation-eu868.toml"
 content = """
 # See https://www.chirpstack.io/gateway-bridge/install/config/ for a full
 # configuration example and documentation.
@@ -9803,7 +9803,7 @@ allow_anonymous true
 
 [[config.mounts]]
 serviceName = "postgres"
-filePath = "/docker-entrypoint-initdb.d/001-chirpstack_extensions.sh"
+filePath = "/postgresql/initdb/001-chirpstack_extensions.sh"
 content = """
 #!/bin/bash
 set -e

@@ -628,6 +628,24 @@
     ]
   },
   {
+    "id": "bentopdf",
+    "name": "BentoPDF",
+    "version": "latest",
+    "description": "BentoPDF is a lightweight PDF conversion microservice that exposes a simple HTTP API for generating PDFs.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/bentopdf/bentopdf",
+      "website": "https://bentopdf.com/",
+      "docs": "https://github.com/bentopdf/bentopdf#readme"
+    },
+    "tags": [
+      "pdf",
+      "converter",
+      "api",
+      "utility"
+    ]
+  },
+  {
     "id": "beszel",
     "name": "Beszel",
     "version": "0.10.2",
@@ -1633,6 +1651,27 @@
       "forum",
       "community",
       "discussion"
+    ]
+  },
+  {
+    "id": "docling-serve",
+    "name": "Docling Serve",
+    "version": "latest",
+    "description": "Running Docling as an API service for document processing and conversion with AI-powered capabilities.",
+    "logo": "docling-serve.png",
+    "links": {
+      "github": "https://github.com/docling-project/docling-serve",
+      "website": "https://docling-project.github.io/docling-serve/",
+      "docs": "https://docling-project.github.io/docling-serve/",
+      "dockerhub": "https://quay.io/repository/docling-project/docling-serve"
+    },
+    "tags": [
+      "document-processing",
+      "api",
+      "ai",
+      "conversion",
+      "pdf",
+      "office"
     ]
   },
   {
@@ -2824,6 +2863,25 @@
     ]
   },
   {
+    "id": "inngest",
+    "name": "Inngest",
+    "version": "v1.12.1",
+    "description": "Inngest is a developer platform for serverless event-driven workflows. Build reliable, scalable background functions and workflows with built-in retries, scheduling, and observability.",
+    "logo": "inngest.svg",
+    "links": {
+      "github": "https://github.com/inngest/inngest",
+      "website": "https://www.inngest.com/",
+      "docs": "https://www.inngest.com/docs/self-hosting"
+    },
+    "tags": [
+      "workflow",
+      "automation",
+      "self-hosted",
+      "serverless",
+      "events"
+    ]
+  },
+  {
     "id": "invoiceshelf",
     "name": "InvoiceShelf",
     "version": "latest",
@@ -3465,6 +3523,23 @@
     ]
   },
   {
+    "id": "mixpost",
+    "name": "Mixpost",
+    "version": "latest",
+    "description": "Mixpost is an open-source social media management tool that allows you to create, schedule, and publish posts across multiple social media platforms from a single interface.",
+    "logo": "mixpost.png",
+    "links": {
+      "github": "https://github.com/inovector/mixpost",
+      "website": "https://mixpost.app/",
+      "docs": "https://docs.mixpost.app/"
+    },
+    "tags": [
+      "social-media",
+      "management",
+      "scheduling"
+    ]
+  },
+  {
     "id": "morphos",
     "name": "Morphos",
     "version": "latest",
@@ -3525,6 +3600,26 @@
     ]
   },
   {
+    "id": "n8n-runner-postgres-ollama",
+    "name": "n8n + Worker + Runner with Redis/Postgres and Ollama",
+    "version": "latest",
+    "description": "n8n is an open source low-code platform for automating workflows and integrations with PostgreSQL database and Ollama AI model.",
+    "logo": "n8n.png",
+    "links": {
+      "github": "https://github.com/n8n-io/n8n",
+      "website": "https://n8n.io/",
+      "docs": "https://docs.n8n.io/"
+    },
+    "tags": [
+      "ai",
+      "automation",
+      "workflow",
+      "low-code",
+      "postgres",
+      "ollama"
+    ]
+  },
+  {
     "id": "n8n-with-postgres",
     "name": "n8n with Postgres",
     "version": "latest",
@@ -3578,6 +3673,24 @@
       "virtual",
       "sharing",
       "remote"
+    ]
+  },
+  {
+    "id": "networking-toolbox",
+    "name": "Networking Toolbox",
+    "version": "latest",
+    "description": "A collection of handy networking utilities by Lissy93, packaged as a self-hostable web app.",
+    "logo": "networking-toolbox.png",
+    "links": {
+      "github": "https://github.com/lissy93/networking",
+      "website": "https://github.com/lissy93/networking",
+      "docs": "https://github.com/lissy93/networking#readme"
+    },
+    "tags": [
+      "networking",
+      "tools",
+      "utilities",
+      "web"
     ]
   },
   {
@@ -4298,6 +4411,29 @@
     ]
   },
   {
+    "id": "poste.io",
+    "name": "Poste.io",
+    "version": "latest",
+    "description": "Complete mail server solution with SMTP, IMAP, POP3, antispam, antivirus, web administration and webmail client.",
+    "logo": "poste.io.svg",
+    "links": {
+      "github": "https://bitbucket.org/analogic/mailserver",
+      "website": "https://poste.io/",
+      "docs": "https://poste.io/doc/",
+      "docker": "https://hub.docker.com/r/analogic/poste.io"
+    },
+    "tags": [
+      "email",
+      "mail-server",
+      "smtp",
+      "imap",
+      "pop3",
+      "antispam",
+      "antivirus",
+      "webmail"
+    ]
+  },
+  {
     "id": "postiz",
     "name": "Postiz",
     "version": "latest",
@@ -4331,6 +4467,23 @@
       "postgres"
     ],
     "dokploy_version": "<0.22.5"
+  },
+  {
+    "id": "prometheus",
+    "name": "Prometheus",
+    "version": "latest",
+    "description": "Prometheus is an open-source monitoring and alerting toolkit designed for reliability and scalability.",
+    "logo": "Prometheus.svg",
+    "links": {
+      "github": "https://github.com/prometheus/prometheus",
+      "website": "https://prometheus.io/",
+      "docs": "https://prometheus.io/docs/introduction/overview/"
+    },
+    "tags": [
+      "monitoring",
+      "alerting",
+      "metrics"
+    ]
   },
   {
     "id": "pterodactyl",
@@ -4502,6 +4655,23 @@
     ]
   },
   {
+    "id": "rustdesk",
+    "name": "RustDesk",
+    "version": "latest",
+    "description": "RustDesk is a full-featured open source remote control alternative for self-hosting and security with minimal configuration.",
+    "logo": "rustdesk.png",
+    "links": {
+      "github": "https://github.com/rustdesk/rustdesk-server",
+      "website": "https://rustdesk.com/",
+      "docs": "https://rustdesk.com/docs/"
+    },
+    "tags": [
+      "remote-desktop",
+      "self-hosted",
+      "productivity"
+    ]
+  },
+  {
     "id": "rutorrent",
     "name": "ruTorrent",
     "version": "latest",
@@ -4641,7 +4811,7 @@
   {
     "id": "signoz",
     "name": "SigNoz",
-    "version": "v0.92.1",
+    "version": "v0.97.1",
     "description": "SigNoz is an open-source Datadog or New Relic alternative. Get APM, logs,traces, metrics, exceptions, & alerts in a single tool.",
     "logo": "signoz.svg",
     "links": {
@@ -5091,7 +5261,7 @@
   {
     "id": "umami",
     "name": "Umami",
-    "version": "v2.16.1",
+    "version": "v2.19.0",
     "description": "Umami is a simple, fast, privacy-focused alternative to Google Analytics.",
     "logo": "umami.png",
     "links": {
@@ -5117,6 +5287,24 @@
     "tags": [
       "self-hosted",
       "networking"
+    ]
+  },
+  {
+    "id": "upsnap",
+    "name": "Upsnap",
+    "version": "5",
+    "description": "Upsnap is a simple network device monitor and dashboard built on PocketBase.",
+    "logo": "upsnap.svg",
+    "links": {
+      "github": "https://github.com/seriousm4x/upsnap",
+      "website": "https://github.com/seriousm4x/upsnap",
+      "docs": "https://github.com/seriousm4x/upsnap#readme"
+    },
+    "tags": [
+      "network",
+      "monitoring",
+      "dashboard",
+      "self-hosted"
     ]
   },
   {

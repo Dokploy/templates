@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  mailserver:
+    image: analogic/poste.io
+    restart: unless-stopped
+    hostname: mail.${DOMAIN}
+    ports:
+      - "25:25"
+      - "110:110"
+      - "143:143"
+      - "465:465"
+      - "587:587"
+      - "993:993"
+      - "995:995"
+      - "4190:4190"
+    environment:
+      - TZ=${TZ}
+      - HTTPS=OFF
+      - HTTP_PORT=8080
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - poste-data:/data
+
+volumes:
+  poste-data: {}

@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "docling-serve"
+port = 5001
+host = "${main_domain}"
+
+[config.env]
+DOCLING_SERVE_ENABLE_UI = "1"
+DOCLING_SERVE_HOST = "0.0.0.0"
+DOCLING_SERVE_PORT = "5001"
+
+[[config.mounts]]

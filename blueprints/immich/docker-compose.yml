@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   immich-server:
-    image: ghcr.io/immich-app/immich-server:v1.121.0
+    image: ghcr.io/immich-app/immich-server:v2.1.0
 
     volumes:
       - immich-library:/usr/src/app/upload
@@ -36,7 +36,7 @@ services:
       retries: 3
 
   immich-machine-learning:
-    image: ghcr.io/immich-app/immich-machine-learning:v1.121.0
+    image: ghcr.io/immich-app/immich-machine-learning:v2.1.0
 
     volumes:
       - immich-model-cache:/cache
@@ -64,7 +64,7 @@ services:
     restart: always
 
   immich-database:
-    image: tensorchord/pgvecto-rs:pg14-v0.2.0
+    image: tensorchord/pgvecto-rs:pg14-v0.3.0
 
     volumes:
       - immich-postgres:/var/lib/postgresql/data

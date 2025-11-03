@@ -4552,6 +4552,23 @@
     ]
   },
   {
+    "id": "scrutiny",
+    "name": "Scrutiny",
+    "version": "latest",
+    "description": "Hard Drive S.M.A.R.T Monitoring, Historical Trends & Real World Failure Thresholds",
+    "logo": "scrutiny.png",
+    "links": {
+      "github": "https://github.com/AnalogJ/scrutiny/",
+      "website": "",
+      "docs": ""
+      
+    },
+    "tags": [
+      "monitoring",
+      "NAS"
+    ]
+  },
+  {
     "id": "scrypted",
     "name": "Scrypted",
     "version": "latest",

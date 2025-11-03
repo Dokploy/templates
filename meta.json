@@ -1155,6 +1155,25 @@
     ]
   },
   {
+    "id": "clickhouse",
+    "name": "ClickHouse",
+    "version": "latest",
+    "description": "ClickHouse is an open-source column-oriented DBMS (columnar database management system) for online analytical processing (OLAP) that allows users to generate analytical reports using SQL queries in real-time. ClickHouse works 100-1000x faster than traditional database management systems, and processes hundreds of millions to over a billion rows and tens of gigabytes of data per server per second.",
+    "logo": "clickhouse_logo.png",
+    "links": {
+      "github": "https://github.com/ClickHouse/ClickHouse",
+      "website": "https://clickhouse.com/",
+      "docs": "https://clickhouse.com/docs"
+    },
+    "tags": [
+      "self-hosted",
+      "open-source",
+      "database",
+      "olap",
+      "analytics"
+    ]
+  },
+  {
     "id": "cloud9",
     "name": "Cloud9",
     "version": "1.29.2",

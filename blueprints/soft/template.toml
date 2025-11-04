@@ -1,0 +1,53 @@
+[variables]
+main_domain = "${domain}"
+ADMIN_SSH_KEY = "${ssh_key:admin_key}"
+DB_DRIVER = "${select:sqlite,postgres}"
+DB_DATA_SOURCE = "${db_datasource}"
+
+[config]
+
+[[config.domains]]
+serviceName = "soft-serve"
+port = 23232
+host = "${main_domain}"
+path = "/"
+
+[[config.ports]]
+serviceName = "soft-serve"
+internalPort = 23231
+externalPort = 23231
+protocol = "tcp"
+description = "SSH access"
+
+[[config.ports]]
+serviceName = "soft-serve"
+internalPort = 9418
+externalPort = 9418
+protocol = "tcp"
+description = "Git daemon"
+
+[config.env]
+SOFT_SERVE_INITIAL_ADMIN_KEYS = "${ADMIN_SSH_KEY}"
+SOFT_SERVE_DB_DRIVER = "${DB_DRIVER}"
+SOFT_SERVE_DB_DATA_SOURCE = "${DB_DATA_SOURCE}"
+
+[[config.mounts]]
+filePath = "/soft-serve/config.yaml"
+content = """
+name: "Soft Serve"
+ssh:
+  listen_addr: ":23231"
+  public_url: "ssh://${main_domain}:23231"
+http:
+  listen_addr: ":23232"
+  public_url: "https://${main_domain}"
+git:
+  listen_addr: ":9418"
+  public_url: "git://${main_domain}"
+db:
+  driver: "${DB_DRIVER}"
+  data_source: "${DB_DATA_SOURCE}"
+lfs:
+  enabled: true
+  ssh_enabled: false
+"""

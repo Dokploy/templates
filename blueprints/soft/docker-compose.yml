@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  soft-serve:
+    image: charmcli/soft-serve:latest
+    restart: unless-stopped
+    expose:
+      - 23231
+      - 23232
+      - 9418
+    environment:
+      - SOFT_SERVE_INITIAL_ADMIN_KEYS=${ADMIN_SSH_KEY}
+      - SOFT_SERVE_DB_DRIVER=${DB_DRIVER}
+      - SOFT_SERVE_DB_DATA_SOURCE=${DB_DATA_SOURCE}
+    volumes:
+      - data:/soft-serve
+
+volumes:
+  data: {}

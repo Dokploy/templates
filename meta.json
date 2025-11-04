@@ -5025,6 +5025,23 @@
     ]
   },
   {
+    "id": "surrealdb",
+    "name": "SurrealDB",
+    "version": "2.3.10",
+    "description": "SurrealDB is a native, open-source, multi-model database that lets you store and manage data across relational, document, graph, time-series, vector & search, and geospatial models—all in one place.",
+    "logo": "surrealdb.svg",
+    "links": {
+      "github": "https://github.com/surrealdb/surrealdb",
+      "website": "https://surrealdb.com",
+      "docs": "https://surrealdb.com/docs/surrealdb"
+    },
+    "tags": [
+      "database",
+      "sql",
+      "surrealdb"
+    ]
+  },
+  {
     "id": "tailscale-exitnode",
     "name": "Tailscale Exit nodes",
     "version": "1.0.0",

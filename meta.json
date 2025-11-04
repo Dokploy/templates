@@ -4877,7 +4877,12 @@
       "docker": "https://hub.docker.com/r/charmcli/soft-serve",
       "docs": "https://github.com/charmbracelet/soft-serve/blob/main/README.md"
     },
-    "tags": ["git", "ssh", "self-hosted", "devtools"]
+    "tags": [
+      "git",
+      "ssh",
+      "self-hosted",
+      "devtools"
+    ]
   },
   {
     "id": "soketi",

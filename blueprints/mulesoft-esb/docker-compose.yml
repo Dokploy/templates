@@ -2,31 +2,21 @@ version: "3.8"
 
 services:
   mule:
-    image: hari1367709/mule-community1:4.9.0
+    image: hari1367709/mule-esb:latest
     restart: unless-stopped
     ports:
-      - 8081
-      - 1099
-    volumes:
-      - mule-logs:/opt/mule-standalone/logs
-      - mule-conf:/opt/mule-standalone/conf
-      - mule-apps:/opt/mule-standalone/apps
-      - mule-domains:/opt/mule-standalone/domains
+      - "${HTTP_PORT:-8081}:${HTTP_PORT:-8081}"
     environment:
+      - MULE_VERSION=${MULE_VERSION:-4.9.0}
+      - HTTP_PORT=${HTTP_PORT:-8081}
       - MULE_HOME=/opt/mule-standalone
       - MULE_BASE=/opt/mule-standalone
       - TZ=UTC
       - MULE_VERBOSE_EXCEPTIONS=true
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8081/ || exit 0"]
+      test: ["CMD-SHELL", "curl -f http://localhost:${HTTP_PORT:-8081}/ || exit 0"]
       interval: 60s
       timeout: 20s
       retries: 5
       start_period: 120s
-
-volumes:
-  mule-logs: {}
-  mule-conf: {}
-  mule-apps: {}
-  mule-domains: {}
 

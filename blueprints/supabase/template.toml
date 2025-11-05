@@ -10,13 +10,13 @@ container_name_prefix = "${APP_NAME}-supabase"
 anon_key_payload = """{
   "role": "anon",
   "iss": "supabase",
-  "exp": ${timestamps:2030-01-01T00:00:00Z},
+  "exp": ${timestamps:2030-01-01T00:00:00Z}
 }
 """
 service_role_key_payload = """{
   "role": "service_role",
   "iss": "supabase",
-  "exp": ${timestamps:2030-01-01T00:00:00Z},
+  "exp": ${timestamps:2030-01-01T00:00:00Z}
 }
 """
 

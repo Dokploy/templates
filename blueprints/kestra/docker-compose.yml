@@ -44,7 +44,7 @@ services:
             basicAuth:
               enabled: false
               username: "admin@localhost.dev" # it must be a valid email address
-              password: kestra
+              password: k3str4p@ss
           repository:
             type: postgres
           storage:

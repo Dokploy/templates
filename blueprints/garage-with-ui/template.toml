@@ -1,14 +1,18 @@
 [variables]
 main_domain = "${domain}"
 webui_domain = "web-ui.${domain}"
-ht_username = "${username}"
-ht_password = "${password:16}"
+admin_token = "${base64:32}"
+metrics_token = "${base64:32}"
+
 
 [config]
 env = [
-    "AUTH_USER_PASS=",
     "API_BASE_URL=http://garage:3903",
-    "S3_ENDPOINT_URL=http://garage:3900"
+    "S3_ENDPOINT_URL=http://garage:3900",
+    "",
+    "# To set up auth for the web-ui please go here: https://github.com/khairul169/garage-webui?tab=readme-ov-file#authentication",
+    "# or run this command: htpasswd -nbBC 10 'YOUR_USERNAME' 'YOUR_PASSWORD' and paste the output in here.",
+    "AUTH_USER_PASS=",
 ]
 
 [[config.domains]]
@@ -24,7 +28,6 @@ host = "${webui_domain}"
 [[config.mounts]]
 filePath = "garage.toml"
 content = """
-
 metadata_dir = "/var/lib/garage/meta"
 data_dir = "/var/lib/garage/data"
 db_engine = "sqlite"
@@ -49,6 +52,7 @@ index = "index.html"
 
 [admin] # Required
 api_bind_addr = "[::]:3903"
-admin_token = "${base64:32}"
-metrics_token = "${base64:32}"
+admin_token = "${admin_token}"
+metrics_require_token = true
+metrics_token = "${metrics_token}"
 """

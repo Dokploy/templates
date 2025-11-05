@@ -1,38 +1,46 @@
+version: "3.8"
+
 services:
-  mysql:
-    image: mysql:8.4
+  db:
+    image: postgres:17-alpine
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: $DB_PASSWORD
-      MYSQL_DATABASE: bugsink
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - my-datavolume:/var/lib/mysql
+      - db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "exit | mysql -h localhost -P 3306 -u root -p$$MYSQL_ROOT_PASSWORD" ]  # 'exit |' closes the MySQL input prompt
-      interval: 1s
-      timeout: 20s
-      retries: 30
+      test: ["CMD-SHELL", "pg_isready -h db"]
+      retries: 5
+      start_period: 10s
+      interval: 5s
+      timeout: 5s
 
   web:
-    image: bugsink/bugsink
+    image: bugsink/bugsink:latest
     depends_on:
-      mysql:
+      db:
         condition: service_healthy
     restart: unless-stopped
-    ports:
-      - "8000"
+    expose:
+      - 8000
     environment:
-      SECRET_KEY: "${SECRET_KEY}"
-      CREATE_SUPERUSER: admin:${ADMIN_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      CREATE_SUPERUSER: ${CREATE_SUPERUSER}
       PORT: 8000
-      DATABASE_URL: mysql://root:${DB_PASSWORD}@mysql:3306/bugsink
-      BASE_URL: http://${MAIN_DOMAIN}
-      BEHIND_HTTPS_PROXY: "false"  # Change this for setups behind a proxy w/ ssl enabled
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      BEHIND_HTTPS_PROXY: ${BEHIND_HTTPS_PROXY}
+      BASE_URL: ${BASE_URL}
     healthcheck:
-      test: ["CMD-SHELL", "python -c 'import requests; requests.get(\"http://localhost:8000/\").raise_for_status()'"]
+      test:
+        [
+          "CMD-SHELL",
+          'python -c ''import requests; requests.get("http://localhost:8000/").raise_for_status()''',
+        ]
       interval: 5s
       timeout: 20s
       retries: 10
 
 volumes:
-  my-datavolume:
+  db-data:

@@ -6,11 +6,12 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Etc/UTC
-#      - DOCKER_MODS=linuxserver/mods:universal-calibre # optional
+      # - DOCKER_MODS=linuxserver/mods:universal-calibre # optional
       - OAUTHLIB_RELAX_TOKEN_SCOPE=1 # optional
     volumes:
       - calibre-config:/config
       - calibre-books:/books
+      - ../files/startup-scripts:/custom-cont-init.d:ro # optional, comment out if you have your own metadata.db file, otherwise it will be created
 
 volumes:
   calibre-config: {}

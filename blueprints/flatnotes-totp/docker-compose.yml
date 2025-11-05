@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  flatnotes:
+    image: dullage/flatnotes:latest
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      FLATNOTES_AUTH_TYPE: "totp"
+      FLATNOTES_USERNAME: ${FLATNOTES_USERNAME}
+      FLATNOTES_PASSWORD: ${FLATNOTES_PASSWORD}
+      FLATNOTES_SECRET_KEY: ${FLATNOTES_SECRET_KEY}
+      FLATNOTES_TOTP_KEY: ${FLATNOTES_TOTP_KEY}
+      FLATNOTES_SESSION_EXPIRY_DAYS: ${FLATNOTES_SESSION_EXPIRY_DAYS}
+      FLATNOTES_PATH_PREFIX: ${FLATNOTES_PATH_PREFIX}
+    expose:
+      - 8080
+    volumes:
+      - flatnotes-data:/data
+
+volumes:
+  flatnotes-data: {}

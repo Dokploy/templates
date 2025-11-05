@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "cookiecloud"
+port = 8088
+host = "${main_domain}"
+
+[config.env]
+# No environment variables required by default
+
+[[config.mounts]]
+# Data volume mount is defined in docker-compose.yml

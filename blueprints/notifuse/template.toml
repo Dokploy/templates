@@ -1,0 +1,29 @@
+[variables]
+main_domain = "${domain}"
+paseto_private_key = "d04zCk3Fa45oOjDWHpAvc1AZxnLdGffOnNWK+Jt2yXf37+FTfuMMHb8flcfPMqLluRR3rvhbr555r6j1DEigrA=="
+paseto_public_key = "9+/hU37jDB2/H5XHzzKi5bkUd674W6+eea+o9QxIoKw="
+
+[config]
+[[config.domains]]
+serviceName = "notifuse"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+ROOT_EMAIL = "${email}"
+API_ENDPOINT = "https://${main_domain}"
+
+# PASETO keys for authentication
+# Default keys for testing - GENERATE YOUR OWN for production at https://paseto.notifuse.com/
+PASETO_PRIVATE_KEY = "${paseto_private_key}"
+PASETO_PUBLIC_KEY = "${paseto_public_key}"
+
+# SMTP Configuration (users need to configure these)
+SMTP_HOST = "smtp.gmail.com"
+SMTP_PORT = "587"
+SMTP_USERNAME = "your-email@gmail.com"
+SMTP_PASSWORD = "your-smtp-password"
+SMTP_FROM_EMAIL = "noreply@yourdomain.com"
+SMTP_FROM_NAME = "Notifuse"
+
+[[config.mounts]]

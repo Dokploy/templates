@@ -1,6 +1,6 @@
 services:
   garage:
-    image: dxflrs/garage:v1.0.1
+    image: dxflrs/garage:v2.0.0
     volumes:
       - ../files/garage.toml:/etc/garage.toml
       - garage-storage:/var/lib/garage
@@ -13,7 +13,7 @@ services:
       - 3903
 
   garage-webui:
-    image: khairul169/garage-webui:latest
+    image: khairul169/garage-webui:1.1.0
     restart: unless-stopped
     volumes:
       - ../files/garage.toml:/etc/garage.toml:ro

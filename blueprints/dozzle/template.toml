@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+docker_socket = "/var/run/docker.sock"
+
+[config]
+[[config.domains]]
+serviceName = "dozzle"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+DOZZLE_USERNAME = "${username}"
+DOZZLE_PASSWORD = "${password:16}"
+
+[[config.mounts]]
+source = "${docker_socket}"
+target = "/var/run/docker.sock"
+read_only = true

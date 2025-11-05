@@ -1,6 +1,6 @@
 services:
   browserless:
-    image: ghcr.io/browserless/chromium:v2.23.0
+    image: ghcr.io/browserless/chromium:latest
     environment:
       TOKEN: ${BROWSERLESS_TOKEN}
     expose:

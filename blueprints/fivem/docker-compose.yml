@@ -1,0 +1,41 @@
+# docker-compose.yml
+# 
+# IMPORTANT: FiveM Template - Two Deployment Modes
+# 
+# MODE 1: Standard FiveM Server
+# - Set LICENSE_KEY environment variable (get free from https://forum.fivem.net/)
+# - Leave NO_DEFAULT_CONFIG empty or unset
+# - Server configured via /config files
+# - No web management interface
+#
+# MODE 2: txAdmin Web Interface  
+# - Set NO_DEFAULT_CONFIG=1
+# - DO NOT set LICENSE_KEY (configure via web UI)
+# - Access web management at https://your-domain
+# - License configured through txAdmin interface
+#
+# WARNING: Don't mix modes! Setting both LICENSE_KEY and NO_DEFAULT_CONFIG=1 causes errors
+#
+services:
+  fivem:
+    image: spritsail/fivem:latest
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    environment:
+      - LICENSE_KEY=${license_key}
+      - RCON_PASSWORD=${rcon_password}
+      - NO_DEFAULT_CONFIG=${NO_DEFAULT_CONFIG:-}
+    volumes:
+      - fivem_config:/config
+      - fivem_txdata:/txData
+    ports:
+      - 30120:30120
+      - 30120:30120/udp
+      - 40120
+    labels:
+      - "traefik.enable=true"
+
+volumes:
+  fivem_config:
+  fivem_txdata:

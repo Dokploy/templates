@@ -1,0 +1,32 @@
+[variables]
+main_domain = "${domain}"
+username = "${username}"
+password = "${password:16}"
+secret_key = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "flatnotes"
+port = 8080
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+PUID = "1000"
+PGID = "1000"
+FLATNOTES_AUTH_TYPE = "password"
+FLATNOTES_USERNAME = "${username}"
+FLATNOTES_PASSWORD = "${password}"
+FLATNOTES_SECRET_KEY = "${secret_key}"
+FLATNOTES_SESSION_EXPIRY_DAYS = "30"
+FLATNOTES_TOTP_KEY = ""
+FLATNOTES_PATH_PREFIX = ""
+FLATNOTES_QUICK_ACCESS_HIDE = "false"
+FLATNOTES_QUICK_ACCESS_TITLE = "RECENTLY MODIFIED"
+FLATNOTES_QUICK_ACCESS_TERM = "*"
+FLATNOTES_QUICK_ACCESS_SORT = "lastModified"
+FLATNOTES_QUICK_ACCESS_LIMIT = "4"
+
+[[config.mounts]]
+name = "flatnotes-data"
+mountPath = "/data"

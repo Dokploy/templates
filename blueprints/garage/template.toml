@@ -1,0 +1,48 @@
+[variables]
+main_domain = "${domain}"
+webui_domain = "web-ui.${domain}"
+admin_token = "${base64:32}"
+metrics_token = "${base64:32}"
+
+[config]
+env = [
+    "API_BASE_URL=http://garage:3903",
+    "S3_ENDPOINT_URL=http://garage:3900",
+]
+
+[[config.domains]]
+serviceName = "garage"
+port = 3900
+host = "${main_domain}"
+
+[[config.mounts]]
+filePath = "garage.toml"
+content = """
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "sqlite"
+metadata_auto_snapshot_interval = "6h"
+
+replication_factor = 1
+compression_level = 2
+
+rpc_bind_addr = "[::]:3901"
+rpc_public_addr = "localhost:3901" # Required
+rpc_secret = "${hash:64}"
+
+[s3_api]
+s3_region = "garage"
+api_bind_addr = "[::]:3900"
+root_domain = ".s3.domain.com"
+
+[s3_web] # Optional, if you want to expose bucket as web
+bind_addr = "[::]:3902"
+root_domain = ".web.domain.com"
+index = "index.html"
+
+[admin] # Required
+api_bind_addr = "[::]:3903"
+admin_token = "${admin_token}"
+metrics_require_token = true
+metrics_token = "${metrics_token}"
+"""

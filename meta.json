@@ -628,6 +628,24 @@
     ]
   },
   {
+    "id": "bentopdf",
+    "name": "BentoPDF",
+    "version": "latest",
+    "description": "BentoPDF is a lightweight PDF conversion microservice that exposes a simple HTTP API for generating PDFs.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/bentopdf/bentopdf",
+      "website": "https://bentopdf.com/",
+      "docs": "https://github.com/bentopdf/bentopdf#readme"
+    },
+    "tags": [
+      "pdf",
+      "converter",
+      "api",
+      "utility"
+    ]
+  },
+  {
     "id": "beszel",
     "name": "Beszel",
     "version": "0.10.2",
@@ -734,6 +752,24 @@
     ]
   },
   {
+    "id": "borgitory",
+    "name": "Borgitory",
+    "version": "latest",
+    "description": "A web interface for managing BorgBackup archives. Allows browsing, mounting (via FUSE), and handling backup repositories.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/mlapaglia/borgitory",
+      "website": "https://github.com/mlapaglia/borgitory",
+      "docs": "https://github.com/mlapaglia/borgitory"
+    },
+    "tags": [
+      "backup",
+      "borg",
+      "archive",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "botpress",
     "name": "Botpress",
     "version": "latest",
@@ -805,7 +841,7 @@
   {
     "id": "bugsink",
     "name": "Bugsink",
-    "version": "v1.4.2",
+    "version": "latest",
     "description": "Bugsink is a self-hosted Error Tracker. Built to self-host; Sentry-SDK compatible; Scalable and reliable",
     "logo": "bugsink.png",
     "links": {
@@ -839,12 +875,12 @@
     "id": "bytestash",
     "name": "ByteStash",
     "version": "latest",
-    "description": "ByteStash is a self-hosted file storage solution that allows you to store and share files with ease. It provides a simple and effective solution for storing and accessing files from anywhere.",
+    "description": "ByteStash is a self-hosted web application designed to store, organise, and manage your code snippets efficiently. With support for creating, editing, and filtering snippets, ByteStash helps you keep track of your code in one secure place.",
     "logo": "logo.png",
     "links": {
-      "github": "https://github.com/bytestash/bytestash",
-      "website": "https://bytestash.com",
-      "docs": "https://bytestash.com/docs"
+      "github": "https://github.com/jordan-dalby/ByteStash",
+      "website": "https://github.com/jordan-dalby/ByteStash",
+      "docs": "https://github.com/jordan-dalby/ByteStash"
     },
     "tags": [
       "file-storage",
@@ -993,6 +1029,23 @@
       "support",
       "chat",
       "customer-service"
+    ]
+  },
+  {
+    "id": "checkcle",
+    "name": "Checkcle",
+    "version": "latest",
+    "description": "Checkcle is a security and compliance tool by Operacle, providing insights into system configuration and runtime checks.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/Operacle/checkcle",
+      "website": "https://operacle.com/",
+      "docs": "https://github.com/Operacle/checkcle#readme"
+    },
+    "tags": [
+      "security",
+      "compliance",
+      "monitoring"
     ]
   },
   {
@@ -1377,6 +1430,24 @@
     ]
   },
   {
+    "id": "cookie-cloud",
+    "name": "CookieCloud",
+    "version": "latest",
+    "description": "CookieCloud lets you sync and manage browser cookies across devices securely using a self-hosted backend.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/easychen/cookiecloud",
+      "website": "https://github.com/easychen/cookiecloud",
+      "docs": "https://github.com/easychen/cookiecloud#readme"
+    },
+    "tags": [
+      "cookies",
+      "sync",
+      "selfhosted",
+      "privacy"
+    ]
+  },
+  {
     "id": "coralproject",
     "name": "Coral",
     "version": "9.7.0",
@@ -1583,6 +1654,27 @@
     ]
   },
   {
+    "id": "docling-serve",
+    "name": "Docling Serve",
+    "version": "latest",
+    "description": "Running Docling as an API service for document processing and conversion with AI-powered capabilities.",
+    "logo": "docling-serve.png",
+    "links": {
+      "github": "https://github.com/docling-project/docling-serve",
+      "website": "https://docling-project.github.io/docling-serve/",
+      "docs": "https://docling-project.github.io/docling-serve/",
+      "dockerhub": "https://quay.io/repository/docling-project/docling-serve"
+    },
+    "tags": [
+      "document-processing",
+      "api",
+      "ai",
+      "conversion",
+      "pdf",
+      "office"
+    ]
+  },
+  {
     "id": "docmost",
     "name": "Docmost",
     "version": "0.4.1",
@@ -1660,6 +1752,23 @@
     },
     "tags": [
       "email"
+    ]
+  },
+  {
+    "id": "dozzle",
+    "name": "Dozzle",
+    "version": "latest",
+    "description": "Dozzle is a lightweight, real-time log viewer for Docker containers.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/amir20/dozzle",
+      "website": "https://dozzle.dev",
+      "docs": "https://dozzle.dev/docs"
+    },
+    "tags": [
+      "monitoring",
+      "logs",
+      "docker"
     ]
   },
   {
@@ -1951,6 +2060,43 @@
     ]
   },
   {
+    "id": "firecrawl",
+    "name": "Firecrawl",
+    "version": "latest",
+    "description": "Firecrawl is an API service that takes a URL, crawls it, and converts it into clean markdown or structured data. It can crawl all accessible subpages and provide clean data for each.",
+    "logo": "firecrawl.svg",
+    "links": {
+      "github": "https://github.com/firecrawl/firecrawl",
+      "website": "https://firecrawl.dev",
+      "docs": "https://github.com/firecrawl/firecrawl"
+    },
+    "tags": [
+      "api",
+      "crawler",
+      "scraping",
+      "data-extraction",
+      "llm"
+    ]
+  },
+  {
+    "id": "fivem",
+    "name": "FiveM Server",
+    "version": "latest",
+    "description": "A modded GTA V multiplayer server with optional txAdmin web interface for easy server management.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/spritsail/fivem",
+      "website": "https://fivem.net/",
+      "docs": "https://docs.fivem.net/docs/server-manual/"
+    },
+    "tags": [
+      "gaming",
+      "gta",
+      "multiplayer",
+      "server"
+    ]
+  },
+  {
     "id": "flagsmith",
     "name": "Flagsmith",
     "version": "2.177.1",
@@ -1987,6 +2133,44 @@
     ]
   },
   {
+    "id": "flatnotes",
+    "name": "Flatnotes",
+    "version": "latest",
+    "description": "A self-hosted, modern note-taking web app that saves your notes as plain text Markdown files.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/dullage/flatnotes",
+      "website": "https://flatnotes.io",
+      "docs": "https://github.com/dullage/flatnotes"
+    },
+    "tags": [
+      "notes",
+      "productivity",
+      "markdown",
+      "self-hosted"
+    ]
+  },
+  {
+    "id": "flatnotes-totp",
+    "name": "Flatnotes (TOTP)",
+    "version": "latest",
+    "description": "Flatnotes with TOTP authentication enabled (username + password + one-time passcode).",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/dullage/flatnotes",
+      "website": "https://flatnotes.io",
+      "docs": "https://github.com/dullage/flatnotes"
+    },
+    "tags": [
+      "notes",
+      "productivity",
+      "markdown",
+      "self-hosted",
+      "totp",
+      "2fa"
+    ]
+  },
+  {
     "id": "flowise",
     "name": "Flowise",
     "version": "latest",
@@ -2002,6 +2186,24 @@
       "LLM",
       "workflow",
       "automation"
+    ]
+  },
+  {
+    "id": "fmd-server",
+    "name": "FMD Server",
+    "version": "0.11.0",
+    "description": "A server to communicate with the FMD Android app, to locate and control your devices.",
+    "logo": "fmd-server.svg",
+    "links": {
+      "github": "https://gitlab.com/fmd-foss/fmd-server",
+      "website": "https://fmd-foss.org",
+      "docs": "https://fmd-foss.org/docs/fmd-server/overview"
+    },
+    "tags": [
+      "phone",
+      "security",
+      "gps",
+      "location"
     ]
   },
   {
@@ -2111,10 +2313,26 @@
     ]
   },
   {
+    "id": "garage",
+    "name": "Garage S3",
+    "version": "latest",
+    "description": "Garage is an open-source distributed object storage service tailored for self-hosting.",
+    "logo": "garage.svg",
+    "links": {
+      "github": "https://git.deuxfleurs.fr/Deuxfleurs/garage",
+      "website": "https://garagehq.deuxfleurs.fr",
+      "docs": "https://garagehq.deuxfleurs.fr/documentation/quick-start/"
+    },
+    "tags": [
+      "storage",
+      "object-storage"
+    ]
+  },
+  {
     "id": "garage-with-ui",
     "name": "Garage S3 with Web UI",
     "version": "latest",
-    "description": "Garage is an open-source distributed object storage service tailored for self-hosting",
+    "description": "Garage is an open-source distributed object storage service tailored for self-hosting. For authentication in the web-ui please go to https://github.com/khairul169/garage-webui?tab=readme-ov-file#authentication",
     "logo": "garage.svg",
     "links": {
       "github": "https://git.deuxfleurs.fr/Deuxfleurs/garage",
@@ -2498,6 +2716,25 @@
     ]
   },
   {
+    "id": "hoppscotch",
+    "name": "Hoppscotch (AIO + Migrations)",
+    "version": "latest",
+    "description": "Hoppscotch Community Edition (All-in-One) with automatic database migrations. Includes backend, frontend, and admin under unified subpath routing.",
+    "logo": "image.png",
+    "tags": [
+      "api",
+      "testing",
+      "development",
+      "postman-alternative",
+      "graphql"
+    ],
+    "links": {
+      "website": "https://hoppscotch.io/",
+      "github": "https://github.com/hoppscotch/hoppscotch",
+      "docs": "https://docs.hoppscotch.io/documentation/self-host/community-edition/install-and-build"
+    }
+  },
+  {
     "id": "hortusfox",
     "name": "HortusFox",
     "version": "5.0",
@@ -2623,6 +2860,25 @@
       "open-source",
       "storage",
       "database"
+    ]
+  },
+  {
+    "id": "inngest",
+    "name": "Inngest",
+    "version": "v1.12.1",
+    "description": "Inngest is a developer platform for serverless event-driven workflows. Build reliable, scalable background functions and workflows with built-in retries, scheduling, and observability.",
+    "logo": "inngest.svg",
+    "links": {
+      "github": "https://github.com/inngest/inngest",
+      "website": "https://www.inngest.com/",
+      "docs": "https://www.inngest.com/docs/self-hosting"
+    },
+    "tags": [
+      "workflow",
+      "automation",
+      "self-hosted",
+      "serverless",
+      "events"
     ]
   },
   {
@@ -2881,6 +3137,40 @@
     ]
   },
   {
+    "id": "libredesk",
+    "name": "Libredesk",
+    "logo": "libredesk.svg",
+    "version": "latest",
+    "description": "Open source, self-hosted customer support desk. Single binary app.",
+    "links": {
+      "github": "https://github.com/abhinavxd/libredesk",
+      "website": "https://libredesk.io",
+      "docs": "https://docs.libredesk.io/introduction"
+    },
+    "tags": [
+      "storage",
+      "object-storage"
+    ]
+  },
+  {
+    "id": "libretranslate",
+    "name": "LibreTranslate",
+    "version": "1.7.3",
+    "description": "LibreTranslate is a free and open-source machine translation API, powered by Argos Translate. Self-hosted, no external dependencies, and supports multiple languages.",
+    "logo": "libretranslate.svg",
+    "links": {
+      "github": "https://github.com/LibreTranslate/LibreTranslate",
+      "website": "https://libretranslate.com/",
+      "docs": "https://docs.libretranslate.com/"
+    },
+    "tags": [
+      "translation",
+      "api",
+      "nlp",
+      "language"
+    ]
+  },
+  {
     "id": "linkding",
     "name": "Linkding",
     "version": "latest",
@@ -3136,6 +3426,23 @@
     ]
   },
   {
+    "id": "mealie",
+    "name": "Mealie (sqlite version)",
+    "version": "latest",
+    "description": " Mealie is an intuitive and easy to use recipe management app. It's designed to make your life easier by being the best recipes management experience on the web and providing you with an easy to use interface to manage your growing collection of recipes. ",
+    "logo": "mealie.png",
+    "links": {
+      "github": "https://github.com/mealie-recipes/mealie",
+      "website": "https://mealie.io/",
+      "docs": "https://docs.mealie.io/"
+    },
+    "tags": [
+      "recipes",
+      "shopping-list",
+      "meal-planning"
+    ]
+  },
+  {
     "id": "meilisearch",
     "name": "Meilisearch",
     "version": "v1.8.3",
@@ -3216,6 +3523,23 @@
     ]
   },
   {
+    "id": "mixpost",
+    "name": "Mixpost",
+    "version": "latest",
+    "description": "Mixpost is an open-source social media management tool that allows you to create, schedule, and publish posts across multiple social media platforms from a single interface.",
+    "logo": "mixpost.png",
+    "links": {
+      "github": "https://github.com/inovector/mixpost",
+      "website": "https://mixpost.app/",
+      "docs": "https://docs.mixpost.app/"
+    },
+    "tags": [
+      "social-media",
+      "management",
+      "scheduling"
+    ]
+  },
+  {
     "id": "morphos",
     "name": "Morphos",
     "version": "latest",
@@ -3276,6 +3600,26 @@
     ]
   },
   {
+    "id": "n8n-runner-postgres-ollama",
+    "name": "n8n + Worker + Runner with Redis/Postgres and Ollama",
+    "version": "latest",
+    "description": "n8n is an open source low-code platform for automating workflows and integrations with PostgreSQL database and Ollama AI model.",
+    "logo": "n8n.png",
+    "links": {
+      "github": "https://github.com/n8n-io/n8n",
+      "website": "https://n8n.io/",
+      "docs": "https://docs.n8n.io/"
+    },
+    "tags": [
+      "ai",
+      "automation",
+      "workflow",
+      "low-code",
+      "postgres",
+      "ollama"
+    ]
+  },
+  {
     "id": "n8n-with-postgres",
     "name": "n8n with Postgres",
     "version": "latest",
@@ -3332,6 +3676,24 @@
     ]
   },
   {
+    "id": "networking-toolbox",
+    "name": "Networking Toolbox",
+    "version": "latest",
+    "description": "A collection of handy networking utilities by Lissy93, packaged as a self-hostable web app.",
+    "logo": "networking-toolbox.png",
+    "links": {
+      "github": "https://github.com/lissy93/networking",
+      "website": "https://github.com/lissy93/networking",
+      "docs": "https://github.com/lissy93/networking#readme"
+    },
+    "tags": [
+      "networking",
+      "tools",
+      "utilities",
+      "web"
+    ]
+  },
+  {
     "id": "nextcloud-aio",
     "name": "Nextcloud All in One",
     "version": "30.0.2",
@@ -3365,7 +3727,7 @@
   {
     "id": "nocodb",
     "name": "NocoDB",
-    "version": "0.257.2",
+    "version": "latest",
     "description": "NocoDB is an opensource Airtable alternative that turns any MySQL, PostgreSQL, SQL Server, SQLite & MariaDB into a smart spreadsheet.",
     "links": {
       "github": "https://github.com/nocodb/nocodb",
@@ -3378,6 +3740,24 @@
       "spreadsheet",
       "low-code",
       "nocode"
+    ]
+  },
+  {
+    "id": "notifuse",
+    "name": "Notifuse",
+    "version": "latest",
+    "description": "Open-source newsletter and notification platform that empowers teams to create, send, and track communications at scale.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/notifuse/notifuse",
+      "website": "https://notifuse.com/",
+      "docs": "https://docs.notifuse.com/"
+    },
+    "tags": [
+      "newsletter",
+      "email",
+      "communication",
+      "notifications"
     ]
   },
   {
@@ -3417,9 +3797,9 @@
     ]
   },
   {
-    "id": "odoo",
+    "id": "odoo_17",
     "name": "Odoo",
-    "version": "16.0",
+    "version": "17.0",
     "description": "Odoo is a free and open source business management software that helps you manage your company's operations.",
     "logo": "odoo.png",
     "links": {
@@ -3428,7 +3808,55 @@
       "docs": "https://www.odoo.com/documentation/"
     },
     "tags": [
-      "cms"
+      "erp"
+    ]
+  },
+  {
+    "id": "odoo_18",
+    "name": "Odoo",
+    "version": "18.0",
+    "description": "Odoo is a free and open source business management software that helps you manage your company's operations.",
+    "logo": "odoo.png",
+    "links": {
+      "github": "https://github.com/odoo/odoo",
+      "website": "https://odoo.com/",
+      "docs": "https://www.odoo.com/documentation/"
+    },
+    "tags": [
+      "erp"
+    ]
+  },
+  {
+    "id": "odoo_19",
+    "name": "Odoo",
+    "version": "19.0",
+    "description": "Odoo is a free and open source business management software that helps you manage your company's operations.",
+    "logo": "odoo.png",
+    "links": {
+      "github": "https://github.com/odoo/odoo",
+      "website": "https://odoo.com/",
+      "docs": "https://www.odoo.com/documentation/"
+    },
+    "tags": [
+      "erp"
+    ]
+  },
+  {
+    "id": "ojs",
+    "name": "Open Journal Systems",
+    "version": "3.3.0-21",
+    "description": "Open Journal Systems (OJS) is a journal management and publishing system that has been developed by the Public Knowledge Project through its federally funded efforts to expand and improve access to research.",
+    "logo": "ojs.svg",
+    "links": {
+      "github": "https://github.com/pkp/docker-ojs",
+      "website": "https://pkp.sfu.ca/ojs/",
+      "docs": "https://pkp.sfu.ca/ojs/docs/"
+    },
+    "tags": [
+      "publishing",
+      "journal",
+      "research",
+      "academic"
     ]
   },
   {
@@ -3934,7 +4362,7 @@
     "id": "pocketbase",
     "name": "PocketBase",
     "description": "Open Source backend in 1 file",
-    "version": "v0.28.0",
+    "version": "latest",
     "logo": "logo.svg",
     "links": {
       "github": "https://github.com/pocketbase/pocketbase",
@@ -3983,6 +4411,29 @@
     ]
   },
   {
+    "id": "poste.io",
+    "name": "Poste.io",
+    "version": "latest",
+    "description": "Complete mail server solution with SMTP, IMAP, POP3, antispam, antivirus, web administration and webmail client.",
+    "logo": "poste.io.svg",
+    "links": {
+      "github": "https://bitbucket.org/analogic/mailserver",
+      "website": "https://poste.io/",
+      "docs": "https://poste.io/doc/",
+      "docker": "https://hub.docker.com/r/analogic/poste.io"
+    },
+    "tags": [
+      "email",
+      "mail-server",
+      "smtp",
+      "imap",
+      "pop3",
+      "antispam",
+      "antivirus",
+      "webmail"
+    ]
+  },
+  {
     "id": "postiz",
     "name": "Postiz",
     "version": "latest",
@@ -4018,6 +4469,23 @@
     "dokploy_version": "<0.22.5"
   },
   {
+    "id": "prometheus",
+    "name": "Prometheus",
+    "version": "latest",
+    "description": "Prometheus is an open-source monitoring and alerting toolkit designed for reliability and scalability.",
+    "logo": "Prometheus.svg",
+    "links": {
+      "github": "https://github.com/prometheus/prometheus",
+      "website": "https://prometheus.io/",
+      "docs": "https://prometheus.io/docs/introduction/overview/"
+    },
+    "tags": [
+      "monitoring",
+      "alerting",
+      "metrics"
+    ]
+  },
+  {
     "id": "pterodactyl",
     "name": "Pterodactyl",
     "version": "latest",
@@ -4049,6 +4517,23 @@
       "self-hosted",
       "open-source",
       "management"
+    ]
+  },
+  {
+    "id": "qbittorrent",
+    "name": "qBittorrent",
+    "version": "latest",
+    "description": "A free and open-source BitTorrent client with web interface for remote management. Default login: admin (check container logs for temporary password on first startup).",
+    "logo": "qbittorrent.svg",
+    "links": {
+      "github": "https://github.com/qbittorrent/qBittorrent",
+      "website": "https://www.qbittorrent.org/",
+      "docs": "https://github.com/qbittorrent/qBittorrent/wiki"
+    },
+    "tags": [
+      "torrent",
+      "download",
+      "file-sharing"
     ]
   },
   {
@@ -4135,6 +4620,24 @@
     ]
   },
   {
+    "id": "rss-bridge",
+    "name": "RSS-Bridge",
+    "version": "latest",
+    "description": "RSS-Bridge is a PHP project capable of generating Atom feeds for websites that don't have one.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/RSS-Bridge/rss-bridge",
+      "website": "https://rss-bridge.github.io/rss-bridge/",
+      "docs": "https://rss-bridge.github.io/rss-bridge/General/Project_goals.html"
+    },
+    "tags": [
+      "rss",
+      "feeds",
+      "news",
+      "content"
+    ]
+  },
+  {
     "id": "rsshub",
     "name": "RSSHub",
     "version": "1.0.0",
@@ -4149,6 +4652,23 @@
       "rss",
       "api",
       "self-hosted"
+    ]
+  },
+  {
+    "id": "rustdesk",
+    "name": "RustDesk",
+    "version": "latest",
+    "description": "RustDesk is a full-featured open source remote control alternative for self-hosting and security with minimal configuration.",
+    "logo": "rustdesk.png",
+    "links": {
+      "github": "https://github.com/rustdesk/rustdesk-server",
+      "website": "https://rustdesk.com/",
+      "docs": "https://rustdesk.com/docs/"
+    },
+    "tags": [
+      "remote-desktop",
+      "self-hosted",
+      "productivity"
     ]
   },
   {
@@ -4275,7 +4795,7 @@
   {
     "id": "signoz",
     "name": "SigNoz",
-    "version": "v0.92.1",
+    "version": "v0.97.1",
     "description": "SigNoz is an open-source Datadog or New Relic alternative. Get APM, logs,traces, metrics, exceptions, & alerts in a single tool.",
     "logo": "signoz.svg",
     "links": {
@@ -4446,6 +4966,25 @@
     "tags": [
       "pdf",
       "tools"
+    ]
+  },
+  {
+    "id": "storyden",
+    "name": "Storyden",
+    "version": "latest",
+    "description": "With a fresh new take on traditional bulletin board forum software, Storyden is a modern, secure and extensible platform for building communities.",
+    "logo": "storyden.png",
+    "links": {
+      "github": "https://github.com/Southclaws/storyden",
+      "discord": "https://discord.gg/XF6ZBGF9XF",
+      "docs": "https://www.storyden.org/docs/introduction",
+      "website": "https://www.storyden.org/"
+    },
+    "tags": [
+      "forum",
+      "discussion",
+      "community",
+      "open-source"
     ]
   },
   {
@@ -4706,7 +5245,7 @@
   {
     "id": "umami",
     "name": "Umami",
-    "version": "v2.16.1",
+    "version": "v2.19.0",
     "description": "Umami is a simple, fast, privacy-focused alternative to Google Analytics.",
     "logo": "umami.png",
     "links": {
@@ -4732,6 +5271,24 @@
     "tags": [
       "self-hosted",
       "networking"
+    ]
+  },
+  {
+    "id": "upsnap",
+    "name": "Upsnap",
+    "version": "5",
+    "description": "Upsnap is a simple network device monitor and dashboard built on PocketBase.",
+    "logo": "upsnap.svg",
+    "links": {
+      "github": "https://github.com/seriousm4x/upsnap",
+      "website": "https://github.com/seriousm4x/upsnap",
+      "docs": "https://github.com/seriousm4x/upsnap#readme"
+    },
+    "tags": [
+      "network",
+      "monitoring",
+      "dashboard",
+      "self-hosted"
     ]
   },
   {
@@ -4939,6 +5496,23 @@
     ]
   },
   {
+    "id": "xsshunter",
+    "name": "XSSHunter",
+    "version": "latest",
+    "description": "XSSHunter is an open-source platform designed to identify and exploit blind Cross-Site Scripting (XSS) vulnerabilities. It provides security researchers, bug bounty hunters, and penetration testers with a comprehensive toolkit for detecting XSS flaws that are otherwise difficult to discover through traditional testing methods.",
+    "logo": "xsshunter.png",
+    "links": {
+      "github": "https://github.com/rs-loves-bugs/xsshunter",
+      "website": "https://github.com/rs-loves-bugs/xsshunter",
+      "docs": "https://github.com/rs-loves-bugs/xsshunter#requirements"
+    },
+    "tags": [
+      "pentest",
+      "xsshunter",
+      "bugbounty"
+    ]
+  },
+  {
     "id": "yamtrack",
     "name": "Yamtrack",
     "version": "latest",
@@ -4989,6 +5563,24 @@
       "youtube",
       "media",
       "webui"
+    ]
+  },
+  {
+    "id": "zabbix",
+    "name": "Zabbix",
+    "version": "7.4",
+    "description": "Zabbix is an open-source enterprise-grade monitoring platform for networks, servers, virtual machines, and cloud services. This template includes PostgreSQL, Nginx frontend, SNMP traps, and Java gateway.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/zabbix/zabbix-docker",
+      "website": "https://www.zabbix.com/",
+      "docs": "https://www.zabbix.com/documentation/current/en/manual/installation/containers"
+    },
+    "tags": [
+      "monitoring",
+      "infrastructure",
+      "observability",
+      "alerting"
     ]
   },
   {

@@ -3586,9 +3586,9 @@
   },
   {
     "id": "mulesoft-esb",
-    "name": "MuleSoft ESB Runtime 4.9.0",
-    "version": "4.9.0",
-    "description": "MuleSoft ESB Runtime 4.9.0 is a lightweight, Java-based integration platform that allows you to easily integrate applications, data sources, and APIs. It provides powerful connectors and data transformation capabilities for building robust integration solutions.",
+    "name": "MuleSoft ESB Runtime Community Edition",
+    "version": "latest",
+    "description": "MuleSoft ESB Runtime  is a lightweight, Java-based integration platform that allows you to easily integrate applications, data sources, and APIs. It provides powerful connectors and data transformation capabilities for building robust integration solutions.",
     "logo": "mulesoft_logo.png",
     "links": {
       "github": "https://github.com/mulesoft",

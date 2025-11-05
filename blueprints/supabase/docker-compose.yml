@@ -343,7 +343,7 @@ services:
 
   analytics:
     container_name: ${CONTAINER_PREFIX}-analytics
-    image: supabase/logflare:1.12.0
+    image: supabase/logflare:1.22.6
     restart: unless-stopped
     # ports:
     #   - 4000:4000
@@ -381,6 +381,8 @@ services:
       LOGFLARE_SINGLE_TENANT: true
       LOGFLARE_SUPABASE_MODE: true
       LOGFLARE_MIN_CLUSTER_SIZE: 1
+      LOGFLARE_HTTP_CONNECTION_POOLS: ""
+      LOGFLARE_LOG_LEVEL: warning
 
       # Comment variables to use Big Query backend for analytics
       POSTGRES_BACKEND_URL: postgresql://supabase_admin:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/_supabase

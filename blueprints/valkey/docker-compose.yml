@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  valkey:
+    image: valkey/valkey:8.1.4
+    restart: unless-stopped
+    ports:
+      - 6379
+    volumes:
+      - ../files/valkey.conf:/etc/valkey/valkey.conf
+      - valkey-data:/data
+    command: valkey-server /etc/valkey/valkey.conf
+    environment:
+      - VALKEY_PASSWORD=${VALKEY_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli -a \"$$VALKEY_PASSWORD\" ping | grep PONG"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  valkey-data: {}
+

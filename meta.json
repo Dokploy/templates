@@ -5340,6 +5340,24 @@
     ]
   },
   {
+    "id": "valkey",
+    "name": "Valkey",
+    "version": "8.1.4",
+    "description": "Valkey is an open-source fork of Redis, backed by AWS and the Linux Foundation. It provides a high-performance, in-memory data structure store with Redis compatibility.",
+    "logo": "valkey.svg",
+    "links": {
+      "github": "https://github.com/valkey-io/valkey",
+      "website": "https://valkey.io/",
+      "docs": "https://github.com/valkey-io/valkey"
+    },
+    "tags": [
+      "database",
+      "cache",
+      "redis",
+      "in-memory"
+    ]
+  },
+  {
     "id": "vikunja",
     "name": "Vikunja",
     "version": "0.23.0",

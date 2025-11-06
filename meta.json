@@ -5325,21 +5325,6 @@
     ]
   },
   {
-    "id": "vaultwarden",
-    "name": "Vaultwarden",
-    "version": "1.34.3",
-    "description": "Unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs",
-    "logo": "vaultwarden.svg",
-    "links": {
-      "github": "https://github.com/dani-garcia/vaultwarden",
-      "website": "",
-      "docs": "https://github.com/dani-garcia/vaultwarden/wiki"
-    },
-    "tags": [
-      "open-source"
-    ]
-  },
-  {
     "id": "valkey",
     "name": "Valkey",
     "version": "8.1.4",
@@ -5355,6 +5340,21 @@
       "cache",
       "redis",
       "in-memory"
+    ]
+  },
+  {
+    "id": "vaultwarden",
+    "name": "Vaultwarden",
+    "version": "1.34.3",
+    "description": "Unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs",
+    "logo": "vaultwarden.svg",
+    "links": {
+      "github": "https://github.com/dani-garcia/vaultwarden",
+      "website": "",
+      "docs": "https://github.com/dani-garcia/vaultwarden/wiki"
+    },
+    "tags": [
+      "open-source"
     ]
   },
   {

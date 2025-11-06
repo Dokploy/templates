@@ -663,6 +663,26 @@
     ]
   },
   {
+    "id": "bigcapital",
+    "name": "BigCapital",
+    "version": "latest",
+    "description": "BigCapital is a great open source alternative to QuickBooks. A comprehensive accounting and financial management system for businesses.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/bigcapitalhq/bigcapital",
+      "website": "https://bigcapital.app/",
+      "docs": "https://github.com/bigcapitalhq/bigcapital"
+    },
+    "tags": [
+      "accounting",
+      "finance",
+      "bookkeeping",
+      "quickbooks",
+      "erp",
+      "business"
+    ]
+  },
+  {
     "id": "blender",
     "name": "Blender",
     "version": "latest",

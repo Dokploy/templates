@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+default_email = "${email}"
+
+[config]
+[[config.domains]]
+serviceName = "grist"
+port = 8484
+host = "${main_domain}"
+
+[config.env]
+GRIST_DEFAULT_EMAIL = "${default_email}"
+
+[[config.mounts]]
+

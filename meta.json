@@ -2591,6 +2591,25 @@
     ]
   },
   {
+    "id": "grist",
+    "name": "Grist",
+    "version": "latest",
+    "description": "Grist is an open-source spreadsheet and database alternative that combines the flexibility of spreadsheets with the power of databases.",
+    "logo": "grist.png",
+    "links": {
+      "github": "https://github.com/gristlabs/grist-core",
+      "website": "https://www.getgrist.com/",
+      "docs": "https://support.getgrist.com/self-managed/"
+    },
+    "tags": [
+      "spreadsheet",
+      "database",
+      "productivity",
+      "self-hosted",
+      "data-management"
+    ]
+  },
+  {
     "id": "habitica",
     "name": "Habitica",
     "version": "latest",

@@ -5325,6 +5325,24 @@
     ]
   },
   {
+    "id": "vault",
+    "name": "Vault",
+    "version": "latest",
+    "description": "Vault is a tool for securely accessing secrets. A secret is anything that you want to tightly control access to, such as API keys, passwords, certificates, and more. Vault provides a unified interface to any secret, while providing tight access control and recording a detailed audit log. To sign in: In the Vault UI, select 'Token' as the authentication method (not GitHub), then enter the root token from the VAULT_DEV_ROOT_TOKEN_ID environment variable (auto-generated).",
+    "logo": "vault.svg",
+    "links": {
+      "github": "https://github.com/hashicorp/vault",
+      "website": "https://www.vaultproject.io/",
+      "docs": "https://developer.hashicorp.com/vault/docs"
+    },
+    "tags": [
+      "security",
+      "secrets",
+      "devops",
+      "infrastructure"
+    ]
+  },
+  {
     "id": "vaultwarden",
     "name": "Vaultwarden",
     "version": "1.34.3",

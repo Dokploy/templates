@@ -3676,6 +3676,25 @@
     ]
   },
   {
+    "id": "netdata",
+    "name": "Netdata",
+    "version": "latest",
+    "description": "Netdata is a real-time performance monitoring tool that provides comprehensive system metrics, application monitoring, and infrastructure health insights.",
+    "logo": "netdata.svg",
+    "links": {
+      "github": "https://github.com/netdata/netdata",
+      "website": "https://www.netdata.cloud/",
+      "docs": "https://learn.netdata.cloud/"
+    },
+    "tags": [
+      "monitoring",
+      "metrics",
+      "analytics",
+      "performance",
+      "infrastructure"
+    ]
+  },
+  {
     "id": "networking-toolbox",
     "name": "Networking Toolbox",
     "version": "latest",

@@ -1,7 +1,7 @@
 version: '3'
 
 x-base-config: &base-config
-  image: chatwoot/chatwoot:v4.0.3
+  image: chatwoot/chatwoot:latest
   volumes:
     - chatwoot-storage:/app/storage
   networks:

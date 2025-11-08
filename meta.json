@@ -663,6 +663,26 @@
     ]
   },
   {
+    "id": "bigcapital",
+    "name": "BigCapital",
+    "version": "latest",
+    "description": "BigCapital is a great open source alternative to QuickBooks. A comprehensive accounting and financial management system for businesses.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/bigcapitalhq/bigcapital",
+      "website": "https://bigcapital.app/",
+      "docs": "https://github.com/bigcapitalhq/bigcapital"
+    },
+    "tags": [
+      "accounting",
+      "finance",
+      "bookkeeping",
+      "quickbooks",
+      "erp",
+      "business"
+    ]
+  },
+  {
     "id": "blender",
     "name": "Blender",
     "version": "latest",
@@ -2591,6 +2611,25 @@
     ]
   },
   {
+    "id": "grist",
+    "name": "Grist",
+    "version": "latest",
+    "description": "Grist is an open-source spreadsheet and database alternative that combines the flexibility of spreadsheets with the power of databases.",
+    "logo": "grist.png",
+    "links": {
+      "github": "https://github.com/gristlabs/grist-core",
+      "website": "https://www.getgrist.com/",
+      "docs": "https://support.getgrist.com/self-managed/"
+    },
+    "tags": [
+      "spreadsheet",
+      "database",
+      "productivity",
+      "self-hosted",
+      "data-management"
+    ]
+  },
+  {
     "id": "habitica",
     "name": "Habitica",
     "version": "latest",
@@ -3673,6 +3712,25 @@
       "virtual",
       "sharing",
       "remote"
+    ]
+  },
+  {
+    "id": "netdata",
+    "name": "Netdata",
+    "version": "latest",
+    "description": "Netdata is a real-time performance monitoring tool that provides comprehensive system metrics, application monitoring, and infrastructure health insights.",
+    "logo": "netdata.svg",
+    "links": {
+      "github": "https://github.com/netdata/netdata",
+      "website": "https://www.netdata.cloud/",
+      "docs": "https://learn.netdata.cloud/"
+    },
+    "tags": [
+      "monitoring",
+      "metrics",
+      "analytics",
+      "performance",
+      "infrastructure"
     ]
   },
   {
@@ -5340,6 +5398,24 @@
       "cache",
       "redis",
       "in-memory"
+    ]
+  },
+  {
+    "id": "vault",
+    "name": "Vault",
+    "version": "latest",
+    "description": "Vault is a tool for securely accessing secrets. A secret is anything that you want to tightly control access to, such as API keys, passwords, certificates, and more. Vault provides a unified interface to any secret, while providing tight access control and recording a detailed audit log. To sign in: In the Vault UI, select 'Token' as the authentication method (not GitHub), then enter the root token from the VAULT_DEV_ROOT_TOKEN_ID environment variable (auto-generated).",
+    "logo": "vault.svg",
+    "links": {
+      "github": "https://github.com/hashicorp/vault",
+      "website": "https://www.vaultproject.io/",
+      "docs": "https://developer.hashicorp.com/vault/docs"
+    },
+    "tags": [
+      "security",
+      "secrets",
+      "devops",
+      "infrastructure"
     ]
   },
   {

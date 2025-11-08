@@ -23,7 +23,7 @@ services:
       - NETDATA_CLAIM_URL=${NETDATA_CLAIM_URL:-}
       - NETDATA_CLAIM_ROOMS=${NETDATA_CLAIM_ROOMS:-}
     ports:
-      - "19999:19999"
+      - "19999"
 
 volumes:
   netdata-config:

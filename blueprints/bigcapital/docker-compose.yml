@@ -1,17 +1,14 @@
 services:
   webapp:
-    container_name: bigcapital-webapp
     image: bigcapitalhq/webapp:latest
     restart: unless-stopped
     depends_on:
       - server
-    expose:
+    ports:
       - '80'
-    networks:
-      - bigcapital_network
+
 
   server:
-    container_name: bigcapital-server
     image: bigcapitalhq/server:latest
     restart: unless-stopped
     depends_on:
@@ -21,10 +18,9 @@ services:
         condition: service_started
       redis:
         condition: service_started
-    expose:
+    ports:
       - '3000'
-    networks:
-      - bigcapital_network
+
     environment:
       # Mail
       - MAIL_HOST=${MAIL_HOST}
@@ -92,7 +88,6 @@ services:
       - S3_BUCKET=${S3_BUCKET}
 
   mysql:
-    container_name: bigcapital-mysql
     image: mariadb:10.11
     restart: unless-stopped
     environment:
@@ -102,10 +97,9 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
       - mysql:/var/lib/mysql
-    expose:
+    ports:
       - '3306'
-    networks:
-      - bigcapital_network
+
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD || exit 1"]
       interval: 10s
@@ -114,26 +108,22 @@ services:
       start_period: 30s
 
   mongo:
-    container_name: bigcapital-mongo
     image: mongo:7
     restart: unless-stopped
-    expose:
+    ports:
       - '27017'
     volumes:
       - mongo:/data/db
-    networks:
-      - bigcapital_network
+
 
   redis:
-    container_name: bigcapital-redis
     image: redis:7-alpine
     restart: unless-stopped
-    expose:
+    ports:
       - '6379'
     volumes:
       - redis:/data
-    networks:
-      - bigcapital_network
+
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -141,13 +131,11 @@ services:
       retries: 5
 
   gotenberg:
-    container_name: bigcapital-gotenberg
     image: gotenberg/gotenberg:7
     restart: unless-stopped
-    expose:
+    ports:
       - '9000'
-    networks:
-      - bigcapital_network
+
 
 volumes:
   mysql:
@@ -160,7 +148,5 @@ volumes:
     name: bigcapital_redis
     driver: local
 
-networks:
-  bigcapital_network:
-    driver: bridge
+
 

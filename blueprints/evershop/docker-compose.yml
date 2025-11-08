@@ -10,12 +10,10 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_USER: ${DB_USER}
       DB_NAME: ${DB_NAME}
-    networks:
-      - myevershop
     depends_on:
       - database
     ports:
-      - 3000:3000
+      - 3000
   
   database:
     image: postgres:16
@@ -27,14 +25,7 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_DB: ${DB_NAME}
     ports:
-      - ${DB_PORT}:${DB_PORT}
-    networks:
-      - myevershop
-
-networks:
-  myevershop:
-    name: MyEverShop
-    driver: bridge
+      - ${DB_PORT}
 
 volumes:
   postgres-data:

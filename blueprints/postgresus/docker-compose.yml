@@ -1,9 +1,8 @@
 services:
   postgresus:
     image: rostislavdugin/postgresus:latest
-    container_name: postgresus
     ports:
-      - "4005:4005"
+      - "4005"
     volumes:
       # Persistent data storage
       - postgresus-data:/postgresus-data
@@ -17,13 +16,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    networks:
-      - dokploy-network
 
 volumes:
   postgresus-data:
     driver: local
 
-networks:
-  dokploy-network:
-    external: true

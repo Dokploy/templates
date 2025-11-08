@@ -2,10 +2,9 @@ version: "3.8"
 services:
   anubis:
     image: ghcr.io/techarohq/anubis:latest
-    container_name: anubis-bot-protection
     restart: unless-stopped
     ports:
-      - "8923:8923" # Anubis default port
+      - "8923" # Anubis default port
     environment:
       # Required: Point to your frontend service locally
       # Example: http://mydocker-wyeud:8080
@@ -29,9 +28,11 @@ services:
       # Optional: Serve robots.txt to discourage indexing
       - SERVE_ROBOTS_TXT=${SERVE_ROBOTS_TXT} # Set to true if you don't want search engines
 
-    networks:
-      - dokploy-network
 
-networks:
-  dokploy-network:
-    external: true # Using existing dokploy-network to connect to your frontend locally
+# Unconmment in case you want to connect the anubis container to dokploy-network
+#     networks:
+#       - dokploy-network
+
+# networks:
+#   dokploy-network:
+#     external: true # Using existing dokploy-network to connect to your frontend locally

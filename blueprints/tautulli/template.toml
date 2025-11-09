@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "tautulli"
+port = 8181
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+PUID=1000
+PGID=1000
+TZ=Europe/Paris
+
+[[config.mounts]]

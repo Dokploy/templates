@@ -1,0 +1,23 @@
+[variables]
+NODE_NAME = "bootnode"
+P2P_PORT = 30333
+RPC_PORT = 9944
+CHAIN_SPEC_URL = "https://raw.githubusercontent.com/anukulpandey/reef-pelagia-testnet-customSpec.json/main/customSpec.json"
+
+[[config.domains]]
+serviceName = "reef-bootnode"
+port = 30333
+host = "${domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "reef-bootnode"
+port = 9944
+host = "${domain}"
+path = "/"
+
+[config.env]
+NODE_NAME = "bootnode"
+P2P_PORT = 30333
+RPC_PORT = 9944
+CHAIN_SPEC_URL = "https://raw.githubusercontent.com/anukulpandey/reef-pelagia-testnet-customSpec.json/main/customSpec.json"

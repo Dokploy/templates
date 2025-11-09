@@ -1,0 +1,89 @@
+services:
+  invoiceninja:
+    image: invoiceninja/invoiceninja-debian:${TAG:-latest}
+    restart: unless-stopped
+    container_name: invoiceninja
+    environment:
+      - APP_NAME=${app_name}
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_URL=https://${domain}
+      - DB_CONNECTION=mysql
+      - DB_HOST=${db_host}
+      - DB_PORT=${db_port}
+      - DB_DATABASE=${db_database}
+      - DB_USERNAME=${db_username}
+      - DB_PASSWORD=${db_password}
+      - APP_KEY=${app_key}
+      - MAIL_MAILER=smtp
+      - MAIL_HOST=${mail_host}
+      - MAIL_PORT=${mail_port}
+      - MAIL_USERNAME=${mail_username}
+      - MAIL_PASSWORD=${mail_password}
+      - MAIL_ENCRYPTION=tls
+      - MAIL_FROM_ADDRESS=${mail_from_address}
+      - MAIL_FROM_NAME=${mail_from_name}
+      - TRUSTED_PROXIES="*"
+      - FORCE_HTTPS=true
+      - IS_DOCKER=true
+      - IN_USER_EMAIL=${in_user_email}
+      - IN_PASSWORD=${in_password}
+    volumes:
+      - invoiceninja_public:/var/www/html/public
+      - invoiceninja_storage:/var/www/html/storage
+    networks:
+      - dokploy-network
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    volumes:
+      - invoiceninja_public:/var/www/html/public:ro
+    command: |
+      sh -c " echo 'server {
+        listen 80;
+        server_name _;
+        root /var/www/html/public;
+        index index.php;
+        client_max_body_size 20M;
+        
+        location / {
+          try_files \$$uri \$$uri/ /index.php?\$$query_string;
+        }
+        
+        location ~ \\.php\$$ {
+          fastcgi_pass invoiceninja:9000;
+          fastcgi_index index.php;
+          fastcgi_param SCRIPT_FILENAME \$$document_root\$$fastcgi_script_name;
+          fastcgi_param HTTP_X_FORWARDED_PROTO https;
+          include fastcgi_params;
+        }
+        
+        location ~ /\\.ht {
+          deny all;
+        }
+      }' > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;' "
+    networks:
+      - dokploy-network
+    depends_on:
+      - invoiceninja
+  mysql:
+    image: mysql:8
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${mysql_root_password}
+      - MYSQL_DATABASE=${db_database}
+      - MYSQL_USER=${db_username}
+      - MYSQL_PASSWORD=${db_password}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - dokploy-network
+
+volumes:
+  invoiceninja_public:
+  invoiceninja_storage:
+  mysql_data:
+
+networks:
+  dokploy-network:
+    external: true

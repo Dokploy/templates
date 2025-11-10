@@ -1,0 +1,79 @@
+# Dokploy Templates App
+
+This is a Vite-based React application that provides a web interface for browsing and managing Dokploy templates.
+
+## Development
+
+To run the project locally:
+
+```bash
+cd app
+pnpm install
+pnpm run dev
+```
+
+Then visit http://localhost:5173/
+
+## Docker Deployment
+
+### Building and Running with Docker
+
+You can deploy this app using Docker. The Dockerfile must be built from the **repository root** (not the app directory) as it needs access to the `blueprints` and `meta.json` files.
+
+#### Option 1: Using docker-compose (Recommended)
+
+From the repository root:
+
+```bash
+docker-compose -f docker-compose.app.yml up -d
+```
+
+The app will be available at http://localhost:8080
+
+#### Option 2: Using Docker directly
+
+From the repository root:
+
+```bash
+# Build the image
+docker build -f app/Dockerfile -t dokploy-templates-app .
+
+# Run the container
+docker run -d -p 8080:80 dokploy-templates-app
+```
+
+The app will be available at http://localhost:8080
+
+### Deploying to Dokploy
+
+1. Create a new **Docker Compose** service in Dokploy
+2. Use this repository URL
+3. Set the **Dockerfile path** to: `app/Dockerfile`
+4. Set the **Build context** to: `.` (repository root)
+5. Configure the port mapping: `80` (container) → your desired external port
+6. Deploy!
+
+Alternatively, you can use the provided `docker-compose.app.yml` file:
+1. Create a new **Docker Compose** service in Dokploy
+2. Paste the contents of `docker-compose.app.yml`
+3. Deploy!
+
+## Building
+
+To build the app for production:
+
+```bash
+cd app
+pnpm install
+pnpm run build
+```
+
+The built files will be in the `dist` directory.
+
+## Architecture
+
+- **Frontend**: React + TypeScript
+- **Build Tool**: Vite
+- **Styling**: TailwindCSS
+- **Production Server**: Nginx (in Docker)
+- **Data**: Loads templates from `blueprints/` and `meta.json` at build time

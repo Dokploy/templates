@@ -2,24 +2,27 @@
 FROM node:20-alpine AS builder
 
 # Set working directory
-WORKDIR /workspace
+WORKDIR /build
 
-# Copy entire repository context (should be run from repository root)
-COPY . .
-
-# Navigate to app directory
-WORKDIR /workspace/app
-
-# Verify blueprints directory exists (debug)
-RUN echo "Checking for blueprints directory..." && \
-    ls -la /workspace/ | grep blueprints || echo "ERROR: blueprints not found at /workspace/" && \
-    ls -la /workspace/blueprints/ | head -5 || echo "ERROR: Cannot list blueprints directory"
+# Copy only app directory first
+COPY app/package.json app/pnpm-lock.yaml ./
 
 # Enable corepack for pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Install dependencies (without frozen-lockfile to handle lockfile sync issues)
 RUN pnpm install --no-frozen-lockfile
+
+# Copy app source
+COPY app/ ./
+
+# Copy blueprints and meta.json to parent directory structure that vite expects
+COPY blueprints /build-parent/blueprints
+COPY meta.json /build-parent/meta.json
+
+# Update vite config to point to the new location
+RUN sed -i "s|src: '../blueprints/\*'|src: '/build-parent/blueprints/*'|g" vite.config.ts && \
+    sed -i "s|src: '../meta.json'|src: '/build-parent/meta.json'|g" vite.config.ts
 
 # Build the app
 RUN pnpm run build
@@ -28,7 +31,7 @@ RUN pnpm run build
 FROM nginx:alpine
 
 # Copy built files from builder
-COPY --from=builder /workspace/app/dist /usr/share/nginx/html
+COPY --from=builder /build/dist /usr/share/nginx/html
 
 # Copy nginx configuration for SPA
 RUN echo 'server { \

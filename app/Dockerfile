@@ -10,6 +10,11 @@ COPY . .
 # Navigate to app directory
 WORKDIR /workspace/app
 
+# Verify blueprints directory exists (debug)
+RUN echo "Checking for blueprints directory..." && \
+    ls -la /workspace/ | grep blueprints || echo "ERROR: blueprints not found at /workspace/" && \
+    ls -la /workspace/blueprints/ | head -5 || echo "ERROR: Cannot list blueprints directory"
+
 # Enable corepack for pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 

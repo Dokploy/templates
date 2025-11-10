@@ -1,0 +1,73 @@
+version: "3.8"
+services:
+  backend:
+    image: ghcr.io/inovex/scrumlr.io/scrumlr-server:${SCRUMLR_BACKEND_VERSION}
+    restart: unless-stopped
+    command:
+      - "/app/main"
+      - "-disable-check-origin"
+    ports:
+      - "8080"
+    environment:
+      SCRUMLR_SERVER_PORT: "8080"
+      SCRUMLR_BASE_PATH: "/api"
+      SCRUMLR_PRIVATE_KEY: ${SCRUMLR_PRIVATE_KEY}
+      SCRUMLR_SERVER_DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable"
+      SCRUMLR_SERVER_NATS_URL: "nats://nats:4222"
+      SCRUMLR_DISABLE_ANONYMOUS_LOGIN: ${SCRUMLR_DISABLE_ANONYMOUS_LOGIN}
+      SCRUMLR_ALLOW_ANONYMOUS_CUSTOM_TEMPLATES: ${SCRUMLR_ALLOW_ANONYMOUS_CUSTOM_TEMPLATES}
+      SCRUMLR_ALLOW_ANONYMOUS_BOARD_CREATION: ${SCRUMLR_ALLOW_ANONYMOUS_BOARD_CREATION}
+      SCRUMLR_AUTH_CALLBACK_HOST: ${SCRUMLR_AUTH_CALLBACK_HOST}
+      SCRUMLR_AUTH_GOOGLE_CLIENT_ID: ${SCRUMLR_AUTH_GOOGLE_CLIENT_ID}
+      SCRUMLR_AUTH_GOOGLE_CLIENT_SECRET: ${SCRUMLR_AUTH_GOOGLE_CLIENT_SECRET}
+      SCRUMLR_AUTH_GITHUB_CLIENT_ID: ${SCRUMLR_AUTH_GITHUB_CLIENT_ID}
+      SCRUMLR_AUTH_GITHUB_CLIENT_SECRET: ${SCRUMLR_AUTH_GITHUB_CLIENT_SECRET}
+      SESSION_SECRET: ${SESSION_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/api/health || exit 1"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    image: ghcr.io/inovex/scrumlr.io/scrumlr-frontend:${SCRUMLR_FRONTEND_VERSION}
+    restart: unless-stopped
+    ports:
+      - "8080"
+    environment:
+      SCRUMLR_LISTEN_PORT: "8080"
+      SCRUMLR_SERVER_URL: "/api"
+      SCRUMLR_WEBSOCKET_URL: ${SCRUMLR_WEBSOCKET_URL}
+      SCRUMLR_SHOW_LEGAL_DOCUMENTS: ${SCRUMLR_SHOW_LEGAL_DOCUMENTS}
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17.5
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  nats:
+    image: nats:2.11.6
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

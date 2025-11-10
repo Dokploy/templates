@@ -1,0 +1,57 @@
+[variables]
+main_domain = "${domain}"
+postgres_user = "scrumlr"
+postgres_db = "scrumlr"
+
+[config]
+[[config.domains]]
+serviceName = "frontend"
+port = 8080
+host = "${main_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "backend"
+port = 8080
+host = "${main_domain}"
+path = "/api"
+
+[config.env]
+SCRUMLR_BACKEND_VERSION = "4.2.1"
+SCRUMLR_FRONTEND_VERSION = "4.2.1"
+
+# JWT Private Key for authentication (EC Private Key in PKCS8 format)
+# Generate with: openssl ecparam -genkey -name secp521r1 -noout -out jwt.key
+# Then format: cat jwt.key | awk '{printf "%s\\n", $0}'
+# Replace <PASTE KEY HERE> with the output from the command above
+SCRUMLR_PRIVATE_KEY = "-----BEGIN EC PRIVATE KEY-----\\n<PASTE KEY HERE>\\n-----END EC PRIVATE KEY-----\\n"
+
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_DB = "${postgres_db}"
+POSTGRES_PASSWORD = "${password:32}" # PostgreSQL database password
+
+# WebSocket URL for real-time communication (use your domain)
+SCRUMLR_WEBSOCKET_URL = "wss://${main_domain}/api" # WebSocket endpoint URL (wss://example.com/api)
+
+# Show legal documents (privacy policy, terms of service)
+SCRUMLR_SHOW_LEGAL_DOCUMENTS = "true" # Set to "false" to hide legal document links
+
+# Anonymous access control - disabled by default for security
+SCRUMLR_DISABLE_ANONYMOUS_LOGIN = "false" # Set to "true" to disable anonymous login and require OAuth
+SCRUMLR_ALLOW_ANONYMOUS_CUSTOM_TEMPLATES = "false" # Set to "true" to allow anonymous users to create custom templates
+SCRUMLR_ALLOW_ANONYMOUS_BOARD_CREATION = "false" # Set to "true" to allow anonymous users to create boards
+
+# OAuth Configuration (optional - leave empty if not using OAuth)
+# OAuth callback URL - use your app URL with https:// (e.g., https://example.com)
+SCRUMLR_AUTH_CALLBACK_HOST = "https://${main_domain}" # Your app URL (https://example.com)
+
+# Google OAuth - Get credentials from: https://console.cloud.google.com/apis/credentials
+SCRUMLR_AUTH_GOOGLE_CLIENT_ID = ""
+SCRUMLR_AUTH_GOOGLE_CLIENT_SECRET = ""
+
+# GitHub OAuth - Get credentials from: https://github.com/settings/developers (OAuth Apps)
+SCRUMLR_AUTH_GITHUB_CLIENT_ID = ""
+SCRUMLR_AUTH_GITHUB_CLIENT_SECRET = ""
+
+# Session secret for OAuth (auto-generated if using OAuth)
+SESSION_SECRET = "${password:32}" # Required if using OAuth providers

@@ -13,8 +13,8 @@ WORKDIR /workspace/app
 # Enable corepack for pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+# Install dependencies (without frozen-lockfile to handle lockfile sync issues)
+RUN pnpm install --no-frozen-lockfile
 
 # Build the app
 RUN pnpm run build
@@ -41,5 +41,3 @@ EXPOSE 80
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
-
-

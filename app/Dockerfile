@@ -5,7 +5,7 @@ FROM node:20-alpine AS builder
 WORKDIR /build
 
 # Copy package files first for better caching
-COPY package.json pnpm-lock.yaml ./
+COPY app/package.json app/pnpm-lock.yaml ./
 
 # Enable corepack for pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
@@ -14,12 +14,11 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 RUN pnpm install --no-frozen-lockfile
 
 # Copy app source code
-COPY . ./
+COPY app/ ./
 
-# Copy blueprints and meta.json from parent directory
-# When build context is app/, use .. to access parent
-COPY ../blueprints /blueprints
-COPY ../meta.json /meta.json
+# Copy blueprints and meta.json from repository root
+COPY blueprints /blueprints
+COPY meta.json /meta.json
 
 # Update vite config to point to the new absolute paths
 RUN sed -i "s|src: '../blueprints/\*'|src: '/blueprints/*'|g" vite.config.ts && \

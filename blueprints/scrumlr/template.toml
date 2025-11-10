@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+postgres_user = "scrumlr"
+postgres_db = "scrumlr"
+
+[config]
+[[config.domains]]
+serviceName = "frontend"
+port = 8080
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+SCRUMLR_BACKEND_VERSION = "4.2.1"
+SCRUMLR_FRONTEND_VERSION = "4.2.1"
+SCRUMLR_PRIVATE_KEY = "${password:64}" # JWT Private Key for authentication
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_DB = "${postgres_db}"
+POSTGRES_PASSWORD = "${password:32}" # PostgreSQL database password

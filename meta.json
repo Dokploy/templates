@@ -4881,6 +4881,24 @@
     ]
   },
   {
+    "id": "scrumlr",
+    "name": "Scrumlr.io",
+    "version": "4.2.1",
+    "description": "Webapp for collaborative online retrospectives. Scrumlr is a free tool for teams to conduct agile retrospectives and collaborate in real-time.",
+    "logo": "scrumlr.svg",
+    "links": {
+      "github": "https://github.com/inovex/scrumlr.io",
+      "website": "https://scrumlr.io/",
+      "docs": "https://docs.scrumlr.io/"
+    },
+    "tags": [
+      "collaboration",
+      "retrospective",
+      "agile",
+      "scrum"
+    ]
+  },
+  {
     "id": "scrypted",
     "name": "Scrypted",
     "version": "latest",

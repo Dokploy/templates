@@ -20,18 +20,6 @@ Then visit http://localhost:5173/
 
 You can deploy this app using Docker. The Dockerfile must be built from the **repository root** (not the app directory) as it needs access to the `blueprints` and `meta.json` files.
 
-#### Option 1: Using docker-compose (Recommended)
-
-From the repository root:
-
-```bash
-docker-compose -f docker-compose.app.yml up -d
-```
-
-The app will be available at http://localhost:8080
-
-#### Option 2: Using Docker directly
-
 From the repository root:
 
 ```bash
@@ -46,17 +34,12 @@ The app will be available at http://localhost:8080
 
 ### Deploying to Dokploy
 
-1. Create a new **Docker Compose** service in Dokploy
+1. Create a new **Dockerfile** service in Dokploy
 2. Use this repository URL
 3. Set the **Dockerfile path** to: `app/Dockerfile`
 4. Set the **Build context** to: `.` (repository root)
 5. Configure the port mapping: `80` (container) → your desired external port
 6. Deploy!
-
-Alternatively, you can use the provided `docker-compose.app.yml` file:
-1. Create a new **Docker Compose** service in Dokploy
-2. Paste the contents of `docker-compose.app.yml`
-3. Deploy!
 
 ## Building
 

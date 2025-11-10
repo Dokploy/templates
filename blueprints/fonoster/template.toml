@@ -175,6 +175,7 @@ env = [
   # PostgreSQL
   "POSTGRES_USER=${postgres_user}",
   "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_DB=${postgres_db_fonoster}",
 ]
 
 [[config.domains]]
@@ -191,8 +192,34 @@ content = """
 """
 
 [[config.mounts]]
+filePath = "config/init-db.sh"
+content = """#!/bin/bash
+set -e
+
+# Create additional databases (ignore error if they already exist)
+psql -v ON_ERROR_STOP=0 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+    CREATE DATABASE fnidentity;
+    CREATE DATABASE routr;
+EOSQL
+
+# Grant privileges
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+    GRANT ALL PRIVILEGES ON DATABASE fnidentity TO $POSTGRES_USER;
+    GRANT ALL PRIVILEGES ON DATABASE routr TO $POSTGRES_USER;
+EOSQL
+"""
+
+[[config.mounts]]
 filePath = "config/keys/.gitkeep"
 content = "# Placeholder - RSA keys need to be generated manually after deployment"
+
+[[config.mounts]]
+filePath = "config/keys/public.pem"
+content = """-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyVvQZ8v3xq7p8BmXdS3C
+G9fk654bAbl30tsqq4h9d3N4F11hlue8bGAY=
+-----END PUBLIC KEY-----
+"""
 
 [[config.mounts]]
 filePath = "config/envoy.yaml"

@@ -10,6 +10,9 @@ services:
   apiserver:
     image: fonoster/apiserver:0.15.15
     restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
     environment:
       - APISERVER_APP_URL=${APISERVER_APP_URL}
       - APISERVER_ASTERISK_ARI_PROXY_URL=${APISERVER_ASTERISK_ARI_PROXY_URL}
@@ -57,8 +60,8 @@ services:
     expose:
       - 50051
     volumes:
-      - ./config/keys:/opt/fonoster/keys:ro
-      - ./config/integrations.json:/opt/fonoster/integrations.json:ro
+      - ../files/config/keys:/opt/fonoster/keys:ro
+      - ../files/config/integrations.json:/opt/fonoster/integrations.json:ro
 
   autopilot:
     image: fonoster/autopilot:0.15.15
@@ -79,11 +82,14 @@ services:
       - AUTOPILOT_UNSTRUCTURED_API_KEY=${AUTOPILOT_UNSTRUCTURED_API_KEY}
       - AUTOPILOT_UNSTRUCTURED_API_URL=${AUTOPILOT_UNSTRUCTURED_API_URL}
     volumes:
-      - ./config/integrations.json:/opt/fonoster/integrations.json:ro
+      - ../files/config/integrations.json:/opt/fonoster/integrations.json:ro
 
   routr:
     image: fonoster/routr-one:2.13.13
     restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
     environment:
       DATABASE_URL: ${ROUTR_DATABASE_URL}
       EXTERNAL_ADDRS: ${ROUTR_EXTERNAL_ADDRS}
@@ -102,7 +108,7 @@ services:
       - 5060:5060/udp
       - 5060-5063:5060-5063
     volumes:
-      - ./config/keys/public.pem:/etc/routr/keys/public.pem
+      - ../files/config/keys/public.pem:/etc/routr/keys/public.pem
 
   # RTPEngine uses a range of ports to handle RTP traffic. Because exposing a large range of ports 
   # is not possible in Docker, we need to use network_mode: host.
@@ -151,11 +157,18 @@ services:
       PGTZ: UTC
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
       TZ: UTC
     expose:
       - 5432
     volumes:
       - db:/var/lib/postgresql/data
+      - ../files/config/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   influxdb:
     image: influxdb:2.7
@@ -181,8 +194,9 @@ services:
   envoy:
     image: envoyproxy/envoy:v1.35.0
     restart: unless-stopped
+    command: ["/usr/local/bin/envoy", "-c", "/etc/envoy/envoy.yaml"]
     volumes:
-      - ./config:/etc/envoy:ro
+      - ../files/config:/etc/envoy:ro
     ports:
       - 8449:8449
 

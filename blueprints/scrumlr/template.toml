@@ -10,6 +10,12 @@ port = 8080
 host = "${main_domain}"
 path = "/"
 
+[[config.domains]]
+serviceName = "backend"
+port = 8080
+host = "${main_domain}"
+path = "/api"
+
 [config.env]
 SCRUMLR_BACKEND_VERSION = "4.2.1"
 SCRUMLR_FRONTEND_VERSION = "4.2.1"
@@ -18,10 +24,16 @@ POSTGRES_USER = "${postgres_user}"
 POSTGRES_DB = "${postgres_db}"
 POSTGRES_PASSWORD = "${password:32}" # PostgreSQL database password
 
-# Anonymous access control (leave empty to allow anonymous access)
-SCRUMLR_DISABLE_ANONYMOUS_LOGIN = "" # Set to "true" to disable anonymous login and require OAuth
-SCRUMLR_ALLOW_ANONYMOUS_CUSTOM_TEMPLATES = "" # Set to "false" to disable anonymous custom templates
-SCRUMLR_ALLOW_ANONYMOUS_BOARD_CREATION = "" # Set to "false" to disable anonymous board creation
+# WebSocket URL for real-time communication
+SCRUMLR_WEBSOCKET_URL = "wss://${main_domain}/api" # WebSocket endpoint URL
+
+# Show legal documents (privacy policy, terms of service)
+SCRUMLR_SHOW_LEGAL_DOCUMENTS = "true" # Set to "false" to hide legal document links
+
+# Anonymous access control - disabled by default for security
+SCRUMLR_DISABLE_ANONYMOUS_LOGIN = "false" # Set to "true" to disable anonymous login and require OAuth
+SCRUMLR_ALLOW_ANONYMOUS_CUSTOM_TEMPLATES = "false" # Set to "true" to allow anonymous users to create custom templates
+SCRUMLR_ALLOW_ANONYMOUS_BOARD_CREATION = "false" # Set to "true" to allow anonymous users to create boards
 
 # OAuth Configuration (optional - leave empty if not using OAuth)
 # For callback host, use your domain with https:// prefix (e.g., "https://yourdomain.com")

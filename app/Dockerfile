@@ -4,8 +4,8 @@ FROM node:20-alpine AS builder
 # Set working directory
 WORKDIR /build
 
-# Copy only app directory first
-COPY app/package.json app/pnpm-lock.yaml ./
+# Copy package files first for better caching
+COPY package.json pnpm-lock.yaml ./
 
 # Enable corepack for pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
@@ -13,16 +13,17 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 # Install dependencies (without frozen-lockfile to handle lockfile sync issues)
 RUN pnpm install --no-frozen-lockfile
 
-# Copy app source
-COPY app/ ./
+# Copy app source code
+COPY . ./
 
-# Copy blueprints and meta.json to parent directory structure that vite expects
-COPY blueprints /build-parent/blueprints
-COPY meta.json /build-parent/meta.json
+# Copy blueprints and meta.json from parent directory
+# When build context is app/, use .. to access parent
+COPY ../blueprints /blueprints
+COPY ../meta.json /meta.json
 
-# Update vite config to point to the new location
-RUN sed -i "s|src: '../blueprints/\*'|src: '/build-parent/blueprints/*'|g" vite.config.ts && \
-    sed -i "s|src: '../meta.json'|src: '/build-parent/meta.json'|g" vite.config.ts
+# Update vite config to point to the new absolute paths
+RUN sed -i "s|src: '../blueprints/\*'|src: '/blueprints/*'|g" vite.config.ts && \
+    sed -i "s|src: '../meta.json'|src: '/meta.json'|g" vite.config.ts
 
 # Build the app
 RUN pnpm run build

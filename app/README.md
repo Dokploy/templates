@@ -18,13 +18,24 @@ Then visit http://localhost:5173/
 
 ### Building and Running with Docker
 
-You can deploy this app using Docker. The Dockerfile must be built from the **repository root** (not the app directory) as it needs access to the `blueprints` and `meta.json` files.
+You can deploy this app using Docker. The Dockerfile is configured to work with the `app` directory as the build context, accessing parent directory files during build.
 
-From the repository root:
+**From the app directory:**
+
+```bash
+cd app
+# Build the image
+docker build -t dokploy-templates-app .
+
+# Run the container
+docker run -d -p 8080:80 dokploy-templates-app
+```
+
+**From the repository root (alternative):**
 
 ```bash
 # Build the image
-docker build -f app/Dockerfile -t dokploy-templates-app .
+docker build -f app/Dockerfile -t dokploy-templates-app app
 
 # Run the container
 docker run -d -p 8080:80 dokploy-templates-app
@@ -37,9 +48,11 @@ The app will be available at http://localhost:8080
 1. Create a new **Dockerfile** service in Dokploy
 2. Use this repository URL
 3. Set the **Dockerfile path** to: `app/Dockerfile`
-4. Set the **Build context** to: `.` (repository root)
+4. Set the **Build context** to: `app` (app directory)
 5. Configure the port mapping: `80` (container) → your desired external port
 6. Deploy!
+
+**Note**: The Dockerfile uses `COPY ../` to access blueprints and meta.json from the parent directory during build.
 
 ## Building
 

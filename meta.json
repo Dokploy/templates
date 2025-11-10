@@ -3531,6 +3531,24 @@
     ]
   },
   {
+    "id": "mcsmanager",
+    "name": "MCSManager",
+    "version": "latest",
+    "description": "A modern dashboard for managing Minecraft servers. Primarily focused on Minecraft, but also supports other games and features a UI that's easy for beginners to use and supports i18n.",
+    "logo": "mcsmanager.png",
+    "links": {
+      "github": "https://github.com/MCSManager/MCSManager",
+      "website": "https://github.com/MCSManager/MCSManager",
+      "docs": "https://github.com/MCSManager/MCSManager#readme"
+    },
+    "tags": [
+      "minecraft",
+      "game-server",
+      "management",
+      "dashboard"
+    ]
+  },
+  {
     "id": "mealie",
     "name": "Mealie (sqlite version)",
     "version": "latest",

@@ -17,3 +17,23 @@ SCRUMLR_PRIVATE_KEY = "${password:64}" # JWT Private Key for authentication
 POSTGRES_USER = "${postgres_user}"
 POSTGRES_DB = "${postgres_db}"
 POSTGRES_PASSWORD = "${password:32}" # PostgreSQL database password
+
+# Anonymous access control (leave empty to allow anonymous access)
+SCRUMLR_DISABLE_ANONYMOUS_LOGIN = "" # Set to "true" to disable anonymous login and require OAuth
+SCRUMLR_ALLOW_ANONYMOUS_CUSTOM_TEMPLATES = "" # Set to "false" to disable anonymous custom templates
+SCRUMLR_ALLOW_ANONYMOUS_BOARD_CREATION = "" # Set to "false" to disable anonymous board creation
+
+# OAuth Configuration (optional - leave empty if not using OAuth)
+# For callback host, use your domain with https:// prefix (e.g., "https://yourdomain.com")
+SCRUMLR_AUTH_CALLBACK_HOST = "" # e.g., "https://${main_domain}"
+
+# Google OAuth - Get credentials from: https://console.cloud.google.com/apis/credentials
+SCRUMLR_AUTH_GOOGLE_CLIENT_ID = ""
+SCRUMLR_AUTH_GOOGLE_CLIENT_SECRET = ""
+
+# GitHub OAuth - Get credentials from: https://github.com/settings/developers (OAuth Apps)
+SCRUMLR_AUTH_GITHUB_CLIENT_ID = ""
+SCRUMLR_AUTH_GITHUB_CLIENT_SECRET = ""
+
+# Session secret for OAuth (auto-generated if using OAuth)
+SESSION_SECRET = "${password:32}" # Required if using OAuth providers

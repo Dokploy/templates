@@ -41,6 +41,8 @@ services:
     environment:
       SCRUMLR_LISTEN_PORT: "8080"
       SCRUMLR_SERVER_URL: "/api"
+      SCRUMLR_WEBSOCKET_URL: ${SCRUMLR_WEBSOCKET_URL}
+      SCRUMLR_SHOW_LEGAL_DOCUMENTS: ${SCRUMLR_SHOW_LEGAL_DOCUMENTS}
     depends_on:
       backend:
         condition: service_healthy

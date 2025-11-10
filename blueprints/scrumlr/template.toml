@@ -19,13 +19,19 @@ path = "/api"
 [config.env]
 SCRUMLR_BACKEND_VERSION = "4.2.1"
 SCRUMLR_FRONTEND_VERSION = "4.2.1"
-SCRUMLR_PRIVATE_KEY = "${password:64}" # JWT Private Key for authentication
+
+# JWT Private Key for authentication (EC Private Key in PKCS8 format)
+# Generate with: openssl ecparam -genkey -name secp521r1 -noout -out jwt.key
+# Then format: cat jwt.key | awk '{printf "%s\\n", $0}'
+# Replace <PASTE KEY HERE> with the output from the command above
+SCRUMLR_PRIVATE_KEY = "-----BEGIN EC PRIVATE KEY-----\\n<PASTE KEY HERE>\\n-----END EC PRIVATE KEY-----\\n"
+
 POSTGRES_USER = "${postgres_user}"
 POSTGRES_DB = "${postgres_db}"
 POSTGRES_PASSWORD = "${password:32}" # PostgreSQL database password
 
-# WebSocket URL for real-time communication
-SCRUMLR_WEBSOCKET_URL = "wss://${main_domain}/api" # WebSocket endpoint URL
+# WebSocket URL for real-time communication (use your domain)
+SCRUMLR_WEBSOCKET_URL = "wss://${main_domain}/api" # WebSocket endpoint URL (wss://example.com/api)
 
 # Show legal documents (privacy policy, terms of service)
 SCRUMLR_SHOW_LEGAL_DOCUMENTS = "true" # Set to "false" to hide legal document links
@@ -36,8 +42,8 @@ SCRUMLR_ALLOW_ANONYMOUS_CUSTOM_TEMPLATES = "false" # Set to "true" to allow anon
 SCRUMLR_ALLOW_ANONYMOUS_BOARD_CREATION = "false" # Set to "true" to allow anonymous users to create boards
 
 # OAuth Configuration (optional - leave empty if not using OAuth)
-# For callback host, use your domain with https:// prefix (e.g., "https://yourdomain.com")
-SCRUMLR_AUTH_CALLBACK_HOST = "" # e.g., "https://${main_domain}"
+# OAuth callback URL - use your app URL with https:// (e.g., https://example.com)
+SCRUMLR_AUTH_CALLBACK_HOST = "https://${main_domain}" # Your app URL (https://example.com)
 
 # Google OAuth - Get credentials from: https://console.cloud.google.com/apis/credentials
 SCRUMLR_AUTH_GOOGLE_CLIENT_ID = ""

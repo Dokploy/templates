@@ -263,6 +263,22 @@
     ]
   },
   {
+    "id": "anubis",
+    "name": "Anubis",
+    "version": "latest",
+    "description": "Anubis is a bot protector, It will block bots from accessing your website.",
+    "logo": "anubis.webp",
+    "links": {
+      "github": "https://github.com/TecharoHQ/anubis",
+      "website": "https://anubis.techaro.lol",
+      "docs": "https://anubis.techaro.lol/docs/"
+    },
+    "tags": [
+      "self-hosted",
+      "bot-protection"
+    ]
+  },
+  {
     "id": "anythingllm",
     "name": "AnythingLLM",
     "version": "latest",
@@ -660,6 +676,26 @@
       "monitoring",
       "docker",
       "alerts"
+    ]
+  },
+  {
+    "id": "bigcapital",
+    "name": "BigCapital",
+    "version": "latest",
+    "description": "BigCapital is a great open source alternative to QuickBooks. A comprehensive accounting and financial management system for businesses.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/bigcapitalhq/bigcapital",
+      "website": "https://bigcapital.app/",
+      "docs": "https://github.com/bigcapitalhq/bigcapital"
+    },
+    "tags": [
+      "accounting",
+      "finance",
+      "bookkeeping",
+      "quickbooks",
+      "erp",
+      "business"
     ]
   },
   {
@@ -1152,6 +1188,25 @@
       "cms",
       "wordpress",
       "content-management"
+    ]
+  },
+  {
+    "id": "clickhouse",
+    "name": "ClickHouse",
+    "version": "latest",
+    "description": "ClickHouse is an open-source column-oriented DBMS (columnar database management system) for online analytical processing (OLAP) that allows users to generate analytical reports using SQL queries in real-time. ClickHouse works 100-1000x faster than traditional database management systems, and processes hundreds of millions to over a billion rows and tens of gigabytes of data per server per second.",
+    "logo": "clickhouse_logo.png",
+    "links": {
+      "github": "https://github.com/ClickHouse/ClickHouse",
+      "website": "https://clickhouse.com/",
+      "docs": "https://clickhouse.com/docs"
+    },
+    "tags": [
+      "self-hosted",
+      "open-source",
+      "database",
+      "olap",
+      "analytics"
     ]
   },
   {
@@ -1937,6 +1992,21 @@
     ]
   },
   {
+    "id": "enshrouded",
+    "name": "Enshrouded",
+    "version": "1.0.0",
+    "description": "Enshrouded steam dedicated server.",
+    "logo": "enshrouded.png",
+    "links": {
+      "github": "https://github.com/jsknnr/enshrouded-server",
+      "website": "",
+      "docs": ""
+    },
+    "tags": [
+      "gaming"
+    ]
+  },
+  {
     "id": "erpnext",
     "name": "ERPNext",
     "version": "version-15",
@@ -1972,6 +2042,22 @@
       "collaboration",
       "text-editor",
       "real-time"
+    ]
+  },
+  {
+    "id": "evershop",
+    "name": "Evershop",
+    "version": "latest",
+    "description": "Your All-in-One open source ecommerce solution.",
+    "logo": "evershop.svg",
+    "links": {
+      "github": "https://github.com/evershopcommerce/evershop",
+      "website": "https://evershop.io/",
+      "docs": "https://evershop.io/docs/development/getting-started/introduction"
+    },
+    "tags": [
+      "E-Commerce",
+      "shopping"
     ]
   },
   {
@@ -2588,6 +2674,25 @@
       "bookmarks",
       "self-hosted",
       "knowledge-management"
+    ]
+  },
+  {
+    "id": "grist",
+    "name": "Grist",
+    "version": "latest",
+    "description": "Grist is an open-source spreadsheet and database alternative that combines the flexibility of spreadsheets with the power of databases.",
+    "logo": "grist.png",
+    "links": {
+      "github": "https://github.com/gristlabs/grist-core",
+      "website": "https://www.getgrist.com/",
+      "docs": "https://support.getgrist.com/self-managed/"
+    },
+    "tags": [
+      "spreadsheet",
+      "database",
+      "productivity",
+      "self-hosted",
+      "data-management"
     ]
   },
   {
@@ -3676,6 +3781,25 @@
     ]
   },
   {
+    "id": "netdata",
+    "name": "Netdata",
+    "version": "latest",
+    "description": "Netdata is a real-time performance monitoring tool that provides comprehensive system metrics, application monitoring, and infrastructure health insights.",
+    "logo": "netdata.svg",
+    "links": {
+      "github": "https://github.com/netdata/netdata",
+      "website": "https://www.netdata.cloud/",
+      "docs": "https://learn.netdata.cloud/"
+    },
+    "tags": [
+      "monitoring",
+      "metrics",
+      "analytics",
+      "performance",
+      "infrastructure"
+    ]
+  },
+  {
     "id": "networking-toolbox",
     "name": "Networking Toolbox",
     "version": "latest",
@@ -4343,6 +4467,24 @@
     ]
   },
   {
+    "id": "plunk",
+    "name": "Plunk",
+    "version": "latest",
+    "description": "Plunk is the open-source, affordable email platform that brings together marketing, transactional and broadcast emails into one single, complete solution",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/useplunk/plunk",
+      "website": "https://www.useplunk.com/",
+      "docs": "https://docs.useplunk.com"
+    },
+    "tags": [
+      "email",
+      "newsletter",
+      "mailing-list",
+      "marketing"
+    ]
+  },
+  {
     "id": "pocket-id",
     "name": "Pocket ID",
     "version": "v1",
@@ -4431,6 +4573,23 @@
       "antispam",
       "antivirus",
       "webmail"
+    ]
+  },
+  {
+    "id": "postgresus",
+    "name": "Postgresus",
+    "version": "latest",
+    "description": "Free, open source and self-hosted solution for automated PostgreSQL backups. With multiple storage options and notifications",
+    "logo": "postgresus.svg",
+    "links": {
+      "github": "hhttps://github.com/RostislavDugin/postgresus",
+      "website": "https://postgresus.com",
+      "docs": "https://postgresus.com"
+    },
+    "tags": [
+      "postgres",
+      "backup",
+      "s3"
     ]
   },
   {
@@ -5041,6 +5200,23 @@
     ]
   },
   {
+    "id": "surrealdb",
+    "name": "SurrealDB",
+    "version": "2.3.10",
+    "description": "SurrealDB is a native, open-source, multi-model database that lets you store and manage data across relational, document, graph, time-series, vector & search, and geospatial models—all in one place.",
+    "logo": "surrealdb.svg",
+    "links": {
+      "github": "https://github.com/surrealdb/surrealdb",
+      "website": "https://surrealdb.com",
+      "docs": "https://surrealdb.com/docs/surrealdb"
+    },
+    "tags": [
+      "database",
+      "sql",
+      "surrealdb"
+    ]
+  },
+  {
     "id": "tailscale-exitnode",
     "name": "Tailscale Exit nodes",
     "version": "1.0.0",
@@ -5338,6 +5514,42 @@
       "marketing",
       "business",
       "self-hosted"
+    ]
+  },
+  {
+    "id": "valkey",
+    "name": "Valkey",
+    "version": "8.1.4",
+    "description": "Valkey is an open-source fork of Redis, backed by AWS and the Linux Foundation. It provides a high-performance, in-memory data structure store with Redis compatibility.",
+    "logo": "valkey.svg",
+    "links": {
+      "github": "https://github.com/valkey-io/valkey",
+      "website": "https://valkey.io/",
+      "docs": "https://github.com/valkey-io/valkey"
+    },
+    "tags": [
+      "database",
+      "cache",
+      "redis",
+      "in-memory"
+    ]
+  },
+  {
+    "id": "vault",
+    "name": "Vault",
+    "version": "latest",
+    "description": "Vault is a tool for securely accessing secrets. A secret is anything that you want to tightly control access to, such as API keys, passwords, certificates, and more. Vault provides a unified interface to any secret, while providing tight access control and recording a detailed audit log. To sign in: In the Vault UI, select 'Token' as the authentication method (not GitHub), then enter the root token from the VAULT_DEV_ROOT_TOKEN_ID environment variable (auto-generated).",
+    "logo": "vault.svg",
+    "links": {
+      "github": "https://github.com/hashicorp/vault",
+      "website": "https://www.vaultproject.io/",
+      "docs": "https://developer.hashicorp.com/vault/docs"
+    },
+    "tags": [
+      "security",
+      "secrets",
+      "devops",
+      "infrastructure"
     ]
   },
   {

@@ -1,17 +1,25 @@
+# IMPORTANT: Please update the admin credentials in your .env file
+# Access PocketBase Admin UI at: https://your-domain.com/_/ (replace with your configured domain)
+# Note: Admin UI may take up to 1 minute to load on first startup
+
 version: "3.8"
 
 services:
   pocketbase:
-    image: elestio/pocketbase:${SOFTWARE_VERSION_TAG}
+    image: adrianmusante/pocketbase:latest
     restart: always
-    user: "0:0"
     expose:
       - 8090
     volumes:
-      - pocketbase-data:/pb_data
+      - pocketbase-data:/pocketbase
     environment:
-      - EMAIL=${EMAIL}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - POCKETBASE_ADMIN_EMAIL=${ADMIN_EMAIL}
+      - POCKETBASE_ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - POCKETBASE_ADMIN_UPSERT=true
+      - POCKETBASE_PORT_NUMBER=8090
+      # Optional: Encryption key for securing app settings (OAuth2 secrets, SMTP passwords, etc.)
+      # Uncomment and set a secure key in your .env file for production use
+      # - POCKETBASE_ENCRYPTION_KEY=${ENCRYPTION_KEY}
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8090/_/"]
       interval: 30s

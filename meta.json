@@ -3038,30 +3038,6 @@
     ]
   },
   {
-    "id": "kafka",
-    "name": "Kafka",
-    "version": "latest",
-    "description": "Apache Kafka is an open-source distributed event streaming platform for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.",
-    "logo": "kafka.svg",
-    "links": {
-      "github": "https://github.com/apache/kafka",
-      "website": "https://kafka.apache.org/",
-      "docs": "https://kafka.apache.org/documentation/"
-    },
-    "tags": [
-      "message-broker",
-      "streaming",
-      "event-streaming",
-      "distributed",
-      "queue",
-      "kafka",
-      "apache",
-      "pub-sub",
-      "sqs",
-      "sns"
-    ]
-  },
-  {
     "id": "jellyfin",
     "name": "jellyfin",
     "version": "v10.9.7",
@@ -3110,6 +3086,30 @@
       "search",
       "notes",
       "productivity"
+    ]
+  },
+  {
+    "id": "kafka",
+    "name": "Kafka",
+    "version": "latest",
+    "description": "Apache Kafka is an open-source distributed event streaming platform for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.",
+    "logo": "kafka.svg",
+    "links": {
+      "github": "https://github.com/apache/kafka",
+      "website": "https://kafka.apache.org/",
+      "docs": "https://kafka.apache.org/documentation/"
+    },
+    "tags": [
+      "message-broker",
+      "streaming",
+      "event-streaming",
+      "distributed",
+      "queue",
+      "kafka",
+      "apache",
+      "pub-sub",
+      "sqs",
+      "sns"
     ]
   },
   {

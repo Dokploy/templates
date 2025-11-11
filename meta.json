@@ -213,23 +213,6 @@
     ]
   },
   {
-    "id": "anytype",
-    "name": "anytype",
-    "version": "latest",
-    "description": "Anytype is a personal knowledge base—your digital brain—that lets you gather, connect and remix all kinds of information. Create pages, tasks, wikis, journals—even entire apps—and define your own data model while your data stays offline‑first, private and encrypted across devices.",
-    "logo": "logo.png",
-    "links": {
-      "github": "https://github.com/grishy/any-sync-bundle",
-      "docs": "https://doc.anytype.io/anytype-docs",
-      "website": "https://anytype.io/"
-    },
-    "tags": [
-      "note-taking",
-      "local-first",
-      "peer-to-peer"
-    ]
-  },
-  {
     "id": "anonupload",
     "name": "AnonUpload",
     "version": "1",
@@ -310,6 +293,23 @@
       "ai",
       "llm",
       "chatbot"
+    ]
+  },
+  {
+    "id": "anytype",
+    "name": "anytype",
+    "version": "latest",
+    "description": "Anytype is a personal knowledge base—your digital brain—that lets you gather, connect and remix all kinds of information. Create pages, tasks, wikis, journals—even entire apps—and define your own data model while your data stays offline‑first, private and encrypted across devices.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/grishy/any-sync-bundle",
+      "docs": "https://doc.anytype.io/anytype-docs",
+      "website": "https://anytype.io/"
+    },
+    "tags": [
+      "note-taking",
+      "local-first",
+      "peer-to-peer"
     ]
   },
   {

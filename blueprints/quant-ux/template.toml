@@ -1,0 +1,50 @@
+[variables]
+main_domain = "${domain}"
+ws_domain = "${domain}"
+qux_auth = "qux"
+qux_jwt_password = "${password:64}"
+qux_mongo_db_name = "quantux"
+qux_mongo_table_prefix = "quantux"
+qux_mail_user = "${email}"
+qux_mail_password = "${password:32}"
+qux_mail_host = "mail.example.com"
+qux_timezone = "America/Chicago"
+qux_auth_service = "qux"
+qux_user_allow_signup = "true"
+qux_user_allowed_domains = "*"
+qux_keycloak_realm = ""
+qux_keycloak_client = ""
+qux_keycloak_url = ""
+qux_keycloak_server = ""
+
+[config]
+env = [
+  "QUX_HTTP_HOST=https://${main_domain}",
+  "QUX_AUTH=${qux_auth}",
+  "QUX_JWT_PASSWORD=${qux_jwt_password}",
+  "QUX_MONGO_DB_NAME=${qux_mongo_db_name}",
+  "QUX_MONGO_TABLE_PREFIX=${qux_mongo_table_prefix}",
+  "QUX_MAIL_USER=${qux_mail_user}",
+  "QUX_MAIL_PASSWORD=${qux_mail_password}",
+  "QUX_MAIL_HOST=${qux_mail_host}",
+  "TZ=${qux_timezone}",
+  "QUX_AUTH_SERVICE=${qux_auth_service}",
+  "QUX_KEYCLOAK_SERVER=${qux_keycloak_server}",
+  "QUX_KEYCLOAK_REALM=${qux_keycloak_realm}",
+  "QUX_KEYCLOAK_CLIENT=${qux_keycloak_client}",
+  "QUX_KEYCLOAK_URL=${qux_keycloak_url}",
+  "QUX_USER_ALLOW_SIGNUP=${qux_user_allow_signup}",
+  "QUX_USER_ALLOWED_DOMAINS=${qux_user_allowed_domains}",
+  "QUX_WS_URL=wss://${ws_domain}"
+]
+
+[[config.domains]]
+serviceName = "qux-fe"
+port = 8082
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "qux-ws"
+port = 8086
+host = "${ws_domain}"
+

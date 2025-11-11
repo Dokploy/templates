@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = {}
+mounts = []
+
+[[config.domains]]
+serviceName = "kafka"
+port = 8_080
+host = "${main_domain}"
+

@@ -16,6 +16,19 @@ port = 8090
 host = "api-${main_domain}"
 path = "/"
 
+# Internal services (no public domain, but need to be on dokploy-network for DNS)
+[[config.domains]]
+serviceName = "postgres"
+port = 5432
+
+[[config.domains]]
+serviceName = "redis"
+port = 6379
+
+[[config.domains]]
+serviceName = "mosquitto"
+port = 1883
+
 [config.env]
 POSTGRES_PASSWORD = "${postgres_password}"
 

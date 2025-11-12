@@ -5,8 +5,6 @@ services:
     restart: unless-stopped
     volumes:
       - ../files/chirpstack:/etc/chirpstack
-    networks:
-      - dokploy-network
     ports:
       - 8080
     environment:
@@ -23,8 +21,6 @@ services:
     restart: unless-stopped
     volumes:
       - ../files/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
-    networks:
-      - dokploy-network
     ports:
       - 1700/udp
     environment:
@@ -40,8 +36,6 @@ services:
     restart: unless-stopped
     volumes:
       - ../files/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
-    networks:
-      - dokploy-network
     ports:
       - 3001
     depends_on:
@@ -51,8 +45,6 @@ services:
     image: chirpstack/chirpstack-rest-api:4
     restart: unless-stopped
     command: --server chirpstack:8080 --bind 0.0.0.0:8090 --insecure
-    networks:
-      - dokploy-network
     ports:
       - 8090
     depends_on:
@@ -64,8 +56,6 @@ services:
     volumes:
       - postgresqldata:/var/lib/postgresql/data
       - ../files/postgresql/initdb:/docker-entrypoint-initdb.d
-    networks:
-      - dokploy-network
     environment:
       - POSTGRES_USER=chirpstack
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -77,23 +67,15 @@ services:
     command: redis-server --save 300 1 --save 60 100 --appendonly no
     volumes:
       - redisdata:/data
-    networks:
-      - dokploy-network
 
   mosquitto:
     image: eclipse-mosquitto:2
     restart: unless-stopped
     volumes:
       - ../files/mosquitto/config/:/mosquitto/config/
-    networks:
-      - dokploy-network
     ports:
       - 1883
 
 volumes:
   postgresqldata:
   redisdata:
-
-networks:
-  dokploy-network:
-    external: true

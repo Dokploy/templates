@@ -1,3 +1,6 @@
+
+# MuleSoft ESB Deployment Configuration
+
 [variables]
 main_domain = "${domain}"
 timezone = "UTC"
@@ -18,6 +21,3 @@ MULE_HOME = "/opt/mule-standalone"
 MULE_BASE = "/opt/mule-standalone"
 TZ = "${timezone}"
 MULE_VERBOSE_EXCEPTIONS = "true"
-
-
-

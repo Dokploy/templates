@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   mule:
-    image: hari1367709/mule-esb:latest
+    image: yogeshmulecraft/mulece-esb:latest
     restart: unless-stopped
     ports:
       - "${HTTP_PORT:-8081}:${HTTP_PORT:-8081}"

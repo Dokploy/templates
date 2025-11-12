@@ -5833,5 +5833,24 @@
       "saml",
       "multi-tenant"
     ]
+  },
+  {
+    "id": "zulip",
+    "name": "Zulip",
+    "version": "11.4-0",
+    "description": "Zulip is a powerful open-source team chat application that combines the immediacy of real-time chat with an email threading model. It features topic-based threading, powerful search, and integrations with popular tools.",
+    "logo": "zulip.svg",
+    "links": {
+      "github": "https://github.com/zulip/docker-zulip",
+      "website": "https://zulip.com/",
+      "docs": "https://zulip.readthedocs.io/"
+    },
+    "tags": [
+      "chat",
+      "collaboration",
+      "team communication",
+      "messaging",
+      "real-time"
+    ]
   }
 ]

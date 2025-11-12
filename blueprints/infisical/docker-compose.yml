@@ -3,7 +3,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    image: infisical/infisical:v0.90.1-postgres
+    image: infisical/infisical:v0.135.0-postgres
     environment:
       - NODE_ENV=production
       - ENCRYPTION_KEY
@@ -30,7 +30,7 @@ services:
         condition: service_started
       db-migration:
         condition: service_completed_successfully
-    image: infisical/infisical:v0.90.1-postgres
+    image: infisical/infisical:v0.135.0-postgres
     pull_policy: always
     environment:
       - NODE_ENV=production

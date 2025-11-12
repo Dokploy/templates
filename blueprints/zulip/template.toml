@@ -1,0 +1,40 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+memcached_password = "${password:32}"
+rabbitmq_password = "${password:32}"
+redis_password = "${password:32}"
+secret_key = "${password:64}"
+email_password = "${password:32}"
+external_host = "${main_domain}"
+zulip_administrator = "${email}"
+email_host = ""
+email_host_user = "noreply@${main_domain}"
+email_port = "587"
+email_use_ssl = "False"
+email_use_tls = "True"
+
+[config]
+env = [
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "MEMCACHED_PASSWORD=${memcached_password}",
+  "RABBITMQ_PASSWORD=${rabbitmq_password}",
+  "REDIS_PASSWORD=${redis_password}",
+  "SECRET_KEY=${secret_key}",
+  "EMAIL_PASSWORD=${email_password}",
+  "EXTERNAL_HOST=${external_host}",
+  "ZULIP_ADMINISTRATOR=${zulip_administrator}",
+  "EMAIL_HOST=${email_host}",
+  "EMAIL_HOST_USER=${email_host_user}",
+  "EMAIL_PORT=${email_port}",
+  "EMAIL_USE_SSL=${email_use_ssl}",
+  "EMAIL_USE_TLS=${email_use_tls}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "zulip"
+port = 80
+host = "${main_domain}"
+path = "/"
+

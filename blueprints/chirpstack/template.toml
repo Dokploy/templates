@@ -43,7 +43,7 @@ content = """
   #  * disable - Do not use TLS
   #  * prefer - Attempt to connect with TLS but allow sessions without
   #  * require - Require the use of TLS
-  dsn="postgres://chirpstack:${postgres_password}@$POSTGRESQL_HOST/chirpstack?sslmode=disable"
+  dsn="postgres://chirpstack:${postgres_password}@postgres/chirpstack?sslmode=disable"
 
   # Max open connections.
   #
@@ -65,7 +65,7 @@ content = """
   #
   # Set multiple addresses when connecting to a cluster.
   servers=[
-    "redis://$REDIS_HOST/",
+    "redis://redis/",
   ]
 
   # TLS enabled.
@@ -126,7 +126,7 @@ content = """
   enabled=["mqtt"]
 
   [integration.mqtt]
-    server="tcp://$MQTT_BROKER_HOST:1883/"
+    server="tcp://mosquitto:1883/"
     json=true
 """
 
@@ -174,7 +174,7 @@ content = """
         topic_prefix="as923_2"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -384,7 +384,7 @@ content = """
         topic_prefix="as923_3"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -594,7 +594,7 @@ content = """
         topic_prefix="as923_4"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -804,7 +804,7 @@ content = """
         topic_prefix="as923"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -1014,7 +1014,7 @@ content = """
         topic_prefix="au915_0"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -1273,7 +1273,7 @@ content = """
         topic_prefix="au915_1"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -1532,7 +1532,7 @@ content = """
         topic_prefix="au915_2"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -1791,7 +1791,7 @@ content = """
         topic_prefix="au915_3"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -2050,7 +2050,7 @@ content = """
         topic_prefix="au915_4"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -2309,7 +2309,7 @@ content = """
         topic_prefix="au915_5"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -2568,7 +2568,7 @@ content = """
         topic_prefix="au915_6"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -2827,7 +2827,7 @@ content = """
         topic_prefix="au915_7"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -3086,7 +3086,7 @@ content = """
         topic_prefix="cn470_0"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -3339,7 +3339,7 @@ content = """
         topic_prefix="cn470_10"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -3592,7 +3592,7 @@ content = """
         topic_prefix="cn470_11"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -3845,7 +3845,7 @@ content = """
         topic_prefix="cn470_1"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -4098,7 +4098,7 @@ content = """
         topic_prefix="cn470_2"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -4351,7 +4351,7 @@ content = """
         topic_prefix="cn470_3"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -4604,7 +4604,7 @@ content = """
         topic_prefix="cn470_4"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -4857,7 +4857,7 @@ content = """
         topic_prefix="cn470_5"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -5110,7 +5110,7 @@ content = """
         topic_prefix="cn470_6"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -5363,7 +5363,7 @@ content = """
         topic_prefix="cn470_7"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -5616,7 +5616,7 @@ content = """
         topic_prefix="cn470_8"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -5869,7 +5869,7 @@ content = """
         topic_prefix="cn470_9"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -6122,7 +6122,7 @@ content = """
         topic_prefix="cn779"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -6338,7 +6338,7 @@ content = """
         topic_prefix="eu433"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -6554,7 +6554,7 @@ content = """
         topic_prefix="eu868"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -6840,7 +6840,7 @@ content = """
         topic_prefix="in865"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -7056,7 +7056,7 @@ content = """
         topic_prefix="ism2400"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -7272,7 +7272,7 @@ content = """
         topic_prefix="kr920"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -7488,7 +7488,7 @@ content = """
         topic_prefix="ru864"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -7698,7 +7698,7 @@ content = """
         topic_prefix="us915_0"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -7957,7 +7957,7 @@ content = """
         topic_prefix="us915_1"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -8216,7 +8216,7 @@ content = """
         topic_prefix="us915_2"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -8475,7 +8475,7 @@ content = """
         topic_prefix="us915_3"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -8734,7 +8734,7 @@ content = """
         topic_prefix="us915_4"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -8993,7 +8993,7 @@ content = """
         topic_prefix="us915_5"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -9252,7 +9252,7 @@ content = """
         topic_prefix="us915_6"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""
@@ -9511,7 +9511,7 @@ content = """
         topic_prefix="us915_7"
 
         # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-        server="tcp://$MQTT_BROKER_HOST:1883"
+        server="tcp://mosquitto:1883"
 
         # Connect with the given username (optional)
         username=""

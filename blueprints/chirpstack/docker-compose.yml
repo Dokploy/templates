@@ -79,3 +79,7 @@ services:
 volumes:
   postgresqldata:
   redisdata:
+
+networks:
+  dokploy-network:
+    external: true

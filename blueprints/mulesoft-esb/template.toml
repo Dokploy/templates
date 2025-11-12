@@ -1,0 +1,23 @@
+
+# MuleSoft ESB Deployment Configuration
+
+[variables]
+main_domain = "${domain}"
+timezone = "UTC"
+mule_version = "4.9.0"
+http_port = "8081"
+
+[config]
+[[config.domains]]
+serviceName = "mule"
+port = 8081
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+MULE_VERSION = "${mule_version}"
+HTTP_PORT = "${http_port}"
+MULE_HOME = "/opt/mule-standalone"
+MULE_BASE = "/opt/mule-standalone"
+TZ = "${timezone}"
+MULE_VERBOSE_EXCEPTIONS = "true"

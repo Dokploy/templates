@@ -1,0 +1,22 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+postgres_user = "instant"
+postgres_db = "instant"
+
+[config]
+env = [
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_USER=${postgres_user}",
+  "POSTGRES_DB=${postgres_db}",
+]
+mounts = []
+
+# NOTE: The server service is commented out in docker-compose.yml because there's no published image.
+# After building and publishing the InstantDB server image, uncomment the server service in docker-compose.yml
+# and add the domain configuration below:
+#
+# [[config.domains]]
+# serviceName = "server"
+# port = 8888
+# host = "${main_domain}"

@@ -2987,6 +2987,23 @@
     ]
   },
   {
+    "id": "instantdb",
+    "name": "InstantDB",
+    "version": "latest",
+    "description": "InstantDB is a real-time database server that provides instant data synchronization and real-time updates for applications.",
+    "logo": "instant.svg",
+    "links": {
+      "github": "https://github.com/instantdb/instant/tree/main/server",
+      "website": "https://github.com/instantdb/instant",
+      "docs": "https://github.com/instantdb/instant"
+    },
+    "tags": [
+      "database",
+      "real-time",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "invoiceshelf",
     "name": "InvoiceShelf",
     "version": "latest",

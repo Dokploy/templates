@@ -5026,6 +5026,25 @@
     ]
   },
   {
+    "id": "soft",
+    "name": "Soft Serve",
+    "version": "latest",
+    "description": "Servidor Git autoaloxado vía SSH e HTTP, construído por Charmbracelet.",
+    "logo": "soft.webp",
+    "links": {
+      "github": "https://github.com/charmbracelet/soft-serve",
+      "website": "https://github.com/charmbracelet/soft-serve",
+      "docker": "https://hub.docker.com/r/charmcli/soft-serve",
+      "docs": "https://github.com/charmbracelet/soft-serve/blob/main/README.md"
+    },
+    "tags": [
+      "git",
+      "ssh",
+      "self-hosted",
+      "devtools"
+    ]
+  },
+  {
     "id": "soketi",
     "name": "Soketi",
     "version": "v1.6.1-16",

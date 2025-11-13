@@ -4871,7 +4871,7 @@
     "name": "Soft Serve",
     "version": "latest",
     "description": "Servidor Git autoaloxado vía SSH e HTTP, construído por Charmbracelet.",
-    "logo": "soft-serve.svg",
+    "logo": "soft.webp",
     "links": {
       "github": "https://github.com/charmbracelet/soft-serve",
       "website": "https://github.com/charmbracelet/soft-serve",

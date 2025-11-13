@@ -4867,7 +4867,7 @@
     ]
   },
   {
-    "id": "soft-serve",
+    "id": "soft",
     "name": "Soft Serve",
     "version": "latest",
     "description": "Servidor Git autoaloxado vía SSH e HTTP, construído por Charmbracelet.",

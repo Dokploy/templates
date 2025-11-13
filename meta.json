@@ -4874,6 +4874,7 @@
     "logo": "soft-serve.svg",
     "links": {
       "github": "https://github.com/charmbracelet/soft-serve",
+      "website": "https://github.com/charmbracelet/soft-serve",
       "docker": "https://hub.docker.com/r/charmcli/soft-serve",
       "docs": "https://github.com/charmbracelet/soft-serve/blob/main/README.md"
     },

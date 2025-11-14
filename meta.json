@@ -5340,7 +5340,7 @@
   {
     "id": "trmnl-byos-laravel",
     "name": "TRMNL BYOS Laravel",
-    "version": "0.14.0",
+    "version": "0.21.0",
     "description": "TRMNL BYOS Laravel is a self-hosted application to manage TRMNL e-ink devices.",
     "logo": "byos-laravel.svg",
     "links": {

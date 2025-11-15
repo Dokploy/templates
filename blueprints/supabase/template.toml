@@ -2,10 +2,12 @@
 main_domain = "${domain}"
 postgres_password = "${password:32}"
 dashboard_password = "${password:32}"
-logflare_api_key = "${password:32}"
+logflare_public_token = "${password:32}"
+logflare_private_token = "${password:32}"
 secret_key_base = "${password:64}"
 vault_enc_key = "${password:32}"
 jwt_secret = "${password:32}"
+pg_meta_crypto_key = "${password:32}"
 container_name_prefix = "${APP_NAME}-supabase"
 anon_key_payload = """{
   "role": "anon",
@@ -59,6 +61,7 @@ env = [
 'DASHBOARD_PASSWORD=${dashboard_password}',
 'SECRET_KEY_BASE=${secret_key_base}',
 'VAULT_ENC_KEY=${vault_enc_key}',
+'PG_META_CRYPTO_KEY=${pg_meta_crypto_key}',
 '',
 '',
 '############',
@@ -78,6 +81,7 @@ env = [
 'POOLER_DEFAULT_POOL_SIZE=20',
 'POOLER_MAX_CLIENT_CONN=100',
 'POOLER_TENANT_ID=your-tenant-id',
+'POOLER_DB_POOL_SIZE=5',
 '',
 '',
 '############',
@@ -136,7 +140,6 @@ env = [
 'STUDIO_DEFAULT_ORGANIZATION=Default Organization',
 'STUDIO_DEFAULT_PROJECT=Default Project',
 '',
-'STUDIO_PORT=3000',
 '# replace if you intend to use Studio outside of localhost',
 'SUPABASE_PUBLIC_URL=http://${main_domain}',
 '',
@@ -155,14 +158,14 @@ env = [
 '',
 '',
 '############',
-'# Logs - Configuration for Logflare',
+'# Logs - Configuration for Analytics',
 '# Please refer to https://supabase.com/docs/reference/self-hosting-analytics/introduction',
 '############',
 '',
-'LOGFLARE_LOGGER_BACKEND_API_KEY=your-super-secret-and-long-logflare-key',
-'',
 '# Change vector.toml sinks to reflect this change',
-'LOGFLARE_API_KEY=${logflare_api_key}',
+'# these cannot be the same value',
+'LOGFLARE_PUBLIC_ACCESS_TOKEN=${logflare_public_token}',
+'LOGFLARE_PRIVATE_ACCESS_TOKEN=${logflare_private_token}',
 '',
 '# Docker socket location - this value will differ depending on your OS',
 'DOCKER_SOCKET_LOCATION=/var/run/docker.sock',
@@ -380,6 +383,48 @@ services:
         strip_path: true
         paths:
           - /analytics/v1/
+
+  ## Block access to /api/mcp
+  - name: mcp-blocker
+    _comment: 'Block direct access to /api/mcp'
+    url: http://studio:3000/api/mcp
+    routes:
+      - name: mcp-blocker-route
+        strip_path: true
+        paths:
+          - /api/mcp
+    plugins:
+      - name: request-termination
+        config:
+          status_code: 403
+          message: "Access is forbidden."
+
+  ## MCP endpoint - local access
+  - name: mcp
+    _comment: 'MCP: /mcp -> http://studio:3000/api/mcp (local access)'
+    url: http://studio:3000/api/mcp
+    routes:
+      - name: mcp
+        strip_path: true
+        paths:
+          - /mcp
+    plugins:
+      # Block access to /mcp by default
+      - name: request-termination
+        config:
+          status_code: 403
+          message: "Access is forbidden."
+      # Enable local access (danger zone!)
+      # 1. Comment out the 'request-termination' section above
+      # 2. Uncomment the entire section below, including 'deny'
+      # 3. Add your local IPs to the 'allow' list
+      #- name: cors
+      #- name: ip-restriction
+      #  config:
+      #    allow:
+      #      - 127.0.0.1
+      #      - ::1
+      #    deny: []
 
   ## Secure Database routes
   - name: meta
@@ -934,6 +979,13 @@ transforms:
           .event_message = parsed.msg
           .metadata.level = parsed.level
       }
+  # Function logs are unstructured messages on stderr
+  functions_logs:
+    type: remap
+    inputs:
+      - router.functions
+    source: |-
+      .metadata.project_ref = del(.project)
   # Storage logs may contain json objects so we parse them for completeness
   storage_logs:
     type: remap
@@ -982,7 +1034,9 @@ sinks:
     method: 'post'
     request:
       retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=gotrue.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+      headers:
+        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
+    uri: 'http://analytics:4000/api/logs?source_name=gotrue.logs.prod'
   logflare_realtime:
     type: 'http'
     inputs:
@@ -992,7 +1046,9 @@ sinks:
     method: 'post'
     request:
       retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=realtime.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+      headers:
+        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
+    uri: 'http://analytics:4000/api/logs?source_name=realtime.logs.prod'
   logflare_rest:
     type: 'http'
     inputs:
@@ -1002,7 +1058,9 @@ sinks:
     method: 'post'
     request:
       retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=postgREST.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+      headers:
+        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
+    uri: 'http://analytics:4000/api/logs?source_name=postgREST.logs.prod'
   logflare_db:
     type: 'http'
     inputs:
@@ -1012,20 +1070,24 @@ sinks:
     method: 'post'
     request:
       retry_max_duration_secs: 10
+      headers:
+        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
     # We must route the sink through kong because ingesting logs before logflare is fully initialised will
     # lead to broken queries from studio. This works by the assumption that containers are started in the
     # following order: vector > db > logflare > kong
-    uri: 'http://kong:8000/analytics/v1/api/logs?source_name=postgres.logs&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+    uri: 'http://kong:8000/analytics/v1/api/logs?source_name=postgres.logs'
   logflare_functions:
     type: 'http'
     inputs:
-      - router.functions
+      - functions_logs
     encoding:
       codec: 'json'
     method: 'post'
     request:
       retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=deno-relay-logs&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+      headers:
+        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
+    uri: 'http://analytics:4000/api/logs?source_name=deno-relay-logs'
   logflare_storage:
     type: 'http'
     inputs:
@@ -1035,7 +1097,9 @@ sinks:
     method: 'post'
     request:
       retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=storage.logs.prod.2&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+      headers:
+        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
+    uri: 'http://analytics:4000/api/logs?source_name=storage.logs.prod.2'
   logflare_kong:
     type: 'http'
     inputs:
@@ -1046,7 +1110,9 @@ sinks:
     method: 'post'
     request:
       retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=cloudflare.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+      headers:
+        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
+    uri: 'http://analytics:4000/api/logs?source_name=cloudflare.logs.prod'
 """
 
 [[config.mounts]]

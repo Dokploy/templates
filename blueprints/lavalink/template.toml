@@ -114,7 +114,7 @@ logging:
 
 [[config.domains]]
 serviceName = "lavalink"
-port = ${server_port}
+port = ${randomPort}
 host = "${main_domain}"
 
 [config.env]

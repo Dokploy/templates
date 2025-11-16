@@ -1,6 +1,6 @@
 [variables]
 main_domain = "${domain}"
-server_port = "${port}"
+server_port = "${randomPort}"
 lavalink_server_password = "${password}"
 
 [config]
@@ -114,7 +114,7 @@ logging:
 
 [[config.domains]]
 serviceName = "lavalink"
-port = ${port}
+port = ${server_port}
 host = "${main_domain}"
 
 [config.env]

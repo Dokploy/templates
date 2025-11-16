@@ -7,7 +7,7 @@ lavalink_server_password = "${password}"
 [[config.mounts]]
 filePath = "./application.yml"
 content = """
-    server: # REST and WS server
+server: # REST and WS server
   port: 2333
   address: 0.0.0.0
   http2:

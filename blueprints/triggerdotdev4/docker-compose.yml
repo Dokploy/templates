@@ -3,13 +3,13 @@ name: trigger
 x-logging: &logging-config
   driver: local
   options:
-    max-size: 20m
-    max-file: 5
-    compress: true
+    max-size: "20m"
+    max-file: "5"
+    compress: "true"
 
 services:
   webapp:
-    image: ghcr.io/triggerdotdev/trigger.dev:v4-beta
+    image: ghcr.io/triggerdotdev/trigger.dev:v4.0.4
     restart: unless-stopped
     logging: *logging-config
     expose:

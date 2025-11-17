@@ -1,6 +1,7 @@
 
 [variables]
 webapp_url = "${domain}"
+registry_url = "${domain}"
 session_secret = "${hash:32}"
 magic_link_secret = "${hash:32}"
 encryption_key = "${hash:32}"
@@ -26,6 +27,11 @@ serviceName = "webapp"
 port = 3000
 host = "${webapp_url}"
 
+[[config.domains]]
+serviceName = "registry"
+port = 5000
+host = "${registry_url}"
+
 [config.env]
 SESSION_SECRET = "${session_secret}"
 MAGIC_LINK_SECRET = "${magic_link_secret}"
@@ -38,7 +44,7 @@ WEB_APP_URL = "http://${webapp_url}"
 NODE_MAX_OLD_SPACE_SIZE = "3200"
 CLICKHOUSE_USER = "${clickhouse_user}"
 CLICKHOUSE_PASSWORD = "${clickhouse_password}"
-DEPLOY_REGISTRY_HOST = "${registry_domain}"
+DEPLOY_REGISTRY_HOST = "${registry_url}"
 DOCKER_REGISTRY_USERNAME = "${docker_registry_username}"
 DOCKER_REGISTRY_PASSWORD = "${docker_registry_password}"
 DEPLOY_REGISTRY_NAMESPACE = "${deploy_registry_namespace}"

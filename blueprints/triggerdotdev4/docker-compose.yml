@@ -1,16 +1,16 @@
 name: trigger
 
 x-logging: &logging-config
-  driver: ${LOGGING_DRIVER}
+  driver: local
   options:
-    max-size: ${LOGGING_MAX_SIZE}
-    max-file: ${LOGGING_MAX_FILES}
-    compress: ${LOGGING_COMPRESS}
+    max-size: 20m
+    max-file: 5
+    compress: true
 
 services:
   webapp:
-    image: ghcr.io/triggerdotdev/trigger.dev:${TRIGGER_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: ghcr.io/triggerdotdev/trigger.dev:v4-beta
+    restart: unless-stopped
     logging: *logging-config
     expose:
       - 3000
@@ -32,12 +32,12 @@ services:
       retries: 5
       start_period: 10s
     environment:
-      APP_ORIGIN: ${APP_ORIGIN}
-      LOGIN_ORIGIN: ${LOGIN_ORIGIN}
-      API_ORIGIN: ${API_ORIGIN}
+      APP_ORIGIN: ${WEB_APP_URL}
+      LOGIN_ORIGIN: ${WEB_APP_URL}
+      API_ORIGIN: ${WEB_APP_URL}
       ELECTRIC_ORIGIN: http://electric:3000
-      DATABASE_URL: ${DATABASE_URL}
-      DIRECT_URL: ${DIRECT_URL}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public&sslmode=disable
+      DIRECT_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public&sslmode=disable
       SESSION_SECRET: ${SESSION_SECRET}
       MAGIC_LINK_SECRET: ${MAGIC_LINK_SECRET}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
@@ -46,11 +46,11 @@ services:
       REDIS_PORT: 6379
       REDIS_TLS_DISABLED: true
       APP_LOG_LEVEL: info
-      DEV_OTEL_EXPORTER_OTLP_ENDPOINT: ${DEV_OTEL_EXPORTER_OTLP_ENDPOINT}
+      DEV_OTEL_EXPORTER_OTLP_ENDPOINT: ${WEB_APP_URL}/otel
       DEPLOY_REGISTRY_HOST: ${DEPLOY_REGISTRY_HOST}
       DEPLOY_REGISTRY_NAMESPACE: ${DEPLOY_REGISTRY_NAMESPACE}
       DEPLOY_IMAGE_PLATFORM: ${DEPLOY_IMAGE_PLATFORM}
-      OBJECT_STORE_BASE_URL: ${OBJECT_STORE_BASE_URL}
+      OBJECT_STORE_BASE_URL: http://minio:9000
       OBJECT_STORE_ACCESS_KEY_ID: ${OBJECT_STORE_ACCESS_KEY_ID}
       OBJECT_STORE_SECRET_ACCESS_KEY: ${OBJECT_STORE_SECRET_ACCESS_KEY}
       GRACEFUL_SHUTDOWN_TIMEOUT: 1000
@@ -58,12 +58,12 @@ services:
       TRIGGER_BOOTSTRAP_ENABLED: 1
       TRIGGER_BOOTSTRAP_WORKER_GROUP_NAME: bootstrap
       TRIGGER_BOOTSTRAP_WORKER_TOKEN_PATH: /home/node/shared/worker_token
-      CLICKHOUSE_URL: ${CLICKHOUSE_URL}
-      CLICKHOUSE_LOG_LEVEL: ${CLICKHOUSE_LOG_LEVEL}
-      RUN_REPLICATION_ENABLED: ${RUN_REPLICATION_ENABLED}
-      RUN_REPLICATION_CLICKHOUSE_URL: ${RUN_REPLICATION_CLICKHOUSE_URL}
-      RUN_REPLICATION_LOG_LEVEL: ${RUN_REPLICATION_LOG_LEVEL}
-      INTERNAL_OTEL_TRACE_LOGGING_ENABLED: ${INTERNAL_OTEL_TRACE_LOGGING_ENABLED}
+      CLICKHOUSE_URL: http://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:8123?secure=false
+      CLICKHOUSE_LOG_LEVEL: info
+      RUN_REPLICATION_ENABLED: 1
+      RUN_REPLICATION_CLICKHOUSE_URL: http://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:8123
+      RUN_REPLICATION_LOG_LEVEL: info
+      INTERNAL_OTEL_TRACE_LOGGING_ENABLED: 0
 
       # Add these email/SMTP variables:
       # EMAIL_TRANSPORT: ${EMAIL_TRANSPORT}
@@ -86,8 +86,8 @@ services:
       # WHITELISTED_EMAILS: ${WHITELISTED_EMAILS}
 
   supervisor:
-    image: ghcr.io/triggerdotdev/supervisor:${TRIGGER_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: ghcr.io/triggerdotdev/supervisor:v4-beta
+    restart: unless-stopped
     logging: *logging-config
     depends_on:
       - docker-proxy
@@ -103,8 +103,8 @@ services:
     environment:
       TRIGGER_WORKER_TOKEN: file:///home/node/shared/worker_token
       MANAGED_WORKER_SECRET: ${MANAGED_WORKER_SECRET}
-      TRIGGER_API_URL: ${TRIGGER_API_URL}
-      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
+      TRIGGER_API_URL: http://webapp:3000
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://webapp:3000/otel
       TRIGGER_WORKLOAD_API_DOMAIN: supervisor
       TRIGGER_WORKLOAD_API_PORT_EXTERNAL: 8020
       DEBUG: 1
@@ -112,7 +112,7 @@ services:
       TRIGGER_DEQUEUE_INTERVAL_MS: 1000
       DOCKER_HOST: tcp://docker-proxy:2375
       DOCKER_RUNNER_NETWORKS: webapp,supervisor
-      DOCKER_REGISTRY_URL: ${DOCKER_REGISTRY_URL}
+      DOCKER_REGISTRY_URL: localhost:5000
       DOCKER_REGISTRY_USERNAME: ${DOCKER_REGISTRY_USERNAME}
       DOCKER_REGISTRY_PASSWORD: ${DOCKER_REGISTRY_PASSWORD}
       DOCKER_AUTOREMOVE_EXITED_CONTAINERS: 0
@@ -124,8 +124,8 @@ services:
       start_period: 10s
 
   postgres:
-    image: postgres:${POSTGRES_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: postgres:14
+    restart: unless-stopped
     logging: *logging-config
     expose:
       - 5432
@@ -148,8 +148,8 @@ services:
       start_period: 10s
 
   redis:
-    image: redis:${REDIS_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: redis:7
+    restart: unless-stopped
     logging: *logging-config
     expose:
       - 6379
@@ -165,15 +165,15 @@ services:
       start_period: 10s
 
   electric:
-    image: electricsql/electric:${ELECTRIC_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: electricsql/electric:1.0.24
+    restart: unless-stopped
     logging: *logging-config
     depends_on:
       - postgres
     networks:
       - webapp
     environment:
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public&sslmode=disable
       ELECTRIC_INSECURE: true
       ELECTRIC_USAGE_REPORTING: false
     healthcheck:
@@ -184,8 +184,8 @@ services:
       start_period: 10s
 
   clickhouse:
-    image: bitnamilegacy/clickhouse:${CLICKHOUSE_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: bitnamilegacy/clickhouse:latest
+    restart: unless-stopped
     logging: *logging-config
     expose:
       - 8123
@@ -205,8 +205,8 @@ services:
       start_period: 10s
 
   registry:
-    image: registry:${REGISTRY_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: registry:2
+    restart: unless-stopped
     logging: *logging-config
     expose:
       - 5000
@@ -222,8 +222,8 @@ services:
       start_period: 10s
 
   minio:
-    image: bitnamilegacy/minio:${MINIO_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: bitnamilegacy/minio:latest
+    restart: unless-stopped
     logging: *logging-config
     expose:
       - 9000
@@ -245,8 +245,8 @@ services:
       start_period: 10s
 
   docker-proxy:
-    image: tecnativa/docker-socket-proxy:${DOCKER_PROXY_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: tecnativa/docker-socket-proxy:latest
+    restart: unless-stopped
     logging: *logging-config
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro

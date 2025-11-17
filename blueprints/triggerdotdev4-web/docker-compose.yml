@@ -1,16 +1,16 @@
 name: trigger
 
 x-logging: &logging-config
-  driver: ${LOGGING_DRIVER}
+  driver: local
   options:
-    max-size: ${LOGGING_MAX_SIZE}
-    max-file: ${LOGGING_MAX_FILES}
-    compress: ${LOGGING_COMPRESS}
+    max-size: "20m"
+    max-file: "5"
+    compress: "true"
 
 services:
   webapp:
-    image: ghcr.io/triggerdotdev/trigger.dev:${TRIGGER_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: ghcr.io/triggerdotdev/trigger.dev:v4.0.4
+    restart: unless-stopped
     logging: *logging-config
     ports:
       - 3000
@@ -40,12 +40,12 @@ services:
       retries: 5
       start_period: 10s
     environment:
-      APP_ORIGIN: ${APP_ORIGIN}
-      LOGIN_ORIGIN: ${LOGIN_ORIGIN}
-      API_ORIGIN: ${API_ORIGIN}
+      APP_ORIGIN: ${WEB_APP_URL}
+      LOGIN_ORIGIN: ${WEB_APP_URL}
+      API_ORIGIN: ${WEB_APP_URL}
       ELECTRIC_ORIGIN: http://electric:3000
-      DATABASE_URL: ${DATABASE_URL}
-      DIRECT_URL: ${DIRECT_URL}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public&sslmode=disable
+      DIRECT_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public&sslmode=disable
       SESSION_SECRET: ${SESSION_SECRET}
       MAGIC_LINK_SECRET: ${MAGIC_LINK_SECRET}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
@@ -54,11 +54,11 @@ services:
       REDIS_PORT: 6379
       REDIS_TLS_DISABLED: true
       APP_LOG_LEVEL: info
-      DEV_OTEL_EXPORTER_OTLP_ENDPOINT: ${DEV_OTEL_EXPORTER_OTLP_ENDPOINT}
+      DEV_OTEL_EXPORTER_OTLP_ENDPOINT: ${WEB_APP_URL}/otel
       DEPLOY_REGISTRY_HOST: ${DEPLOY_REGISTRY_HOST}
       DEPLOY_REGISTRY_NAMESPACE: ${DOCKER_REGISTRY_NAMESPACE}
       DEPLOY_IMAGE_PLATFORM: ${DEPLOY_IMAGE_PLATFORM}
-      OBJECT_STORE_BASE_URL: ${OBJECT_STORE_BASE_URL}
+      OBJECT_STORE_BASE_URL: http://minio:9000
       OBJECT_STORE_ACCESS_KEY_ID: ${OBJECT_STORE_ACCESS_KEY_ID}
       OBJECT_STORE_SECRET_ACCESS_KEY: ${OBJECT_STORE_SECRET_ACCESS_KEY}
       GRACEFUL_SHUTDOWN_TIMEOUT: 1000
@@ -69,12 +69,12 @@ services:
       TRIGGER_BOOTSTRAP_WORKER_GROUP_NAME: bootstrap
       TRIGGER_BOOTSTRAP_WORKER_TOKEN_PATH: /home/node/shared/worker_token
       # ClickHouse configuration
-      CLICKHOUSE_URL: ${CLICKHOUSE_URL}
-      CLICKHOUSE_LOG_LEVEL: ${CLICKHOUSE_LOG_LEVEL}
+      CLICKHOUSE_URL: http://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:8123?secure=false
+      CLICKHOUSE_LOG_LEVEL: info
       # Run replication
-      RUN_REPLICATION_ENABLED: ${RUN_REPLICATION_ENABLED}
-      RUN_REPLICATION_CLICKHOUSE_URL: ${RUN_REPLICATION_CLICKHOUSE_URL}
-      RUN_REPLICATION_LOG_LEVEL: ${RUN_REPLICATION_LOG_LEVEL}
+      RUN_REPLICATION_ENABLED: 1
+      RUN_REPLICATION_CLICKHOUSE_URL: http://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@clickhouse:8123
+      RUN_REPLICATION_LOG_LEVEL: info
       # Limits
       # TASK_PAYLOAD_OFFLOAD_THRESHOLD: 524288 # 512KB
       # TASK_PAYLOAD_MAXIMUM_SIZE: 3145728 # 3MB
@@ -83,7 +83,7 @@ services:
       # DEFAULT_ENV_EXECUTION_CONCURRENCY_LIMIT: 100
       # DEFAULT_ORG_EXECUTION_CONCURRENCY_LIMIT: 100
       # Internal OTEL configuration
-      INTERNAL_OTEL_TRACE_LOGGING_ENABLED: ${INTERNAL_OTEL_TRACE_LOGGING_ENABLED}
+      INTERNAL_OTEL_TRACE_LOGGING_ENABLED: 0
       
       # Must enable one of the following for sign-up:
       # 1. Email by SMTP
@@ -108,8 +108,8 @@ services:
 
 
   postgres:
-    image: postgres:${POSTGRES_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: postgres:14
+    restart: unless-stopped
     logging: *logging-config
     ports:
       - 5432
@@ -132,8 +132,8 @@ services:
       start_period: 10s
 
   redis:
-    image: redis:${REDIS_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: redis:7
+    restart: unless-stopped
     logging: *logging-config
     ports:
       - 6379
@@ -149,15 +149,15 @@ services:
       start_period: 10s
 
   electric:
-    image: electricsql/electric:${ELECTRIC_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: electricsql/electric:1.2.4
+    restart: unless-stopped
     logging: *logging-config
     depends_on:
       - postgres
     networks:
       - webapp
     environment:
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public&sslmode=disable
       ELECTRIC_INSECURE: true
       ELECTRIC_USAGE_REPORTING: false
     healthcheck:
@@ -168,8 +168,8 @@ services:
       start_period: 10s
 
   clickhouse:
-    image: bitnamilegacy/clickhouse:${CLICKHOUSE_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: bitnamilegacy/clickhouse:latest
+    restart: unless-stopped
     logging: *logging-config
     ports:
       - 8123
@@ -204,8 +204,8 @@ services:
       start_period: 10s
 
   registry:
-    image: registry:${REGISTRY_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: registry:2
+    restart: unless-stopped
     logging: *logging-config
     ports:
       - 5000
@@ -226,8 +226,8 @@ services:
       start_period: 10s
 
   minio:
-    image: bitnamilegacy/minio:${MINIO_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: bitnamilegacy/minio:latest
+    restart: unless-stopped
     logging: *logging-config
     ports:
       - 9000

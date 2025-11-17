@@ -1,16 +1,16 @@
 name: trigger
 
 x-logging: &logging-config
-  driver: ${LOGGING_DRIVER:-local}
+  driver: ${LOGGING_DRIVER}
   options:
-    max-size: ${LOGGING_MAX_SIZE:-20m}
-    max-file: ${LOGGING_MAX_FILES:-5}
-    compress: ${LOGGING_COMPRESS:-true}
+    max-size: ${LOGGING_MAX_SIZE}
+    max-file: ${LOGGING_MAX_FILES}
+    compress: ${LOGGING_COMPRESS}
 
 services:
   webapp:
     image: ghcr.io/triggerdotdev/trigger.dev:${TRIGGER_IMAGE_TAG}
-    restart: ${RESTART_POLICY:-unless-stopped}
+    restart: ${RESTART_POLICY}
     logging: *logging-config
     expose:
       - 3000
@@ -47,9 +47,9 @@ services:
       REDIS_TLS_DISABLED: true
       APP_LOG_LEVEL: info
       DEV_OTEL_EXPORTER_OTLP_ENDPOINT: ${DEV_OTEL_EXPORTER_OTLP_ENDPOINT}
-      DEPLOY_REGISTRY_HOST: ${DOCKER_REGISTRY_URL}
-      DEPLOY_REGISTRY_NAMESPACE: ${DOCKER_REGISTRY_NAMESPACE}
-      OBJECT_STORE_BASE_URL: ${OBJECT_STORE_BASE_URL:-http://minio:9000}
+      DEPLOY_REGISTRY_HOST: ${DEPLOY_REGISTRY_HOST}
+      DEPLOY_REGISTRY_NAMESPACE: ${DEPLOY_REGISTRY_NAMESPACE}
+      OBJECT_STORE_BASE_URL: ${OBJECT_STORE_BASE_URL}
       OBJECT_STORE_ACCESS_KEY_ID: ${OBJECT_STORE_ACCESS_KEY_ID}
       OBJECT_STORE_SECRET_ACCESS_KEY: ${OBJECT_STORE_SECRET_ACCESS_KEY}
       GRACEFUL_SHUTDOWN_TIMEOUT: 1000
@@ -58,21 +58,21 @@ services:
       TRIGGER_BOOTSTRAP_WORKER_GROUP_NAME: bootstrap
       TRIGGER_BOOTSTRAP_WORKER_TOKEN_PATH: /home/node/shared/worker_token
       CLICKHOUSE_URL: ${CLICKHOUSE_URL}
-      CLICKHOUSE_LOG_LEVEL: ${CLICKHOUSE_LOG_LEVEL:-info}
-      RUN_REPLICATION_ENABLED: ${RUN_REPLICATION_ENABLED:-1}
+      CLICKHOUSE_LOG_LEVEL: ${CLICKHOUSE_LOG_LEVEL}
+      RUN_REPLICATION_ENABLED: ${RUN_REPLICATION_ENABLED}
       RUN_REPLICATION_CLICKHOUSE_URL: ${RUN_REPLICATION_CLICKHOUSE_URL}
-      RUN_REPLICATION_LOG_LEVEL: ${RUN_REPLICATION_LOG_LEVEL:-info}
-      INTERNAL_OTEL_TRACE_LOGGING_ENABLED: ${INTERNAL_OTEL_TRACE_LOGGING_ENABLED:-0}
+      RUN_REPLICATION_LOG_LEVEL: ${RUN_REPLICATION_LOG_LEVEL}
+      INTERNAL_OTEL_TRACE_LOGGING_ENABLED: ${INTERNAL_OTEL_TRACE_LOGGING_ENABLED}
 
       # Add these email/SMTP variables:
-      EMAIL_TRANSPORT: ${EMAIL_TRANSPORT}
-      FROM_EMAIL: ${FROM_EMAIL}
-      REPLY_TO_EMAIL: ${REPLY_TO_EMAIL}
-      SMTP_HOST: ${SMTP_HOST}
-      SMTP_PORT: ${SMTP_PORT}
-      SMTP_SECURE: ${SMTP_SECURE}
-      SMTP_USER: ${SMTP_USER}
-      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      # EMAIL_TRANSPORT: ${EMAIL_TRANSPORT}
+      # FROM_EMAIL: ${FROM_EMAIL}
+      # REPLY_TO_EMAIL: ${REPLY_TO_EMAIL}
+      # SMTP_HOST: ${SMTP_HOST}
+      # SMTP_PORT: ${SMTP_PORT}
+      # SMTP_SECURE: ${SMTP_SECURE}
+      # SMTP_USER: ${SMTP_USER}
+      # SMTP_PASSWORD: ${SMTP_PASSWORD}
       
       # If using Resend instead:
       # RESEND_API_KEY: ${RESEND_API_KEY}
@@ -86,7 +86,7 @@ services:
 
   supervisor:
     image: ghcr.io/triggerdotdev/supervisor:${TRIGGER_IMAGE_TAG}
-    restart: ${RESTART_POLICY:-unless-stopped}
+    restart: ${RESTART_POLICY}
     logging: *logging-config
     depends_on:
       - docker-proxy
@@ -102,8 +102,8 @@ services:
     environment:
       TRIGGER_WORKER_TOKEN: file:///home/node/shared/worker_token
       MANAGED_WORKER_SECRET: ${MANAGED_WORKER_SECRET}
-      TRIGGER_API_URL: ${TRIGGER_API_URL:-http://webapp:3000}
-      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://webapp:3000/otel}
+      TRIGGER_API_URL: ${TRIGGER_API_URL}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
       TRIGGER_WORKLOAD_API_DOMAIN: supervisor
       TRIGGER_WORKLOAD_API_PORT_EXTERNAL: 8020
       DEBUG: 1
@@ -123,8 +123,8 @@ services:
       start_period: 10s
 
   postgres:
-    image: postgres:${POSTGRES_IMAGE_TAG:-14}
-    restart: ${RESTART_POLICY:-unless-stopped}
+    image: postgres:${POSTGRES_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
     logging: *logging-config
     expose:
       - 5432
@@ -147,8 +147,8 @@ services:
       start_period: 10s
 
   redis:
-    image: redis:${REDIS_IMAGE_TAG:-7}
-    restart: ${RESTART_POLICY:-unless-stopped}
+    image: redis:${REDIS_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
     logging: *logging-config
     expose:
       - 6379
@@ -164,8 +164,8 @@ services:
       start_period: 10s
 
   electric:
-    image: electricsql/electric:${ELECTRIC_IMAGE_TAG:-1.0.24}
-    restart: ${RESTART_POLICY:-unless-stopped}
+    image: electricsql/electric:${ELECTRIC_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
     logging: *logging-config
     depends_on:
       - postgres
@@ -183,8 +183,8 @@ services:
       start_period: 10s
 
   clickhouse:
-    image: bitnamilegacy/clickhouse:${CLICKHOUSE_IMAGE_TAG:-latest}
-    restart: ${RESTART_POLICY:-unless-stopped}
+    image: bitnamilegacy/clickhouse:${CLICKHOUSE_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
     logging: *logging-config
     expose:
       - 8123
@@ -204,8 +204,8 @@ services:
       start_period: 10s
 
   registry:
-    image: registry:${REGISTRY_IMAGE_TAG:-2}
-    restart: ${RESTART_POLICY:-unless-stopped}
+    image: registry:${REGISTRY_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
     logging: *logging-config
     expose:
       - 5000
@@ -221,8 +221,8 @@ services:
       start_period: 10s
 
   minio:
-    image: bitnamilegacy/minio:${MINIO_IMAGE_TAG:-latest}
-    restart: ${RESTART_POLICY:-unless-stopped}
+    image: bitnamilegacy/minio:${MINIO_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
     logging: *logging-config
     expose:
       - 9000
@@ -244,8 +244,8 @@ services:
       start_period: 10s
 
   docker-proxy:
-    image: tecnativa/docker-socket-proxy:${DOCKER_PROXY_IMAGE_TAG:-latest}
-    restart: ${RESTART_POLICY:-unless-stopped}
+    image: tecnativa/docker-socket-proxy:${DOCKER_PROXY_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
     logging: *logging-config
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro

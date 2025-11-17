@@ -208,12 +208,25 @@ services:
     image: registry:2
     restart: unless-stopped
     logging: *logging-config
-    expose:
+    ports:
       - 5000
     networks:
       - webapp
+    volumes:
+      - registry-auth:/auth
+    entrypoint: /bin/sh
+    command: |
+      -c "
+      if [ ! -f /auth/htpasswd ]; then
+        apk add --no-cache apache2-utils
+        htpasswd -Bbn ${DOCKER_REGISTRY_USERNAME} ${DOCKER_REGISTRY_PASSWORD} > /auth/htpasswd
+      fi
+      exec /entrypoint.sh /etc/docker/registry/config.yml
+      "
     environment:
-      REGISTRY_STORAGE_DELETE_ENABLED: "true"
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:5000/"]
       interval: 10s

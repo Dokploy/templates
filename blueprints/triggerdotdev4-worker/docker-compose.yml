@@ -1,16 +1,16 @@
 name: trigger
 
 x-logging: &logging-config
-  driver: ${LOGGING_DRIVER}
+  driver: local
   options:
-    max-size: ${LOGGING_MAX_SIZE}
-    max-file: ${LOGGING_MAX_FILES}
-    compress: ${LOGGING_COMPRESS}
+    max-size: "20m"
+    max-file: "5"
+    compress: "true"
 
 services:
   supervisor:
-    image: ghcr.io/triggerdotdev/supervisor:${TRIGGER_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: ghcr.io/triggerdotdev/supervisor:v4.0.4
+    restart: unless-stopped
     logging: *logging-config
     depends_on:
       - docker-proxy
@@ -28,8 +28,8 @@ services:
       # Use the bootstrap token created by the webapp
       TRIGGER_WORKER_TOKEN: ${TRIGGER_WORKER_TOKEN}
       MANAGED_WORKER_SECRET: ${MANAGED_WORKER_SECRET}
-      TRIGGER_API_URL: ${TRIGGER_API_URL}
-      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
+      TRIGGER_API_URL: ${WEB_APP_URL}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${WEB_APP_URL}/otel
       TRIGGER_WORKLOAD_API_DOMAIN: supervisor
       TRIGGER_WORKLOAD_API_PORT_EXTERNAL: 8020
       # Optional settings
@@ -50,8 +50,8 @@ services:
       start_period: 10s
 
   docker-proxy:
-    image: tecnativa/docker-socket-proxy:${DOCKER_PROXY_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: tecnativa/docker-socket-proxy:v0.4.1
+    restart: unless-stopped
     logging: *logging-config
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro

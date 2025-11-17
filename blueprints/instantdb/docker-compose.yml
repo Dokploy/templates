@@ -65,10 +65,6 @@ services:
       retries: 3
       start_period: 40s
 
-networks:
-  dokploy-network:
-    external: true
-
 volumes:
   backend-db:
 

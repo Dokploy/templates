@@ -17,7 +17,6 @@ object_store_access_key_id = "${username}"
 object_store_secret_access_key = "${password:24}"
 minio_root_user = "admin"
 minio_root_password = "${password:24}"
-trigger_worker_token = "${hash:32}"
 
 [config]
 mounts = []
@@ -41,7 +40,6 @@ NODE_MAX_OLD_SPACE_SIZE="3200"
 SESSION_SECRET="${session_secret}"
 MAGIC_LINK_SECRET="${magic_link_secret}"
 ENCRYPTION_KEY="${encryption_key}"
-TRIGGER_WORKER_TOKEN="${trigger_worker_token}"
 MANAGED_WORKER_SECRET="${managed_worker_secret}"
 DEPLOY_REGISTRY_NAMESPACE="${deploy_registry_namespace}"
 OBJECT_STORE_ACCESS_KEY_ID="${object_store_access_key_id}"

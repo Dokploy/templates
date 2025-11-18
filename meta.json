@@ -4192,6 +4192,26 @@
     ]
   },
   {
+    "id": "optique-nextjs",
+    "name": "Optique Next.js App",
+    "version": "1.0.0",
+    "description": "A production-ready Next.js application with PostgreSQL database, Prisma ORM, and Cloudinary integration for image management.",
+    "logo": "arinass-logo.png",
+    "links": {
+      "github": "https://github.com/Dokploy/templates",
+      "website": "https://dokploy.com",
+      "docs": "https://docs.dokploy.com"
+    },
+    "tags": [
+      "nextjs",
+      "postgresql",
+      "prisma",
+      "cloudinary",
+      "optics",
+      "business-management"
+    ]
+  },
+  {
     "id": "otterwiki",
     "name": "Otter Wiki",
     "version": "2",
@@ -5832,26 +5852,6 @@
       "openid-connect",
       "saml",
       "multi-tenant"
-    ]
-  },
-  {
-    "id": "optique-nextjs",
-    "name": "Optique Next.js App",
-    "version": "1.0.0",
-    "description": "A production-ready Next.js application with PostgreSQL database, Prisma ORM, and Cloudinary integration for image management.",
-    "logo": "arinass-logo.png",
-    "links": {
-        "github": "https://github.com/Dokploy/templates",
-        "website": "https://dokploy.com",
-        "docs": "https://docs.dokploy.com"
-    },
-    "tags": [
-        "nextjs",
-        "postgresql",
-        "prisma",
-        "cloudinary",
-        "optics",
-        "business-management"
     ]
   }
 ]

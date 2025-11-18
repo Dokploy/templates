@@ -1,0 +1,39 @@
+# Variables section - Define reusable variables
+[variables]
+main_domain = "${domain}"
+postgres_user = "${username}"
+postgres_password = "${password:32}"
+postgres_db = "optique_db"
+encryption_key = "${base64:32}"
+docker_image = "ahmedbelkadi/optique-app:latest"
+
+# Configuration section
+[config]
+
+# Domain configuration
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "${main_domain}"
+https = true
+
+# Environment variables
+[config.env]
+# PostgreSQL Configuration
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "${postgres_db}"
+
+# Docker Image (users should replace this)
+DOCKER_IMAGE = "${docker_image}"
+
+# Application Domain
+MAIN_DOMAIN = "${main_domain}"
+
+# Encryption Key
+ENCRYPTION_KEY = "${encryption_key}"
+
+# Cloudinary Configuration (users need to provide these)
+CLOUDINARY_CLOUD_NAME = ""
+CLOUDINARY_API_KEY = ""
+CLOUDINARY_API_SECRET = ""

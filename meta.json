@@ -2078,6 +2078,25 @@
     ]
   },
   {
+    "id": "evoai",
+    "name": "Evo AI",
+    "version": "latest",
+    "description": "Evo AI is a comprehensive AI-powered platform with backend API and frontend interface, featuring PostgreSQL database and Redis caching for high-performance AI operations.",
+    "logo": "evoai.png",
+    "links": {
+      "github": "https://github.com/EvolutionAPI/evo-ai",
+      "website": "https://evo-ai.co/",
+      "docs": "https://evoai.mintlify.app/"
+    },
+    "tags": [
+      "ai",
+      "api",
+      "machine-learning",
+      "postgresql",
+      "redis"
+    ]
+  },
+  {
     "id": "excalidraw",
     "name": "Excalidraw",
     "version": "latest",

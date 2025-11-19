@@ -1,0 +1,72 @@
+[variables]
+api_domain = "${domain}"
+app_domain = "${domain}"
+postgres_password = "${password}"
+redis_password = "${password}"
+jwt_secret_key = "${base64:64}"
+admin_email = "${email}"
+admin_initial_password = "${password}"
+smtp_host = "${text}"
+smtp_from = "${email}"
+smtp_user = "${text}"
+smtp_password = "${password}"
+smtp_port = "${text}"
+smtp_use_tls = "${text}"
+smtp_use_ssl = "${text}"
+log_level = "INFO"
+
+[config]
+env = [
+  # PostgreSQL Configuration
+  "POSTGRES_CONNECTION_STRING=postgresql://postgres:${postgres_password}@postgres:5432/evo_ai",
+  "POSTGRES_USER=postgres",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_DB=evo_ai",
+  
+  # Redis Configuration
+  "REDIS_HOST=redis",
+  "REDIS_PORT=6379",
+  "REDIS_PASSWORD=${redis_password}",
+  "REDIS_SSL=false",
+  "REDIS_KEY_PREFIX=a2a:",
+  "REDIS_TTL=3600",
+  
+  # JWT Configuration
+  "JWT_SECRET_KEY=${jwt_secret_key}",
+  "JWT_ALGORITHM=HS256",
+  "JWT_EXPIRATION_TIME=3600",
+  
+  # URLs
+  "API_URL=https://${api_domain}",
+  "APP_URL=https://${app_domain}",
+  "NEXT_PUBLIC_API_URL=https://${api_domain}",
+  
+  # Admin Configuration
+  "ADMIN_EMAIL=${admin_email}",
+  "ADMIN_INITIAL_PASSWORD=${admin_initial_password}",
+  
+  # Email Configuration
+  "EMAIL_PROVIDER=smtp",
+  "SMTP_HOST=${smtp_host}",
+  "SMTP_FROM=${smtp_from}",
+  "SMTP_USER=${smtp_user}",
+  "SMTP_PASSWORD=${smtp_password}",
+  "SMTP_PORT=${smtp_port}",
+  "SMTP_USE_TLS=${smtp_use_tls}",
+  "SMTP_USE_SSL=${smtp_use_ssl}",
+  
+  # Application Configuration
+  "LOG_LEVEL=${log_level}",
+  "DEBUG=false",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "api"
+port = 8_000
+host = "${api_domain}"
+
+[[config.domains]]
+serviceName = "frontend"
+port = 3_000
+host = "${app_domain}"

@@ -1,10 +1,9 @@
 services:
   evolution-api:
-    image: atendai/evolution-api:v2.1.2
+    image: evoapicloud/evolution-api:latest
     restart: always
     volumes:
       - evolution-instances:/evolution/instances
-
     environment:
       - SERVER_URL=${SERVER_URL}
       - AUTHENTICATION_TYPE=${AUTHENTICATION_TYPE}
@@ -13,6 +12,9 @@ services:
       - LANGUAGE=${LANGUAGE}
       - CONFIG_SESSION_PHONE_CLIENT=${CONFIG_SESSION_PHONE_CLIENT}
       - CONFIG_SESSION_PHONE_NAME=${CONFIG_SESSION_PHONE_NAME}
+      - CONFIG_SESSION_DEVICE_TYPE=Chrome
+      - CONFIG_SESSION_DEVICE_VERSION=2.3000.10
+      - CONFIG_SESSION_PLATFORM=Linux
       - TELEMETRY=${TELEMETRY}
       - TELEMETRY_URL=${TELEMETRY_URL}
       - DATABASE_ENABLED=${DATABASE_ENABLED}
@@ -29,24 +31,28 @@ services:
       - CACHE_REDIS_URI=${CACHE_REDIS_URI}
       - CACHE_REDIS_PREFIX_KEY=${CACHE_REDIS_PREFIX_KEY}
       - CACHE_REDIS_SAVE_INSTANCES=${CACHE_REDIS_SAVE_INSTANCES}
+    networks:
+      - dokploy-network
 
   evolution-postgres:
     image: postgres:16-alpine
     restart: always
     volumes:
       - evolution-postgres-data:/var/lib/postgresql/data
-
     environment:
       - POSTGRES_DB=${POSTGRES_DATABASE}
       - POSTGRES_USER=${POSTGRES_USERNAME}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - dokploy-network
 
   evolution-redis:
-    image: redis:alpine
+    image: redis/redis-stack-server:latest
     restart: always
     volumes:
       - evolution-redis-data:/data
-
+    networks:
+      - dokploy-network
 
 networks:
   dokploy-network:

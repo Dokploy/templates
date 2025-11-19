@@ -1,7 +1,7 @@
 services:
   evolution-api:
     image: evoapicloud/evolution-api:latest
-    restart: always
+    restart: unless-stopped
     volumes:
       - evolution-instances:/evolution/instances
     environment:
@@ -31,32 +31,22 @@ services:
       - CACHE_REDIS_URI=${CACHE_REDIS_URI}
       - CACHE_REDIS_PREFIX_KEY=${CACHE_REDIS_PREFIX_KEY}
       - CACHE_REDIS_SAVE_INSTANCES=${CACHE_REDIS_SAVE_INSTANCES}
-    networks:
-      - dokploy-network
 
   evolution-postgres:
     image: postgres:16-alpine
-    restart: always
+    restart: unless-stopped
     volumes:
       - evolution-postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${POSTGRES_DATABASE}
       - POSTGRES_USER=${POSTGRES_USERNAME}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    networks:
-      - dokploy-network
 
   evolution-redis:
     image: redis/redis-stack-server:latest
-    restart: always
+    restart: unless-stopped
     volumes:
       - evolution-redis-data:/data
-    networks:
-      - dokploy-network
-
-networks:
-  dokploy-network:
-    external: true
 
 volumes:
   evolution-instances:

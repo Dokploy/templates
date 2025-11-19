@@ -6,29 +6,22 @@ services:
   # ============================
   api:
     image: evoapicloud/evo-ai:latest
-    networks:
-      - public
-      - internal
+    restart: unless-stopped
     environment:
       POSTGRES_CONNECTION_STRING: "postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/evo_ai"
-
       REDIS_HOST: "redis"
       REDIS_PORT: 6379
       REDIS_PASSWORD: "${REDIS_PASSWORD}"
       REDIS_SSL: "false"
       REDIS_KEY_PREFIX: "a2a:"
       REDIS_TTL: 3600
-
       JWT_SECRET_KEY: "${JWT_SECRET_KEY}"
       JWT_ALGORITHM: "HS256"
       JWT_EXPIRATION_TIME: "3600"
-
       API_URL: "https://${api_domain}"
       APP_URL: "https://${app_domain}"
-
       ADMIN_EMAIL: "${ADMIN_EMAIL}"
       ADMIN_INITIAL_PASSWORD: "${ADMIN_INITIAL_PASSWORD}"
-
       EMAIL_PROVIDER: "smtp"
       SMTP_HOST: "${SMTP_HOST}"
       SMTP_FROM: "${SMTP_FROM}"
@@ -37,65 +30,40 @@ services:
       SMTP_PORT: "${SMTP_PORT}"
       SMTP_USE_TLS: "${SMTP_USE_TLS}"
       SMTP_USE_SSL: "${SMTP_USE_SSL}"
-
       LOG_LEVEL: "${LOG_LEVEL:-INFO}"
       DEBUG: "false"
-
     volumes:
       - evo_logs:/app/logs
       - evo_static:/app/static
-
-    deploy:
-      mode: replicated
-      replicas: 1
-      labels:
-        - traefik.enable=true
-        - traefik.http.routers.evoapi.rule=Host(`${api_domain}`)
-        - traefik.http.routers.evoapi.entrypoints=websecure
-        - traefik.http.routers.evoapi.tls.certresolver=letsencryptresolver
-        - traefik.http.services.evoapi.loadbalancer.server.port=8000
 
   # ============================
   # FRONTEND EVOAI
   # ============================
   frontend:
     image: evoapicloud/evo-ai-frontend:latest
-    networks:
-      - public
+    restart: unless-stopped
     environment:
       NEXT_PUBLIC_API_URL: "https://${api_domain}"
-    deploy:
-      mode: replicated
-      replicas: 1
-      labels:
-        - traefik.enable=true
-        - traefik.http.routers.evofront.rule=Host(`${app_domain}`)
-        - traefik.http.routers.evofront.entrypoints=websecure
-        - traefik.http.routers.evofront.tls.certresolver=letsencryptresolver
-        - traefik.http.services.evofront.loadbalancer.server.port=3000
 
   # ============================
   # POSTGRES
   # ============================
   postgres:
     image: postgres:14-alpine
-    networks:
-      - internal
+    restart: unless-stopped
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       POSTGRES_DB: "evo_ai"
     volumes:
       - pg_data:/var/lib/postgresql/data
-    deploy:
-      mode: replicated
-      replicas: 1
 
   # ============================
   # REDIS
   # ============================
   redis:
     image: redis:alpine
+    restart: unless-stopped
     command:
       [
         "redis-server",
@@ -104,24 +72,12 @@ services:
         "--requirepass",
         "${REDIS_PASSWORD}",
       ]
-    networks:
-      - internal
     volumes:
       - redis_data:/data
-    deploy:
-      mode: replicated
-      replicas: 1
 
 # ============================
-# NETWORKS & VOLUMES
+# VOLUMES
 # ============================
-networks:
-  internal:
-    driver: overlay
-  public:
-    external: true
-    name: network_public
-
 volumes:
   pg_data:
   redis_data:

@@ -1732,7 +1732,7 @@
   {
     "id": "docmost",
     "name": "Docmost",
-    "version": "0.4.1",
+    "version": "latest",
     "description": "Docmost, is an open-source collaborative wiki and documentation software.",
     "logo": "docmost.png",
     "links": {

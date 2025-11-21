@@ -2,7 +2,7 @@
 main_domain = "${domain}"
 admin_password = "${password:32}"
 jwt_secret = "${jwt:32}"
-rotation_key = "${jwt:64}"
+rotation_key = "${jwt:32}"
 
 [config]
 mounts = []

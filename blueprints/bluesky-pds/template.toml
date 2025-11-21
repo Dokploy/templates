@@ -5,6 +5,7 @@ jwt_secret = "${jwt:32}"
 rotation_key = "${jwt:64}"
 
 [config]
+mounts = []
 env = [
     "PDS_ADMIN_PASSWORD=${admin_password}",
     "PDS_HOSTNAME=${main_domain}",

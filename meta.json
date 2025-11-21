@@ -734,6 +734,24 @@
     ]
   },
   {
+    "id": "bluesky-pds",
+    "name": "Bluesky PDS",
+    "version": "0.4.182",
+    "description": "Bluesky PDS is a personal data server for Bluesky.",
+    "logo": "bluesky-pds.svg",
+    "links": {
+      "github": "https://github.com/bluesky-social/pds",
+      "website": "https://bsky.social/about",
+      "docs": "https://github.com/bluesky-social/pds"
+    },
+    "tags": [
+      "bluesky",
+      "pds",
+      "data",
+      "server"
+    ]
+  },
+  {
     "id": "bolt.diy",
     "name": "bolt.diy",
     "version": "latest",

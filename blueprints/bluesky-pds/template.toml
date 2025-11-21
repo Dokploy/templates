@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:32}"
+jwt_secret = "${jwt:32}"
+rotation_key = "${hex:64}"
+
+[config]
+env = [
+    "PDS_ADMIN_PASSWORD=${admin_password}",
+    "PDS_HOSTNAME=${main_domain}",
+    "PDS_JWT_SECRET=${jwt_secret}",
+    "PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX=${rotation_key}",
+]
+
+[[config.domains]]
+serviceName = "blueskypds"
+port = 3000
+host = "${main_domain}"
+path = "/"

@@ -1,0 +1,186 @@
+name: ${COMPOSE_PROJECT_NAME}
+version: "3.8"
+
+x-environment: &default-back-environment
+  # These environment variables will be used by taiga-back and taiga-async.
+  # Database settings
+  POSTGRES_DB: taiga
+  POSTGRES_USER: ${POSTGRES_USER}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  POSTGRES_HOST: taiga-db
+  # Taiga settings
+  TAIGA_SECRET_KEY: ${SECRET_KEY}
+  TAIGA_SITES_SCHEME: ${TAIGA_SCHEME}
+  TAIGA_SITES_DOMAIN: ${TAIGA_DOMAIN}
+  TAIGA_SUBPATH: ${SUBPATH}
+  # Email settings.
+  EMAIL_BACKEND: django.core.mail.backends.${EMAIL_BACKEND}.EmailBackend
+  DEFAULT_FROM_EMAIL: ${EMAIL_DEFAULT_FROM}
+  EMAIL_USE_TLS: ${EMAIL_USE_TLS}
+  EMAIL_USE_SSL: ${EMAIL_USE_SSL}
+  EMAIL_HOST: ${EMAIL_HOST}
+  EMAIL_PORT: ${EMAIL_PORT}
+  EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+  EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+  # Rabbitmq settings
+  RABBITMQ_USER: ${RABBITMQ_USER}
+  RABBITMQ_PASS: ${RABBITMQ_PASS}
+  # Telemetry settings
+  ENABLE_TELEMETRY: ${ENABLE_TELEMETRY}
+  # Public registration
+  PUBLIC_REGISTER_ENABLED: ${PUBLIC_REGISTER_ENABLED}
+
+x-volumes:
+  &default-back-volumes
+	# These volumens will be used by taiga-back and taiga-async.
+  - taiga-static-data:/taiga-back/static
+  - taiga-media-data:/taiga-back/media
+
+services:
+  taiga-db:
+    image: postgres:12.3
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: taiga
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 2s
+      timeout: 15s
+      retries: 5
+      start_period: 3s
+    volumes:
+      - taiga-db-data:/var/lib/postgresql/data
+
+  taiga-init:
+    image: taigaio/taiga-back:latest
+    environment:
+      <<: *default-back-environment
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    entrypoint:
+      - sh
+      - -c
+      - |
+        python manage.py migrate --noinput
+        python manage.py shell -c "
+        from django.contrib.auth import get_user_model
+        import os
+        User = get_user_model()
+        username = os.environ.get('ADMIN_USERNAME')
+        email = os.environ.get('ADMIN_EMAIL')
+        password = os.environ.get('ADMIN_PASSWORD')
+        user = User.objects.filter(is_superuser=True).first()
+        if user:
+            user.username = username
+            user.email = email
+            user.set_password(password)
+            user.save()
+        else:
+            User.objects.create_superuser(username=username, email=email, password=password)
+        "
+    volumes: *default-back-volumes
+    depends_on:
+      taiga-db:
+        condition: service_healthy
+
+  taiga-back:
+    image: taigaio/taiga-back:latest
+    restart: unless-stopped
+    environment: *default-back-environment
+    volumes: *default-back-volumes
+    depends_on:
+      taiga-init:
+        condition: service_completed_successfully
+      taiga-events-rabbitmq:
+        condition: service_started
+      taiga-async-rabbitmq:
+        condition: service_started
+
+  taiga-async:
+    image: taigaio/taiga-back:latest
+    restart: unless-stopped
+    entrypoint: ["/taiga-back/docker/async_entrypoint.sh"]
+    environment: *default-back-environment
+    volumes: *default-back-volumes
+    depends_on:
+      taiga-db:
+        condition: service_healthy
+      taiga-events-rabbitmq:
+        condition: service_started
+      taiga-async-rabbitmq:
+        condition: service_started
+
+  taiga-async-rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    restart: unless-stopped
+    hostname: taiga-async-rabbitmq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+      RABBITMQ_DEFAULT_VHOST: "${RABBITMQ_VHOST}"
+    volumes:
+      - taiga-async-rabbitmq-data:/var/lib/rabbitmq
+
+  taiga-front:
+    image: taigaio/taiga-front:latest
+    restart: unless-stopped
+    environment:
+      TAIGA_URL: ${TAIGA_SCHEME}://${TAIGA_DOMAIN}
+      TAIGA_WEBSOCKETS_URL: ${WEBSOCKETS_SCHEME}://${TAIGA_DOMAIN}
+      TAIGA_SUBPATH: "${SUBPATH}"
+      PUBLIC_REGISTER_ENABLED: ${PUBLIC_REGISTER_ENABLED}
+
+  taiga-events:
+    image: taigaio/taiga-events:latest
+    restart: unless-stopped
+    environment:
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASS: ${RABBITMQ_PASS}
+      TAIGA_SECRET_KEY: ${SECRET_KEY}
+    depends_on:
+      taiga-events-rabbitmq:
+        condition: service_started
+
+  taiga-events-rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    restart: unless-stopped
+    hostname: taiga-events-rabbitmq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST}
+    volumes:
+      - taiga-events-rabbitmq-data:/var/lib/rabbitmq
+
+  taiga-protected:
+    image: taigaio/taiga-protected:latest
+    restart: unless-stopped
+    environment:
+      MAX_AGE: ${ATTACHMENTS_MAX_AGE}
+      SECRET_KEY: ${SECRET_KEY}
+
+  taiga-gateway:
+    image: nginx:1.19-alpine
+    restart: unless-stopped
+    expose:
+      - 80
+    volumes:
+      - ../files/volumes/nginx/taiga.conf:/etc/nginx/conf.d/default.conf:ro
+      - taiga-static-data:/taiga/static:ro
+      - taiga-media-data:/taiga/media:ro
+    depends_on:
+      - taiga-front
+      - taiga-back
+      - taiga-events
+
+volumes:
+  taiga-static-data:
+  taiga-media-data:
+  taiga-db-data:
+  taiga-async-rabbitmq-data:
+  taiga-events-rabbitmq-data:

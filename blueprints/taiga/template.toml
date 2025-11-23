@@ -1,0 +1,144 @@
+[variables]
+main_domain = "${domain}"
+postgres_user = "taiga"
+rabbitmq_user = "taiga"
+project_name = "${APP_NAME}-taiga"
+admin_username = "admin"
+admin_email = "admin@example.com"
+admin_password = "${password:32}"
+
+[config]
+env = [
+'# TAIGA ADMIN USER - CREDENTIALS FOR THE SUPERUSER ACCOUNT',
+'# THIS WILL CREATE OR UPDATE THE FIRST SUPERUSER ON EVERY DEPLOY',
+'# IF SUPERUSER EXISTS: USERNAME, EMAIL AND PASSWORD WILL BE UPDATED',
+'# IF NO SUPERUSER EXISTS: NEW SUPERUSER WILL BE CREATED',
+'ADMIN_USERNAME=${admin_username}',
+'ADMIN_EMAIL=${admin_email}',
+'ADMIN_PASSWORD=${admin_password}',
+'COMPOSE_PROJECT_NAME=${project_name}',
+'',
+"# Taiga's URLs - Variables to define where Taiga should be served",
+"TAIGA_SCHEME=https  # serve Taiga using 'http' or 'https' (secured) connection",
+"TAIGA_DOMAIN=${main_domain}  # Taiga's base URL",
+"WEBSOCKETS_SCHEME=wss # events connection protocol (use either 'ws' or 'wss')",
+'',
+"# Taiga's Secret Key - Variable to provide cryptographic signing",
+'SECRET_KEY=${password:64} # Please, change it to an unpredictable value!!',
+'',
+"# Taiga's Database settings - Variables to create the Taiga database and connect to it",
+'POSTGRES_USER=${postgres_user} # user to connect to PostgreSQL',
+"POSTGRES_PASSWORD=${password:32} # database user's password",
+'',
+"# Taiga's SMTP settings - Variables to send Taiga's emails to the users",
+"EMAIL_BACKEND=console # use an SMTP server or display the emails in the console (either 'smtp' or 'console')",
+'EMAIL_HOST=smtp.host.example.com # SMTP server address',
+'EMAIL_PORT=587 # default SMTP port',
+'EMAIL_HOST_USER=user # user to connect the SMTP server',
+"EMAIL_HOST_PASSWORD=password # SMTP user's password",
+'EMAIL_DEFAULT_FROM=changeme@example.com   # default email address for the automated emails',
+'# EMAIL_USE_TLS/EMAIL_USE_SSL are mutually exclusive (only set one of those to True)',
+'EMAIL_USE_TLS=False # use TLS (secure) connection with the SMTP server',
+'EMAIL_USE_SSL=False # use implicit TLS (secure) connection with the SMTP server',
+'',
+'# Taiga`s RabbitMQ settings - Variables to leave messages for the realtime and asynchronous events',
+'RABBITMQ_USER=${rabbitmq_user} # user to connect to RabbitMQ',
+"RABBITMQ_PASS=${password:32} # RabbitMQ user's password",
+'RABBITMQ_VHOST=taiga  # RabbitMQ container name',
+'RABBITMQ_ERLANG_COOKIE=${password:32} # unique value shared by any connected instance of RabbitMQ',
+'',
+'# Taiga`s Attachments - Variable to define how long the attachments will be accesible',
+'ATTACHMENTS_MAX_AGE=360 # token expiration date (in seconds)',
+'',
+"# Taiga's Telemetry - Variable to enable or disable the anonymous telemetry",
+'ENABLE_TELEMETRY=False',
+'',
+"# Taiga's Public Registration - Enable or disable public user registration",
+'PUBLIC_REGISTER_ENABLED=False',
+]
+
+[[config.domains]]
+serviceName = "taiga-gateway"
+port = 80
+host = "${main_domain}"
+path = "/"
+
+[[config.mounts]]
+filePath = "/volumes/nginx/taiga.conf"
+content = """
+server {
+    listen 80 default_server;
+
+    client_max_body_size 100M;
+    charset utf-8;
+
+    # Frontend
+    location / {
+        proxy_pass http://taiga-front/;
+        proxy_pass_header Server;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Scheme $scheme;
+    }
+
+    # API
+    location /api/ {
+        proxy_pass http://taiga-back:8000/api/;
+        proxy_pass_header Server;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Scheme $scheme;
+    }
+
+    # Admin
+    location /admin/ {
+        proxy_pass http://taiga-back:8000/admin/;
+        proxy_pass_header Server;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Scheme $scheme;
+    }
+
+    # Static
+    location /static/ {
+        alias /taiga/static/;
+    }
+
+    # Media - Protected
+    location /_protected/ {
+        internal;
+        alias /taiga/media/;
+        add_header Content-disposition "attachment";
+    }
+
+    # Unprotected section
+    location /media/exports/ {
+        alias /taiga/media/exports/;
+        add_header Content-disposition "attachment";
+    }
+
+    location /media/ {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Scheme $scheme;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://taiga-protected:8003/;
+        proxy_redirect off;
+    }
+
+    # Events (WebSocket)
+    location /events {
+        proxy_pass http://taiga-events:8888/events;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_connect_timeout 7d;
+        proxy_send_timeout 7d;
+        proxy_read_timeout 7d;
+    }
+}
+"""

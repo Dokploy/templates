@@ -5201,6 +5201,24 @@
     ]
   },
   {
+    "id": "taiga",
+    "name": "Taiga",
+    "version": "latest",
+    "description": "Taiga is a free and open-source project management platform for agile developers, designers and project managers.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/taigaio/taiga-docker",
+      "website": "https://taiga.io/",
+      "docs": "https://docs.taiga.io/"
+    },
+    "tags": [
+      "project-management",
+      "agile",
+      "scrum",
+      "kanban"
+    ]
+  },
+  {
     "id": "tailscale-exitnode",
     "name": "Tailscale Exit nodes",
     "version": "1.0.0",

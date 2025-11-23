@@ -54,7 +54,9 @@ env = [
 'ENABLE_TELEMETRY=False',
 '',
 "# Taiga's Public Registration - Enable or disable public user registration",
+'# IMPORTANT: Use True/False for backend, true/false for frontend (case sensitive!)',
 'PUBLIC_REGISTER_ENABLED=False',
+'PUBLIC_REGISTER_ENABLED_FRONT=false',
 ]
 
 [[config.domains]]

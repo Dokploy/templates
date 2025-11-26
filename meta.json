@@ -4599,7 +4599,7 @@
     "description": "Free, open source and self-hosted solution for automated PostgreSQL backups. With multiple storage options and notifications",
     "logo": "postgresus.svg",
     "links": {
-      "github": "hhttps://github.com/RostislavDugin/postgresus",
+      "github": "https://github.com/RostislavDugin/postgresus",
       "website": "https://postgresus.com",
       "docs": "https://postgresus.com"
     },

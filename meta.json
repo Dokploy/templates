@@ -2326,6 +2326,26 @@
     ]
   },
   {
+    "id": "fonoster",
+    "name": "Fonoster",
+    "version": "0.15.15",
+    "description": "Fonoster is an open-source alternative to Twilio. A complete telephony stack for building voice applications with SIP, WebRTC, and PSTN connectivity.",
+    "logo": "fonoster.svg",
+    "links": {
+      "github": "https://github.com/fonoster/fonoster",
+      "website": "https://fonoster.com/",
+      "docs": "https://docs.fonoster.com/"
+    },
+    "tags": [
+      "telephony",
+      "voip",
+      "sip",
+      "webrtc",
+      "pstn",
+      "communication"
+    ]
+  },
+  {
     "id": "forgejo",
     "name": "Forgejo",
     "version": "10",

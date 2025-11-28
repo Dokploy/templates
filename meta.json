@@ -3225,21 +3225,21 @@
     ]
   },
   {
-  "id": "lavalink",
-  "name": "Lavalink",
-  "version": "4.1.1",
-  "description": "Lavalink is an open source standalone audio sending node based on Lavaplayer.",
-  "logo": "lavalink.svg",
-  "links": {
-    "github": "https://github.com/lavalink-devs/Lavalink",
-    "website": "https://lavalink.dev/",
-    "docs": "https://lavalink.dev/getting-started/index.html"
+    "id": "lavalink",
+    "name": "Lavalink",
+    "version": "4.1.1",
+    "description": "Lavalink is an open source standalone audio sending node based on Lavaplayer.",
+    "logo": "lavalink.svg",
+    "links": {
+      "github": "https://github.com/lavalink-devs/Lavalink",
+      "website": "https://lavalink.dev/",
+      "docs": "https://lavalink.dev/getting-started/index.html"
+    },
+    "tags": [
+      "voice",
+      "discord"
+    ]
   },
-  "tags": [
-    "voice",
-    "discord"
-  ]
-},
   {
     "id": "letterfeed",
     "name": "Letterfeed",

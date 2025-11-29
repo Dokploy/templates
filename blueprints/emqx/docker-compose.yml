@@ -1,0 +1,55 @@
+# This templates requires additional traefik port mapping and entry points
+# for ports 8883 (mqtts) and 8084 (wss).
+#
+# For the full instructions, refer to:
+# - https://github.com/Dokploy/dokploy/discussions/3126
+#
+# The initial login credentials are:
+# - USERNAME: admin
+# - PASSWORD: public
+
+services:
+  emqx:
+    image: emqx/emqx-enterprise:6.0.1
+    hostname: node1.emqx.com
+    environment:
+      EMQX_NODE_NAME: emqx@node1.emqx.com
+    expose:
+      - 1883
+      - 8083
+      - 18083
+    volumes:
+      - emqx_data:/opt/emqx/data
+      - emqx_log:/opt/emqx/log
+    networks:
+      dokploy-network:
+        aliases:
+          - emqx-service
+    labels:
+      # MQTT over TLS
+      - "traefik.tcp.routers.emqx-mqtts.entrypoints=mqtts"
+      - "traefik.tcp.routers.emqx-mqtts.rule=HostSNI(`broker.yourdomain.com`)" # Change domain
+      - "traefik.tcp.routers.emqx-mqtts.tls.certresolver=letsencrypt"
+      - "traefik.tcp.routers.emqx-mqtts.service=emqx-service"
+      - "traefik.tcp.services.emqx-service.loadbalancer.server.port=1883"
+
+      # WebSocket MQTT over TLS (WSS)
+      - "traefik.http.routers.emqx-wss.entrypoints=wss"
+      - "traefik.http.routers.emqx-wss.rule=Host(`broker.yourdomain.com`)" # Change domain
+      - "traefik.http.routers.emqx-wss.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.emqx-wss.service=emqx-service"
+      - "traefik.http.services.emqx-service.loadbalancer.server.port=8083"
+
+  #
+  # Optional Web UI:
+  # - https://github.com/emqx/MQTTX/tree/main/web
+  #
+  # mqttx-web:
+  #   image: emqx/mqttx-web:latest
+  #   expose:
+  #     - 80
+  #
+
+volumes:
+  emqx_data:
+  emqx_log:

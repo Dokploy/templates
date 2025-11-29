@@ -1,0 +1,7 @@
+[variables]
+main_domain = "${domain}"
+
+[[config.domains]]
+serviceName = "emqx"
+port = 18083
+host = "${main_domain}"

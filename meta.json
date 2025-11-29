@@ -1992,6 +1992,24 @@
     ]
   },
   {
+    "id": "emqx",
+    "name": "EMQX",
+    "version": "6.0.1",
+    "description": "A scalable and reliable MQTT broker for AI, IoT, IIoT and connected vehicles",
+    "logo": "emqx.svg",
+    "links": {
+      "github": "https://github.com/emqx/emqx",
+      "website": "https://www.emqx.com",
+      "docs": "https://docs.emqx.com"
+    },
+    "tags": [
+      "broker",
+      "iot",
+      "mqtt"
+    ]
+  },
+
+  {
     "id": "enshrouded",
     "name": "Enshrouded",
     "version": "1.0.0",

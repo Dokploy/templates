@@ -9,25 +9,31 @@ node_env = "production"
 
 [config]
 
+# --- 1. Service Routing ---
 [[config.domains]]
 serviceName = "dittofeed-lite"
 port = 3000
 host = "${main_domain}"
 path = "/"
-env = [
-    "NODE_ENV=${node_env}",
-    "WORKSPACE_NAME=${workspace_name}",
-    "DASHBOARD_URL=https://${main_domain}",
-    "DASHBOARD_API_BASE=https://${main_domain}",
-    "POSTGRES_PASSWORD=${postgres_password}",
-    "SECRET_KEY=${app_secret}",
-    "MINIO_ROOT_USER=${minio_user}",
-    "MINIO_ROOT_PASSWORD=${minio_password}",
-    "DATABASE_URL=postgres://dittofeed:${postgres_password}@postgres:5432/dittofeed",
-    "BLOB_STORAGE_ACCESS_KEY_ID=${minio_user}",
-    "BLOB_STORAGE_SECRET_ACCESS_KEY=${minio_password}"
-]
 
+# --- 2. Global Environment Variables ---
+# These will appear in the "Environment" tab in Dokploy
+[config.env]
+NODE_ENV = "${node_env}"
+WORKSPACE_NAME = "${workspace_name}"
+DASHBOARD_URL = "https://${main_domain}"
+DASHBOARD_API_BASE = "https://${main_domain}"
+# Secrets
+POSTGRES_PASSWORD = "${postgres_password}"
+SECRET_KEY = "${app_secret}"
+MINIO_ROOT_USER = "${minio_user}"
+MINIO_ROOT_PASSWORD = "${minio_password}"
+# Connection Strings
+DATABASE_URL = "postgres://dittofeed:${postgres_password}@postgres:5432/dittofeed"
+BLOB_STORAGE_ACCESS_KEY_ID = "${minio_user}"
+BLOB_STORAGE_SECRET_ACCESS_KEY = "${minio_password}"
+
+# --- 3. Persistent Storage ---
 [[config.mounts]]
 type = "volume"
 source = "postgres_data"

@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_DB: dittofeed
       POSTGRES_USER: dittofeed
-      POSTGRES_PASSWORD: ${postgres_password}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -28,9 +28,9 @@ services:
     image: minio/minio:latest
     restart: always
     environment:
-      MINIO_ROOT_USER: ${minio_user}
-      MINIO_ROOT_PASSWORD: ${minio_password}
-      MINIO_BROWSER_REDIRECT_URL: "https://${main_domain}/minio/"
+      MINIO_ROOT_USER: ${MINIO_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+      MINIO_BROWSER_REDIRECT_URL: "https://${MAIN_DOMAIN}/minio/"
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
@@ -41,7 +41,7 @@ services:
       retries: 5
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ditto-minio.rule=Host(`${main_domain}`) && PathPrefix(`/minio`)"
+      - "traefik.http.routers.ditto-minio.rule=Host(`${MAIN_DOMAIN}`) && PathPrefix(`/minio`)"
       - "traefik.http.routers.ditto-minio.priority=10"
       - "traefik.http.routers.ditto-minio.entrypoints=websecure"
       - "traefik.http.routers.ditto-minio.tls.certresolver=letsencrypt"
@@ -58,7 +58,7 @@ services:
     entrypoint: sh
     command: >
       -c "
-      /usr/bin/mc alias set myminio http://minio:9000 ${minio_user} ${minio_password} &&
+      /usr/bin/mc alias set myminio http://minio:9000 ${MINIO_USER} ${MINIO_PASSWORD} &&
       /usr/bin/mc mb --ignore-existing myminio/dittofeed
       "
 
@@ -69,7 +69,7 @@ services:
       DB: postgres12
       POSTGRES_SEEDS: postgres
       POSTGRES_USER: dittofeed
-      POSTGRES_PWD: ${postgres_password}
+      POSTGRES_PWD: ${POSTGRES_PASSWORD}
       DB_PORT: 5432
       BIND_ON_IP: "0.0.0.0"
       TEMPORAL_ADDRESS: "127.0.0.1:7233"
@@ -87,25 +87,25 @@ services:
     image: dittofeed/dittofeed-lite
     restart: always
     environment:
-      NODE_ENV: ${node_env}
+      NODE_ENV: ${NODE_ENV}
       PORT: 3000
-      PASSWORD: ${postgres_password}
-      SECRET_KEY: ${app_secret}
+      PASSWORD: ${POSTGRES_PASSWORD}
+      SECRET_KEY: ${APP_SECRET}
       SESSION_COOKIE_SECURE: "true"
-      DASHBOARD_URL: "https://${main_domain}"
-      DASHBOARD_API_BASE: "https://${main_domain}"
+      DASHBOARD_URL: "https://${MAIN_DOMAIN}"
+      DASHBOARD_API_BASE: "https://${MAIN_DOMAIN}"
       AUTH_MODE: "single-tenant"
-      WORKSPACE_NAME: "${workspace_name}"
+      WORKSPACE_NAME: "${WORKSPACE_NAME}"
       BOOTSTRAP: "true"
-      DATABASE_URL: postgres://dittofeed:${postgres_password}@postgres:5432/dittofeed
+      DATABASE_URL: postgres://dittofeed:${POSTGRES_PASSWORD}@postgres:5432/dittofeed
       CLICKHOUSE_HOST: clickhouse:8123
       CLICKHOUSE_USER: default
       CLICKHOUSE_PASSWORD: ""
       CLICKHOUSE_DATABASE: default
       BLOB_STORAGE_ENDPOINT: http://minio:9000
       BLOB_STORAGE_BUCKET: dittofeed
-      BLOB_STORAGE_ACCESS_KEY_ID: ${minio_user}
-      BLOB_STORAGE_SECRET_ACCESS_KEY: ${minio_password}
+      BLOB_STORAGE_ACCESS_KEY_ID: ${MINIO_USER}
+      BLOB_STORAGE_SECRET_ACCESS_KEY: ${MINIO_PASSWORD}
       BLOB_STORAGE_REGION: us-east-1
       TEMPORAL_ADDRESS: temporal:7233
     depends_on:
@@ -128,23 +128,23 @@ services:
     image: dittofeed/dittofeed-worker
     restart: always
     environment:
-      NODE_ENV: ${node_env}
-      PASSWORD: ${postgres_password}
-      SECRET_KEY: ${app_secret}
+      NODE_ENV: ${NODE_ENV}
+      PASSWORD: ${POSTGRES_PASSWORD}
+      SECRET_KEY: ${APP_SECRET}
       SESSION_COOKIE_SECURE: "true"
-      DASHBOARD_URL: "https://${main_domain}"
-      DASHBOARD_API_BASE: "https://${main_domain}"
+      DASHBOARD_URL: "https://${MAIN_DOMAIN}"
+      DASHBOARD_API_BASE: "https://${MAIN_DOMAIN}"
       AUTH_MODE: "single-tenant"
-      WORKSPACE_NAME: "${workspace_name}"
-      DATABASE_URL: postgres://dittofeed:${postgres_password}@postgres:5432/dittofeed
+      WORKSPACE_NAME: "${WORKSPACE_NAME}"
+      DATABASE_URL: postgres://dittofeed:${POSTGRES_PASSWORD}@postgres:5432/dittofeed
       CLICKHOUSE_HOST: clickhouse:8123
       CLICKHOUSE_USER: default
       CLICKHOUSE_PASSWORD: ""
       CLICKHOUSE_DATABASE: default
       BLOB_STORAGE_ENDPOINT: http://minio:9000
       BLOB_STORAGE_BUCKET: dittofeed
-      BLOB_STORAGE_ACCESS_KEY_ID: ${minio_user}
-      BLOB_STORAGE_SECRET_ACCESS_KEY: ${minio_password}
+      BLOB_STORAGE_ACCESS_KEY_ID: ${MINIO_USER}
+      BLOB_STORAGE_SECRET_ACCESS_KEY: ${MINIO_PASSWORD}
       BLOB_STORAGE_REGION: us-east-1
       TEMPORAL_ADDRESS: temporal:7233
     depends_on:

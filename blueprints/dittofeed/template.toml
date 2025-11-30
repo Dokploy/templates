@@ -1,39 +1,30 @@
 [variables]
-main_domain = "${domain}"
-postgres_password = "${password:24}"
-app_secret = "${base64:32}"
-minio_password = "${password:24}"
-minio_user = "minioadmin"
-workspace_name = "Dittofeed"
-node_env = "production"
+domain_var = "${domain}"
+postgres_pass_var = "${password:24}"
+app_secret_var = "${base64:32}"
+minio_pass_var = "${password:24}"
+minio_user_var = "minioadmin"
+workspace_name_var = "Dittofeed"
+node_env_var = "production"
 
 [config]
 
-# --- 1. Service Routing ---
 [[config.domains]]
 serviceName = "dittofeed-lite"
 port = 3000
-host = "${main_domain}"
+host = "${domain_var}"
 path = "/"
+# This ENV block populates the Docker Compose environment
+env = [
+    "MAIN_DOMAIN=${domain_var}",
+    "POSTGRES_PASSWORD=${postgres_pass_var}",
+    "APP_SECRET=${app_secret_var}",
+    "MINIO_PASSWORD=${minio_pass_var}",
+    "MINIO_USER=${minio_user_var}",
+    "WORKSPACE_NAME=${workspace_name_var}",
+    "NODE_ENV=${node_env_var}"
+]
 
-# --- 2. Global Environment Variables ---
-# These will appear in the "Environment" tab in Dokploy
-[config.env]
-NODE_ENV = "${node_env}"
-WORKSPACE_NAME = "${workspace_name}"
-DASHBOARD_URL = "https://${main_domain}"
-DASHBOARD_API_BASE = "https://${main_domain}"
-# Secrets
-POSTGRES_PASSWORD = "${postgres_password}"
-SECRET_KEY = "${app_secret}"
-MINIO_ROOT_USER = "${minio_user}"
-MINIO_ROOT_PASSWORD = "${minio_password}"
-# Connection Strings
-DATABASE_URL = "postgres://dittofeed:${postgres_password}@postgres:5432/dittofeed"
-BLOB_STORAGE_ACCESS_KEY_ID = "${minio_user}"
-BLOB_STORAGE_SECRET_ACCESS_KEY = "${minio_password}"
-
-# --- 3. Persistent Storage ---
 [[config.mounts]]
 type = "volume"
 source = "postgres_data"

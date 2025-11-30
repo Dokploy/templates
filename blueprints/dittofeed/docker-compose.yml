@@ -1,9 +1,6 @@
 version: "3.8"
 
 services:
-  # -------------------------------------------------------------------------
-  # SERVICE 1: Postgres
-  # -------------------------------------------------------------------------
   postgres:
     image: postgres:16
     restart: always
@@ -19,9 +16,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # -------------------------------------------------------------------------
-  # SERVICE 2: Clickhouse
-  # -------------------------------------------------------------------------
   clickhouse:
     image: clickhouse/clickhouse-server:24
     restart: always
@@ -30,9 +24,6 @@ services:
     volumes:
       - clickhouse_data:/var/lib/clickhouse
 
-  # -------------------------------------------------------------------------
-  # SERVICE 3: MinIO (Object Storage)
-  # -------------------------------------------------------------------------
   minio:
     image: minio/minio:latest
     restart: always
@@ -48,7 +39,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    # Dokploy routing labels
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ditto-minio.rule=Host(`${main_domain}`) && PathPrefix(`/minio`)"
@@ -59,9 +49,6 @@ services:
       - "traefik.http.middlewares.ditto-minio-strip.stripprefix.prefixes=/minio"
       - "traefik.http.routers.ditto-minio.middlewares=ditto-minio-strip"
 
-  # -------------------------------------------------------------------------
-  # SERVICE 4: MinIO Setup
-  # -------------------------------------------------------------------------
   mc:
     image: minio/mc
     restart: "no"
@@ -75,9 +62,6 @@ services:
       /usr/bin/mc mb --ignore-existing myminio/dittofeed
       "
 
-  # -------------------------------------------------------------------------
-  # SERVICE 5: Temporal
-  # -------------------------------------------------------------------------
   temporal:
     image: temporalio/auto-setup
     restart: always
@@ -99,16 +83,12 @@ services:
       retries: 5
       start_period: 45s
 
-  # -------------------------------------------------------------------------
-  # SERVICE 6: Dittofeed Web
-  # -------------------------------------------------------------------------
   dittofeed-lite:
     image: dittofeed/dittofeed-lite
     restart: always
     environment:
       NODE_ENV: ${node_env}
       PORT: 3000
-      # --- Configs ---
       PASSWORD: ${postgres_password}
       SECRET_KEY: ${app_secret}
       SESSION_COOKIE_SECURE: "true"
@@ -117,7 +97,6 @@ services:
       AUTH_MODE: "single-tenant"
       WORKSPACE_NAME: "${workspace_name}"
       BOOTSTRAP: "true"
-      # --- Connections ---
       DATABASE_URL: postgres://dittofeed:${postgres_password}@postgres:5432/dittofeed
       CLICKHOUSE_HOST: clickhouse:8123
       CLICKHOUSE_USER: default
@@ -145,15 +124,11 @@ services:
       retries: 5
       start_period: 45s
 
-  # -------------------------------------------------------------------------
-  # SERVICE 7: Dittofeed Worker
-  # -------------------------------------------------------------------------
   dittofeed-worker:
     image: dittofeed/dittofeed-worker
     restart: always
     environment:
       NODE_ENV: ${node_env}
-      # --- Configs ---
       PASSWORD: ${postgres_password}
       SECRET_KEY: ${app_secret}
       SESSION_COOKIE_SECURE: "true"
@@ -161,7 +136,6 @@ services:
       DASHBOARD_API_BASE: "https://${main_domain}"
       AUTH_MODE: "single-tenant"
       WORKSPACE_NAME: "${workspace_name}"
-      # --- Connections ---
       DATABASE_URL: postgres://dittofeed:${postgres_password}@postgres:5432/dittofeed
       CLICKHOUSE_HOST: clickhouse:8123
       CLICKHOUSE_USER: default

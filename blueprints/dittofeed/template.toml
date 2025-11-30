@@ -14,16 +14,20 @@ serviceName = "dittofeed-lite"
 port = 3000
 host = "${domain_var}"
 path = "/"
-# This ENV block populates the Docker Compose environment
-env = [
-    "MAIN_DOMAIN=${domain_var}",
-    "POSTGRES_PASSWORD=${postgres_pass_var}",
-    "APP_SECRET=${app_secret_var}",
-    "MINIO_PASSWORD=${minio_pass_var}",
-    "MINIO_USER=${minio_user_var}",
-    "WORKSPACE_NAME=${workspace_name_var}",
-    "NODE_ENV=${node_env_var}"
-]
+
+[config.env]
+MAIN_DOMAIN = "${domain_var}"
+NODE_ENV = "${node_env_var}"
+WORKSPACE_NAME = "${workspace_name_var}"
+DASHBOARD_URL = "https://${domain_var}"
+DASHBOARD_API_BASE = "https://${domain_var}"
+POSTGRES_PASSWORD = "${postgres_pass_var}"
+APP_SECRET = "${app_secret_var}"
+MINIO_USER = "${minio_user_var}"
+MINIO_PASSWORD = "${minio_pass_var}"
+DATABASE_URL = "postgres://dittofeed:${postgres_pass_var}@postgres:5432/dittofeed"
+BLOB_STORAGE_ACCESS_KEY_ID = "${minio_user_var}"
+BLOB_STORAGE_SECRET_ACCESS_KEY = "${minio_pass_var}"
 
 [[config.mounts]]
 type = "volume"

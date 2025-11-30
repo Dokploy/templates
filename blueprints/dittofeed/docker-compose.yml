@@ -1,0 +1,204 @@
+version: "3.8"
+
+services:
+  # -------------------------------------------------------------------------
+  # SERVICE 1: Postgres
+  # -------------------------------------------------------------------------
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: dittofeed
+      POSTGRES_USER: dittofeed
+      POSTGRES_PASSWORD: ${postgres_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dittofeed -d dittofeed"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------------------------
+  # SERVICE 2: Clickhouse
+  # -------------------------------------------------------------------------
+  clickhouse:
+    image: clickhouse/clickhouse-server:24
+    restart: always
+    cap_add:
+      - SYS_NICE
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+
+  # -------------------------------------------------------------------------
+  # SERVICE 3: MinIO (Object Storage)
+  # -------------------------------------------------------------------------
+  minio:
+    image: minio/minio:latest
+    restart: always
+    environment:
+      MINIO_ROOT_USER: ${minio_user}
+      MINIO_ROOT_PASSWORD: ${minio_password}
+      # Dynamic Domain Injection
+      MINIO_BROWSER_REDIRECT_URL: "https://${main_domain}/minio/"
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    # Dokploy handles the network automatically, but we need specific labels 
+    # for the MinIO subpath routing which template.toml cannot easily do yet.
+    labels:
+      - "traefik.enable=true"
+      # ROUTER: Console access via /minio
+      - "traefik.http.routers.ditto-minio.rule=Host(`${main_domain}`) && PathPrefix(`/minio`)"
+      - "traefik.http.routers.ditto-minio.priority=10"
+      - "traefik.http.routers.ditto-minio.entrypoints=websecure"
+      - "traefik.http.routers.ditto-minio.tls.certresolver=letsencrypt"
+      - "traefik.http.services.ditto-minio.loadbalancer.server.port=9001"
+      - "traefik.http.middlewares.ditto-minio-strip.stripprefix.prefixes=/minio"
+      - "traefik.http.routers.ditto-minio.middlewares=ditto-minio-strip"
+
+  # -------------------------------------------------------------------------
+  # SERVICE 4: MinIO Setup (One-off)
+  # -------------------------------------------------------------------------
+  mc:
+    image: minio/mc
+    restart: "no"
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: sh
+    command: >
+      -c "
+      /usr/bin/mc alias set myminio http://minio:9000 ${minio_user} ${minio_password} &&
+      /usr/bin/mc mb --ignore-existing myminio/dittofeed
+      "
+
+  # -------------------------------------------------------------------------
+  # SERVICE 5: Temporal (Backend Engine)
+  # -------------------------------------------------------------------------
+  temporal:
+    image: temporalio/auto-setup
+    restart: always
+    environment:
+      DB: postgres12
+      POSTGRES_SEEDS: postgres
+      POSTGRES_USER: dittofeed
+      POSTGRES_PWD: ${postgres_password}
+      DB_PORT: 5432
+      BIND_ON_IP: "0.0.0.0"
+      TEMPORAL_ADDRESS: "127.0.0.1:7233"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "tctl", "cluster", "health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+
+  # -------------------------------------------------------------------------
+  # SERVICE 6: Dittofeed Web (Lite)
+  # -------------------------------------------------------------------------
+  dittofeed-lite:
+    image: dittofeed/dittofeed-lite
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      # --- Dittofeed Config ---
+      PASSWORD: ${postgres_password}
+      SECRET_KEY: ${app_secret}
+      SESSION_COOKIE_SECURE: "true"
+      DASHBOARD_URL: "https://${main_domain}"
+      DASHBOARD_API_BASE: "https://${main_domain}"
+      AUTH_MODE: "single-tenant"
+      WORKSPACE_NAME: "Dittofeed"
+      BOOTSTRAP: "true"
+      # --- Database Config ---
+      DATABASE_URL: postgres://dittofeed:${postgres_password}@postgres:5432/dittofeed
+      # --- ClickHouse Config ---
+      CLICKHOUSE_HOST: clickhouse:8123
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: ""
+      CLICKHOUSE_DATABASE: default
+      # --- Blob Storage Config ---
+      BLOB_STORAGE_ENDPOINT: http://minio:9000
+      BLOB_STORAGE_BUCKET: dittofeed
+      BLOB_STORAGE_ACCESS_KEY_ID: ${minio_user}
+      BLOB_STORAGE_SECRET_ACCESS_KEY: ${minio_password}
+      BLOB_STORAGE_REGION: us-east-1
+      # --- Temporal Config ---
+      TEMPORAL_ADDRESS: temporal:7233
+    depends_on:
+      postgres:
+        condition: service_healthy
+      temporal:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      clickhouse:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3000 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+
+  # -------------------------------------------------------------------------
+  # SERVICE 7: Dittofeed Worker
+  # -------------------------------------------------------------------------
+  dittofeed-worker:
+    image: dittofeed/dittofeed-worker
+    restart: always
+    environment:
+      NODE_ENV: production
+      # --- Dittofeed Config ---
+      PASSWORD: ${postgres_password}
+      SECRET_KEY: ${app_secret}
+      SESSION_COOKIE_SECURE: "true"
+      DASHBOARD_URL: "https://${main_domain}"
+      DASHBOARD_API_BASE: "https://${main_domain}"
+      AUTH_MODE: "single-tenant"
+      WORKSPACE_NAME: "Dittofeed"
+      # --- Database Config ---
+      DATABASE_URL: postgres://dittofeed:${postgres_password}@postgres:5432/dittofeed
+      # --- ClickHouse Config ---
+      CLICKHOUSE_HOST: clickhouse:8123
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: ""
+      CLICKHOUSE_DATABASE: default
+      # --- Blob Storage Config ---
+      BLOB_STORAGE_ENDPOINT: http://minio:9000
+      BLOB_STORAGE_BUCKET: dittofeed
+      BLOB_STORAGE_ACCESS_KEY_ID: ${minio_user}
+      BLOB_STORAGE_SECRET_ACCESS_KEY: ${minio_password}
+      BLOB_STORAGE_REGION: us-east-1
+      # --- Temporal Config ---
+      TEMPORAL_ADDRESS: temporal:7233
+    depends_on:
+      postgres:
+        condition: service_healthy
+      temporal:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      clickhouse:
+        condition: service_started
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+
+volumes:
+  postgres_data:
+  clickhouse_data:
+  minio_data:
+  minio_data:
+  minio_data:
+  minio_data:

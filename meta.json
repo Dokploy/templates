@@ -5897,7 +5897,7 @@
   "name": "Dittofeed",
   "version": "latest",
   "description": "Dittofeed is an open-source customer engagement platform for automating email, SMS, and webhook messaging.",
-  "logo": "https://avatars.githubusercontent.com/u/108604724?s=200&v=4",
+  "logo": "dittofeed.png",
   "links": {
     "github": "https://github.com/dittofeed/dittofeed",
     "website": "https://dittofeed.com",

@@ -96,7 +96,7 @@ services:
       DASHBOARD_API_BASE: "https://${MAIN_DOMAIN}"
       AUTH_MODE: "single-tenant"
       WORKSPACE_NAME: "${WORKSPACE_NAME}"
-      BOOTSTRAP: "true"
+      BOOTSTRAP: "${BOOTSTRAP}"
       DATABASE_URL: postgres://dittofeed:${POSTGRES_PASSWORD}@postgres:5432/dittofeed
       CLICKHOUSE_HOST: clickhouse:8123
       CLICKHOUSE_USER: default

@@ -28,6 +28,7 @@ MINIO_PASSWORD = "${minio_pass_var}"
 DATABASE_URL = "postgres://dittofeed:${postgres_pass_var}@postgres:5432/dittofeed"
 BLOB_STORAGE_ACCESS_KEY_ID = "${minio_user_var}"
 BLOB_STORAGE_SECRET_ACCESS_KEY = "${minio_pass_var}"
+BOOTSTRAP = "true"
 
 [[config.mounts]]
 type = "volume"

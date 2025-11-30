@@ -39,7 +39,6 @@ services:
     environment:
       MINIO_ROOT_USER: ${minio_user}
       MINIO_ROOT_PASSWORD: ${minio_password}
-      # Dynamic Domain Injection
       MINIO_BROWSER_REDIRECT_URL: "https://${main_domain}/minio/"
     command: server /data --console-address ":9001"
     volumes:
@@ -49,11 +48,9 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    # Dokploy handles the network automatically, but we need specific labels 
-    # for the MinIO subpath routing which template.toml cannot easily do yet.
+    # Dokploy routing labels
     labels:
       - "traefik.enable=true"
-      # ROUTER: Console access via /minio
       - "traefik.http.routers.ditto-minio.rule=Host(`${main_domain}`) && PathPrefix(`/minio`)"
       - "traefik.http.routers.ditto-minio.priority=10"
       - "traefik.http.routers.ditto-minio.entrypoints=websecure"
@@ -63,7 +60,7 @@ services:
       - "traefik.http.routers.ditto-minio.middlewares=ditto-minio-strip"
 
   # -------------------------------------------------------------------------
-  # SERVICE 4: MinIO Setup (One-off)
+  # SERVICE 4: MinIO Setup
   # -------------------------------------------------------------------------
   mc:
     image: minio/mc
@@ -79,7 +76,7 @@ services:
       "
 
   # -------------------------------------------------------------------------
-  # SERVICE 5: Temporal (Backend Engine)
+  # SERVICE 5: Temporal
   # -------------------------------------------------------------------------
   temporal:
     image: temporalio/auto-setup
@@ -103,37 +100,34 @@ services:
       start_period: 45s
 
   # -------------------------------------------------------------------------
-  # SERVICE 6: Dittofeed Web (Lite)
+  # SERVICE 6: Dittofeed Web
   # -------------------------------------------------------------------------
   dittofeed-lite:
     image: dittofeed/dittofeed-lite
     restart: always
     environment:
-      NODE_ENV: production
+      NODE_ENV: ${node_env}
       PORT: 3000
-      # --- Dittofeed Config ---
+      # --- Configs ---
       PASSWORD: ${postgres_password}
       SECRET_KEY: ${app_secret}
       SESSION_COOKIE_SECURE: "true"
       DASHBOARD_URL: "https://${main_domain}"
       DASHBOARD_API_BASE: "https://${main_domain}"
       AUTH_MODE: "single-tenant"
-      WORKSPACE_NAME: "Dittofeed"
+      WORKSPACE_NAME: "${workspace_name}"
       BOOTSTRAP: "true"
-      # --- Database Config ---
+      # --- Connections ---
       DATABASE_URL: postgres://dittofeed:${postgres_password}@postgres:5432/dittofeed
-      # --- ClickHouse Config ---
       CLICKHOUSE_HOST: clickhouse:8123
       CLICKHOUSE_USER: default
       CLICKHOUSE_PASSWORD: ""
       CLICKHOUSE_DATABASE: default
-      # --- Blob Storage Config ---
       BLOB_STORAGE_ENDPOINT: http://minio:9000
       BLOB_STORAGE_BUCKET: dittofeed
       BLOB_STORAGE_ACCESS_KEY_ID: ${minio_user}
       BLOB_STORAGE_SECRET_ACCESS_KEY: ${minio_password}
       BLOB_STORAGE_REGION: us-east-1
-      # --- Temporal Config ---
       TEMPORAL_ADDRESS: temporal:7233
     depends_on:
       postgres:
@@ -158,29 +152,26 @@ services:
     image: dittofeed/dittofeed-worker
     restart: always
     environment:
-      NODE_ENV: production
-      # --- Dittofeed Config ---
+      NODE_ENV: ${node_env}
+      # --- Configs ---
       PASSWORD: ${postgres_password}
       SECRET_KEY: ${app_secret}
       SESSION_COOKIE_SECURE: "true"
       DASHBOARD_URL: "https://${main_domain}"
       DASHBOARD_API_BASE: "https://${main_domain}"
       AUTH_MODE: "single-tenant"
-      WORKSPACE_NAME: "Dittofeed"
-      # --- Database Config ---
+      WORKSPACE_NAME: "${workspace_name}"
+      # --- Connections ---
       DATABASE_URL: postgres://dittofeed:${postgres_password}@postgres:5432/dittofeed
-      # --- ClickHouse Config ---
       CLICKHOUSE_HOST: clickhouse:8123
       CLICKHOUSE_USER: default
       CLICKHOUSE_PASSWORD: ""
       CLICKHOUSE_DATABASE: default
-      # --- Blob Storage Config ---
       BLOB_STORAGE_ENDPOINT: http://minio:9000
       BLOB_STORAGE_BUCKET: dittofeed
       BLOB_STORAGE_ACCESS_KEY_ID: ${minio_user}
       BLOB_STORAGE_SECRET_ACCESS_KEY: ${minio_password}
       BLOB_STORAGE_REGION: us-east-1
-      # --- Temporal Config ---
       TEMPORAL_ADDRESS: temporal:7233
     depends_on:
       postgres:

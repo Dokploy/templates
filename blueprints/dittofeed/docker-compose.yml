@@ -199,6 +199,3 @@ volumes:
   postgres_data:
   clickhouse_data:
   minio_data:
-  minio_data:
-  minio_data:
-  minio_data:

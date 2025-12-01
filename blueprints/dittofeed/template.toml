@@ -57,6 +57,10 @@ APP_SECRET = "${app_secret_var}"
 MINIO_USER = "${minio_user_var}"
 MINIO_PASSWORD = "${minio_pass_var}"
 
+# FIX FOR 12-HOUR LIMIT (Set to 30 Days)
+MINIO_BROWSER_SESSION_DURATION = "720h"
+MINIO_STS_DURATION = "720h"
+
 # DB Connection
 DATABASE_URL = "postgres://dittofeed:${postgres_pass_var}@postgres:5432/dittofeed"
 

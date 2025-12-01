@@ -34,6 +34,9 @@ services:
     environment:
       MINIO_ROOT_USER: ${MINIO_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+      # Fix for Share Duration Limit
+      MINIO_BROWSER_SESSION_DURATION: ${MINIO_BROWSER_SESSION_DURATION}
+      MINIO_STS_DURATION: ${MINIO_STS_DURATION}
       # Explicitly use the domains passed from Dokploy
       MINIO_SERVER_URL: "https://${MINIO_API_DOMAIN}"
       MINIO_BROWSER_REDIRECT_URL: "https://${MINIO_CONSOLE_DOMAIN}"

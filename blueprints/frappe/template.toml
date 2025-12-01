@@ -4,6 +4,7 @@ mysql_root_password = "${password:32}"
 admin_password = "${password:32}"
 site_name = "${main_domain}"
 app_name = "lms"
+payments_app_repo = "https://github.com/frappe/payments.git"
 
 [config]
 env = [

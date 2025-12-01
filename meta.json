@@ -2181,8 +2181,8 @@
     ]
   },
   {
-    "id": "frappe-lms",
-    "name": "Frappe LMS",
+    "id": "frappe",
+    "name": "Frappe",
     "version": "latest",
     "description": "A comprehensive Learning Management System built on Frappe Framework. 100% open source and customizable for creating and managing online courses.",
     "logo": "frappe.png",
@@ -2194,6 +2194,7 @@
     "tags": [
       "lms",
       "education",
+      "Payments",
       "learning",
       "courses",
       "e-learning",

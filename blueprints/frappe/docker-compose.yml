@@ -35,8 +35,14 @@ services:
     command: >
       bash -c "
       if [ -d '/home/frappe/frappe-bench/apps/frappe' ]; then
-        echo 'Bench already exists, skipping init';
+        echo 'Bench already exists, checking for Payments app...';
         cd frappe-bench;
+        if [ ! -d 'apps/payments' ]; then
+          echo 'Payments app not found, installing...';
+          bench get-app payments https://github.com/frappe/payments.git || echo 'Failed to get payments app, continuing...';
+          bench --site \$${SITE_NAME:-lms.localhost} install-app payments || echo 'Payments app may already be installed or failed to install';
+          bench --site \$${SITE_NAME:-lms.localhost} clear-cache;
+        fi;
         bench start;
       else
         echo 'Creating new bench...';
@@ -50,8 +56,10 @@ services:
         sed -i '/redis/d' ./Procfile;
         sed -i '/watch/d' ./Procfile;
         bench get-app \$${APP_NAME:-lms};
-        bench new-site \$${SITE_NAME:-lms.localhost} --force --mariadb-root-password \$${MYSQL_ROOT_PASSWORD} --admin-password \$${ADMIN_PASSWORD:-admin} --no-mariadb-socket;
+        bench get-app payments https://github.com/frappe/payments.git;
+        bench new-site \$${SITE_NAME:-lms.localhost} --force --mariadb-user-host-login-scope='%' --db-root-username=root --db-root-password=\$${MYSQL_ROOT_PASSWORD} --admin-password \$${ADMIN_PASSWORD:-admin};
         bench --site \$${SITE_NAME:-lms.localhost} install-app \$${APP_NAME:-lms};
+        bench --site \$${SITE_NAME:-lms.localhost} install-app payments;
         bench --site \$${SITE_NAME:-lms.localhost} set-config developer_mode 1;
         bench --site \$${SITE_NAME:-lms.localhost} clear-cache;
         bench use \$${SITE_NAME:-lms.localhost};

@@ -1,5 +1,5 @@
-# This templates requires additional traefik port mapping and entry points
-# for ports 8883 (mqtts)
+# This templates requires additional traefik port mapping and entry point
+# for port 8883 (mqtts over TCP)
 #
 # For the full instructions, refer to:
 # - https://github.com/Dokploy/dokploy/discussions/3126
@@ -15,9 +15,9 @@ services:
     environment:
       EMQX_NODE_NAME: emqx@node1.emqx.com
     expose:
-      - 1883
-      - 8083
-      - 18083
+      - 1883  # MQTT
+      - 8083  # WS
+      - 18083 # Dashboard
     volumes:
       - emqx_data:/opt/emqx/data
       - emqx_log:/opt/emqx/log

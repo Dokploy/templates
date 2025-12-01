@@ -46,3 +46,7 @@ services:
 volumes:
   emqx_data:
   emqx_log:
+
+networks:
+  dokploy-network:
+    external: true

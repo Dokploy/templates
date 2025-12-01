@@ -1,0 +1,79 @@
+version: "3.8"
+
+services:
+  mariadb:
+    image: mariadb:10.8
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+      - --skip-innodb-read-only-compressed
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh", "--connect"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 8
+
+  frappe:
+    image: frappe/bench:latest
+    restart: unless-stopped
+    command: >
+      bash -c "
+      if [ -d '/home/frappe/frappe-bench/apps/frappe' ]; then
+        echo 'Bench already exists, skipping init';
+        cd frappe-bench;
+        bench start;
+      else
+        echo 'Creating new bench...';
+        export PATH=\"\$${NVM_DIR}/versions/node/v\$${NODE_VERSION_DEVELOP}/bin/:\$${PATH}\";
+        bench init --skip-redis-config-generation frappe-bench;
+        cd frappe-bench;
+        bench set-mariadb-host mariadb;
+        bench set-redis-cache-host redis://redis:6379;
+        bench set-redis-queue-host redis://redis:6379;
+        bench set-redis-socketio-host redis://redis:6379;
+        sed -i '/redis/d' ./Procfile;
+        sed -i '/watch/d' ./Procfile;
+        bench get-app \$${APP_NAME:-lms};
+        bench new-site \$${SITE_NAME:-lms.localhost} --force --mariadb-root-password \$${MYSQL_ROOT_PASSWORD} --admin-password \$${ADMIN_PASSWORD:-admin} --no-mariadb-socket;
+        bench --site \$${SITE_NAME:-lms.localhost} install-app \$${APP_NAME:-lms};
+        bench --site \$${SITE_NAME:-lms.localhost} set-config developer_mode 1;
+        bench --site \$${SITE_NAME:-lms.localhost} clear-cache;
+        bench use \$${SITE_NAME:-lms.localhost};
+        bench start;
+      fi
+      "
+    environment:
+      SHELL: /bin/bash
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+      APP_NAME: "${APP_NAME}"
+      SITE_NAME: "${SITE_NAME}"
+    working_dir: /home/frappe
+    ports:
+      - "8000"
+      - "9000"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  mariadb-data:
+

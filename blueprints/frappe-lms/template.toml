@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+mysql_root_password = "${password:32}"
+admin_password = "${password:32}"
+site_name = "${main_domain}"
+app_name = "lms"
+
+[config]
+env = [
+  "MYSQL_ROOT_PASSWORD=${mysql_root_password}",
+  "ADMIN_PASSWORD=${admin_password}",
+  "APP_NAME=${app_name}",
+  "SITE_NAME=${site_name}",
+]
+
+[[config.domains]]
+serviceName = "frappe"
+port = 8000
+host = "${main_domain}"
+
+

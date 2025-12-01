@@ -7,6 +7,6 @@ port = 18083
 host = "${main_domain}"
 
 [[config.domains]]
-serviceName = "broker"
+serviceName = "emqx"
 port = 8083
 host = "${main_domain}"

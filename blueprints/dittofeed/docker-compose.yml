@@ -34,9 +34,9 @@ services:
     environment:
       MINIO_ROOT_USER: ${MINIO_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
-      # Dynamic Subdomains based on your main domain variable
-      MINIO_SERVER_URL: "https://s3.${MAIN_DOMAIN}"
-      MINIO_BROWSER_REDIRECT_URL: "https://minio.${MAIN_DOMAIN}"
+      # Explicitly use the domains passed from Dokploy
+      MINIO_SERVER_URL: "https://${MINIO_API_DOMAIN}"
+      MINIO_BROWSER_REDIRECT_URL: "https://${MINIO_CONSOLE_DOMAIN}"
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
@@ -45,18 +45,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    labels:
-      - "traefik.enable=true"
-      # ROUTER 1: The UI (Console) -> minio.yourdomain.com
-      - "traefik.http.routers.ditto-minio-console.rule=Host(`minio.${MAIN_DOMAIN}`)"
-      - "traefik.http.routers.ditto-minio-console.entrypoints=websecure"
-      - "traefik.http.routers.ditto-minio-console.tls.certresolver=letsencrypt"
-      - "traefik.http.services.ditto-minio-console.loadbalancer.server.port=9001"
-      # ROUTER 2: The API (S3) -> s3.yourdomain.com
-      - "traefik.http.routers.ditto-minio-api.rule=Host(`s3.${MAIN_DOMAIN}`)"
-      - "traefik.http.routers.ditto-minio-api.entrypoints=websecure"
-      - "traefik.http.routers.ditto-minio-api.tls.certresolver=letsencrypt"
-      - "traefik.http.services.ditto-minio-api.loadbalancer.server.port=9000"
 
   mc:
     image: minio/mc
@@ -65,7 +53,7 @@ services:
       minio:
         condition: service_healthy
     entrypoint: sh
-    # We use the internal docker name 'minio' on port 9000 here
+    # Internal setup uses internal Docker DNS (http://minio:9000)
     command: >
       -c "
       /usr/bin/mc alias set myminio http://minio:9000 ${MINIO_USER} ${MINIO_PASSWORD} &&
@@ -113,7 +101,7 @@ services:
       CLICKHOUSE_USER: default
       CLICKHOUSE_PASSWORD: ""
       CLICKHOUSE_DATABASE: default
-      # Backend talks to Minio via INTERNAL Docker network, not public internet
+      # Backend talks to Minio via INTERNAL Docker network
       BLOB_STORAGE_ENDPOINT: http://minio:9000
       BLOB_STORAGE_BUCKET: dittofeed
       BLOB_STORAGE_ACCESS_KEY_ID: ${MINIO_USER}

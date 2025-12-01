@@ -1,12 +1,11 @@
 [variables]
-main_domain = "${domain}"
 
 [[config.domains]]
 serviceName = "emqx"
 port = 18083
-host = "${main_domain}"
+host = "emqx.yourdomain.com"
 
 [[config.domains]]
 serviceName = "emqx"
 port = 8083
-host = "${main_domain}"
+host = "broker.yourdomain.com"

@@ -3,19 +3,23 @@ domain_var = "${domain}"
 postgres_pass_var = "${password:24}"
 app_secret_var = "${base64:32}"
 minio_pass_var = "${password:24}"
-minio_user_var = "minioadmin"
+# Changed default user to something safer than 'minioadmin', but kept variable
+minio_user_var = "admin" 
 workspace_name_var = "Dittofeed"
 node_env_var = "production"
 
 [config]
 
+# This handles the routing for the MAIN Dittofeed App (port 3000)
 [[config.domains]]
 serviceName = "dittofeed-lite"
 port = 3000
 host = "${domain_var}"
 path = "/"
+https = true
 
 [config.env]
+# We pass the domain in so we can build subdomains (minio.domain / s3.domain) inside the compose file
 MAIN_DOMAIN = "${domain_var}"
 NODE_ENV = "${node_env_var}"
 WORKSPACE_NAME = "${workspace_name_var}"
@@ -25,10 +29,12 @@ POSTGRES_PASSWORD = "${postgres_pass_var}"
 APP_SECRET = "${app_secret_var}"
 MINIO_USER = "${minio_user_var}"
 MINIO_PASSWORD = "${minio_pass_var}"
+# Using internal docker networking for DB
 DATABASE_URL = "postgres://dittofeed:${postgres_pass_var}@postgres:5432/dittofeed"
 BLOB_STORAGE_ACCESS_KEY_ID = "${minio_user_var}"
 BLOB_STORAGE_SECRET_ACCESS_KEY = "${minio_pass_var}"
-BOOTSTRAP = "true"
+# CAREFUL: Set this to 'true' only for the very first deployment, then change to 'false'
+BOOTSTRAP = "false" 
 
 [[config.mounts]]
 type = "volume"

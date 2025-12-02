@@ -30,7 +30,7 @@ MYSQL_ROOT_PASSWORD = "${root_password}"
 
 # Security & Proxy (CRITICAL FOR DOKPLOY/TRAEFIK)
 # 0.0.0.0/0 tells Mautic to trust the headers from Traefik
-MAUTIC_TRUSTED_PROXIES = "0.0.0.0/0"
+MAUTIC_TRUSTED_PROXIES = '["0.0.0.0/0"]'
 
 # Mautic Queue/Worker Settings (Mautic 5+)
 # These tell Mautic to use the database to queue emails instead of sending immediately

@@ -1,6 +1,9 @@
 [variables]
+# Generates the domain provided by Dokploy
 main_domain = "${domain}"
+# Generates a random secure password for the DB User
 db_password = "${password:32}"
+# Generates a random secure password for the DB Root
 root_password = "${password:32}"
 
 [config]
@@ -10,8 +13,30 @@ port = 80
 host = "${main_domain}"
 path = "/"
 
-env = [
-    "MAUTIC_URL=https://${main_domain}",
-    "MAUTIC_DB_PASSWORD=${db_password}",
-    "MYSQL_ROOT_PASSWORD=${root_password}"
-]
+# -------------------------------------------------------------------------
+# MAUTIC ENVIRONMENT VARIABLES
+# -------------------------------------------------------------------------
+[config.env]
+# URL Configuration
+MAUTIC_URL = "https://${main_domain}"
+
+# Database Connections (Shared by all containers)
+MAUTIC_DB_HOST = "mysql"
+MAUTIC_DB_PORT = "3306"
+MAUTIC_DB_DATABASE = "mautic"
+MAUTIC_DB_USER = "mautic"
+MAUTIC_DB_PASSWORD = "${db_password}"
+MYSQL_ROOT_PASSWORD = "${root_password}"
+
+# Security & Proxy (CRITICAL FOR DOKPLOY/TRAEFIK)
+# 0.0.0.0/0 tells Mautic to trust the headers from Traefik
+MAUTIC_TRUSTED_PROXIES = "0.0.0.0/0"
+
+# Mautic Queue/Worker Settings (Mautic 5+)
+# These tell Mautic to use the database to queue emails instead of sending immediately
+MAUTIC_MESSENGER_DSN_EMAIL = "doctrine://default"
+MAUTIC_MESSENGER_DSN_HIT = "doctrine://default"
+
+# PHP Settings
+PHP_INI_DATE_TIMEZONE = "UTC"
+PHP_MEMORY_LIMIT = "512M"

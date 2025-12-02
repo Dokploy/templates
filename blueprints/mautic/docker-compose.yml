@@ -1,18 +1,29 @@
 version: "3.8"
 
 services:
+  # -------------------------------------------------------------------------
+  # Database
+  # -------------------------------------------------------------------------
   mysql:
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
+    environment:
+      # These map the Dokploy variables to the MySQL container
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MAUTIC_DB_DATABASE}
+      MYSQL_USER: ${MAUTIC_DB_USER}
+      MYSQL_PASSWORD: ${MAUTIC_DB_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
-    # No environment section needed here; Dokploy injects everything from [config.env]
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
 
+  # -------------------------------------------------------------------------
+  # Mautic Web
+  # -------------------------------------------------------------------------
   mautic:
     image: mautic/mautic:5.1.1-apache
     restart: unless-stopped
@@ -24,9 +35,23 @@ services:
     environment:
       - DOCKER_MAUTIC_ROLE=mautic_web
       - DOCKER_MAUTIC_RUN_MIGRATIONS=true
+      - MAUTIC_DB_HOST=${MAUTIC_DB_HOST}
+      - MAUTIC_DB_PORT=${MAUTIC_DB_PORT}
+      - MAUTIC_DB_DATABASE=${MAUTIC_DB_DATABASE}
+      - MAUTIC_DB_USER=${MAUTIC_DB_USER}
+      - MAUTIC_DB_PASSWORD=${MAUTIC_DB_PASSWORD}
+      - MAUTIC_URL=${MAUTIC_URL}
+      - MAUTIC_TRUSTED_PROXIES=${MAUTIC_TRUSTED_PROXIES}
+      - MAUTIC_MESSENGER_DSN_EMAIL=${MAUTIC_MESSENGER_DSN_EMAIL}
+      - MAUTIC_MESSENGER_DSN_HIT=${MAUTIC_MESSENGER_DSN_HIT}
+      - PHP_INI_DATE_TIMEZONE=${PHP_INI_DATE_TIMEZONE}
+      - PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT}
     volumes:
       - mautic_data:/var/www/html
 
+  # -------------------------------------------------------------------------
+  # Mautic Cron
+  # -------------------------------------------------------------------------
   mautic-cron:
     image: mautic/mautic:5.1.1-apache
     restart: unless-stopped
@@ -34,9 +59,19 @@ services:
       - mautic
     environment:
       - DOCKER_MAUTIC_ROLE=mautic_cron
+      - MAUTIC_DB_HOST=${MAUTIC_DB_HOST}
+      - MAUTIC_DB_PORT=${MAUTIC_DB_PORT}
+      - MAUTIC_DB_DATABASE=${MAUTIC_DB_DATABASE}
+      - MAUTIC_DB_USER=${MAUTIC_DB_USER}
+      - MAUTIC_DB_PASSWORD=${MAUTIC_DB_PASSWORD}
+      - MAUTIC_URL=${MAUTIC_URL}
+      - PHP_INI_DATE_TIMEZONE=${PHP_INI_DATE_TIMEZONE}
     volumes:
       - mautic_data:/var/www/html
 
+  # -------------------------------------------------------------------------
+  # Mautic Worker
+  # -------------------------------------------------------------------------
   mautic-worker:
     image: mautic/mautic:5.1.1-apache
     restart: unless-stopped
@@ -51,6 +86,15 @@ services:
       - DOCKER_MAUTIC_WORKERS_CONSUME_EMAIL=2
       - DOCKER_MAUTIC_WORKERS_CONSUME_HIT=2
       - DOCKER_MAUTIC_WORKERS_CONSUME_FAILED=2
+      - MAUTIC_DB_HOST=${MAUTIC_DB_HOST}
+      - MAUTIC_DB_PORT=${MAUTIC_DB_PORT}
+      - MAUTIC_DB_DATABASE=${MAUTIC_DB_DATABASE}
+      - MAUTIC_DB_USER=${MAUTIC_DB_USER}
+      - MAUTIC_DB_PASSWORD=${MAUTIC_DB_PASSWORD}
+      - MAUTIC_URL=${MAUTIC_URL}
+      - MAUTIC_MESSENGER_DSN_EMAIL=${MAUTIC_MESSENGER_DSN_EMAIL}
+      - MAUTIC_MESSENGER_DSN_HIT=${MAUTIC_MESSENGER_DSN_HIT}
+      - PHP_INI_DATE_TIMEZONE=${PHP_INI_DATE_TIMEZONE}
     volumes:
       - mautic_data:/var/www/html
 

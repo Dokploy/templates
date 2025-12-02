@@ -3536,6 +3536,24 @@
     ]
   },
   {
+    "id": "mautic",
+    "name": "Mautic",
+    "version": "5.1.1",
+    "description": "Mautic is the world's largest open-source marketing automation project. It allows you to automate the process of finding and nurturing contacts through landing pages and forms, sending email, text messages, web notifications, and tracking your contacts.",
+    "logo": "mautic.svg",
+    "links": {
+      "github": "https://github.com/mautic/mautic",
+      "website": "https://www.mautic.org/",
+      "docs": "https://docs.mautic.org/en"
+    },
+    "tags": [
+      "marketing",
+      "automation",
+      "email",
+      "crm"
+    ]
+  },
+  {
     "id": "maybe",
     "name": "Maybe",
     "version": "latest",

@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+root_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "mautic"
+port = 80
+host = "${main_domain}"
+path = "/"
+
+env = [
+    "MAUTIC_URL=https://${main_domain}",
+    "MAUTIC_DB_PASSWORD=${db_password}",
+    "MYSQL_ROOT_PASSWORD=${root_password}"
+]

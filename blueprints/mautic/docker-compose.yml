@@ -2,14 +2,13 @@ version: "3.8"
 
 services:
   # -------------------------------------------------------------------------
-  # Database
+  # Service 1: Database
   # -------------------------------------------------------------------------
   mysql:
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
     environment:
-      # These map the Dokploy variables to the MySQL container
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MAUTIC_DB_DATABASE}
       MYSQL_USER: ${MAUTIC_DB_USER}
@@ -22,7 +21,7 @@ services:
       retries: 10
 
   # -------------------------------------------------------------------------
-  # Mautic Web
+  # Service 2: Mautic Web (Main UI)
   # -------------------------------------------------------------------------
   mautic:
     image: mautic/mautic:5.1.1-apache
@@ -50,7 +49,7 @@ services:
       - mautic_data:/var/www/html
 
   # -------------------------------------------------------------------------
-  # Mautic Cron
+  # Service 3: Mautic Cron (Scheduler)
   # -------------------------------------------------------------------------
   mautic-cron:
     image: mautic/mautic:5.1.1-apache
@@ -70,7 +69,7 @@ services:
       - mautic_data:/var/www/html
 
   # -------------------------------------------------------------------------
-  # Mautic Worker
+  # Service 4: Mautic Worker (Queue Processor)
   # -------------------------------------------------------------------------
   mautic-worker:
     image: mautic/mautic:5.1.1-apache
@@ -97,6 +96,21 @@ services:
       - PHP_INI_DATE_TIMEZONE=${PHP_INI_DATE_TIMEZONE}
     volumes:
       - mautic_data:/var/www/html
+
+  # -------------------------------------------------------------------------
+  # Service 5: phpMyAdmin (Database Manager)
+  # -------------------------------------------------------------------------
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 64M
+    ports:
+      - 80
 
 volumes:
   mysql_data:

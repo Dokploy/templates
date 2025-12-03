@@ -4178,6 +4178,25 @@
     ]
   },
   {
+    "id": "openinary",
+    "name": "Openinary",
+    "version": "latest",
+    "description": "Openinary is a self-hosted Cloudinary alternative.",
+    "logo": "openinary.svg",
+    "links": {
+      "github": "https://github.com/openinary/openinary",
+      "website": "https://openinary.dev",
+      "docs": "https://docs.openinary.dev"
+    },
+    "tags": [
+      "media",
+      "images",
+      "videos",
+      "cloudinary-alternative",
+      "developer-tools"
+    ]
+  },
+  {
     "id": "openpanel",
     "name": "OpenPanel",
     "version": "latest",

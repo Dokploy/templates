@@ -1,0 +1,41 @@
+[variables]
+domain = "${domain}"
+image_tag = "latest"
+better_auth_secret = "${password:64}"
+better_auth_url = "https://${domain}"
+next_public_api_base_url = "/api"
+cache_volume = "cache-data"
+public_files_volume = "public-files"
+db_volume = "db-data"
+
+[config]
+[[config.domains]]
+serviceName = "openinary"
+port = 3000
+host = "${domain}"
+
+[config.env]
+IMAGE_TAG = "${image_tag}"
+BETTER_AUTH_SECRET = "${better_auth_secret}"
+BETTER_AUTH_URL = "${better_auth_url}"
+NEXT_PUBLIC_API_BASE_URL = "${next_public_api_base_url}"
+
+[[config.mounts]]
+serviceName = "openinary"
+volumeName = "${cache_volume}"
+mountPath = "/app/apps/api/cache"
+
+[[config.mounts]]
+serviceName = "openinary"
+volumeName = "${public_files_volume}"
+mountPath = "/app/apps/api/public"
+
+[[config.mounts]]
+serviceName = "openinary"
+volumeName = "${db_volume}"
+mountPath = "/app/data"
+
+[[config.mounts]]
+serviceName = "openinary"
+volumeName = "${db_volume}"
+mountPath = "/app/web-standalone/data"

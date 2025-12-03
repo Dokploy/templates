@@ -1,22 +1,27 @@
 [variables]
 main_domain = "${domain}"
-mysql_root_password = "${password:32}"
+db_root_password = "${password:32}"
 admin_password = "${password:32}"
-site_name = "${main_domain}"
-app_name = "lms"
-payments_app_repo = "https://github.com/frappe/payments.git"
 
 [config]
 env = [
-  "MYSQL_ROOT_PASSWORD=${mysql_root_password}",
+  "SITE_NAME=${main_domain}",
   "ADMIN_PASSWORD=${admin_password}",
-  "APP_NAME=${app_name}",
-  "SITE_NAME=${site_name}",
+  "DB_ROOT_PASSWORD=${db_root_password}",
+  "MIGRATE=1",
+  "ENABLE_DB=1",
+  "DB_HOST=db",
+  "CREATE_SITE=1",
+  "CONFIGURE=1",
+  "REGENERATE_APPS_TXT=1",
+  "INSTALL_APP_ARGS=--install-app lms",
+  "IMAGE_NAME=ghcr.io/frappe/lms",
+  "VERSION=stable",
+  "FRAPPE_SITE_NAME_HEADER=${FRAPPE_SITE_NAME_HEADER:-$$host}",
 ]
+mounts = []
 
 [[config.domains]]
-serviceName = "frappe"
-port = 8000
+serviceName = "frontend"
+port = 8_080
 host = "${main_domain}"
-
-

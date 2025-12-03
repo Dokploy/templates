@@ -1,94 +1,506 @@
-version: "3.8"
+x-custom-image: &custom_image
+  image: ${IMAGE_NAME:-ghcr.io/frappe/lms}:${VERSION:-stable}
+  pull_policy: ${PULL_POLICY:-always}
+  deploy:
+    restart_policy:
+      condition: always
 
 services:
-  mariadb:
-    image: mariadb:10.8
-    restart: unless-stopped
+  backend:
+    <<: *custom_image
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        cd /home/frappe/frappe-bench;
+        if [ -d "apps/payments" ] && ! ./env/bin/pip show payments > /dev/null 2>&1; then
+          echo "Installing payments app in Python environment...";
+          ./env/bin/pip install -e apps/payments || echo "Failed to install payments";
+        fi;
+        echo "Waiting for site to be ready...";
+        export start=`date +%s`;
+        while [ ! -f "sites/sites.txt" ] || [ ! -d "sites/${SITE_NAME}" ] || [ ! -f "sites/${SITE_NAME}/site_config.json" ]; do
+          echo "Waiting for site ${SITE_NAME} to be created and ready...";
+          sleep 2;
+          if (( `date +%s`-start > 300 )); then
+            echo "Timeout waiting for site to be ready";
+            echo "Checking sites directory:";
+            ls -la sites/ || echo "sites directory not found";
+            echo "Checking sites.txt:";
+            cat sites/sites.txt 2>/dev/null || echo "sites.txt not found";
+            break;
+          fi
+        done;
+        if [ -f "sites/sites.txt" ] && [ -d "sites/${SITE_NAME}" ] && [ -f "sites/${SITE_NAME}/site_config.json" ]; then
+          echo "Site ${SITE_NAME} is ready!";
+          echo "sites.txt contents:";
+          cat sites/sites.txt;
+          echo "Verifying site is accessible via bench...";
+          bench --site ${SITE_NAME} list-apps > /dev/null 2>&1 && echo "Site is accessible via bench" || echo "Warning: Site accessibility check via bench failed";
+          echo "Site directory structure:";
+          ls -la sites/${SITE_NAME}/ | head -10;
+        else
+          echo "Warning: Site may not be fully ready, but starting backend anyway";
+        fi;
+        echo "Starting bench serve (production-ready) with FRAPPE_SITE_NAME_HEADER=${FRAPPE_SITE_NAME_HEADER:-$$host}";
+        export PYTHONUNBUFFERED=1;
+        bench serve --port 8000 2>&1 | awk '!/127\.0\.0\.1.*400/ {print}' || bench serve --port 8000;
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    networks:
+      - bench-network
+    environment:
+      SITE_NAME: ${SITE_NAME}
+      FRAPPE_SITE_NAME_HEADER: ${FRAPPE_SITE_NAME_HEADER:-$$host}
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+        required: true
+      create-site:
+        condition: service_completed_successfully
+        required: true
+    healthcheck:
+      test:
+        - CMD
+        - wait-for-it
+        - '0.0.0.0:8000'
+      interval: 2s
+      timeout: 10s
+      retries: 30
+
+  frontend:
+    <<: *custom_image
+    command:
+      - nginx-entrypoint.sh
+    depends_on:
+      backend:
+        condition: service_started
+        required: true
+      websocket:
+        condition: service_started
+        required: true
+    environment:
+      BACKEND: backend:8000
+      FRAPPE_SITE_NAME_HEADER: ${FRAPPE_SITE_NAME_HEADER:-$$host}
+      SOCKETIO: websocket:9000
+      UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
+      UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
+      UPSTREAM_REAL_IP_RECURSIVE: "off"
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+
+    networks:
+      - bench-network
+    
+    healthcheck:
+      test:
+        - CMD
+        - wait-for-it
+        - '0.0.0.0:8080'
+      interval: 2s
+      timeout: 30s
+      retries: 30
+
+  queue-default:
+    <<: *custom_image
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        cd /home/frappe/frappe-bench;
+        export start=`date +%s`;
+        while [ ! -d "apps/payments" ]; do
+          echo "Waiting for apps to be available...";
+          sleep 2;
+          if (( `date +%s`-start > 300 )); then
+            echo "Timeout waiting for apps";
+            break;
+          fi;
+        done;
+        if [ -d "apps/payments" ] && ! ./env/bin/pip show payments > /dev/null 2>&1; then
+          echo "Installing payments app in Python environment...";
+          ./env/bin/pip install -e apps/payments || echo "Failed to install payments";
+        fi;
+        exec bench worker --queue default
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    networks:
+      - bench-network
+    healthcheck:
+      test:
+        - CMD
+        - wait-for-it
+        - 'redis-queue:6379'
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+        required: true
+
+  queue-long:
+    <<: *custom_image
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        cd /home/frappe/frappe-bench;
+        export start=`date +%s`;
+        while [ ! -d "apps/payments" ]; do
+          echo "Waiting for apps to be available...";
+          sleep 2;
+          if (( `date +%s`-start > 300 )); then
+            echo "Timeout waiting for apps";
+            break;
+          fi;
+        done;
+        if [ -d "apps/payments" ] && ! ./env/bin/pip show payments > /dev/null 2>&1; then
+          echo "Installing payments app in Python environment...";
+          ./env/bin/pip install -e apps/payments || echo "Failed to install payments";
+        fi;
+        exec bench worker --queue long
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    networks:
+      - bench-network
+    healthcheck:
+      test:
+        - CMD
+        - wait-for-it
+        - 'redis-queue:6379'
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+        required: true
+
+  queue-short:
+    <<: *custom_image
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        cd /home/frappe/frappe-bench;
+        export start=`date +%s`;
+        while [ ! -d "apps/payments" ]; do
+          echo "Waiting for apps to be available...";
+          sleep 2;
+          if (( `date +%s`-start > 300 )); then
+            echo "Timeout waiting for apps";
+            break;
+          fi;
+        done;
+        if [ -d "apps/payments" ] && ! ./env/bin/pip show payments > /dev/null 2>&1; then
+          echo "Installing payments app in Python environment...";
+          ./env/bin/pip install -e apps/payments || echo "Failed to install payments";
+        fi;
+        exec bench worker --queue short
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    networks:
+      - bench-network
+    healthcheck:
+      test:
+        - CMD
+        - wait-for-it
+        - 'redis-queue:6379'
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+        required: true
+
+  scheduler:
+    <<: *custom_image
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        cd /home/frappe/frappe-bench;
+        export start=`date +%s`;
+        while [ ! -d "apps/payments" ]; do
+          echo "Waiting for apps to be available...";
+          sleep 2;
+          if (( `date +%s`-start > 300 )); then
+            echo "Timeout waiting for apps";
+            break;
+          fi;
+        done;
+        if [ -d "apps/payments" ] && ! ./env/bin/pip show payments > /dev/null 2>&1; then
+          echo "Installing payments app in Python environment...";
+          ./env/bin/pip install -e apps/payments || echo "Failed to install payments";
+        fi;
+        exec bench schedule
+    healthcheck:
+      test:
+        - CMD
+        - wait-for-it
+        - 'redis-queue:6379'
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+        required: true
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    networks:
+      - bench-network
+
+  websocket:
+    <<: *custom_image
+    healthcheck:
+      test:
+        - CMD
+        - wait-for-it
+        - '0.0.0.0:9000'
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    command:
+      - node
+      - /home/frappe/frappe-bench/apps/frappe/socketio.js
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+        required: true
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    networks:
+      - bench-network
+
+  configurator:
+    <<: *custom_image
+    deploy:
+      mode: replicated
+      replicas: ${CONFIGURE:-0}
+      restart_policy:
+        condition: none
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        [[ $${REGENERATE_APPS_TXT} == "1" ]] && ls -1 apps > sites/apps.txt;
+        [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".db_host // empty"` ]] && exit 0;
+        bench set-config -g db_host $$DB_HOST;
+        bench set-config -gp db_port $$DB_PORT;
+        bench set-config -g redis_cache "redis://$$REDIS_CACHE";
+        bench set-config -g redis_queue "redis://$$REDIS_QUEUE";
+        bench set-config -g redis_socketio "redis://$$REDIS_QUEUE";
+        bench set-config -gp socketio_port $$SOCKETIO_PORT;
+    environment:
+      DB_HOST: "${DB_HOST:-db}"
+      DB_PORT: "3306"
+      REDIS_CACHE: redis-cache:6379
+      REDIS_QUEUE: redis-queue:6379
+      SOCKETIO_PORT: "9000"
+      REGENERATE_APPS_TXT: "${REGENERATE_APPS_TXT:-0}"
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    networks:
+      - bench-network
+
+  create-site:
+    <<: *custom_image
+    deploy:
+      mode: replicated
+      replicas: ${CREATE_SITE:-0}
+      restart_policy:
+        condition: none
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        wait-for-it -t 120 $$DB_HOST:$$DB_PORT;
+        wait-for-it -t 120 redis-cache:6379;
+        wait-for-it -t 120 redis-queue:6379;
+        export start=`date +%s`;
+        until [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".db_host // empty"` ]] && \
+          [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".redis_cache // empty"` ]] && \
+          [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".redis_queue // empty"` ]];
+        do
+          echo "Waiting for sites/common_site_config.json to be created";
+          sleep 5;
+          if (( `date +%s`-start > 120 )); then
+            echo "could not find sites/common_site_config.json with required keys";
+            exit 1
+          fi
+        done;
+        echo "sites/common_site_config.json found";
+        [[ -d "sites/${SITE_NAME}" ]] && echo "${SITE_NAME} already exists" && exit 0;
+        cd /home/frappe/frappe-bench;
+        if [ ! -d "apps/payments" ]; then
+          echo "Cloning payments app...";
+          git clone https://github.com/frappe/payments.git apps/payments || echo "Failed to clone payments app";
+        fi;
+        if [ -d "apps/payments" ]; then
+          echo "Installing payments app in Python environment...";
+          ./env/bin/pip install -e apps/payments || echo "Failed to install payments app";
+        fi;
+        echo "Regenerating apps.txt to include all apps...";
+        ls -1 apps > sites/apps.txt || (echo "frappe" > sites/apps.txt && echo "lms" >> sites/apps.txt);
+        echo "apps.txt contents:";
+        cat sites/apps.txt;
+        bench set-mariadb-host $${DB_HOST:-db};
+        bench new-site --force --mariadb-user-host-login-scope='%' --admin-password=$${ADMIN_PASSWORD} --db-root-username=root --db-root-password=$${DB_ROOT_PASSWORD} $${INSTALL_APP_ARGS} $${SITE_NAME};
+        if [ ! -d "sites/${SITE_NAME}" ]; then
+          echo "ERROR: Site ${SITE_NAME} was not created successfully";
+          exit 1;
+        fi;
+        echo "Site ${SITE_NAME} created successfully";
+        bench use $${SITE_NAME};
+        echo "Current site set to: $${SITE_NAME}";
+        if [ -d "apps/payments" ]; then
+          echo "Installing payments app on site...";
+          bench --site $${SITE_NAME} install-app payments || echo "Payments app may already be installed or failed to install";
+        fi;
+        echo "Creating sites.txt for site resolution...";
+        echo "$${SITE_NAME}" > sites/sites.txt || echo "Warning: Could not create sites.txt";
+        echo "Site registered in sites.txt:";
+        cat sites/sites.txt || echo "sites.txt not found";
+        echo "Verifying site directory and config exist...";
+        if [ -d "sites/${SITE_NAME}" ] && [ -f "sites/${SITE_NAME}/site_config.json" ]; then
+          echo "Site directory and config verified successfully";
+        else
+          echo "Warning: Site directory or config file missing";
+          ls -la sites/${SITE_NAME}/ 2>/dev/null || echo "Site directory listing failed";
+        fi;
+        echo "Setting default site in common_site_config.json...";
+        bench set-config -g default_site $${SITE_NAME} || echo "Warning: Could not set default site";
+        echo "Verifying site is accessible...";
+        bench --site $${SITE_NAME} list-apps > /dev/null 2>&1 && echo "Site is accessible and working" || echo "Warning: Site accessibility check failed";
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    environment:
+      SITE_NAME: ${SITE_NAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: "${DB_PORT:-3306}"
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      INSTALL_APP_ARGS: ${INSTALL_APP_ARGS}
+    networks:
+      - bench-network
+
+  migration:
+    <<: *custom_image
+    deploy:
+      mode: replicated
+      replicas: ${MIGRATE:-0}
+      restart_policy:
+        condition: none
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        curl -f http://${SITE_NAME}:8080/api/method/ping || echo "Site busy" && exit 0;
+        bench --site all set-config -p maintenance_mode 1;
+        bench --site all set-config -p pause_scheduler 1;
+        bench --site all migrate;
+        bench --site all set-config -p maintenance_mode 0;
+        bench --site all set-config -p pause_scheduler 0;
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    networks:
+      - bench-network
+
+  db:
+    image: mariadb:10.6
+    deploy:
+      mode: replicated
+      replicas: ${ENABLE_DB:-0}
+      restart_policy:
+        condition: always
+    healthcheck:
+      test: mysqladmin ping -h localhost --password=${DB_ROOT_PASSWORD}
+      interval: 1s
+      retries: 20
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
       - --skip-character-set-client-handshake
       - --skip-innodb-read-only-compressed
     environment:
-      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     volumes:
-      - mariadb-data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "/usr/local/bin/healthcheck.sh", "--connect"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
+      - db-data:/var/lib/mysql
+    networks:
+      - bench-network
 
-  redis:
-    image: redis:alpine
-    restart: unless-stopped
+  redis-cache:
+    deploy:
+      restart_policy:
+        condition: always
+    image: redis:6.2-alpine
+    volumes:
+      - redis-cache-data:/data
+    networks:
+      - bench-network
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      interval: 5s
       timeout: 5s
-      retries: 8
+      retries: 3
 
-  frappe:
-    image: frappe/bench:latest
-    restart: unless-stopped
-    command: >
-      bash -c "
-      if [ -d '/home/frappe/frappe-bench/apps/frappe' ]; then
-        echo 'Bench already exists, checking for Payments and Wiki apps...';
-        cd frappe-bench;
-        if [ ! -d 'apps/payments' ]; then
-          echo 'Payments app not found, installing...';
-          bench get-app payments https://github.com/frappe/payments.git || echo 'Failed to get payments app, continuing...';
-          bench --site \$${SITE_NAME:-lms.localhost} install-app payments || echo 'Payments app may already be installed or failed to install';
-        fi;
-        if [ ! -d 'apps/wiki' ]; then
-          echo 'Wiki app not found, installing...';
-          bench get-app wiki https://github.com/frappe/wiki.git || echo 'Failed to get wiki app, continuing...';
-          bench --site \$${SITE_NAME:-lms.localhost} install-app wiki || echo 'Wiki app may already be installed or failed to install';
-        fi;
-        bench --site \$${SITE_NAME:-lms.localhost} clear-cache;
-        bench start;
-      else
-        echo 'Creating new bench...';
-        export PATH=\"\$${NVM_DIR}/versions/node/v\$${NODE_VERSION_DEVELOP}/bin/:\$${PATH}\";
-        bench init --skip-redis-config-generation frappe-bench;
-        cd frappe-bench;
-        bench set-mariadb-host mariadb;
-        bench set-redis-cache-host redis://redis:6379;
-        bench set-redis-queue-host redis://redis:6379;
-        bench set-redis-socketio-host redis://redis:6379;
-        sed -i '/redis/d' ./Procfile;
-        sed -i '/watch/d' ./Procfile;
-        bench get-app \$${APP_NAME:-lms};
-        bench get-app payments https://github.com/frappe/payments.git;
-        bench get-app wiki https://github.com/frappe/wiki.git;
-        bench new-site \$${SITE_NAME:-lms.localhost} --force --mariadb-user-host-login-scope='%' --db-root-username=root --db-root-password=\$${MYSQL_ROOT_PASSWORD} --admin-password \$${ADMIN_PASSWORD:-admin};
-        bench --site \$${SITE_NAME:-lms.localhost} install-app \$${APP_NAME:-lms};
-        bench --site \$${SITE_NAME:-lms.localhost} install-app payments;
-        bench --site \$${SITE_NAME:-lms.localhost} install-app wiki;
-        bench --site \$${SITE_NAME:-lms.localhost} set-config developer_mode 1;
-        bench --site \$${SITE_NAME:-lms.localhost} clear-cache;
-        bench use \$${SITE_NAME:-lms.localhost};
-        bench start;
-      fi
-      "
-    environment:
-      SHELL: /bin/bash
-      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
-      ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
-      APP_NAME: "${APP_NAME}"
-      SITE_NAME: "${SITE_NAME}"
-    working_dir: /home/frappe
-    ports:
-      - "8000"
-      - "9000"
-    depends_on:
-      mariadb:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+  redis-queue:
+    deploy:
+      restart_policy:
+        condition: always
+    image: redis:6.2-alpine
+    volumes:
+      - redis-queue-data:/data
+    networks:
+      - bench-network
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  redis-socketio:
+    deploy:
+      restart_policy:
+        condition: always
+    image: redis:6.2-alpine
+    volumes:
+      - redis-socketio-data:/data
+    networks:
+      - bench-network
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      interval: 5s
+      timeout: 5s
+      retries: 3
 
 volumes:
-  mariadb-data:
+  db-data:
+  redis-cache-data:
+  redis-queue-data:
+  redis-socketio-data:
+  sites:
+    driver_opts:
+      type: "${SITE_VOLUME_TYPE}"
+      o: "${SITE_VOLUME_OPTS}"
+      device: "${SITE_VOLUME_DEV}"
+  apps:
+
+networks:
+  bench-network:
 

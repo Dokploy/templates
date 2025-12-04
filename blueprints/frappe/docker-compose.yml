@@ -334,8 +334,16 @@ services:
           fi
         done;
         echo "sites/common_site_config.json found";
-        [[ -d "sites/${SITE_NAME}" ]] && echo "${SITE_NAME} already exists" && exit 0;
         cd /home/frappe/frappe-bench;
+        if [ -d "sites/${SITE_NAME}" ] && [ -f "sites/${SITE_NAME}/site_config.json" ]; then
+          echo "Site ${SITE_NAME} already exists, skipping creation";
+          bench use $${SITE_NAME} || echo "Warning: Could not set current site";
+          echo "$${SITE_NAME}" > sites/sites.txt || echo "Warning: Could not update sites.txt";
+          bench set-config -g default_site $${SITE_NAME} || echo "Warning: Could not set default site";
+          echo "Verifying existing site is accessible...";
+          bench --site $${SITE_NAME} list-apps > /dev/null 2>&1 && echo "Existing site is accessible and working" || echo "Warning: Site accessibility check failed";
+          exit 0;
+        fi;
         if [ ! -d "apps/payments" ]; then
           echo "Cloning payments app...";
           git clone https://github.com/frappe/payments.git apps/payments || echo "Failed to clone payments app";
@@ -349,7 +357,7 @@ services:
         echo "apps.txt contents:";
         cat sites/apps.txt;
         bench set-mariadb-host $${DB_HOST:-db};
-        bench new-site --force --mariadb-user-host-login-scope='%' --admin-password=$${ADMIN_PASSWORD} --db-root-username=root --db-root-password=$${DB_ROOT_PASSWORD} $${INSTALL_APP_ARGS} $${SITE_NAME};
+        bench new-site --mariadb-user-host-login-scope='%' --admin-password=$${ADMIN_PASSWORD} --db-root-username=root --db-root-password=$${DB_ROOT_PASSWORD} $${INSTALL_APP_ARGS} $${SITE_NAME};
         if [ ! -d "sites/${SITE_NAME}" ]; then
           echo "ERROR: Site ${SITE_NAME} was not created successfully";
           exit 1;

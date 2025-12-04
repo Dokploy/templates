@@ -41,7 +41,7 @@ services:
         else
           echo "Warning: Site may not be fully ready, but starting backend anyway";
         fi;
-        echo "Starting bench serve (production-ready) with FRAPPE_SITE_NAME_HEADER=${FRAPPE_SITE_NAME_HEADER:-$$host}";
+        echo "Starting bench serve (production-ready)";
         export PYTHONUNBUFFERED=1;
         bench serve --port 8000 2>&1 | awk '!/127\.0\.0\.1.*400/ {print}' || bench serve --port 8000;
     volumes:
@@ -51,7 +51,7 @@ services:
       - bench-network
     environment:
       SITE_NAME: ${SITE_NAME}
-      FRAPPE_SITE_NAME_HEADER: ${FRAPPE_SITE_NAME_HEADER:-$$host}
+      FRAPPE_SITE_NAME_HEADER: ""
     depends_on:
       configurator:
         condition: service_completed_successfully
@@ -81,7 +81,7 @@ services:
         required: true
     environment:
       BACKEND: backend:8000
-      FRAPPE_SITE_NAME_HEADER: ${FRAPPE_SITE_NAME_HEADER:-$$host}
+      FRAPPE_SITE_NAME_HEADER: ""
       SOCKETIO: websocket:9000
       UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
       UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
@@ -95,12 +95,11 @@ services:
     
     healthcheck:
       test:
-        - CMD
-        - wait-for-it
-        - '0.0.0.0:8080'
-      interval: 2s
-      timeout: 30s
-      retries: 30
+        - CMD-SHELL
+        - curl -fsS http://127.0.0.1:8080/login || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   queue-default:
     <<: *custom_image
@@ -340,6 +339,10 @@ services:
           bench use $${SITE_NAME} || echo "Warning: Could not set current site";
           echo "$${SITE_NAME}" > sites/sites.txt || echo "Warning: Could not update sites.txt";
           bench set-config -g default_site $${SITE_NAME} || echo "Warning: Could not set default site";
+          if [ -n "$${MAIN_DOMAIN}" ]; then
+            echo "Updating host_name to ${MAIN_DOMAIN} (without port)...";
+            bench --site $${SITE_NAME} set-config host_name "http://$${MAIN_DOMAIN}" || echo "Warning: Could not update host_name";
+          fi;
           echo "Verifying existing site is accessible...";
           bench --site $${SITE_NAME} list-apps > /dev/null 2>&1 && echo "Existing site is accessible and working" || echo "Warning: Site accessibility check failed";
           exit 0;
@@ -382,6 +385,10 @@ services:
         fi;
         echo "Setting default site in common_site_config.json...";
         bench set-config -g default_site $${SITE_NAME} || echo "Warning: Could not set default site";
+        if [ -n "$${MAIN_DOMAIN}" ]; then
+          echo "Setting host_name to ${MAIN_DOMAIN} (without port)...";
+          bench --site $${SITE_NAME} set-config host_name "http://$${MAIN_DOMAIN}" || echo "Warning: Could not set host_name";
+        fi;
         echo "Verifying site is accessible...";
         bench --site $${SITE_NAME} list-apps > /dev/null 2>&1 && echo "Site is accessible and working" || echo "Warning: Site accessibility check failed";
     volumes:
@@ -389,6 +396,7 @@ services:
       - apps:/home/frappe/frappe-bench/apps
     environment:
       SITE_NAME: ${SITE_NAME}
+      MAIN_DOMAIN: ${main_domain}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       DB_HOST: ${DB_HOST:-db}
       DB_PORT: "${DB_PORT:-3306}"

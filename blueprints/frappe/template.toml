@@ -1,11 +1,12 @@
 [variables]
 main_domain = "${domain}"
+site_name = "frappe.lms"
 db_root_password = "${password:32}"
 admin_password = "${password:32}"
 
 [config]
 env = [
-  "SITE_NAME=${main_domain}",
+  "SITE_NAME=${site_name}",
   "ADMIN_PASSWORD=${admin_password}",
   "DB_ROOT_PASSWORD=${db_root_password}",
   "MIGRATE=1",
@@ -17,7 +18,8 @@ env = [
   "INSTALL_APP_ARGS=--install-app lms",
   "IMAGE_NAME=ghcr.io/frappe/lms",
   "VERSION=stable",
-  "FRAPPE_SITE_NAME_HEADER=${FRAPPE_SITE_NAME_HEADER:-$$host}",
+  "FRAPPE_SITE_NAME_HEADER=",
+  "MAIN_DOMAIN=${main_domain}",
 ]
 mounts = []
 

@@ -3710,6 +3710,24 @@
     ]
   },
   {
+    "id": "mumble",
+    "name": "Mumble",
+    "version": "latest",
+    "description": "Mumble is an open-source, low-latency, high-quality voice chat software primarily intended for use while gaming.",
+    "logo": "mumble.png",
+    "links": {
+      "github": "https://github.com/mumble-voip/mumble",
+      "website": "https://www.mumble.info/",
+      "docs": "https://wiki.mumble.info/"
+    },
+    "tags": [
+      "voice-chat",
+      "communication",
+      "gaming",
+      "voip"
+    ]
+  },
+  {
     "id": "n8n",
     "name": "n8n",
     "version": "1.104.0",

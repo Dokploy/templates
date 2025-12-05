@@ -82,8 +82,34 @@ services:
 
   frontend:
     <<: *custom_image
+    entrypoint: ["bash", "-c"]
     command:
-      - nginx-entrypoint.sh
+      - >
+        echo "Starting Nginx with port_in_redirect fix...";
+        nginx-entrypoint.sh &
+        NGINX_PID=$!;
+        sleep 3;
+        if [ -f /etc/nginx/conf.d/frappe.conf ]; then
+          if ! grep -q "port_in_redirect off" /etc/nginx/conf.d/frappe.conf; then
+            echo "Applying port_in_redirect fix to prevent :8080 in URLs...";
+            sed -i 's/listen 8080;/listen 8080;\n    port_in_redirect off;\n    absolute_redirect off;/' /etc/nginx/conf.d/frappe.conf;
+            echo "Nginx config updated - reloading...";
+            sleep 1;
+            nginx -s reload 2>/dev/null || echo "Nginx will use updated config on next reload";
+          else
+            echo "Nginx config already has port_in_redirect settings";
+          fi
+        else
+          echo "Warning: frappe.conf not found yet, will check again";
+          sleep 2;
+          if [ -f /etc/nginx/conf.d/frappe.conf ]; then
+            if ! grep -q "port_in_redirect off" /etc/nginx/conf.d/frappe.conf; then
+              sed -i 's/listen 8080;/listen 8080;\n    port_in_redirect off;\n    absolute_redirect off;/' /etc/nginx/conf.d/frappe.conf;
+              nginx -s reload 2>/dev/null || true;
+            fi
+          fi
+        fi;
+        wait $NGINX_PID
     depends_on:
       backend:
         condition: service_started
@@ -354,6 +380,10 @@ services:
           bench use $${SITE_NAME} || echo "Warning: Could not set current site";
           echo "$${SITE_NAME}" > sites/sites.txt || echo "Warning: Could not update sites.txt";
           bench set-config -g default_site $${SITE_NAME} || echo "Warning: Could not set default site";
+          if [ -n "$${ADMIN_PASSWORD}" ]; then
+            echo "Updating admin password for existing site...";
+            bench --site $${SITE_NAME} set-admin-password $${ADMIN_PASSWORD} || echo "Warning: Could not update admin password (may need to be done manually)";
+          fi;
           if [ -n "$${MAIN_DOMAIN}" ]; then
             echo "Setting host_name and SSL settings to https://${MAIN_DOMAIN} (with HTTPS)...";
             bench --site $${SITE_NAME} set-config host_name "https://$${MAIN_DOMAIN}" || echo "Warning: Could not set host_name";

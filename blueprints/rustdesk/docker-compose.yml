@@ -24,4 +24,4 @@ services:
       - 21119
 
 volumes:
-  rustdesk-data: {}
+  rustdesk-data:

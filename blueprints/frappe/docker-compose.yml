@@ -38,6 +38,17 @@ services:
           bench --site ${SITE_NAME} list-apps > /dev/null 2>&1 && echo "Site is accessible via bench" || echo "Warning: Site accessibility check via bench failed";
           echo "Site directory structure:";
           ls -la sites/${SITE_NAME}/ | head -10;
+          if [ -n "${MAIN_DOMAIN}" ]; then
+            echo "Updating host_name and SSL settings to https://${MAIN_DOMAIN} (ensuring correct domain for emails)...";
+            bench --site ${SITE_NAME} set-config host_name "https://${MAIN_DOMAIN}" || echo "Warning: Could not update host_name";
+            bench --site ${SITE_NAME} set-config host_url "https://${MAIN_DOMAIN}" || echo "Warning: Could not update host_url";
+            bench --site ${SITE_NAME} set-config use_ssl 1 || echo "Warning: Could not set use_ssl";
+            echo "Verifying configuration...";
+            bench --site ${SITE_NAME} get-config host_name 2>/dev/null || echo "Could not read host_name (this is OK if site is not fully initialized)";
+            echo "Clearing cache to apply new domain settings...";
+            bench --site ${SITE_NAME} clear-cache || echo "Warning: Could not clear cache";
+            bench --site ${SITE_NAME} clear-website-cache || echo "Warning: Could not clear website cache";
+          fi;
         else
           echo "Warning: Site may not be fully ready, but starting backend anyway";
         fi;
@@ -52,6 +63,7 @@ services:
     environment:
       SITE_NAME: ${SITE_NAME}
       FRAPPE_SITE_NAME_HEADER: ""
+      MAIN_DOMAIN: ${MAIN_DOMAIN}
     depends_on:
       configurator:
         condition: service_completed_successfully
@@ -86,6 +98,9 @@ services:
       UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
       UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
       UPSTREAM_REAL_IP_RECURSIVE: "off"
+      USE_X_FORWARDED_HOST: "1"
+      PROXY_FIX: "1"
+      X_FORWARDED_PROTO: "https"
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - apps:/home/frappe/frappe-bench/apps
@@ -340,8 +355,13 @@ services:
           echo "$${SITE_NAME}" > sites/sites.txt || echo "Warning: Could not update sites.txt";
           bench set-config -g default_site $${SITE_NAME} || echo "Warning: Could not set default site";
           if [ -n "$${MAIN_DOMAIN}" ]; then
-            echo "Updating host_name to ${MAIN_DOMAIN} (without port)...";
-            bench --site $${SITE_NAME} set-config host_name "http://$${MAIN_DOMAIN}" || echo "Warning: Could not update host_name";
+            echo "Setting host_name and SSL settings to https://${MAIN_DOMAIN} (with HTTPS)...";
+            bench --site $${SITE_NAME} set-config host_name "https://$${MAIN_DOMAIN}" || echo "Warning: Could not set host_name";
+            bench --site $${SITE_NAME} set-config host_url "https://$${MAIN_DOMAIN}" || echo "Warning: Could not set host_url";
+            bench --site $${SITE_NAME} set-config use_ssl 1 || echo "Warning: Could not set use_ssl";
+            echo "Clearing cache to apply new domain settings...";
+            bench --site $${SITE_NAME} clear-cache || echo "Warning: Could not clear cache";
+            bench --site $${SITE_NAME} clear-website-cache || echo "Warning: Could not clear website cache";
           fi;
           echo "Verifying existing site is accessible...";
           bench --site $${SITE_NAME} list-apps > /dev/null 2>&1 && echo "Existing site is accessible and working" || echo "Warning: Site accessibility check failed";
@@ -386,8 +406,13 @@ services:
         echo "Setting default site in common_site_config.json...";
         bench set-config -g default_site $${SITE_NAME} || echo "Warning: Could not set default site";
         if [ -n "$${MAIN_DOMAIN}" ]; then
-          echo "Setting host_name to ${MAIN_DOMAIN} (without port)...";
-          bench --site $${SITE_NAME} set-config host_name "http://$${MAIN_DOMAIN}" || echo "Warning: Could not set host_name";
+          echo "Setting host_name and SSL settings to https://${MAIN_DOMAIN} (with HTTPS)...";
+          bench --site $${SITE_NAME} set-config host_name "https://$${MAIN_DOMAIN}" || echo "Warning: Could not set host_name";
+          bench --site $${SITE_NAME} set-config host_url "https://$${MAIN_DOMAIN}" || echo "Warning: Could not set host_url";
+          bench --site $${SITE_NAME} set-config use_ssl 1 || echo "Warning: Could not set use_ssl";
+          echo "Clearing cache to apply new domain settings...";
+          bench --site $${SITE_NAME} clear-cache || echo "Warning: Could not clear cache";
+          bench --site $${SITE_NAME} clear-website-cache || echo "Warning: Could not clear website cache";
         fi;
         echo "Verifying site is accessible...";
         bench --site $${SITE_NAME} list-apps > /dev/null 2>&1 && echo "Site is accessible and working" || echo "Warning: Site accessibility check failed";

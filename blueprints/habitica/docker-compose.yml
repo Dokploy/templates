@@ -58,7 +58,7 @@ services:
         "
       interval: 10s
       timeout: 30s
-      retries: 30
+      retries: 3
     volumes:
       - habitica-mongo-data:/data/db
 

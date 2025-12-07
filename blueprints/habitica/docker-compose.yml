@@ -7,7 +7,6 @@ services:
         condition: service_healthy
     environment:
       NODE_DB_URI: "mongodb://${MONGO_HABITICA_USER}:${MONGO_HABITICA_PASSWORD}@mongo/habitica?authSource=habitica"
-      BASE_URL: "${BASE_URL}"
       INVITE_ONLY: "${INVITE_ONLY}"
       EMAIL_SERVER_URL: "${EMAIL_SERVER_URL}"
       EMAIL_SERVER_PORT: "${EMAIL_SERVER_PORT}"

@@ -3,7 +3,8 @@ services:
     image: docker.io/awinterstein/habitica-server:latest
     restart: unless-stopped
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     environment:
       NODE_DB_URI: "mongodb://${MONGO_HABITICA_USER}:${MONGO_HABITICA_PASSWORD}@mongo/habitica?authSource=habitica"
       BASE_URL: "${BASE_URL}"

@@ -2,8 +2,8 @@
 main_domain = "${domain}"
 postgres_password = "${password:32}"
 zitadel_masterkey = "${password:32}"
+org_name = "${username}"
 admin_username = "${username}"
-admin_email = "${email}"
 admin_password = "AdminPassword123!"
 
 [config]
@@ -19,10 +19,14 @@ ZITADEL_MASTERKEY = "${zitadel_masterkey}"
 EXTERNAL_DOMAIN = "${main_domain}"
 
 # Custom Admin User Configuration
+ZITADEL_FIRSTINSTANCE_ORG_NAME = "${org_name}"
 ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME = "${admin_username}"
 ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD = "${admin_password}"
-ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS = "${admin_email}"
-ZITADEL_FIRSTINSTANCE_ORG_HUMAN_FIRSTNAME = "Admin"
-ZITADEL_FIRSTINSTANCE_ORG_HUMAN_LASTNAME = "User"
 
 [[config.mounts]]
+filePath = "/current-dir/tls.crt"
+content = "${base64:2048}"  # Placeholder; mount real certs externally
+
+[[config.mounts]]
+filePath = "/current-dir/tls.key"
+content = "${base64:2048}"

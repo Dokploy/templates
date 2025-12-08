@@ -12,6 +12,7 @@ services:
       EMAIL_SERVER_PORT: "${EMAIL_SERVER_PORT}"
       EMAIL_SERVER_AUTH_USER: "${EMAIL_SERVER_AUTH_USER}"
       EMAIL_SERVER_AUTH_PASSWORD: "${EMAIL_SERVER_AUTH_PASSWORD}"
+      ADMIN_EMAIL: "${ADMIN_EMAIL}"
 
   client:
     image: docker.io/awinterstein/habitica-client:latest

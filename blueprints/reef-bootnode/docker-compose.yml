@@ -2,21 +2,50 @@ version: "3.9"
 
 services:
   reef-bootnode:
-    image: anukulpandey/reef-node:latest
-    platform: linux/amd64
-    restart: unless-stopped
-    environment:
-      - P2P_PORT=${P2P_PORT}
-      - RPC_PORT=${RPC_PORT}
-      - NODE_NAME=${NODE_NAME}
-      - CHAIN_SPEC_URL=${CHAIN_SPEC_URL}
+    image: anukulpandey/reef-chain-node:linux-2
+    container_name: reef-bootnode
+    working_dir: /workspace
+
     volumes:
-      - ./bootnode-db:/reef-data
-    entrypoint: sh -c
-    command: >
-      "wget -qO /reef-data/customSpec.json $CHAIN_SPEC_URL &&
-      reef-node build-spec --disable-default-bootnode --chain /reef-data/customSpec.json --raw > /reef-data/customSpecRaw.json &&
-      reef-node --base-path /reef-data --chain /reef-data/customSpecRaw.json --port $P2P_PORT --rpc-port $RPC_PORT --no-telemetry --name $NODE_NAME --rpc-cors all --rpc-external"
+      - ./output:/output
+
     ports:
+      - "${PORT}:${PORT}"
       - "${P2P_PORT}:${P2P_PORT}"
-      - "${RPC_PORT}:${RPC_PORT}"
+
+    environment:
+      V1_ADDR: ${V1_ADDR}
+      V1_SEED: ${V1_SEED}
+
+      V2_ADDR: ${V2_ADDR}
+      V2_SEED: ${V2_SEED}
+
+      V3_ADDR: ${V3_ADDR}
+      V3_SEED: ${V3_SEED}
+
+      PORT: ${PORT}
+      P2P_PORT: ${P2P_PORT}
+
+    entrypoint: /bin/sh
+    command: -c "
+      set -e &&
+
+      echo '📦 Installing dependencies...' &&
+      apt-get update &&
+      apt-get install -y python3 wget ca-certificates &&
+
+      echo '📥 Downloading bootstrap scripts...' &&
+      mkdir -p /workspace &&
+      wget -O /workspace/run.sh \
+        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/bootstrap/scripts/run.sh &&
+      wget -O /workspace/update-spec.py \
+        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/bootstrap/scripts/update-spec.py &&
+      wget -O /workspace/update-spec.sh \
+        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/bootstrap/scripts/update-spec.sh &&
+
+      echo '🔧 Making scripts executable...' &&
+      chmod +x /workspace/run.sh &&
+      chmod +x /workspace/update-spec.sh &&
+
+      echo '🚀 Running spec generator + bootnode...' &&
+      /workspace/run.sh"

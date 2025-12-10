@@ -39,5 +39,5 @@ services:
       echo '🔧 Making script executable...' &&
       chmod +x /workspace/scripts/start-validator.sh &&
 
-      echo '🚀 Starting validator...' &&
+      echo '🚀 Starting validator $VALIDATOR_NAME' &&
       exec /workspace/scripts/start-validator.sh"

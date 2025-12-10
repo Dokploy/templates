@@ -8,5 +8,4 @@ host = "${domain}"
 path = "/"
 
 [config.env]
-NODE_NAME = "reef-keygen"
 PORT = 48765

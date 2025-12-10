@@ -1,0 +1,12 @@
+[variables]
+PORT = 48765
+
+[[config.domains]]
+serviceName = "reef-keygen"
+port = 48765
+host = "${domain}"
+path = "/"
+
+[config.env]
+NODE_NAME = "reef-keygen"
+PORT = 48765

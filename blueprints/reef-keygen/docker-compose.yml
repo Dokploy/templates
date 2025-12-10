@@ -4,6 +4,7 @@ services:
   reef-keygen:
     image: anukulpandey/reef-chain-node
     container_name: reef-keygen
+    platform: linux/amd64
     working_dir: /workspace
     volumes:
       - ./output:/output

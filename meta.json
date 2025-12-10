@@ -4385,7 +4385,7 @@
     ]
   },
   {
-    "id": "reef-rpc",
+    "id": "reef-validator",
     "name": "Reef Chain - Validator",
     "version": "1",
     "description": "Runs Validator which connects to bootnode for a custom Reef Chain cluster",

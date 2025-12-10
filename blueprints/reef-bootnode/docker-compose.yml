@@ -47,5 +47,5 @@ services:
       chmod +x /workspace/run.sh &&
       chmod +x /workspace/update-spec.sh &&
 
-      echo '🚀 Running spec generator + bootnode...' &&
+      echo '🚀 Running spec generator + bootnode:' &&
       /workspace/run.sh"

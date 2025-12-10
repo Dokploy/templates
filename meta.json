@@ -4385,6 +4385,24 @@
     ]
   },
   {
+    "id": "reef-rpc",
+    "name": "Reef Chain - Validator",
+    "version": "1",
+    "description": "Runs Validator which connects to bootnode for a custom Reef Chain cluster",
+    "links": {
+      "github": "https://github.com/reef-chain/chain-upgrade",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "docs": "https://docs.reef.io/"
+    },
+    "logo": "reef.svg",
+    "tags": [
+      "reef-chain",
+      "validator",
+      "self-hosted",
+      "reef-validator"
+    ]
+  },
+  {
     "id": "registry",
     "name": "Docker Registry",
     "version": "2",

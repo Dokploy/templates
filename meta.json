@@ -4331,6 +4331,24 @@
     ]
   },
   {
+    "id": "reef-keygen",
+    "name": "Reef Chain - Keys Generator",
+    "version": "1",
+    "description": "Generates 3 Validators keys for a custom Reef Chain cluster",
+    "links": {
+      "github": "https://github.com/reef-chain/chain-upgrade",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "docs": "https://docs.reef.io/"
+    },
+    "logo": "reef.svg",
+    "tags": [
+      "reef-chain",
+      "keys generator",
+      "self-hosted",
+      "keys"
+    ]
+  },
+  {
     "id": "reef-rpc",
     "name": "Reef Chain - RPC",
     "version": "1",

@@ -3,7 +3,6 @@ version: '3.8'
 services:
   reef-validator:
     image: anukulpandey/reef-chain-node:linux-2
-    container_name: reef-validator
     working_dir: /workspace
 
     ports:

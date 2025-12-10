@@ -1,7 +1,6 @@
 services:
   reef-keygen:
-    image: anukulpandey/reef-chain-node
-    platform: linux/arm64/v8
+    image: anukulpandey/reef-chain-node:linux
     container_name: reef-keygen
     working_dir: /workspace
     volumes:

@@ -12,6 +12,7 @@ services:
   emqx:
     image: emqx/emqx-enterprise:6.0.1
     hostname: node1.emqx.com
+    restart: unless-stopped
     environment:
       EMQX_NODE_NAME: emqx@node1.emqx.com
     expose:

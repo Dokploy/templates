@@ -4313,6 +4313,24 @@
     ]
   },
   {
+    "id": "reef-dev-cluster",
+    "name": "Reef Chain - Dev Cluster",
+    "version": "1",
+    "description": "Development cluster",
+    "links": {
+      "github": "https://github.com/reef-chain/chain-upgrade",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "docs": "https://docs.reef.io/"
+    },
+    "logo": "reef.svg",
+    "tags": [
+      "reef-chain",
+      "dev-cluster",
+      "self-hosted",
+      "evm"
+    ]
+  },
+  {
     "id": "reef-eth-rpc",
     "name": "Reef Chain - ETH RPC",
     "version": "1",

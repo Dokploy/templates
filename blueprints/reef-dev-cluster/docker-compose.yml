@@ -20,13 +20,13 @@ services:
     command: -c "
       set -e &&
 
-      echo '📥 Downloading Makefile...' &&
-      wget -q -O /workspace/Makefile \
-        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/reef-cluster/Makefile &&
-
       echo '📦 Installing required tools...' &&
       apt-get update &&
       apt-get install -y make wget curl jq &&
+
+      echo '📥 Downloading Makefile...' &&
+      wget -q -O /workspace/Makefile \
+        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/reef-cluster/Makefile &&
 
       echo '🔧 Preparing fake build output...' &&
       mkdir -p target/release &&

@@ -12,7 +12,6 @@ services:
   emqx:
     image: emqx/emqx-enterprise:6.0.1
     hostname: node1.emqx.com
-    restart: unless-stopped
     environment:
       EMQX_NODE_NAME: emqx@node1.emqx.com
     expose:
@@ -26,6 +25,12 @@ services:
       dokploy-network:
         aliases:
           - emqx-service
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx_ctl", "status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
     labels:
       # MQTT over TLS
       - "traefik.tcp.routers.emqx-mqtts.entrypoints=mqtts"

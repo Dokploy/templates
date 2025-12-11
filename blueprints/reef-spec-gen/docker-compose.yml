@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  reef-spec-api:
+    image: anukulpandey/reef-chain-node
+    container_name: reef-spec-api
+    working_dir: /workspace
+
+    volumes:
+      - ./output:/output
+
+    ports:
+      - "8000:8000"
+
+    entrypoint: /bin/sh
+    command: -c "
+      set -e &&
+      apt-get update &&
+      apt-get install -y python3 python3-pip wget ca-certificates jq &&
+
+      echo '📥 Downloading API + scripts...' &&
+      mkdir -p /workspace/scripts &&
+
+      wget -O /workspace/scripts/update-spec.py \
+        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/spec-generator/scripts/update-spec.py &&
+
+      wget -O /workspace/scripts/update-spec.sh \
+        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/spec-generator/scripts/update-spec.sh &&
+
+      wget -O /workspace/api.py \
+        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/spec-generator/api/api.py &&
+
+      chmod +x /workspace/scripts/update-spec.sh &&
+
+      pip3 install flask &&
+
+      echo '🚀 Starting Spec Generator API on port 8000...' &&
+      python3 /workspace/api.py"

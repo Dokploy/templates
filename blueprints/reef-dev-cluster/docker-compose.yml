@@ -1,7 +1,7 @@
 services:
   reef-dev-cluster:
     image: anukulpandey/reef-chain-node:linux-2
-    container_name: reef-run-local
+    container_name: reef-dev-cluster
     working_dir: /workspace
 
     volumes:

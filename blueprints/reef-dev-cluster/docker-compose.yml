@@ -1,0 +1,36 @@
+services:
+  reef-dev-cluster:
+    image: anukulpandey/reef-chain-node:linux-2
+    container_name: reef-run-local
+    working_dir: /workspace
+
+    volumes:
+      - ./:/workspace
+
+    ports:
+      - "30335:30335"
+      - "30333:30333"
+      - "30334:30334"
+      - "30336:30336"
+      - "9944:9944"
+      - "9945:9945"
+      - "9946:9946"
+
+    entrypoint: /bin/sh
+    command: -c "
+      set -e &&
+
+      echo '📥 Downloading Makefile...' &&
+      wget -q -O /workspace/Makefile \
+        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/reef-cluster/Makefile &&
+
+      echo '📦 Installing required tools...' &&
+      apt-get update &&
+      apt-get install -y make wget curl jq &&
+
+      echo '🔧 Preparing fake build output...' &&
+      mkdir -p target/release &&
+      ln -sf /usr/local/bin/reef-node target/release/reef-node &&
+
+      echo '🚀 Running make run-local...' &&
+      make run-local"

@@ -1998,7 +1998,7 @@
     "description": "Enshrouded steam dedicated server.",
     "logo": "enshrouded.png",
     "links": {
-      "github": "https://github.com/jsknnr/enshrouded-server",
+      "github": "https://github.com/mornedhels/enshrouded-server",
       "website": "",
       "docs": ""
     },
@@ -3262,6 +3262,26 @@
     ]
   },
   {
+    "id": "librechat",
+    "name": "LibreChat",
+    "version": "latest",
+    "description": "LibreChat is the ultimate open-source app for all your AI conversations, fully customizable and compatible with any AI provider (Openai, Ollama, Google etc.) — all in one sleek interface.",
+    "logo": "librechat.png",
+    "links": {
+      "github": "https://github.com/danny-avila/librechat",
+      "website": "https://librechat.ai",
+      "docs": "https://docs.librechat.ai"
+    },
+    "tags": [
+      "ai",
+      "chatbot",
+      "llm",
+      "MIT-license",
+      "BYOK",
+      "generative-ai"
+    ]
+  },
+  {
     "id": "libredesk",
     "name": "Libredesk",
     "logo": "libredesk.svg",
@@ -4158,6 +4178,25 @@
     ]
   },
   {
+    "id": "openinary",
+    "name": "Openinary",
+    "version": "latest",
+    "description": "Openinary is a self-hosted Cloudinary alternative.",
+    "logo": "openinary.svg",
+    "links": {
+      "github": "https://github.com/openinary/openinary",
+      "website": "https://openinary.dev",
+      "docs": "https://docs.openinary.dev"
+    },
+    "tags": [
+      "media",
+      "images",
+      "videos",
+      "cloudinary-alternative",
+      "developer-tools"
+    ]
+  },
+  {
     "id": "openpanel",
     "name": "OpenPanel",
     "version": "latest",
@@ -4782,6 +4821,24 @@
     ]
   },
   {
+    "id": "rote",
+    "name": "Rote",
+    "version": "latest",
+    "description": "Rote is an open-source multi-platform personal note system featuring an open API, full data ownership, and effortless Docker deployment.",
+    "logo": "rote.png",
+    "links": {
+      "github": "https://github.com/Rabithua/Rote",
+      "website": "https://rote.ink",
+      "docs": "https://github.com/Rabithua/Rote/tree/main/doc/userguide"
+    },
+    "tags": [
+      "notes",
+      "productivity",
+      "postgres",
+      "bun"
+    ]
+  },
+  {
     "id": "roundcube",
     "name": "Roundcube",
     "version": "1.6.9",
@@ -4848,6 +4905,24 @@
       "remote-desktop",
       "self-hosted",
       "productivity"
+    ]
+  },
+  {
+    "id": "rustfs",
+    "name": "RustFS",
+    "version": "latest",
+    "description": "RustFS is a high-performance, S3-compatible distributed object storage system built in Rust. 2.3x faster than MinIO for small objects, with full S3 API compatibility.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/rustfs/rustfs",
+      "website": "https://rustfs.com/",
+      "docs": "https://docs.rustfs.com/"
+    },
+    "tags": [
+      "storage",
+      "s3",
+      "object-storage",
+      "rust"
     ]
   },
   {

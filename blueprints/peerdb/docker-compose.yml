@@ -191,9 +191,3 @@ services:
 volumes:
   pgdata:
   minio-data:
-
-networks:
-  default:
-    name: peerdb_network
-  dokploy-network:
-    external: true

@@ -110,8 +110,8 @@ services:
     environment:
       <<: [*catalog-config, *flow-worker-env, *minio-config]
       PEERDB_ALLOWED_TARGETS: ${PEERDB_ALLOWED_TARGETS}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    networks:
+      - dokploy-network
     depends_on:
       temporal-admin-tools:
         condition: service_healthy
@@ -148,6 +148,8 @@ services:
       RUST_BACKTRACE: 1
     expose:
       - 9900
+    networks:
+      - dokploy-network
     depends_on:
       catalog:
         condition: service_healthy
@@ -191,3 +193,7 @@ services:
 volumes:
   pgdata:
   minio-data:
+
+networks:
+  dokploy-network:
+    external: true

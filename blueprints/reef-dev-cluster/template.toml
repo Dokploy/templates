@@ -1,4 +1,13 @@
 [variables]
+v1sec ="0x4beb11e380012110b0b072fbb3d8e7455921cf4658de06c33d970be82ccf9ed5"
+v2sec = "0x3348e15287dae612d9c8f008a468ff6c229a55c4b58d778f389cc03134e3efbe"
+v3sec = "0xba8ad5d3607f10c356860024a08ea279dbd529f0950fa752fc6c2d59981b89e5"
+
+v1addr = "5GH14oJ4A3VDLoC6nXutsTwS4dMwebDipNdSugD5zFnnWKp5"
+v2addr = "5CmKswtRQGFrt3CcP5waJVxgEJfRy1xsmwPLRPWkumLBz8nv"
+v3addr = "5HTmW3wtfs6h1D44QxfLPpwVzQ3Jc7S8eiQAuDRkmqEhrwMQ"
+
+specgenurl = "http://reef.host:8000"
 
 [[config.domains]]
 serviceName = "reef-dev-cluster"
@@ -43,3 +52,12 @@ host = "${domain}"
 path = "/"
 
 [config.env]
+v1sec ="0x4beb11e380012110b0b072fbb3d8e7455921cf4658de06c33d970be82ccf9ed5"
+v2sec = "0x3348e15287dae612d9c8f008a468ff6c229a55c4b58d778f389cc03134e3efbe"
+v3sec = "0xba8ad5d3607f10c356860024a08ea279dbd529f0950fa752fc6c2d59981b89e5"
+
+v1addr = "5GH14oJ4A3VDLoC6nXutsTwS4dMwebDipNdSugD5zFnnWKp5"
+v2addr = "5CmKswtRQGFrt3CcP5waJVxgEJfRy1xsmwPLRPWkumLBz8nv"
+v3addr = "5HTmW3wtfs6h1D44QxfLPpwVzQ3Jc7S8eiQAuDRkmqEhrwMQ"
+
+specgenurl = "http://reef.host:8000"

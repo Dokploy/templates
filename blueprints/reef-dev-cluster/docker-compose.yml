@@ -4,6 +4,15 @@ services:
     container_name: reef-dev-cluster
     working_dir: /workspace
 
+    environment:
+      v1addr: "${v1addr}"
+      v2addr: "${v2addr}"
+      v3addr: "${v3addr}"
+      v1sec: "${v1sec}"
+      v2sec: "${v2sec}"
+      v3sec: "${v3sec}"
+      specgenurl: "${specgenurl}"
+
     volumes:
       - ./:/workspace
 
@@ -28,9 +37,9 @@ services:
       wget -q -O /workspace/Makefile \
         https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/reef-cluster/Makefile &&
 
-      echo '🔧 Preparing fake build output...' &&
+      echo '🔧 Preparing build output...' &&
       mkdir -p target/release &&
       ln -sf /usr/local/bin/reef-node target/release/reef-node &&
 
-      echo '🚀 Running make run-local...' &&
+      echo '🚀 Starting local network...' &&
       make run-local"

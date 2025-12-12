@@ -80,14 +80,14 @@ services:
     image: temporalio/admin-tools:1.25.2-tctl-1.18.1-cli-1.1.1@sha256:da0c7a7982b571857173ab8f058e7f139b3054800abb4dcb100445d29a563ee8
     stdin_open: true
     tty: true
-    entrypoint: /etc/temporal/entrypoint.sh
+    entrypoint: ["sh", "-c", "chmod +x /etc/temporal/entrypoint.sh && /etc/temporal/entrypoint.sh"]
     healthcheck:
       test: ["CMD", "tctl", "workflow", "list"]
-      interval: 30s
-      timeout: 5s
+      interval: 10s
+      timeout: 30s
       retries: 5
     volumes:
-      - ../files/mirror-name-search.sh:/etc/temporal/entrypoint.sh
+      - ../files/scripts/mirror-name-search.sh:/etc/temporal/entrypoint.sh
 
   temporal-ui:
     restart: unless-stopped

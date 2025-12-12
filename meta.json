@@ -4349,24 +4349,6 @@
     ]
   },
   {
-    "id": "reef-faucet",
-    "name": "Reef Chain - Cluster Faucet",
-    "version": "1",
-    "description": "Faucet service for a custom Reef Chain cluster",
-    "links": {
-      "github": "https://github.com/reef-chain/chain-upgrade",
-      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
-      "docs": "https://docs.reef.io/"
-    },
-    "logo": "reef.svg",
-    "tags": [
-      "reef-chain",
-      "faucet",
-      "self-hosted",
-      "native"
-    ]
-  },
-  {
     "id": "reef-keygen",
     "name": "Reef Chain - Keys Generator",
     "version": "1",
@@ -4382,24 +4364,6 @@
       "keys generator",
       "self-hosted",
       "keys"
-    ]
-  },
-  {
-    "id": "reef-rpc",
-    "name": "Reef Chain - RPC",
-    "version": "1",
-    "description": "Runs RPC for a custom Reef Chain cluster",
-    "links": {
-      "github": "https://github.com/reef-chain/chain-upgrade",
-      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
-      "docs": "https://docs.reef.io/"
-    },
-    "logo": "reef.svg",
-    "tags": [
-      "reef-chain",
-      "rpc",
-      "self-hosted",
-      "evm"
     ]
   },
   {

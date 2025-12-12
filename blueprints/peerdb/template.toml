@@ -21,8 +21,8 @@ port = 9001
 host = "${main_domain}"
 
 [[config.domains]]
-serviceName = "temporal"
-port = 7233
+serviceName = "temporal-ui"
+port = 8080
 host = "${main_domain}"
 
 [config.env]

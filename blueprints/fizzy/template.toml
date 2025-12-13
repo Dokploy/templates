@@ -28,6 +28,6 @@ env = [
 ]
 
 [[config.domains]]
-serviceName = "web"
+serviceName = "web2"
 port = 3_000
 host = "${main_domain}"

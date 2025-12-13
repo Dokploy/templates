@@ -1,7 +1,6 @@
 services:
   web:
     image: ghcr.io/basecamp/fizzy:main
-    container_name: fizzy
     restart: unless-stopped
 
     environment:

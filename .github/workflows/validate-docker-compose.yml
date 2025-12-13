@@ -1,0 +1,309 @@
+name: Validate Docker Compose Files
+
+on:
+  pull_request:
+    branches:
+      - canary
+    paths:
+      - 'blueprints/**/docker-compose.yml'
+      - 'blueprints/**/template.toml'
+  workflow_dispatch:
+
+jobs:
+  validate-docker-compose:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Necesitamos el historial completo para comparar con base
+
+      - name: Set up Docker Compose
+        run: |
+          echo "🐳 Setting up Docker Compose..."
+          # Docker Compose V2 viene preinstalado en ubuntu-latest
+          docker compose version
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.16.0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing Node.js dependencies..."
+          cd build-scripts && pnpm install
+
+      - name: Get changed files
+        id: changed-files
+        run: |
+          echo "🔍 Detecting changed files..."
+          
+          # Obtener la rama base
+          BASE_SHA=$(git merge-base HEAD origin/${{ github.base_ref }})
+          
+          # Encontrar todos los archivos docker-compose.yml y template.toml modificados/agregados
+          CHANGED_COMPOSE=$(git diff --name-only --diff-filter=ACMRT $BASE_SHA HEAD | grep -E 'blueprints/.*/docker-compose\.yml$' || true)
+          CHANGED_TOML=$(git diff --name-only --diff-filter=ACMRT $BASE_SHA HEAD | grep -E 'blueprints/.*/template\.toml$' || true)
+          
+          # Crear lista de directorios únicos que tienen cambios
+          CHANGED_DIRS=$(echo -e "$CHANGED_COMPOSE\n$CHANGED_TOML" | sed 's|blueprints/\([^/]*\)/.*|\1|' | sort -u)
+          
+          echo "Changed compose files:"
+          echo "$CHANGED_COMPOSE" | while read file; do [ -n "$file" ] && echo "  - $file"; done
+          
+          echo "Changed TOML files:"
+          echo "$CHANGED_TOML" | while read file; do [ -n "$file" ] && echo "  - $file"; done
+          
+          echo "Changed directories:"
+          echo "$CHANGED_DIRS" | while read dir; do [ -n "$dir" ] && echo "  - $dir"; done
+          
+          # Guardar para usar en siguientes pasos
+          echo "compose_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED_COMPOSE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          echo "toml_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED_TOML" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          echo "directories<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED_DIRS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Validate Docker Compose files syntax
+        id: validate-compose-syntax
+        run: |
+          echo "🔍 Validating Docker Compose files syntax..."
+          
+          ERROR=0
+          COMPOSE_FILES="${{ steps.changed-files.outputs.compose_files }}"
+          
+          if [ -z "$COMPOSE_FILES" ]; then
+            echo "ℹ️ No docker-compose.yml files changed, skipping validation"
+            exit 0
+          fi
+          
+          echo "$COMPOSE_FILES" | while read -r compose_file; do
+            if [ -z "$compose_file" ]; then
+              continue
+            fi
+            
+            TEMPLATE_DIR=$(dirname "$compose_file")
+            TEMPLATE_NAME=$(basename "$TEMPLATE_DIR")
+            
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "📦 Validating syntax: $TEMPLATE_NAME"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            
+            # Validar sintaxis de docker-compose.yml usando docker compose
+            echo "🔍 Validating docker-compose.yml syntax..."
+            if ! docker compose -f "$compose_file" config > /dev/null 2>&1; then
+              echo "❌ ERROR: docker-compose.yml syntax is invalid in $TEMPLATE_NAME"
+              echo "Running docker compose config to show errors:"
+              docker compose -f "$compose_file" config 2>&1 || true
+              ERROR=1
+            else
+              echo "✅ docker-compose.yml syntax is valid"
+            fi
+            
+            # Obtener lista de servicios del compose
+            SERVICES=$(docker compose -f "$compose_file" config --services 2>/dev/null || echo "")
+            echo "📋 Services found in docker-compose.yml:"
+            echo "$SERVICES" | while read service; do
+              [ -n "$service" ] && echo "   - $service"
+            done
+            
+            # Guardar servicios para validación posterior
+            echo "$SERVICES" > "/tmp/${TEMPLATE_NAME}_services.txt"
+          done
+          
+          if [ $ERROR -eq 1 ]; then
+            echo ""
+            echo "❌ Docker Compose syntax validation failed"
+            exit 1
+          else
+            echo ""
+            echo "✅ All Docker Compose files have valid syntax"
+          fi
+
+      - name: Validate Docker Compose best practices
+        id: validate-compose-practices
+        run: |
+          echo "🔍 Validating Docker Compose best practices..."
+          
+          ERROR=0
+          COMPOSE_FILES="${{ steps.changed-files.outputs.compose_files }}"
+          
+          if [ -z "$COMPOSE_FILES" ]; then
+            echo "ℹ️ No docker-compose.yml files changed, skipping validation"
+            exit 0
+          fi
+          
+          echo "$COMPOSE_FILES" | while read -r compose_file; do
+            if [ -z "$compose_file" ]; then
+              continue
+            fi
+            
+            TEMPLATE_DIR=$(dirname "$compose_file")
+            TEMPLATE_NAME=$(basename "$TEMPLATE_DIR")
+            
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "📦 Validating best practices: $TEMPLATE_NAME"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            
+            # Validar usando el script de TypeScript
+            if ! (cd build-scripts && pnpm exec tsx validate-docker-compose.ts --file "../$compose_file" --verbose); then
+              ERROR=1
+            fi
+          done
+          
+          if [ $ERROR -eq 1 ]; then
+            echo ""
+            echo "❌ Docker Compose best practices validation failed"
+            exit 1
+          else
+            echo ""
+            echo "✅ All Docker Compose files follow best practices"
+          fi
+
+      - name: Validate template.toml files
+        id: validate-toml
+        run: |
+          echo "🔍 Validating template.toml files..."
+          
+          ERROR=0
+          DIRECTORIES="${{ steps.changed-files.outputs.directories }}"
+          
+          if [ -z "$DIRECTORIES" ]; then
+            echo "ℹ️ No template directories changed, skipping TOML validation"
+            exit 0
+          fi
+          
+          echo "$DIRECTORIES" | while read -r template_dir; do
+            if [ -z "$template_dir" ]; then
+              continue
+            fi
+            
+            TEMPLATE_PATH="blueprints/$template_dir"
+            TOML_FILE="$TEMPLATE_PATH/template.toml"
+            
+            if [ ! -f "$TOML_FILE" ]; then
+              echo "⚠️  WARNING: template.toml not found in $template_dir (might be deleted)"
+              continue
+            fi
+            
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "📝 Validating: $template_dir/template.toml"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            
+            # Validar usando el script de TypeScript con tsx
+            # Ejecutar desde build-scripts para tener acceso a node_modules
+            if ! (cd build-scripts && pnpm exec tsx validate-template.ts --dir "../$TEMPLATE_PATH" --verbose); then
+              ERROR=1
+            fi
+          done
+          
+          if [ $ERROR -eq 1 ]; then
+            echo ""
+            echo "❌ template.toml validation failed"
+            exit 1
+          else
+            echo ""
+            echo "✅ All template.toml files are valid"
+          fi
+
+      - name: Test Docker Compose (dry-run)
+        id: test-compose
+        run: |
+          echo "🧪 Testing Docker Compose files (dry-run)..."
+          
+          ERROR=0
+          DIRECTORIES="${{ steps.changed-files.outputs.directories }}"
+          
+          if [ -z "$DIRECTORIES" ]; then
+            echo "ℹ️ No template directories changed, skipping dry-run test"
+            exit 0
+          fi
+          
+          echo "$DIRECTORIES" | while read -r template_dir; do
+            if [ -z "$template_dir" ]; then
+              continue
+            fi
+            
+            COMPOSE_FILE="blueprints/$template_dir/docker-compose.yml"
+            
+            if [ ! -f "$COMPOSE_FILE" ]; then
+              continue
+            fi
+            
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "🧪 Testing: $template_dir"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            
+            # Cambiar al directorio del template para resolver rutas relativas
+            cd "blueprints/$template_dir"
+            
+            # Validar que docker-compose puede parsear el archivo completamente
+            echo "🔍 Running docker compose config (full validation)..."
+            if docker compose config > /dev/null 2>&1; then
+              echo "✅ Docker Compose file is fully valid and can be processed"
+              
+              # Mostrar información útil
+              echo "📋 Configuration summary:"
+              docker compose config --services | while read service; do
+                [ -n "$service" ] && echo "   Service: $service"
+              done
+            else
+              echo "❌ ERROR: Docker Compose file failed full validation"
+              docker compose config 2>&1 || true
+              ERROR=1
+            fi
+            
+            cd - > /dev/null
+          done
+          
+          if [ $ERROR -eq 1 ]; then
+            echo ""
+            echo "❌ Docker Compose dry-run test failed"
+            exit 1
+          else
+            echo ""
+            echo "✅ All Docker Compose files passed dry-run test"
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "📊 Validation Summary"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          
+          if [ "${{ steps.validate-compose-syntax.outcome }}" == "success" ] && \
+             [ "${{ steps.validate-compose-practices.outcome }}" == "success" ] && \
+             [ "${{ steps.validate-toml.outcome }}" == "success" ] && \
+             [ "${{ steps.test-compose.outcome }}" == "success" ]; then
+            echo "✅ All validations passed!"
+            echo ""
+            echo "Your Docker Compose and template.toml files are valid and ready to merge."
+          else
+            echo "❌ Some validations failed. Please review the errors above."
+            echo ""
+            echo "Common issues to check:"
+            echo "  - docker-compose.yml syntax errors"
+            echo "  - template.toml syntax errors"
+            echo "  - serviceName in template.toml must match service names in docker-compose.yml"
+            echo "  - Avoid using container_name, explicit networks, or port mappings"
+          fi
+

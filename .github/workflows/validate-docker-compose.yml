@@ -189,7 +189,8 @@ jobs:
             exit 0
           fi
           
-          echo "$COMPOSE_FILES" | while read -r compose_file; do
+          # Use process substitution instead of pipe to preserve exit codes
+          while IFS= read -r compose_file; do
             if [ -z "$compose_file" ]; then
               continue
             fi
@@ -206,7 +207,7 @@ jobs:
             if ! (cd build-scripts && pnpm exec tsx validate-docker-compose.ts --file "../$compose_file" --verbose); then
               ERROR=1
             fi
-          done
+          done < <(echo "$COMPOSE_FILES")
           
           if [ $ERROR -eq 1 ]; then
             echo ""

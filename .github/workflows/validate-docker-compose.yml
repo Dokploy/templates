@@ -97,25 +97,62 @@ jobs:
             
             TEMPLATE_DIR=$(dirname "$compose_file")
             TEMPLATE_NAME=$(basename "$TEMPLATE_DIR")
+            TEMPLATE_TOML="$TEMPLATE_DIR/template.toml"
             
             echo ""
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             echo "📦 Validating syntax: $TEMPLATE_NAME"
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             
+            # Generate .env file from template.toml if it exists
+            ENV_FILE=""
+            if [ -f "$TEMPLATE_TOML" ]; then
+              echo "🔍 Processing template.toml to generate .env file..."
+              if (cd build-scripts && pnpm exec tsx generate-env.ts --dir "../$TEMPLATE_DIR" --output "/tmp/${TEMPLATE_NAME}.env" > /dev/null 2>&1); then
+                ENV_FILE="/tmp/${TEMPLATE_NAME}.env"
+                echo "✅ Generated .env file from template.toml"
+              else
+                echo "⚠️  WARNING: Could not generate .env from template.toml, validating without it"
+              fi
+            fi
+            
             # Validar sintaxis de docker-compose.yml usando docker compose
             echo "🔍 Validating docker-compose.yml syntax..."
-            if ! docker compose -f "$compose_file" config > /dev/null 2>&1; then
-              echo "❌ ERROR: docker-compose.yml syntax is invalid in $TEMPLATE_NAME"
-              echo "Running docker compose config to show errors:"
-              docker compose -f "$compose_file" config 2>&1 || true
-              ERROR=1
+            
+            # Use .env file if generated, otherwise try without it
+            if [ -n "$ENV_FILE" ] && [ -f "$ENV_FILE" ]; then
+              # Change to template directory and use .env file
+              cd "$TEMPLATE_DIR"
+              if ! docker compose --env-file "$ENV_FILE" config > /dev/null 2>&1; then
+                echo "❌ ERROR: docker-compose.yml syntax is invalid in $TEMPLATE_NAME"
+                echo "Running docker compose config to show errors:"
+                docker compose --env-file "$ENV_FILE" config 2>&1 || true
+                ERROR=1
+              else
+                echo "✅ docker-compose.yml syntax is valid"
+              fi
+              cd - > /dev/null
             else
-              echo "✅ docker-compose.yml syntax is valid"
+              # Try without .env file (for templates that don't need env vars)
+              if ! docker compose -f "$compose_file" config > /dev/null 2>&1; then
+                echo "❌ ERROR: docker-compose.yml syntax is invalid in $TEMPLATE_NAME"
+                echo "Running docker compose config to show errors:"
+                docker compose -f "$compose_file" config 2>&1 || true
+                ERROR=1
+              else
+                echo "✅ docker-compose.yml syntax is valid"
+              fi
             fi
             
             # Obtener lista de servicios del compose
-            SERVICES=$(docker compose -f "$compose_file" config --services 2>/dev/null || echo "")
+            if [ -n "$ENV_FILE" ] && [ -f "$ENV_FILE" ]; then
+              cd "$TEMPLATE_DIR"
+              SERVICES=$(docker compose --env-file "$ENV_FILE" config --services 2>/dev/null || echo "")
+              cd - > /dev/null
+            else
+              SERVICES=$(docker compose -f "$compose_file" config --services 2>/dev/null || echo "")
+            fi
+            
             echo "📋 Services found in docker-compose.yml:"
             echo "$SERVICES" | while read service; do
               [ -n "$service" ] && echo "   - $service"
@@ -123,6 +160,11 @@ jobs:
             
             # Guardar servicios para validación posterior
             echo "$SERVICES" > "/tmp/${TEMPLATE_NAME}_services.txt"
+            
+            # Clean up .env file
+            if [ -n "$ENV_FILE" ] && [ -f "$ENV_FILE" ]; then
+              rm -f "$ENV_FILE"
+            fi
           done
           
           if [ $ERROR -eq 1 ]; then

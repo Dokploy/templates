@@ -6,6 +6,7 @@
   "scripts": {
     "validate-template": "tsx validate-template.ts",
     "validate-docker-compose": "tsx validate-docker-compose.ts",
+    "generate-env": "tsx generate-env.ts",
     "process-meta": "node process-meta.js"
   },
   "dependencies": {

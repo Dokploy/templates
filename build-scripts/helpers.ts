@@ -195,7 +195,11 @@ export function processValue(
 
 	// Then replace any remaining ${var} with their values from variables
 	processedValue = processedValue.replace(/\${([^}]+)}/g, (match, varName) => {
-		return variables[varName] || match;
+		// Check if variable exists (even if it's an empty string)
+		if (varName in variables) {
+			return variables[varName];
+		}
+		return match;
 	});
 
 	return processedValue;

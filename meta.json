@@ -2183,6 +2183,25 @@
     ]
   },
   {
+    "id": "fizzy",
+    "name": "Fizzy",
+    "version": "main",
+    "description": "Fizzy is a Kanban-style tracker for issues and ideas from 37signals.",
+    "logo": "fizzy.svg",
+    "links": {
+      "github": "https://github.com/basecamp/fizzy",
+      "website": "https://fizzy.do/",
+      "docs": "https://github.com/basecamp/fizzy"
+    },
+    "tags": [
+      "kanban",
+      "project-management",
+      "issues",
+      "ideas",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "flagsmith",
     "name": "Flagsmith",
     "version": "2.177.1",

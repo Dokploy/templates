@@ -34,9 +34,12 @@ _APP_ENV = "production"
 _APP_USAGE_STATS = "enabled"
 
 _APP_DOMAIN = "${main_domain}"
+_APP_DOMAIN_TARGET_CNAME = "${main_domain}"
+_APP_DOMAIN_TARGET_AAAA = "${main_domain}"
+_APP_DOMAIN_TARGET_A = "${main_domain}"
+_APP_DOMAIN_TARGET_CAA = "${main_domain}"
 _APP_DOMAIN_FUNCTIONS = "${main_domain}"
 _APP_DOMAIN_SITES = "${main_domain}"
-
 _APP_OPENSSL_KEY_V1 = "${app_openssl_key_v1}"
 
 _APP_DB_HOST = "mariadb"

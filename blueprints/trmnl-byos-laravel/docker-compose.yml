@@ -14,7 +14,6 @@ services:
     volumes:
       - trmnl-database:/var/www/html/database/storage
       - trmnl-storage:/var/www/html/storage/app/public/images/generated
-
 volumes:
   trmnl-database:
   trmnl-storage:

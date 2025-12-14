@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   docmost:
-    image: docmost/docmost:latest
+    image: docmost/docmost:0.4.1
     depends_on:
       - db
       - redis

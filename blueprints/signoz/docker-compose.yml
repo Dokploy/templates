@@ -187,3 +187,4 @@ volumes:
   zookeeper-data:
   signoz-data:
   otel-config:
+  

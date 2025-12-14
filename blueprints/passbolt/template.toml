@@ -13,7 +13,7 @@ port = 80
 host = "${main_domain}"
 
 [config.env]
-PASSBOLT_APP_FULL_BASE_URL = "https://${main_domain}"
+PASSBOLT_APP_FULL_BASE_URL = "http://${main_domain}"
 PASSBOLT_DB_HOST = "mariadb"
 PASSBOLT_DB_PORT = "3306"
 PASSBOLT_DB_NAME = "passbolt"

@@ -7,7 +7,6 @@ services:
     image: mongo
     volumes:
       - mongo_data:/data/db
-
   qux-fe:
     restart: always
     container_name: quant-ux-frontend

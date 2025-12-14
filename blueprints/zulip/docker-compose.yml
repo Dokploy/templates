@@ -108,7 +108,4 @@ volumes:
   rabbitmq:
   redis:
 
-networks:
-  dokploy-network:
-    external: true
 

@@ -1,5 +1,4 @@
 version: "3.8"
-
 services:
   soft-serve:
     image: charmcli/soft-serve:latest

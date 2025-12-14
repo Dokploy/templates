@@ -14,4 +14,3 @@ host = "${main_domain}"
 PARSEABLE_USERNAME = "${parseable_username}"
 PARSEABLE_PASSWORD = "${parseable_password}"
 
-[[config.mounts]]

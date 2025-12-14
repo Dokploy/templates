@@ -52,7 +52,6 @@ services:
 
   qux-ws:
     restart: always
-    container_name: quant-ux-websocket-server
     image: klausenschaefersinho/quant-ux-websocket
     environment:
       - QUX_SERVER=http://quant-ux-backend:8080/

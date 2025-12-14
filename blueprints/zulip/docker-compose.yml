@@ -60,8 +60,6 @@ services:
       - "443"
     ports:
       - "25"
-    networks:
-      - dokploy-network
     environment:
       DB_HOST: "database"
       DB_HOST_PORT: "5432"

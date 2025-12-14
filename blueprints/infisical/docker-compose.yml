@@ -20,7 +20,6 @@ services:
     command: npm run migration:latest
     pull_policy: always
 
-
   backend:
     restart: unless-stopped
     depends_on:

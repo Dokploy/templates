@@ -237,8 +237,10 @@ class TemplateValidator {
           if (domain.port === undefined || domain.port === null) {
             this.error(`domain[${index}]: Missing required field 'port'`);
           }
-          if (!domain.host) {
-            this.error(`domain[${index}]: Missing required field 'host'`);
+          // host is optional for internal services (they'll be on dokploy-network for DNS)
+          // but if provided, it should be a valid string
+          if (domain.host !== undefined && domain.host !== null && typeof domain.host !== "string") {
+            this.error(`domain[${index}]: host must be a string if provided`);
           }
 
           // Validate serviceName matches docker-compose.yml services

@@ -26,7 +26,6 @@ services:
 
   qux-be:
     restart: always
-    container_name: quant-ux-backend
     image: klausenschaefersinho/quant-ux-backend
     volumes:
       - quant_ux_data:/app-data

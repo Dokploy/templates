@@ -7,7 +7,6 @@ x-logging: &logging-config
     max-file: "5"
     compress: "true"
 
-
 services:
   webapp:
     image: ghcr.io/triggerdotdev/trigger.dev:v4.0.4

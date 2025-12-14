@@ -1,0 +1,93 @@
+[variables]
+# Domain Configuration
+main_domain = "${domain}"
+
+# Security & Authentication
+jwt_secret = "${password:64}"
+jwt_refresh_secret = "${password:64}"
+creds_key = "f34be427ebb29de8d88c107a71546019685ed8b241d8f2ed00c3df97ad2566f0"
+creds_iv = "e2341419ec3dd3d19b13a1a87fafcbfb"
+meili_master_key = "${password:32}"
+
+# Database Configuration
+mongo_password = "${password:16}"
+postgresql_password = "${password:16}"
+
+[config]
+version = "1.0.0"
+# Main service domain mapping
+[[config.domains]]
+serviceName = "librechat"
+port = 3080
+host = "${main_domain}"
+
+[config.env]
+# Basic Configuration
+HOST="0.0.0.0"
+PORT="3080"
+DOMAIN_CLIENT="https://${main_domain}"
+DOMAIN_SERVER="https://${main_domain}"
+
+# Search Configuration
+MEILI_MASTER_KEY="${meili_master_key}"
+
+# Security
+JWT_SECRET="${jwt_secret}"
+JWT_REFRESH_SECRET="${jwt_refresh_secret}"
+CREDS_KEY="${creds_key}"
+CREDS_IV="${creds_iv}"
+
+# API Keys
+OPENAI_API_KEY=""
+ANTHROPIC_API_KEY=""
+GOOGLE_KEY=""
+OPENROUTER_KEY=""
+
+# Database
+POSTGRES_DB="librechat_db"
+POSTGRES_USER="librechat_user"
+POSTGRES_PASSWORD="${postgresql_password}"
+
+# Security & Sessions
+
+# User Interface
+APP_TITLE="LibreChat"
+CUSTOM_FOOTER="Made with ❤️ by LibreChat"
+ALLOW_EMAIL_LOGIN="true"
+ALLOW_REGISTRATION="false"
+ALLOW_SOCIAL_LOGIN="false"
+
+# RAG
+RAG_OPENAI_API_KEY=""
+RAG_GOOGLE_API_KEY=""
+EMBEDDINGS_PROVIDER="openai"
+EMBEDDINGS_MODEL="text-embedding-3-small"
+
+CHUNK_SIZE=1500
+CHUNK_OVERLAP=100
+
+
+
+[[config.mounts]]
+filePath = "librechat.yaml"
+content = """
+### librechat.yaml configs ###
+
+version: 1.2.8
+cache: true
+endpoints:
+  custom:
+    - name: "OpenRouter"
+      apiKey: "${OPENROUTER_KEY}"
+      baseURL: "https://openrouter.ai/api/v1"
+      models:
+        default: ["meta-llama/llama-3.3-70b-instruct:free"]
+        fetch: true
+      titleConvo: true
+      titleModel: "current_model"
+      summarize: false
+      summaryModel: "current_model"
+      forcePrompt: false
+      dropParams: ["stop"]
+      modelDisplayLabel: "OpenRouter"
+"""

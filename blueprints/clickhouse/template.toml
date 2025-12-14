@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+clickhouse_user = "default"
+clickhouse_password = "${password:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "clickhouse"
+port = 8123
+host = "${main_domain}"
+
+[config.env]
+CLICKHOUSE_USER = "${clickhouse_user}"
+CLICKHOUSE_PASSWORD = "${clickhouse_password}"
+

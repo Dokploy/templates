@@ -1,0 +1,331 @@
+[variables]
+main_domain = "${domain}"
+
+# Critical: Set these to your host machine's IP address
+# For cloud deployments, use the public IP of your server
+# For local deployments, use your local machine's IP
+host_ip = "CHANGE_ME_TO_HOST_IP"
+
+# Secrets - auto-generated strong passwords
+dashboard_session_secret = "${password:64}"
+ari_secret = "${password:32}"
+asterisk_ari_secret = "${password:32}"
+asterisk_sipproxy_secret = "${password:32}"
+postgres_password = "${password:32}"
+influxdb_password = "${password:32}"
+influxdb_token = "${password:64}"
+cloak_encryption_key = "${base64:32}"
+
+# Database credentials
+postgres_user = "postgres"
+postgres_db_fonoster = "fonoster"
+postgres_db_identity = "fnidentity"
+postgres_db_routr = "routr"
+
+# API Server Configuration
+api_server_app_url = "https://${main_domain}"
+api_server_root_domain = "${main_domain}"
+api_server_owner_email = "admin@${main_domain}"
+api_server_owner_name = "Admin User"
+api_server_owner_password = "${password:32}"
+
+# InfluxDB Configuration
+influxdb_init_org = "fonoster"
+influxdb_init_username = "influxdb"
+
+# Asterisk Configuration
+asterisk_codecs = "g722,ulaw,alaw"
+asterisk_dtmf_mode = "auto_info"
+asterisk_rtp_port_start = "10000"
+asterisk_rtp_port_end = "20000"
+asterisk_sipproxy_port = "5060"
+asterisk_sipproxy_username = "voice"
+
+# RTP Engine Configuration
+rtpengine_port_min = "10000"
+rtpengine_port_max = "20000"
+
+# Routr Configuration
+routr_nats_publisher_url = "nats://nats:4222"
+
+# Logging Configuration
+logs_format = "json"
+logs_level = "verbose"
+logs_transport = "none"
+
+[config]
+env = [
+  # Dashboard
+  "SERVER_DASHBOARD_SESSION_SECRET=${dashboard_session_secret}",
+  
+  # API Server - Core
+  "APISERVER_APP_URL=${api_server_app_url}",
+  "APISERVER_ROOT_DOMAIN=${api_server_root_domain}",
+  "APISERVER_OWNER_EMAIL=${api_server_owner_email}",
+  "APISERVER_OWNER_NAME=${api_server_owner_name}",
+  "APISERVER_OWNER_PASSWORD=${api_server_owner_password}",
+  
+  # API Server - Database
+  "APISERVER_DATABASE_URL=postgresql://${postgres_user}:${postgres_password}@postgres:5432/${postgres_db_fonoster}",
+  "APISERVER_IDENTITY_DATABASE_URL=postgresql://${postgres_user}:${postgres_password}@postgres:5432/${postgres_db_identity}",
+  
+  # API Server - Asterisk ARI
+  "APISERVER_ASTERISK_ARI_PROXY_URL=http://asterisk:8088",
+  "APISERVER_ASTERISK_ARI_SECRET=${ari_secret}",
+  "APISERVER_ASTERISK_ARI_USERNAME=ari",
+  
+  # API Server - Identity
+  "APISERVER_IDENTITY_ISSUER=https://${api_server_root_domain}",
+  "APISERVER_IDENTITY_CONTACT_VERIFICATION_REQUIRED=false",
+  "APISERVER_IDENTITY_TWO_FACTOR_AUTHENTICATION_REQUIRED=false",
+  "APISERVER_IDENTITY_WORKSPACE_INVITE_EXPIRATION=1d",
+  "APISERVER_IDENTITY_WORKSPACE_INVITE_FAIL_URL=${api_server_app_url}/invite-fail",
+  "APISERVER_IDENTITY_WORKSPACE_INVITE_URL=https://${api_server_root_domain}:8449/api/identity/accept-invite",
+  "APISERVER_IDENTITY_OAUTH2_GITHUB_CLIENT_ID=",
+  "APISERVER_IDENTITY_OAUTH2_GITHUB_CLIENT_SECRET=",
+  "APISERVER_IDENTITY_OAUTH2_GITHUB_ENABLED=false",
+  
+  # API Server - InfluxDB
+  "APISERVER_INFLUXDB_URL=http://influxdb:8086",
+  "APISERVER_INFLUXDB_INIT_ORG=${influxdb_init_org}",
+  "APISERVER_INFLUXDB_INIT_USERNAME=${influxdb_init_username}",
+  "APISERVER_INFLUXDB_INIT_PASSWORD=${influxdb_password}",
+  "APISERVER_INFLUXDB_INIT_TOKEN=${influxdb_token}",
+  
+  # API Server - NATS
+  "APISERVER_NATS_URL=nats://nats:4222",
+  
+  # API Server - Logging
+  "APISERVER_LOGS_FORMAT=${logs_format}",
+  "APISERVER_LOGS_LEVEL=${logs_level}",
+  "APISERVER_LOGS_TRANSPORT=${logs_transport}",
+  
+  # API Server - Encryption
+  "APISERVER_CLOAK_ENCRYPTION_KEY=${cloak_encryption_key}",
+  
+  # API Server - AuthZ Service (disabled by default)
+  "APISERVER_AUTHZ_SERVICE_ENABLED=false",
+  "APISERVER_AUTHZ_SERVICE_HOST=fnauthz",
+  "APISERVER_AUTHZ_SERVICE_METHODS=/fonoster.calls.v1beta2.Calls/CreateCall,/fonoster.identity.v1beta2.Identity/CreateWorkspace",
+  "APISERVER_AUTHZ_SERVICE_PORT=50071",
+  
+  # API Server - SMTP (optional, configure if needed)
+  "APISERVER_SMTP_HOST=your-smtp-server",
+  "APISERVER_SMTP_PORT=587",
+  "APISERVER_SMTP_SECURE=true",
+  "APISERVER_SMTP_AUTH_USER=postmaster@${api_server_root_domain}",
+  "APISERVER_SMTP_AUTH_PASS=secret",
+  "APISERVER_SMTP_SENDER=Fonoster Info <info@${api_server_root_domain}>",
+  
+  # API Server - Signaling
+  "APISERVER_SIGNALING_SERVER=ws://${api_server_root_domain}:5062",
+  
+  # API Server - Twilio (optional, configure if needed)
+  "APISERVER_TWILIO_ACCOUNT_SID=",
+  "APISERVER_TWILIO_AUTH_TOKEN=",
+  "APISERVER_TWILIO_PHONE_NUMBER=",
+  
+  # Autopilot
+  "AUTOPILOT_CONVERSATION_PROVIDER=api",
+  "AUTOPILOT_KNOWLEDGE_BASE_ENABLED=false",
+  "AUTOPILOT_LOGS_FORMAT=${logs_transport}",
+  "AUTOPILOT_LOGS_LEVEL=${logs_level}",
+  "AUTOPILOT_LOGS_TRANSPORT=${logs_transport}",
+  "AUTOPILOT_AWS_S3_ACCESS_KEY_ID=",
+  "AUTOPILOT_AWS_S3_ENDPOINT=",
+  "AUTOPILOT_AWS_S3_REGION=us-east-1",
+  "AUTOPILOT_AWS_S3_SECRET_ACCESS_KEY=",
+  "AUTOPILOT_OPENAI_API_KEY=",
+  "AUTOPILOT_UNSTRUCTURED_API_KEY=",
+  "AUTOPILOT_UNSTRUCTURED_API_URL=",
+  
+  # Routr
+  "ROUTR_DATABASE_URL=postgresql://${postgres_user}:${postgres_password}@postgres:5432/${postgres_db_routr}",
+  "ROUTR_EXTERNAL_ADDRS=${host_ip}",
+  "ROUTR_RTPENGINE_HOST=rtpengine",
+  "ROUTR_NATS_PUBLISHER_URL=${routr_nats_publisher_url}",
+  "ROUTR_LOGS_FORMAT=${logs_transport}",
+  "ROUTR_LOGS_LEVEL=${logs_level}",
+  "ROUTR_LOGS_TRANSPORT=${logs_transport}",
+  
+  # Asterisk
+  "ASTERISK_ARI_PROXY_URL=http://asterisk:8088",
+  "ASTERISK_ARI_SECRET=${asterisk_ari_secret}",
+  "ASTERISK_ARI_USERNAME=ari",
+  "ASTERISK_CODECS=${asterisk_codecs}",
+  "ASTERISK_DTMF_MODE=${asterisk_dtmf_mode}",
+  "ASTERISK_RTP_PORT_START=${asterisk_rtp_port_start}",
+  "ASTERISK_RTP_PORT_END=${asterisk_rtp_port_end}",
+  "ASTERISK_SIPPROXY_HOST=${host_ip}",
+  "ASTERISK_SIPPROXY_PORT=${asterisk_sipproxy_port}",
+  "ASTERISK_SIPPROXY_SECRET=${asterisk_sipproxy_secret}",
+  "ASTERISK_SIPPROXY_USERNAME=${asterisk_sipproxy_username}",
+  
+  # RTP Engine
+  "RTPENGINE_PUBLIC_IP=${host_ip}",
+  "RTPENGINE_PORT_MIN=${rtpengine_port_min}",
+  "RTPENGINE_PORT_MAX=${rtpengine_port_max}",
+  
+  # InfluxDB
+  "INFLUXDB_INIT_ORG=${influxdb_init_org}",
+  "INFLUXDB_INIT_USERNAME=${influxdb_init_username}",
+  "INFLUXDB_INIT_PASSWORD=${influxdb_password}",
+  "INFLUXDB_INIT_TOKEN=${influxdb_token}",
+  
+  # PostgreSQL
+  "POSTGRES_USER=${postgres_user}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_DB=${postgres_db_fonoster}",
+]
+
+[[config.domains]]
+serviceName = "dashboard"
+port = 3030
+host = "${main_domain}"
+
+[[config.mounts]]
+filePath = "config/integrations.json"
+content = """
+{
+  "integrations": []
+}
+"""
+
+[[config.mounts]]
+filePath = "config/init-db.sh"
+content = """#!/bin/bash
+set -e
+
+# Create additional databases (ignore error if they already exist)
+psql -v ON_ERROR_STOP=0 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+    CREATE DATABASE fnidentity;
+    CREATE DATABASE routr;
+EOSQL
+
+# Grant privileges
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+    GRANT ALL PRIVILEGES ON DATABASE fnidentity TO $POSTGRES_USER;
+    GRANT ALL PRIVILEGES ON DATABASE routr TO $POSTGRES_USER;
+EOSQL
+"""
+
+[[config.mounts]]
+filePath = "config/keys/.gitkeep"
+content = "# Placeholder - RSA keys need to be generated manually after deployment"
+
+[[config.mounts]]
+filePath = "config/keys/public.pem"
+content = """-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyVvQZ8v3xq7p8BmXdS3C
+G9fk654bAbl30tsqq4h9d3N4F11hlue8bGAY=
+-----END PUBLIC KEY-----
+"""
+
+[[config.mounts]]
+filePath = "config/envoy.yaml"
+content = """
+# Envoy configuration without tls for development and testing.
+# Do not use this configuration in production. Please check the docs for examples using tls.
+static_resources:
+  listeners:
+    - name: listener_http
+      address:
+        socket_address: { address: 0.0.0.0, port_value: 8449 }
+      filter_chains:
+        - filters:
+          - name: envoy.filters.network.http_connection_manager
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+              codec_type: auto
+              stat_prefix: ingress_http
+              route_config:
+                name: local_route
+                virtual_hosts:
+                  - name: local_service
+                    domains: ["*"]
+                    routes:
+                      - match:
+                          prefix: "/api"
+                        route:
+                          cluster: apiserver-cluster-http
+                          timeout: 0s
+                      - match:
+                          prefix: "/"
+                          headers:
+                            - name: "content-type"
+                              safe_regex_match:
+                                google_re2: {}
+                                regex: "^(application/grpc|application/grpc-web-text)$"
+                        route:
+                          cluster: apiserver-cluster
+                          timeout: 0s
+                          max_stream_duration:
+                            grpc_timeout_header_max: 0s
+                      - match:
+                          prefix: "/"
+                        route:
+                          cluster: dashboard-cluster
+                          timeout: 0s
+                    cors:
+                      allow_origin_string_match:
+                        - prefix: "*"
+                      allow_methods: GET, PUT, DELETE, POST, OPTIONS
+                      allow_headers: token,accesskeyid,keep-alive,user-agent,cache-control,content-type,content-transfer-encoding,x-accept-content-transfer-encoding,x-accept-response-streaming,x-user-agent,x-grpc-web,grpc-timeout
+                      max_age: "1728000"
+                      expose_headers: grpc-status,grpc-message
+              http_filters:
+                - name: envoy.filters.http.grpc_web
+                  typed_config:
+                    "@type": type.googleapis.com/envoy.extensions.filters.http.grpc_web.v3.GrpcWeb
+                - name: envoy.filters.http.cors
+                  typed_config:
+                    "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
+                - name: envoy.filters.http.router
+                  typed_config:
+                    "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+
+  clusters:
+    - name: apiserver-cluster
+      type: logical_dns
+      connect_timeout: 20s
+      http2_protocol_options: {}
+      lb_policy: round_robin
+      load_assignment:
+        cluster_name: apiserver-cluster
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: apiserver
+                      port_value: 50051
+
+    - name: apiserver-cluster-http
+      type: logical_dns
+      connect_timeout: 20s
+      lb_policy: round_robin
+      load_assignment:
+        cluster_name: apiserver-cluster-http
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: apiserver
+                      port_value: 9876
+
+    - name: dashboard-cluster
+      type: logical_dns
+      connect_timeout: 20s
+      lb_policy: round_robin
+      load_assignment:
+        cluster_name: dashboard-cluster
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: dashboard
+                      port_value: 3030
+"""
+

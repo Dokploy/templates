@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+parseable_username = "${username}"
+parseable_password = "${password:32}"
+
+[config]
+
+[[config.domains]]
+serviceName = "parseable"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+PARSEABLE_USERNAME = "${parseable_username}"
+PARSEABLE_PASSWORD = "${parseable_password}"
+

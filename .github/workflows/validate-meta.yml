@@ -2,10 +2,10 @@ name: Validate and Process Meta.json
 
 on:
   push:
-    branches: [main, master, develop]
+    branches: [canary]
     paths: ["meta.json"]
   pull_request:
-    branches: [main, master]
+    branches: [canary]
     paths: ["meta.json"]
   workflow_dispatch:
 

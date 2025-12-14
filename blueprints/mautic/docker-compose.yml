@@ -17,11 +17,12 @@ services:
       - mysql_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # -------------------------------------------------------------------------
-  # Service 2: Mautic Web (Main UI)
+  # Service 2: Mautic Web (Main UI & Volume Owner)
   # -------------------------------------------------------------------------
   mautic:
     image: mautic/mautic:5.1.1-apache
@@ -47,6 +48,13 @@ services:
       - PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT}
     volumes:
       - mautic_data:/var/www/html
+    # FIX: Ensure web server is actually responding before letting workers start
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   # -------------------------------------------------------------------------
   # Service 3: Mautic Cron (Scheduler)
@@ -55,7 +63,8 @@ services:
     image: mautic/mautic:5.1.1-apache
     restart: unless-stopped
     depends_on:
-      - mautic
+      mautic:
+        condition: service_healthy # FIX: Wait for Web to initialize volume
     environment:
       - DOCKER_MAUTIC_ROLE=mautic_cron
       - MAUTIC_DB_HOST=${MAUTIC_DB_HOST}
@@ -75,7 +84,8 @@ services:
     image: mautic/mautic:5.1.1-apache
     restart: unless-stopped
     depends_on:
-      - mautic
+      mautic:
+        condition: service_healthy # FIX: Wait for Web to initialize volume
     deploy:
       resources:
         limits:
@@ -98,13 +108,14 @@ services:
       - mautic_data:/var/www/html
 
   # -------------------------------------------------------------------------
-  # Service 5: phpMyAdmin (Database Manager)
+  # Service 5: phpMyAdmin
   # -------------------------------------------------------------------------
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     restart: unless-stopped
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306

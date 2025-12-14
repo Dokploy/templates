@@ -10,7 +10,6 @@ services:
       - "../files/plugins/:/opt/Lavalink/plugins/"
       - "../files/application.yml:/opt/Lavalink/application.yml"
     restart: "no"
-
   lavalink:
     image: ghcr.io/lavalink-devs/lavalink:4
     depends_on:

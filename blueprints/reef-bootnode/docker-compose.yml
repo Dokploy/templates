@@ -1,5 +1,4 @@
 version: "3.9"
-
 services:
   reef-bootnode:
     image: anukulpandey/reef-chain-node:linux-2

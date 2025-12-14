@@ -8,8 +8,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - backend-db:/var/lib/postgresql/data
-    networks:
-      - dokploy-network
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
       interval: 10s

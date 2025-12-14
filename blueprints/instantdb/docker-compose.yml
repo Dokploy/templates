@@ -45,8 +45,6 @@ services:
       PYTHONUNBUFFERED: "1"
       NODE_ENV: "production"
     command: ["java", "-Djava.awt.headless=true", "-server", "-jar", "target/instant-standalone.jar"]
-    networks:
-      - dokploy-network
     ports:
       - "8888"
       - "6005"

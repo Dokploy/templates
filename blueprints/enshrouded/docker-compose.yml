@@ -1,0 +1,25 @@
+services:
+  enshrouded:
+    image: mornedhels/enshrouded-server:latest
+    container_name: enshrouded
+    hostname: enshrouded
+    restart: unless-stopped
+    stop_grace_period: 90s
+    ports:
+      - "15637:15637/udp"
+      - "27015:27015/udp"
+    volumes:
+      - enshrouded-persistent-data:/opt/enshrouded
+    # only add ntsync device if your kernel supports it (6.14 or newer)
+    # devices:
+    #   - /dev/ntsync:/dev/ntsync
+    environment:
+      - SERVER_NAME=${SERVER_NAME}
+      - SERVER_PASSWORD=${SERVER_PASSWORD}
+      - SERVER_SLOT_COUNT=6
+      - UPDATE_CRON=0 3 * * *
+      - PUID=4711
+      - PGID=4711
+
+volumes:
+  enshrouded-persistent-data:

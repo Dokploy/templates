@@ -1,0 +1,24 @@
+{
+  "name": "dokploy-templates-build-scripts",
+  "version": "1.0.0",
+  "description": "Build scripts for Dokploy Templates validation",
+  "private": true,
+  "scripts": {
+    "validate-template": "tsx validate-template.ts",
+    "validate-docker-compose": "tsx validate-docker-compose.ts",
+    "process-meta": "node process-meta.js"
+  },
+  "dependencies": {
+    "toml": "^3.0.0",
+    "yaml": "2.7.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+

@@ -1,0 +1,170 @@
+[variables]
+main_domain = "${domain}"
+base_url = "https://${main_domain}"
+
+# Database configuration
+db_user = "bigcapital"
+db_password = "${password:32}"
+db_root_password = "${password:32}"
+db_charset = "utf8mb4"
+system_db_name = "bigcapital"
+tenant_db_name_prefix = "bigcapital_tenant_"
+
+# JWT Secret
+jwt_secret = "${hash:64}"
+
+# Mail configuration (optional - can be left empty)
+mail_host = ""
+mail_username = ""
+mail_password = ""
+mail_port = "587"
+mail_secure = "false"
+mail_from_name = "BigCapital"
+mail_from_address = "noreply@${main_domain}"
+
+# Agendash authentication
+agendash_auth_user = "admin"
+agendash_auth_password = "${password:24}"
+
+# Sign-up configuration
+signup_disabled = "false"
+signup_allowed_domains = ""
+signup_allowed_emails = ""
+signup_email_confirmation = "false"
+
+# Gotenberg configuration
+gotenberg_url = "http://gotenberg:9000"
+gotenberg_docs_url = "http://gotenberg:9000"
+
+# Exchange Rate Service
+exchange_rate_service = "openexchangerates"
+open_exchange_rate_app_id = ""
+
+# Banking Connect
+banking_connect = "false"
+
+# Plaid configuration (optional)
+plaid_env = "sandbox"
+plaid_client_id = ""
+plaid_secret = ""
+plaid_link_webhook = ""
+
+# Lemon Squeezy configuration (optional)
+lemonsqueezy_api_key = ""
+lemonsqueezy_store_id = ""
+lemonsqueezy_webhook_secret = ""
+hosted_on_bigcapital_cloud = "false"
+
+# New Relic configuration (optional)
+new_relic_distributed_tracing_enabled = "false"
+new_relic_log = "false"
+new_relic_ai_monitoring_enabled = "false"
+new_relic_custom_insights_events_max_samples_stored = "10000"
+new_relic_span_events_max_samples_stored = "10000"
+new_relic_license_key = ""
+new_relic_app_name = "BigCapital"
+
+# S3 configuration (optional)
+s3_region = ""
+s3_access_key_id = ""
+s3_secret_access_key = ""
+s3_endpoint = ""
+s3_bucket = ""
+
+[config]
+
+[[config.domains]]
+serviceName = "webapp"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+# Mail
+MAIL_HOST = "${mail_host}"
+MAIL_USERNAME = "${mail_username}"
+MAIL_PASSWORD = "${mail_password}"
+MAIL_PORT = "${mail_port}"
+MAIL_SECURE = "${mail_secure}"
+MAIL_FROM_NAME = "${mail_from_name}"
+MAIL_FROM_ADDRESS = "${mail_from_address}"
+
+# Database
+DB_HOST = "mysql"
+DB_USER = "${db_user}"
+DB_PASSWORD = "${db_password}"
+DB_CHARSET = "${db_charset}"
+
+# System database
+SYSTEM_DB_NAME = "${system_db_name}"
+
+# Tenants databases
+TENANT_DB_NAME_PERFIX = "${tenant_db_name_prefix}"
+
+# Authentication
+JWT_SECRET = "${jwt_secret}"
+
+# MongoDB
+MONGODB_DATABASE_URL = "mongodb://mongo/bigcapital"
+
+# Application
+BASE_URL = "${base_url}"
+
+# Agendash
+AGENDASH_AUTH_USER = "${agendash_auth_user}"
+AGENDASH_AUTH_PASSWORD = "${agendash_auth_password}"
+
+# Sign-up restrictions
+SIGNUP_DISABLED = "${signup_disabled}"
+SIGNUP_ALLOWED_DOMAINS = "${signup_allowed_domains}"
+SIGNUP_ALLOWED_EMAILS = "${signup_allowed_emails}"
+
+# Sign-up email confirmation
+SIGNUP_EMAIL_CONFIRMATION = "${signup_email_confirmation}"
+
+# Gotenberg (Pdf generator)
+GOTENBERG_URL = "${gotenberg_url}"
+GOTENBERG_DOCS_URL = "${gotenberg_docs_url}"
+
+# Exchange Rate
+EXCHANGE_RATE_SERVICE = "${exchange_rate_service}"
+OPEN_EXCHANGE_RATE_APP_ID = "${open_exchange_rate_app_id}"
+
+# Bank Sync
+BANKING_CONNECT = "${banking_connect}"
+
+# Plaid
+PLAID_ENV = "${plaid_env}"
+PLAID_CLIENT_ID = "${plaid_client_id}"
+PLAID_SECRET = "${plaid_secret}"
+PLAID_LINK_WEBHOOK = "${plaid_link_webhook}"
+
+# Lemon Squeez
+LEMONSQUEEZY_API_KEY = "${lemonsqueezy_api_key}"
+LEMONSQUEEZY_STORE_ID = "${lemonsqueezy_store_id}"
+LEMONSQUEEZY_WEBHOOK_SECRET = "${lemonsqueezy_webhook_secret}"
+HOSTED_ON_BIGCAPITAL_CLOUD = "${hosted_on_bigcapital_cloud}"
+
+# New Relic metrics tracking
+NEW_RELIC_DISTRIBUTED_TRACING_ENABLED = "${new_relic_distributed_tracing_enabled}"
+NEW_RELIC_LOG = "${new_relic_log}"
+NEW_RELIC_AI_MONITORING_ENABLED = "${new_relic_ai_monitoring_enabled}"
+NEW_RELIC_CUSTOM_INSIGHTS_EVENTS_MAX_SAMPLES_STORED = "${new_relic_custom_insights_events_max_samples_stored}"
+NEW_RELIC_SPAN_EVENTS_MAX_SAMPLES_STORED = "${new_relic_span_events_max_samples_stored}"
+NEW_RELIC_LICENSE_KEY = "${new_relic_license_key}"
+NEW_RELIC_APP_NAME = "${new_relic_app_name}"
+
+# S3
+S3_REGION = "${s3_region}"
+S3_ACCESS_KEY_ID = "${s3_access_key_id}"
+S3_SECRET_ACCESS_KEY = "${s3_secret_access_key}"
+S3_ENDPOINT = "${s3_endpoint}"
+S3_BUCKET = "${s3_bucket}"
+
+# MySQL
+MYSQL_DATABASE = "${system_db_name}"
+MYSQL_USER = "${db_user}"
+MYSQL_PASSWORD = "${db_password}"
+MYSQL_ROOT_PASSWORD = "${db_root_password}"
+
+[[config.mounts]]
+

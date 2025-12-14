@@ -13,7 +13,9 @@ port = 3_000
 host = "${main_domain}"
 
 [config.env]
+HTTP_PROTOCOL = "http"
 TWENTY_HOST = "${main_domain}"
 DB_USER = "${db_user}"
 DB_PASSWORD = "${db_password}"
 APP_SECRET = "${app_secret}"
+IS_SIGN_UP_DISABLED = "false"

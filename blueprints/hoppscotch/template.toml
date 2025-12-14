@@ -1,0 +1,41 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+encryption_key = "${password:32}"
+
+[config]
+
+[[config.domains]]
+serviceName = "hoppscotch"
+port = 80
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+# Database & Encryption
+POSTGRES_DB = "hoppscotch"
+POSTGRES_USER = "hoppscotch"
+POSTGRES_PASSWORD = "${db_password}"
+DATABASE_URL = "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
+DATA_ENCRYPTION_KEY = "${encryption_key}"
+
+# AIO Port
+HOPP_AIO_ALTERNATE_PORT = "80"
+
+# Whitelist / Routing
+WHITELISTED_ORIGINS = "https://${main_domain},http://${main_domain},app://hoppscotch"
+VITE_BASE_URL = "https://${main_domain}"
+VITE_SHORTCODE_BASE_URL = "https://${main_domain}"
+VITE_ADMIN_URL = "https://${main_domain}/admin"
+VITE_BACKEND_GQL_URL = "https://${main_domain}/backend/graphql"
+VITE_BACKEND_WS_URL = "wss://${main_domain}/backend/graphql"
+VITE_BACKEND_API_URL = "https://${main_domain}/backend/v1"
+
+# Legal Links
+VITE_APP_TOS_LINK = "https://docs.hoppscotch.io/support/terms"
+VITE_APP_PRIVACY_POLICY_LINK = "https://docs.hoppscotch.io/support/privacy"
+
+# Subpath Access
+ENABLE_SUBPATH_BASED_ACCESS = "true"
+
+[[config.mounts]]

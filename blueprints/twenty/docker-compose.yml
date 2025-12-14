@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   twenty-change-vol-ownership:
     image: ubuntu
@@ -21,13 +19,19 @@ services:
       - twenty-docker-data:/app/docker-data
     environment:
       PORT: 3000
+      SERVER_URL: ${HTTP_PROTOCOL}://${TWENTY_HOST}
+      FRONT_BASE_URL: ${HTTP_PROTOCOL}://${TWENTY_HOST}
+
       PG_DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@twenty-postgres:5432/twenty
-      SERVER_URL: https://${TWENTY_HOST}
-      FRONT_BASE_URL: https://${TWENTY_HOST}
-      REDIS_URL: redis://twenty-redis:6379
       ENABLE_DB_MIGRATIONS: "true"
-      SIGN_IN_PREFILLED: "true"
+
+      REDIS_URL: redis://twenty-redis:6379
+      IS_SIGN_UP_DISABLED: ${IS_SIGN_UP_DISABLED:-false}
+      SIGN_IN_PREFILLED: "false"
+
+      IS_CONFIG_VARIABLES_IN_DB_ENABLED: "true"
       STORAGE_TYPE: local
+
       APP_SECRET: ${APP_SECRET}
     depends_on:
       twenty-change-vol-ownership:
@@ -35,10 +39,11 @@ services:
       twenty-postgres:
         condition: service_healthy
     healthcheck:
-      test: curl --fail http://localhost:3000/healthz
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:3000/healthz"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 30
+      start_period: 30s
     restart: always
 
   twenty-worker:
@@ -47,8 +52,8 @@ services:
     command: ["yarn", "worker:prod"]
     environment:
       PG_DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@twenty-postgres:5432/twenty
-      SERVER_URL: https://${TWENTY_HOST}
-      FRONT_BASE_URL: https://${TWENTY_HOST}
+      SERVER_URL: ${HTTP_PROTOCOL}://${TWENTY_HOST}
+      FRONT_BASE_URL: ${HTTP_PROTOCOL}://${TWENTY_HOST}
       REDIS_URL: redis://twenty-redis:6379
       ENABLE_DB_MIGRATIONS: "false"
       STORAGE_TYPE: local
@@ -61,7 +66,7 @@ services:
     restart: always
 
   twenty-postgres:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
 
     volumes:
       - twenty-postgres-data:/var/lib/postgresql/data
@@ -87,10 +92,6 @@ services:
       timeout: 5s
       retries: 10
     restart: always
-
-networks:
-  dokploy-network:
-    external: true
 
 volumes:
   twenty-docker-data:

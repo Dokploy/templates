@@ -1,0 +1,23 @@
+[variables]
+main_domain = "${domain}"
+upsnap_password = "${password:32}"
+
+[config]
+
+[[config.domains]]
+serviceName = "upsnap"
+port = 8090
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+TZ = "Europe/Berlin"
+UPSNAP_INTERVAL = "*/10 * * * * *"
+UPSNAP_SCAN_RANGE = "192.168.1.0/24"
+UPSNAP_SCAN_TIMEOUT = "500ms"
+UPSNAP_PING_PRIVILEGED = "true"
+UPSNAP_WEBSITE_TITLE = "Upsnap Network Monitor"
+
+[[config.mounts]]
+source = "upsnap-data"
+target = "/app/pb_data"

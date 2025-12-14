@@ -1,0 +1,152 @@
+services:
+  webapp:
+    image: bigcapitalhq/webapp:latest
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - '80'
+
+
+  server:
+    image: bigcapitalhq/server:latest
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+      redis:
+        condition: service_started
+    ports:
+      - '3000'
+
+    environment:
+      # Mail
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_SECURE=${MAIL_SECURE}
+      - MAIL_FROM_NAME=${MAIL_FROM_NAME}
+      - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
+      # Database
+      - DB_HOST=mysql
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_CHARSET=${DB_CHARSET}
+      # System database
+      - SYSTEM_DB_NAME=${SYSTEM_DB_NAME}
+      # Tenants databases
+      - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
+      # Authentication
+      - JWT_SECRET=${JWT_SECRET}
+      # MongoDB
+      - MONGODB_DATABASE_URL=mongodb://mongo/bigcapital
+      # Application
+      - BASE_URL=${BASE_URL}
+      # Agendash
+      - AGENDASH_AUTH_USER=${AGENDASH_AUTH_USER}
+      - AGENDASH_AUTH_PASSWORD=${AGENDASH_AUTH_PASSWORD}
+      # Sign-up restrictions
+      - SIGNUP_DISABLED=${SIGNUP_DISABLED}
+      - SIGNUP_ALLOWED_DOMAINS=${SIGNUP_ALLOWED_DOMAINS}
+      - SIGNUP_ALLOWED_EMAILS=${SIGNUP_ALLOWED_EMAILS}
+      # Sign-up email confirmation
+      - SIGNUP_EMAIL_CONFIRMATION=${SIGNUP_EMAIL_CONFIRMATION}
+      # Gotenberg (Pdf generator)
+      - GOTENBERG_URL=${GOTENBERG_URL}
+      - GOTENBERG_DOCS_URL=${GOTENBERG_DOCS_URL}
+      # Exchange Rate
+      - EXCHANGE_RATE_SERVICE=${EXCHANGE_RATE_SERVICE}
+      - OPEN_EXCHANGE_RATE_APP_ID=${OPEN_EXCHANGE_RATE_APP_ID}
+      # Bank Sync
+      - BANKING_CONNECT=${BANKING_CONNECT}
+      # Plaid
+      - PLAID_ENV=${PLAID_ENV}
+      - PLAID_CLIENT_ID=${PLAID_CLIENT_ID}
+      - PLAID_SECRET=${PLAID_SECRET}
+      - PLAID_LINK_WEBHOOK=${PLAID_LINK_WEBHOOK}
+      # Lemon Squeez
+      - LEMONSQUEEZY_API_KEY=${LEMONSQUEEZY_API_KEY}
+      - LEMONSQUEEZY_STORE_ID=${LEMONSQUEEZY_STORE_ID}
+      - LEMONSQUEEZY_WEBHOOK_SECRET=${LEMONSQUEEZY_WEBHOOK_SECRET}
+      - HOSTED_ON_BIGCAPITAL_CLOUD=${HOSTED_ON_BIGCAPITAL_CLOUD}
+      # New Relic metrics tracking
+      - NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=${NEW_RELIC_DISTRIBUTED_TRACING_ENABLED}
+      - NEW_RELIC_LOG=${NEW_RELIC_LOG}
+      - NEW_RELIC_AI_MONITORING_ENABLED=${NEW_RELIC_AI_MONITORING_ENABLED}
+      - NEW_RELIC_CUSTOM_INSIGHTS_EVENTS_MAX_SAMPLES_STORED=${NEW_RELIC_CUSTOM_INSIGHTS_EVENTS_MAX_SAMPLES_STORED}
+      - NEW_RELIC_SPAN_EVENTS_MAX_SAMPLES_STORED=${NEW_RELIC_SPAN_EVENTS_MAX_SAMPLES_STORED}
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME}
+      # S3
+      - S3_REGION=${S3_REGION}
+      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
+      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
+      - S3_ENDPOINT=${S3_ENDPOINT}
+      - S3_BUCKET=${S3_BUCKET}
+
+  mysql:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=${SYSTEM_DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - mysql:/var/lib/mysql
+    ports:
+      - '3306'
+
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - '27017'
+    volumes:
+      - mongo:/data/db
+
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - '6379'
+    volumes:
+      - redis:/data
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  gotenberg:
+    image: gotenberg/gotenberg:7
+    restart: unless-stopped
+    ports:
+      - '9000'
+
+
+volumes:
+  mysql:
+    name: bigcapital_mysql
+    driver: local
+  mongo:
+    name: bigcapital_mongo
+    driver: local
+  redis:
+    name: bigcapital_redis
+    driver: local
+
+
+

@@ -186,3 +186,4 @@ services:
     depends_on:
       - tactical-postgres
       - tactical-redis
+      

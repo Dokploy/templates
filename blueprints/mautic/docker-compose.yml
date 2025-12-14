@@ -22,7 +22,7 @@ services:
       retries: 5
 
   # -------------------------------------------------------------------------
-  # Service 2: Mautic Web (Main UI & Volume Owner)
+  # Service 2: Mautic Web (The Leader)
   # -------------------------------------------------------------------------
   mautic:
     image: mautic/mautic:5.1.1-apache
@@ -48,23 +48,26 @@ services:
       - PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT}
     volumes:
       - mautic_data:/var/www/html
-    # FIX: Ensure web server is actually responding before letting workers start
+    # AUTOMATION FIX 1: Force permissions to be correct on every start
+    entrypoint: ["/bin/sh", "-c", "chown -R www-data:www-data /var/www/html && /entrypoint.sh apache2-foreground"]
+    # AUTOMATION FIX 2: Check if the CONFIG FILE exists. If not, report 'unhealthy'.
+    # This signals the other containers to keep waiting.
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/"]
-      interval: 30s
-      timeout: 10s
+      test: ["CMD-SHELL", "test -f /var/www/html/config/local.php || exit 1"]
+      interval: 10s
+      timeout: 5s
       retries: 3
-      start_period: 60s
+      start_period: 300s # Give you 5 mins to run the installer before marking failed
 
   # -------------------------------------------------------------------------
-  # Service 3: Mautic Cron (Scheduler)
+  # Service 3: Mautic Cron (Waits for Install)
   # -------------------------------------------------------------------------
   mautic-cron:
     image: mautic/mautic:5.1.1-apache
     restart: unless-stopped
     depends_on:
       mautic:
-        condition: service_healthy # FIX: Wait for Web to initialize volume
+        condition: service_healthy # AUTOMATION FIX 3: Do not start until config file exists
     environment:
       - DOCKER_MAUTIC_ROLE=mautic_cron
       - MAUTIC_DB_HOST=${MAUTIC_DB_HOST}
@@ -78,14 +81,14 @@ services:
       - mautic_data:/var/www/html
 
   # -------------------------------------------------------------------------
-  # Service 4: Mautic Worker (Queue Processor)
+  # Service 4: Mautic Worker (Waits for Install)
   # -------------------------------------------------------------------------
   mautic-worker:
     image: mautic/mautic:5.1.1-apache
     restart: unless-stopped
     depends_on:
       mautic:
-        condition: service_healthy # FIX: Wait for Web to initialize volume
+        condition: service_healthy # AUTOMATION FIX 3: Do not start until config file exists
     deploy:
       resources:
         limits:

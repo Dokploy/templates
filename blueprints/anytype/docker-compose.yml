@@ -8,7 +8,6 @@
 services:
   any-sync-bundle:
     image: ghcr.io/grishy/any-sync-bundle:latest
-    container_name: any-sync-bundle-aio
     restart: unless-stopped
     ports:
       - "33010:33010"

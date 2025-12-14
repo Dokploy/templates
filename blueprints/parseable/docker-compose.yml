@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   parseable:
-    image: parseable/parseable:v1.6.5
+    image: parseable/parseable:v1.6.0
     command: parseable local-store
     restart: unless-stopped
     volumes:

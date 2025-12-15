@@ -1,6 +1,4 @@
-name: ${COMPOSE_PROJECT_NAME}
 version: "3.8"
-
 x-environment: &default-back-environment
   # These environment variables will be used by taiga-back and taiga-async.
   # Database settings

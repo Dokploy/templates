@@ -6,7 +6,6 @@ services:
     working_dir: /workspace
 
     ports:
-      - "${RPC_PORT}:${RPC_PORT}"
       - "${P2P_PORT}:${P2P_PORT}"
 
     environment:
@@ -15,7 +14,6 @@ services:
       BOOTNODE_IP: ${BOOTNODE_IP}
       V1SEED: ${V1SEED}
       V1ADDR: ${V1ADDR}
-      RPC_PORT: ${RPC_PORT}
       P2P_PORT: ${P2P_PORT}
       VALIDATOR_NAME: ${VALIDATOR_NAME}
 

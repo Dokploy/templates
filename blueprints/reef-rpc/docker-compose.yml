@@ -29,7 +29,7 @@ services:
 
       echo '📥 Downloading start-validator.sh...' &&
       mkdir -p /workspace/scripts &&
-      wget -O /workspace/scripts/start-validator.sh \
+      wget -O /workspace/scripts/start-rpc.sh \
         https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/rpc/scripts/start-rpc.sh &&
 
       echo '🔧 Making script executable...' &&

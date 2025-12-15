@@ -3,10 +3,10 @@ name: Validate Blueprints Structure and Meta
 on:
   pull_request:
     branches:
-      - main
+      - canary
   push:
     branches:
-      - main
+      - canary
 
 jobs:
   validate:

@@ -1,0 +1,36 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:32}"
+jwt_secret = "${jwt:32}"
+rotation_key = "${jwt:32}"
+data_directory = "/pds"
+blob_upload_limit = "104857600"
+log_enabled = "true"
+
+[config]
+mounts = []
+env = [
+    "PDS_ADMIN_PASSWORD=${admin_password}",
+    "PDS_HOSTNAME=${main_domain}",
+    "PDS_JWT_SECRET=${jwt_secret}",
+    "PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX=${rotation_key}",
+    "PDS_ADMIN_EMAIL=",
+    "PDS_EMAIL_FROM_ADDRESS=",
+    "PDS_EMAIL_SMTP_URL=",
+    "PDS_DATA_DIRECTORY=${data_directory}",
+    "PDS_BLOBSTORE_DISK_LOCATION=${data_directory}/blocks",
+    "PDS_BLOB_UPLOAD_LIMIT=${blob_upload_limit}",
+    "PDS_DID_PLC_URL=https://plc.directory",
+    "PDS_BSKY_APP_VIEW_URL=https://api.bsky.app",
+    "PDS_BSKY_APP_VIEW_DID=did:web:api.bsky.app",
+    "PDS_REPORT_SERVICE_URL=https://mod.bsky.app/xrpc/com.atproto.moderation.createReport",
+    "PDS_REPORT_SERVICE_DID=did:plc:ar7c4by46qjdydhdevvrndac",
+    "PDS_CRAWLERS=https://bsky.network",
+    "LOG_ENABLED=${log_enabled}"
+]
+
+[[config.domains]]
+serviceName = "pds"
+port = 3000
+host = "${main_domain}"
+path = "/"

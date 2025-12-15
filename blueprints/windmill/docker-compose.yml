@@ -94,9 +94,6 @@ services:
       - windmill-server
       - windmill-lsp
 
-networks:
-  dokploy-network:
-    external: true
 
 volumes:
   windmill-postgres-data:

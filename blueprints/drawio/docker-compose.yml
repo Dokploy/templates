@@ -51,9 +51,5 @@ services:
       DRAWIO_GITLAB_SECRET: ${DRAWIO_GITLAB_SECRET}
       DRAWIO_GITLAB_URL: ${DRAWIO_GITLAB_URL}
       DRAWIO_CLOUD_CONVERT_APIKEY: ${DRAWIO_CLOUD_CONVERT_APIKEY}
-networks:
-  dokploy-network:
-    external: true
-
 volumes:
   fonts_volume:

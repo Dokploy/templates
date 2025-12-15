@@ -1,0 +1,41 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+db_root_password = "${password:32}"
+email_host = "smtp.example.com"
+email_user = "noreply@example.com"
+email_pass = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "passbolt"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+PASSBOLT_APP_FULL_BASE_URL = "http://${main_domain}"
+PASSBOLT_DB_HOST = "mariadb"
+PASSBOLT_DB_PORT = "3306"
+PASSBOLT_DB_NAME = "passbolt"
+PASSBOLT_DB_USER = "passbolt"
+PASSBOLT_DB_PASSWORD = "${db_password}"
+PASSBOLT_DB_ROOT_PASSWORD = "${db_root_password}"
+PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED = "true"
+PASSBOLT_EMAIL_FROM = "passbolt@${main_domain}"
+PASSBOLT_EMAIL_HOST = "${email_host}"
+PASSBOLT_EMAIL_PORT = "587"
+PASSBOLT_EMAIL_USER = "${email_user}"
+PASSBOLT_EMAIL_PASS = "${email_pass}"
+PASSBOLT_EMAIL_TLS = "true"
+
+[[config.mounts]]
+volume = "gpg_volume"
+target = "/etc/passbolt/gpg"
+
+[[config.mounts]]
+volume = "jwt_volume"
+target = "/etc/passbolt/jwt"
+
+[[config.mounts]]
+volume = "passbolt_mariadb_data"
+target = "/var/lib/mysql"

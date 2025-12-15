@@ -11,7 +11,6 @@ port = 8_080
 host = "${main_domain}"
 
 [config.env]
-TOLGEE_HOST = "${main_domain}"
 TOLGEE_AUTHENTICATION_ENABLED = "true"
 TOLGEE_AUTHENTICATION_INITIAL_PASSWORD = "admin"
 TOLGEE_AUTHENTICATION_INITIAL_USERNAME = "admin"
@@ -19,7 +18,7 @@ TOLGEE_AUTHENTICATION_JWT_SECRET = "${jwt_secret}"
 TOLGEE_MACHINE_TRANSLATION_GOOGLE_API_KEY = "my_google_api_key"
 TOLGEE_SMTP_AUTH = "true"
 TOLGEE_SMTP_FROM = "Tolgee <no-reply@mydomain.com>"
-TOLGEE_SMTPHOST = "email-smtp.regional-region.amazonaws.com"
+TOLGEE_SMTP_HOST = "email-smtp.regional-region.amazonaws.com"
 TOLGEE_SMTP_PASSWORD = "omg/my/password"
 TOLGEE_SMTP_PORT = "465"
 TOLGEE_SMTP_SSL_ENABLED = "true"

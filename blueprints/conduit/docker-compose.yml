@@ -7,8 +7,6 @@ services:
         restart: unless-stopped
         volumes:
             - db:/var/lib/matrix-conduit/
-        networks:
-            - dokploy-network
         environment:
             CONDUIT_SERVER_NAME: ${MATRIX_SUBDOMAIN}
             CONDUIT_DATABASE_PATH: /var/lib/matrix-conduit/
@@ -25,7 +23,3 @@ services:
             CONDUIT_CONFIG: '' # Ignore this
 volumes:
     db:
-
-networks:
-  dokploy-network:
-    external: true

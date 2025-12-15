@@ -45,10 +45,6 @@ services:
       PUBLISH_COMMANDS: "true"
       SUPER: ${SUPER_USERS}
 
-networks:
-  dokploy-network:
-    external: true
-
 volumes:
   tickets-mysql-data:
   tickets-app-data: 

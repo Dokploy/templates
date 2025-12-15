@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password}"
+admin_password = "${password}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "web"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}"
+ADMIN_PASSWORD = "${admin_password}"
+

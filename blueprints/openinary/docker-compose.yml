@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  openinary:
+    image: openinary/openinary:${IMAGE_TAG:-latest}
+    pull_policy: always
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      NODE_ENV: production
+      MODE: fullstack
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-/api}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL}
+      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-http://${domain}}
+      DOCKER_CONTAINER: "true"
+    volumes:
+      - cache-data:/app/apps/api/cache
+      - public-files:/app/apps/api/public
+      - db-data:/app/data
+      - db-data:/app/web-standalone/data
+
+volumes:
+  cache-data:
+  public-files:
+  db-data:

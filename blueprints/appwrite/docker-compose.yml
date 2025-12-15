@@ -6,7 +6,6 @@ x-logging: &x-logging
     options:
       max-file: "5"
       max-size: "10m"
-
 services:
   appwrite:
     image: appwrite/appwrite:1.8.0

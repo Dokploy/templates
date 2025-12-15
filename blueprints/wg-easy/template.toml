@@ -11,5 +11,3 @@ host = "${main_domain}"
 [config.env]
 WIREGUARD_HOST = "${main_domain}"
 WIREGUARD_PASSWORD = "${wg_password}"
-
-[[config.mounts]]

@@ -6,7 +6,6 @@ services:
       - server
     expose:
       - "80"
-
   server:
     image: bigcapitalhq/server:latest
     restart: unless-stopped

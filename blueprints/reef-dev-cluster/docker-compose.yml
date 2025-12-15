@@ -21,6 +21,7 @@ services:
       - "30333:30333"
       - "30334:30334"
       - "30336:30336"
+      - "8001:8001"
 
     entrypoint: /bin/sh
     command: -c "
@@ -28,7 +29,7 @@ services:
 
       echo '📦 Installing required tools...' &&
       apt-get update &&
-      apt-get install -y make wget curl jq &&
+      apt-get install -y make wget curl jq python3 &&
 
       echo '📥 Downloading Makefile...' &&
       wget -q -O /workspace/Makefile \

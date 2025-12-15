@@ -38,8 +38,6 @@ services:
       POSTGRES_PASSWORD: ${PEERDB_CATALOG_PASSWORD}
       POSTGRES_DB: ${PEERDB_CATALOG_DATABASE}
       POSTGRES_INITDB_ARGS: --locale=C.UTF-8
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ../files/postgresql.conf:/etc/postgresql.conf
@@ -130,8 +128,8 @@ services:
     restart: unless-stopped
     environment:
       <<: [*catalog-config, *flow-worker-env, *minio-config]
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    networks:
+      - dokploy-network
     depends_on:
       temporal-admin-tools:
         condition: service_healthy

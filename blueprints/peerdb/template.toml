@@ -1,0 +1,93 @@
+[variables]
+main_domain = "${domain}"
+peerdb_password = "${password:32}"
+postgres_password = "${password:32}"
+minio_root_user = "_peerdb_minioadmin"
+minio_root_password = "${password:32}"
+nextauth_secret = "${password:32}"
+
+[[config.domains]]
+serviceName = "peerdb-ui"
+port = 3000
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "minio"
+port = 9001
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "temporal-ui"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+PEERDB_PASSWORD = "${peerdb_password}"
+PEERDB_CATALOG_HOST = "catalog"
+PEERDB_CATALOG_PORT = "5432"
+PEERDB_CATALOG_USER = "postgres"
+PEERDB_CATALOG_PASSWORD = "${postgres_password}"
+PEERDB_CATALOG_DATABASE = "postgres"
+PEERDB_FLOW_SERVER_ADDRESS = "grpc://flow-api:8112"
+NEXTAUTH_URL = "http://localhost:3000"
+NEXTAUTH_SECRET = "${nextauth_secret}"
+DATABASE_URL = "postgres://postgres:${postgres_password}@catalog:5432/postgres"
+PEERDB_FLOW_SERVER_HTTP = "http://flow-api:8113"
+PEERDB_EXPERIMENTAL_ENABLE_SCRIPTING = "true"
+MINIO_ROOT_USER = "${minio_root_user}"
+MINIO_ROOT_PASSWORD = "${minio_root_password}"
+PEERDB_CLICKHOUSE_AWS_REGION = "us-east-1"
+PEERDB_CLICKHOUSE_AWS_ENDPOINT_URL_S3 = "http://minio:9000"
+PEERDB_CLICKHOUSE_AWS_S3_BUCKET_NAME = "peerdbbucket"
+PEERDB_ALLOWED_TARGETS = ""
+PEERDB_CLICKHOUSE_ALLOWED_DOMAINS = ""
+AWS_ACCESS_KEY_ID = ""
+AWS_SECRET_ACCESS_KEY = ""
+AWS_REGION = ""
+AWS_ENDPOINT = ""
+
+[[config.mounts]]
+filePath = "./postgresql.conf"
+content = """
+listen_addresses = '*'
+
+wal_level = logical
+max_wal_senders = 4
+max_replication_slots = 4
+"""
+
+[[config.mounts]]
+filePath = "./docker-entrypoint-initdb.d/pg-hba-replication.sh"
+content = """
+#!/bin/sh
+echo "host replication $POSTGRES_USER 0.0.0.0/0 trust" >> "$PGDATA/pg_hba.conf"
+"""
+
+[[config.mounts]]
+filePath = "./temporal-dynamicconfig/production-sql.yaml"
+content = """
+limit.maxIDLength:
+  - value: 255
+    constraints: {}
+system.forceSearchAttributesCacheRefreshOnRead:
+  - value: false
+    constraints: {}
+frontend.enableUpdateWorkflowExecution:
+  - value: true
+"""
+
+[[config.mounts]]
+filePath = "./scripts/mirror-name-search.sh"
+content = """
+#!/bin/sh
+
+sleep 5
+
+# Check if MirrorName attribute exists
+if ! temporal operator search-attribute list | grep -w MirrorName >/dev/null 2>&1; then
+    # If not, create MirrorName attribute
+    temporal operator search-attribute create --name MirrorName --type Text --namespace default
+fi
+
+tini -s -- sleep infinity
+"""

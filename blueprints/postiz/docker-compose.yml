@@ -54,10 +54,6 @@ services:
     volumes:
       - postiz-redis-data:/data
 
-networks:
-  dokploy-network:
-    external: true
-
 volumes:
   postiz-postgres-data:
   postiz-redis-data:

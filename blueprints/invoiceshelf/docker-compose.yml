@@ -47,10 +47,6 @@ services:
       invoiceshelf-postgres:
         condition: service_healthy
 
-networks:
-  dokploy-network:
-    external: true
-
 volumes:
   invoiceshelf-postgres-data:
   invoiceshelf-app-data:

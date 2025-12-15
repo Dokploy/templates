@@ -96,10 +96,6 @@ services:
       ]
     restart: always
 
-networks:
-  dokploy-network:
-    external: true
-
 volumes:
   immich-model-cache:
   immich-postgres:

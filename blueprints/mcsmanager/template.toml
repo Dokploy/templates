@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = []
+mounts = []
+
+[[config.domains]]
+serviceName = "web"
+port = 23333
+host = "${main_domain}"
+

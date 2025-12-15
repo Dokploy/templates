@@ -36,9 +36,5 @@ services:
     volumes:
       - pg_hi-events_data:/var/lib/postgresql/data
 
-networks:
-  dokploy-network:
-    external: true
-
 volumes:
   pg_hi-events_data:

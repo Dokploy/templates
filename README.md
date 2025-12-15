@@ -170,7 +170,7 @@ We have a few helpers that are very common when creating a template, these are:
 
 
 
-## General Suggestions when creating a template
+## General Requirements when creating a template
 
 - Don't use this way in your docker compose file:
 

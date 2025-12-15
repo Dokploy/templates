@@ -5566,6 +5566,23 @@
     ]
   },
   {
+    "id": "trailbase",
+    "name": "TrailBase",
+    "version": "latest",
+    "description": "Trailbase is a blazingly fast, open-source application server with type-safe APIs, built-in WebAssembly runtime, realtime, auth, and admin UI built on Rust, SQLite & Wasmtime.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/trailbase/trailbase",
+      "website": "https://trailbase.io/",
+      "docs": "https://trailbase.io/getting-started/install"
+    },
+    "tags": [
+      "backend",
+      "database",
+      "api"
+    ]
+  },
+  {
     "id": "triggerdotdev",
     "name": "Trigger.dev",
     "version": "v3",

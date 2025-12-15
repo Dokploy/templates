@@ -10,4 +10,3 @@ SUPERUSER_PASSWORD = "${superuser_password}"
 WELCOME_TEXT = "${welcome_text}"
 MAX_USERS = "${max_users}"
 
-[[config.mounts]]

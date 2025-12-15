@@ -1,5 +1,4 @@
 version: "3.8"
-
 services:
   docmost:
     image: docmost/docmost:0.4.1

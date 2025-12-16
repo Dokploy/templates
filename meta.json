@@ -5503,7 +5503,7 @@
   {
     "id": "superset",
     "name": "Superset (Unofficial)",
-    "version": "latest",
+    "version": "5.0.0",
     "description": "Data visualization and data exploration platform.",
     "logo": "superset.svg",
     "links": {

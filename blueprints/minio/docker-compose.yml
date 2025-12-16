@@ -37,8 +37,8 @@ services:
       - MINIO_SERVER_URL
     command: server /data --console-address ":9001"
     ports:
-      - 9000:9000
-      - 9001:9001
+      - 9000
+      - 9001
 
 # Comment the line below if you specified a local directory 
 volumes:

@@ -1,17 +1,53 @@
+# MinIO template for Dokploy
+# Notes:
+# - Compatible with MinIO RELEASE.2025-04-22T22-12-26Z and newer. If you need older admin UI behaviour, test by changing the image in `docker-compose.yml` and validate in a PR preview.
+# - Volume options: use the named volume `minio-data` (recommended) or bind-mount a host directory (e.g., `../files/minio-data:/data`) for direct access. Ensure permissions and performance are suitable for your backend.
+
 [variables]
-main_domain = "${domain}"
+access_key = "minioadmin"
 api_domain = "${domain}"
+main_domain = "${domain}"
+minio_api_cors_allow_credentials_with_wildcard = "off"
+minio_api_cors_allow_origin = "*"
+minio_browser = "on"
+minio_browser_content_security_policy = "default-src 'self' 'unsafe-eval' 'unsafe-inline'"
+minio_browser_login_animation = "on"
+minio_browser_referrer_policy = "strict-origin-when-cross-origin"
+minio_browser_redirect = "true"
+minio_browser_session_duration = "1h"
+minio_compression_allow_encryption = "off"
+minio_compression_enable = "on"
+minio_compression_extensions = ".txt, .log, .csv, .json, .tar, .xml, .bin"
+region = "us-east-1"
+secret_key = "${password:16}"
 
 [config]
+env = [
+    "MINIO_API_CORS_ALLOW_ORIGIN=${minio_api_cors_allow_origin}",
+    "MINIO_API_CORS_ALLOW_CREDENTIALS_WITH_WILDCARD=${minio_api_cors_allow_credentials_with_wildcard}",
+    "MINIO_BROWSER=${minio_browser}",
+    "MINIO_BROWSER_CONTENT_SECURITY_POLICY=${minio_browser_content_security_policy}",
+    "MINIO_BROWSER_LOGIN_ANIMATION=${minio_browser_login_animation}",
+    "MINIO_BROWSER_REDIRECT=${minio_browser_redirect}",
+    "MINIO_BROWSER_REDIRECT_URL=http://${main_domain}",
+    "MINIO_BROWSER_REFERRER_POLICY=${minio_browser_referrer_policy}",
+    "MINIO_BROWSER_SESSION_DURATION=${minio_browser_session_duration}",
+    "MINIO_COMPRESSION_ALLOW_ENCRYPTION=${minio_compression_allow_encryption}",
+    "MINIO_COMPRESSION_ENABLE=${minio_compression_enable}",
+    "MINIO_COMPRESSION_EXTENSIONS=${minio_compression_extensions}",
+    "MINIO_REGION=${region}",
+    "MINIO_ROOT_PASSWORD=${secret_key}",
+    "MINIO_ROOT_USER=${access_key}",
+    "MINIO_SERVER_URL=http://${api_domain}"
+]
 mounts = []
 
 [[config.domains]]
 serviceName = "minio"
-port = 9_001
+port = 9001
 host = "${main_domain}"
 
-[config.env]
-MINIO_ROOT_USER = "minioadmin"
-MINIO_ROOT_PASSWORD = "${password:16}"
-MINIO_BROWSER_REDIRECT_URL = "http://${main_domain}"
-MINIO_BROWSER_REDIRECT = "false"
+[[config.domains]]
+serviceName = "minio"
+port = 9000
+host = "${api_domain}"

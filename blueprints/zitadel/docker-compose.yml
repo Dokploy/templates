@@ -1,50 +1,9 @@
 version: '3.8'
 
 services:
-  zitadel:
-    restart: 'always'
-    image: 'ghcr.io/zitadel/zitadel:latest'
-    command: 'start-from-init --masterkey "${ZITADEL_MASTERKEY}" --tlsMode disabled'
-    environment:
-      # Database Configuration
-      ZITADEL_DATABASE_POSTGRES_HOST: db
-      ZITADEL_DATABASE_POSTGRES_PORT: 5432
-      ZITADEL_DATABASE_POSTGRES_DATABASE: zitadel
-      ZITADEL_DATABASE_POSTGRES_USER_USERNAME: zitadel
-      ZITADEL_DATABASE_POSTGRES_USER_PASSWORD: "${POSTGRES_PASSWORD}"
-      ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE: disable
-      ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME: postgres
-      ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD: "${POSTGRES_PASSWORD}"
-      ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE: disable
-
-      # External Configuration for HTTP only - TLS mode disabled
-      ZITADEL_EXTERNALSECURE: false
-      ZITADEL_EXTERNALPORT: 8080
-      ZITADEL_EXTERNALDOMAIN: "${EXTERNAL_DOMAIN}"
-      ZITADEL_TLS_ENABLED: false
-
-      # Disable Email Notifications
-      ZITADEL_NOTIFICATIONS_SMTP_HOST: ""
-      ZITADEL_NOTIFICATIONS_SMTP_PORT: ""
-
-      # Custom Admin User Configuration
-      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME}"
-      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD}"
-      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS}"
-      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_FIRSTNAME: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_FIRSTNAME}"
-      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_LASTNAME: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_LASTNAME}"
-
-    depends_on:
-      db:
-        condition: 'service_healthy'
-    ports:
-      - '8080'
-    volumes:
-      - zitadel_data:/app/data
-
   db:
     restart: 'always'
-    image: postgres:17-alpine
+    image: postgres:17
     environment:
       PGUSER: postgres
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
@@ -57,6 +16,75 @@ services:
       timeout: '30s'
       retries: 5
       start_period: '20s'
+  zitadel:
+    restart: 'always'
+    image: 'ghcr.io/zitadel/zitadel:latest'
+    command: 'start-from-init --masterkey "${ZITADEL_MASTERKEY}" --tlsMode disabled'
+    environment:
+      ZITADEL_EXTERNALDOMAIN: "${EXTERNAL_DOMAIN}"
+      ZITADEL_EXTERNALSECURE: false
+      ZITADEL_TLS_ENABLED: false
+      # Database Configuration
+      ZITADEL_DATABASE_POSTGRES_HOST: db
+      ZITADEL_DATABASE_POSTGRES_PORT: 5432
+      ZITADEL_DATABASE_POSTGRES_DATABASE: zitadel
+      ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME: postgres
+      ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD: "${POSTGRES_PASSWORD}"
+      ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE: disable
+      ZITADEL_DATABASE_POSTGRES_USER_USERNAME: zitadel
+      ZITADEL_DATABASE_POSTGRES_USER_PASSWORD: "${POSTGRES_PASSWORD}"
+      ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE: disable
+      # By configuring a login client, the setup job creates a user of type machine with the role IAM_LOGIN_CLIENT.
+      # It writes a PAT to the path specified in ZITADEL_FIRSTINSTANCE_LOGINCLIENTPATPATH.
+      # The PAT is passed to the login container via the environment variable ZITADEL_SERVICE_USER_TOKEN_FILE.
+      ZITADEL_FIRSTINSTANCE_LOGINCLIENTPATPATH: /current-dir/login-client.pat
+      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORDCHANGEREQUIRED: false
+      ZITADEL_FIRSTINSTANCE_ORG_LOGINCLIENT_MACHINE_USERNAME: login-client
+      ZITADEL_FIRSTINSTANCE_ORG_LOGINCLIENT_MACHINE_NAME: Automatically Initialized IAM_LOGIN_CLIENT
+      ZITADEL_FIRSTINSTANCE_ORG_LOGINCLIENT_PAT_EXPIRATIONDATE: ${ZITADEL_FIRSTINSTANCE_ORG_LOGINCLIENT_PAT_EXPIRATIONDATE}
+      # Activate the login v2 on an installation from scratch.
+      # To activate the login v2 on an existing installation, read the "What's next" section.
+      ZITADEL_DEFAULTINSTANCE_FEATURES_LOGINV2_REQUIRED: true # To use the login v1, set this to false.
+      ZITADEL_DEFAULTINSTANCE_FEATURES_LOGINV2_BASEURI: https://${EXTERNAL_DOMAIN}/ui/v2/login
+      # Configure the redirection paths to the login v2.
+      ZITADEL_OIDC_DEFAULTLOGINURLV2: https://${EXTERNAL_DOMAIN}/ui/v2/login/login?authRequest=
+      ZITADEL_OIDC_DEFAULTLOGOUTURLV2: https://${EXTERNAL_DOMAIN}/ui/v2/login/logout?post_logout_redirect=
+      ZITADEL_SAML_DEFAULTLOGINURLV2: https://${EXTERNAL_DOMAIN}/ui/v2/login/login?samlRequest=
+      # Custom Admin User Configuration
+      ZITADEL_FIRSTINSTANCE_ORG_NAME: "${ZITADEL_FIRSTINSTANCE_ORG_NAME}"
+      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME}"
+      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD}"
+      # Enable debug logs
+      ZITADEL_LOG_LEVEL: debug     
+      # Write Access Logs to stdout.
+      ZITADEL_LOGSTORE_ACCESS_STDOUT_ENABLED: true
+    healthcheck:
+      test: ["CMD", "/app/zitadel", "ready"]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 10s
+    ports:
+      - '8080'
+      - '3000'
+    volumes:
+      - zitadel_data:/current-dir
+    depends_on:
+      db:
+        condition: 'service_healthy'
+  login:
+    restart: 'always'
+    image: ghcr.io/zitadel/zitadel-login:latest
+    environment:
+      ZITADEL_API_URL: http://zitadel:8080
+      NEXT_PUBLIC_BASE_PATH: /ui/v2/login
+      ZITADEL_SERVICE_USER_TOKEN_FILE: /current-dir/login-client.pat
+    network_mode: service:zitadel
+    volumes:
+      - zitadel_data:/current-dir:ro
+    depends_on:
+      zitadel:
+        condition: service_healthy
 
 volumes:
   postgres_data:

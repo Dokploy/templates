@@ -47,11 +47,6 @@ services:
     volumes:
       - evolution-redis-data:/data
 
-
-networks:
-  dokploy-network:
-    external: true
-
 volumes:
   evolution-instances:
   evolution-postgres-data:

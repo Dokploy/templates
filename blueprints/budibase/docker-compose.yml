@@ -182,9 +182,6 @@ services:
     labels:
       - com.centurylinklabs.watchtower.enable=false
 
-networks:
-  dokploy-network:
-    external: true
 
 volumes:
   minio_data:

@@ -1,0 +1,81 @@
+services:
+  chirpstack:
+    image: chirpstack/chirpstack:4 
+    command: -c /etc/chirpstack
+    restart: unless-stopped
+    volumes:
+      - ../files/chirpstack:/etc/chirpstack
+    ports:
+      - 8080
+    environment:
+      - MQTT_BROKER_HOST=mosquitto
+      - REDIS_HOST=redis
+      - POSTGRESQL_HOST=postgres
+    depends_on:
+      - postgres
+      - mosquitto
+      - redis
+
+  chirpstack-gateway-bridge:
+    image: chirpstack/chirpstack-gateway-bridge:4
+    restart: unless-stopped
+    volumes:
+      - ../files/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
+    ports:
+      - 1700/udp
+    environment:
+      - INTEGRATION__MQTT__EVENT_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/event/{{ .EventType }}
+      - INTEGRATION__MQTT__STATE_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/state/{{ .StateType }}
+      - INTEGRATION__MQTT__COMMAND_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/command/#
+    depends_on:
+      - mosquitto
+
+  chirpstack-gateway-bridge-basicstation:
+    image: chirpstack/chirpstack-gateway-bridge:4
+    command: -c /etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge-basicstation-eu868.toml
+    restart: unless-stopped
+    volumes:
+      - ../files/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
+    ports:
+      - 3001
+    depends_on:
+      - mosquitto
+
+  chirpstack-rest-api:
+    image: chirpstack/chirpstack-rest-api:4
+    restart: unless-stopped
+    command: --server chirpstack:8080 --bind 0.0.0.0:8090 --insecure
+    ports:
+      - 8090
+    depends_on:
+      - chirpstack
+
+  postgres:
+    image: postgres:14-alpine
+    restart: unless-stopped
+    volumes:
+      - postgresqldata:/var/lib/postgresql/data
+      - ../files/postgresql/initdb:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_USER=chirpstack
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=chirpstack
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --save 300 1 --save 60 100 --appendonly no
+    volumes:
+      - redisdata:/data
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    volumes:
+      - ../files/mosquitto/config/:/mosquitto/config/
+    ports:
+      - 1883
+
+volumes:
+  postgresqldata:
+  redisdata:

@@ -296,6 +296,23 @@
     ]
   },
   {
+    "id": "anytype",
+    "name": "Anytype",
+    "version": "latest",
+    "description": "Anytype is a personal knowledge base—your digital brain—that lets you gather, connect and remix all kinds of information. Create pages, tasks, wikis, journals—even entire apps—and define your own data model while your data stays offline-first, private and encrypted across devices.\n\nAfter installation, you can view the Anytype client configuration by running `cat /data/client-config.yml` inside the service container.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/grishy/any-sync-bundle",
+      "docs": "https://doc.anytype.io/anytype-docs",
+      "website": "https://anytype.io/"
+    },
+    "tags": [
+      "note-taking",
+      "local-first",
+      "peer-to-peer"
+    ]
+  },
+  {
     "id": "appflowy",
     "name": "App Flowy",
     "version": "0.9.3",
@@ -734,6 +751,24 @@
     ]
   },
   {
+    "id": "bluesky-pds",
+    "name": "Bluesky PDS",
+    "version": "0.4.182",
+    "description": "Bluesky PDS is a personal data server for Bluesky.",
+    "logo": "bluesky-pds.svg",
+    "links": {
+      "github": "https://github.com/bluesky-social/pds",
+      "website": "https://bsky.social/about",
+      "docs": "https://github.com/bluesky-social/pds"
+    },
+    "tags": [
+      "bluesky",
+      "pds",
+      "data",
+      "server"
+    ]
+  },
+  {
     "id": "bolt.diy",
     "name": "bolt.diy",
     "version": "latest",
@@ -1154,6 +1189,25 @@
       "Task Tracking",
       "Role-Based Access",
       "Document Management"
+    ]
+  },
+  {
+    "id": "chirpstack",
+    "name": "ChirpStack",
+    "version": "4",
+    "description": "Open-source LoRaWAN Network Server for IoT applications. Complete stack with gateway bridges, REST API, and web interface for managing LoRaWAN devices and gateways.",
+    "logo": "chirpstack.png",
+    "links": {
+      "github": "https://github.com/chirpstack/chirpstack",
+      "website": "https://www.chirpstack.io/",
+      "docs": "https://www.chirpstack.io/docs/"
+    },
+    "tags": [
+      "iot",
+      "lorawan",
+      "network-server",
+      "gateway",
+      "monitoring"
     ]
   },
   {
@@ -1774,6 +1828,26 @@
     },
     "tags": [
       "document-signing"
+    ]
+  },
+  {
+    "id": "dokploy-prom-monitoring-extension",
+    "name": "Dokploy Prometheus Monitoring Extension",
+    "version": "canary",
+    "description": "Dokploy monitoring extension with Prometheus metrics export for external monitoring systems like Grafana Cloud. Tracks server and container metrics with configurable thresholds and alerting.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/Dokploy/dokploy",
+      "website": "https://dokploy.com/",
+      "docs": "https://docs.dokploy.com/"
+    },
+    "tags": [
+      "monitoring",
+      "prometheus",
+      "metrics",
+      "observability",
+      "docker",
+      "grafana"
     ]
   },
   {
@@ -2956,7 +3030,7 @@
   {
     "id": "infisical",
     "name": "Infisical",
-    "version": "0.90.1",
+    "version": "0.135.0",
     "description": "All-in-one platform to securely manage application configuration and secrets across your team and infrastructure.",
     "logo": "infisical.jpg",
     "links": {
@@ -3193,6 +3267,25 @@
       "recipes",
       "grocery",
       "personal"
+    ]
+  },
+  {
+    "id": "kokoro-tts",
+    "name": "Kokoro TTS",
+    "version": "latest",
+    "description": "Dockerized FastAPI wrapper for the Kokoro-82M text-to-speech model with multi-language support and OpenAI-compatible endpoints.",
+    "logo": "kokoro-tts.svg",
+    "links": {
+      "github": "https://github.com/remsky/Kokoro-FastAPI",
+      "website": "https://github.com/remsky/Kokoro-FastAPI",
+      "docs": "https://github.com/remsky/Kokoro-FastAPI#readme"
+    },
+    "tags": [
+      "text-to-speech",
+      "ai",
+      "voice",
+      "fastapi",
+      "openai-compatible"
     ]
   },
   {
@@ -3571,6 +3664,24 @@
     ]
   },
   {
+    "id": "mcsmanager",
+    "name": "MCSManager",
+    "version": "latest",
+    "description": "A modern dashboard for managing Minecraft servers. Primarily focused on Minecraft, but also supports other games and features a UI that's easy for beginners to use and supports i18n.",
+    "logo": "mcsmanager.png",
+    "links": {
+      "github": "https://github.com/MCSManager/MCSManager",
+      "website": "https://github.com/MCSManager/MCSManager",
+      "docs": "https://github.com/MCSManager/MCSManager#readme"
+    },
+    "tags": [
+      "minecraft",
+      "game-server",
+      "management",
+      "dashboard"
+    ]
+  },
+  {
     "id": "mealie",
     "name": "Mealie (sqlite version)",
     "version": "latest",
@@ -3585,6 +3696,25 @@
       "recipes",
       "shopping-list",
       "meal-planning"
+    ]
+  },
+  {
+    "id": "mediacms",
+    "name": "MediaCMS",
+    "version": "latest",
+    "description": "MediaCMS is an open-source video and media CMS. It is a modern, full-featured solution for managing and streaming media content.",
+    "logo": "mediacms.svg",
+    "links": {
+      "github": "https://github.com/mediacms/mediacms",
+      "website": "https://mediacms.io/",
+      "docs": "https://docs.mediacms.io/"
+    },
+    "tags": [
+      "media",
+      "video",
+      "cms",
+      "streaming",
+      "self-hosted"
     ]
   },
   {
@@ -3727,6 +3857,43 @@
       "tmdb",
       "statistics",
       "rating"
+    ]
+  },
+  {
+    "id": "mulesoft-esb",
+    "name": "MuleSoft ESB Runtime Community Edition",
+    "version": "latest",
+    "description": "MuleSoft ESB Runtime  is a lightweight, Java-based integration platform that allows you to easily integrate applications, data sources, and APIs. It provides powerful connectors and data transformation capabilities for building robust integration solutions.",
+    "logo": "mulesoft_logo.png",
+    "links": {
+      "github": "https://github.com/mulesoft",
+      "website": "https://www.mulesoft.com/",
+      "docs": "https://docs.mulesoft.com/"
+    },
+    "tags": [
+      "integration",
+      "api",
+      "esb",
+      "enterprise",
+      "java"
+    ]
+  },
+  {
+    "id": "mumble",
+    "name": "Mumble",
+    "version": "latest",
+    "description": "Mumble is an open-source, low-latency, high-quality voice chat software primarily intended for use while gaming.",
+    "logo": "mumble.png",
+    "links": {
+      "github": "https://github.com/mumble-voip/mumble",
+      "website": "https://www.mumble.info/",
+      "docs": "https://wiki.mumble.info/"
+    },
+    "tags": [
+      "voice-chat",
+      "communication",
+      "gaming",
+      "voip"
     ]
   },
   {
@@ -4323,6 +4490,42 @@
     ]
   },
   {
+    "id": "parseable",
+    "name": "Parseable",
+    "version": "v1.6.5",
+    "description": "Fast observability and log analytics platform on object storage",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/parseablehq/parseable",
+      "website": "https://www.parseable.com/",
+      "docs": "https://www.parseable.com/docs"
+    },
+    "tags": [
+      "observability",
+      "logging",
+      "analytics",
+      "monitoring"
+    ]
+  },
+  {
+    "id": "passbolt",
+    "name": "Passbolt",
+    "version": "latest-ce",
+    "description": "Passbolt is an open source credential platform for modern teams. A versatile, battle-tested solution to manage and collaborate on passwords, accesses, and secrets. All in one.",
+    "logo": "passbolt.svg",
+    "links": {
+      "github": "https://github.com/passbolt/passbolt_api",
+      "website": "https://www.passbolt.com/",
+      "docs": "https://www.passbolt.com/docs/"
+    },
+    "tags": [
+      "password-manager",
+      "security",
+      "team-collaboration",
+      "encryption"
+    ]
+  },
+  {
     "id": "pastefy",
     "name": "Pastefy",
     "version": "latest",
@@ -4359,6 +4562,25 @@
       "business",
       "automation",
       "client-management"
+    ]
+  },
+  {
+    "id": "peerdb",
+    "name": "PeerDB",
+    "version": "v0.35.5",
+    "description": "Data integration platform that synchronizes and federates data across databases with a unified API.",
+    "logo": "peerdb.jpeg",
+    "links": {
+      "github": "https://github.com/peerdb-io/peerdb",
+      "website": "https://peerdb.io",
+      "docs": "https://docs.peerdb.io"
+    },
+    "tags": [
+      "database",
+      "integration",
+      "sync",
+      "sql",
+      "workflow"
     ]
   },
   {
@@ -4769,6 +4991,25 @@
       "vector-db",
       "database",
       "search"
+    ]
+  },
+  {
+    "id": "quant-ux",
+    "name": "Quant-UX",
+    "version": "latest",
+    "description": "Quant-UX is an open-source UX design and prototyping tool that allows you to create interactive prototypes, conduct user research, and analyze user behavior.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/KlausSchaefers/quant-ux",
+      "website": "https://www.quant-ux.com/",
+      "docs": "https://www.quant-ux.com/"
+    },
+    "tags": [
+      "design",
+      "ux",
+      "prototyping",
+      "user-research",
+      "analytics"
     ]
   },
   {
@@ -5349,7 +5590,7 @@
   {
     "id": "tolgee",
     "name": "Tolgee",
-    "version": "v3.80.4",
+    "version": "latest",
     "description": "Developer & translator friendly web-based localization platform",
     "logo": "tolgee.svg",
     "links": {
@@ -5435,7 +5676,7 @@
   {
     "id": "trmnl-byos-laravel",
     "name": "TRMNL BYOS Laravel",
-    "version": "0.14.0",
+    "version": "0.21.0",
     "description": "TRMNL BYOS Laravel is a self-hosted application to manage TRMNL e-ink devices.",
     "logo": "byos-laravel.svg",
     "links": {

@@ -4,8 +4,6 @@ x-base-config: &base-config
   image: chatwoot/chatwoot:v4.0.3
   volumes:
     - chatwoot-storage:/app/storage
-  networks:
-    - dokploy-network
   environment:
     - FRONTEND_URL=${FRONTEND_URL}
     - SECRET_KEY_BASE=${SECRET_KEY_BASE}
@@ -62,10 +60,6 @@ services:
     restart: always
     volumes:
       - chatwoot-redis-data:/data
-
-networks:
-  dokploy-network:
-    external: true
 
 volumes:
   chatwoot-storage:

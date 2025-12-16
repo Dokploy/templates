@@ -31,9 +31,6 @@ services:
       timeout: 5s
       retries: 5
 
-networks:
-  dokploy-network:
-    external: true
 
 volumes:
   logto-connectors:

@@ -34,10 +34,6 @@ services:
     volumes:
       - redis_docmost_data:/data
 
-networks:
-  dokploy-network:
-    external: true
-
 volumes:
   docmost:
   db_docmost_data:

@@ -35,6 +35,7 @@ env = [
     "MINIO_COMPRESSION_ALLOW_ENCRYPTION=${minio_compression_allow_encryption}",
     "MINIO_COMPRESSION_ENABLE=${minio_compression_enable}",
     "MINIO_COMPRESSION_EXTENSIONS=${minio_compression_extensions}",
+    "MINIO_DOMAIN=${main_domain}",
     "MINIO_REGION=${region}",
     "MINIO_ROOT_PASSWORD=${secret_key}",
     "MINIO_ROOT_USER=${access_key}",

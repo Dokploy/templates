@@ -1,8 +1,3 @@
-# MinIO template for Dokploy
-# Notes:
-# - Compatible with MinIO RELEASE.2025-04-22T22-12-26Z and newer. If you need older admin UI behaviour, test by changing the image in `docker-compose.yml` and validate in a PR preview.
-# - Volume options: use the named volume `minio-data` (recommended) or bind-mount a host directory (e.g., `../files/minio-data:/data`) for direct access. Ensure permissions and performance are suitable for your backend.
-
 [variables]
 access_key = "minioadmin"
 api_domain = "${domain}"

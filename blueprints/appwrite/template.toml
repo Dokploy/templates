@@ -2,10 +2,10 @@
 main_domain = "${domain}"
 functions_domain = "functions.${main_domain}"
 sites_domain = "sites.${main_domain}"
-openssl_key = "${password}"
-db_root_pw = "${password}"
-db_user_pw = "${password}"
-executor_secret = "${password}"
+openssl_key = "${password:32}"
+db_root_pw = "${password:32}"
+db_user_pw = "${password:32}"
+executor_secret = "${password:32}"
 
 [config]
 env = [

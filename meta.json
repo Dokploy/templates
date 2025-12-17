@@ -345,7 +345,8 @@
       "firebase", 
       "mariadb", 
       "hosting", 
-      "self-hosted"]
+      "self-hosted"
+    ]
   },
   {
     "id": "aptabase",

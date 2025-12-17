@@ -263,6 +263,22 @@
     ]
   },
   {
+    "id": "anubis",
+    "name": "Anubis",
+    "version": "latest",
+    "description": "Anubis is a bot protector, It will block bots from accessing your website.",
+    "logo": "anubis.webp",
+    "links": {
+      "github": "https://github.com/TecharoHQ/anubis",
+      "website": "https://anubis.techaro.lol",
+      "docs": "https://anubis.techaro.lol/docs/"
+    },
+    "tags": [
+      "self-hosted",
+      "bot-protection"
+    ]
+  },
+  {
     "id": "anythingllm",
     "name": "AnythingLLM",
     "version": "latest",
@@ -277,6 +293,23 @@
       "ai",
       "llm",
       "chatbot"
+    ]
+  },
+  {
+    "id": "anytype",
+    "name": "Anytype",
+    "version": "latest",
+    "description": "Anytype is a personal knowledge base—your digital brain—that lets you gather, connect and remix all kinds of information. Create pages, tasks, wikis, journals—even entire apps—and define your own data model while your data stays offline-first, private and encrypted across devices.\n\nAfter installation, you can view the Anytype client configuration by running `cat /data/client-config.yml` inside the service container.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/grishy/any-sync-bundle",
+      "docs": "https://doc.anytype.io/anytype-docs",
+      "website": "https://anytype.io/"
+    },
+    "tags": [
+      "note-taking",
+      "local-first",
+      "peer-to-peer"
     ]
   },
   {
@@ -665,6 +698,26 @@
     ]
   },
   {
+    "id": "bigcapital",
+    "name": "BigCapital",
+    "version": "latest",
+    "description": "BigCapital is a great open source alternative to QuickBooks. A comprehensive accounting and financial management system for businesses.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/bigcapitalhq/bigcapital",
+      "website": "https://bigcapital.app/",
+      "docs": "https://github.com/bigcapitalhq/bigcapital"
+    },
+    "tags": [
+      "accounting",
+      "finance",
+      "bookkeeping",
+      "quickbooks",
+      "erp",
+      "business"
+    ]
+  },
+  {
     "id": "blender",
     "name": "Blender",
     "version": "latest",
@@ -697,6 +750,24 @@
       "organization",
       "workflow",
       "nextjs"
+    ]
+  },
+  {
+    "id": "bluesky-pds",
+    "name": "Bluesky PDS",
+    "version": "0.4.182",
+    "description": "Bluesky PDS is a personal data server for Bluesky.",
+    "logo": "bluesky-pds.svg",
+    "links": {
+      "github": "https://github.com/bluesky-social/pds",
+      "website": "https://bsky.social/about",
+      "docs": "https://github.com/bluesky-social/pds"
+    },
+    "tags": [
+      "bluesky",
+      "pds",
+      "data",
+      "server"
     ]
   },
   {
@@ -1123,6 +1194,25 @@
     ]
   },
   {
+    "id": "chirpstack",
+    "name": "ChirpStack",
+    "version": "4",
+    "description": "Open-source LoRaWAN Network Server for IoT applications. Complete stack with gateway bridges, REST API, and web interface for managing LoRaWAN devices and gateways.",
+    "logo": "chirpstack.png",
+    "links": {
+      "github": "https://github.com/chirpstack/chirpstack",
+      "website": "https://www.chirpstack.io/",
+      "docs": "https://www.chirpstack.io/docs/"
+    },
+    "tags": [
+      "iot",
+      "lorawan",
+      "network-server",
+      "gateway",
+      "monitoring"
+    ]
+  },
+  {
     "id": "chromium",
     "name": "Chromium",
     "version": "5f5dd27e-ls102",
@@ -1154,6 +1244,25 @@
       "cms",
       "wordpress",
       "content-management"
+    ]
+  },
+  {
+    "id": "clickhouse",
+    "name": "ClickHouse",
+    "version": "latest",
+    "description": "ClickHouse is an open-source column-oriented DBMS (columnar database management system) for online analytical processing (OLAP) that allows users to generate analytical reports using SQL queries in real-time. ClickHouse works 100-1000x faster than traditional database management systems, and processes hundreds of millions to over a billion rows and tens of gigabytes of data per server per second.",
+    "logo": "clickhouse_logo.png",
+    "links": {
+      "github": "https://github.com/ClickHouse/ClickHouse",
+      "website": "https://clickhouse.com/",
+      "docs": "https://clickhouse.com/docs"
+    },
+    "tags": [
+      "self-hosted",
+      "open-source",
+      "database",
+      "olap",
+      "analytics"
     ]
   },
   {
@@ -1724,6 +1833,26 @@
     ]
   },
   {
+    "id": "dokploy-prom-monitoring-extension",
+    "name": "Dokploy Prometheus Monitoring Extension",
+    "version": "canary",
+    "description": "Dokploy monitoring extension with Prometheus metrics export for external monitoring systems like Grafana Cloud. Tracks server and container metrics with configurable thresholds and alerting.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/Dokploy/dokploy",
+      "website": "https://dokploy.com/",
+      "docs": "https://docs.dokploy.com/"
+    },
+    "tags": [
+      "monitoring",
+      "prometheus",
+      "metrics",
+      "observability",
+      "docker",
+      "grafana"
+    ]
+  },
+  {
     "id": "domain-locker",
     "name": "Domain Locker",
     "version": "latest",
@@ -1939,6 +2068,21 @@
     ]
   },
   {
+    "id": "enshrouded",
+    "name": "Enshrouded",
+    "version": "1.0.0",
+    "description": "Enshrouded steam dedicated server.",
+    "logo": "enshrouded.png",
+    "links": {
+      "github": "https://github.com/mornedhels/enshrouded-server",
+      "website": "",
+      "docs": ""
+    },
+    "tags": [
+      "gaming"
+    ]
+  },
+  {
     "id": "erpnext",
     "name": "ERPNext",
     "version": "version-15",
@@ -1974,6 +2118,22 @@
       "collaboration",
       "text-editor",
       "real-time"
+    ]
+  },
+  {
+    "id": "evershop",
+    "name": "Evershop",
+    "version": "latest",
+    "description": "Your All-in-One open source ecommerce solution.",
+    "logo": "evershop.svg",
+    "links": {
+      "github": "https://github.com/evershopcommerce/evershop",
+      "website": "https://evershop.io/",
+      "docs": "https://evershop.io/docs/development/getting-started/introduction"
+    },
+    "tags": [
+      "E-Commerce",
+      "shopping"
     ]
   },
   {
@@ -2221,6 +2381,26 @@
     },
     "tags": [
       "kanban"
+    ]
+  },
+  {
+    "id": "fonoster",
+    "name": "Fonoster",
+    "version": "0.15.15",
+    "description": "Fonoster is an open-source alternative to Twilio. A complete telephony stack for building voice applications with SIP, WebRTC, and PSTN connectivity.",
+    "logo": "fonoster.svg",
+    "links": {
+      "github": "https://github.com/fonoster/fonoster",
+      "website": "https://fonoster.com/",
+      "docs": "https://docs.fonoster.com/"
+    },
+    "tags": [
+      "telephony",
+      "voip",
+      "sip",
+      "webrtc",
+      "pstn",
+      "communication"
     ]
   },
   {
@@ -2593,6 +2773,25 @@
     ]
   },
   {
+    "id": "grist",
+    "name": "Grist",
+    "version": "latest",
+    "description": "Grist is an open-source spreadsheet and database alternative that combines the flexibility of spreadsheets with the power of databases.",
+    "logo": "grist.png",
+    "links": {
+      "github": "https://github.com/gristlabs/grist-core",
+      "website": "https://www.getgrist.com/",
+      "docs": "https://support.getgrist.com/self-managed/"
+    },
+    "tags": [
+      "spreadsheet",
+      "database",
+      "productivity",
+      "self-hosted",
+      "data-management"
+    ]
+  },
+  {
     "id": "habitica",
     "name": "Habitica",
     "version": "latest",
@@ -2833,7 +3032,7 @@
   {
     "id": "infisical",
     "name": "Infisical",
-    "version": "0.90.1",
+    "version": "0.135.0",
     "description": "All-in-one platform to securely manage application configuration and secrets across your team and infrastructure.",
     "logo": "infisical.jpg",
     "links": {
@@ -3073,6 +3272,25 @@
     ]
   },
   {
+    "id": "kokoro-tts",
+    "name": "Kokoro TTS",
+    "version": "latest",
+    "description": "Dockerized FastAPI wrapper for the Kokoro-82M text-to-speech model with multi-language support and OpenAI-compatible endpoints.",
+    "logo": "kokoro-tts.svg",
+    "links": {
+      "github": "https://github.com/remsky/Kokoro-FastAPI",
+      "website": "https://github.com/remsky/Kokoro-FastAPI",
+      "docs": "https://github.com/remsky/Kokoro-FastAPI#readme"
+    },
+    "tags": [
+      "text-to-speech",
+      "ai",
+      "voice",
+      "fastapi",
+      "openai-compatible"
+    ]
+  },
+  {
     "id": "kokoro-web",
     "name": "Kokoro Web",
     "version": "latest",
@@ -3136,6 +3354,26 @@
       "email",
       "self-hosted",
       "productivity"
+    ]
+  },
+  {
+    "id": "librechat",
+    "name": "LibreChat",
+    "version": "latest",
+    "description": "LibreChat is the ultimate open-source app for all your AI conversations, fully customizable and compatible with any AI provider (Openai, Ollama, Google etc.) — all in one sleek interface.",
+    "logo": "librechat.png",
+    "links": {
+      "github": "https://github.com/danny-avila/librechat",
+      "website": "https://librechat.ai",
+      "docs": "https://docs.librechat.ai"
+    },
+    "tags": [
+      "ai",
+      "chatbot",
+      "llm",
+      "MIT-license",
+      "BYOK",
+      "generative-ai"
     ]
   },
   {
@@ -3428,6 +3666,24 @@
     ]
   },
   {
+    "id": "mcsmanager",
+    "name": "MCSManager",
+    "version": "latest",
+    "description": "A modern dashboard for managing Minecraft servers. Primarily focused on Minecraft, but also supports other games and features a UI that's easy for beginners to use and supports i18n.",
+    "logo": "mcsmanager.png",
+    "links": {
+      "github": "https://github.com/MCSManager/MCSManager",
+      "website": "https://github.com/MCSManager/MCSManager",
+      "docs": "https://github.com/MCSManager/MCSManager#readme"
+    },
+    "tags": [
+      "minecraft",
+      "game-server",
+      "management",
+      "dashboard"
+    ]
+  },
+  {
     "id": "mealie",
     "name": "Mealie (sqlite version)",
     "version": "latest",
@@ -3442,6 +3698,25 @@
       "recipes",
       "shopping-list",
       "meal-planning"
+    ]
+  },
+  {
+    "id": "mediacms",
+    "name": "MediaCMS",
+    "version": "latest",
+    "description": "MediaCMS is an open-source video and media CMS. It is a modern, full-featured solution for managing and streaming media content.",
+    "logo": "mediacms.svg",
+    "links": {
+      "github": "https://github.com/mediacms/mediacms",
+      "website": "https://mediacms.io/",
+      "docs": "https://docs.mediacms.io/"
+    },
+    "tags": [
+      "media",
+      "video",
+      "cms",
+      "streaming",
+      "self-hosted"
     ]
   },
   {
@@ -3587,6 +3862,43 @@
     ]
   },
   {
+    "id": "mulesoft-esb",
+    "name": "MuleSoft ESB Runtime Community Edition",
+    "version": "latest",
+    "description": "MuleSoft ESB Runtime  is a lightweight, Java-based integration platform that allows you to easily integrate applications, data sources, and APIs. It provides powerful connectors and data transformation capabilities for building robust integration solutions.",
+    "logo": "mulesoft_logo.png",
+    "links": {
+      "github": "https://github.com/mulesoft",
+      "website": "https://www.mulesoft.com/",
+      "docs": "https://docs.mulesoft.com/"
+    },
+    "tags": [
+      "integration",
+      "api",
+      "esb",
+      "enterprise",
+      "java"
+    ]
+  },
+  {
+    "id": "mumble",
+    "name": "Mumble",
+    "version": "latest",
+    "description": "Mumble is an open-source, low-latency, high-quality voice chat software primarily intended for use while gaming.",
+    "logo": "mumble.png",
+    "links": {
+      "github": "https://github.com/mumble-voip/mumble",
+      "website": "https://www.mumble.info/",
+      "docs": "https://wiki.mumble.info/"
+    },
+    "tags": [
+      "voice-chat",
+      "communication",
+      "gaming",
+      "voip"
+    ]
+  },
+  {
     "id": "n8n",
     "name": "n8n",
     "version": "1.104.0",
@@ -3675,6 +3987,25 @@
       "virtual",
       "sharing",
       "remote"
+    ]
+  },
+  {
+    "id": "netdata",
+    "name": "Netdata",
+    "version": "latest",
+    "description": "Netdata is a real-time performance monitoring tool that provides comprehensive system metrics, application monitoring, and infrastructure health insights.",
+    "logo": "netdata.svg",
+    "links": {
+      "github": "https://github.com/netdata/netdata",
+      "website": "https://www.netdata.cloud/",
+      "docs": "https://learn.netdata.cloud/"
+    },
+    "tags": [
+      "monitoring",
+      "metrics",
+      "analytics",
+      "performance",
+      "infrastructure"
     ]
   },
   {
@@ -4016,6 +4347,25 @@
     ]
   },
   {
+    "id": "openinary",
+    "name": "Openinary",
+    "version": "latest",
+    "description": "Openinary is a self-hosted Cloudinary alternative.",
+    "logo": "openinary.svg",
+    "links": {
+      "github": "https://github.com/openinary/openinary",
+      "website": "https://openinary.dev",
+      "docs": "https://docs.openinary.dev"
+    },
+    "tags": [
+      "media",
+      "images",
+      "videos",
+      "cloudinary-alternative",
+      "developer-tools"
+    ]
+  },
+  {
     "id": "openpanel",
     "name": "OpenPanel",
     "version": "latest",
@@ -4142,6 +4492,42 @@
     ]
   },
   {
+    "id": "parseable",
+    "name": "Parseable",
+    "version": "v1.6.5",
+    "description": "Fast observability and log analytics platform on object storage",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/parseablehq/parseable",
+      "website": "https://www.parseable.com/",
+      "docs": "https://www.parseable.com/docs"
+    },
+    "tags": [
+      "observability",
+      "logging",
+      "analytics",
+      "monitoring"
+    ]
+  },
+  {
+    "id": "passbolt",
+    "name": "Passbolt",
+    "version": "latest-ce",
+    "description": "Passbolt is an open source credential platform for modern teams. A versatile, battle-tested solution to manage and collaborate on passwords, accesses, and secrets. All in one.",
+    "logo": "passbolt.svg",
+    "links": {
+      "github": "https://github.com/passbolt/passbolt_api",
+      "website": "https://www.passbolt.com/",
+      "docs": "https://www.passbolt.com/docs/"
+    },
+    "tags": [
+      "password-manager",
+      "security",
+      "team-collaboration",
+      "encryption"
+    ]
+  },
+  {
     "id": "pastefy",
     "name": "Pastefy",
     "version": "latest",
@@ -4178,6 +4564,25 @@
       "business",
       "automation",
       "client-management"
+    ]
+  },
+  {
+    "id": "peerdb",
+    "name": "PeerDB",
+    "version": "v0.35.5",
+    "description": "Data integration platform that synchronizes and federates data across databases with a unified API.",
+    "logo": "peerdb.jpeg",
+    "links": {
+      "github": "https://github.com/peerdb-io/peerdb",
+      "website": "https://peerdb.io",
+      "docs": "https://docs.peerdb.io"
+    },
+    "tags": [
+      "database",
+      "integration",
+      "sync",
+      "sql",
+      "workflow"
     ]
   },
   {
@@ -4345,6 +4750,24 @@
     ]
   },
   {
+    "id": "plunk",
+    "name": "Plunk",
+    "version": "latest",
+    "description": "Plunk is the open-source, affordable email platform that brings together marketing, transactional and broadcast emails into one single, complete solution",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/useplunk/plunk",
+      "website": "https://www.useplunk.com/",
+      "docs": "https://docs.useplunk.com"
+    },
+    "tags": [
+      "email",
+      "newsletter",
+      "mailing-list",
+      "marketing"
+    ]
+  },
+  {
     "id": "pocket-id",
     "name": "Pocket ID",
     "version": "v1",
@@ -4433,6 +4856,23 @@
       "antispam",
       "antivirus",
       "webmail"
+    ]
+  },
+  {
+    "id": "postgresus",
+    "name": "Postgresus",
+    "version": "latest",
+    "description": "Free, open source and self-hosted solution for automated PostgreSQL backups. With multiple storage options and notifications",
+    "logo": "postgresus.svg",
+    "links": {
+      "github": "https://github.com/RostislavDugin/postgresus",
+      "website": "https://postgresus.com",
+      "docs": "https://postgresus.com"
+    },
+    "tags": [
+      "postgres",
+      "backup",
+      "s3"
     ]
   },
   {
@@ -4556,6 +4996,25 @@
     ]
   },
   {
+    "id": "quant-ux",
+    "name": "Quant-UX",
+    "version": "latest",
+    "description": "Quant-UX is an open-source UX design and prototyping tool that allows you to create interactive prototypes, conduct user research, and analyze user behavior.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/KlausSchaefers/quant-ux",
+      "website": "https://www.quant-ux.com/",
+      "docs": "https://www.quant-ux.com/"
+    },
+    "tags": [
+      "design",
+      "ux",
+      "prototyping",
+      "user-research",
+      "analytics"
+    ]
+  },
+  {
     "id": "rabbitmq",
     "name": "RabbitMQ",
     "version": "4.1-management",
@@ -4602,6 +5061,24 @@
     },
     "tags": [
       "chat"
+    ]
+  },
+  {
+    "id": "rote",
+    "name": "Rote",
+    "version": "latest",
+    "description": "Rote is an open-source multi-platform personal note system featuring an open API, full data ownership, and effortless Docker deployment.",
+    "logo": "rote.png",
+    "links": {
+      "github": "https://github.com/Rabithua/Rote",
+      "website": "https://rote.ink",
+      "docs": "https://github.com/Rabithua/Rote/tree/main/doc/userguide"
+    },
+    "tags": [
+      "notes",
+      "productivity",
+      "postgres",
+      "bun"
     ]
   },
   {
@@ -4671,6 +5148,24 @@
       "remote-desktop",
       "self-hosted",
       "productivity"
+    ]
+  },
+  {
+    "id": "rustfs",
+    "name": "RustFS",
+    "version": "latest",
+    "description": "RustFS is a high-performance, S3-compatible distributed object storage system built in Rust. 2.3x faster than MinIO for small objects, with full S3 API compatibility.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/rustfs/rustfs",
+      "website": "https://rustfs.com/",
+      "docs": "https://docs.rustfs.com/"
+    },
+    "tags": [
+      "storage",
+      "s3",
+      "object-storage",
+      "rust"
     ]
   },
   {
@@ -5027,6 +5522,23 @@
     ]
   },
   {
+    "id": "surrealdb",
+    "name": "SurrealDB",
+    "version": "2.3.10",
+    "description": "SurrealDB is a native, open-source, multi-model database that lets you store and manage data across relational, document, graph, time-series, vector & search, and geospatial models—all in one place.",
+    "logo": "surrealdb.svg",
+    "links": {
+      "github": "https://github.com/surrealdb/surrealdb",
+      "website": "https://surrealdb.com",
+      "docs": "https://surrealdb.com/docs/surrealdb"
+    },
+    "tags": [
+      "database",
+      "sql",
+      "surrealdb"
+    ]
+  },
+  {
     "id": "tailscale-exitnode",
     "name": "Tailscale Exit nodes",
     "version": "1.0.0",
@@ -5080,7 +5592,7 @@
   {
     "id": "tolgee",
     "name": "Tolgee",
-    "version": "v3.80.4",
+    "version": "latest",
     "description": "Developer & translator friendly web-based localization platform",
     "logo": "tolgee.svg",
     "links": {
@@ -5166,7 +5678,7 @@
   {
     "id": "trmnl-byos-laravel",
     "name": "TRMNL BYOS Laravel",
-    "version": "0.14.0",
+    "version": "0.21.0",
     "description": "TRMNL BYOS Laravel is a self-hosted application to manage TRMNL e-ink devices.",
     "logo": "byos-laravel.svg",
     "links": {
@@ -5324,6 +5836,42 @@
       "marketing",
       "business",
       "self-hosted"
+    ]
+  },
+  {
+    "id": "valkey",
+    "name": "Valkey",
+    "version": "8.1.4",
+    "description": "Valkey is an open-source fork of Redis, backed by AWS and the Linux Foundation. It provides a high-performance, in-memory data structure store with Redis compatibility.",
+    "logo": "valkey.svg",
+    "links": {
+      "github": "https://github.com/valkey-io/valkey",
+      "website": "https://valkey.io/",
+      "docs": "https://github.com/valkey-io/valkey"
+    },
+    "tags": [
+      "database",
+      "cache",
+      "redis",
+      "in-memory"
+    ]
+  },
+  {
+    "id": "vault",
+    "name": "Vault",
+    "version": "latest",
+    "description": "Vault is a tool for securely accessing secrets. A secret is anything that you want to tightly control access to, such as API keys, passwords, certificates, and more. Vault provides a unified interface to any secret, while providing tight access control and recording a detailed audit log. To sign in: In the Vault UI, select 'Token' as the authentication method (not GitHub), then enter the root token from the VAULT_DEV_ROOT_TOKEN_ID environment variable (auto-generated).",
+    "logo": "vault.svg",
+    "links": {
+      "github": "https://github.com/hashicorp/vault",
+      "website": "https://www.vaultproject.io/",
+      "docs": "https://developer.hashicorp.com/vault/docs"
+    },
+    "tags": [
+      "security",
+      "secrets",
+      "devops",
+      "infrastructure"
     ]
   },
   {

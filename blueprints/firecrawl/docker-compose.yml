@@ -124,15 +124,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-    networks:
-      - backend
-      - dokploy-network
- 
-networks:
-  backend:
-    driver: bridge
-  dokploy-network:
-    external: true
  
 volumes:
   nuq_pg_data:

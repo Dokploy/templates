@@ -1,0 +1,45 @@
+services:
+  rote-backend:
+    image: rabithua/rote-backend:${IMAGE_TAG:-latest}
+    pull_policy: always
+    environment:
+      POSTGRESQL_URL: postgresql://rote:${POSTGRES_PASSWORD}@rote-postgres:5432/rote
+    depends_on:
+      rote-postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    command:
+      [
+        "sh",
+        "-c",
+        "sleep 15 && bun run dist/scripts/runMigrations.js && bun run dist/server.js",
+      ]
+
+  rote-frontend:
+    image: rabithua/rote-frontend:${IMAGE_TAG:-latest}
+    pull_policy: always
+    depends_on:
+      - rote-backend
+    environment:
+      # VITE_API_BASE must point to an address that reaches rote-backend (reverse-proxy domain or host IP:port)
+      VITE_API_BASE: ${VITE_API_BASE}
+    restart: unless-stopped
+
+  rote-postgres:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rote
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: rote
+    volumes:
+      - rote-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rote -d rote"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  rote-postgres-data: {}

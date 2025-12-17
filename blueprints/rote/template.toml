@@ -1,0 +1,23 @@
+[variables]
+frontend_domain = "${domain}"
+backend_domain = "${domain}"
+postgres_password = "${password:32}"
+image_tag = "latest"
+
+[config]
+[[config.domains]]
+serviceName = "rote-frontend"
+port = 80
+host = "${frontend_domain}"
+
+[[config.domains]]
+serviceName = "rote-backend"
+port = 3000
+host = "${backend_domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}"
+IMAGE_TAG = "${image_tag}"
+VITE_API_BASE = "http://${backend_domain}"
+
+[[config.mounts]]

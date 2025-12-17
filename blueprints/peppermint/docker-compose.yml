@@ -30,9 +30,5 @@ services:
       DB_HOST: "peppermint-postgres"
       SECRET: ${SECRET}
 
-networks:
-  dokploy-network:
-    external: true
-
 volumes:
   peppermint-postgres-data: 

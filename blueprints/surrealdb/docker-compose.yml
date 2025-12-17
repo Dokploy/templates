@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  surrealdb:
+    image: surrealdb/surrealdb:v2.3.10
+    environment:
+      SURREAL_USER: ${SURREAL_USER}
+      SURREAL_PASS: ${SURREAL_PASS}
+    volumes:
+      - db_data:/usr/app/data
+    user: root
+    command: start rocksdb:/db_data/data.db
+    pull_policy: always
+
+volumes:
+  db_data: {}

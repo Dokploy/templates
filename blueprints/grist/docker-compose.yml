@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  grist:
+    image: gristlabs/grist:latest
+    restart: unless-stopped
+    ports:
+      - 8484
+    volumes:
+      - grist_data:/persist
+    environment:
+      GRIST_DEFAULT_EMAIL: ${GRIST_DEFAULT_EMAIL:-}
+      GRIST_SESSION_SECRET: ${GRIST_SESSION_SECRET:-}
+      GRIST_SINGLE_ORG: ${GRIST_SINGLE_ORG:-}
+      GRIST_HOME_INSTANCE: ${GRIST_HOME_INSTANCE:-}
+
+volumes:
+  grist_data:
+

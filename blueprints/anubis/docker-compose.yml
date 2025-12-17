@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  anubis:
+    image: ghcr.io/techarohq/anubis:latest
+    restart: unless-stopped
+    ports:
+      - "8923" # Anubis default port
+    environment:
+      # Required: Point to your frontend service locally
+      # Example: http://mydocker-wyeud:8080
+      - TARGET=${TARGET}
+
+      # Bind address
+      - BIND=:8923
+
+      # Cookie domain (set to your domain)
+      - COOKIE_DOMAIN=${COOKIE_DOMAIN}
+
+      # Challenge difficulty (1-20, default is 5)
+      # Lower = easier for users, Higher = harder for bots
+      - DIFFICULTY=${DIFFICULTY}
+
+      # OpenGraph passthrough (allows social media previews to work)
+      - OG_PASSTHROUGH=${OG_PASSTHROUGH}
+      - OG_EXPIRY_TIME=${OG_EXPIRY_TIME}
+      - OG_CACHE_CONSIDER_HOST=${OG_CACHE_CONSIDER_HOST}
+
+      # Optional: Serve robots.txt to discourage indexing
+      - SERVE_ROBOTS_TXT=${SERVE_ROBOTS_TXT} # Set to true if you don't want search engines
+
+
+# Unconmment in case you want to connect the anubis container to dokploy-network
+#     networks:
+#       - dokploy-network
+
+# networks:
+#   dokploy-network:
+#     external: true # Using existing dokploy-network to connect to your frontend locally

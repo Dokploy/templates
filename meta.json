@@ -374,10 +374,10 @@
     },
     "logo": "appwrite.svg",
     "tags": [
-      "database", 
-      "firebase", 
-      "mariadb", 
-      "hosting", 
+      "database",
+      "firebase",
+      "mariadb",
+      "hosting",
       "self-hosted"
     ]
   },

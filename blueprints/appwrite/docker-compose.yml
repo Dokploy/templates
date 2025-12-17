@@ -1,16 +1,15 @@
 version: "3.8"
 
-
 x-logging: &x-logging
   logging:
     driver: "json-file"
     options:
       max-file: "5"
       max-size: "10m"
+
 services:
   appwrite:
     image: appwrite/appwrite:1.8.0
-    container_name: appwrite
     <<: *x-logging
     restart: unless-stopped
     networks:
@@ -137,7 +136,6 @@ services:
       - _APP_ASSISTANT_OPENAI_API_KEY
   appwrite-console:
     <<: *x-logging
-    container_name: appwrite-console
     image: appwrite/console:7.4.7
     restart: unless-stopped
     networks:
@@ -149,7 +147,6 @@ services:
   appwrite-realtime:
     image: appwrite/appwrite:1.8.0
     entrypoint: realtime
-    container_name: appwrite-realtime
     <<: *x-logging
     restart: unless-stopped
     labels:
@@ -182,7 +179,6 @@ services:
     image: appwrite/appwrite:1.8.0
     entrypoint: worker-audits
     <<: *x-logging
-    container_name: appwrite-worker-audits
     restart: unless-stopped
     networks:
       - dokploy-network
@@ -208,7 +204,6 @@ services:
     image: appwrite/appwrite:1.8.0
     entrypoint: worker-webhooks
     <<: *x-logging
-    container_name: appwrite-worker-webhooks
     restart: unless-stopped
     networks:
       - dokploy-network
@@ -236,7 +231,6 @@ services:
     image: appwrite/appwrite:1.8.0
     entrypoint: worker-deletes
     <<: *x-logging
-    container_name: appwrite-worker-deletes
     restart: unless-stopped
     networks:
       - dokploy-network
@@ -299,7 +293,6 @@ services:
     image: appwrite/appwrite:1.8.0
     entrypoint: worker-databases
     <<: *x-logging
-    container_name: appwrite-worker-databases
     restart: unless-stopped
     networks:
       - dokploy-network
@@ -325,7 +318,6 @@ services:
     image: appwrite/appwrite:1.8.0
     entrypoint: worker-builds
     <<: *x-logging
-    container_name: appwrite-worker-builds
     restart: unless-stopped
     networks:
       - dokploy-network
@@ -393,7 +385,6 @@ services:
     image: appwrite/appwrite:1.8.0
     entrypoint: worker-certificates
     <<: *x-logging
-    container_name: appwrite-worker-certificates
     restart: unless-stopped
     networks:
       - dokploy-network
@@ -430,7 +421,6 @@ services:
     image: appwrite/appwrite:1.8.0
     entrypoint: worker-functions
     <<: *x-logging
-    container_name: appwrite-worker-functions
     restart: unless-stopped
     networks:
       - dokploy-network
@@ -469,7 +459,6 @@ services:
     image: appwrite/appwrite:1.8.0
     entrypoint: worker-mails
     <<: *x-logging
-    container_name: appwrite-worker-mails
     restart: unless-stopped
     networks:
       - dokploy-network
@@ -503,7 +492,6 @@ services:
     image: appwrite/appwrite:1.8.0
     entrypoint: worker-messaging
     <<: *x-logging
-    container_name: appwrite-worker-messaging
     restart: unless-stopped
     networks:
       - dokploy-network
@@ -554,7 +542,6 @@ services:
     image: appwrite/appwrite:1.8.0
     entrypoint: worker-migrations
     <<: *x-logging
-    container_name: appwrite-worker-migrations
     restart: unless-stopped
     networks:
       - dokploy-network
@@ -590,7 +577,6 @@ services:
     image: appwrite/appwrite:1.8.0
     entrypoint: maintenance
     <<: *x-logging
-    container_name: appwrite-task-maintenance
     restart: unless-stopped
     networks:
       - dokploy-network
@@ -627,7 +613,6 @@ services:
 
   appwrite-task-stats-resources:
     image: appwrite/appwrite:1.8.0
-    container_name: appwrite-task-stats-resources
     entrypoint: stats-resources
     <<: *x-logging
     restart: unless-stopped
@@ -657,7 +642,6 @@ services:
   appwrite-worker-stats-resources:
     image: appwrite/appwrite:1.8.0
     entrypoint: worker-stats-resources
-    container_name: appwrite-worker-stats-resources
     <<: *x-logging
     restart: unless-stopped
     networks:
@@ -685,7 +669,6 @@ services:
   appwrite-worker-stats-usage:
     image: appwrite/appwrite:1.8.0
     entrypoint: worker-stats-usage
-    container_name: appwrite-worker-stats-usage
     <<: *x-logging
     restart: unless-stopped
     networks:
@@ -713,7 +696,6 @@ services:
   appwrite-task-scheduler-functions:
     image: appwrite/appwrite:1.8.0
     entrypoint: schedule-functions
-    container_name: appwrite-task-scheduler-functions
     <<: *x-logging
     restart: unless-stopped
     networks:
@@ -738,7 +720,6 @@ services:
   appwrite-task-scheduler-executions:
     image: appwrite/appwrite:1.8.0
     entrypoint: schedule-executions
-    container_name: appwrite-task-scheduler-executions
     <<: *x-logging
     restart: unless-stopped
     networks:
@@ -763,7 +744,6 @@ services:
   appwrite-task-scheduler-messages:
     image: appwrite/appwrite:1.8.0
     entrypoint: schedule-messages
-    container_name: appwrite-task-scheduler-messages
     <<: *x-logging
     restart: unless-stopped
     networks:
@@ -787,7 +767,6 @@ services:
 
   appwrite-assistant:
     image: appwrite/assistant:0.8.3
-    container_name: appwrite-assistant
     <<: *x-logging
     restart: unless-stopped
     networks:
@@ -797,14 +776,12 @@ services:
 
   appwrite-browser:
     image: appwrite/browser:0.2.4
-    container_name: appwrite-browser
     <<: *x-logging
     restart: unless-stopped
     networks:
       - dokploy-network
 
   openruntimes-executor:
-    container_name: openruntimes-executor
     hostname: exc1
     <<: *x-logging
     restart: unless-stopped
@@ -856,7 +833,6 @@ services:
 
   mariadb:
     image: mariadb:10.11 # fix issues when upgrading using: mysql_upgrade -u root -p
-    container_name: appwrite-mariadb
     <<: *x-logging
     restart: unless-stopped
     networks:
@@ -873,7 +849,6 @@ services:
 
   redis:
     image: redis:7.2.4-alpine
-    container_name: appwrite-redis
     <<: *x-logging
     restart: unless-stopped
     command: >
@@ -888,7 +863,6 @@ services:
 
   # clamav:
   #   image: appwrite/clamav:1.2.0
-  #   container_name: appwrite-clamav
   #   restart: unless-stopped
   #   networks:
   #     - dokploy-network

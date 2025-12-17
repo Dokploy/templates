@@ -12,8 +12,6 @@ services:
     image: appwrite/appwrite:1.8.0
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     labels:
       - traefik.enable=true
       - traefik.constraint-label-stack=appwrite
@@ -138,8 +136,6 @@ services:
     <<: *x-logging
     image: appwrite/console:7.4.7
     restart: unless-stopped
-    networks:
-      - dokploy-network
     labels:
       - "traefik.enable=true"
       - "traefik.constraint-label-stack=appwrite"
@@ -152,8 +148,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.constraint-label-stack=appwrite"
-    networks:
-      - dokploy-network
     depends_on:
       - mariadb
       - redis
@@ -180,8 +174,6 @@ services:
     entrypoint: worker-audits
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - redis
       - mariadb
@@ -205,8 +197,6 @@ services:
     entrypoint: worker-webhooks
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - redis
       - mariadb
@@ -232,8 +222,6 @@ services:
     entrypoint: worker-deletes
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - redis
       - mariadb
@@ -294,8 +282,6 @@ services:
     entrypoint: worker-databases
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - redis
       - mariadb
@@ -319,8 +305,6 @@ services:
     entrypoint: worker-builds
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - redis
       - mariadb
@@ -386,8 +370,6 @@ services:
     entrypoint: worker-certificates
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - redis
       - mariadb
@@ -422,8 +404,6 @@ services:
     entrypoint: worker-functions
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - redis
       - mariadb
@@ -460,8 +440,6 @@ services:
     entrypoint: worker-mails
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - redis
     environment:
@@ -493,8 +471,6 @@ services:
     entrypoint: worker-messaging
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     volumes:
       - appwrite-uploads:/storage/uploads:rw
     depends_on:
@@ -543,8 +519,6 @@ services:
     entrypoint: worker-migrations
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     volumes:
       - appwrite-imports:/storage/imports:rw
     depends_on:
@@ -578,8 +552,6 @@ services:
     entrypoint: maintenance
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - redis
     environment:
@@ -616,8 +588,6 @@ services:
     entrypoint: stats-resources
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - redis
       - mariadb
@@ -644,8 +614,6 @@ services:
     entrypoint: worker-stats-resources
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - redis
       - mariadb
@@ -671,8 +639,6 @@ services:
     entrypoint: worker-stats-usage
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - redis
       - mariadb
@@ -698,8 +664,6 @@ services:
     entrypoint: schedule-functions
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - mariadb
       - redis
@@ -722,8 +686,6 @@ services:
     entrypoint: schedule-executions
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - mariadb
       - redis
@@ -746,8 +708,6 @@ services:
     entrypoint: schedule-messages
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     depends_on:
       - mariadb
       - redis
@@ -769,8 +729,6 @@ services:
     image: appwrite/assistant:0.8.3
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     environment:
       - _APP_ASSISTANT_OPENAI_API_KEY
 
@@ -778,8 +736,6 @@ services:
     image: appwrite/browser:0.2.4
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
 
   openruntimes-executor:
     hostname: exc1
@@ -787,8 +743,6 @@ services:
     restart: unless-stopped
     stop_signal: SIGINT
     image: openruntimes/executor:0.7.22
-    networks:
-      - dokploy-network
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - appwrite-builds:/storage/builds:rw
@@ -835,8 +789,6 @@ services:
     image: mariadb:10.11 # fix issues when upgrading using: mysql_upgrade -u root -p
     <<: *x-logging
     restart: unless-stopped
-    networks:
-      - dokploy-network
     volumes:
       - appwrite-mariadb:/var/lib/mysql:rw
     environment:
@@ -856,16 +808,12 @@ services:
       --maxmemory            512mb
       --maxmemory-policy     allkeys-lru
       --maxmemory-samples    5
-    networks:
-      - dokploy-network
     volumes:
       - appwrite-redis:/data:rw
 
   # clamav:
   #   image: appwrite/clamav:1.2.0
   #   restart: unless-stopped
-  #   networks:
-  #     - dokploy-network
   #   volumes:
   #     - appwrite-uploads:/storage/uploads
 
@@ -880,7 +828,3 @@ volumes:
   appwrite-sites:
   appwrite-builds:
   appwrite-config:
-
-networks:
-  dokploy-network:
-    external: true

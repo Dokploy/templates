@@ -8,7 +8,6 @@ Key components:
 
 - **Blueprints**: Self-contained templates with `docker-compose.yml` (service definitions) and `template.toml` (Dokploy-specific configuration for domains, env vars, mounts).
 - **meta.json**: Centralized index of all templates, aggregated from blueprint metadata. Entries include `id`, `name`, `version`, `description`, `logo`, `links`, and `tags`.
-- **app/**: Vite-based React frontend for local preview/development (runs at http://localhost:5173). Copies blueprints and meta.json to dist during build.
 - **Scripts**: Node.js tools in root and `build-scripts/` for maintaining `meta.json` (deduplication, sorting, validation).
 
 Data flow: New templates added to `blueprints/` → Metadata updated in `meta.json` → Processing scripts ensure consistency → App builds include static blueprints/meta for preview.
@@ -22,7 +21,6 @@ The "why": Enables rapid, standardized deployment of 200+ OSS apps on Dokploy wi
   - `docker-compose.yml`: Standard Docker Compose v3.8. Avoid `ports`, `container_name`, `networks`—Dokploy handles isolation via internal networks.
   - `template.toml`: Defines variables (e.g., `${domain}`), domains (service:port → host), env vars, and mounts. Use helpers like `${password:32}`, `${uuid}`, `${jwt:secret_var}`.
   - `logo.svg/png`: Service icon, referenced in `meta.json`.
-- `app/vite.config.ts`: Configures build to copy `blueprints/*` and `meta.json` to dist root for static serving.
 - `dedupe-and-sort-meta.js`: Standalone script—reads `meta.json`, removes duplicate `id`s (keeps first), sorts by `id` (case-insensitive), creates timestamped backup.
 - `build-scripts/process-meta.js`: Advanced processor with CLI options (`--verbose`, `--no-backup`, `--input`/`--output`), JSON schema validation (required: `id`, `name`, `version`, `description`, `links.github`, `logo`, `tags` array).
 
@@ -39,14 +37,7 @@ Exemplary blueprint: `blueprints/ghost/`—`docker-compose.yml` exposes port 236
    - Run `node dedupe-and-sort-meta.js --backup` to validate/sort.
    - Commit; PR triggers Dokploy preview (base64 import for testing).
 
-2. **Local Development**:
-
-   - App: `cd app && pnpm install && pnpm dev` (Vite dev server).
-   - Meta processing: `npm run process-meta` or `make process-meta` (uses Makefile targets: `validate`, `check`, `build`).
-   - Build app: `cd app && pnpm build`—copies blueprints/meta to `dist/` for static hosting.
-   - Test template: Use PR preview URL or local Dokploy instance; import base64 from template card.
-
-3. **CI/CD**:
+2. **CI/CD**:
    - `.github/workflows/validate-meta.yml` (if present): Runs validation on push/PR—fails on duplicates, invalid JSON, missing fields.
    - Integrate processing: Add `npm run process-meta` to build steps; use `--no-backup` in CI.
 
@@ -67,7 +58,7 @@ No tests in repo—focus on manual validation via scripts and Dokploy deploys. D
 - **Versions**: Pin images to specific versions in `docker-compose.yml` (e.g., `ghost:5.82.0-alpine`); match in `meta.json.version`.
 - **Logos**: SVG preferred; size ~128x128; file name in `meta.json.logo` (e.g., "ghost.svg").
 
-Cross-component: No runtime communication—templates independent. App consumes static blueprints/meta for UI rendering (e.g., search, cards via React components in `app/src/`).
+Cross-component: Templates are independent and ship as static blueprints/meta.
 
 ## Integration Points
 

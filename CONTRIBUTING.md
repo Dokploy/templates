@@ -148,7 +148,6 @@ Use these in `${}` for dynamic values:
 
   - Omit explicit ports; let Dokploy handle exposure.
   - Use persistent volumes for data (e.g., databases).
-  - Set `restart: unless-stopped` for services.
 
 - **Template.toml**:
 

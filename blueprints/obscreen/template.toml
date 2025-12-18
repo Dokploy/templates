@@ -12,5 +12,5 @@ host = "${main_domain}"
 
 [config.env]
 SECRET_KEY = "${secret_key}"
-FROZEN_VAR_EXTERNAL_URL = "https://${main_domain}"
+FROZEN_VAR_EXTERNAL_URL = "http://${main_domain}"
 PORT = "5000"

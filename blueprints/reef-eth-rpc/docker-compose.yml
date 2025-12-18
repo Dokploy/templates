@@ -11,4 +11,4 @@ services:
     ports:
       - "${PORT}:${PORT}"
     entrypoint: /bin/sh
-    command: -c "eth-rpc --node-rpc-url $NODE_RPC_URL --rpc-port $PORT --rpc-external"
+    command: -c "eth-rpc --node-rpc-url $NODE_RPC_URL --rpc-port $PORT --rpc-external --rpc-cors all"

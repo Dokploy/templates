@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${password:30}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "obscreen"
+port = 5_000
+host = "${main_domain}"
+
+[config.env]
+SECRET_KEY = "${secret_key}"
+FROZEN_VAR_EXTERNAL_URL = "https://${main_domain}"
+PORT = "5000"

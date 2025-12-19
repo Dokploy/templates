@@ -61,6 +61,7 @@ services:
       STORAGE_USE_SSL: "false"
       STORAGE_SKIP_BUCKET_CHECK: "false"
 
+
 volumes:
   minio_data:
   postgres_data:

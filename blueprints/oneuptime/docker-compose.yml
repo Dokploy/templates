@@ -48,10 +48,12 @@ services:
     image: redis:7-alpine
     restart: unless-stopped
     command: redis-server --requirepass ${REDIS_PASSWORD}
+    environment:
+      REDISCLI_AUTH: ${REDIS_PASSWORD}
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -67,7 +69,7 @@ services:
     volumes:
       - clickhouse_data:/var/lib/clickhouse
     healthcheck:
-      test: ["CMD", "clickhouse-client", "--password", "${CLICKHOUSE_PASSWORD}", "--query", "SELECT 1"]
+      test: ["CMD-SHELL", "clickhouse-client --password $CLICKHOUSE_PASSWORD --query 'SELECT 1'"]
       interval: 10s
       timeout: 5s
       retries: 5

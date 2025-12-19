@@ -8,6 +8,8 @@ serviceName = "easyappointments"
 port = 80
 host = "${main_domain}"
 
-[config.env]
-DOMAIN = "${main_domain}"
-DB_PASSWORD = "${db_password}"
+[[config.env]]
+value = "DOMAIN=${main_domain}"
+
+[[config.env]]
+value = "DB_PASSWORD=${db_password}"

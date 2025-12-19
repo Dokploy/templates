@@ -45,7 +45,7 @@ services:
       PORT: 3000
       NODE_ENV: production
       PUBLIC_URL: https://${APP_DOMAIN}
-      STORAGE_URL: https://${APP_DOMAIN}/minio/default
+      STORAGE_URL: https://${APP_DOMAIN}/default
       CHROME_TOKEN: ${CHROME_TOKEN}
       CHROME_URL: ws://chrome:3000
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres

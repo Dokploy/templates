@@ -30,4 +30,4 @@ host = "${main_domain}"
 serviceName = "minio"
 port = 9000
 host = "${main_domain}"
-path = "/minio"
+path = "/default"

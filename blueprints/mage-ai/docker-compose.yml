@@ -16,6 +16,11 @@ services:
     volumes:
       - mageai_data:/home/src/
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-s", "-f", "-o", "/dev/null", "http://localhost:6789"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 volumes:
   mageai_data:

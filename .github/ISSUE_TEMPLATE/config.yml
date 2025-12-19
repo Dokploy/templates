@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 Documentation
+    url: https://docs.dokploy.com
+    about: Check out the official Dokploy documentation for guides and references
+  - name: 🌐 Website
+    url: https://dokploy.com
+    about: Visit the official Dokploy website
+  - name: 💬 GitHub Discussions
+    url: https://github.com/Dokploy/dokploy/discussions
+    about: Join the community discussions for questions and support

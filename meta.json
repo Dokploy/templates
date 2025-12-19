@@ -3597,6 +3597,24 @@
     ]
   },
   {
+    "id": "mage-ai",
+    "name": "Mage AI",
+    "version": "0.9.78",
+    "description": "Build, run, and manage data pipelines for integrating and transforming data.",
+    "logo": "mage-ai.svg",
+    "links": {
+      "github": "https://github.com/mage-ai/mage-ai",
+      "website": "https://mage.ai",
+      "docs": "https://docs.mage.ai"
+    },
+    "tags": [
+      "data",
+      "dbt",
+      "etl",
+      "pipelines"
+    ]
+  },
+  {
     "id": "mailpit",
     "name": "Mailpit",
     "version": "v1.22.3",

@@ -1,0 +1,28 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+  "WEBLATE_SITE_DOMAIN=${main_domain}",
+  "WEBLATE_SITE_TITLE=Weblate",
+  "WEBLATE_ADMIN_NAME=Admin",
+  "WEBLATE_ADMIN_EMAIL=admin@${main_domain}",
+  "WEBLATE_ADMIN_PASSWORD=${password:16}",
+  "WEBLATE_SERVER_EMAIL=noreply@${main_domain}",
+  "WEBLATE_DEFAULT_FROM_EMAIL=noreply@${main_domain}",
+  "WEBLATE_REGISTRATION_OPEN=0",
+  "WEBLATE_TIME_ZONE=UTC",
+  "WEBLATE_ENABLE_HTTPS=0",
+  "WEBLATE_CSRF_TRUSTED_ORIGINS=https://${main_domain}",
+  "WEBLATE_SECRET_KEY=${base64:64}",
+  "WEBLATE_TAG=latest",
+  "POSTGRES_USER=weblate",
+  "POSTGRES_DB=weblate",
+  "POSTGRES_PASSWORD=${password:32}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "weblate"
+port = 8080
+host = "${main_domain}"

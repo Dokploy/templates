@@ -5978,6 +5978,24 @@
     ]
   },
   {
+    "id": "weblate",
+    "name": "Weblate",
+    "version": "latest",
+    "description": "Weblate is a web-based continuous localization platform with tight version control integration, supporting Git, GitHub, GitLab, and more. It provides translation memory, machine translation, and quality checks for efficient collaborative translation workflows.",
+    "logo": "weblate.png",
+    "links": {
+      "github": "https://github.com/WeblateOrg/weblate",
+      "website": "https://weblate.org/",
+      "docs": "https://docs.weblate.org/"
+    },
+    "tags": [
+      "localization",
+      "translation",
+      "i18n",
+      "collaboration"
+    ]
+  },
+  {
     "id": "wg-easy",
     "name": "WG-Easy",
     "version": "15",

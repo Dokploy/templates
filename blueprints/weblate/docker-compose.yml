@@ -1,0 +1,83 @@
+version: "3"
+
+services:
+  weblate:
+    image: weblate/weblate:${WEBLATE_TAG:-latest}
+    restart: unless-stopped
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      WEBLATE_SITE_DOMAIN: ${WEBLATE_SITE_DOMAIN}
+      WEBLATE_SITE_TITLE: ${WEBLATE_SITE_TITLE:-Weblate}
+      WEBLATE_ADMIN_NAME: ${WEBLATE_ADMIN_NAME:-Admin}
+      WEBLATE_ADMIN_EMAIL: ${WEBLATE_ADMIN_EMAIL}
+      WEBLATE_ADMIN_PASSWORD: ${WEBLATE_ADMIN_PASSWORD}
+      WEBLATE_SERVER_EMAIL: ${WEBLATE_SERVER_EMAIL}
+      WEBLATE_DEFAULT_FROM_EMAIL: ${WEBLATE_DEFAULT_FROM_EMAIL}
+      WEBLATE_REGISTRATION_OPEN: ${WEBLATE_REGISTRATION_OPEN:-0}
+      WEBLATE_TIME_ZONE: ${WEBLATE_TIME_ZONE:-UTC}
+      WEBLATE_ENABLE_HTTPS: ${WEBLATE_ENABLE_HTTPS:-1}
+      WEBLATE_CSRF_TRUSTED_ORIGINS: ${WEBLATE_CSRF_TRUSTED_ORIGINS}
+      WEBLATE_SECRET_KEY: ${WEBLATE_SECRET_KEY}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DATABASE: ${POSTGRES_DB}
+      POSTGRES_HOST: postgresql
+      POSTGRES_PORT: 5432
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    expose:
+      - 8080
+    volumes:
+      - weblate-data:/app/data
+      - weblate-cache:/app/cache
+    read_only: true
+    tmpfs:
+      - /run
+      - /tmp
+    networks:
+      - dokploy-network
+
+  postgresql:
+    image: postgres:15
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - dokploy-network
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - redis-data:/data
+    networks:
+      - dokploy-network
+
+networks:
+  dokploy-network:
+    external: true
+
+volumes:
+  weblate-data:
+  weblate-cache:
+  postgres-data:
+  redis-data:

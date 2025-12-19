@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+database_password = "${password:32}"
+redis_password = "${password:32}"
+clickhouse_password = "${password:32}"
+encryption_secret = "${password:64}"
+
+[config]
+env = [
+  "ONEUPTIME_HOST=${main_domain}",
+  "DATABASE_PASSWORD=${database_password}",
+  "REDIS_PASSWORD=${redis_password}",
+  "CLICKHOUSE_PASSWORD=${clickhouse_password}",
+  "ENCRYPTION_SECRET=${encryption_secret}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "oneuptime"
+port = 3002
+host = "${main_domain}"

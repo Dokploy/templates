@@ -67,7 +67,7 @@ services:
     volumes:
       - clickhouse_data:/var/lib/clickhouse
     healthcheck:
-      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      test: ["CMD", "clickhouse-client", "--password", "${CLICKHOUSE_PASSWORD}", "--query", "SELECT 1"]
       interval: 10s
       timeout: 5s
       retries: 5

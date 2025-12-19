@@ -32,7 +32,7 @@ services:
     restart: unless-stopped
 
   discourse-app:
-    image: docker.io/bitnami/discourse:3.3.2
+    image: docker.io/bitnamilegacy/discourse:3.5.0
 
     volumes:
       - discourse-data:/bitnami/discourse
@@ -59,7 +59,7 @@ services:
     restart: unless-stopped
 
   discourse-sidekiq:
-    image: docker.io/bitnami/discourse:3.3.2
+    image: docker.io/bitnamilegacy/discourse:3.5.0
 
     volumes:
       - discourse-sidekiq-data:/bitnami/discourse

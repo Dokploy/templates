@@ -5048,6 +5048,24 @@
     ]
   },
   {
+    "id": "reactive-resume",
+    "name": "Reactive Resume",
+    "version": "latest",
+    "description": "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/AmruthPillai/Reactive-Resume",
+      "website": "https://rxresu.me/",
+      "docs": "https://docs.rxresu.me/"
+    },
+    "tags": [
+      "resume",
+      "cv",
+      "productivity",
+      "document"
+    ]
+  },
+  {
     "id": "registry",
     "name": "Docker Registry",
     "version": "2",

@@ -17,6 +17,9 @@ services:
       S3_INTERNAL_ENDPOINT: "http://minio:3902"
     expose:
       - 3000
+    depends_on:
+      - ps-mysql
+      - minio
 
   ps-mysql:
     image: mysql:8.0
@@ -34,11 +37,10 @@ services:
       - ps-mysql:/var/lib/mysql
 
   minio:
-    image: bitnami/minio:latest
+    image: quay.io/minio/minio:RELEASE.2025-05-24T17-08-30Z
     restart: unless-stopped
+    command: server /bitnami/minio/data --address ":3902" --console-address ":3903"
     environment:
-      MINIO_API_PORT_NUMBER: 3902
-      MINIO_CONSOLE_PORT_NUMBER: 3903
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     expose:
@@ -47,6 +49,11 @@ services:
     volumes:
       - minio-data:/bitnami/minio/data
       - minio-certs:/certs
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
 
 volumes:
   ps-mysql:

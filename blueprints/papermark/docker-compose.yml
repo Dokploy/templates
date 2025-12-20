@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    volumes:
+      - papermark-postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=papermark
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=papermark
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U papermark"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - papermark-redis-data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  papermark:
+    image: ghcr.io/avnox-com/papermark:sha-d6a12777d41d
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=postgresql://papermark:${POSTGRES_PASSWORD}@postgres:5432/papermark
+      - POSTGRES_PRISMA_URL=postgresql://papermark:${POSTGRES_PASSWORD}@postgres:5432/papermark
+      - POSTGRES_PRISMA_URL_NON_POOLING=postgresql://papermark:${POSTGRES_PASSWORD}@postgres:5432/papermark
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=http://${PAPERMARK_HOST}
+      - NEXT_PUBLIC_BASE_URL=http://${PAPERMARK_HOST}
+      - NEXT_PUBLIC_MARKETING_URL=http://${PAPERMARK_HOST}
+      - NEXT_PRIVATE_DOCUMENT_PASSWORD_KEY=${DOCUMENT_PASSWORD_KEY}
+      - NEXT_PUBLIC_UPLOAD_TRANSPORT=database
+      - UPSTASH_REDIS_REST_URL=http://redis:6379
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  papermark-postgres-data:
+  papermark-redis-data:

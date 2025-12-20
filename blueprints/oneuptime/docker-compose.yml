@@ -64,6 +64,7 @@ services:
       CLICKHOUSE_DATABASE: oneuptime
       SERVER_URL: http://${ONEUPTIME_HOST}
       ENCRYPTION_SECRET: ${ENCRYPTION_SECRET}
+      ONEUPTIME_SECRET: ${ONEUPTIME_SECRET}
     depends_on:
       postgres:
         condition: service_healthy
@@ -85,6 +86,7 @@ services:
       REDIS_PORT: 6379
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       SERVER_URL: http://${ONEUPTIME_HOST}
+      ONEUPTIME_SECRET: ${ONEUPTIME_SECRET}
     depends_on:
       postgres:
         condition: service_healthy
@@ -104,6 +106,7 @@ services:
       REDIS_PORT: 6379
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       SERVER_URL: http://${ONEUPTIME_HOST}
+      ONEUPTIME_SECRET: ${ONEUPTIME_SECRET}
     depends_on:
       postgres:
         condition: service_healthy
@@ -123,6 +126,7 @@ services:
       REDIS_PORT: 6379
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       SERVER_URL: http://${ONEUPTIME_HOST}
+      ONEUPTIME_SECRET: ${ONEUPTIME_SECRET}
     depends_on:
       postgres:
         condition: service_healthy
@@ -148,6 +152,7 @@ services:
       CLICKHOUSE_DATABASE: oneuptime
       SERVER_URL: http://${ONEUPTIME_HOST}
       ENCRYPTION_SECRET: ${ENCRYPTION_SECRET}
+      ONEUPTIME_SECRET: ${ONEUPTIME_SECRET}
     depends_on:
       postgres:
         condition: service_healthy
@@ -167,6 +172,7 @@ services:
       DATABASE_NAME: oneuptime
       SERVER_URL: http://${ONEUPTIME_HOST}
       ONEUPTIME_URL: http://${ONEUPTIME_HOST}
+      ONEUPTIME_SECRET: ${ONEUPTIME_SECRET}
       PROBE_KEY: ${PROBE_KEY}
       PROBE_NAME: ${PROBE_NAME}
     depends_on:

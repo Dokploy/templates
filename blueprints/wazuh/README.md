@@ -4,6 +4,7 @@ This template deploys Wazuh, a free and open source security platform that unifi
 
 ## Components
 
+
 This single-node deployment includes:
 - **Wazuh Manager**: Processes security events from agents and external sources
 - **Wazuh Indexer**: Stores and indexes security data (based on OpenSearch)

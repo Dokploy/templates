@@ -61,7 +61,7 @@ services:
       - OPENSEARCH_HOSTS=http://wazuh.indexer:9200
       - INDEXER_USERNAME=${INDEXER_USERNAME}
       - INDEXER_PASSWORD=${INDEXER_PASSWORD}
-      - WAZUH_API_URL=https://wazuh.manager
+      - WAZUH_API_URL=http://wazuh.manager
       - DASHBOARD_USERNAME=${DASHBOARD_USERNAME}
       - DASHBOARD_PASSWORD=${DASHBOARD_PASSWORD}
       - API_USERNAME=${API_USERNAME}

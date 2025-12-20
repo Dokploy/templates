@@ -2,12 +2,16 @@
 main_domain = "${domain}"
 db_password = "${password:32}"
 minio_password = "${password:32}"
+temporal_db_password = "${password:32}"
 
 [config]
 env = [
   "AIRBYTE_DB_PASSWORD=${db_password}",
-  "MINIO_ROOT_PASSWORD=${minio_password}"
+  "MINIO_ROOT_PASSWORD=${minio_password}",
+  "TEMPORAL_DB_PASSWORD=${temporal_db_password}"
 ]
+# Note: The Airbyte worker service requires a Docker socket mount at /var/run/docker.sock.
+# This mount is intentionally configured in docker-compose.yml rather than via config.mounts.
 mounts = []
 
 [[config.domains]]

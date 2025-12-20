@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: temporal
-      POSTGRES_PASSWORD: temporal
+      POSTGRES_PASSWORD: ${TEMPORAL_DB_PASSWORD}
       POSTGRES_DB: temporal
     volumes:
       - temporal-db:/var/lib/postgresql/data
@@ -33,7 +33,7 @@ services:
       DB: postgresql
       DB_PORT: 5432
       POSTGRES_USER: temporal
-      POSTGRES_PWD: temporal
+      POSTGRES_PWD: ${TEMPORAL_DB_PASSWORD}
       POSTGRES_SEEDS: temporal-db
       DYNAMIC_CONFIG_FILE_PATH: config/dynamicconfig/development-sql.yaml
 

@@ -62,7 +62,7 @@ services:
       CLICKHOUSE_USER: default
       CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
       CLICKHOUSE_DATABASE: oneuptime
-      SERVER_URL: https://${ONEUPTIME_HOST}
+      SERVER_URL: http://${ONEUPTIME_HOST}
       ENCRYPTION_SECRET: ${ENCRYPTION_SECRET}
     depends_on:
       postgres:

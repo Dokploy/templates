@@ -30,7 +30,7 @@ services:
     depends_on:
       - temporal-db
     environment:
-      DB: postgresql
+      DB: postgres12
       DB_PORT: 5432
       POSTGRES_USER: temporal
       POSTGRES_PWD: ${TEMPORAL_DB_PASSWORD}
@@ -68,6 +68,7 @@ services:
       WEBAPP_URL: http://webapp:80
       TEMPORAL_HOST: temporal:7233
       LOG_LEVEL: INFO
+      STORAGE_TYPE: MINIO
       S3_LOG_BUCKET: airbyte-dev-logs
       S3_LOG_BUCKET_REGION: us-east-1
       S3_PATH_STYLE_ACCESS: "true"
@@ -101,6 +102,7 @@ services:
       WEBAPP_URL: http://webapp:80
       TEMPORAL_HOST: temporal:7233
       LOG_LEVEL: INFO
+      STORAGE_TYPE: MINIO
       S3_LOG_BUCKET: airbyte-dev-logs
       S3_LOG_BUCKET_REGION: us-east-1
       S3_PATH_STYLE_ACCESS: "true"

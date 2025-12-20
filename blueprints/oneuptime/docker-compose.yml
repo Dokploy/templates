@@ -1,5 +1,4 @@
 version: "3.8"
-
 services:
   oneuptime:
     image: oneuptime/oneuptime:7.0.3424

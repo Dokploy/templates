@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+indexer_username = "admin"
+indexer_password = "${password:32}"
+dashboard_username = "kibanaserver"
+dashboard_password = "${password:32}"
+api_username = "wazuh-wui"
+api_password = "${password:32}"
+
+[config]
+env = [
+  "INDEXER_USERNAME=${indexer_username}",
+  "INDEXER_PASSWORD=${indexer_password}",
+  "DASHBOARD_USERNAME=${dashboard_username}",
+  "DASHBOARD_PASSWORD=${dashboard_password}",
+  "API_USERNAME=${api_username}",
+  "API_PASSWORD=${api_password}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "wazuh.dashboard"
+port = 5601
+host = "${main_domain}"

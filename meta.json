@@ -4263,7 +4263,7 @@
   {
     "id": "oneuptime",
     "name": "OneUptime",
-    "version": "7.0.3424",
+    "version": "release",
     "description": "Complete open-source observability platform with uptime monitoring, status pages, incident management, and on-call scheduling.",
     "logo": "logo.svg",
     "links": {

@@ -10,7 +10,6 @@ services:
       DOCLING_SERVE_PORT: ${DOCLING_SERVE_PORT}
     volumes:
       - docling-data:/opt/app-root/src/.cache/docling/models
-
 volumes:
   docling-data:
 

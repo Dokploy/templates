@@ -84,7 +84,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: ${REDIS_PASSWORD}
-      SERVER_URL: https://${ONEUPTIME_HOST}
+      SERVER_URL: http://${ONEUPTIME_HOST}
     depends_on:
       postgres:
         condition: service_healthy

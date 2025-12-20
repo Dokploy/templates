@@ -1851,6 +1851,25 @@
     ]
   },
   {
+    "id": "dolibarr",
+    "name": "Dolibarr",
+    "version": "21.0.0",
+    "description": "Dolibarr ERP & CRM is a modern software package that helps manage your organization's activities (contacts, quotes, invoices, orders, stocks, agenda, human resources, ecm, manufacturing).",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/Dolibarr/dolibarr",
+      "website": "https://www.dolibarr.org/",
+      "docs": "https://wiki.dolibarr.org/"
+    },
+    "tags": [
+      "erp",
+      "crm",
+      "business",
+      "management",
+      "invoicing"
+    ]
+  },
+  {
     "id": "domain-locker",
     "name": "Domain Locker",
     "version": "latest",

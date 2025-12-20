@@ -165,8 +165,8 @@ services:
       DATABASE_USERNAME: oneuptime
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_NAME: oneuptime
-      SERVER_URL: https://${ONEUPTIME_HOST}
-      ONEUPTIME_URL: https://${ONEUPTIME_HOST}
+      SERVER_URL: http://${ONEUPTIME_HOST}
+      ONEUPTIME_URL: http://${ONEUPTIME_HOST}
     depends_on:
       postgres:
         condition: service_healthy

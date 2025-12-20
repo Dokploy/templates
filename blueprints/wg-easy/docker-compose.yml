@@ -3,24 +3,23 @@ volumes:
 
 services:
   wg-easy:
-    image: ghcr.io/wg-easy/wg-easy:15
-    restart: unless-stopped
     environment:
-      - WG_HOST=${WIREGUARD_HOST}
-      - PASSWORD=${WIREGUARD_PASSWORD}
-      - WG_PORT=51820
+      - INIT_ENABLED=1
+      - INIT_HOST=${WIREGUARD_HOST}
+      - INIT_PORT=51820
+      - INIT_USERNAME=admin
+      - INIT_PASSWORD=${WIREGUARD_PASSWORD}
+      - INIT_DNS=1.1.1.1,8.8.8.8
       - PORT=51821
-      - WG_MTU=1280
-      - WG_DEFAULT_DNS=1.1.1.1,8.8.8.8
-      - WG_ALLOWED_IPS=0.0.0.0/0
-      - WG_POST_UP=iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE; iptables -A FORWARD -i wg0 -j ACCEPT; iptables -A FORWARD -o wg0 -j ACCEPT;
-      - WG_POST_DOWN=iptables -t nat -D POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE; iptables -D FORWARD -i wg0 -j ACCEPT; iptables -D FORWARD -o wg0 -j ACCEPT;
+    image: ghcr.io/wg-easy/wg-easy:15
+    container_name: wg-easy
     volumes:
       - etc_wireguard:/etc/wireguard
       - /lib/modules:/lib/modules:ro
     ports:
       - "51820:51820/udp"
       - "51821:51821/tcp"
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
       - SYS_MODULE

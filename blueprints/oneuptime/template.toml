@@ -6,6 +6,7 @@ redis_password = "${password:32}"
 clickhouse_password = "${password:32}"
 encryption_secret = "${password:64}"
 
+
 [config]
 env = [
   "ONEUPTIME_HOST=${main_domain}",

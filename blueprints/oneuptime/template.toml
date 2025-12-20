@@ -5,6 +5,8 @@ database_password = "${password:32}"
 redis_password = "${password:32}"
 clickhouse_password = "${password:32}"
 encryption_secret = "${password:64}"
+probe_key = "${password:32}"
+probe_name = "Dokploy Probe"
 
 
 [config]
@@ -15,6 +17,8 @@ env = [
   "REDIS_PASSWORD=${redis_password}",
   "CLICKHOUSE_PASSWORD=${clickhouse_password}",
   "ENCRYPTION_SECRET=${encryption_secret}",
+  "PROBE_KEY=${probe_key}",
+  "PROBE_NAME=${probe_name}",
 ]
 mounts = []
 

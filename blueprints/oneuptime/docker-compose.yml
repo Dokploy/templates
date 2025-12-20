@@ -167,6 +167,8 @@ services:
       DATABASE_NAME: oneuptime
       SERVER_URL: http://${ONEUPTIME_HOST}
       ONEUPTIME_URL: http://${ONEUPTIME_HOST}
+      PROBE_KEY: ${PROBE_KEY}
+      PROBE_NAME: ${PROBE_NAME}
     depends_on:
       postgres:
         condition: service_healthy

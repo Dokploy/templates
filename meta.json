@@ -1765,14 +1765,13 @@
   {
     "id": "docling-serve",
     "name": "Docling Serve",
-    "version": "latest",
+    "version": "v0.5.1",
     "description": "Running Docling as an API service for document processing and conversion with AI-powered capabilities.",
     "logo": "docling-serve.png",
     "links": {
-      "github": "https://github.com/docling-project/docling-serve",
-      "website": "https://docling-project.github.io/docling-serve/",
-      "docs": "https://docling-project.github.io/docling-serve/",
-      "dockerhub": "https://quay.io/repository/docling-project/docling-serve"
+      "github": "https://github.com/DS4SD/docling-serve",
+      "website": "https://github.com/DS4SD/docling-serve",
+      "docs": "https://github.com/DS4SD/docling-serve#readme"
     },
     "tags": [
       "document-processing",

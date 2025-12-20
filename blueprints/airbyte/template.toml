@@ -1,8 +1,13 @@
 [variables]
 main_domain = "${domain}"
+db_password = "${password:32}"
+minio_password = "${password:32}"
 
 [config]
-env = []
+env = [
+  "AIRBYTE_DB_PASSWORD=${db_password}",
+  "MINIO_ROOT_PASSWORD=${minio_password}"
+]
 mounts = []
 
 [[config.domains]]

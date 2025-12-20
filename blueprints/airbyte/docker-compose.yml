@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: docker
-      POSTGRES_PASSWORD: docker
+      POSTGRES_PASSWORD: ${AIRBYTE_DB_PASSWORD}
       POSTGRES_DB: airbyte
     volumes:
       - db:/var/lib/postgresql/data
@@ -43,7 +43,7 @@ services:
     restart: unless-stopped
     environment:
       MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: minio123
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
       - minio:/data
     command: server /data --console-address ":9001"
@@ -57,11 +57,11 @@ services:
       - temporal
     environment:
       DATABASE_USER: docker
-      DATABASE_PASSWORD: docker
+      DATABASE_PASSWORD: ${AIRBYTE_DB_PASSWORD}
       DATABASE_DB: airbyte
       DATABASE_URL: jdbc:postgresql://db:5432/airbyte
       CONFIG_DATABASE_USER: docker
-      CONFIG_DATABASE_PASSWORD: docker
+      CONFIG_DATABASE_PASSWORD: ${AIRBYTE_DB_PASSWORD}
       CONFIG_DATABASE_URL: jdbc:postgresql://db:5432/airbyte
       WORKSPACE_ROOT: /data
       TRACKING_STRATEGY: segment
@@ -72,12 +72,12 @@ services:
       S3_LOG_BUCKET_REGION: us-east-1
       S3_PATH_STYLE_ACCESS: "true"
       AWS_ACCESS_KEY_ID: minio
-      AWS_SECRET_ACCESS_KEY: minio123
+      AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
       S3_MINIO_ENDPOINT: http://minio:9000
       STATE_STORAGE_MINIO_BUCKET_NAME: airbyte-state-storage
       STATE_STORAGE_MINIO_ENDPOINT: http://minio:9000
       STATE_STORAGE_MINIO_ACCESS_KEY: minio
-      STATE_STORAGE_MINIO_SECRET_ACCESS_KEY: minio123
+      STATE_STORAGE_MINIO_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
     volumes:
       - workspace:/data
 
@@ -90,11 +90,11 @@ services:
       - temporal
     environment:
       DATABASE_USER: docker
-      DATABASE_PASSWORD: docker
+      DATABASE_PASSWORD: ${AIRBYTE_DB_PASSWORD}
       DATABASE_DB: airbyte
       DATABASE_URL: jdbc:postgresql://db:5432/airbyte
       CONFIG_DATABASE_USER: docker
-      CONFIG_DATABASE_PASSWORD: docker
+      CONFIG_DATABASE_PASSWORD: ${AIRBYTE_DB_PASSWORD}
       CONFIG_DATABASE_URL: jdbc:postgresql://db:5432/airbyte
       WORKSPACE_ROOT: /data
       TRACKING_STRATEGY: segment
@@ -105,12 +105,12 @@ services:
       S3_LOG_BUCKET_REGION: us-east-1
       S3_PATH_STYLE_ACCESS: "true"
       AWS_ACCESS_KEY_ID: minio
-      AWS_SECRET_ACCESS_KEY: minio123
+      AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
       S3_MINIO_ENDPOINT: http://minio:9000
       STATE_STORAGE_MINIO_BUCKET_NAME: airbyte-state-storage
       STATE_STORAGE_MINIO_ENDPOINT: http://minio:9000
       STATE_STORAGE_MINIO_ACCESS_KEY: minio
-      STATE_STORAGE_MINIO_SECRET_ACCESS_KEY: minio123
+      STATE_STORAGE_MINIO_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
     volumes:
       - workspace:/data
       - /var/run/docker.sock:/var/run/docker.sock

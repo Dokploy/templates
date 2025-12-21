@@ -18,10 +18,10 @@ services:
       DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - strapi_data:/srv/app
-    exposes:
+    expose:
       - 1337
     depends_on:
-      - postgres
+      - strapi_postgres
 
   strapi_postgres:
     image: postgres:18

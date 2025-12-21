@@ -3,7 +3,7 @@
 
 services:
   strapi:
-    image: strapi/strapi
+    image: strapi/strapi:latest
     environment:
       # https://docs.strapi.io/cms/configurations/environment
       NODE_ENV: production
@@ -24,13 +24,13 @@ services:
       - postgres
 
   strapi_postgres:
-    image: postgres
+    image: postgres:18
     environment:
       POSTGRES_DB: strapi
       POSTGRES_USER: strapi
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - strapi_postgres_data::/var/lib/postgresql/data
+      - strapi_postgres_data::/var/lib/postgresql
 
 volumes:
   strapi_data:

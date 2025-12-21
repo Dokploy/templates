@@ -21,7 +21,7 @@
 
 services:
   superset:
-    image: amancevice/superset:5.0.0
+    image: amancevice/superset:6.0.0
     restart: unless-stopped
     #networks:
     #  - dokploy-network

@@ -30,7 +30,7 @@ services:
       POSTGRES_USER: strapi
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - strapi_postgres_data::/var/lib/postgresql
+      - strapi_postgres_data:/var/lib/postgresql
 
 volumes:
   strapi_data:

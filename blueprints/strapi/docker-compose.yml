@@ -10,6 +10,8 @@ services:
       STRAPI_TELEMETRY_DISABLED: true
       STRAPI_PLUGIN_I18N_INIT_LOCALE_CODE: en
       FAST_REFRESH: true
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
       DATABASE_CLIENT: postgres
       DATABASE_HOST: strapi_postgres
       DATABASE_PORT: 5432

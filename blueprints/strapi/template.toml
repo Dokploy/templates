@@ -1,6 +1,8 @@
 [variables]
 main_domain = "${domain}"
 postgres_password = "${password:32}"
+jwt_secret = "${password:32}"
+admin_jwt_secret = "${password:32}"
 
 [[config.domains]]
 serviceName = "strapi"
@@ -9,3 +11,5 @@ host = "${main_domain}"
 
 [config.env]
 POSTGRES_PASSWORD = "${postgres_password}"
+JWT_SECRET = "${jwt_secret}"
+ADMIN_JWT_SECRET = "${admin_jwt_secret}"

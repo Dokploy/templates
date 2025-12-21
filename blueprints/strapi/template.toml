@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+
+[[config.domains]]
+serviceName = "strapi"
+port = 1337
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}"

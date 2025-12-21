@@ -1,0 +1,37 @@
+# Self-host guide:
+# - https://strapi.io/blog/how-to-self-host-your-headless-cms-using-docker-compose
+
+services:
+  strapi:
+    image: strapi/strapi
+    environment:
+      # https://docs.strapi.io/cms/configurations/environment
+      NODE_ENV: production
+      STRAPI_TELEMETRY_DISABLED: true
+      STRAPI_PLUGIN_I18N_INIT_LOCALE_CODE: en
+      FAST_REFRESH: true
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: strapi_postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: strapi
+      DATABASE_USERNAME: strapi
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - strapi_data:/srv/app
+    exposes:
+      - 1337
+    depends_on:
+      - postgres
+
+  strapi_postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: strapi
+      POSTGRES_USER: strapi
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - strapi_postgres_data::/var/lib/postgresql/data
+
+volumes:
+  strapi_data:
+  strapi_postgres_data:

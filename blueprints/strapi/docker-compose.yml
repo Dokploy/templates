@@ -3,7 +3,7 @@
 
 services:
   strapi:
-    image: elestio/strapi-production:latest
+    image: elestio/strapi-production:v5.33.0
     environment:
       # https://docs.strapi.io/cms/configurations/environment
       NODE_ENV: production

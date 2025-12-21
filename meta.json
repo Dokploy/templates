@@ -5557,7 +5557,7 @@
   {
     "id": "strapi",
     "name": "Strapi",
-    "version": "latest",
+    "version": "v5.33.0",
     "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
     "logo": "strapi.svg",
     "links": {

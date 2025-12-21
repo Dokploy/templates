@@ -4997,6 +4997,24 @@
     ]
   },
   {
+    "id": "pulse",
+    "name": "Pulse",
+    "version": "latest",
+    "description": "A responsive monitoring platform for Proxmox VE, PBS, and Docker with real-time metrics across nodes and containers.",
+    "logo": "pulse.svg",
+    "links": {
+      "github": "https://github.com/rcourtman/Pulse",
+      "website": "https://pulse.rcourtman.com/",
+      "docs": "https://docs.pulse.rcourtman.com/"
+    },
+    "tags": [
+      "monitoring",
+      "proxmox",
+      "docker",
+      "metrics"
+    ]
+  },
+  {
     "id": "pyrodactyl",
     "name": "Pyrodactyl",
     "version": "main",

@@ -3343,6 +3343,22 @@
     ]
   },
   {
+    "id": "komari-monitor",
+    "name": "Komari Monitor",
+    "version": "latest",
+    "description": "A lightweight, self-hosted server monitoring tool for tracking server performance.",
+    "logo": "komari-monitor.ico",
+    "links": {
+      "github": "https://github.com/komari-monitor/komari",
+      "website": "https://github.com/komari-monitor/komari",
+      "docs": "https://github.com/komari-monitor/komari#readme"
+    },
+    "tags": [
+      "monitoring",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "kutt",
     "name": "Kutt",
     "version": "latest",

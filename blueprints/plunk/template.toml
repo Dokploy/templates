@@ -25,9 +25,6 @@ serviceName = "plunk"
 port = 80
 host = "${api_domain}"
 path = "/"
-env = [
-    "API_DOMAIN=${api_domain}"
-]
 
 # Dashboard Domain
 [[config.domains]]
@@ -35,9 +32,6 @@ serviceName = "plunk"
 port = 80
 host = "${dashboard_domain}"
 path = "/"
-env = [
-    "DASHBOARD_DOMAIN=${dashboard_domain}"
-]
 
 # Landing Page Domain
 [[config.domains]]
@@ -45,9 +39,6 @@ serviceName = "plunk"
 port = 80
 host = "${landing_domain}"
 path = "/"
-env = [
-    "LANDING_DOMAIN=${landing_domain}"
-]
 
 # Documentation Domain
 [[config.domains]]
@@ -55,9 +46,6 @@ serviceName = "plunk"
 port = 80
 host = "${wiki_domain}"
 path = "/"
-env = [
-    "WIKI_DOMAIN=${wiki_domain}"
-]
 
 # Minio Console Domain (optional)
 [[config.domains]]
@@ -79,7 +67,11 @@ JWT_SECRET = "${jwt_secret}"
 # Nginx configuration
 NGINX_PORT = "80"
 
-# HTTPS setting
+# Domain configuration (subdomain-based routing)
+API_DOMAIN = "${api_domain}"
+DASHBOARD_DOMAIN = "${dashboard_domain}"
+LANDING_DOMAIN = "${landing_domain}"
+WIKI_DOMAIN = "${wiki_domain}"
 USE_HTTPS = "true"
 
 # AWS SES (Required - users must configure these for email to work)

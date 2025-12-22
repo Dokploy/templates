@@ -5004,8 +5004,8 @@
     "logo": "pulse.svg",
     "links": {
       "github": "https://github.com/rcourtman/Pulse",
-      "website": "https://pulse.rcourtman.com/",
-      "docs": "https://github.com/rcourtman/Pulse/tree/main/docs"
+      "website": "https://pulserelay.pro/",
+      "docs": "https://github.com/rcourtman/Pulse/blob/main/docs/README.md"
     },
     "tags": [
       "monitoring",

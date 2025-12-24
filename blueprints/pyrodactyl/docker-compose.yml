@@ -38,12 +38,6 @@ services:
       RECAPTCHA_ENABLED:
       DB_CONNECTION: "mariadb"
 
-networks:
-  default:
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
-
 volumes:
   pterodb:
   pterovar:

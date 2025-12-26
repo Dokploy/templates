@@ -1,7 +1,6 @@
 services:
   reef-bootnode:
     image: anukulpandey/reef-chain-node:linux-2
-    container_name: reef-bootnode
     working_dir: /workspace
 
     volumes:

@@ -1,7 +1,6 @@
 services:
   reef-eth-rpc:
     image: anukulpandey/reef-chain-eth-rpc:linux
-    container_name: reef-eth-rpc
     working_dir: /workspace
     volumes:
       - ./output:/output

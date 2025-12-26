@@ -3,7 +3,6 @@ version: "3.9"
 services:
   reef-spec-api:
     image: anukulpandey/reef-chain-node:linux-2
-    container_name: reef-spec-api
     working_dir: /workspace
 
     volumes:

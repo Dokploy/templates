@@ -1,5 +1,5 @@
 [variables]
-PORT = 48765
+PORT = "48765"
 
 [[config.domains]]
 serviceName = "reef-keygen"
@@ -8,4 +8,4 @@ host = "${domain}"
 path = "/"
 
 [config.env]
-PORT = 48765
+PORT = "48765"

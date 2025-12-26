@@ -9,7 +9,7 @@ BOOTNODE_IP="72.60.35.83"
 
 VALIDATOR_NAME="Validator-1"
 
-P2P_PORT=30333
+P2P_PORT="30333"
 
 [[config.domains]]
 serviceName = "reef-validator"
@@ -28,4 +28,4 @@ BOOTNODE_IP="72.60.35.83"
 
 VALIDATOR_NAME="Validator-1"
 
-P2P_PORT=30333
+P2P_PORT="30333"

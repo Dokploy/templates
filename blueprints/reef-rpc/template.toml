@@ -4,8 +4,8 @@ BOOTNODE_NODE_KEY="http://reef.host:8001/bootnode_node_key.txt"
 
 BOOTNODE_IP="72.60.35.83"
 
-P2P_PORT=30339
-RPC_PORT=9994
+P2P_PORT="30339"
+RPC_PORT="9994"
 
 [[config.domains]]
 serviceName = "reef-rpc"
@@ -25,5 +25,5 @@ BOOTNODE_NODE_KEY="http://reef.host:8001/bootnode_node_key.txt"
 
 BOOTNODE_IP="72.60.35.83"
 
-P2P_PORT=30339
-RPC_PORT=9994
+P2P_PORT="30339"
+RPC_PORT="9994"

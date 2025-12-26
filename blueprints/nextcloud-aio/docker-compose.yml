@@ -30,7 +30,3 @@ services:
 volumes:
   nextcloud_data:
   nextcloud_db_data:
-
-networks:
-  dokploy-network:
-    external: true

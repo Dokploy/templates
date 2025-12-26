@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    command: server /data
+    volumes:
+      - minio_data:/data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+
+  chrome:
+    image: ghcr.io/browserless/chromium:v2.18.0
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      TIMEOUT: 10000
+      CONCURRENT: 10
+      TOKEN: ${CHROME_TOKEN}
+      EXIT_ON_HEALTH_FAILURE: "true"
+      PRE_REQUEST_HEALTH_CHECK: "true"
+
+  app:
+    image: amruthpillai/reactive-resume:latest
+    depends_on:
+      - postgres
+      - minio
+      - chrome
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      PUBLIC_URL: https://${APP_DOMAIN}
+      STORAGE_URL: https://${APP_DOMAIN}/default
+      CHROME_TOKEN: ${CHROME_TOKEN}
+      CHROME_URL: ws://chrome:3000
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+      MAIL_FROM: ${MAIL_FROM}
+      STORAGE_ENDPOINT: minio
+      STORAGE_PORT: 9000
+      STORAGE_REGION: us-east-1
+      STORAGE_BUCKET: default
+      STORAGE_ACCESS_KEY: ${MINIO_ROOT_USER}
+      STORAGE_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      STORAGE_USE_SSL: "false"
+      STORAGE_SKIP_BUCKET_CHECK: "false"
+
+
+volumes:
+  minio_data:
+  postgres_data:

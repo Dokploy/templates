@@ -41,6 +41,3 @@ services:
     restart: unless-stopped
 
 
-networks:
-  dokploy-network:
-    external: true

@@ -46,9 +46,6 @@ services:
     volumes:
       - redis-data:/data
 
-networks:
-  libredesk:
-
 volumes:
   postgres-data:
   redis-data:

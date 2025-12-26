@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   excalidraw:
+    restart: unless-stopped
     image: excalidraw/excalidraw:latest
     healthcheck:
       test:

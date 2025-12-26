@@ -1,0 +1,23 @@
+[variables]
+main_domain = "${domain}"
+mx_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "mixpost"
+port = 80
+host = "${main_domain}"
+
+
+[config.env]
+APP_NAME="Mixpost"
+APP_KEY="base64:ygtEUxD0fB3vUchihbUYqUzN57rfNi9ER5alJ98dWiA="
+APP_DEBUG="false"
+APP_DOMAIN="${main_domain}"
+APP_URL="http://${APP_DOMAIN}"
+DB_DATABASE="mixpost_db"
+DB_USERNAME="mixpost_user"
+DB_PASSWORD="${mx_password}"
+
+
+[[config.mounts]]

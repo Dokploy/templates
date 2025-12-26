@@ -1,0 +1,24 @@
+# IMPORTANT: The initial admin credentials will be printed in the logs after the container starts
+# Access TrailBase Admin UI at: https://your-domain.com/_/admin (replace with your configured domain)
+
+version: "3.8"
+
+services:
+  trailbase:
+    image: trailbase/trailbase:latest
+    restart: unless-stopped
+    volumes:
+      - trailbase-data:/app/traildepot
+      # If you want to use a local directory instead, uncomment the line below and specify the path to your local
+      # directory. Make sure this directory is writable by the trailbase user (UID 1000) and the group (GID 1000) i.e.
+      # chown -R 1000:1000 /path/to/your/local/directory
+      # - /path/to/your/local/directory:/app/traildepot
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:4000/api/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  # comment the line below if you specified a local directory in the volumes section of the trailbase service
+  trailbase-data: {}

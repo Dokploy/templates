@@ -5,6 +5,7 @@ services:
     restart: always
     volumes:
       - uptime-kuma-data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   uptime-kuma-data:

@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  mule:
+    image: yogeshmulecraft/mulece-esb:latest
+    restart: unless-stopped
+    ports:
+      - "8081"
+    environment:
+      - MULE_VERSION=${MULE_VERSION:-4.9.0}
+      - HTTP_PORT=${HTTP_PORT:-8081}
+      - MULE_HOME=/opt/mule-standalone
+      - MULE_BASE=/opt/mule-standalone
+      - TZ=UTC
+      - MULE_VERBOSE_EXCEPTIONS=true
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${HTTP_PORT:-8081}/ || exit 0"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 120s
+

@@ -1,0 +1,71 @@
+[variables]
+admin_domain = "${domain}"
+xss_domain = "${domain}"
+session_secret = "${base64:64}"
+admin_password = "${password:32}"
+db_password = "${password:16}"
+postgres_user = "xsshunterexpress"
+postgres_db = "xsshunterexpress"
+
+[config]
+[[config.domains]]
+serviceName = "xsshunterexpress-service"
+port = 8080
+host = "${admin_domain}"
+
+[[config.domains]]
+serviceName = "xsshunterexpress-service"
+port = 8080
+host = "xss.${admin_domain}"
+
+[config.env]
+# Core Configuration
+SESSION_SECRET_KEY = "${session_secret}"
+HOSTNAME = "${admin_domain}"
+XSS_HOSTNAME = "xss.${admin_domain}"
+
+# Panel Configuration
+PANEL_LOGIN = "true"
+PANEL_USERNAME = "admin@${admin_domain}"
+PANEL_PASSWORD = '${admin_password}' # [ use single quote to avoid the problem] just to let you know takecare of the special characters, it will make your password invalid, so make a strong password without special characters
+ALLOW_EMPTY_USERPATH = "true"
+
+# OAuth Configuration (disabled by default)
+OAUTH_LOGIN = "false"
+CLIENT_ID = ""
+CLIENT_SECRET = ""
+GMAIL_ACCOUNTS = ""
+
+# Email Configuration (disabled by default)
+EMAIL_NOTIFICATIONS_ENABLED = "false"
+EMAIL_FROM = ""
+SENDGRID_API_KEY = ""
+SENDGRID_UNSUBSRIBE_GROUP_ID = ""
+
+# Database Configuration
+DATABASE_HOST = "xsshunterexpress-db"
+POSTGRES_DB = "${postgres_db}"
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_PASSWORD = "${db_password}"
+
+# Application Configuration
+NODE_ENV = "production"
+PORT = "8080"
+CONTROL_PANEL_ENABLED = "true"
+SCREENSHOTS_DIR = "/app/payload-fire-images"
+TRUFFLEHOG_URL = "http://${TRUFFLEHOG_HOST}:${TRUFFLEHOG_PORT}/trufflehog"
+
+# Port Configuration
+APP_PORT = "8080"
+TRUFFLEHOG_HOST = "xsshunterexpress-trufflehog"
+TRUFFLEHOG_PORT = "8000"
+
+# Optional Services (disabled by default)
+SENTRY_DSN = ""
+SENTRY_ENABLED = "false"
+USE_CLOUD_STORAGE = "false"
+BUCKET_NAME = ""
+
+[[config.mounts]]
+filePath = "./payload-fire-images"
+content = "Directory for storing XSS payload screenshots and collected data"

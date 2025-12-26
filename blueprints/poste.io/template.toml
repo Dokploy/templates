@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "mailserver"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+TZ = "UTC"

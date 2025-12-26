@@ -1,0 +1,9 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "bentopdf"
+port = 80
+host = "${main_domain}"
+path = "/"

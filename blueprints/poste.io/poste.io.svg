@@ -1,0 +1,7 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="64" height="64" fill="black"/>
+  
+  <!-- Ultra bold stylish lowercase 'p' -->
+  <path d="M14 8h12c8.8 0 16 7.2 16 16s-7.2 16-16 16h-6v16h-6V8zm6 6v20h6c5.5 0 10-4.5 10-10s-4.5-10-10-10h-6z" fill="white"/>
+</svg>

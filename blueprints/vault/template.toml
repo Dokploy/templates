@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+root_token = "${password:32}"
+
+[config]
+
+[[config.domains]]
+serviceName = "vault"
+port = 8200
+host = "${main_domain}"
+
+[config.env]
+VAULT_DEV_ROOT_TOKEN_ID = "${root_token}"
+VAULT_DEV_LISTEN_ADDRESS = "0.0.0.0:8200"
+
+[[config.mounts]]
+

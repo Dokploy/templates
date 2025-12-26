@@ -33,6 +33,18 @@ port = 30336
 host = "${domain}"
 path = "/"
 
+[[config.domains]]
+serviceName = "reef-dev-cluster"
+port = 8001
+host = "${domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "reef-dev-cluster"
+port = 9944
+host = "${domain}"
+path = "/"
+
 [config.env]
 v1sec ="0x4beb11e380012110b0b072fbb3d8e7455921cf4658de06c33d970be82ccf9ed5"
 v2sec = "0x3348e15287dae612d9c8f008a468ff6c229a55c4b58d778f389cc03134e3efbe"

@@ -1,11 +1,11 @@
 [variables]
-warp_key = "<INSERT TOKEN>"
+cloudflare_warp_token = "<Get from Cloudflare Zero Trust Dashboard>"
 
 [config]
 domains = []
 
 [config.env]
-LICENSE = "${warp_key}"
+LICENSE = "${cloudflare_warp_token}"
 
 [[config.mounts]]
 filePath = "/run/dbus/system_bus_socket"

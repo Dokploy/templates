@@ -2,8 +2,7 @@ services:
   cloudflare-warp-proxy:
     image: ghcr.io/seiry/cloudflare-warp-proxy:latest
     restart: unless-stopped
-    environment:
-      - LICENSE=${WARP_KEY}
+    # `LICENSE` is injected by the Dokploy template (`template.toml` [config.env]).
     logging:
       driver: json-file
       options:

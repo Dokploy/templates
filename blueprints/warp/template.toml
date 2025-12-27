@@ -1,7 +1,4 @@
-[variables]
-license = "${warp_key}"
+variables = {}
 
 [config]
-
-[[config.env]]
-WARP_LICENSE = ""
+env = ["WARP_KEY=\"<INSERT TOKEN>\""]

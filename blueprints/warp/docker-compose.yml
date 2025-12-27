@@ -7,7 +7,7 @@ services:
       - 40000
     restart: unless-stopped
     environment:
-      - LICENSE=${WARP_KEY}
+      - LICENSE=${WARP_LICENSE}
     logging:
       driver: json-file
       options:

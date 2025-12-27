@@ -1,7 +1,7 @@
 [variables]
-warp_key = "${warp_key}"
+license = "${warp_key}"
 
 [config]
 
 [[config.env]]
-WARP_LICENSE = "${warp_key}"
+WARP_LICENSE = ""

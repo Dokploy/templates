@@ -8,3 +8,5 @@ services:
       driver: json-file
       options:
         max-size: 1m
+    volumes:
+      - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro

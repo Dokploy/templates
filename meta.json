@@ -6038,7 +6038,9 @@
     "description": "Cloudflare WARP Connector (beta) is a software client that enables site-to-site, bidirectional, and mesh networking connectivity without requiring changes to underlying network routing infrastructure.",
     "logo": "warp.svg",
     "links": {
-      "github": "https://github.com/seiry/docker-warp-proxy"
+      "github": "https://github.com/seiry/docker-warp-proxy",
+      "website": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/private-net/",
+      "docs": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/private-net/warp-connector/"
     },
     "tags": [
       "proxy",

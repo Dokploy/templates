@@ -1305,8 +1305,8 @@
     "logo": "cloudflared.svg",
     "links": {
       "github": "https://github.com/cloudflare/cloudflared",
-      "website": "https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/",
-      "docs": "https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/"
+      "website": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/",
+      "docs": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/"
     },
     "tags": [
       "cloud",
@@ -6029,6 +6029,22 @@
       "geolocation",
       "search",
       "self-hosted"
+    ]
+  },
+  {
+    "id": "warp",
+    "name": "Cloudflare WARP",
+    "version": "latest",
+    "description": "Cloudflare WARP Connector (beta) is a software client that enables site-to-site, bidirectional, and mesh networking connectivity without requiring changes to underlying network routing infrastructure.",
+    "logo": "image.svg",
+    "links": {
+      "website": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/private-net/",
+      "docs": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/private-net/warp-connector/"
+    },
+    "tags": [
+      "proxy",
+      "networking",
+      "tunnel"
     ]
   },
   {

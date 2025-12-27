@@ -1,10 +1,11 @@
-variables = {}
+[variables]
+warp_key = "<INSERT TOKEN>"
 
 [config]
+domains = []
 
-[[config.env]]
-WARP_KEY = "<INSERT TOKEN>"
-
+[config.env]
+LICENSE = "${warp_key}"
 
 [[config.mounts]]
 filePath = "/run/dbus/system_bus_socket"

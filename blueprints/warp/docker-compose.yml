@@ -10,3 +10,8 @@ services:
         max-size: 1m
     volumes:
       - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro
+    security_opt:
+      - apparmor:unconfined
+    # If AppArmor unconfined is insufficient on some hosts, uncomment the next line
+    # to run the container in privileged mode (less secure):
+    # privileged: true

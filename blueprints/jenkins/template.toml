@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = {}
+mounts = []
+
+[[config.domains]]
+serviceName = "jenkins"
+port = 8080
+host = "${main_domain}"
+

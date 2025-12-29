@@ -3183,6 +3183,25 @@
     ]
   },
   {
+    "id": "jenkins",
+    "name": "jenkins",
+    "version": "latest",
+    "description": "Jenkins is a free, open-source automation server that helps developers build, test, and deploy software by automating repetitive tasks in the software delivery pipeline.",
+    "logo": "jenkins.svg",
+    "links": {
+      "github": "https://github.com/jenkinsci/jenkins",
+      "website": "https://www.jenkins.io/",
+      "docs": "https://www.jenkins.io/doc/"
+    },
+    "tags": [
+      "ci-cd",
+      "devops",
+      "automation",
+      "pipelines",
+      "open-source"
+    ]
+  },
+  {
     "id": "kaneo",
     "name": "Kaneo",
     "version": "latest",

@@ -5609,6 +5609,23 @@
     ]
   },
   {
+    "id": "syncthing",
+    "name": "Syncthing",
+    "version": "latest",
+    "description": "Syncthing is a continuous file synchronization program that synchronizes files between two or more computers in real time.",
+    "logo": "syncthing.svg",
+    "links": {
+      "github": "https://github.com/syncthing/syncthing",
+      "website": "https://syncthing.net/",
+      "docs": "https://docs.syncthing.net/"
+    },
+    "tags": [
+      "file-sync",
+      "synchronization",
+      "backup"
+    ]
+  },
+  {
     "id": "tailscale-exitnode",
     "name": "Tailscale Exit nodes",
     "version": "1.0.0",

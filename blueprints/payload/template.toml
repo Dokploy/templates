@@ -1,0 +1,27 @@
+[variables]
+main_domain = "${domain}"
+minio_domain = "minio-${domain}"
+postgres_password = "${password:32}"
+payload_secret = "${password:64}"
+minio_access_key = "${password:20}"
+minio_secret_key = "${password:40}"
+
+[config]
+env = [
+  "PAYLOAD_DOMAIN=${main_domain}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "PAYLOAD_SECRET=${payload_secret}",
+  "MINIO_ACCESS_KEY=${minio_access_key}",
+  "MINIO_SECRET_KEY=${minio_secret_key}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "payload"
+port = 3000
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "minio"
+port = 9001
+host = "${minio_domain}"

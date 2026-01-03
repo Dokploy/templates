@@ -164,13 +164,13 @@
   {
     "id": "alist",
     "name": "AList",
-    "version": "v3.41.0",
+    "version": "v3.55.0",
     "description": "🗂️A file list/WebDAV program that supports multiple storages, powered by Gin and Solidjs.",
     "logo": "alist.svg",
     "links": {
       "github": "https://github.com/AlistGo/alist",
-      "website": "https://alist.nn.ci",
-      "docs": "https://alist.nn.ci/guide/install/docker.html"
+      "website": "https://alistgo.com/",
+      "docs": "https://alistgo.com/guide/install/docker.html"
     },
     "tags": [
       "file",
@@ -350,7 +350,7 @@
   {
     "id": "appsmith",
     "name": "Appsmith",
-    "version": "v1.29",
+    "version": "v1.94",
     "description": "Appsmith is a free and open source platform for building internal tools and applications.",
     "logo": "appsmith.png",
     "links": {
@@ -894,7 +894,7 @@
   {
     "id": "budibase",
     "name": "Budibase",
-    "version": "3.5.3",
+    "version": "3.23.47",
     "description": "Budibase is an open-source low-code platform that saves engineers 100s of hours building forms, portals, and approval apps, securely.",
     "logo": "budibase.svg",
     "links": {

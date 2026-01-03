@@ -1,8 +1,8 @@
 services:
-  apps:
-    image: budibase.docker.scarf.sh/budibase/apps:3.5.3
-    restart: unless-stopped
 
+  apps:
+    image: budibase/apps:3.23.47
+    restart: unless-stopped
     environment:
       SELF_HOSTED: 1
       LOG_LEVEL: info
@@ -39,10 +39,10 @@ services:
       timeout: 15s
       retries: 5
       start_period: 10s
-  worker:
-    image: budibase.docker.scarf.sh/budibase/worker:3.2.25
-    restart: unless-stopped
 
+  worker:
+    image: budibase/worker:3.23.47
+    restart: unless-stopped
     environment:
       SELF_HOSTED: 1
       LOG_LEVEL: info
@@ -78,10 +78,10 @@ services:
       timeout: 15s
       retries: 5
       start_period: 10s
-  minio:
-    image: minio/minio:RELEASE.2024-11-07T00-52-20Z
-    restart: unless-stopped
 
+  minio:
+    image: minio/minio
+    restart: unless-stopped
     volumes:
       - 'minio_data:/data'
     environment:
@@ -98,10 +98,10 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
-  proxy:
-    image: budibase/proxy:3.2.25
-    restart: unless-stopped
 
+  proxy:
+    image: budibase/proxy:3.23.47
+    restart: unless-stopped
     environment:
       PROXY_RATE_LIMIT_WEBHOOKS_PER_SECOND: 10
       PROXY_RATE_LIMIT_API_PER_SECOND: 20
@@ -130,10 +130,10 @@ services:
       timeout: 15s
       retries: 5
       start_period: 10s
+
   couchdb:
     image: budibase/couchdb:v3.3.3
     restart: unless-stopped
-
     environment:
       COUCHDB_USER: budibase
       COUCHDB_PASSWORD: ${BB_COUCHDB_PASSWORD}
@@ -150,9 +150,9 @@ services:
       start_period: 10s
     volumes:
       - 'couchdb3_data:/opt/couchdb/data'
-  redis:
-    image: redis:7.2-alpine
 
+  redis:
+    image: redis:8.4-alpine
     restart: unless-stopped
     command: 'redis-server --requirepass "${BB_REDIS_PASSWORD}"'
     volumes:
@@ -168,19 +168,6 @@ services:
       timeout: 15s
       retries: 5
       start_period: 10s
-  watchtower:
-    restart: unless-stopped   
- 
-    image: containrrr/watchtower:1.7.1
-    volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock'
-    command: '--debug --http-api-update bbapps bbworker bbproxy'
-    environment:
-      WATCHTOWER_HTTP_API: true
-      WATCHTOWER_HTTP_API_TOKEN: ${BB_WATCHTOWER_PASSWORD}
-      WATCHTOWER_CLEANUP: true
-    labels:
-      - com.centurylinklabs.watchtower.enable=false
 
 
 volumes:

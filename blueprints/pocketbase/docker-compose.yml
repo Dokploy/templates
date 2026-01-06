@@ -9,7 +9,7 @@ services:
     image: adrianmusante/pocketbase:latest
     restart: always
     ports:
-      - 8090:8090
+      - 8090
     expose:
       - 8090
     volumes:

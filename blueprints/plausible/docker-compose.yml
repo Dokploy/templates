@@ -32,6 +32,10 @@ services:
     depends_on:
       - plausible_db
       - plausible_events_db
+    env_file:
+      - .env
+    ports:
+      - 8000
 
 volumes:
   db-data:

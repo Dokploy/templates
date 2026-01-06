@@ -1,0 +1,30 @@
+[variables]
+main_domain = "${domain}"
+oneuptime_version = "release"
+database_password = "${password:32}"
+redis_password = "${password:32}"
+clickhouse_password = "${password:32}"
+encryption_secret = "${password:64}"
+oneuptime_secret = "${password:64}"
+probe_key = "${password:32}"
+probe_name = "Dokploy Probe"
+
+
+[config]
+env = [
+  "ONEUPTIME_HOST=${main_domain}",
+  "ONEUPTIME_VERSION=${oneuptime_version}",
+  "DATABASE_PASSWORD=${database_password}",
+  "REDIS_PASSWORD=${redis_password}",
+  "CLICKHOUSE_PASSWORD=${clickhouse_password}",
+  "ENCRYPTION_SECRET=${encryption_secret}",
+  "ONEUPTIME_SECRET=${oneuptime_secret}",
+  "PROBE_KEY=${probe_key}",
+  "PROBE_NAME=${probe_name}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "home"
+port = 3002
+host = "${main_domain}"

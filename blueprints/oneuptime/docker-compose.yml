@@ -1,0 +1,184 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: oneuptime
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: oneuptime
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U oneuptime"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    environment:
+      REDISCLI_AUTH: ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:23.8-alpine
+    restart: unless-stopped
+    environment:
+      CLICKHOUSE_DB: oneuptime
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    healthcheck:
+      test: ["CMD-SHELL", "clickhouse-client --query 'SELECT 1'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  home:
+    image: oneuptime/home:${ONEUPTIME_VERSION}
+    restart: unless-stopped
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: oneuptime
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: oneuptime
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_PORT: 8123
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      CLICKHOUSE_DATABASE: oneuptime
+      SERVER_URL: http://${ONEUPTIME_HOST}
+      ENCRYPTION_SECRET: ${ENCRYPTION_SECRET}
+      ONEUPTIME_SECRET: ${ONEUPTIME_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+
+  dashboard:
+    image: oneuptime/dashboard:${ONEUPTIME_VERSION}
+    restart: unless-stopped
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: oneuptime
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: oneuptime
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      SERVER_URL: http://${ONEUPTIME_HOST}
+      ONEUPTIME_SECRET: ${ONEUPTIME_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  accounts:
+    image: oneuptime/accounts:${ONEUPTIME_VERSION}
+    restart: unless-stopped
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: oneuptime
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: oneuptime
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      SERVER_URL: http://${ONEUPTIME_HOST}
+      ONEUPTIME_SECRET: ${ONEUPTIME_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  status-page:
+    image: oneuptime/status-page:${ONEUPTIME_VERSION}
+    restart: unless-stopped
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: oneuptime
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: oneuptime
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      SERVER_URL: http://${ONEUPTIME_HOST}
+      ONEUPTIME_SECRET: ${ONEUPTIME_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  app:
+    image: oneuptime/app:${ONEUPTIME_VERSION}
+    restart: unless-stopped
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: oneuptime
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: oneuptime
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_PORT: 8123
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      CLICKHOUSE_DATABASE: oneuptime
+      SERVER_URL: http://${ONEUPTIME_HOST}
+      ENCRYPTION_SECRET: ${ENCRYPTION_SECRET}
+      ONEUPTIME_SECRET: ${ONEUPTIME_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+
+  probe:
+    image: oneuptime/probe:${ONEUPTIME_VERSION}
+    restart: unless-stopped
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: oneuptime
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: oneuptime
+      SERVER_URL: http://${ONEUPTIME_HOST}
+      ONEUPTIME_URL: http://${ONEUPTIME_HOST}
+      ONEUPTIME_SECRET: ${ONEUPTIME_SECRET}
+      PROBE_KEY: ${PROBE_KEY}
+      PROBE_NAME: ${PROBE_NAME}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
+  clickhouse_data:

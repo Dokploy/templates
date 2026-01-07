@@ -3,8 +3,8 @@ main_domain = "${domain}"
 postgres_password = "${password:32}"
 postgres_user = "instant"
 postgres_db = "instant"
-aws_access_key_id = ""
-aws_secret_access_key = ""
+aws_access_key_id = "FILL-YOUR-CREDENTIALS"
+aws_secret_access_key = "FILL-YOUR-CREDENTIALS"
 aws_region = "us-east-1"
 
 [config]

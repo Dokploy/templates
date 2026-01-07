@@ -10,7 +10,10 @@ port = 9_090
 host = "${main_domain}"
 
 [[config.mounts]]
-filePath = "/etc/prometheus/prometheus.yml"
+# Note: this relative path is resolved by Dokploy to the file mounted from
+# ../files/prometheus.yml in docker-compose, and mapped inside the container
+# to /etc/prometheus/prometheus.yml.
+filePath = "prometheus.yml"
 serviceName = "prometheus"
 content = """
 # Prometheus Configuration

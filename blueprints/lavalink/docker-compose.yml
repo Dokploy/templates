@@ -1,0 +1,41 @@
+services:
+  fix-perms:
+    image: busybox:1.36
+    command: >
+      sh -c "mkdir -p /opt/Lavalink/plugins &&
+             chmod -R 0777 /opt/Lavalink/plugins || true &&
+             chown -R 1000:1000 /opt/Lavalink/plugins || true &&
+             echo perms-fixed && sleep 1"
+    volumes:
+      - "../files/plugins/:/opt/Lavalink/plugins/"
+      - "../files/application.yml:/opt/Lavalink/application.yml"
+    restart: "no"
+  lavalink:
+    image: ghcr.io/lavalink-devs/lavalink:4
+    depends_on:
+      - fix-perms
+    restart: unless-stopped
+    environment:
+      _JAVA_OPTIONS: "${_JAVA_OPTIONS:--Xmx6G}"
+      LAVALINK_SERVER_PASSWORD: "${LAVALINK_SERVER_PASSWORD:-youshallnotpass}"
+      SERVER_PORT: "${SERVER_PORT:-2333}"
+    volumes:
+      - "../files/application.yml:/opt/Lavalink/application.yml:rw"
+      - "../files/plugins/:/opt/Lavalink/plugins/:rw"
+    ports:
+      - ${SERVER_PORT}
+
+    healthcheck:
+      test: >
+        sh -c 'wget --header="Authorization: ${LAVALINK_SERVER_PASSWORD}" -qO- http://127.0.0.1:${SERVER_PORT}/v4/info >/dev/null 2>&1 || exit 1'
+      interval: 100s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+    entrypoint: >
+      sh -c 'until [ -w /opt/Lavalink/plugins ] ; do
+                echo "waiting for /opt/Lavalink/plugins to be writable";
+                sleep 1;
+             done;
+             exec java -jar /opt/Lavalink/Lavalink.jar'

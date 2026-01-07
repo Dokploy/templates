@@ -1,0 +1,123 @@
+[variables]
+main_domain = "${domain}"
+server_port = "2333"
+lavalink_server_password = "${password}"
+
+[config]
+[[config.mounts]]
+filePath = "./application.yml"
+content = """
+server: # REST and WS server
+  port: 2333
+  address: 0.0.0.0
+  http2:
+    enabled: false
+plugins:
+#  name: # Name of the plugin
+#    some_key: some_value # Some key-value pair for the plugin
+#    another_key: another_value
+lavalink:
+  plugins:
+    # - dependency: "com.github.username.pluginName:pluginName-plugin:x.y.z"
+    #   snapshot: false
+  # pluginsDir: "/opt/Lavalink/plugins"
+  # defaultPluginRepository: "https://maven.lavalink.dev/releases"
+  # defaultPluginSnapshotRepository: "https://maven.lavalink.dev/snapshots"
+  server:
+    password: "youshallnotpass"
+    sources:
+      # The default Youtube source is now deprecated and won't receive further updates. Please use https://github.com/lavalink-devs/youtube-source#plugin instead.
+      youtube: true
+      bandcamp: true
+      soundcloud: true
+      twitch: true
+      vimeo: true
+      nico: true
+      http: true
+      local: false
+    filters:
+      volume: true
+      equalizer: true
+      karaoke: true
+      timescale: true
+      tremolo: true
+      vibrato: true
+      distortion: true
+      rotation: true
+      channelMix: true
+      lowPass: true
+    nonAllocatingFrameBuffer: false
+    bufferDurationMs: 400
+    frameBufferDurationMs: 5000
+    opusEncodingQuality: 10
+    resamplingQuality: LOW
+    trackStuckThresholdMs: 10000
+    useSeekGhosting: true
+    youtubePlaylistLoadLimit: 6
+    playerUpdateInterval: 5
+    youtubeSearchEnabled: true
+    soundcloudSearchEnabled: true
+    gc-warnings: true
+    #ratelimit:
+      #ipBlocks: ["1.0.0.0/8", "..."] # list of ip blocks
+      #excludedIps: ["...", "..."] # ips which should be explicit excluded from usage by lavalink
+      #strategy: "RotateOnBan" # RotateOnBan | LoadBalance | NanoSwitch | RotatingNanoSwitch
+      #searchTriggersFail: true # Whether a search 429 should trigger marking the ip as failing
+      #retryLimit: -1 # -1 = use default lavaplayer value | 0 = infinity | >0 = retry will happen this numbers times
+    #youtubeConfig: # Required for avoiding all age restrictions by YouTube, some restricted videos still can be played without.
+      #email: "" # Email of Google account
+      #password: "" # Password of Google account
+    #httpConfig: # Useful for blocking bad-actors from ip-grabbing your music node and attacking it, this way only the http proxy will be attacked
+      #proxyHost: "localhost" # Hostname of the proxy, (ip or domain)
+      #proxyPort: 3128 # Proxy port, 3128 is the default for squidProxy
+      #proxyUser: "" # Optional user for basic authentication fields, leave blank if you don't use basic auth
+      #proxyPassword: "" # Password for basic authentication
+    timeouts:
+      connectTimeoutMs: 3000
+      connectionRequestTimeoutMs: 3000
+      socketTimeoutMs: 3000
+
+metrics:
+  prometheus:
+    enabled: false
+    endpoint: /metrics
+
+sentry:
+  dsn: ""
+  environment: ""
+#  tags:
+#    some_key: some_value
+#    another_key: another_value
+
+logging:
+  file:
+    path: ./logs/
+
+  level:
+    root: INFO
+    lavalink: INFO
+
+  request:
+    enabled: true
+    includeClientInfo: true
+    includeHeaders: false
+    includeQueryString: true
+    includePayload: true
+    maxPayloadLength: 10000
+
+
+  logback:
+    rollingpolicy:
+      max-file-size: 1GB
+      max-history: 30
+"""
+
+[[config.domains]]
+serviceName = "lavalink"
+port = 2_333
+host = "${main_domain}"
+
+[config.env]
+_JAVA_OPTIONS = "-Xmx6G"
+LAVALINK_SERVER_PASSWORD = "${lavalink_server_password}"
+SERVER_PORT = "${server_port}"

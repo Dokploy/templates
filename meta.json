@@ -1750,7 +1750,7 @@
   {
     "id": "discourse",
     "name": "Discourse",
-    "version": "3.3.2",
+    "version": "3.5.0",
     "description": "Discourse is a modern forum software for your community. Use it as a mailing list, discussion forum, or long-form chat room.",
     "logo": "discourse.svg",
     "links": {
@@ -1850,6 +1850,25 @@
       "observability",
       "docker",
       "grafana"
+    ]
+  },
+  {
+    "id": "dolibarr",
+    "name": "Dolibarr",
+    "version": "21.0.0",
+    "description": "Dolibarr ERP & CRM is a modern software package that helps manage your organization's activities (contacts, quotes, invoices, orders, stocks, agenda, human resources, ecm, manufacturing).",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/Dolibarr/dolibarr",
+      "website": "https://www.dolibarr.org/",
+      "docs": "https://wiki.dolibarr.org/"
+    },
+    "tags": [
+      "erp",
+      "crm",
+      "business",
+      "management",
+      "invoicing"
     ]
   },
   {
@@ -2033,6 +2052,23 @@
       "notepad",
       "self-hosted",
       "simple"
+    ]
+  },
+  {
+    "id": "easyappointments",
+    "name": "Easy!Appointments",
+    "version": "1.5.0",
+    "description": "Easy!Appointments is a highly customizable web application that allows customers to book appointments with you via a sophisticated web interface.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/alextselegidis/easyappointments",
+      "website": "https://easyappointments.org",
+      "docs": "https://easyappointments.org/docs"
+    },
+    "tags": [
+      "scheduling",
+      "appointments",
+      "booking"
     ]
   },
   {
@@ -3083,6 +3119,23 @@
     ]
   },
   {
+    "id": "instantdb",
+    "name": "InstantDB",
+    "version": "latest",
+    "description": "InstantDB is a real-time database server that provides instant data synchronization and real-time updates for applications.",
+    "logo": "instant.svg",
+    "links": {
+      "github": "https://github.com/instantdb/instant/tree/main/server",
+      "website": "https://github.com/instantdb/instant",
+      "docs": "https://github.com/instantdb/instant"
+    },
+    "tags": [
+      "database",
+      "real-time",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "invoiceshelf",
     "name": "InvoiceShelf",
     "version": "latest",
@@ -3337,6 +3390,22 @@
     },
     "tags": [
       "ai"
+    ]
+  },
+  {
+    "id": "lavalink",
+    "name": "Lavalink",
+    "version": "4.1.1",
+    "description": "Lavalink is an open source standalone audio sending node based on Lavaplayer.",
+    "logo": "lavalink.svg",
+    "links": {
+      "github": "https://github.com/lavalink-devs/Lavalink",
+      "website": "https://lavalink.dev/",
+      "docs": "https://lavalink.dev/getting-started/index.html"
+    },
+    "tags": [
+      "voice",
+      "discord"
     ]
   },
   {
@@ -3596,6 +3665,24 @@
       "self-hosted",
       "open-source",
       "os"
+    ]
+  },
+  {
+    "id": "mage-ai",
+    "name": "Mage AI",
+    "version": "0.9.78",
+    "description": "Build, run, and manage data pipelines for integrating and transforming data.",
+    "logo": "mage-ai.svg",
+    "links": {
+      "github": "https://github.com/mage-ai/mage-ai",
+      "website": "https://mage.ai",
+      "docs": "https://docs.mage.ai"
+    },
+    "tags": [
+      "data",
+      "dbt",
+      "etl",
+      "pipelines"
     ]
   },
   {
@@ -5032,6 +5119,24 @@
     ]
   },
   {
+    "id": "reactive-resume",
+    "name": "Reactive Resume",
+    "version": "latest",
+    "description": "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/AmruthPillai/Reactive-Resume",
+      "website": "https://rxresu.me/",
+      "docs": "https://docs.rxresu.me/"
+    },
+    "tags": [
+      "resume",
+      "cv",
+      "productivity",
+      "document"
+    ]
+  },
+  {
     "id": "registry",
     "name": "Docker Registry",
     "version": "2",
@@ -5539,6 +5644,23 @@
     ]
   },
   {
+    "id": "syncthing",
+    "name": "Syncthing",
+    "version": "latest",
+    "description": "Syncthing is a continuous file synchronization program that synchronizes files between two or more computers in real time.",
+    "logo": "syncthing.svg",
+    "links": {
+      "github": "https://github.com/syncthing/syncthing",
+      "website": "https://syncthing.net/",
+      "docs": "https://docs.syncthing.net/"
+    },
+    "tags": [
+      "file-sync",
+      "synchronization",
+      "backup"
+    ]
+  },
+  {
     "id": "tailscale-exitnode",
     "name": "Tailscale Exit nodes",
     "version": "1.0.0",
@@ -5640,6 +5762,23 @@
       "security",
       "browser",
       "tor"
+    ]
+  },
+  {
+    "id": "trailbase",
+    "name": "TrailBase",
+    "version": "latest",
+    "description": "TrailBase is a blazingly fast, open-source application server with type-safe APIs, built-in WebAssembly runtime, realtime, auth, and admin UI built on Rust, SQLite & Wasmtime.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/trailbase/trailbase",
+      "website": "https://trailbase.io/",
+      "docs": "https://trailbase.io/getting-started/install"
+    },
+    "tags": [
+      "backend",
+      "database",
+      "api"
     ]
   },
   {
@@ -5759,7 +5898,7 @@
   {
     "id": "umami",
     "name": "Umami",
-    "version": "v2.19.0",
+    "version": "v2.20.2",
     "description": "Umami is a simple, fast, privacy-focused alternative to Google Analytics.",
     "logo": "umami.png",
     "links": {

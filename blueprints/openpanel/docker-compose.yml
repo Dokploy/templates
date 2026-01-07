@@ -1,8 +1,12 @@
-x-database: &x-database
-  DATABASE_URL: postgres://${SERVICE_USER_POSTGRES}:${SERVICE_PASSWORD_POSTGRES}@op-db:5432/${OPENPANEL_POSTGRES_DB}?schema=public
-  DATABASE_URL_DIRECT: postgres://${SERVICE_USER_POSTGRES}:${SERVICE_PASSWORD_POSTGRES}@op-db:5432/${OPENPANEL_POSTGRES_DB}?schema=public
-  REDIS_URL: redis://default:${SERVICE_PASSWORD_REDIS}@op-kv:6379
-  CLICKHOUSE_URL: ${OPENPANEL_CLICKHOUSE_URL:-http://op-ch:8123/openpanel}
+x-common: &x-common
+  NODE_ENV: production
+  SELF_HOSTED: "true"
+  API_URL: ${API_URL}
+  DASHBOARD_URL: ${DASHBOARD_URL}
+  DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@op-db:5432/${POSTGRES_DB}?schema=public
+  DATABASE_URL_DIRECT: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@op-db:5432/${POSTGRES_DB}?schema=public
+  REDIS_URL: redis://default:${REDIS_PASSWORD}@op-kv:6379
+  CLICKHOUSE_URL: http://op-ch:8123/openpanel
 
 services:
   op-db:
@@ -11,44 +15,46 @@ services:
     volumes:
       - op-db-data:/var/lib/postgresql/data
     healthcheck:
-      test: [ 'CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}' ]
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
       interval: 10s
       timeout: 5s
       retries: 5
     environment:
-      - POSTGRES_DB=${OPENPANEL_POSTGRES_DB}
-      - POSTGRES_USER=${SERVICE_USER_POSTGRES}
-      - POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   op-kv:
     image: redis:7.2.5-alpine
     restart: always
     volumes:
       - op-kv-data:/data
-    command: redis-server --requirepass ${SERVICE_PASSWORD_REDIS} --maxmemory-policy noeviction
+    command: redis-server --requirepass ${REDIS_PASSWORD} --maxmemory-policy noeviction
     healthcheck:
-      test: [CMD, redis-cli, -a, "${SERVICE_PASSWORD_REDIS}", ping]
+      test: ['CMD', 'redis-cli', '-a', '${REDIS_PASSWORD}', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
 
   op-ch:
-    image: clickhouse/clickhouse-server:24.3.2-alpine
+    image: clickhouse/clickhouse-server:25.10.2.65
     restart: always
     volumes:
       - op-ch-data:/var/lib/clickhouse
       - op-ch-logs:/var/log/clickhouse-server
-      - ../files/clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/op-config.xml:ro
-      - ../files/clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/op-user-config.xml:ro
-      - ../files/clickhouse/init-db.sql:/docker-entrypoint-initdb.d/1_init-db.sql:ro
+      - ../files/clickhouse_config:/etc/clickhouse-server/config.d
+      - ../files/clickhouse_users:/etc/clickhouse-server/users.d
+      - ../files/clickhouse_init:/docker-entrypoint-initdb.d
+    environment:
+      - CLICKHOUSE_SKIP_USER_SETUP=1
     healthcheck:
-      test: [CMD-SHELL, 'clickhouse-client --query "SELECT 1" -d openpanel']
+      test: ['CMD-SHELL', 'clickhouse-client --query "SELECT 1" -d openpanel']
       interval: 10s
       timeout: 5s
       retries: 5
 
   op-api:
-    image: lindesvard/openpanel-api:${OP_API_VERSION:-latest}
+    image: lindesvard/openpanel-api:2.0.0
     restart: always
     command: >
       sh -c "
@@ -57,39 +63,28 @@ services:
           sleep 1
         done
         echo 'PostgreSQL is ready'
-      
+
         echo 'Waiting for ClickHouse to be ready...'
         while ! nc -z op-ch 8123; do
           sleep 1
         done
         echo 'ClickHouse is ready'
-      
+
         echo 'Running migrations...'
-        
-        echo '$DATABASE_URL'
-      
+
         CI=true pnpm -r run migrate:deploy
-      
+
         pnpm start
       "
     environment:
-      # Common
-      NODE_ENV: production
-      NEXT_PUBLIC_SELF_HOSTED: true
-      # URLs
-      SERVICE_FQDN_OPAPI: /api
-      # Set coolify FQDN domain
-      NEXT_PUBLIC_API_URL: $SERVICE_FQDN_OPAPI
-      NEXT_PUBLIC_DASHBOARD_URL: $SERVICE_FQDN_OPDASHBOARD
-      # Others
-      COOKIE_SECRET: ${SERVICE_BASE64_COOKIESECRET}
-      ALLOW_REGISTRATION: ${OPENPANEL_ALLOW_REGISTRATION:-false}
-      ALLOW_INVITATION: ${OPENPANEL_ALLOW_INVITATION:-true}
-      EMAIL_SENDER: ${OPENPANEL_EMAIL_SENDER}
+      COOKIE_SECRET: ${COOKIE_SECRET}
+      ALLOW_REGISTRATION: ${ALLOW_REGISTRATION}
+      ALLOW_INVITATION: ${ALLOW_INVITATION}
+      EMAIL_SENDER: ${EMAIL_SENDER}
       RESEND_API_KEY: ${RESEND_API_KEY}
-      <<: *x-database
+      <<: *x-common
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1" ]
+      test: ['CMD-SHELL', 'curl -f http://localhost:3000/healthcheck || exit 1']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -102,55 +97,35 @@ services:
         condition: service_healthy
 
   op-dashboard:
-    image: lindesvard/openpanel-dashboard:${OP_DASHBOARD_VERSION:-latest}
+    image: lindesvard/openpanel-dashboard:2.0.0
     restart: always
     depends_on:
       op-api:
         condition: service_healthy
     environment:
-      # Common
-      NODE_ENV: production
-      NEXT_PUBLIC_SELF_HOSTED: true
-      # URLs
-      SERVICE_FQDN_OPDASHBOARD:
-      # Set coolify FQDN domain
-      NEXT_PUBLIC_API_URL: $SERVICE_FQDN_OPAPI
-      NEXT_PUBLIC_DASHBOARD_URL: $SERVICE_FQDN_OPDASHBOARD
-      <<: *x-database
+      <<: *x-common
     healthcheck:
-      test: [ 'CMD-SHELL', 'curl -f http://localhost:3000/api/healthcheck || exit 1' ]
+      test: ['CMD-SHELL', 'curl -f http://localhost:3000/api/healthcheck || exit 1']
       interval: 10s
       timeout: 5s
       retries: 5
 
   op-worker:
-    image: lindesvard/openpanel-worker:${OP_WORKER_VERSION:-latest}
+    image: lindesvard/openpanel-worker:2.0.0
     restart: always
     depends_on:
       op-api:
         condition: service_healthy
     environment:
-      # FQDN
-      SERVICE_FQDN_OPBULLBOARD:
-      # Common
-      NODE_ENV=production:
-      NEXT_PUBLIC_SELF_HOSTED: true
-      # Set coolify FQDN domain
-      NEXT_PUBLIC_API_URL: $SERVICE_FQDN_OPAPI
-      <<: *x-database
+      <<: *x-common
     healthcheck:
-      test: [ 'CMD-SHELL', 'curl -f http://localhost:3000/healthcheck || exit 1' ]
+      test: ['CMD-SHELL', 'curl -f http://localhost:3000/healthcheck || exit 1']
       interval: 10s
       timeout: 5s
       retries: 5
-    deploy:
-      mode: replicated
-      replicas: $OP_WORKER_REPLICAS
 
 volumes:
   op-db-data:
   op-kv-data:
   op-ch-data:
   op-ch-logs:
-  op-proxy-data:
-  op-proxy-config:

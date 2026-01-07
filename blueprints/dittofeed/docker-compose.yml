@@ -1,0 +1,169 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: dittofeed
+      POSTGRES_USER: dittofeed
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dittofeed -d dittofeed"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24
+    restart: always
+    cap_add:
+      - SYS_NICE
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+  minio:
+    image: minio/minio:latest
+    restart: always
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+      # Fix for Share Duration Limit
+      MINIO_BROWSER_SESSION_DURATION: ${MINIO_BROWSER_SESSION_DURATION}
+      MINIO_STS_DURATION: ${MINIO_STS_DURATION}
+      # Explicitly use the domains passed from Dokploy
+      MINIO_SERVER_URL: "https://${MINIO_API_DOMAIN}"
+      MINIO_BROWSER_REDIRECT_URL: "https://${MINIO_CONSOLE_DOMAIN}"
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mc:
+    image: minio/mc
+    restart: "no"
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: sh
+    # Internal setup uses internal Docker DNS (http://minio:9000)
+    command: >
+      -c "
+      /usr/bin/mc alias set myminio http://minio:9000 ${MINIO_USER} ${MINIO_PASSWORD} &&
+      /usr/bin/mc mb --ignore-existing myminio/dittofeed &&
+      /usr/bin/mc anonymous set public myminio/dittofeed
+      "
+
+  temporal:
+    image: temporalio/auto-setup
+    restart: always
+    environment:
+      DB: postgres12
+      POSTGRES_SEEDS: postgres
+      POSTGRES_USER: dittofeed
+      POSTGRES_PWD: ${POSTGRES_PASSWORD}
+      DB_PORT: 5432
+      BIND_ON_IP: "0.0.0.0"
+      TEMPORAL_ADDRESS: "127.0.0.1:7233"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "tctl", "cluster", "health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+
+  dittofeed-lite:
+    image: dittofeed/dittofeed-lite
+    restart: always
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: 3000
+      PASSWORD: ${POSTGRES_PASSWORD}
+      SECRET_KEY: ${APP_SECRET}
+      SESSION_COOKIE_SECURE: "true"
+      DASHBOARD_URL: "https://${MAIN_DOMAIN}"
+      DASHBOARD_API_BASE: "https://${MAIN_DOMAIN}"
+      AUTH_MODE: "single-tenant"
+      WORKSPACE_NAME: "${WORKSPACE_NAME}"
+      BOOTSTRAP: "${BOOTSTRAP}"
+      DATABASE_URL: postgres://dittofeed:${POSTGRES_PASSWORD}@postgres:5432/dittofeed
+      CLICKHOUSE_HOST: clickhouse:8123
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: ""
+      CLICKHOUSE_DATABASE: default
+      # Backend talks to Minio via INTERNAL Docker network
+      BLOB_STORAGE_ENDPOINT: http://minio:9000
+      BLOB_STORAGE_BUCKET: dittofeed
+      BLOB_STORAGE_ACCESS_KEY_ID: ${MINIO_USER}
+      BLOB_STORAGE_SECRET_ACCESS_KEY: ${MINIO_PASSWORD}
+      BLOB_STORAGE_REGION: us-east-1
+      TEMPORAL_ADDRESS: temporal:7233
+    depends_on:
+      postgres:
+        condition: service_healthy
+      temporal:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      clickhouse:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3000 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+
+  dittofeed-worker:
+    image: dittofeed/dittofeed-worker
+    restart: always
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PASSWORD: ${POSTGRES_PASSWORD}
+      SECRET_KEY: ${APP_SECRET}
+      SESSION_COOKIE_SECURE: "true"
+      DASHBOARD_URL: "https://${MAIN_DOMAIN}"
+      DASHBOARD_API_BASE: "https://${MAIN_DOMAIN}"
+      AUTH_MODE: "single-tenant"
+      WORKSPACE_NAME: "${WORKSPACE_NAME}"
+      DATABASE_URL: postgres://dittofeed:${POSTGRES_PASSWORD}@postgres:5432/dittofeed
+      CLICKHOUSE_HOST: clickhouse:8123
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: ""
+      CLICKHOUSE_DATABASE: default
+      BLOB_STORAGE_ENDPOINT: http://minio:9000
+      BLOB_STORAGE_BUCKET: dittofeed
+      BLOB_STORAGE_ACCESS_KEY_ID: ${MINIO_USER}
+      BLOB_STORAGE_SECRET_ACCESS_KEY: ${MINIO_PASSWORD}
+      BLOB_STORAGE_REGION: us-east-1
+      TEMPORAL_ADDRESS: temporal:7233
+    depends_on:
+      postgres:
+        condition: service_healthy
+      temporal:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      clickhouse:
+        condition: service_started
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+
+volumes:
+  postgres_data:
+  clickhouse_data:
+  minio_data:

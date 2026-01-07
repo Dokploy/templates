@@ -1765,6 +1765,24 @@
     ]
   },
   {
+    "id": "dittofeed",
+    "name": "Dittofeed",
+    "version": "latest",
+    "description": "Dittofeed is an open-source customer engagement platform for automating email, SMS, and webhook messaging. Template by cyberslide.net",
+    "logo": "dittofeed.png",
+    "links": {
+      "github": "https://github.com/dittofeed/dittofeed",
+      "website": "https://dittofeed.com",
+      "docs": "https://docs.dittofeed.com"
+    },
+    "tags": [
+      "marketing",
+      "automation",
+      "email",
+      "messaging"
+    ]
+  },
+  {
     "id": "docling-serve",
     "name": "Docling Serve",
     "version": "latest",

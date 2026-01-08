@@ -14,7 +14,7 @@ services:
     image: redis:alpine
     restart: always
   panel:
-    image: ghcr.io/pyrohost/pyrodactyl:main
+    image: ghcr.io/pyrohost/pyrodactyl:latest
     restart: always
     links:
       - database
@@ -37,12 +37,6 @@ services:
       DB_PASSWORD: ${MYSQL_PASSWORD}
       RECAPTCHA_ENABLED:
       DB_CONNECTION: "mariadb"
-
-networks:
-  default:
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
 
 volumes:
   pterodb:

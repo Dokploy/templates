@@ -143,6 +143,23 @@
     ]
   },
   {
+    "id": "airbyte",
+    "name": "Airbyte",
+    "version": "1.7.8",
+    "description": "The Open Standard for Data Movement. Build data pipelines that work anywhere. Deploy on-prem, in the cloud, or hybrid - keeping your data sovereign and AI ready.",
+    "logo": "airbyte.png",
+    "links": {
+      "github": "https://github.com/airbytehq/airbyte",
+      "website": "https://airbyte.com/",
+      "docs": "https://docs.airbyte.com/"
+    },
+    "tags": [
+      "data-pipeline",
+      "etl",
+      "integration"
+    ]
+  },
+  {
     "id": "akaunting",
     "name": "Akaunting",
     "version": "latest",

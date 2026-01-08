@@ -1,0 +1,136 @@
+version: "3.8"
+
+services:
+  # PostgreSQL database for Airbyte metadata 
+  db:
+    image: airbyte/db:1.7.8
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: ${AIRBYTE_DB_PASSWORD}
+      POSTGRES_DB: airbyte
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  # PostgreSQL database for Temporal
+  temporal-db:
+    image: postgres:13-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: temporal
+      POSTGRES_PASSWORD: ${TEMPORAL_DB_PASSWORD}
+      POSTGRES_DB: temporal
+    volumes:
+      - temporal-db:/var/lib/postgresql/data
+
+  # Temporal workflow engine
+  temporal:
+    image: temporalio/auto-setup:1.24.2
+    restart: unless-stopped
+    depends_on:
+      - temporal-db
+    environment:
+      DB: postgres12
+      DB_PORT: 5432
+      POSTGRES_USER: temporal
+      POSTGRES_PWD: ${TEMPORAL_DB_PASSWORD}
+      POSTGRES_SEEDS: temporal-db
+      DYNAMIC_CONFIG_FILE_PATH: config/dynamicconfig/development-sql.yaml
+
+  # MinIO for S3-compatible storage
+  minio:
+    image: minio/minio:RELEASE.2024-11-07T00-52-20Z
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio:/data
+    command: server /data --console-address ":9001"
+
+  # Airbyte Server (API)
+  server:
+    image: airbyte/server:1.7.8
+    restart: unless-stopped
+    depends_on:
+      - db
+      - temporal
+    environment:
+      DATABASE_USER: docker
+      DATABASE_PASSWORD: ${AIRBYTE_DB_PASSWORD}
+      DATABASE_DB: airbyte
+      DATABASE_URL: jdbc:postgresql://db:5432/airbyte
+      CONFIG_DATABASE_USER: docker
+      CONFIG_DATABASE_PASSWORD: ${AIRBYTE_DB_PASSWORD}
+      CONFIG_DATABASE_URL: jdbc:postgresql://db:5432/airbyte
+      WORKSPACE_ROOT: /data
+      TRACKING_STRATEGY: segment
+      WEBAPP_URL: http://webapp:80
+      TEMPORAL_HOST: temporal:7233
+      LOG_LEVEL: INFO
+      STORAGE_TYPE: MINIO
+      S3_LOG_BUCKET: airbyte-dev-logs
+      S3_LOG_BUCKET_REGION: us-east-1
+      S3_PATH_STYLE_ACCESS: "true"
+      AWS_ACCESS_KEY_ID: minio
+      AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
+      S3_MINIO_ENDPOINT: http://minio:9000
+      STATE_STORAGE_MINIO_BUCKET_NAME: airbyte-state-storage
+      STATE_STORAGE_MINIO_ENDPOINT: http://minio:9000
+      STATE_STORAGE_MINIO_ACCESS_KEY: minio
+      STATE_STORAGE_MINIO_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - workspace:/data
+
+  # Airbyte Worker (job execution)
+  worker:
+    image: airbyte/worker:1.7.8
+    restart: unless-stopped
+    depends_on:
+      - db
+      - temporal
+    environment:
+      DATABASE_USER: docker
+      DATABASE_PASSWORD: ${AIRBYTE_DB_PASSWORD}
+      DATABASE_DB: airbyte
+      DATABASE_URL: jdbc:postgresql://db:5432/airbyte
+      CONFIG_DATABASE_USER: docker
+      CONFIG_DATABASE_PASSWORD: ${AIRBYTE_DB_PASSWORD}
+      CONFIG_DATABASE_URL: jdbc:postgresql://db:5432/airbyte
+      WORKSPACE_ROOT: /data
+      TRACKING_STRATEGY: segment
+      WEBAPP_URL: http://webapp:80
+      TEMPORAL_HOST: temporal:7233
+      LOG_LEVEL: INFO
+      STORAGE_TYPE: MINIO
+      S3_LOG_BUCKET: airbyte-dev-logs
+      S3_LOG_BUCKET_REGION: us-east-1
+      S3_PATH_STYLE_ACCESS: "true"
+      AWS_ACCESS_KEY_ID: minio
+      AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
+      S3_MINIO_ENDPOINT: http://minio:9000
+      STATE_STORAGE_MINIO_BUCKET_NAME: airbyte-state-storage
+      STATE_STORAGE_MINIO_ENDPOINT: http://minio:9000
+      STATE_STORAGE_MINIO_ACCESS_KEY: minio
+      STATE_STORAGE_MINIO_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - workspace:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  # Airbyte Webapp (UI)
+  webapp:
+    image: airbyte/webapp:1.7.8
+    restart: unless-stopped
+    depends_on:
+      - server
+    environment:
+      AIRBYTE_VERSION: 1.7.8
+      API_URL: http://server:8001/api/v1/
+      TRACKING_STRATEGY: segment
+      INTERNAL_API_HOST: server:8001
+
+volumes:
+  db:
+  temporal-db:
+  minio:
+  workspace:

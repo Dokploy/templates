@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  pulse:
+    image: rcourtman/pulse:latest
+    restart: always
+    expose:
+      - 7655
+    volumes:
+      - pulse_data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - PULSE_AUTH_USER=${PULSE_AUTH_USER}
+      - PULSE_AUTH_PASS=${PULSE_AUTH_PASS}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:7655/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  pulse_data:

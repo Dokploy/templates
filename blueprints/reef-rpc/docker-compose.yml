@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  reef-rpc:
+    image: anukulpandey/reef-chain-node:linux-2
+    working_dir: /workspace
+
+    ports:
+      - "${P2P_PORT}:${P2P_PORT}"
+      - "${RPC_PORT}:${RPC_PORT}"
+
+    environment:
+      SPEC_URL: ${SPEC_URL}
+      BOOTNODE_NODE_KEY: ${BOOTNODE_NODE_KEY}
+      BOOTNODE_IP: ${BOOTNODE_IP}
+      P2P_PORT: ${P2P_PORT}
+      RPC_PORT: ${RPC_PORT}
+
+    volumes:
+      - ./output:/output
+
+    entrypoint: /bin/sh
+    command: -c "
+      set -e &&
+
+      echo '📦 Installing dependencies...' &&
+      apt-get update &&
+      apt-get install -y wget ca-certificates &&
+
+      echo '📥 Downloading start-validator.sh...' &&
+      mkdir -p /workspace/scripts &&
+      wget -O /workspace/scripts/start-rpc.sh \
+        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/rpc/scripts/start-rpc.sh &&
+
+      echo '🔧 Making script executable...' &&
+      chmod +x /workspace/scripts/start-rpc.sh &&
+
+      echo '🚀 Starting RPC' &&
+      exec /workspace/scripts/start-rpc.sh"

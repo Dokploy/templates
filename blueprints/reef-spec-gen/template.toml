@@ -1,0 +1,9 @@
+[variables]
+
+[[config.domains]]
+serviceName = "reef-spec-api"
+port = 8000
+host = "${domain}"
+path = "/"
+
+[config.env]

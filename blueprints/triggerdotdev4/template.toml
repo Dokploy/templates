@@ -1,0 +1,69 @@
+
+[variables]
+webapp_url = "${domain}"
+registry_url = "${domain}"
+session_secret = "${hash:32}"
+magic_link_secret = "${hash:32}"
+encryption_key = "${hash:32}"
+managed_worker_secret = "${hash:32}"
+db_user = "postgres"
+db_password = "${password:24}"
+db_name = "triggerdb"
+clickhouse_user = "default"
+clickhouse_password = "${password:16}"
+docker_registry_username = "registry-user"
+docker_registry_password = "${password:16}"
+deploy_registry_namespace = "trigger"
+object_store_access_key_id = "${username}"
+object_store_secret_access_key = "${password:24}"
+minio_root_user = "admin"
+minio_root_password = "${password:24}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "webapp"
+port = 3000
+host = "${webapp_url}"
+
+[[config.domains]]
+serviceName = "registry"
+port = 5000
+host = "${registry_url}"
+
+[config.env]
+WEB_APP_URL = "http://${webapp_url}"
+DEPLOY_REGISTRY_HOST = "${registry_url}"
+DEPLOY_IMAGE_PLATFORM = "linux/amd64"
+NODE_MAX_OLD_SPACE_SIZE = "3200"
+
+SESSION_SECRET = "${session_secret}"
+MAGIC_LINK_SECRET = "${magic_link_secret}"
+ENCRYPTION_KEY = "${encryption_key}"
+MANAGED_WORKER_SECRET = "${managed_worker_secret}"
+POSTGRES_USER = "${db_user}"
+POSTGRES_PASSWORD = "${db_password}"
+POSTGRES_DB = "${db_name}"
+CLICKHOUSE_USER = "${clickhouse_user}"
+CLICKHOUSE_PASSWORD = "${clickhouse_password}"
+DOCKER_REGISTRY_USERNAME = "${docker_registry_username}"
+DOCKER_REGISTRY_PASSWORD = "${docker_registry_password}"
+DEPLOY_REGISTRY_NAMESPACE = "${deploy_registry_namespace}"
+OBJECT_STORE_ACCESS_KEY_ID = "${object_store_access_key_id}"
+OBJECT_STORE_SECRET_ACCESS_KEY = "${object_store_secret_access_key}"
+MINIO_ROOT_USER = "${minio_root_user}"
+MINIO_ROOT_PASSWORD = "${minio_root_password}"
+
+EMAIL_TRANSPORT=""
+FROM_EMAIL=""
+REPLY_TO_EMAIL=""
+SMTP_HOST=""
+SMTP_PORT="587"
+SMTP_SECURE="false"
+SMTP_USER=""
+SMTP_PASSWORD=""
+RESEND_API_KEY=""
+AUTH_GITHUB_CLIENT_ID=""
+AUTH_GITHUB_CLIENT_SECRET=""
+WHITELISTED_EMAILS=""

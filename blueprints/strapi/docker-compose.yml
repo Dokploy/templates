@@ -1,0 +1,58 @@
+# Self-host guide:
+# - https://strapi.io/blog/how-to-self-host-your-headless-cms-using-docker-compose
+
+services:
+  strapi:
+    image: elestio/strapi-production:v5.33.0
+    environment:
+      # https://docs.strapi.io/cms/configurations/environment
+      NODE_ENV: production
+      STRAPI_TELEMETRY_DISABLED: true
+      STRAPI_PLUGIN_I18N_INIT_LOCALE_CODE: en
+      FAST_REFRESH: true
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: strapi_postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: strapi
+      DATABASE_USERNAME: strapi
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - strapi_data:/srv/app
+    expose:
+      - 1337
+    depends_on:
+      - strapi_postgres
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - "-q"
+        - "--spider"
+        - "http://127.0.0.1:1337"
+      start_interval: 3s
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  strapi_postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: strapi
+      POSTGRES_USER: strapi
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - strapi_postgres_data:/var/lib/postgresql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"
+      start_interval: 3s
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  strapi_data:
+  strapi_postgres_data:

@@ -5625,6 +5625,24 @@
     ]
   },
   {
+    "id": "strapi",
+    "name": "Strapi",
+    "version": "v5.33.0",
+    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
+    "logo": "strapi.svg",
+    "links": {
+      "github": "https://github.com/strapi/strapi",
+      "discord": "https://discord.com/invite/strapi",
+      "docs": "https://docs.strapi.io",
+      "website": "https://strapi.io"
+    },
+    "tags": [
+      "headless",
+      "cms",
+      "content-management"
+    ]
+  },
+  {
     "id": "supabase",
     "name": "SupaBase",
     "version": "1.25.04 / dokploy >= 0.22.5",

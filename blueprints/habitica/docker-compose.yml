@@ -1,13 +1,18 @@
-version: "3.8"
-
 services:
   server:
     image: docker.io/awinterstein/habitica-server:latest
     restart: unless-stopped
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     environment:
-      - NODE_DB_URI=mongodb://mongo/habitica
+      NODE_DB_URI: "mongodb://${MONGO_HABITICA_USER}:${MONGO_HABITICA_PASSWORD}@mongo/habitica?authSource=habitica"
+      INVITE_ONLY: "${INVITE_ONLY}"
+      EMAIL_SERVER_URL: "${EMAIL_SERVER_URL}"
+      EMAIL_SERVER_PORT: "${EMAIL_SERVER_PORT}"
+      EMAIL_SERVER_AUTH_USER: "${EMAIL_SERVER_AUTH_USER}"
+      EMAIL_SERVER_AUTH_PASSWORD: "${EMAIL_SERVER_AUTH_PASSWORD}"
+      ADMIN_EMAIL: "${ADMIN_EMAIL}"
 
   client:
     image: docker.io/awinterstein/habitica-client:latest
@@ -20,12 +25,64 @@ services:
   mongo:
     image: docker.io/mongo:latest
     restart: unless-stopped
-    command: ["--replSet", "rs", "--bind_ip_all", "--port", "27017"]
+    command: >
+      bash -c "
+        echo \"${MONGO_KEYFILE_CONTENT}\" > /etc/mongo-keyfile &&
+        chown 999:999 /etc/mongo-keyfile &&
+        chmod 400 /etc/mongo-keyfile &&
+        exec docker-entrypoint.sh mongod --replSet rs --bind_ip_all --port 27017 --keyFile /etc/mongo-keyfile
+      "
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ADMIN_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ADMIN_PASSWORD}
+      MONGO_KEYFILE_CONTENT: ${MONGO_KEYFILE_CONTENT}
+      MONGO_HABITICA_USER: ${MONGO_HABITICA_USER}
+      MONGO_HABITICA_PASSWORD: ${MONGO_HABITICA_PASSWORD}
+    # ---------------------------------------------------------
+    # SMART HEALTHCHECK: Auto-fixes Hostname Mismatches for replicaSet
+    # ---------------------------------------------------------
     healthcheck:
-      test: echo "try { rs.status() } catch (err) { rs.initiate() }" | mongosh --port 27017 --quiet
-      interval: 10s
-      timeout: 30s
-      retries: 30
+      test: |
+        mongosh --port 27017 --quiet -u "${MONGO_ADMIN_USER}" -p "${MONGO_ADMIN_PASSWORD}" --authenticationDatabase admin --eval "
+          try {
+            // 1. Hostname Fix
+            const config = rs.conf();
+            const currentHost = require('os').hostname() + ':27017';
+            if (config.members[0].host !== currentHost) {
+              config.members[0].host = currentHost;
+              rs.reconfig(config, { force: true });
+            }
+
+            // 2. User Creation Logic
+            const targetDb = db.getSiblingDB('habitica');
+            const hUser = process.env.MONGO_HABITICA_USER;
+            const hPass = process.env.MONGO_HABITICA_PASSWORD;
+
+            // We can only check/create users if we are Primary
+            if (rs.isMaster().ismaster) {
+              if (!targetDb.getUser(hUser)) {
+                print('Creating missing user ' + hUser + '...');
+                targetDb.createUser({ user: hUser, pwd: hPass, roles: ['readWrite'] });
+              }
+              // SUCCESS: User exists and we are Primary
+              quit(0);
+            } else {
+              // We are not Primary yet (still electing), so we cannot confirm user exists.
+              // Fail the check so the dependent app waits.
+              print('Waiting for Primary state...');
+              quit(1);
+            }
+          } catch (err) {
+            // If not initialized, initiate and FAIL this check so we wait for the next cycle
+            try { 
+              rs.initiate({ _id: 'rs', members: [{ _id: 0, host: require('os').hostname() + ':27017' }] }); 
+            } catch (e) {}
+            quit(1);
+          }
+        "
+      interval: 5s
+      timeout: 10s
+      retries: 20
     volumes:
       - habitica-mongo-data:/data/db
 

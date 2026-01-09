@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+session_secret = "${password:64}"
+
+[config]
+[[config.domains]]
+serviceName = "streamflow"
+port = 7575
+host = "${main_domain}"
+
+[config.env]
+SESSION_SECRET = "${session_secret}"
+TIMEZONE = "Asia/Jakarta"
+
+[[config.mounts]]

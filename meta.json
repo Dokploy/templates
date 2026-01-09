@@ -5499,6 +5499,25 @@
     ]
   },
   {
+    "id": "streamflow",
+    "name": "StreamFlow",
+    "version": "2.1",
+    "description": "StreamFlow is a multi-platform live streaming web application that enables simultaneous RTMP streaming to YouTube, Facebook, and other platforms with video gallery, scheduled streaming, and real-time monitoring.",
+    "logo": "streamflow.png",
+    "links": {
+      "github": "https://github.com/bangtutorial/streamflow",
+      "website": "https://github.com/bangtutorial/streamflow",
+      "docs": "https://github.com/bangtutorial/streamflow#readme"
+    },
+    "tags": [
+      "streaming",
+      "rtmp",
+      "video",
+      "live-streaming",
+      "media"
+    ]
+  },
+  {
     "id": "supabase",
     "name": "SupaBase",
     "version": "1.25.04 / dokploy >= 0.22.5",

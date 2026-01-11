@@ -1,0 +1,121 @@
+name: Validate Docker Compose Files
+
+on:
+  pull_request:
+    branches:
+      - canary
+    paths:
+      - 'blueprints/**/docker-compose.yml'
+      - 'blueprints/**/template.toml'
+  workflow_dispatch:
+
+jobs:
+  validate-docker-compose:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Compose
+        run: docker compose version
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.16.0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: cd build-scripts && pnpm install
+
+      - name: Detect changed blueprints
+        id: changed
+        run: |
+          BASE_SHA=$(git merge-base HEAD origin/${{ github.base_ref }})
+          
+          # Obtener todos los blueprints que tienen cambios (en docker-compose.yml o template.toml)
+          CHANGED_BLUEPRINTS=$(git diff --name-only --diff-filter=ACMRT $BASE_SHA HEAD | \
+            grep -E 'blueprints/[^/]+/(docker-compose\.yml|template\.toml)$' | \
+            sed 's|blueprints/\([^/]*\)/.*|\1|' | \
+            sort -u)
+          
+          echo "Changed blueprints:"
+          echo "$CHANGED_BLUEPRINTS" | while read blueprint; do
+            [ -n "$blueprint" ] && echo "  - $blueprint"
+          done
+          
+          # Guardar lista de blueprints (una por línea)
+          echo "blueprints<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED_BLUEPRINTS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Validate blueprints
+        run: |
+          BLUEPRINTS="${{ steps.changed.outputs.blueprints }}"
+          
+          if [ -z "$BLUEPRINTS" ] || [ "$BLUEPRINTS" = "" ]; then
+            echo "ℹ️ No blueprints changed, skipping validation"
+            exit 0
+          fi
+          
+          ERROR=0
+          
+          # Convertir a array para evitar problemas con subshells
+          mapfile -t BLUEPRINT_ARRAY <<< "$BLUEPRINTS"
+          
+          # Iterar sobre cada blueprint
+          for blueprint in "${BLUEPRINT_ARRAY[@]}"; do
+            [ -z "$blueprint" ] && continue
+            
+            BLUEPRINT_PATH="blueprints/$blueprint"
+            COMPOSE_FILE="$BLUEPRINT_PATH/docker-compose.yml"
+            TOML_FILE="$BLUEPRINT_PATH/template.toml"
+            
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "📦 Validating: $blueprint"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            
+            # 1. Validar best practices de docker-compose.yml
+            if [ ! -f "$COMPOSE_FILE" ]; then
+              echo "⚠️  WARNING: docker-compose.yml not found"
+              ERROR=1
+              continue
+            fi
+            echo "🔍 Validating docker-compose.yml best practices..."
+            if ! (cd build-scripts && pnpm exec tsx validate-docker-compose.ts --file "../$COMPOSE_FILE" --verbose); then
+              ERROR=1
+              continue
+            fi
+            
+            # 3. Validar template.toml
+            if [ -f "$TOML_FILE" ]; then
+              echo "🔍 Validating template.toml..."
+              if ! (cd build-scripts && pnpm exec tsx validate-template.ts --dir "../$BLUEPRINT_PATH" --verbose); then
+                ERROR=1
+                continue
+              fi
+            else
+              echo "⚠️  WARNING: template.toml not found"
+              ERROR=1
+              continue
+            fi
+            
+            echo "✅ All validations passed for $blueprint"
+          done
+          
+          if [ $ERROR -eq 1 ]; then
+            echo ""
+            echo "❌ Validation failed for one or more blueprints"
+            exit 1
+          else
+            echo ""
+            echo "✅ All blueprints validated successfully"
+          fi

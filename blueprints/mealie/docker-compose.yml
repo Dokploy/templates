@@ -1,0 +1,35 @@
+services:
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:latest
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+    volumes:
+      - mealie-data:/app/data/
+    environment:
+      PUID: 1000
+      PGID: 1000
+
+      # Basic settings
+      BASE_URL: ${BASE_URL}
+      API_DOCS: ${API_DOCS}
+      ALLOW_SIGNUP: ${ALLOW_SIGNUP}
+      DEFAULT_GROUP: ${DEFAULT_GROUP}
+      DEFAULT_HOUSEHOLD: ${DEFAULT_HOUSEHOLD}
+      TZ: ${TZ}
+      SECURITY_MAX_LOGIN_ATTEMPTS: ${SECURITY_MAX_LOGIN_ATTEMPTS}
+      SECURITY_USER_LOCKOUT_TIME: ${SECURITY_USER_LOCKOUT_TIME}
+      DAILY_SCHEDULE_TIME: ${DAILY_SCHEDULE_TIME}
+
+      # Email settings
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_AUTH_STRATEGY: ${SMTP_AUTH_STRATEGY}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+
+volumes:
+  mealie-data: {}

@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  budget-board-server:
+    restart: unless-stopped
+    image: ghcr.io/teelur/budget-board/server:release
+
+    environment:
+      Logging__LogLevel__Default: Information
+      CLIENT_URL: http://budget-board-client:6253
+      POSTGRES_HOST: budget-board-db
+      POSTGRES_DATABASE: budgetboard
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      AUTO_UPDATE_DB: true
+
+    depends_on:
+      budget-board-db:
+        condition: service_healthy
+  budget-board-client:
+    restart: unless-stopped
+    image: ghcr.io/teelur/budget-board/client:release
+    environment:
+      VITE_API_URL: http://budget-board-server
+      PORT: 6253
+    ports:
+      - 6253
+    depends_on:
+      - budget-board-server
+  budget-board-db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: budgetboard
+    volumes:
+      - "../files/db-data:/var/lib/postgresql/data"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d budgetboard"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

@@ -1,0 +1,91 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+cookie_secret = "${base64:32}"
+redis_password = "${password:32}"
+
+[config]
+# ClickHouse config files - mounted as directories
+[[config.mounts]]
+filePath = "./clickhouse_config/op-config.xml"
+content = """
+<clickhouse>
+    <logger>
+        <level>warning</level>
+        <console>true</console>
+    </logger>
+    <keep_alive_timeout>10</keep_alive_timeout>
+    <!-- Stop all the unnecessary logging -->
+    <query_thread_log remove="remove"/>
+    <query_log remove="remove"/>
+    <text_log remove="remove"/>
+    <trace_log remove="remove"/>
+    <metric_log remove="remove"/>
+    <asynchronous_metric_log remove="remove"/>
+    <session_log remove="remove"/>
+    <part_log remove="remove"/>
+    <listen_host>0.0.0.0</listen_host>
+    <interserver_listen_host>0.0.0.0</interserver_listen_host>
+    <interserver_http_host>opch</interserver_http_host>
+    <!-- Disable cgroup memory observer -->
+    <cgroups_memory_usage_observer_wait_time>0</cgroups_memory_usage_observer_wait_time>
+    <!-- Not used anymore, but kept for backwards compatibility -->
+    <macros>
+        <shard>1</shard>
+        <replica>replica1</replica>
+        <cluster>openpanel_cluster</cluster>
+    </macros>
+</clickhouse>
+"""
+
+[[config.mounts]]
+filePath = "./clickhouse_users/op-user-config.xml"
+content = """
+<clickhouse>
+    <profiles>
+        <default>
+            <log_queries>0</log_queries>
+            <log_query_threads>0</log_query_threads>
+        </default>
+    </profiles>
+</clickhouse>
+"""
+
+[[config.mounts]]
+filePath = "./clickhouse_init/1_init-db.sql"
+content = """
+CREATE DATABASE IF NOT EXISTS openpanel;
+"""
+
+[[config.domains]]
+serviceName = "op-dashboard"
+port = 3000
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "op-api"
+port = 3000
+host = "${main_domain}"
+path = "/api"
+stripPath = true
+
+[config.env]
+DASHBOARD_URL = "http://${main_domain}"
+API_URL = "http://${main_domain}/api"
+
+# Database configuration
+POSTGRES_DB = "openpanel"
+POSTGRES_USER = "openpanel"
+POSTGRES_PASSWORD = "${db_password}"
+REDIS_PASSWORD = "${redis_password}"
+
+# Security
+COOKIE_SECRET = "${cookie_secret}"
+
+# Registration settings
+ALLOW_REGISTRATION = "true"
+ALLOW_INVITATION = "true"
+
+# Email configuration (optional - configure for email notifications)
+EMAIL_SENDER = ""
+RESEND_API_KEY = ""

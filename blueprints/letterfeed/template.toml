@@ -1,0 +1,34 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${password:64}"
+auth_password = "${password:32}"
+
+[config]
+
+[[config.domains]]
+serviceName = "frontend"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+LETTERFEED_APP_BASE_URL = "https://${main_domain}"
+LETTERFEED_BACKEND_URL = "http://backend:8000"
+LETTERFEED_DATABASE_URL = "sqlite:////data/letterfeed.db"
+
+LETTERFEED_IMAP_SERVER = ""
+LETTERFEED_IMAP_USERNAME = ""
+LETTERFEED_IMAP_PASSWORD = ""
+
+LETTERFEED_SEARCH_FOLDER = "INBOX"
+LETTERFEED_MOVE_TO_FOLDER = ""
+LETTERFEED_MARK_AS_READ = "true"
+LETTERFEED_EMAIL_CHECK_INTERVAL = "15"
+LETTERFEED_AUTO_ADD_NEW_SENDERS = "false"
+
+LETTERFEED_SECRET_KEY = "${secret_key}"
+LETTERFEED_AUTH_USERNAME = "admin"
+LETTERFEED_AUTH_PASSWORD = "${auth_password}"
+
+[[config.mounts]]
+name = "letterfeed_data"
+mountPath = "/data"

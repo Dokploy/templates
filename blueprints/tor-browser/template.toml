@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+display_width = "1920"
+display_height = "1080"
+keep_app_running = "1"
+timezone = "Europe/Vienna"
+
+[config]
+[[config.domains]]
+serviceName = "tor"
+port = 5800
+host = "${main_domain}"
+
+[config.env]
+DISPLAY_WIDTH = "${display_width}"
+DISPLAY_HEIGHT = "${display_height}"
+KEEP_APP_RUNNING = "${keep_app_running}"
+TZ = "${timezone}"
+
+[[config.mounts]]

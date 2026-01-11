@@ -170,7 +170,7 @@ We have a few helpers that are very common when creating a template, these are:
 
 
 
-## General Suggestions when creating a template
+## General Requirements when creating a template
 
 - Don't use this way in your docker compose file:
 
@@ -205,7 +205,7 @@ services:
     container_name: grafana # ❌ Remove this
 ```
 
-- Don't use dokploy-network in your docker compose file, by default all the templates have this flag enabled https://docs.dokploy.com/docs/core/docker-compose/utilities#isolated-deployments, so by default they have a internal network created, so you don't to create a new one or use the dokploy-network name.
+- Don't use dokploy-network in your docker compose file, by default all the templates have this flag enabled https://docs.dokploy.com/docs/core/docker-compose/utilities#isolated-deployments, so by default they have a internal network created, so you don't need to create a new one or use the dokploy-network name.
 
 ```yaml
 services:
@@ -223,3 +223,6 @@ services:
 4. Go to your instance, create a new Compose Service, go to Advanced Section -> Scroll Down -> Import Section -> Paste the Base64 Value -> Click on the Import Button
 5. If everything is correct and set, you should see a modal with all the details (Compose File, Environment Variables, Mounts, Domains, etc)
 6. Now you can click on the Deploy Button and wait for the deployment to finish, and try to access to the service, if everything is correct you should access to the service and see the template working.
+
+
+use the command `node dedupe-and-sort-meta.js` to deduplicate and sort the meta.json file.

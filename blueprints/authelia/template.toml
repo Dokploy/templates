@@ -1,0 +1,195 @@
+[variables]
+main_domain = "${domain}"
+jwt_secret = "${password:64}"
+session_secret = "${password:64}"
+storage_encryption_key = "${password:64}"
+redis_password = "${password:32}"
+postgres_password = "${password:32}"
+admin_username = "${username}"
+admin_email = "${email}"
+admin_password = "AdminPass123!"
+admin_password_hash = "$argon2id$v=19$m=65536,t=3,p=4$170PGJ1MskQyxfFknfBPFQ$VqD1/pqC3fBHo+Zk58bC2xQm1ltOFTr0w2wx93vJgC4"
+
+[config]
+[[config.domains]]
+serviceName = "authelia"
+port = 9091
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+JWT_SECRET = "${jwt_secret}"
+SESSION_SECRET = "${session_secret}"
+STORAGE_ENCRYPTION_KEY = "${storage_encryption_key}"
+REDIS_PASSWORD = "${redis_password}"
+POSTGRES_PASSWORD = "${postgres_password}"
+admin_username = "${admin_username}"
+admin_email = "${admin_email}"
+
+[[config.mounts]]
+filePath = "configuration.yml"
+content = """
+###############################################################
+#                   Authelia configuration                    #
+###############################################################
+
+# DEFAULT ADMIN CREDENTIALS:
+# Username: (auto-generated, check users_database.yml)
+# Password: AdminPass123!
+# Email: (auto-generated)
+#
+# IMPORTANT: Change the password after first login!
+# SECURITY NOTE: This template starts with one-factor auth for easier setup.
+# After configuring SMTP/notifications, change the policy to 'two_factor'
+
+# Server Configuration
+server:
+  address: 'tcp://0.0.0.0:9091'
+  headers:
+    csp_template: ''
+
+# Log Configuration
+log:
+  level: info
+  format: text
+
+# Theme
+theme: auto
+
+# TOTP Configuration
+totp:
+  disable: false
+  issuer: authelia.com
+  algorithm: sha1
+  digits: 6
+  period: 30
+  skew: 1
+  secret_size: 32
+
+# WebAuthn/FIDO2 Configuration
+webauthn:
+  disable: false
+  timeout: 60s
+  display_name: Authelia
+  attestation_conveyance_preference: indirect
+  user_verification: preferred
+
+# NTP Configuration
+ntp:
+  address: 'time.cloudflare.com:123'
+  version: 4
+  max_desync: 3s
+  disable_startup_check: false
+  disable_failure: false
+
+# Authentication Backend Configuration
+authentication_backend:
+  password_reset:
+    disable: false
+    custom_url: ''
+  refresh_interval: 5m
+  file:
+    path: /config/users_database.yml
+    watch: false
+    search:
+      email: false
+      case_insensitive: false
+    password:
+      algorithm: argon2
+      argon2:
+        variant: argon2id
+        iterations: 3
+        memory: 65536
+        parallelism: 4
+        key_length: 32
+        salt_length: 16
+
+# Password Policy
+password_policy:
+  standard:
+    enabled: false
+    min_length: 8
+    max_length: 0
+    require_uppercase: true
+    require_lowercase: true
+    require_number: true
+    require_special: true
+  zxcvbn:
+    enabled: false
+    min_score: 3
+
+# Session Configuration
+session:
+  name: authelia_session
+  domain: ${main_domain}
+  same_site: lax
+  secret: ${session_secret}
+  expiration: 1h
+  inactivity: 5m
+  remember_me_duration: 1M
+  redis:
+    host: redis
+    port: 6379
+    password: ${redis_password}
+    database_index: 0
+    maximum_active_connections: 8
+    minimum_idle_connections: 0
+
+# Storage Configuration
+storage:
+  encryption_key: ${storage_encryption_key}
+  postgres:
+    host: postgres
+    port: 5432
+    database: authelia
+    schema: public
+    username: authelia
+    password: ${postgres_password}
+    timeout: 5s
+
+# Notifier Configuration
+notifier:
+  disable_startup_check: true
+  filesystem:
+    filename: /config/notification.txt
+
+# Regulation Configuration
+regulation:
+  max_retries: 3
+  find_time: 10m
+  ban_time: 12h
+
+# Access Control Configuration - MODIFIED FOR EASIER INITIAL SETUP
+access_control:
+  default_policy: deny
+  rules:
+    - domain: ${main_domain}
+      policy: one_factor  # Changed from one_factor to two_factor for production
+"""
+
+[[config.mounts]]
+filePath = "users_database.yml"
+content = """
+###############################################################
+#                         Users Database                     #
+###############################################################
+
+# DEFAULT LOGIN CREDENTIALS:
+# Username: (generated from username helper)
+# Password: AdminPass123!
+# Email: (generated from email helper)
+#
+# IMPORTANT: Change the default password after first login!
+# To generate a new password hash, run:
+# docker run authelia/authelia:latest authelia hash-password 'your-new-password'
+
+users:
+  ${admin_username}:
+    disabled: false
+    displayname: "Authelia Admin"
+    password: "${admin_password_hash}"
+    email: ${admin_email}
+    groups:
+      - admins
+      - dev
+"""

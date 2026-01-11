@@ -1,0 +1,87 @@
+#version: '3.8'
+
+services:
+  xsshunterexpress-db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-xsshunterexpress}
+      POSTGRES_USER: ${POSTGRES_USER:-xsshunterexpress}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-xsshunterexpress}
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_HOST_AUTH_METHOD: trust
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-xsshunterexpress}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/pgdata
+
+  xsshunterexpress-service:
+    build: https://github.com/rs-loves-bugs/xsshunter.git
+    restart: unless-stopped
+    environment:
+      # Core Configuration
+      SESSION_SECRET_KEY: ${SESSION_SECRET_KEY}
+      HOSTNAME: ${HOSTNAME}
+      XSS_HOSTNAME: ${XSS_HOSTNAME}
+      
+      # Panel Configuration
+      PANEL_LOGIN: ${PANEL_LOGIN:-true}
+      PANEL_USERNAME: ${PANEL_USERNAME}
+      PANEL_PASSWORD: ${PANEL_PASSWORD}
+      ALLOW_EMPTY_USERPATH: ${ALLOW_EMPTY_USERPATH:-true}
+      
+      # OAuth Configuration
+      OAUTH_LOGIN: ${OAUTH_LOGIN:-false}
+      CLIENT_ID: ${CLIENT_ID:-}
+      CLIENT_SECRET: ${CLIENT_SECRET:-}
+      GMAIL_ACCOUNTS: ${GMAIL_ACCOUNTS:-}
+      
+      # Email Configuration
+      EMAIL_NOTIFICATIONS_ENABLED: ${EMAIL_NOTIFICATIONS_ENABLED:-false}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY:-}
+      SENDGRID_UNSUBSRIBE_GROUP_ID: ${SENDGRID_UNSUBSRIBE_GROUP_ID:-}
+      
+      # Database Configuration
+      DATABASE_HOST: xsshunterexpress-db
+      POSTGRES_DB: ${POSTGRES_DB:-xsshunterexpress}
+      POSTGRES_USER: ${POSTGRES_USER:-xsshunterexpress}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-xsshunterexpress}
+      
+      # Application Configuration
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: ${PORT}
+      CONTROL_PANEL_ENABLED: ${CONTROL_PANEL_ENABLED:-true}
+      SCREENSHOTS_DIR: /app/payload-fire-images
+      TRUFFLEHOG_URL: http://${TRUFFLEHOG_HOST:-xsshunterexpress-trufflehog}:${TRUFFLEHOG_PORT:-8000}/trufflehog
+      
+      # Optional Services
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_ENABLED: ${SENTRY_ENABLED:-false}
+      USE_CLOUD_STORAGE: ${USE_CLOUD_STORAGE:-false}
+      BUCKET_NAME: ${BUCKET_NAME:-}
+    expose:
+      - ${PORT:-8080}
+    volumes:
+      - payload_images:/app/payload-fire-images
+    depends_on:
+      xsshunterexpress-db:
+        condition: service_healthy
+
+  xsshunterexpress-trufflehog:
+    build:
+      context: https://github.com/rs-loves-bugs/xsshunter.git
+      dockerfile: Dockerfile.trufflehog
+    restart: unless-stopped
+    expose:
+      - ${TRUFFLEHOG_PORT:-8000}
+
+volumes:
+  postgres_data:
+    driver: local
+  payload_images:
+    driver: local

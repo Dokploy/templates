@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  metube:
+    image: ghcr.io/alexta69/metube
+    restart: unless-stopped
+    ports:
+      - 8081
+    volumes:
+      - ../files/downloads:/downloads

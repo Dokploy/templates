@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+monitoring_token = "${password:32}"
+callback_url = "http://dokploy:3000/api/trpc/notification.receiveNotification"
+server_type = "Dokploy"
+refresh_rate = "30"
+retention_days = "7"
+cpu_threshold = "80"
+memory_threshold = "85"
+
+[[config.domains]]
+serviceName = "dokploy-monitoring"
+port = 3001
+host = "${main_domain}"
+
+[config.env]
+METRICS_CONFIG = "{\"server\":{\"refreshRate\":${refresh_rate},\"port\":3001,\"type\":\"${server_type}\",\"token\":\"${monitoring_token}\",\"urlCallback\":\"${callback_url}\",\"retentionDays\":${retention_days},\"cronJob\":\"0 0 * * *\",\"thresholds\":{\"cpu\":${cpu_threshold},\"memory\":${memory_threshold}},\"prometheus\":{\"enabled\":true}},\"containers\":{\"refreshRate\":${refresh_rate},\"services\":{\"include\":[],\"exclude\":[]}}}"

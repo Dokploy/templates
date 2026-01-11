@@ -1,0 +1,58 @@
+services:
+  livekit:
+    image: livekit/livekit-server:v1.9.0
+    restart: unless-stopped
+    command: --config /etc/livekit.yaml
+    volumes:
+      - ../files/livekit.yaml:/etc/livekit.yaml
+    ports:
+      - "${LIVEKIT_PORT}:${LIVEKIT_PORT}"
+      - "${TURN_UDP_PORT}:${TURN_UDP_PORT}/udp"
+      - "${LIVEKIT_UDP_PORT}:${LIVEKIT_UDP_PORT}/udp"
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO- http://localhost:${LIVEKIT_PORT} || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server /etc/redis.conf
+    volumes:
+      - ../files/redis.conf:/etc/redis.conf
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  egress:
+    image: livekit/egress:latest
+    restart: unless-stopped
+    environment:
+      - EGRESS_CONFIG_FILE=/etc/egress.yaml
+    volumes:
+      - ../files/egress.yaml:/etc/egress.yaml
+    cap_add:
+      - CAP_SYS_ADMIN
+    depends_on:
+      livekit:
+        condition: service_healthy
+
+  ingress:
+    image: livekit/ingress:latest
+    restart: unless-stopped
+    environment:
+      - INGRESS_CONFIG_FILE=/etc/ingress.yaml
+    volumes:
+      - ../files/ingress.yaml:/etc/ingress.yaml
+    ports:
+      - "${RTMP_PORT}:${RTMP_PORT}"
+      - "${INGRESS_UDP_PORT}:${INGRESS_UDP_PORT}/udp"
+    depends_on:
+      livekit:
+        condition: service_healthy

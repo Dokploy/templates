@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+registration_token = "${password:32}"
+
+[[config.domains]]
+serviceName = "fmd-server"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+FMD_REGISTRATIONTOKEN = "${registration_token}"
+FMD_USERIDLENGTH=5
+FMD_MAXSAVEDLOC=1000
+FMD_MAXSAVEDPIC=10

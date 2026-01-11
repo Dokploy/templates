@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "navidrome"
+port = 4533
+host = "${main_domain}"
+
+[config.env]
+
+[[config.mounts]]

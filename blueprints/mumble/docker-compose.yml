@@ -1,0 +1,16 @@
+services:
+  mumble-server:
+    image: mumblevoip/mumble-server:latest
+    restart: unless-stopped
+    ports:
+      - 64738
+      - 64738/udp
+    volumes:
+      - mumble-data:/data
+    environment:
+      - MUMBLE_SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD}
+      - MUMBLE_CONFIG_WELCOMETEXT=${WELCOME_TEXT}
+      - MUMBLE_CONFIG_USERS=${MAX_USERS}
+
+volumes:
+  mumble-data:

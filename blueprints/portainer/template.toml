@@ -2,10 +2,11 @@
 main_domain = "${domain}"
 
 [config]
-env = {}
-mounts = []
-
 [[config.domains]]
 serviceName = "portainer"
-port = 9_000
+port = 9000
 host = "${main_domain}"
+
+[config.env]
+
+[[config.mounts]]

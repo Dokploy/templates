@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  parseable:
+    image: parseable/parseable:v1.6.0
+    command: parseable local-store
+    restart: unless-stopped
+    volumes:
+      - parseable-staging:/parseable/staging
+      - parseable-data:/parseable/data
+    environment:
+      - P_ADDR=0.0.0.0:8000
+      - P_USERNAME=${PARSEABLE_USERNAME}
+      - P_PASSWORD=${PARSEABLE_PASSWORD}
+      - P_STAGING_DIR=/parseable/staging
+      - P_FS_DIR=/parseable/data
+    ports:
+      - 8000
+      - 8001
+      - 8002
+volumes:
+  parseable-staging: {}
+  parseable-data: {}
+  

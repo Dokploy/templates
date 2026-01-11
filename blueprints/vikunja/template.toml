@@ -1,0 +1,33 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+jwt_secret = "${jwt:db_password}"
+
+[config]
+[[config.domains]]
+serviceName = "vikunja"
+port = 3456
+host = "${main_domain}"
+
+[config.env]
+VIKUNJA_SERVICE_PUBLICURL = "https://${main_domain}"
+VIKUNJA_DATABASE_HOST = "db"
+VIKUNJA_DATABASE_PASSWORD = "${db_password}"
+VIKUNJA_DATABASE_TYPE = "postgres"
+VIKUNJA_DATABASE_USER = "vikunja"
+VIKUNJA_DATABASE_DATABASE = "vikunja"
+VIKUNJA_SERVICE_JWTSECRET = "${jwt_secret}"
+
+POSTGRES_PASSWORD = "${db_password}"
+POSTGRES_USER = "vikunja"
+POSTGRES_DB = "vikunja"
+
+[[config.mounts]]
+serviceName = "vikunja"
+volumeName = "vikunja-files"
+mountPath = "/app/vikunja/files"
+
+[[config.mounts]]
+serviceName = "db"
+volumeName = "vikunja-db"
+mountPath = "/var/lib/postgresql/data"

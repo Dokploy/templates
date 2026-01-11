@@ -5,7 +5,6 @@ on:
     workflows: [Build Preview Deployment]
     types:
       - completed
-
 permissions:
   actions: read
   deployments: write

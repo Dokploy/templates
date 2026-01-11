@@ -11,6 +11,3 @@ services:
       - ROUNDCUBEMAIL_SMTP_SERVER=${SMTP_SERVER}
 
 
-networks:
-  dokploy-network:
-    external: true

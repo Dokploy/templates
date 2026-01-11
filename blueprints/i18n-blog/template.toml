@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+jwt_secret = "${password:32}" # secure default
+recovery_mode = "false"
+
+[config]
+
+[[config.domains]]
+serviceName = "kuno"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+NEXT_PUBLIC_API_URL = "https://${main_domain}/api"
+DB_PATH = "/app/data/blog.db"
+UPLOAD_DIR = "/app/data/uploads"
+GIN_MODE = "release"
+NODE_ENV = "production"
+JWT_SECRET = "${jwt_secret}"
+RECOVERY_MODE = "${recovery_mode}"
+
+[[config.mounts]]
+name = "kuno-data"
+mountPath = "/app/data"

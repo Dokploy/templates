@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  nginx:
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - 80
+      - 443
+    volumes:
+      - nginx-config:/etc/nginx
+      - nginx-html:/usr/share/nginx/html
+volumes:
+  nginx-config: {}
+  nginx-html: {}

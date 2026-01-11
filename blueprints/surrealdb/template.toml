@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+surrealdb_user = "${username}"
+surrealdb_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "surrealdb"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+SURREAL_USER = "${surrealdb_user}"
+SURREAL_PASS = "${surrealdb_password}"
+
+[[config.mounts]]
+serviceName = "surrealdb"
+volumeName = "db_data"
+mountPath = "/usr/app/data"

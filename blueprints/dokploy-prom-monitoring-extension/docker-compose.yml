@@ -1,0 +1,11 @@
+services:
+  dokploy-monitoring:
+    image: dokploy/monitoring:canary
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - monitoring-data:/app/data
+volumes:
+  monitoring-data: {}

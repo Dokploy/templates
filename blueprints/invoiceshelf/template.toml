@@ -9,7 +9,7 @@ mounts = []
 
 [[config.domains]]
 serviceName = "invoiceshelf-app"
-port = 80
+port = 8080
 host = "${main_domain}"
 
 [config.env]

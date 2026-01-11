@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  kokoro-web:
+    image: ghcr.io/eduardolat/kokoro-web:latest
+    restart: unless-stopped
+    environment:
+      - KW_SECRET_API_KEY=${KW_SECRET_API_KEY}
+      - KW_PUBLIC_NO_TRACK=${KW_PUBLIC_NO_TRACK}
+    volumes:
+      - kokoro-cache:/kokoro/cache
+
+volumes:
+  kokoro-cache: {}

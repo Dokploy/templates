@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+
+[[config.domains]]
+serviceName = "cup"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+
+[[config.mounts]]
+serviceName = "cup"
+source = "/var/run/docker.sock"
+target = "/var/run/docker.sock"
+type = "bind"

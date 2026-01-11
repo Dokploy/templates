@@ -2,5 +2,15 @@ version: "3.8"
 
 services:
   excalidraw:
-
+    restart: unless-stopped
     image: excalidraw/excalidraw:latest
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - '--spider'
+        - '--quiet'
+        - 'http://localhost'
+      interval: 30s
+      timeout: 5s
+      retries: 3

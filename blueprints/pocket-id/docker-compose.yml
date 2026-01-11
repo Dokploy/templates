@@ -1,17 +1,15 @@
 services:
   pocket-id:
-    image: ghcr.io/pocket-id/pocket-id:v0.35.1
+    image: ghcr.io/pocket-id/pocket-id:v1
     restart: unless-stopped
     environment:
-      - PUBLIC_UI_CONFIG_DISABLED
-      - PUBLIC_APP_URL
+      - APP_URL
       - TRUST_PROXY
-    ports:
-      - 80
+      - ENCRYPTION_KEY
     volumes:
-      - pocket-id-data:/app/backend/data
+      - pocket-id-data:/app/data
     healthcheck:
-      test: "curl -f http://localhost/health"
+      test: [ "CMD", "/app/pocket-id", "healthcheck" ]
       interval: 1m30s
       timeout: 5s
       retries: 2

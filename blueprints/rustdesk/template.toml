@@ -1,0 +1,14 @@
+[variables]
+server_domain = "${domain}"
+encryption_key = "${password:32}"
+
+[config]
+
+[config.env]
+RELAY_HOST = "${server_domain}"
+RUSTDESK_RELAY_SERVER = "${server_domain}:21117"
+RUSTDESK_API_SERVER = "http://${server_domain}:21118"
+RUSTDESK_ID_SERVER = "${server_domain}:21116"
+ENCRYPTION_KEY = "${encryption_key}"
+
+[[config.mounts]]

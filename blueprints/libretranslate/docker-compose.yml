@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  libretranslate:
+    image: libretranslate/libretranslate:latest
+    restart: unless-stopped
+    ports:
+      - "5000"
+    environment:
+      # Enables the API key system
+      - LT_API_KEYS=true
+      # Defines the path for the API keys database INSIDE the container
+      - LT_API_KEYS_DB_PATH=/app/db/api_keys.db
+      # Optional: Load only the languages you need to save RAM (Spanish, English, Chinese)
+      # - LT_LOAD_ONLY=en,es,zh-Hans
+      # This ensures the API is not public and does not accept requests when api_key is ""
+      # - LT_REQ_LIMIT=0
+      # This disables the web UI so it doesn’t show on the link
+      # - LT_DISABLE_WEB_UI=true
+      # This only allows requests from a specific origin page
+      # - LT_REQUIRE_API_KEY_ORIGIN=webthat.canuse.translate.com
+    volumes:
+      # Volume to store downloaded language models
+      - libretranslate_models:/home/libretranslate/.local
+      # Volume to store the API keys database
+      - libretranslate_api_keys:/app/db
+
+volumes:
+  libretranslate_models:
+  libretranslate_api_keys:
+  # TO GET AN API KEY YOU MUST GO TO THE TERMINAL AND RUN -> ltmanage keys add 1000000
+  # To make it work only with an API key, you need to use LT_REQ_LIMIT=0 so it isn’t open to other users
+  # For more information, see https://docs.libretranslate.com/guides/manage_api_keys/

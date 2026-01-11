@@ -1,18 +1,30 @@
+# IMPORTANT: Please update the admin credentials in your .env file
+# Access PocketBase Admin UI at: https://your-domain.com/_/ (replace with your configured domain)
+# Note: Admin UI may take up to 1 minute to load on first startup
+
 version: "3.8"
+
 services:
   pocketbase:
-    image: ghcr.io/muchobien/pocketbase:latest
-    restart: unless-stopped
-    ports:
-      - "8090"
+    image: adrianmusante/pocketbase:latest
+    restart: always
+    expose:
+      - 8090
     volumes:
-      - "/etc/dokploy/templates/${HASH}/data:/app/pb_data"
-      - "/etc/dokploy/templates/${HASH}/migrations:/app/pb_migrations" 
-      - "/etc/dokploy/templates/${HASH}/hooks:/app/pb_hooks" 
-      - "/etc/dokploy/templates/${HASH}/public:/app/pb_public" 
+      - pocketbase-data:/pocketbase
+    environment:
+      - POCKETBASE_ADMIN_EMAIL=${ADMIN_EMAIL}
+      - POCKETBASE_ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - POCKETBASE_ADMIN_UPSERT=true
+      - POCKETBASE_PORT_NUMBER=8090
+      # Optional: Encryption key for securing app settings (OAuth2 secrets, SMTP passwords, etc.)
+      # Uncomment and set a secure key in your .env file for production use
+      # - POCKETBASE_ENCRYPTION_KEY=${ENCRYPTION_KEY}
     healthcheck:
-      test: wget -q --spider http://localhost:8090/api/health || exit 1
-      interval: 60s
-      timeout: 5s
+      test: ["CMD", "wget", "-qO-", "http://localhost:8090/_/"]
+      interval: 30s
+      timeout: 10s
       retries: 3
-      start_period: 5s
+
+volumes:
+  pocketbase-data: {}

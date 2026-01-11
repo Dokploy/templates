@@ -1,0 +1,29 @@
+# docker-compose.yml
+# 
+# IMPORTANT: First-time setup information
+# - Default username: admin
+# - Password: Check container logs for temporary password on first startup
+# - Access via your configured domain (HTTPS) after deployment
+# - Change the default password immediately after first login
+#
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+    volumes:
+      - qb_config:/config
+      - qb_downloads:/downloads
+    ports:
+      - 8080
+      - 6881:6881
+      - 6881:6881/udp
+    labels:
+      - "traefik.enable=true"
+volumes:
+  qb_config:
+  qb_downloads:

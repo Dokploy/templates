@@ -1,0 +1,39 @@
+services:
+  azuracast:
+    image: ghcr.io/azuracast/azuracast:latest
+    restart: unless-stopped
+    ports:
+      - 80
+    volumes:
+      - azuracast-station-data:/var/azuracast/stations
+      - azuracast-data:/var/azuracast/www_tmp
+      - azuracast-uploads:/var/azuracast/uploads
+      - azuracast-backups:/var/azuracast/backups
+    environment:
+      - LANG=en_US.UTF-8
+      - AZURACAST_DC_REVISION=1
+      - MYSQL_HOST=mariadb
+      - MYSQL_PORT=3306
+      - MYSQL_USER=azuracast
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=azuracast
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:11.4
+    restart: unless-stopped
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=azuracast
+      - MYSQL_USER=azuracast
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
+volumes:
+  azuracast-station-data: {}
+  azuracast-data: {}
+  azuracast-uploads: {}
+  azuracast-backups: {}
+  mariadb-data: {}

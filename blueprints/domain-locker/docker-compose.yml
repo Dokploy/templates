@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DL_PG_NAME:-domain_locker}
+      POSTGRES_USER: ${DL_PG_USER:-postgres}
+      POSTGRES_PASSWORD: ${DL_PG_PASSWORD:-changeme2420}
+    expose:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # - ./db/schema.sql:/docker-entrypoint-initdb.d/init-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DL_PG_USER:-postgres}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    image: lissy93/domain-locker:latest
+    restart: unless-stopped
+    environment:
+      NODE_ENV: "production"
+      DL_ENV_TYPE: ${DL_ENV_TYPE:-selfHosted}
+      DL_PG_HOST: ${DL_PG_HOST:-postgres}
+      DL_PG_PORT: ${DL_PG_PORT:-5432}
+      DL_PG_USER: ${DL_PG_USER:-postgres}
+      DL_PG_PASSWORD: ${DL_PG_PASSWORD:-changeme2420}
+      DL_PG_NAME: ${DL_PG_NAME:-domain_locker}
+    expose:
+      - "3000"
+    depends_on:
+      - postgres
+
+  updater:
+    image: alpine:3.20
+    restart: unless-stopped
+    depends_on:
+      - app
+    command: >
+      /bin/sh -c "
+        apk add --no-cache curl &&
+        echo '0 3 * * * /usr/bin/curl -s -X POST http://app:3000/api/domain-updater' > /etc/crontabs/root &&
+        echo '0 4 * * * /usr/bin/curl -s -X POST http://app:3000/api/expiration-reminders' >> /etc/crontabs/root &&
+        crond -f -L /dev/stdout
+      "
+
+volumes:
+  postgres_data: {}

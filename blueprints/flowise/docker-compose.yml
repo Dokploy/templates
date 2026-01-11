@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - redis_data:/data
+
+  flowise:
+    image: flowiseai/flowise:latest
+    restart: always
+    expose:
+      - 3000
+    volumes:
+      - flowise_data:/root/.flowise
+    environment:
+      PORT: 3000
+      DATABASE_PATH: /root/.flowise
+      REDIS_URL: redis://redis:6379
+      JWT_AUTH_TOKEN_SECRET: ${JWT_AUTH_TOKEN_SECRET}
+      JWT_REFRESH_TOKEN_SECRET: ${JWT_REFRESH_TOKEN_SECRET}
+      EXPRESS_SESSION_SECRET: ${EXPRESS_SESSION_SECRET}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    entrypoint: /bin/sh -c "sleep 3; flowise start"
+    depends_on:
+      - redis
+
+  flowise-worker:
+    image: flowiseai/flowise-worker:latest
+    restart: always
+    volumes:
+      - flowise_data:/root/.flowise
+    environment:
+      WORKER_PORT: 5566
+      DATABASE_PATH: /root/.flowise
+      REDIS_URL: redis://redis:6379
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5566/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    entrypoint: /bin/sh -c "node /app/healthcheck/healthcheck.js & sleep 5 && pnpm run start-worker"
+    depends_on:
+      - redis
+      - flowise
+
+volumes:
+  redis_data:
+  flowise_data:

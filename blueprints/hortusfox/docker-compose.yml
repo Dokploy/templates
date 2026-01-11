@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  app:
+    image: ghcr.io/danielbrendel/hortusfox-web:latest
+    restart: unless-stopped
+    volumes:
+      - app_images:/var/www/html/public/img
+      - app_logs:/var/www/html/app/logs
+      - app_backup:/var/www/html/public/backup
+      - app_themes:/var/www/html/public/themes
+      - app_migrate:/var/www/html/app/migrations
+    environment:
+      APP_ADMIN_EMAIL: ${APP_ADMIN_EMAIL}
+      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD}
+      APP_TIMEZONE: ${APP_TIMEZONE}
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_CHARSET: utf8mb4
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
+  app_images:
+  app_logs:
+  app_backup:
+  app_themes:
+  app_migrate:

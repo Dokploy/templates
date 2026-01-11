@@ -1,6 +1,6 @@
 services:
   autobase-console:
-    image: autobase/console:2.5.0
+    image: autobase/console:2.5.2
     restart: unless-stopped
     ports:
       - "80"

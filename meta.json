@@ -3219,6 +3219,23 @@
     ]
   },
   {
+    "id": "kanbn",
+    "name": "Kan",
+    "version": "latest",
+    "description": "Kan is an open-source, Notion-inspired project management and collaboration tool with authentication, S3 storage, and OAuth integrations.",
+    "logo": "image.png",
+    "links": {
+      "github": "https://github.com/kanbn/kan",
+      "website": "https://kanbn.github.io/",
+      "docs": "https://github.com/kanbn/kan?tab=readme-ov-file"
+    },
+    "tags": [
+      "project-management",
+      "collaboration",
+      "web"
+    ]
+  },
+  {
     "id": "kaneo",
     "name": "Kaneo",
     "version": "latest",

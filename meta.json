@@ -2489,6 +2489,27 @@
     ]
   },
   {
+    "id": "frappe",
+    "name": "Frappe LMS",
+    "version": "latest",
+    "description": "A comprehensive Learning Management System built on Frappe Framework. 100% open source and customizable for creating and managing online courses.",
+    "logo": "frappe.png",
+    "links": {
+      "github": "https://github.com/frappe/lms",
+      "docs": "https://docs.frappe.io/lms",
+      "website": "https://frappe.io/lms"
+    },
+    "tags": [
+      "lms",
+      "education",
+      "Payments",
+      "learning",
+      "courses",
+      "e-learning",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "frappe-hr",
     "name": "Frappe HR",
     "version": "version-15",

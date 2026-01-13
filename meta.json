@@ -1318,6 +1318,24 @@
     ]
   },
   {
+    "id": "cloudreve",
+    "name": "Cloudreve",
+    "version": "4.10.1",
+    "description": "Self-hosted file management and sharing system with multi-cloud storage support. Compatible with local, OneDrive, S3, and various cloud providers.",
+    "logo": "cloudreve.png",
+    "links": {
+      "github": "https://github.com/cloudreve/Cloudreve",
+      "website": "https://cloudreve.org",
+      "docs": "https://docs.cloudreve.org"
+    },
+    "tags": [
+      "storage",
+      "file-sharing",
+      "cloud",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "cockpit",
     "name": "Cockpit",
     "version": "core-2.11.0",

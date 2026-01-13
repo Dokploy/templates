@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  cloudreve:
+    image: cloudreve/cloudreve:4.10.1
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+    environment:
+      - CR_CONF_Database.Type=postgres
+      - CR_CONF_Database.Host=postgresql
+      - CR_CONF_Database.User=${POSTGRES_USER}
+      - CR_CONF_Database.Password=${POSTGRES_PASSWORD}
+      - CR_CONF_Database.Name=${POSTGRES_DB}
+      - CR_CONF_Database.Port=5432
+      - CR_CONF_Redis.Server=redis:6379
+    volumes:
+      - cloudreve_data:/cloudreve/data
+
+  postgresql:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  redis:
+    image: redis:8.4.0
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+volumes:
+  cloudreve_data:
+  postgres_data:
+  redis_data:

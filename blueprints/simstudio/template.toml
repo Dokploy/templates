@@ -1,0 +1,41 @@
+[variables]
+main_domain = "${domain}"
+realtime_domain = "ws.${domain}"
+app_protocol = "https"
+postgres_user = "postgres"
+postgres_password = "${password:32}"
+postgres_db = "simstudio"
+auth_secret = "${base64:32}"
+encryption_key = "${base64:32}"
+copilot_api_key = ""
+sim_agent_api_url = ""
+ollama_url = "http://localhost:11434"
+default_admin_email = "${email}"
+default_admin_password = "${password:16}"
+
+[config]
+env = [
+    "POSTGRES_USER=${postgres_user}",
+    "POSTGRES_PASSWORD=${postgres_password}",
+    "POSTGRES_DB=${postgres_db}",
+    "NEXT_PUBLIC_APP_URL=${app_protocol}://${main_domain}",
+    "BETTER_AUTH_URL=${app_protocol}://${main_domain}",
+    "NEXT_PUBLIC_SOCKET_URL=${app_protocol}://${realtime_domain}",
+    "BETTER_AUTH_SECRET=${auth_secret}",
+    "ENCRYPTION_KEY=${encryption_key}",
+    "COPILOT_API_KEY=${copilot_api_key}",
+    "SIM_AGENT_API_URL=${sim_agent_api_url}",
+    "OLLAMA_URL=${ollama_url}",
+    "DEFAULT_ADMIN_EMAIL=${default_admin_email}",
+    "DEFAULT_ADMIN_PASSWORD=${default_admin_password}"
+]
+
+[[config.domains]]
+serviceName = "simstudio"
+port = 3000
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "realtime"
+port = 3002
+host = "${realtime_domain}"

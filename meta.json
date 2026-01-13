@@ -4614,6 +4614,24 @@
     ]
   },
   {
+    "id": "papermark",
+    "name": "Papermark",
+    "version": "sha-d6a12777d41d",
+    "description": "Open-source DocSend alternative with built-in analytics and custom domains. Share documents securely with real-time tracking.",
+    "logo": "papermark.svg",
+    "links": {
+      "github": "https://github.com/mfts/papermark",
+      "website": "https://www.papermark.io/",
+      "docs": "https://www.papermark.io/help"
+    },
+    "tags": [
+      "document-sharing",
+      "analytics",
+      "collaboration",
+      "security"
+    ]
+  },
+  {
     "id": "parseable",
     "name": "Parseable",
     "version": "v1.6.5",

@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+nextauth_secret = "${base64:32}"
+postgres_password = "${password:32}"
+document_password_key = "${base64:32}"
+
+[config]
+env = [
+  "PAPERMARK_HOST=${main_domain}",
+  "NEXTAUTH_SECRET=${nextauth_secret}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "DOCUMENT_PASSWORD_KEY=${document_password_key}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "papermark"
+port = 3_000
+host = "${main_domain}"

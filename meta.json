@@ -2509,6 +2509,26 @@
     ]
   },
   {
+    "id": "frappe-lending",
+    "name": "Frappe Lending",
+    "version": "latest",
+    "description": "A comprehensive loan management system built on Frappe Framework. 100% open source and customizable for managing loans, repayments, and lending operations.",
+    "logo": "frappe-lending.png",
+    "links": {
+      "github": "https://github.com/frappe/lending",
+      "docs": "https://docs.frappe.io/lending",
+      "website": "https://frappe.io"
+    },
+    "tags": [
+      "lending",
+      "finance",
+      "loans",
+      "payments",
+      "accounting",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "freescout",
     "name": "FreeScout",
     "version": "latest",

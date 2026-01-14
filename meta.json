@@ -4367,6 +4367,25 @@
     ]
   },
   {
+    "id": "oneuptime",
+    "name": "OneUptime",
+    "version": "release",
+    "description": "Complete open-source observability platform with uptime monitoring, status pages, incident management, and on-call scheduling.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/OneUptime/oneuptime",
+      "website": "https://oneuptime.com/",
+      "docs": "https://oneuptime.com/docs"
+    },
+    "tags": [
+      "monitoring",
+      "uptime",
+      "observability",
+      "status-page",
+      "incident-management"
+    ]
+  },
+  {
     "id": "ontime",
     "name": "Ontime",
     "version": "v3.8.0",

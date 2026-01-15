@@ -4176,11 +4176,11 @@
       "docs": "https://help.sonatype.com/en/sonatype-nexus-repository.html"
     },
     "tags": [
-      "sonatype",
       "nexus",
       "repo",
-      "storage",
-      "self-hosted"
+      "self-hosted",
+      "sonatype",
+      "storage"
     ]
   },
   {

@@ -3513,6 +3513,24 @@
     ]
   },
   {
+    "id": "linknlink",
+    "name": "LinknLink",
+    "version": "latest",
+    "description": "LinknLink is a link management application with PocketBase backend and Next.js frontend.",
+    "logo": "linknlink.svg",
+    "links": {
+      "github": "https://github.com/sonmezerekrem/linknlink",
+      "website": "https://github.com/sonmezerekrem/linknlink",
+      "docs": "https://github.com/sonmezerekrem/linknlink#readme"
+    },
+    "tags": [
+      "link-management",
+      "pocketbase",
+      "nextjs",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "linkstack",
     "name": "LinkStack",
     "version": "latest",

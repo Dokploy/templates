@@ -4169,7 +4169,7 @@
     "name": "Sonatype Nexus Repository",
     "version": "3.88.0",
     "description": "Sonatype Nexus Repository is the single source of truth for all your internal and third-party binaries, components, and packages.",
-    "logo": "nexus.svg",
+    "logo": "nexus.png",
     "links": {
       "github": "https://github.com/sonatype/docker-nexus3",
       "website": "https://www.sonatype.com/products/sonatype-nexus-oss-download",

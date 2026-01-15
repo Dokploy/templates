@@ -4165,6 +4165,25 @@
     ]
   },
   {
+    "id": "nexus",
+    "name": "Sonatype Nexus Repository",
+    "version": "3.88.0",
+    "description": "Sonatype Nexus Repository is the single source of truth for all your internal and third-party binaries, components, and packages.",
+    "logo": "nexus.svg",
+    "links": {
+      "github": "https://github.com/sonatype/docker-nexus3",
+      "website": "https://www.sonatype.com/products/sonatype-nexus-oss-download",
+      "docs": "https://help.sonatype.com/en/sonatype-nexus-repository.html"
+    },
+    "tags": [
+      "sonatype",
+      "nexus",
+      "repo",
+      "storage",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "nginx",
     "name": "Nginx",
     "version": "latest",

@@ -1,6 +1,6 @@
 services:
   backend:
-    image: ketbom/minepanel-backend:latest
+    image: ketbom/minepanel-backend:1.7.1
     restart: unless-stopped
     ports:
       - 8091
@@ -17,7 +17,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   frontend:
-    image: ketbom/minepanel-frontend:latest
+    image: ketbom/minepanel-frontend:1.7.1
     restart: unless-stopped
     ports:
       - 3000

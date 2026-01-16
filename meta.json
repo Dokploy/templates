@@ -3924,7 +3924,7 @@
   {
     "id": "minepanel",
     "name": "Minepanel",
-    "version": "latest",
+    "version": "1.7.1",
     "description": "Web panel for managing Minecraft servers with Docker. Create, configure, start/stop, and monitor multiple instances from a modern UI.",
     "logo": "minepanel.webp",
     "links": {

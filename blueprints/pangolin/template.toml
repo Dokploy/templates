@@ -5,7 +5,7 @@ letsencrypt_email = "${email}"
 gerbil_endpoint = "${main_domain}"
 
 [[config.domains]]
-serviceName = "gerbil"
+serviceName = "traefik"
 port = 80
 host = "${main_domain}"
 

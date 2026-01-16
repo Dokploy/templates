@@ -41,16 +41,20 @@ services:
   traefik:
     image: traefik:v3.6
     restart: unless-stopped
-    network_mode: service:gerbil
     depends_on:
       pangolin:
         condition: service_healthy
+      gerbil:
+        condition: service_started
     command:
       - --configFile=/etc/traefik/traefik_config.yml
     volumes:
       - pangolin-traefik:/etc/traefik:ro
       - pangolin-letsencrypt:/letsencrypt
       - pangolin-traefik-logs:/var/log/traefik
+    expose:
+      - "80"
+      - "443"
 
 volumes:
   pangolin-config:

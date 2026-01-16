@@ -21,10 +21,10 @@ Pangolin consists of three core services:
    - Stores WireGuard keys
 
 3. **traefik** - Internal reverse proxy
-   - Uses `network_mode: service:gerbil` to share gerbil's network namespace
-   - Handles HTTP/HTTPS routing
+   - Handles HTTP/HTTPS routing on ports 80/443
    - Manages SSL certificates via Let's Encrypt
    - Routes to pangolin services internally
+   - Communicates with gerbil and pangolin via Docker network
 
 ## Domain Routing Architecture
 
@@ -202,7 +202,77 @@ docker network inspect dokploy-network | grep -A 5 gerbil
 1. Access Pangolin dashboard at your assigned domain
 2. Configure sites and resources as needed
 3. Set up domain routing in Pangolin for the forwarded domains
-4. Pangolin's Traefik will handle SSL certificates via Let's Encrypt
+4. **SSL Handling**: See "SSL/TLS Certificate Handling" section below for important details
+
+### SSL/TLS Certificate Handling in Proxy Chains
+
+**Important**: SSL certificate handling depends on how Dokploy's Traefik is configured.
+
+#### Scenario: `examplessltest.example.com` → Dokploy → Pangolin → Service
+
+**Current Setup (HTTP Router - Recommended):**
+
+When using an HTTP router in Dokploy's catch-all configuration (as shown above):
+
+1. **Dokploy's Traefik terminates SSL** - It decrypts HTTPS requests for `examplessltest.example.com`
+2. **Forwards HTTP to Pangolin** - Pangolin's Traefik receives plain HTTP (not HTTPS)
+3. **Pangolin forwards to service** - The final service receives HTTP
+
+**SSL Status:**
+- ✅ **SSL works at Dokploy level** - Client to Dokploy is encrypted
+- ✅ **Dokploy generates certificate** - Let's Encrypt certificate for `examplessltest.example.com` is managed by Dokploy
+- ⚠️ **Pangolin sees HTTP** - Pangolin's Traefik receives HTTP, not HTTPS
+- ✅ **Service receives HTTP** - Final service receives HTTP (can be HTTPS if service requires it)
+
+**This setup works and is the simplest approach.** SSL is handled by Dokploy, and Pangolin acts as an HTTP proxy.
+
+#### Alternative: TCP Passthrough (Advanced)
+
+If you need Pangolin's Traefik to handle SSL termination instead:
+
+1. **Use TCP router in Dokploy** with `passthrough: true`
+2. **SSL passes through** to Pangolin's Traefik
+3. **Pangolin terminates SSL** and can generate its own certificates
+
+**Configuration for TCP Passthrough:**
+
+```yaml
+tcp:
+  routers:
+    pangolin-catchall-tcp:
+      rule: "HostSNI(`*`)"  # Matches all domains
+      service: pangolin-forward-tcp
+      entryPoints:
+        - websecure
+      tls:
+        passthrough: true  # Pass SSL through to Pangolin
+
+  services:
+    pangolin-forward-tcp:
+      loadBalancer:
+        servers:
+          - address: "pangolin-gerbil:443"  # Forward to HTTPS port
+```
+
+**Important Notes for TCP Passthrough:**
+- More complex configuration
+- Pangolin's Traefik must handle SSL termination
+- Pangolin can generate certificates via Let's Encrypt
+- Requires Pangolin's Traefik to be accessible on port 443
+- Let's Encrypt HTTP-01 challenge must be able to reach Pangolin on port 80
+
+#### Recommendation
+
+**For most use cases, use the HTTP router approach (current setup):**
+- Simpler configuration
+- Dokploy handles SSL certificates
+- Works reliably with catch-all routing
+- Pangolin receives HTTP and forwards to services
+
+**Use TCP passthrough only if:**
+- You need Pangolin to manage SSL certificates
+- You want end-to-end SSL visibility in Pangolin
+- You have specific requirements for certificate management
 
 ### Troubleshooting Catch-All Routing
 
@@ -283,11 +353,12 @@ This forwards all unmatched paths to Pangolin, regardless of domain.
 
 ## Limitations and Considerations
 
-### Network Mode Dependency
+### Network Configuration
 
-- Traefik uses `network_mode: service:gerbil` which shares gerbil's network namespace
-- This is a Docker feature that should work with Dokploy, but may have limitations
-- If issues occur, you may need to adjust the network configuration
+- All services communicate via Docker's default bridge network
+- Traefik listens on ports 80/443 internally
+- Dokploy routes external traffic to traefik service
+- Services can communicate using service names (pangolin, gerbil, traefik)
 
 ### Capabilities Required
 
@@ -370,6 +441,375 @@ The template creates the following volumes:
 - **Documentation**: https://docs.pangolin.net
 - **Dokploy Templates**: https://github.com/dokploy/templates
 
+## Testing Your Pull Request
+
+Before your PR is merged, you should test the template using the PR preview system. Here's how:
+
+### Step 1: Create and Push Your PR
+
+1. **Create your PR** with the Pangolin template changes
+2. **Wait for CI/CD** - GitHub Actions will automatically:
+   - Validate `meta.json` structure
+   - Build a preview deployment
+   - Deploy to Cloudflare Pages
+3. **Find the preview URL** - Check the PR description or GitHub Actions logs for the preview deployment link
+
+### Step 2: Access the Preview
+
+1. **Open the preview URL** from your PR (usually in PR description or GitHub Actions)
+2. **Search for "pangolin"** in the template search
+3. **Click on the Pangolin template card** to view details
+
+### Step 3: Import Template to Dokploy
+
+1. **Copy the Base64 configuration**:
+   - In the preview, scroll down on the Pangolin template card
+   - Click the "Copy" button next to "Base64 Configuration"
+   - This copies the complete template configuration
+
+2. **Import into your Dokploy instance**:
+   - Go to your Dokploy instance
+   - Create a new **Compose Service**
+   - Go to **Advanced** section
+   - Scroll down to **Import** section
+   - Paste the Base64 value
+   - Click **Import**
+
+3. **Verify import**:
+   - You should see a modal with all details:
+     - Compose File (docker-compose.yml)
+     - Environment Variables
+     - Mounts (config files)
+     - Domains configuration
+   - Review the configuration to ensure everything is correct
+
+### Step 4: Deploy and Test
+
+1. **Deploy the service**:
+   - Click **Deploy** button
+   - Wait for deployment to complete
+   - Monitor service status in Dokploy
+
+2. **Verify services start**:
+   - Check that all three services (pangolin, gerbil, traefik) are running
+   - Verify healthcheck status
+   - Check service logs for any errors
+
+3. **Test domain access**:
+   - Assign a domain to the service in Dokploy
+   - Wait for SSL certificate generation
+   - Access the domain via HTTPS
+   - Verify dashboard loads
+
+4. **Test functionality**:
+   - Complete initial setup in Pangolin dashboard
+   - Test API endpoints
+   - Verify SSL certificate is valid
+   - Test basic functionality
+
+### Step 5: Test Edge Cases
+
+1. **Restart services**:
+   - Restart the deployment
+   - Verify services come back up correctly
+   - Check data persistence (volumes)
+
+2. **Test environment variables**:
+   - Verify all variables are set correctly
+   - Check that secrets are generated properly
+
+3. **Test volume persistence**:
+   - Verify config files persist
+   - Check SSL certificates persist
+   - Verify database/data persistence
+
+### Step 6: Local Testing (Optional)
+
+You can also test locally before pushing:
+
+```bash
+# Install dependencies
+cd app
+pnpm install
+
+# Run development server
+pnpm run dev
+
+# Visit http://localhost:5173/
+# Search for your template and test the preview locally
+```
+
+### What to Check
+
+- ✅ Template appears in preview search
+- ✅ Base64 import works correctly
+- ✅ All services deploy successfully
+- ✅ Healthchecks pass
+- ✅ Domain is accessible
+- ✅ SSL certificate generates
+- ✅ Dashboard loads
+- ✅ No errors in logs
+- ✅ Configuration files are mounted correctly
+- ✅ Environment variables are set
+
+### Common Issues
+
+**Preview not building:**
+- Check GitHub Actions logs
+- Verify `meta.json` is valid (run `node dedupe-and-sort-meta.js`)
+- Check for syntax errors in YAML/TOML files
+
+**Import fails:**
+- Verify Base64 is copied completely
+- Check for special characters in config
+- Ensure template structure is correct
+
+**Deployment fails:**
+- Check service logs
+- Verify Docker Compose syntax
+- Check for missing dependencies
+- Verify network capabilities (NET_ADMIN, SYS_MODULE)
+
+**Services not starting:**
+- Check healthcheck configuration
+- Verify image tags are correct
+- Check resource limits
+- Review service dependencies
+
+## Testing Your Deployment
+
+### Step 1: Verify Services Are Running
+
+**Check all services are up:**
+```bash
+# In Dokploy UI: Check service status
+# Or via command line:
+docker ps | grep pangolin
+docker ps | grep gerbil
+docker ps | grep traefik
+```
+
+**Expected output:** All three services should show as "Up" with healthy status.
+
+**Check service health:**
+```bash
+# Check pangolin healthcheck
+docker exec <pangolin-container> curl -f http://localhost:3001/api/v1/
+
+# Check service logs
+docker logs <pangolin-container>
+docker logs <gerbil-container>
+docker logs <traefik-container>
+```
+
+### Step 2: Verify Domain Accessibility
+
+**Test HTTP access:**
+```bash
+# Should redirect to HTTPS
+curl -I http://your-pangolin-domain.com
+
+# Expected: 301 or 302 redirect to HTTPS
+```
+
+**Test HTTPS access:**
+```bash
+# Test HTTPS connection
+curl -I https://your-pangolin-domain.com
+
+# Expected: 200 OK or dashboard content
+```
+
+**Test with browser:**
+1. Navigate to `https://your-pangolin-domain.com`
+2. Check browser shows valid SSL certificate
+3. Verify dashboard loads correctly
+
+### Step 3: Verify SSL Certificate
+
+**Check certificate details:**
+```bash
+# View certificate information
+openssl s_client -connect your-pangolin-domain.com:443 -servername your-pangolin-domain.com < /dev/null 2>/dev/null | openssl x509 -noout -text
+
+# Or use online tools:
+# - https://www.ssllabs.com/ssltest/
+# - https://crt.sh/
+```
+
+**Verify Let's Encrypt certificate:**
+```bash
+# Check certificate in Traefik volume
+docker exec <traefik-container> ls -la /letsencrypt/
+
+# Should see acme.json file
+```
+
+**Expected:**
+- Certificate issued by "Let's Encrypt"
+- Valid expiration date (90 days from issue)
+- Certificate matches your domain
+
+### Step 4: Test Pangolin Dashboard
+
+**Access dashboard:**
+1. Navigate to `https://your-pangolin-domain.com`
+2. Complete initial setup (if first time)
+3. Verify you can log in
+
+**Test API endpoints:**
+```bash
+# Test API health endpoint
+curl https://your-pangolin-domain.com/api/v1/
+
+# Test with authentication (after login)
+curl -H "Authorization: Bearer <token>" https://your-pangolin-domain.com/api/v1/
+```
+
+**Expected:**
+- Dashboard loads without errors
+- API responds with JSON
+- No console errors in browser DevTools
+
+### Step 5: Test Catch-All Routing (If Configured)
+
+**Test unknown domain:**
+```bash
+# Test with a domain not configured in Dokploy
+curl -H "Host: test-unknown.example.com" http://your-server-ip
+
+# Or test via DNS (if configured)
+curl https://test-unknown.example.com
+```
+
+**Verify routing:**
+1. Check Dokploy Traefik logs for catch-all match
+2. Check Pangolin receives the request
+3. Verify Pangolin can route to configured resources
+
+**Expected:**
+- Request reaches Pangolin
+- Pangolin can handle routing
+- No 404 errors from Dokploy
+
+### Step 6: Test VPN Functionality (WireGuard)
+
+**Verify gerbil service:**
+```bash
+# Check gerbil is running
+docker ps | grep gerbil
+
+# Check WireGuard keys generated
+docker exec <gerbil-container> ls -la /var/config/
+
+# Should see key file
+```
+
+**Test WireGuard connection:**
+1. In Pangolin dashboard, create a WireGuard site
+2. Download WireGuard configuration
+3. Import into WireGuard client
+4. Connect and verify connectivity
+
+**Expected:**
+- Gerbil service running
+- Keys generated successfully
+- Can connect via WireGuard client
+
+### Step 7: Test Resource Proxying
+
+**Create a test resource in Pangolin:**
+1. Access Pangolin dashboard
+2. Create a new resource (local, WireGuard, or other)
+3. Configure domain routing
+4. Test access to the resource
+
+**Test proxying:**
+```bash
+# Test access to proxied resource
+curl https://your-resource-domain.com
+
+# Should reach the target service
+```
+
+**Expected:**
+- Resource accessible via configured domain
+- SSL certificate valid (if applicable)
+- Content loads correctly
+
+### Step 8: Monitor Logs
+
+**Watch service logs:**
+```bash
+# Follow all service logs
+docker logs -f <pangolin-container>
+docker logs -f <gerbil-container>
+docker logs -f <traefik-container>
+
+# Or via Dokploy UI: View logs for each service
+```
+
+**Check for errors:**
+- Look for error messages
+- Check for connection failures
+- Verify certificate generation logs
+- Monitor healthcheck status
+
+### Step 9: Performance Testing
+
+**Test response times:**
+```bash
+# Measure response time
+time curl -o /dev/null -s -w "%{time_total}\n" https://your-pangolin-domain.com
+
+# Test API response time
+time curl -o /dev/null -s https://your-pangolin-domain.com/api/v1/
+```
+
+**Expected:**
+- Dashboard loads in < 2 seconds
+- API responds in < 500ms
+- No timeout errors
+
+### Step 10: Security Testing
+
+**Verify SSL/TLS:**
+```bash
+# Test SSL configuration
+nmap --script ssl-enum-ciphers -p 443 your-pangolin-domain.com
+
+# Check for vulnerabilities
+testssl.sh your-pangolin-domain.com
+```
+
+**Verify headers:**
+```bash
+# Check security headers
+curl -I https://your-pangolin-domain.com
+
+# Should see appropriate headers
+```
+
+**Expected:**
+- Strong cipher suites
+- No known vulnerabilities
+- Appropriate security headers
+
+### Quick Test Checklist
+
+- [ ] All three services (pangolin, gerbil, traefik) are running
+- [ ] Services show healthy status
+- [ ] Domain is accessible via HTTPS
+- [ ] SSL certificate is valid and from Let's Encrypt
+- [ ] Dashboard loads without errors
+- [ ] Can log in to dashboard
+- [ ] API endpoints respond correctly
+- [ ] Catch-all routing works (if configured)
+- [ ] WireGuard VPN can connect (if configured)
+- [ ] Resources can be proxied
+- [ ] No errors in service logs
+- [ ] Performance is acceptable
+
 ## Troubleshooting
 
 ### Services Not Starting
@@ -379,12 +819,22 @@ The template creates the following volumes:
 3. Check resource limits
 4. Verify network connectivity
 
+**Common issues:**
+- Healthcheck failing: Check if pangolin API is accessible
+- Port conflicts: Verify no other services use same ports
+- Resource limits: Check if containers have enough memory/CPU
+
 ### Dashboard Not Accessible
 
 1. Verify domain is correctly assigned in Dokploy
 2. Check Traefik logs for routing issues
 3. Verify SSL certificate generation
 4. Check firewall rules
+
+**Common issues:**
+- DNS not pointing to server: Verify DNS A record
+- Certificate not generated: Check Let's Encrypt logs
+- Routing misconfiguration: Verify Traefik dynamic config
 
 ### VPN Not Working
 
@@ -393,12 +843,22 @@ The template creates the following volumes:
 3. Verify network capabilities (`NET_ADMIN`, `SYS_MODULE`)
 4. Check firewall rules for UDP ports (51820, 21820)
 
+**Common issues:**
+- Capabilities not available: Check Docker/container permissions
+- Firewall blocking UDP: Open ports 51820 and 21820
+- Key generation failed: Check gerbil logs
+
 ### API Errors
 
 1. Check pangolin service logs
 2. Verify API endpoint is accessible
 3. Check Traefik routing rules
 4. Verify CORS configuration if needed
+
+**Common issues:**
+- API not responding: Check pangolin healthcheck
+- Routing misconfiguration: Verify Traefik dynamic config
+- CORS errors: Check browser console for details
 
 ## Contributing
 

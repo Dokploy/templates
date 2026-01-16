@@ -3922,6 +3922,24 @@
     ]
   },
   {
+    "id": "minepanel",
+    "name": "Minepanel",
+    "version": "latest",
+    "description": "Web panel for managing Minecraft servers with Docker. Create, configure, start/stop, and monitor multiple instances from a modern UI.",
+    "logo": "minepanel.webp",
+    "links": {
+      "github": "https://github.com/Ketbome/minepanel",
+      "website": "https://minepanel.ketbome.lat",
+      "docs": "https://minepanel.ketbome.lat"
+    },
+    "tags": [
+      "gaming",
+      "minecraft",
+      "server-management",
+      "docker"
+    ]
+  },
+  {
     "id": "mixpost",
     "name": "Mixpost",
     "version": "latest",

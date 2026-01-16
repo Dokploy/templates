@@ -1,0 +1,184 @@
+[variables]
+main_domain = "${domain}"
+pangolin_secret = "${base64:64}"
+letsencrypt_email = "${email}"
+gerbil_endpoint = "${main_domain}"
+
+[[config.domains]]
+serviceName = "gerbil"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+SERVER_SECRET = "${pangolin_secret}"
+
+[[config.mounts]]
+filePath = "/app/config/config.yml"
+content = """
+app:
+  dashboard_url: "https://${main_domain}"
+  log_level: "info"
+
+domains:
+  domain1:
+    base_domain: "${main_domain}"
+    cert_resolver: "letsencrypt"
+    prefer_wildcard_cert: false
+
+server:
+  integration_port: 3003
+  external_port: 3000
+  internal_port: 3001
+  next_port: 3002
+  internal_hostname: "pangolin"
+  session_cookie_name: "p_session_token"
+  resource_access_token_param: "p_token"
+  resource_access_token_headers:
+    id: "P-Access-Token-Id"
+    token: "P-Access-Token"
+  dashboard_session_length_hours: 720
+  resource_session_length_hours: 720
+  trust_proxy: 1
+  secret: "${pangolin_secret}"
+
+gerbil:
+  base_endpoint: "${gerbil_endpoint}"
+  use_subnet: false
+  subnet_group: "100.89.137.0/20"
+  block_size: 24
+  site_block_size: 30
+
+orgs:
+  block_size: 24
+  subnet_group: "100.90.128.0/20"
+  utility_subnet_group: "100.96.128.0/20"
+
+traefik:
+  http_entrypoint: "web"
+  https_entrypoint: "websecure"
+  cert_resolver: "letsencrypt"
+  prefer_wildcard_cert: false
+  file_mode: true
+  site_types: ["newt", "wireguard", "local"]
+  allow_raw_resources: true
+
+flags:
+  require_email_verification: false
+  disable_signup_without_invite: false
+  disable_user_create_org: false
+  allow_raw_resources: false
+  enable_integration_api: false
+  disable_local_sites: false
+  disable_basic_wireguard_sites: false
+"""
+
+[[config.mounts]]
+filePath = "/etc/traefik/traefik_config.yml"
+content = """
+api:
+  insecure: true
+  dashboard: true
+
+providers:
+  file:
+    filename: "/etc/traefik/dynamic_config.yml"
+    watch: true
+
+log:
+  level: "INFO"
+  format: "common"
+  maxSize: 100
+  maxBackups: 3
+  maxAge: 3
+  compress: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      httpChallenge:
+        entryPoint: web
+      email: "${letsencrypt_email}"
+      storage: "/letsencrypt/acme.json"
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+    transport:
+      respondingTimeouts:
+        readTimeout: "30m"
+    http:
+      tls:
+        certResolver: letsencrypt
+      encodedCharacters:
+        allowEncodedSlash: true
+        allowEncodedQuestionMark: true
+
+serversTransport:
+  insecureSkipVerify: true
+
+ping:
+  entryPoint: "web"
+"""
+
+[[config.mounts]]
+filePath = "/etc/traefik/dynamic_config.yml"
+content = """
+http:
+  middlewares:
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+
+  routers:
+    # HTTP to HTTPS redirect router
+    main-app-router-redirect:
+      rule: "Host(`${main_domain}`)"
+      service: next-service
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+
+    # Next.js router (handles everything except API and WebSocket paths)
+    next-router:
+      rule: "Host(`${main_domain}`) && !PathPrefix(`/api/v1`)"
+      service: next-service
+      priority: 10
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+
+    # API router (handles /api/v1 paths)
+    api-router:
+      rule: "Host(`${main_domain}`) && PathPrefix(`/api/v1`)"
+      service: api-service
+      priority: 100
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+
+    # WebSocket router
+    ws-router:
+      rule: "Host(`${main_domain}`)"
+      service: api-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    next-service:
+      loadBalancer:
+        servers:
+          - url: "http://pangolin:3002"
+
+    api-service:
+      loadBalancer:
+        servers:
+          - url: "http://pangolin:3001"
+"""

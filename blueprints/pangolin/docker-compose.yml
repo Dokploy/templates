@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  pangolin:
+    image: fosrl/pangolin:latest
+    restart: unless-stopped
+    volumes:
+      - pangolin-config:/app/config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/v1/"]
+      interval: 10s
+      timeout: 10s
+      retries: 15
+      start_period: 30s
+    expose:
+      - "3001"
+      - "3002"
+
+  gerbil:
+    image: fosrl/gerbil:latest
+    restart: unless-stopped
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --reachableAt=http://gerbil:3004
+      - --generateAndSaveKeyTo=/var/config/key
+      - --remoteConfig=http://pangolin:3001/api/v1/
+    volumes:
+      - pangolin-config:/var/config
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    expose:
+      - "80"
+      - "443"
+      - "51820/udp"
+      - "21820/udp"
+      - "3004"
+
+  traefik:
+    image: traefik:v3.6
+    restart: unless-stopped
+    network_mode: service:gerbil
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --configFile=/etc/traefik/traefik_config.yml
+    volumes:
+      - pangolin-traefik:/etc/traefik:ro
+      - pangolin-letsencrypt:/letsencrypt
+      - pangolin-traefik-logs:/var/log/traefik
+
+volumes:
+  pangolin-config:
+  pangolin-traefik:
+  pangolin-letsencrypt:
+  pangolin-traefik-logs:

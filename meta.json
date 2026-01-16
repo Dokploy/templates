@@ -3907,21 +3907,6 @@
     ]
   },
   {
-    "id": "minio",
-    "name": "Minio",
-    "description": "Minio is an open source object storage server compatible with Amazon S3 cloud storage service.",
-    "logo": "minio.png",
-    "version": "latest",
-    "links": {
-      "github": "https://github.com/minio/minio",
-      "website": "https://minio.io/",
-      "docs": "https://docs.minio.io/"
-    },
-    "tags": [
-      "storage"
-    ]
-  },
-  {
     "id": "minepanel",
     "name": "Minepanel",
     "version": "1.7.1",
@@ -3937,6 +3922,21 @@
       "minecraft",
       "server-management",
       "docker"
+    ]
+  },
+  {
+    "id": "minio",
+    "name": "Minio",
+    "description": "Minio is an open source object storage server compatible with Amazon S3 cloud storage service.",
+    "logo": "minio.png",
+    "version": "latest",
+    "links": {
+      "github": "https://github.com/minio/minio",
+      "website": "https://minio.io/",
+      "docs": "https://docs.minio.io/"
+    },
+    "tags": [
+      "storage"
     ]
   },
   {

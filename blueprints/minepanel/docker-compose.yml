@@ -2,8 +2,6 @@ services:
   backend:
     image: ketbom/minepanel-backend:1.7.1
     restart: unless-stopped
-    ports:
-      - 8091
     environment:
       - NODE_ENV=production
       - FRONTEND_URL=${FRONTEND_URL}
@@ -19,8 +17,6 @@ services:
   frontend:
     image: ketbom/minepanel-frontend:1.7.1
     restart: unless-stopped
-    ports:
-      - 3000
     environment:
       - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
       - NEXT_PUBLIC_DEFAULT_LANGUAGE=${NEXT_PUBLIC_DEFAULT_LANGUAGE}

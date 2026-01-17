@@ -6347,7 +6347,7 @@
     ]
   },
   {
-    "id": "pterodactyl-wings",
+    "id": "wings",
     "name": "Pterodactyl Wings",
     "version": "v1.11.11",
     "description": "The server control plane for Pterodactyl Panel. Written from the ground-up with security, speed, and stability in mind.",

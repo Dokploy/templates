@@ -7,8 +7,8 @@ services:
     networks:
       - wings0
     ports:
-      - "8080:8080"
-      - "2022:2022"
+      - 8080
+      - 2022
     tty: true
     environment:
       TZ: "UTC"

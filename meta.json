@@ -6345,5 +6345,21 @@
       "saml",
       "multi-tenant"
     ]
+  },
+  {
+    "id": "pterodactyl-wings",
+    "name": "Pterodactyl Wings",
+    "version": "v1.11.11",
+    "description": "The server control plane for Pterodactyl Panel. Written from the ground-up with security, speed, and stability in mind.",
+    "logo": "pterodactyl.png",
+    "links": {
+      "github": "https://github.com/pterodactyl/wings",
+      "website": "https://pterodactyl.io",
+      "docs": "https://pterodactyl.io/project/introduction.html"
+    },
+    "tags": [
+      "self-hosted",
+      "open-source"
+    ]
   }
 ]

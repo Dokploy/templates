@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   wings:
-    image: ghcr.io/pterodactyl/wings:v1.11.11
+    image: ghcr.io/pterodactyl/wings:v1.11.11 # latest version (v1.12.0) doesnt work - https://github.com/pterodactyl/panel/pull/5324
     restart: always
     networks:
       - wings0
@@ -25,7 +25,7 @@ services:
       - "/etc/ssl/certs:/etc/ssl/certs:ro"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.c1.rule=Host(`HOST`)"
+      - "traefik.http.routers.c1.rule=Host(`your.wings.domain`)"
       - "traefik.http.routers.c1.entrypoints=websecure"
       - "traefik.http.services.c1.loadbalancer.server.port=8080"
       - "traefik.http.routers.c1.tls=true"

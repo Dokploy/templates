@@ -5,12 +5,10 @@ secret_key  = "${password}"
 project_name = "spliit"
 
 [config]
-mounts = [
-    { source = "/data/${project_name}/database", target = "/var/lib/postgresql/data" },
-]
+mounts = []
 
 [[config.domains]]
-serviceName = "server"
+serviceName = "spliit"
 port        = 3000
 host        = "${main_domain}"
 

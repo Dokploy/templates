@@ -4,8 +4,6 @@ services:
   wings:
     image: ghcr.io/pterodactyl/wings:v1.11.11 # latest version (v1.12.0) doesnt work - https://github.com/pterodactyl/panel/pull/5324
     restart: always
-    networks:
-      - wings0
     ports:
       - 8080
       - 2022
@@ -33,11 +31,3 @@ services:
       - "traefik.http.routers.c1.middlewares=c1-headers"
       - "traefik.http.services.c1.loadbalancer.server.scheme=https"
       - "traefik.http.routers.c1.tls.certresolver=myresolver"
-
-
-networks:
-  wings0:
-    name: wings0
-    driver: bridge
-    driver_opts:
-      com.docker.network.bridge.name: wings0

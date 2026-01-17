@@ -1,6 +1,5 @@
 services:
   spliit:
-    container_name: spliit
     image: ghcr.io/spliit-app/spliit:1.19.0
     restart: unless-stopped
     env_file:
@@ -8,7 +7,7 @@ services:
     depends_on:
       spliit_db:
         condition: service_healthy
-  spliit_db:
+  spliit-db:
     image: pgvector/pgvector:pg16
     volumes:
       - ${DB_DATA_LOCATION}:/var/lib/DBql/data

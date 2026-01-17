@@ -5536,6 +5536,23 @@
     ]
   },
   {
+    "id": "spliit",
+    "name": "Spliit",
+    "version": "latest",
+    "description": "Spliit is a lightweight, self-hosted alternative to Auth0 and Clerk. Open-source, cost-effective, and developer-friendly, it provides secure authentication (OAuth, email/password, social logins) with full control over your data. No per-user fees, easy to integrate, and perfect for startups or privacy-focused projects.",
+    "logo": "spliit.png",
+    "links": {
+      "github": "https://github.com/spliit-app/spliit",
+      "website": "https://spliit.app/",
+      "docs": "https://github.com/spliit-app
+    },
+    "tags": [
+      "budgeting",
+      "finance",
+      "money"
+    ]
+  },
+  {
     "id": "stack-auth",
     "name": "Stack Auth",
     "version": "latest",

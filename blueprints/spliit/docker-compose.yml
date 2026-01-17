@@ -1,0 +1,29 @@
+services:
+  spliit:
+    container_name: spliit
+    image: ghcr.io/spliit-app/spliit:1.19.0
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      spliit_db:
+        condition: service_healthy
+  spliit_db:
+    image: pgvector/pgvector:pg16
+    volumes:
+      - ${DB_DATA_LOCATION}:/var/lib/DBql/data
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE:-spliit}
+      POSTGRES_INITDB_ARGS: '--data-checksums'
+      POSTGRES_HOST_AUTH_METHOD: trust
+    healthcheck:
+      test:
+        ['CMD', 'pg_isready', '-U', "${DB_USERNAME}", '-d', "${DB_DATABASE:-spliit}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    env_file:
+      - .env

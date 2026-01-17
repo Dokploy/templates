@@ -1,0 +1,26 @@
+
+[variables]
+main_domain = "${domain}"
+secret_key  = "${password}"
+project_name = "spliit"
+
+[config]
+mounts = [
+    { source = "/data/${project_name}/database", target = "/var/lib/postgresql/data" },
+]
+
+[[config.domains]]
+serviceName = "server"
+port        = 8080
+host        = "${main_domain}"
+
+[config.env]
+
+DB_USERNAME     = "${project_name}-admin"
+DB_PASSWORD     = "${secret_key}"
+DB_DATA_LOCATION = "/data/${project_name}/database"
+DB_DATABASE     = "${project_name}"
+
+# --- PostgreSQL ---
+POSTGRES_PRISMA_URL       = "postgresql://${DB_USERNAME}:${DB_PASSWORD}@${project_name}_db:5432/${DB_DATABASE}"
+POSTGRES_URL_NON_POOLING  = "postgresql://${DB_USERNAME}:${DB_PASSWORD}@${project_name}_db:5432/${DB_DATABASE}"

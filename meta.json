@@ -6205,6 +6205,22 @@
     ]
   },
   {
+    "id": "wings",
+    "name": "Pterodactyl Wings",
+    "version": "v1.11.11",
+    "description": "The server control plane for Pterodactyl Panel. Written from the ground-up with security, speed, and stability in mind.",
+    "logo": "pterodactyl.png",
+    "links": {
+      "github": "https://github.com/pterodactyl/wings",
+      "website": "https://pterodactyl.io",
+      "docs": "https://pterodactyl.io/project/introduction.html"
+    },
+    "tags": [
+      "self-hosted",
+      "open-source"
+    ]
+  },
+  {
     "id": "wordpress",
     "name": "Wordpress",
     "version": "latest",
@@ -6344,22 +6360,6 @@
       "openid-connect",
       "saml",
       "multi-tenant"
-    ]
-  },
-  {
-    "id": "wings",
-    "name": "Pterodactyl Wings",
-    "version": "v1.11.11",
-    "description": "The server control plane for Pterodactyl Panel. Written from the ground-up with security, speed, and stability in mind.",
-    "logo": "pterodactyl.png",
-    "links": {
-      "github": "https://github.com/pterodactyl/wings",
-      "website": "https://pterodactyl.io",
-      "docs": "https://pterodactyl.io/project/introduction.html"
-    },
-    "tags": [
-      "self-hosted",
-      "open-source"
     ]
   }
 ]

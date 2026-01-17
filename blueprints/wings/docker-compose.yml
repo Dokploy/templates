@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  wings:
+    image: ghcr.io/pterodactyl/wings:v1.11.11
+    restart: always
+    networks:
+      - wings0
+    ports:
+      - "8080:8080"
+      - "2022:2022"
+    tty: true
+    environment:
+      TZ: "UTC"
+      WINGS_UID: 988
+      WINGS_GID: 988
+      WINGS_USERNAME: pterodactyl
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/var/lib/docker/containers/:/var/lib/docker/containers/"
+      - "/etc/wings/:/etc/pterodactyl/"
+      - "/var/lib/pterodactyl/:/var/lib/pterodactyl/"
+      - "/var/log/pterodactyl/:/var/log/pterodactyl/"
+      - "/tmp/pterodactyl/:/tmp/pterodactyl/"
+      - "/etc/ssl/certs:/etc/ssl/certs:ro"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.c1.rule=Host(`HOST`)"
+      - "traefik.http.routers.c1.entrypoints=websecure"
+      - "traefik.http.services.c1.loadbalancer.server.port=8080"
+      - "traefik.http.routers.c1.tls=true"
+      - "traefik.http.middlewares.c1-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.c1.middlewares=c1-headers"
+      - "traefik.http.services.c1.loadbalancer.server.scheme=https"
+      - "traefik.http.routers.c1.tls.certresolver=myresolver"
+
+
+networks:
+  wings0:
+    name: wings0
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: wings0

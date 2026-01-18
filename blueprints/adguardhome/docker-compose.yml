@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   adguardhome:
     image: adguard/adguardhome:latest

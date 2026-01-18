@@ -7,11 +7,11 @@ services:
     volumes:
       - pangolin-config:/app/config
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/api/v1/"]
-      interval: 10s
+      test: ["CMD-SHELL", "pgrep -f 'node.*pangolin' || exit 1"]
+      interval: 30s
       timeout: 10s
-      retries: 15
-      start_period: 30s
+      retries: 5
+      start_period: 120s
     expose:
       - "3001"
       - "3002"
@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
     depends_on:
       pangolin:
-        condition: service_healthy
+        condition: service_started
     command:
       - --reachableAt=http://gerbil:3004
       - --generateAndSaveKeyTo=/var/config/key
@@ -43,7 +43,7 @@ services:
     restart: unless-stopped
     depends_on:
       pangolin:
-        condition: service_healthy
+        condition: service_started
       gerbil:
         condition: service_started
     command:

@@ -4,7 +4,7 @@ services:
   netbird-management:
     image: ghcr.io/netbirdio/netbird:0.63.0-rootless
     restart: unless-stopped
-    command: netbird-mgmt
+    command: netbird-mgmt management
     volumes:
       - netbird-management:/var/lib/netbird
       - netbird-ssl:/etc/letsencrypt:ro
@@ -55,6 +55,8 @@ services:
       - AUTH_CLIENT_ID=${AUTH_CLIENT_ID}
       - AUTH_CLIENT_SECRET=${AUTH_CLIENT_SECRET}
       - AUTH_AUTHORITY=${AUTH_AUTHORITY}
+      - AUTH_REDIRECT_URI=${AUTH_REDIRECT_URI}
+      - AUTH_SILENT_REDIRECT_URI=${AUTH_SILENT_REDIRECT_URI}
       - USE_AUTH0=${USE_AUTH0}
       - LETSENCRYPT_DOMAIN=${LETSENCRYPT_DOMAIN}
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}

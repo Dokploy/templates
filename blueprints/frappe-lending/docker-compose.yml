@@ -58,8 +58,6 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - apps:/home/frappe/frappe-bench/apps
-    networks:
-      - bench-network
     environment:
       SITE_NAME: ${SITE_NAME}
       FRAPPE_SITE_NAME_HEADER: ""
@@ -130,9 +128,6 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - apps:/home/frappe/frappe-bench/apps
-
-    networks:
-      - bench-network
     
     healthcheck:
       test:
@@ -165,8 +160,6 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - apps:/home/frappe/frappe-bench/apps
-    networks:
-      - bench-network
     healthcheck:
       test:
         - CMD
@@ -203,8 +196,6 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - apps:/home/frappe/frappe-bench/apps
-    networks:
-      - bench-network
     healthcheck:
       test:
         - CMD
@@ -241,8 +232,6 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - apps:/home/frappe/frappe-bench/apps
-    networks:
-      - bench-network
     healthcheck:
       test:
         - CMD
@@ -291,8 +280,6 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - apps:/home/frappe/frappe-bench/apps
-    networks:
-      - bench-network
 
   websocket:
     <<: *custom_image
@@ -314,8 +301,6 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - apps:/home/frappe/frappe-bench/apps
-    networks:
-      - bench-network
 
   configurator:
     <<: *custom_image
@@ -345,8 +330,6 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - apps:/home/frappe/frappe-bench/apps
-    networks:
-      - bench-network
 
   create-site:
     <<: *custom_image
@@ -462,8 +445,6 @@ services:
       DB_PORT: "${DB_PORT:-3306}"
       DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       INSTALL_APP_ARGS: ${INSTALL_APP_ARGS}
-    networks:
-      - bench-network
 
   migration:
     <<: *custom_image
@@ -484,8 +465,6 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - apps:/home/frappe/frappe-bench/apps
-    networks:
-      - bench-network
 
   db:
     image: mariadb:10.6
@@ -508,8 +487,6 @@ services:
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     volumes:
       - db-data:/var/lib/mysql
-    networks:
-      - bench-network
 
   redis-cache:
     deploy:
@@ -518,8 +495,6 @@ services:
     image: redis:6.2-alpine
     volumes:
       - redis-cache-data:/data
-    networks:
-      - bench-network
     healthcheck:
       test:
         - CMD
@@ -536,8 +511,6 @@ services:
     image: redis:6.2-alpine
     volumes:
       - redis-queue-data:/data
-    networks:
-      - bench-network
     healthcheck:
       test:
         - CMD
@@ -554,8 +527,6 @@ services:
     image: redis:6.2-alpine
     volumes:
       - redis-socketio-data:/data
-    networks:
-      - bench-network
     healthcheck:
       test:
         - CMD
@@ -576,7 +547,4 @@ volumes:
       o: "${SITE_VOLUME_OPTS}"
       device: "${SITE_VOLUME_DEV}"
   apps:
-
-networks:
-  bench-network:
 

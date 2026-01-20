@@ -8,7 +8,6 @@
 
 [config]
   [[config.env]]
-    serviceName = "nextcloud"
     env = [
       "NEXTCLOUD_ADMIN_USER=${admin_user}",
       "NEXTCLOUD_ADMIN_PASSWORD=${admin_password}",

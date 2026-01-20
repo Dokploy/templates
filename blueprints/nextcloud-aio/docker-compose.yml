@@ -1,34 +1,32 @@
 services:
   nextcloud:
-    image: nextcloud:31.0.13
+    image: nextcloud:stable
     restart: always
+    volumes:
+      - nextcloud_data:/var/www/html
     environment:
-      # Database Connection
       - MYSQL_HOST=nextcloud_db
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - MYSQL_PASSWORD=${MYSQL_SECRET_PASSWORD}
-      # Admin Setup
-      - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
-      - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
-      # Proxy / HTTPS Settings
-      - NEXTCLOUD_TRUSTED_DOMAINS=${NEXTCLOUD_DOMAIN}
-      - OVERWRITEPROTOCOL=https
-    volumes:
-      - nextcloud_data:/var/www/html
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     depends_on:
       - nextcloud_db
+      - nextcloud_redis
 
   nextcloud_db:
     image: mariadb:10.11
     restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_SECRET_PASSWORD_ROOT}
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-      - MYSQL_PASSWORD=${MYSQL_SECRET_PASSWORD}
     volumes:
       - nextcloud_db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
+  nextcloud_redis:
+    image: redis:alpine
+    restart: always
 
 volumes:
   nextcloud_data:

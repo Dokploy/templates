@@ -1,22 +1,21 @@
 [variables]
-  # These define the UI fields in Dokploy
-  NEXTCLOUD_DOMAIN = "${domain}"
-  DB_PASSWORD = "${password:32}"
-  DB_ROOT_PASSWORD = "${password:32}"
-  PHONE_REGION = "DE"
+  domain_name = "${domain}"
+  db_password = "${password:32}"
+  db_root_password = "${password:32}"
+  region = "DE"
 
 [config]
   [[config.domains]]
     serviceName = "nextcloud"
     port = 80
-    host = "${NEXTCLOUD_DOMAIN}"
+    host = "${domain_name}"
 
   [[config.env]]
     serviceName = "nextcloud"
     env = [
-      "NEXTCLOUD_DOMAIN=${NEXTCLOUD_DOMAIN}",
-      "MYSQL_SECRET_PASSWORD=${DB_PASSWORD}",
-      "DEFAULT_PHONE_REGION=${PHONE_REGION}",
+      "NEXTCLOUD_DOMAIN=${domain_name}",
+      "MYSQL_SECRET_PASSWORD=${db_password}",
+      "DEFAULT_PHONE_REGION=${region}",
       "OVERWRITEPROTOCOL=https",
       "TRUSTED_PROXIES=10.0.0.0/8 172.16.0.0/12",
       "REDIS_HOST=nextcloud_redis"
@@ -25,6 +24,8 @@
   [[config.env]]
     serviceName = "nextcloud_db"
     env = [
-      "MYSQL_PASSWORD=${DB_PASSWORD}",      # Matches the app's password
-      "MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}"
+      "MYSQL_PASSWORD=${db_password}",
+      "MYSQL_ROOT_PASSWORD=${db_root_password}",
+      "MYSQL_DATABASE=nextcloud",
+      "MYSQL_USER=nextcloud"
     ]

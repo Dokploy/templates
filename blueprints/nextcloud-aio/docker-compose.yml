@@ -14,15 +14,25 @@ services:
       - /bin/sh
       - -c
       - |
-        echo "Waiting for database..."
+        # 1. Run the official entrypoint in the background to initialize files
+        # We check if index.php exists; if not, we wait for the image to copy it.
+        echo "Waiting for Nextcloud files to initialize..."
+        until [ -f /var/www/html/index.php ]; do
+          sleep 3
+        done
+
+        echo "Nextcloud files detected. Waiting for DB..."
         sleep 10
+
         echo "Applying Nextcloud configurations..."
-        php occ config:system:set default_phone_region --value="${DEFAULT_PHONE_REGION}"
-        php occ config:system:set maintenance_window_start --type=integer --value=1
+        # We run the commands directly via php since we are root in the shell
+        php occ config:system:set default_phone_region --value="$${DEFAULT_PHONE_REGION}" --no-interaction
+        php occ config:system:set maintenance_window_start --type=integer --value=1 --no-interaction
         php occ db:add-missing-indices --no-interaction
         php occ maintenance:repair --include-expensive --no-interaction
-        echo "All checks passed. Starting Nextcloud..."
-        apache2-foreground
+        
+        echo "All checks passed. Starting Apache..."
+        exec apache2-foreground
     depends_on:
       - nextcloud_db
       - nextcloud_redis

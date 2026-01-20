@@ -1,17 +1,29 @@
 [variables]
-main_domain = "${domain}"
-db_password = "${password}"
-db_root_password = "${password}"
+  NEXTCLOUD_DOMAIN = "${domain}"
+  MYSQL_SECRET_PASSWORD = "${password:32}"
+  MYSQL_SECRET_PASSWORD_ROOT = "${password:32}"
+  DEFAULT_PHONE_REGION = "DE"
 
 [config]
-mounts = []
+  [[config.domains]]
+    serviceName = "nextcloud"
+    port = 80
+    host = "${NEXTCLOUD_DOMAIN}"
 
-[[config.domains]]
-serviceName = "nextcloud"
-port = 80
-host = "${main_domain}"
+  [[config.env]]
+    serviceName = "nextcloud"
+    env = [
+      "NEXTCLOUD_DOMAIN=${NEXTCLOUD_DOMAIN}",
+      "MYSQL_SECRET_PASSWORD=${MYSQL_SECRET_PASSWORD}",
+      "DEFAULT_PHONE_REGION=${DEFAULT_PHONE_REGION}",
+      "OVERWRITEPROTOCOL=https",
+      "TRUSTED_PROXIES=10.0.0.0/8 172.16.0.0/12",
+      "REDIS_HOST=nextcloud_redis"
+    ]
 
-[config.env]
-NEXTCLOUD_DOMAIN = "${main_domain}"
-MYSQL_SECRET_PASSWORD = "${db_password}"
-MYSQL_SECRET_PASSWORD_ROOT = "${db_root_password}"
+  [[config.env]]
+    serviceName = "nextcloud_db"
+    env = [
+      "MYSQL_SECRET_PASSWORD=${MYSQL_SECRET_PASSWORD}",
+      "MYSQL_SECRET_PASSWORD_ROOT=${MYSQL_SECRET_PASSWORD_ROOT}"
+    ]

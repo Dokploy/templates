@@ -23,7 +23,7 @@
     host = "${domain_name}"
 
   [[config.mounts]]
-    filePath = "/entrypoint-wrapper.sh"
+    filePath = "entrypoint-wrapper.sh"
     content = """#!/bin/sh
 set -e
 
@@ -74,7 +74,7 @@ wait $NEXTCLOUD_PID
 """
 
   [[config.mounts]]
-    filePath = "/fix-nextcloud.sh"
+    filePath = "fix-nextcloud.sh"
     content = """#!/bin/sh
 #
 # Nextcloud Optimization Script

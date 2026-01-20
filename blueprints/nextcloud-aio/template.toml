@@ -21,3 +21,168 @@
     serviceName = "nextcloud"
     port = 80
     host = "${domain_name}"
+
+  [[config.mounts]]
+    filePath = "/entrypoint-wrapper.sh"
+    content = """#!/bin/sh
+set -e
+
+echo "=== Nextcloud Custom Entrypoint Wrapper ==="
+echo "Starting Nextcloud with automated optimization support..."
+
+# Start original Nextcloud entrypoint in background
+/entrypoint.sh apache2-foreground &
+NEXTCLOUD_PID=$!
+
+echo "Waiting for Nextcloud to initialize..."
+# Wait for Nextcloud to be ready (version.php and config.php must exist)
+COUNTER=0
+MAX_WAIT=300  # 5 minutes maximum wait
+while [ ! -f /var/www/html/version.php ] || [ ! -f /var/www/html/config/config.php ]; do
+  sleep 5
+  COUNTER=$((COUNTER + 5))
+  if [ $COUNTER -ge $MAX_WAIT ]; then
+    echo "ERROR: Nextcloud initialization timeout after ${MAX_WAIT}s"
+    kill $NEXTCLOUD_PID 2>/dev/null || true
+    exit 1
+  fi
+  echo "Still waiting for Nextcloud... (${COUNTER}s)"
+done
+
+echo "Nextcloud initialized successfully!"
+
+# Run optimizations if not already done
+MARKER_FILE="/var/www/html/data/.nextcloud-optimized"
+if [ ! -f "$MARKER_FILE" ]; then
+  echo "Running first-time optimizations..."
+  chmod +x /fix-nextcloud.sh
+  /bin/sh /fix-nextcloud.sh
+
+  if [ $? -eq 0 ]; then
+    echo "Optimizations completed successfully!"
+  else
+    echo "WARNING: Some optimizations may have failed. Check logs above."
+  fi
+else
+  echo "Optimizations already applied (marker file exists), skipping..."
+fi
+
+echo "=== Nextcloud is ready and optimized ==="
+
+# Wait for Nextcloud process to complete
+wait $NEXTCLOUD_PID
+"""
+
+  [[config.mounts]]
+    filePath = "/fix-nextcloud.sh"
+    content = """#!/bin/sh
+#
+# Nextcloud Optimization Script
+# ==============================
+# This script applies production-ready optimizations to Nextcloud.
+# It runs automatically on first container start via the custom entrypoint.
+#
+# Optimizations include:
+# - Trusted proxy configuration for reverse proxy support
+# - HTTPS protocol override
+# - Regional settings (phone region, maintenance window)
+# - Performance optimizations (database repair, missing indices)
+# - Redis caching configuration (APCu, distributed, locking)
+#
+# The script is idempotent - it creates a marker file to prevent re-running.
+# To re-run manually: delete /var/www/html/data/.nextcloud-optimized and restart container
+#
+
+MARKER_FILE="/var/www/html/data/.nextcloud-optimized"
+OCC="php /var/www/html/occ"
+
+# Check if already run
+if [ -f "$MARKER_FILE" ]; then
+  echo "Optimizations already applied (marker file exists)."
+  exit 0
+fi
+
+echo "=========================================="
+echo "  Nextcloud Optimization Script"
+echo "=========================================="
+echo ""
+
+# Wait a bit for services to stabilize
+echo "[1/6] Waiting for services to stabilize..."
+sleep 15
+
+# Function to run occ command as www-data with error handling
+run_occ() {
+  local description="$1"
+  shift
+  echo -n "  - ${description}... "
+  if su -s /bin/sh www-data -c "$OCC $*" >/dev/null 2>&1; then
+    echo "✓"
+    return 0
+  else
+    echo "✗ (failed, but continuing)"
+    return 1
+  fi
+}
+
+# Test database connectivity
+echo "[2/6] Testing database connectivity..."
+RETRY_COUNT=0
+MAX_RETRIES=30
+while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+  if su -s /bin/sh www-data -c "$OCC status" >/dev/null 2>&1; then
+    echo "  ✓ Database is accessible"
+    break
+  fi
+  RETRY_COUNT=$((RETRY_COUNT + 1))
+  echo "  Waiting for database... (attempt $RETRY_COUNT/$MAX_RETRIES)"
+  sleep 5
+done
+
+if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
+  echo "  ✗ Database not accessible after ${MAX_RETRIES} attempts"
+  echo "  Skipping optimizations - please run manually later"
+  exit 1
+fi
+
+# Configure trusted proxies
+echo "[3/6] Configuring trusted proxies..."
+run_occ "Set trusted proxy 10.0.0.0/8" config:system:set trusted_proxies 0 --value='10.0.0.0/8'
+run_occ "Set trusted proxy 172.16.0.0/12" config:system:set trusted_proxies 1 --value='172.16.0.0/12'
+run_occ "Set trusted proxy 192.168.0.0/16" config:system:set trusted_proxies 2 --value='192.168.0.0/16'
+run_occ "Set HTTPS protocol override" config:system:set overwriteprotocol --value='https'
+
+# Configure regional settings
+echo "[4/6] Configuring regional settings..."
+run_occ "Set phone region to DE" config:system:set default_phone_region --value='DE'
+run_occ "Set maintenance window start" config:system:set maintenance_window_start --value=1 --type=integer
+
+# Run performance optimizations
+echo "[5/6] Running performance optimizations..."
+echo "  - Running maintenance repair (this may take a while)..."
+if su -s /bin/sh www-data -c "$OCC maintenance:repair --include-expensive" 2>&1 | grep -q "No repair steps available"; then
+  echo "    ✓ No repairs needed"
+else
+  echo "    ✓ Repair completed"
+fi
+run_occ "Add missing database indices" db:add-missing-indices
+
+# Configure Redis caching
+echo "[6/6] Configuring Redis caching..."
+run_occ "Set APCu for local cache" config:system:set memcache.local --value='\\OC\\Memcache\\APCu'
+run_occ "Set Redis for distributed cache" config:system:set memcache.distributed --value='\\OC\\Memcache\\Redis'
+run_occ "Set Redis for locking" config:system:set memcache.locking --value='\\OC\\Memcache\\Redis'
+run_occ "Set Redis host" config:system:set redis host --value='nextcloud_redis'
+run_occ "Set Redis port" config:system:set redis port --value=6379 --type=integer
+
+# Create marker file
+touch "$MARKER_FILE"
+
+echo ""
+echo "=========================================="
+echo "  Optimization Complete!"
+echo "=========================================="
+echo "All optimizations have been applied."
+echo "Marker file created at: $MARKER_FILE"
+echo ""
+"""

@@ -2,6 +2,7 @@ services:
   nextcloud:
     image: nextcloud:stable
     restart: always
+    entrypoint: /entrypoint-wrapper.sh
     volumes:
       - nextcloud_data:/var/www/html
     environment:

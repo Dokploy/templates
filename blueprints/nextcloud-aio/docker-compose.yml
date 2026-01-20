@@ -10,29 +10,30 @@ services:
       - MYSQL_USER=nextcloud
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     # This block is an automated post-deployment script for common warnings and optimizations
-    command: 
-      - /bin/sh
-      - -c
+    entrypoint: /bin/sh -c
+    command:
       - |
-        # 1. Run the official entrypoint in the background to initialize files
-        # We check if index.php exists; if not, we wait for the image to copy it.
-        echo "Waiting for Nextcloud files to initialize..."
-        until [ -f /var/www/html/index.php ]; do
-          sleep 3
-        done
-
-        echo "Nextcloud files detected. Waiting for DB..."
-        sleep 10
-
-        echo "Applying Nextcloud configurations..."
-        # We run the commands directly via php since we are root in the shell
-        php occ config:system:set default_phone_region --value="$${DEFAULT_PHONE_REGION}" --no-interaction
-        php occ config:system:set maintenance_window_start --type=integer --value=1 --no-interaction
-        php occ db:add-missing-indices --no-interaction
-        php occ maintenance:repair --include-expensive --no-interaction
+        # 1. Run the official entrypoint script to copy files and setup Apache
+        # This is the "Magic" that populates /var/www/html
+        /entrypoint.sh apache2-foreground & 
         
-        echo "All checks passed. Starting Apache..."
-        exec apache2-foreground
+        # 2. Wait for the background process to actually put files there
+        echo "Waiting for Nextcloud initialization..."
+        until [ -f /var/www/html/occ ]; do sleep 2; done
+        
+        # 3. Give the DB a moment to breathe
+        sleep 15
+        
+        # 4. Run your fixes
+        echo "Applying Nextcloud configurations..."
+        php /var/www/html/occ config:system:set default_phone_region --value="$${DEFAULT_PHONE_REGION}" --no-interaction
+        php /var/www/html/occ config:system:set maintenance_window_start --type=integer --value=1 --no-interaction
+        php /var/www/html/occ db:add-missing-indices --no-interaction
+        php /var/www/html/occ maintenance:repair --include-expensive --no-interaction
+        
+        echo "Post-deployment fixes complete."
+        # Keep the container alive by waiting on the background process
+        wait
     depends_on:
       - nextcloud_db
       - nextcloud_redis

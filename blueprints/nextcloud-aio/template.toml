@@ -6,8 +6,8 @@
 
 [config]
   env = [
-    "MYSQL_SECRET_PASSWORD=${db_password}",
-    "MYSQL_SECRET_PASSWORD_ROOT=${db_root_password}",
+    "MYSQL_PASSWORD=${db_password}",
+    "MYSQL_ROOT_PASSWORD=${db_root_password}",
     "DEFAULT_PHONE_REGION=${region}",
     "NEXTCLOUD_DOMAIN=${domain_name}",
     "OVERWRITEPROTOCOL=https",

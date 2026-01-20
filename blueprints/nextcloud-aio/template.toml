@@ -13,8 +13,6 @@
     "OVERWRITEPROTOCOL=https",
     "TRUSTED_PROXIES=10.0.0.0/8 172.16.0.0/12",
     "REDIS_HOST=nextcloud_redis",
-    "MYSQL_PASSWORD=${db_password}",
-    "MYSQL_ROOT_PASSWORD=${db_root_password}",
     "MYSQL_DATABASE=nextcloud",
     "MYSQL_USER=nextcloud"
   ]

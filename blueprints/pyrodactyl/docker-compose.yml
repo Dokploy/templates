@@ -1,6 +1,6 @@
 services:
   database:
-    image: mariadb:10.5
+    image: mariadb:11
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     volumes:
@@ -14,7 +14,7 @@ services:
     image: redis:alpine
     restart: always
   panel:
-    image: ghcr.io/pyrohost/pyrodactyl:latest
+    image: ghcr.io/pyrodactyl-oss/pyrodactyl:latest
     restart: always
     links:
       - database
@@ -35,7 +35,6 @@ services:
       DB_HOST:
       DB_PORT:
       DB_PASSWORD: ${MYSQL_PASSWORD}
-      RECAPTCHA_ENABLED:
       DB_CONNECTION: "mariadb"
 
 volumes:

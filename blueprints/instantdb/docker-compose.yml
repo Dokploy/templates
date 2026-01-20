@@ -1,0 +1,64 @@
+services:
+  postgres:
+    image: ghcr.io/instantdb/postgresql:postgresql-16-pg-hint-plan
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - backend-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+      - "-c"
+      - "max_replication_slots=4"
+      - "-c"
+      - "max_wal_senders=4"
+      - "-c"
+      - "shared_preload_libraries=pg_hint_plan"
+      - "-c"
+      - "random_page_cost=1.1"
+  server:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    image: hari1367709/instantdb-server:latest
+    restart: unless-stopped
+    working_dir: /app
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
+      NREPL_BIND_ADDRESS: "0.0.0.0"
+      PORT: "8888"
+      HOST: "0.0.0.0"
+      # AWS Credentials for KMS (required for InstantDB)
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      # Force unbuffered output for logs
+      PYTHONUNBUFFERED: "1"
+      NODE_ENV: "production"
+    command: ["java", "-Djava.awt.headless=true", "-server", "-jar", "target/instant-standalone.jar"]
+    ports:
+      - "8888"
+      - "6005"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8888/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+volumes:
+  backend-db:
+

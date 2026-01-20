@@ -365,8 +365,8 @@
   {
     "id": "appwrite",
     "name": "Appwrite",
-    "version": "1.6.1",
-    "description": "Appwrite is an end-to-end backend server for Web, Mobile, Native, or Backend apps. Appwrite abstracts the complexity and repetitiveness required to build a modern backend API from scratch and allows you to build secure apps faster.\nUsing Appwrite, you can easily integrate your app with user authentication and multiple sign-in methods, a database for storing and querying users and team data, storage and file management, image manipulation, Cloud Functions, messaging, and more services.",
+    "version": "1.8.0",
+    "description": "Appwrite is an end-to-end platform for building Web, Mobile, Native, or Backend apps, packaged as a set of Docker microservices. It includes both a backend server and a fully integrated hosting solution for deploying static and server-side rendered frontends. Appwrite abstracts the complexity and repetitiveness required to build modern apps from scratch and allows you to build secure, full-stack applications faster.\nUsing Appwrite, you can easily integrate your app with user authentication and multiple sign-in methods, a database for storing and querying users and team data, storage and file management, image manipulation, Cloud Functions, messaging, and more services.",
     "links": {
       "github": "https://github.com/appwrite/appwrite",
       "website": "https://appwrite.io/",
@@ -376,7 +376,9 @@
     "tags": [
       "database",
       "firebase",
-      "postgres"
+      "mariadb",
+      "hosting",
+      "self-hosted"
     ]
   },
   {
@@ -2102,6 +2104,23 @@
     ]
   },
   {
+    "id": "emqx",
+    "name": "EMQX",
+    "version": "6.0.1",
+    "description": "A scalable and reliable MQTT broker for AI, IoT, IIoT and connected vehicles",
+    "logo": "emqx.svg",
+    "links": {
+      "github": "https://github.com/emqx/emqx",
+      "website": "https://www.emqx.com",
+      "docs": "https://docs.emqx.com"
+    },
+    "tags": [
+      "broker",
+      "iot",
+      "mqtt"
+    ]
+  },
+  {
     "id": "enshrouded",
     "name": "Enshrouded",
     "version": "1.0.0",
@@ -3117,6 +3136,23 @@
     ]
   },
   {
+    "id": "instantdb",
+    "name": "InstantDB",
+    "version": "latest",
+    "description": "InstantDB is a real-time database server that provides instant data synchronization and real-time updates for applications.",
+    "logo": "instant.svg",
+    "links": {
+      "github": "https://github.com/instantdb/instant/tree/main/server",
+      "website": "https://github.com/instantdb/instant",
+      "docs": "https://github.com/instantdb/instant"
+    },
+    "tags": [
+      "database",
+      "real-time",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "invoiceshelf",
     "name": "InvoiceShelf",
     "version": "latest",
@@ -3371,6 +3407,22 @@
     },
     "tags": [
       "ai"
+    ]
+  },
+  {
+    "id": "lavalink",
+    "name": "Lavalink",
+    "version": "4.1.1",
+    "description": "Lavalink is an open source standalone audio sending node based on Lavaplayer.",
+    "logo": "lavalink.svg",
+    "links": {
+      "github": "https://github.com/lavalink-devs/Lavalink",
+      "website": "https://lavalink.dev/",
+      "docs": "https://lavalink.dev/getting-started/index.html"
+    },
+    "tags": [
+      "voice",
+      "discord"
     ]
   },
   {
@@ -3680,6 +3732,24 @@
     "tags": [
       "chat",
       "self-hosted"
+    ]
+  },
+  {
+    "id": "mautic",
+    "name": "Mautic",
+    "version": "5.1.1",
+    "description": "Mautic is the world's largest open-source marketing automation project. It allows you to automate the process of finding and nurturing contacts through landing pages and forms, sending email, text messages, web notifications, and tracking your contacts.",
+    "logo": "mautic.svg",
+    "links": {
+      "github": "https://github.com/mautic/mautic",
+      "website": "https://www.mautic.org/",
+      "docs": "https://docs.mautic.org/en"
+    },
+    "tags": [
+      "marketing",
+      "automation",
+      "email",
+      "crm"
     ]
   },
   {
@@ -5609,6 +5679,23 @@
     ]
   },
   {
+    "id": "syncthing",
+    "name": "Syncthing",
+    "version": "latest",
+    "description": "Syncthing is a continuous file synchronization program that synchronizes files between two or more computers in real time.",
+    "logo": "syncthing.svg",
+    "links": {
+      "github": "https://github.com/syncthing/syncthing",
+      "website": "https://syncthing.net/",
+      "docs": "https://docs.syncthing.net/"
+    },
+    "tags": [
+      "file-sync",
+      "synchronization",
+      "backup"
+    ]
+  },
+  {
     "id": "tailscale-exitnode",
     "name": "Tailscale Exit nodes",
     "version": "1.0.0",
@@ -5846,7 +5933,7 @@
   {
     "id": "umami",
     "name": "Umami",
-    "version": "v2.19.0",
+    "version": "v2.20.2",
     "description": "Umami is a simple, fast, privacy-focused alternative to Google Analytics.",
     "logo": "umami.png",
     "links": {

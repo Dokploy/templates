@@ -23,64 +23,22 @@
     host = "${domain_name}"
 
   [[config.mounts]]
-    filePath = "entrypoint-wrapper.sh"
-    content = """#!/bin/sh
-set -e
-
-echo "=== Nextcloud Custom Entrypoint Wrapper ==="
-echo "Starting Nextcloud with automated optimization support..."
-
-# Start original Nextcloud entrypoint in background
-/entrypoint.sh apache2-foreground &
-NEXTCLOUD_PID=$!
-
-echo "Waiting for Nextcloud to initialize..."
-# Wait for Nextcloud to be ready (version.php and config.php must exist)
-COUNTER=0
-MAX_WAIT=300  # 5 minutes maximum wait
-while [ ! -f /var/www/html/version.php ] || [ ! -f /var/www/html/config/config.php ]; do
-  sleep 5
-  COUNTER=$((COUNTER + 5))
-  if [ $COUNTER -ge $MAX_WAIT ]; then
-    echo "ERROR: Nextcloud initialization timeout after ${MAX_WAIT}s"
-    kill $NEXTCLOUD_PID 2>/dev/null || true
-    exit 1
-  fi
-  echo "Still waiting for Nextcloud... (${COUNTER}s)"
-done
-
-echo "Nextcloud initialized successfully!"
-
-# Run optimizations if not already done
-MARKER_FILE="/var/www/html/data/.nextcloud-optimized"
-if [ ! -f "$MARKER_FILE" ]; then
-  echo "Running first-time optimizations..."
-  chmod +x /fix-nextcloud.sh
-  /bin/sh /fix-nextcloud.sh
-
-  if [ $? -eq 0 ]; then
-    echo "Optimizations completed successfully!"
-  else
-    echo "WARNING: Some optimizations may have failed. Check logs above."
-  fi
-else
-  echo "Optimizations already applied (marker file exists), skipping..."
-fi
-
-echo "=== Nextcloud is ready and optimized ==="
-
-# Wait for Nextcloud process to complete
-wait $NEXTCLOUD_PID
-"""
-
-  [[config.mounts]]
     filePath = "fix-nextcloud.sh"
     content = """#!/bin/sh
 #
 # Nextcloud Optimization Script
 # ==============================
 # This script applies production-ready optimizations to Nextcloud.
-# It runs automatically on first container start via the custom entrypoint.
+#
+# MANUAL EXECUTION REQUIRED
+# -------------------------
+# After Nextcloud completes its initial setup (create admin account, etc.),
+# run this script manually with:
+#
+#   docker exec -u www-data <container-name> /bin/sh /var/www/html/fix-nextcloud.sh
+#
+# To find your container name, run:
+#   docker ps | grep nextcloud
 #
 # Optimizations include:
 # - Trusted proxy configuration for reverse proxy support

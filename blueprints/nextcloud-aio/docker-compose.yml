@@ -2,11 +2,9 @@ services:
   nextcloud:
     image: nextcloud:stable
     restart: always
-    entrypoint: /entrypoint-wrapper.sh
     volumes:
       - nextcloud_data:/var/www/html
-      - ../files/entrypoint-wrapper.sh:/entrypoint-wrapper.sh:ro
-      - ../files/fix-nextcloud.sh:/fix-nextcloud.sh:ro
+      - ../files/fix-nextcloud.sh:/var/www/html/fix-nextcloud.sh:ro
     environment:
       - MYSQL_HOST=nextcloud_db
       - MYSQL_DATABASE=nextcloud

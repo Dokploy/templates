@@ -13,18 +13,27 @@ services:
     entrypoint: /bin/sh -c
     command:
       - |
-        # 1. Run the official entrypoint script to copy files and setup Apache
-        # This is the "Magic" that populates /var/www/html
+        # 1. Start Apache/Nextcloud in the background
         /entrypoint.sh apache2-foreground & 
         
-        # 2. Wait for the background process to actually put files there
         echo "Waiting for Nextcloud initialization..."
         until [ -f /var/www/html/occ ]; do sleep 2; done
         
-        # 3. Give the DB a moment to breathe
+        # 2. Wait for the DB to be ready
         sleep 15
         
-        # 4. Run your fixes
+        # 3. AUTO-INSTALL if not already installed
+        # This makes the 'config:system' commands available
+        if ! php /var/www/html/occ status | grep -q "installed: true"; then
+          echo "First run detected: Installing Nextcloud..."
+          php /var/www/html/occ maintenance:install \
+            --database "mysql" --database-name "nextcloud" \
+            --database-host "nextcloud_db" --database-user "nextcloud" \
+            --database-pass "$${MYSQL_PASSWORD}" \
+            --admin-user "$${NEXTCLOUD_ADMIN_USER}" --admin-pass "$${NEXTCLOUD_ADMIN_PASSWORD}" \
+            --no-interaction
+        fi
+
         echo "Applying Nextcloud configurations..."
         php /var/www/html/occ config:system:set default_phone_region --value="$${DEFAULT_PHONE_REGION}" --no-interaction
         php /var/www/html/occ config:system:set maintenance_window_start --type=integer --value=1 --no-interaction
@@ -32,7 +41,6 @@ services:
         php /var/www/html/occ maintenance:repair --include-expensive --no-interaction
         
         echo "Post-deployment fixes complete."
-        # Keep the container alive by waiting on the background process
         wait
     depends_on:
       - nextcloud_db

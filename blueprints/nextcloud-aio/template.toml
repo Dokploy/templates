@@ -2,10 +2,15 @@
   domain_name = "${domain}"
   db_password = "${password:32}"
   db_root_password = "${password:32}"
+  admin_user = "admin"
+  admin_password = "${password:32}"
   region = "DE"
 
 [config]
   env = [
+    "NEXTCLOUD_ADMIN_USER=${admin_user}",
+    "NEXTCLOUD_ADMIN_PASSWORD=${admin_password}",
+    "APACHE_SERVERNAME=${domain_name}",
     "MYSQL_PASSWORD=${db_password}",
     "MYSQL_ROOT_PASSWORD=${db_root_password}",
     "DEFAULT_PHONE_REGION=${region}",

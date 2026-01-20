@@ -5,27 +5,21 @@
   region = "DE"
 
 [config]
+  env = [
+    "MYSQL_SECRET_PASSWORD=${db_password}",
+    "MYSQL_SECRET_PASSWORD_ROOT=${db_root_password}",
+    "DEFAULT_PHONE_REGION=${region}",
+    "NEXTCLOUD_DOMAIN=${domain_name}",
+    "OVERWRITEPROTOCOL=https",
+    "TRUSTED_PROXIES=10.0.0.0/8 172.16.0.0/12",
+    "REDIS_HOST=nextcloud_redis",
+    "MYSQL_PASSWORD=${db_password}",
+    "MYSQL_ROOT_PASSWORD=${db_root_password}",
+    "MYSQL_DATABASE=nextcloud",
+    "MYSQL_USER=nextcloud"
+  ]
+
   [[config.domains]]
     serviceName = "nextcloud"
     port = 80
     host = "${domain_name}"
-
-  [[config.env]]
-    serviceName = "nextcloud"
-    env = [
-      "NEXTCLOUD_DOMAIN=${domain_name}",
-      "MYSQL_SECRET_PASSWORD=${db_password}",
-      "DEFAULT_PHONE_REGION=${region}",
-      "OVERWRITEPROTOCOL=https",
-      "TRUSTED_PROXIES=10.0.0.0/8 172.16.0.0/12",
-      "REDIS_HOST=nextcloud_redis"
-    ]
-
-  [[config.env]]
-    serviceName = "nextcloud_db"
-    env = [
-      "MYSQL_PASSWORD=${db_password}",
-      "MYSQL_ROOT_PASSWORD=${db_root_password}",
-      "MYSQL_DATABASE=nextcloud",
-      "MYSQL_USER=nextcloud"
-    ]

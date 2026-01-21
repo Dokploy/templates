@@ -1,6 +1,6 @@
 # Running `docker-compose up` will create/use the "trilium-data" directory in the user home
 services:
-  trilium:
+  trilium_next:
     # Optionally, replace `latest` with a version tag like `v0.110.3`
     # Using `latest` may cause unintended updates to the container
     image: triliumnext/trilium:latest

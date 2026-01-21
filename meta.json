@@ -5850,6 +5850,23 @@
     ]
   },
   {
+    "id": "trilium-next",
+    "name": "TriliumNext",
+    "version": "latest",
+    "description": "Is a free and open-source, cross-platform hierarchical note taking application with focus on building large personal knowledge bases.",
+    "logo": "trilium-next-logo.svg",
+    "links": {
+      "github": "https://github.com/TriliumNext/Trilium",
+      "website": "https://triliumnotes.org/",
+      "docs": "https://docs.triliumnotes.org/"
+    },
+    "tags": [
+      "self-hosted",
+      "productivity",
+      "personal-use"
+    ]
+  },
+  {
     "id": "trmnl-byos-laravel",
     "name": "TRMNL BYOS Laravel",
     "version": "0.21.0",
@@ -6344,23 +6361,6 @@
       "openid-connect",
       "saml",
       "multi-tenant"
-    ]
-  },
-  {
-    "id": "trilium-next",
-    "name": "TriliumNext",
-    "version": "latest",
-    "description": "Is a free and open-source, cross-platform hierarchical note taking application with focus on building large personal knowledge bases.",
-    "logo": "trilium-next-logo.svg",
-    "links": {
-      "github": "https://github.com/TriliumNext/Trilium",
-      "website": "https://triliumnotes.org/",
-      "docs": "https://docs.triliumnotes.org/"
-    },
-    "tags": [
-      "self-hosted",
-      "productivity",
-      "personal-use"
     ]
   }
 ]

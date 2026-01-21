@@ -4,7 +4,7 @@ services:
     restart: always
     volumes:
       - nextcloud_data:/var/www/html
-      - ../files/fix-nextcloud.sh:/var/www/html/fix-nextcloud.sh:ro
+      - ../files/fix-nextcloud.sh:/usr/local/bin/fix-nextcloud.sh:ro
     environment:
       - MYSQL_HOST=nextcloud_db
       - MYSQL_DATABASE=nextcloud

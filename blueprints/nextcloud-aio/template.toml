@@ -33,12 +33,15 @@
 # MANUAL EXECUTION REQUIRED
 # -------------------------
 # After Nextcloud completes its initial setup (create admin account, etc.),
-# run this script manually with:
+# run this script manually:
 #
-#   docker exec -u www-data <container-name> /bin/sh /var/www/html/fix-nextcloud.sh
+# Option 1 (From Dokploy UI):
+#   1. Go to your Nextcloud service in Dokploy
+#   2. Open the Terminal tab
+#   3. Run: su -s /bin/sh www-data -c "/bin/sh /usr/local/bin/fix-nextcloud.sh"
 #
-# To find your container name, run:
-#   docker ps | grep nextcloud
+# Option 2 (From command line):
+#   docker exec -u www-data <container-name> /bin/sh /usr/local/bin/fix-nextcloud.sh
 #
 # Optimizations include:
 # - Trusted proxy configuration for reverse proxy support
@@ -65,68 +68,90 @@ echo "  Nextcloud Optimization Script"
 echo "=========================================="
 echo ""
 
-# Wait a bit for services to stabilize
-echo "[1/6] Waiting for services to stabilize..."
-sleep 15
+# Check if running as www-data
+CURRENT_USER=$(whoami)
+if [ "$CURRENT_USER" = "www-data" ]; then
+  RUN_AS_WWWDATA=""
+else
+  RUN_AS_WWWDATA="su -s /bin/sh www-data -c"
+fi
 
-# Function to run occ command as www-data with error handling
+# Function to run occ command with error handling
 run_occ() {
-  local description="$1"
+  description="$1"
   shift
-  echo -n "  - ${description}... "
-  if su -s /bin/sh www-data -c "$OCC $*" >/dev/null 2>&1; then
-    echo "✓"
-    return 0
+  printf "  - %s... " "$description"
+  if [ -z "$RUN_AS_WWWDATA" ]; then
+    # Already running as www-data
+    if $OCC "$@" >/dev/null 2>&1; then
+      echo "✓"
+      return 0
+    else
+      echo "✗ (failed, but continuing)"
+      return 1
+    fi
   else
-    echo "✗ (failed, but continuing)"
-    return 1
+    # Need to switch to www-data
+    if $RUN_AS_WWWDATA "$OCC $*" >/dev/null 2>&1; then
+      echo "✓"
+      return 0
+    else
+      echo "✗ (failed, but continuing)"
+      return 1
+    fi
   fi
 }
 
 # Test database connectivity
-echo "[2/6] Testing database connectivity..."
-RETRY_COUNT=0
-MAX_RETRIES=30
-while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-  if su -s /bin/sh www-data -c "$OCC status" >/dev/null 2>&1; then
+echo "[1/5] Testing database connectivity..."
+if [ -z "$RUN_AS_WWWDATA" ]; then
+  if $OCC status >/dev/null 2>&1; then
     echo "  ✓ Database is accessible"
-    break
+  else
+    echo "  ✗ Database not accessible"
+    exit 1
   fi
-  RETRY_COUNT=$((RETRY_COUNT + 1))
-  echo "  Waiting for database... (attempt $RETRY_COUNT/$MAX_RETRIES)"
-  sleep 5
-done
-
-if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
-  echo "  ✗ Database not accessible after ${MAX_RETRIES} attempts"
-  echo "  Skipping optimizations - please run manually later"
-  exit 1
+else
+  if $RUN_AS_WWWDATA "$OCC status" >/dev/null 2>&1; then
+    echo "  ✓ Database is accessible"
+  else
+    echo "  ✗ Database not accessible"
+    exit 1
+  fi
 fi
 
 # Configure trusted proxies
-echo "[3/6] Configuring trusted proxies..."
+echo "[2/5] Configuring trusted proxies..."
 run_occ "Set trusted proxy 10.0.0.0/8" config:system:set trusted_proxies 0 --value='10.0.0.0/8'
 run_occ "Set trusted proxy 172.16.0.0/12" config:system:set trusted_proxies 1 --value='172.16.0.0/12'
 run_occ "Set trusted proxy 192.168.0.0/16" config:system:set trusted_proxies 2 --value='192.168.0.0/16'
 run_occ "Set HTTPS protocol override" config:system:set overwriteprotocol --value='https'
 
 # Configure regional settings
-echo "[4/6] Configuring regional settings..."
+echo "[3/5] Configuring regional settings..."
 run_occ "Set phone region to DE" config:system:set default_phone_region --value='DE'
 run_occ "Set maintenance window start" config:system:set maintenance_window_start --value=1 --type=integer
 
 # Run performance optimizations
-echo "[5/6] Running performance optimizations..."
+echo "[4/5] Running performance optimizations..."
 echo "  - Running maintenance repair (this may take a while)..."
-if su -s /bin/sh www-data -c "$OCC maintenance:repair --include-expensive" 2>&1 | grep -q "No repair steps available"; then
-  echo "    ✓ No repairs needed"
+if [ -z "$RUN_AS_WWWDATA" ]; then
+  if $OCC maintenance:repair --include-expensive 2>&1 | grep -q "No repair steps available"; then
+    echo "    ✓ No repairs needed"
+  else
+    echo "    ✓ Repair completed"
+  fi
 else
-  echo "    ✓ Repair completed"
+  if $RUN_AS_WWWDATA "$OCC maintenance:repair --include-expensive" 2>&1 | grep -q "No repair steps available"; then
+    echo "    ✓ No repairs needed"
+  else
+    echo "    ✓ Repair completed"
+  fi
 fi
 run_occ "Add missing database indices" db:add-missing-indices
 
 # Configure Redis caching
-echo "[6/6] Configuring Redis caching..."
+echo "[5/5] Configuring Redis caching..."
 run_occ "Set APCu for local cache" config:system:set memcache.local --value='\\OC\\Memcache\\APCu'
 run_occ "Set Redis for distributed cache" config:system:set memcache.distributed --value='\\OC\\Memcache\\Redis'
 run_occ "Set Redis for locking" config:system:set memcache.locking --value='\\OC\\Memcache\\Redis'

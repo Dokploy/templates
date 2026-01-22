@@ -8,7 +8,7 @@ services:
     logging:
       driver: none
     volumes:
-      - mongodb-data:/data/db
+      - mongodb-data-monitorss:/data/db
 
   rabbitmq-broker:
     image: rabbitmq:3-management-alpine
@@ -18,6 +18,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 20
+      start_period: 30s
     environment:
       - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=${RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS}
     volumes:
@@ -28,7 +29,7 @@ services:
     restart: always
     command: redis-server --save 60 1
     volumes:
-      - feed-requests-redis-data:/data
+      - feed-requests-redis-data-monitorss:/data
 
   feed-requests-postgres-db:
     image: postgres:17-alpine
@@ -38,6 +39,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+      start_period: 10s
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -45,15 +47,17 @@ services:
     logging:
       driver: none
     volumes:
-      - feed-requests-postgres-data:/var/lib/postgresql/data
+      - feed-requests-postgres-data-monitorss:/var/lib/postgresql/data
 
   bot-presence-service:
     image: ghcr.io/synzen/monitorss-bot-presence:main
     restart: on-failure:10
     command: ["node", "dist/main.js"]
     depends_on:
-      - rabbitmq-broker
-      - mongo
+      rabbitmq-broker:
+        condition: service_healthy
+      mongo:
+        condition: service_started
     environment:
       - BOT_PRESENCE_RABBITMQ_URL=${BOT_PRESENCE_RABBITMQ_URL}
       - BOT_PRESENCE_DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
@@ -71,10 +75,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 15s
     depends_on:
-      - feed-requests-postgres-db
-      - rabbitmq-broker
-      - feed-requests-redis-cache
+      feed-requests-postgres-db:
+        condition: service_healthy
+      rabbitmq-broker:
+        condition: service_healthy
+      feed-requests-redis-cache:
+        condition: service_started
     environment:
       - FEED_REQUESTS_START_TARGET=api
       - FEED_REQUESTS_POSTGRES_URI=${FEED_REQUESTS_POSTGRES_URI}
@@ -103,9 +111,12 @@ services:
     restart: on-failure:10
     command: ["node", "dist/main.js"]
     depends_on:
-      - feed-requests-postgres-db
-      - rabbitmq-broker
-      - feed-requests-redis-cache
+      feed-requests-postgres-db:
+        condition: service_healthy
+      rabbitmq-broker:
+        condition: service_healthy
+      feed-requests-redis-cache:
+        condition: service_started
     environment:
       - FEED_REQUESTS_START_TARGET=service
       - FEED_REQUESTS_POSTGRES_URI=${FEED_REQUESTS_POSTGRES_URI}
@@ -129,14 +140,18 @@ services:
     image: ghcr.io/synzen/monitorss-user-feeds:main
     restart: on-failure:10
     depends_on:
-      - feed-requests-postgres-db
-      - rabbitmq-broker
-      - feed-requests-redis-cache
+      feed-requests-postgres-db:
+        condition: service_healthy
+      rabbitmq-broker:
+        condition: service_healthy
+      feed-requests-redis-cache:
+        condition: service_started
     healthcheck:
       test: "wget --no-verbose --tries=1 --spider http://127.0.0.1:5000/v1/user-feeds/health || exit 1"
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 15s
     environment:
       - USER_FEEDS_POSTGRES_URI=${USER_FEEDS_POSTGRES_URI}
       - USER_FEEDS_POSTGRES_SCHEMA=${USER_FEEDS_POSTGRES_SCHEMA:-userfeeds}
@@ -163,8 +178,10 @@ services:
     restart: on-failure:10
     command: ["node", "build/app.js"]
     depends_on:
-      - rabbitmq-broker
-      - mongo
+      rabbitmq-broker:
+        condition: service_healthy
+      mongo:
+        condition: service_started
     environment:
       - DISCORD_REST_LISTENER_RABBITMQ_URI=${DISCORD_REST_LISTENER_RABBITMQ_URI}
       - DISCORD_REST_LISTENER_MAX_REQ_PER_SEC=40
@@ -181,7 +198,10 @@ services:
     restart: on-failure:10
     command: ["node", "dist/scripts/legacy-feed-bulk-converter.js"]
     depends_on:
-      - mongo
+      mongo:
+        condition: service_started
+      rabbitmq-broker:
+        condition: service_healthy
     environment:
       - BACKEND_API_MONGODB_URI=${BACKEND_API_MONGODB_URI}
       - BACKEND_API_USER_FEEDS_API_HOST=http://user-feeds-service:5000
@@ -207,8 +227,10 @@ services:
     restart: on-failure:10
     command: ["node", "dist/scripts/schedule-emitter.js"]
     depends_on:
-      - mongo
-      - rabbitmq-broker
+      mongo:
+        condition: service_started
+      rabbitmq-broker:
+        condition: service_healthy
     environment:
       - BACKEND_API_USER_FEEDS_API_HOST=http://user-feeds-service:5000
       - BACKEND_API_USER_FEEDS_API_KEY=${USER_FEEDS_API_KEY}
@@ -232,9 +254,12 @@ services:
     image: ghcr.io/synzen/monitorss-monolith:main
     restart: on-failure:5
     depends_on:
-      - mongo
-      - user-feeds-service
-      - feed-requests-service
+      mongo:
+        condition: service_started
+      user-feeds-service:
+        condition: service_started
+      feed-requests-service:
+        condition: service_started
     expose:
       - "8000"
     command: ["node", "dist/main.js"]
@@ -274,7 +299,8 @@ services:
     command: "npm run migration:up"
     restart: on-failure
     depends_on:
-      - feed-requests-postgres-db
+      feed-requests-postgres-db:
+        condition: service_healthy
     environment:
       - NODE_ENV=production
       - FEED_REQUESTS_POSTGRES_URI=${FEED_REQUESTS_POSTGRES_URI}
@@ -288,13 +314,14 @@ services:
     command: "node ./dist/src/scripts/run-migrations.js"
     restart: on-failure
     depends_on:
-      - feed-requests-postgres-db
+      feed-requests-postgres-db:
+        condition: service_healthy
     environment:
       - NODE_ENV=production
       - USER_FEEDS_POSTGRES_URI=${USER_FEEDS_POSTGRES_URI}
 
 volumes:
-  mongodb-data:
+  mongodb-data-monitorss:
   rabbitmq-data:
-  feed-requests-postgres-data:
-  feed-requests-redis-data:
+  feed-requests-postgres-data-monitorss:
+  feed-requests-redis-data-monitorss:

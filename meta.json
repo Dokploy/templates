@@ -3939,6 +3939,26 @@
     ]
   },
   {
+    "id": "monitorss",
+    "name": "Monito RSS",
+    "version": "main",
+    "description": "MonitoRSS is a Discord bot for monitoring RSS feeds. Get notified about new articles in your favorite feeds directly in Discord.",
+    "logo": "monitorss.svg",
+    "links": {
+      "github": "https://github.com/synzen/MonitoRSS",
+      "website": "https://github.com/synzen/MonitoRSS",
+      "docs": "https://github.com/synzen/MonitoRSS"
+    },
+    "tags": [
+      "discord",
+      "bot",
+      "rss",
+      "feeds",
+      "monitoring",
+      "notifications"
+    ]
+  },
+  {
     "id": "morphos",
     "name": "Morphos",
     "version": "latest",

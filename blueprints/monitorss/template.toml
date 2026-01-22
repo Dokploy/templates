@@ -1,0 +1,90 @@
+# Monito RSS Template Configuration
+
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+discord_bot_token = "${password:68}"
+discord_client_id = "${password:20}"
+discord_client_secret = "${password:32}"
+session_secret = "${base64:64}"
+session_salt = "${base64:16}"
+feed_requests_api_key = "${password:32}"
+user_feeds_api_key = "${password:32}"
+
+[config]
+env = [
+  "NODE_ENV=production",
+  "PUBLIC_URL=http://${main_domain}",
+  "BACKEND_API_LOGIN_REDIRECT_URI=http://${main_domain}",
+  "BACKEND_API_DISCORD_REDIRECT_URI=http://${main_domain}/api/v1/discord/callback-v2",
+  "DISCORD_BOT_TOKEN=${discord_bot_token}",
+  "DISCORD_CLIENT_ID=${discord_client_id}",
+  "DISCORD_CLIENT_SECRET=${discord_client_secret}",
+  "BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES=10",
+  "BACKEND_API_DEFAULT_MAX_FEEDS=999999999",
+  "BACKEND_API_DEFAULT_MAX_USER_FEEDS=999999999",
+  "BACKEND_API_MAX_DAILY_ARTICLES_DEFAULT=999999999",
+  "BACKEND_API_SUBSCRIPTIONS_ENABLED=false",
+  "POSTGRES_USER=monitorss",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_DB=feedrequests",
+  "BACKEND_API_MONGODB_URI=mongodb://mongo:27017/rss",
+  "DISCORD_REST_LISTENER_MONGO_URI=mongodb://mongo:27017/rss",
+  "FEED_REQUESTS_FEEDS_MONGODB_URI=mongodb://mongo:27017/rss",
+  "FEED_REQUESTS_POSTGRES_URI=postgres://monitorss:${postgres_password}@feed-requests-postgres-db:5432/feedrequests",
+  "USER_FEEDS_POSTGRES_URI=postgres://monitorss:${postgres_password}@feed-requests-postgres-db:5432/userfeeds",
+  "FEED_REQUESTS_REDIS_URI=redis://feed-requests-redis-cache:6379",
+  "USER_FEEDS_REDIS_URI=redis://feed-requests-redis-cache:6379",
+  "RABBITMQ_URI=amqp://guest:guest@rabbitmq-broker:5672/",
+  "RABBITMQ_BROKER_URL=amqp://guest:guest@rabbitmq-broker:5672/",
+  "BOT_PRESENCE_RABBITMQ_URL=amqp://guest:guest@rabbitmq-broker:5672/",
+  "DISCORD_REST_LISTENER_RABBITMQ_URI=amqp://guest:guest@rabbitmq-broker:5672/",
+  "FEED_REQUESTS_RABBITMQ_BROKER_URL=amqp://guest:guest@rabbitmq-broker:5672/",
+  "USER_FEEDS_RABBITMQ_BROKER_URL=amqp://guest:guest@rabbitmq-broker:5672/",
+  "BACKEND_API_RABBITMQ_BROKER_URL=amqp://guest:guest@rabbitmq-broker:5672/",
+  "RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit loopback_users []",
+  "HOST=0.0.0.0",
+  "FEED_REQUESTS_API_HOST=0.0.0.0",
+  "FEED_REQUESTS_API_PORT=5000",
+  "USER_FEEDS_API_HOST=0.0.0.0",
+  "USER_FEEDS_API_PORT=5000",
+  "BACKEND_API_HOST=0.0.0.0",
+  "BACKEND_API_PORT=8000",
+  "FEED_REQUESTS_GRPC_PORT=4999",
+  "FEED_REQUESTS_GRPC_HOST=0.0.0.0",
+  "USER_FEEDS_FEED_REQUESTS_GRPC_URL=feed-requests-service:4999",
+  "USER_FEEDS_FEED_REQUESTS_GRPC_USE_TLS=false",
+  "FEED_REQUESTS_API_KEY=${feed_requests_api_key}",
+  "USER_FEEDS_API_KEY=${user_feeds_api_key}",
+  "SESSION_SECRET=${session_secret}",
+  "SESSION_SALT=${session_salt}",
+  "BACKEND_API_FEED_USER_AGENT=Mozilla/5.0 (compatible; MonitoRSS/1.0)",
+  "FEED_REQUESTS_FEED_REQUEST_DEFAULT_USER_AGENT=Mozilla/5.0 (compatible; MonitoRSS/1.0)",
+  "BOT_PRESENCE_STATUS=online",
+  "BOT_PRESENCE_ACTIVITY_TYPE=PLAYING",
+  "BOT_PRESENCE_ACTIVITY_NAME=MonitoRSS",
+  "BACKEND_API_ALLOW_LEGACY_REVERSION=false",
+  "USER_FEEDS_DELIVERY_RECORD_PERSISTENCE_MONTHS=2",
+  "USER_FEEDS_ARTICLE_PERSISTENCE_MONTHS=2",
+  "FEED_REQUESTS_HISTORY_PERSISTENCE_MONTHS=1",
+  "FEED_REQUESTS_MAX_FAIL_ATTEMPTS=0",
+  "FEED_REQUESTS_REQUEST_TIMEOUT_MS=15000",
+  "BACKEND_API_SMTP_HOST=",
+  "BACKEND_API_SMTP_USERNAME=",
+  "BACKEND_API_SMTP_PASSWORD=",
+  "BACKEND_API_SMTP_FROM=",
+  "FEED_REQUESTS_POSTGRES_SCHEMA=feedrequests",
+  "USER_FEEDS_POSTGRES_SCHEMA=userfeeds",
+  "USER_FEEDS_POSTGRES_DATABASE=userfeeds",
+  "FEED_REQUESTS_REDIS_DISABLE_CLUSTER=true",
+  "USER_FEEDS_REDIS_DISABLE_CLUSTER=true",
+  "BACKEND_API_DISCORD_BOT_TOKEN=${discord_bot_token}",
+  "BACKEND_API_DISCORD_CLIENT_ID=${discord_client_id}",
+  "BACKEND_API_DISCORD_CLIENT_SECRET=${discord_client_secret}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "monolith"
+port = 8000
+host = "${main_domain}"

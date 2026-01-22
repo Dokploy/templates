@@ -1,0 +1,300 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:8.0
+    restart: always
+    command: mongod --port 27017
+    logging:
+      driver: none
+    volumes:
+      - mongodb-data:/data/db
+
+  rabbitmq-broker:
+    image: rabbitmq:3-management-alpine
+    restart: always
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 10s
+      retries: 20
+    environment:
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=${RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS}
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
+  feed-requests-redis-cache:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --save 60 1
+    volumes:
+      - feed-requests-redis-data:/data
+
+  feed-requests-postgres-db:
+    image: postgres:17-alpine
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    logging:
+      driver: none
+    volumes:
+      - feed-requests-postgres-data:/var/lib/postgresql/data
+
+  bot-presence-service:
+    image: ghcr.io/synzen/monitorss-bot-presence:main
+    restart: on-failure:10
+    command: ["node", "dist/main.js"]
+    depends_on:
+      - rabbitmq-broker
+      - mongo
+    environment:
+      - BOT_PRESENCE_RABBITMQ_URL=${BOT_PRESENCE_RABBITMQ_URL}
+      - BOT_PRESENCE_DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - BOT_PRESENCE_DISCORD_BOT_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - BOT_PRESENCE_STATUS=${BOT_PRESENCE_STATUS}
+      - BOT_PRESENCE_ACTIVITY_TYPE=${BOT_PRESENCE_ACTIVITY_TYPE}
+      - BOT_PRESENCE_ACTIVITY_NAME=${BOT_PRESENCE_ACTIVITY_NAME}
+
+  feed-requests-service:
+    image: ghcr.io/synzen/monitorss-feed-requests:main
+    restart: on-failure:10
+    command: ["node", "dist/main.js"]
+    healthcheck:
+      test: "wget --no-verbose --tries=1 --spider http://127.0.0.1:5000/v1/feed-requests/health || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      - feed-requests-postgres-db
+      - rabbitmq-broker
+      - feed-requests-redis-cache
+    environment:
+      - FEED_REQUESTS_START_TARGET=api
+      - FEED_REQUESTS_POSTGRES_URI=${FEED_REQUESTS_POSTGRES_URI}
+      - FEED_REQUESTS_POSTGRES_SCHEMA=${FEED_REQUESTS_POSTGRES_SCHEMA:-feedrequests}
+      - FEED_REQUESTS_REDIS_URI=${FEED_REQUESTS_REDIS_URI}
+      - FEED_REQUESTS_REDIS_DISABLE_CLUSTER=true
+      - FEED_REQUESTS_RABBITMQ_BROKER_URL=${FEED_REQUESTS_RABBITMQ_BROKER_URL}
+      - FEED_REQUESTS_API_KEY=${FEED_REQUESTS_API_KEY}
+      - FEED_REQUESTS_API_PORT=${FEED_REQUESTS_API_PORT}
+      - FEED_REQUESTS_GRPC_PORT=${FEED_REQUESTS_GRPC_PORT}
+      - FEED_REQUESTS_GRPC_HOST=${FEED_REQUESTS_GRPC_HOST}
+      - FEED_REQUESTS_FAILED_REQUEST_DURATION_THRESHOLD_HOURS=48
+      - FEED_REQUESTS_FEED_REQUEST_DEFAULT_USER_AGENT=${FEED_REQUESTS_FEED_REQUEST_DEFAULT_USER_AGENT}
+      - FEED_REQUESTS_S3_API_KEY_ID=1
+      - FEED_REQUESTS_S3_API_KEY=1
+      - FEED_REQUESTS_FEEDS_MONGODB_URI=${FEED_REQUESTS_FEEDS_MONGODB_URI}
+      - FEED_REQUESTS_HISTORY_PERSISTENCE_MONTHS=${FEED_REQUESTS_HISTORY_PERSISTENCE_MONTHS}
+      - FEED_REQUESTS_MAX_FAIL_ATTEMPTS=${FEED_REQUESTS_MAX_FAIL_ATTEMPTS}
+      - FEED_REQUESTS_REQUEST_TIMEOUT_MS=${FEED_REQUESTS_REQUEST_TIMEOUT_MS}
+      - NODE_ENV=${NODE_ENV}
+      - HOST=${HOST}
+      - FEED_REQUESTS_API_HOST=${FEED_REQUESTS_API_HOST}
+
+  feed-requests-worker:
+    image: ghcr.io/synzen/monitorss-feed-requests:main
+    restart: on-failure:10
+    command: ["node", "dist/main.js"]
+    depends_on:
+      - feed-requests-postgres-db
+      - rabbitmq-broker
+      - feed-requests-redis-cache
+    environment:
+      - FEED_REQUESTS_START_TARGET=service
+      - FEED_REQUESTS_POSTGRES_URI=${FEED_REQUESTS_POSTGRES_URI}
+      - FEED_REQUESTS_POSTGRES_SCHEMA=${FEED_REQUESTS_POSTGRES_SCHEMA:-feedrequests}
+      - FEED_REQUESTS_REDIS_URI=${FEED_REQUESTS_REDIS_URI}
+      - FEED_REQUESTS_REDIS_DISABLE_CLUSTER=true
+      - FEED_REQUESTS_RABBITMQ_BROKER_URL=${FEED_REQUESTS_RABBITMQ_BROKER_URL}
+      - FEED_REQUESTS_API_KEY=${FEED_REQUESTS_API_KEY}
+      - FEED_REQUESTS_API_PORT=${FEED_REQUESTS_API_PORT}
+      - FEED_REQUESTS_FAILED_REQUEST_DURATION_THRESHOLD_HOURS=48
+      - FEED_REQUESTS_FEED_REQUEST_DEFAULT_USER_AGENT=${FEED_REQUESTS_FEED_REQUEST_DEFAULT_USER_AGENT}
+      - FEED_REQUESTS_S3_API_KEY_ID=1
+      - FEED_REQUESTS_S3_API_KEY=1
+      - FEED_REQUESTS_FEEDS_MONGODB_URI=${FEED_REQUESTS_FEEDS_MONGODB_URI}
+      - FEED_REQUESTS_HISTORY_PERSISTENCE_MONTHS=${FEED_REQUESTS_HISTORY_PERSISTENCE_MONTHS}
+      - FEED_REQUESTS_MAX_FAIL_ATTEMPTS=${FEED_REQUESTS_MAX_FAIL_ATTEMPTS}
+      - FEED_REQUESTS_REQUEST_TIMEOUT_MS=${FEED_REQUESTS_REQUEST_TIMEOUT_MS}
+      - NODE_ENV=${NODE_ENV}
+
+  user-feeds-service:
+    image: ghcr.io/synzen/monitorss-user-feeds:main
+    restart: on-failure:10
+    depends_on:
+      - feed-requests-postgres-db
+      - rabbitmq-broker
+      - feed-requests-redis-cache
+    healthcheck:
+      test: "wget --no-verbose --tries=1 --spider http://127.0.0.1:5000/v1/user-feeds/health || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - USER_FEEDS_POSTGRES_URI=${USER_FEEDS_POSTGRES_URI}
+      - USER_FEEDS_POSTGRES_SCHEMA=${USER_FEEDS_POSTGRES_SCHEMA:-userfeeds}
+      - USER_FEEDS_POSTGRES_DATABASE=${USER_FEEDS_POSTGRES_DATABASE:-userfeeds}
+      - USER_FEEDS_REDIS_URI=${USER_FEEDS_REDIS_URI}
+      - USER_FEEDS_REDIS_DISABLE_CLUSTER=true
+      - USER_FEEDS_RABBITMQ_BROKER_URL=${USER_FEEDS_RABBITMQ_BROKER_URL}
+      - USER_FEEDS_API_PORT=${USER_FEEDS_API_PORT}
+      - USER_FEEDS_API_KEY=${USER_FEEDS_API_KEY}
+      - USER_FEEDS_FEED_REQUESTS_API_URL=http://feed-requests-service:5000/v1/feed-requests
+      - USER_FEEDS_FEED_REQUESTS_API_KEY=${FEED_REQUESTS_API_KEY}
+      - USER_FEEDS_DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - USER_FEEDS_DISCORD_API_TOKEN=${DISCORD_BOT_TOKEN}
+      - USER_FEEDS_FEED_REQUESTS_GRPC_URL=${USER_FEEDS_FEED_REQUESTS_GRPC_URL}
+      - USER_FEEDS_FEED_REQUESTS_GRPC_USE_TLS=${USER_FEEDS_FEED_REQUESTS_GRPC_USE_TLS}
+      - USER_FEEDS_DELIVERY_RECORD_PERSISTENCE_MONTHS=${USER_FEEDS_DELIVERY_RECORD_PERSISTENCE_MONTHS}
+      - USER_FEEDS_ARTICLE_PERSISTENCE_MONTHS=${USER_FEEDS_ARTICLE_PERSISTENCE_MONTHS}
+      - NODE_ENV=${NODE_ENV}
+      - HOST=${HOST}
+      - USER_FEEDS_API_HOST=${USER_FEEDS_API_HOST}
+
+  discord-rest-listener-service:
+    image: ghcr.io/synzen/monitorss-discord-rest-listener:main
+    restart: on-failure:10
+    command: ["node", "build/app.js"]
+    depends_on:
+      - rabbitmq-broker
+      - mongo
+    environment:
+      - DISCORD_REST_LISTENER_RABBITMQ_URI=${DISCORD_REST_LISTENER_RABBITMQ_URI}
+      - DISCORD_REST_LISTENER_MAX_REQ_PER_SEC=40
+      - DISCORD_REST_LISTENER_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - DISCORD_REST_LISTENER_BOT_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - DISCORD_REST_LISTENER_MONGO_URI=${DISCORD_REST_LISTENER_MONGO_URI}
+      - token=${DISCORD_BOT_TOKEN}
+      - discordClientId=${DISCORD_CLIENT_ID}
+      - databaseURI=${DISCORD_REST_LISTENER_MONGO_URI}
+      - NODE_ENV=${NODE_ENV}
+
+  legacy-feed-bulk-converter-service:
+    image: ghcr.io/synzen/monitorss-monolith:main
+    restart: on-failure:10
+    command: ["node", "dist/scripts/legacy-feed-bulk-converter.js"]
+    depends_on:
+      - mongo
+    environment:
+      - BACKEND_API_MONGODB_URI=${BACKEND_API_MONGODB_URI}
+      - BACKEND_API_USER_FEEDS_API_HOST=http://user-feeds-service:5000
+      - BACKEND_API_USER_FEEDS_API_KEY=${USER_FEEDS_API_KEY}
+      - BACKEND_API_FEED_REQUESTS_API_HOST=http://feed-requests-service:5000
+      - BACKEND_API_FEED_REQUESTS_API_KEY=${FEED_REQUESTS_API_KEY}
+      - BACKEND_API_SESSION_SECRET=${SESSION_SECRET}
+      - BACKEND_API_SESSION_SALT=${SESSION_SALT}
+      - BACKEND_API_FEED_USER_AGENT=${BACKEND_API_FEED_USER_AGENT}
+      - BACKEND_API_LOGIN_REDIRECT_URI=${BACKEND_API_LOGIN_REDIRECT_URI}
+      - BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES=${BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES}
+      - BACKEND_API_DEFAULT_MAX_FEEDS=${BACKEND_API_DEFAULT_MAX_FEEDS}
+      - BACKEND_API_DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - BACKEND_API_DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - BACKEND_API_DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+      - BACKEND_API_DISCORD_REDIRECT_URI=${BACKEND_API_DISCORD_REDIRECT_URI}
+      - RABBITMQ_URI=${RABBITMQ_URI}
+      - RABBITMQ_BROKER_URL=${RABBITMQ_BROKER_URL}
+      - NODE_ENV=${NODE_ENV}
+
+  schedule-emitter-service:
+    image: ghcr.io/synzen/monitorss-monolith:main
+    restart: on-failure:10
+    command: ["node", "dist/scripts/schedule-emitter.js"]
+    depends_on:
+      - mongo
+      - rabbitmq-broker
+    environment:
+      - BACKEND_API_USER_FEEDS_API_HOST=http://user-feeds-service:5000
+      - BACKEND_API_USER_FEEDS_API_KEY=${USER_FEEDS_API_KEY}
+      - BACKEND_API_FEED_REQUESTS_API_HOST=http://feed-requests-service:5000
+      - BACKEND_API_FEED_REQUESTS_API_KEY=${FEED_REQUESTS_API_KEY}
+      - BACKEND_API_DISCORD_REDIRECT_URI=${BACKEND_API_DISCORD_REDIRECT_URI}
+      - BACKEND_API_DEFAULT_MAX_FEEDS=${BACKEND_API_DEFAULT_MAX_FEEDS}
+      - BACKEND_API_FEED_USER_AGENT=${BACKEND_API_FEED_USER_AGENT}
+      - BACKEND_API_RABBITMQ_BROKER_URL=${RABBITMQ_BROKER_URL}
+      - BACKEND_API_MONGODB_URI=${BACKEND_API_MONGODB_URI}
+      - BACKEND_API_DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - BACKEND_API_DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - BACKEND_API_DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+      - BACKEND_API_LOGIN_REDIRECT_URI=${BACKEND_API_LOGIN_REDIRECT_URI}
+      - BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES=${BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES}
+      - BACKEND_API_SESSION_SECRET=${SESSION_SECRET}
+      - BACKEND_API_SESSION_SALT=${SESSION_SALT}
+      - NODE_ENV=${NODE_ENV}
+
+  monolith:
+    image: ghcr.io/synzen/monitorss-monolith:main
+    restart: on-failure:5
+    depends_on:
+      - mongo
+      - user-feeds-service
+      - feed-requests-service
+    expose:
+      - "8000"
+    command: ["node", "dist/main.js"]
+    environment:
+      - BACKEND_API_NODE_ENV=${NODE_ENV}
+      - BACKEND_API_PORT=${BACKEND_API_PORT}
+      - BACKEND_API_DEFAULT_MAX_FEEDS=${BACKEND_API_DEFAULT_MAX_FEEDS}
+      - BACKEND_API_DEFAULT_MAX_USER_FEEDS=${BACKEND_API_DEFAULT_MAX_USER_FEEDS}
+      - BACKEND_API_MAX_DAILY_ARTICLES_DEFAULT=${BACKEND_API_MAX_DAILY_ARTICLES_DEFAULT}
+      - BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES=${BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES}
+      - BACKEND_API_FEED_USER_AGENT=${BACKEND_API_FEED_USER_AGENT}
+      - BACKEND_API_RABBITMQ_BROKER_URL=${RABBITMQ_BROKER_URL}
+      - BACKEND_API_USER_FEEDS_API_HOST=http://user-feeds-service:5000
+      - BACKEND_API_FEED_REQUESTS_API_HOST=http://feed-requests-service:5000
+      - BACKEND_API_USER_FEEDS_API_KEY=${USER_FEEDS_API_KEY}
+      - BACKEND_API_FEED_REQUESTS_API_KEY=${FEED_REQUESTS_API_KEY}
+      - BACKEND_API_DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - BACKEND_API_DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+      - BACKEND_API_DISCORD_REDIRECT_URI=${BACKEND_API_DISCORD_REDIRECT_URI}
+      - BACKEND_API_LOGIN_REDIRECT_URI=${BACKEND_API_LOGIN_REDIRECT_URI}
+      - BACKEND_API_MONGODB_URI=${BACKEND_API_MONGODB_URI}
+      - BACKEND_API_SESSION_SECRET=${SESSION_SECRET}
+      - BACKEND_API_SESSION_SALT=${SESSION_SALT}
+      - BACKEND_API_DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - BACKEND_API_ALLOW_LEGACY_REVERSION=${BACKEND_API_ALLOW_LEGACY_REVERSION}
+      - BACKEND_API_SMTP_HOST=${BACKEND_API_SMTP_HOST}
+      - BACKEND_API_SMTP_USERNAME=${BACKEND_API_SMTP_USERNAME}
+      - BACKEND_API_SMTP_PASSWORD=${BACKEND_API_SMTP_PASSWORD}
+      - BACKEND_API_SMTP_FROM=${BACKEND_API_SMTP_FROM}
+      - LOG_LEVEL=info
+      - NODE_ENV=${NODE_ENV}
+      - BACKEND_API_HOST=${BACKEND_API_HOST}
+      - BACKEND_API_SUBSCRIPTIONS_ENABLED=${BACKEND_API_SUBSCRIPTIONS_ENABLED}
+
+  feed-requests-postgres-migration:
+    image: ghcr.io/synzen/monitorss-feed-requests:main
+    command: "npm run migration:up"
+    restart: on-failure
+    depends_on:
+      - feed-requests-postgres-db
+    environment:
+      - NODE_ENV=production
+      - FEED_REQUESTS_POSTGRES_URI=${FEED_REQUESTS_POSTGRES_URI}
+      - FEED_REQUESTS_API_KEY=${FEED_REQUESTS_API_KEY}
+      - FEED_REQUESTS_API_PORT=${FEED_REQUESTS_API_PORT}
+      - FEED_REQUESTS_FEED_REQUEST_DEFAULT_USER_AGENT=${FEED_REQUESTS_FEED_REQUEST_DEFAULT_USER_AGENT}
+      - FEED_REQUESTS_REDIS_URI=${FEED_REQUESTS_REDIS_URI}
+
+  user-feeds-postgres-migration:
+    image: ghcr.io/synzen/monitorss-user-feeds:main
+    command: "node ./dist/src/scripts/run-migrations.js"
+    restart: on-failure
+    depends_on:
+      - feed-requests-postgres-db
+    environment:
+      - NODE_ENV=production
+      - USER_FEEDS_POSTGRES_URI=${USER_FEEDS_POSTGRES_URI}
+
+volumes:
+  mongodb-data:
+  rabbitmq-data:
+  feed-requests-postgres-data:
+  feed-requests-redis-data:

@@ -29,7 +29,7 @@ services:
       # Or read-write mount (enables delete/move/copy/rename):
       # - /path/to/your/downloads:/downloads
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
       interval: 30s
       timeout: 5s
       retries: 3

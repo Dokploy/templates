@@ -7,7 +7,7 @@ services:
     volumes:
       - feed-requests-redis-data:/data
     networks:
-      - dokploy-network
+      - monitorss-network
 
   rabbitmq-broker:
     image: rabbitmq:3-management-alpine
@@ -22,7 +22,7 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
     networks:
-      - dokploy-network
+      - monitorss-network
 
   mongo:
     image: mongo:8.0
@@ -33,7 +33,7 @@ services:
     volumes:
       - mongodb-data:/data/db
     networks:
-      - dokploy-network
+      - monitorss-network
 
   feed-requests-postgres-db:
     image: postgres:17-alpine
@@ -52,7 +52,7 @@ services:
     volumes:
       - feed-requests-postgres17-data:/var/lib/postgresql/data
     networks:
-      - dokploy-network
+      - monitorss-network
 
   init-dbs:
     image: postgres:17-alpine
@@ -74,7 +74,7 @@ services:
       echo 'Database initialization complete!';
       "
     networks:
-      - dokploy-network
+      - monitorss-network
 
   bot-presence-service:
     image: ghcr.io/synzen/monitorss-bot-presence:latest
@@ -93,7 +93,7 @@ services:
       BOT_PRESENCE_RABBITMQ_URL: ${BOT_PRESENCE_RABBITMQ_URL}
       NODE_ENV: production
     networks:
-      - dokploy-network
+      - monitorss-network
 
   discord-rest-listener-service:
     image: ghcr.io/synzen/monitorss-discord-rest-listener:latest
@@ -112,7 +112,7 @@ services:
       DISCORD_REST_LISTENER_BOT_CLIENT_ID: ${DISCORD_REST_LISTENER_BOT_CLIENT_ID}
       NODE_ENV: production
     networks:
-      - dokploy-network
+      - monitorss-network
 
   feed-requests-service:
     image: ghcr.io/synzen/monitorss-feed-requests:latest
@@ -150,7 +150,7 @@ services:
       timeout: 5s
       retries: 3
     networks:
-      - dokploy-network
+      - monitorss-network
 
   feed-requests-postgres-migration:
     image: ghcr.io/synzen/monitorss-feed-requests:latest
@@ -177,7 +177,7 @@ services:
       FEED_REQUESTS_REQUEST_TIMEOUT_MS: ${FEED_REQUESTS_REQUEST_TIMEOUT_MS}
       NODE_ENV: production
     networks:
-      - dokploy-network
+      - monitorss-network
 
   user-feeds-service:
     image: ghcr.io/synzen/monitorss-user-feeds:latest
@@ -215,7 +215,7 @@ services:
       timeout: 5s
       retries: 3
     networks:
-      - dokploy-network
+      - monitorss-network
 
   user-feeds-postgres-migration:
     image: ghcr.io/synzen/monitorss-user-feeds:latest
@@ -241,7 +241,7 @@ services:
       USER_FEEDS_FEED_REQUESTS_API_KEY: ${USER_FEEDS_FEED_REQUESTS_API_KEY}
       NODE_ENV: production
     networks:
-      - dokploy-network
+      - monitorss-network
 
   legacy-feed-bulk-converter-service:
     image: ghcr.io/synzen/monitorss-monolith:main
@@ -274,7 +274,7 @@ services:
       BACKEND_API_MONGODB_URI: ${BACKEND_API_MONGODB_URI}
       LOG_LEVEL: ${LOG_LEVEL}
     networks:
-      - dokploy-network
+      - monitorss-network
 
   schedule-emitter-service:
     image: ghcr.io/synzen/monitorss-monolith:main
@@ -309,7 +309,7 @@ services:
       LOG_LEVEL: ${LOG_LEVEL}
       NODE_ENV: production
     networks:
-      - dokploy-network
+      - monitorss-network
 
   monolith:
     image: ghcr.io/synzen/monitorss-monolith:main
@@ -349,7 +349,7 @@ services:
       LOG_LEVEL: ${LOG_LEVEL}
       NODE_ENV: production
     networks:
-      - dokploy-network
+      - monitorss-network
 
 volumes:
   mongodb-data:
@@ -358,5 +358,5 @@ volumes:
   feed-requests-redis-data:
 
 networks:
-  dokploy-network:
+  monitorss-network:
     external: true

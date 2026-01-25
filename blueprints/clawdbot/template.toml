@@ -1,0 +1,26 @@
+[variables]
+main_domain = "${domain}"
+setup_password = "${password:32}"
+gateway_token = "${password:64}"
+image_tag = "latest"
+
+[config]
+env = [
+  "PORT=8080",
+  "SETUP_PASSWORD=${setup_password}",
+  "CLAWDBOT_STATE_DIR=/data/.clawdbot",
+  "CLAWDBOT_WORKSPACE_DIR=/data/workspace",
+  "CLAWDBOT_GATEWAY_TOKEN=${gateway_token}",
+  "IMAGE_TAG=${image_tag}"
+]
+
+[[config.domains]]
+serviceName = "clawdbot"
+port = 8080
+host = "${main_domain}"
+
+[[config.mounts]]
+serviceName = "clawdbot"
+type = "volume"
+source = "clawdbot-data"
+target = "/data"

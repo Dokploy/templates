@@ -1247,6 +1247,25 @@
     ]
   },
   {
+    "id": "clawdbot",
+    "name": "Clawdbot",
+    "version": "latest",
+    "description": "Clawdbot is a self-hosted AI agent gateway with a control UI, multi-channel integrations, and persistent workspaces for automation.",
+    "logo": "clawdbot.png",
+    "links": {
+      "github": "https://github.com/clawdbot/clawdbot",
+      "website": "https://clawd.bot/",
+      "docs": "https://docs.clawd.bot/"
+    },
+    "tags": [
+      "ai",
+      "agent",
+      "automation",
+      "gateway",
+      "chatbot"
+    ]
+  },
+  {
     "id": "clickhouse",
     "name": "ClickHouse",
     "version": "latest",

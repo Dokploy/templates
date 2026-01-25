@@ -26,11 +26,12 @@ user_feeds_postgres_uri = "postgres://${postgres_user}:${postgres_password}@feed
 [config]
 env = [
   "# Fill the Discord bot credentials above before deploying",
-  "# Change the URLs above only if you customize public hostnames",
   "",
-  "# Core Discord auth (edit these)",
+  "# Change the URLs above only if you customize public hostnames",
   "BACKEND_API_LOGIN_REDIRECT_URI=https://${main_domain}",
   "BACKEND_API_DISCORD_REDIRECT_URI=https://${main_domain}${discord_redirect_path}",
+  "",
+  "# Core Discord auth (edit these)",
   "BACKEND_API_DISCORD_BOT_TOKEN=${discord_bot_token}",
   "USER_FEEDS_DISCORD_API_TOKEN=${discord_bot_token}",
   "DISCORD_REST_LISTENER_BOT_TOKEN=${discord_bot_token}",

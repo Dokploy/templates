@@ -3940,22 +3940,20 @@
   },
   {
     "id": "monitorss",
-    "name": "Monito RSS",
+    "name": "MonitoRSS",
     "version": "main",
-    "description": "MonitoRSS is a Discord bot for monitoring RSS feeds. Get notified about new articles in your favorite feeds directly in Discord.",
-    "logo": "monitorss.svg",
+    "description": "MonitoRSS is a Discord RSS/Atom bot that delivers feeds with scheduling, filters, and presence updates.",
+    "logo": "logo.svg",
     "links": {
       "github": "https://github.com/synzen/MonitoRSS",
-      "website": "https://github.com/synzen/MonitoRSS",
-      "docs": "https://github.com/synzen/MonitoRSS"
+      "website": "https://monitorss.xyz/",
+      "docs": "https://docs.monitorss.xyz/"
     },
     "tags": [
-      "discord",
-      "bot",
       "rss",
-      "feeds",
-      "monitoring",
-      "notifications"
+      "notifications",
+      "discord",
+      "automation"
     ]
   },
   {

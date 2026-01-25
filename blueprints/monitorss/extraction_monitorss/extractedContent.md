@@ -1,3 +1,5 @@
+### docker-compose.yml
+```
 version: "3.8"
 services:
   feed-requests-redis-cache:
@@ -67,10 +69,13 @@ services:
       sh -c "
       echo 'Waiting for Postgres...';
       until pg_isready -h feed-requests-postgres-db; do sleep 2; done;
+
       echo 'Checking feedrequests database...';
       psql -h feed-requests-postgres-db -tc \"SELECT 1 FROM pg_database WHERE datname = 'feedrequests'\" | grep -q 1 || psql -h feed-requests-postgres-db -c 'CREATE DATABASE feedrequests';
+
       echo 'Checking userfeeds database...';
       psql -h feed-requests-postgres-db -tc \"SELECT 1 FROM pg_database WHERE datname = 'userfeeds'\" | grep -q 1 || psql -h feed-requests-postgres-db -c 'CREATE DATABASE userfeeds';
+
       echo 'Database initialization complete!';
       "
     networks:
@@ -120,13 +125,11 @@ services:
     command: ["node", "dist/main.js"]
     depends_on:
       feed-requests-postgres-db:
-        condition: service_healthy
+        condition: service_started
       feed-requests-redis-cache:
         condition: service_started
       rabbitmq-broker:
         condition: service_healthy
-      init-dbs:
-        condition: service_completed_successfully
     environment:
       FEED_REQUESTS_POSTGRES_URI: ${FEED_REQUESTS_POSTGRES_URI}
       FEED_REQUESTS_POSTGRES_SCHEMA: ${FEED_REQUESTS_POSTGRES_SCHEMA}
@@ -191,8 +194,6 @@ services:
         condition: service_healthy
       rabbitmq-broker:
         condition: service_healthy
-      init-dbs:
-        condition: service_completed_successfully
     environment:
       USER_FEEDS_POSTGRES_URI: ${USER_FEEDS_POSTGRES_URI}
       USER_FEEDS_API_PORT: ${USER_FEEDS_API_PORT}
@@ -229,8 +230,6 @@ services:
     depends_on:
       feed-requests-postgres-db:
         condition: service_started
-      init-dbs:
-        condition: service_completed_successfully
     environment:
       USER_FEEDS_POSTGRES_URI: ${USER_FEEDS_POSTGRES_URI}
       USER_FEEDS_DISCORD_CLIENT_ID: ${USER_FEEDS_DISCORD_CLIENT_ID}
@@ -252,14 +251,6 @@ services:
         condition: service_started
     environment:
       NODE_ENV: production
-      # --- CREDENCIAIS ADICIONADAS AQUI PARA PASSAR NA VALIDAÇÃO ---
-      BACKEND_API_DISCORD_BOT_TOKEN: ${BACKEND_API_DISCORD_BOT_TOKEN}
-      BACKEND_API_DISCORD_CLIENT_ID: ${BACKEND_API_DISCORD_CLIENT_ID}
-      BACKEND_API_DISCORD_CLIENT_SECRET: ${BACKEND_API_DISCORD_CLIENT_SECRET}
-      BACKEND_API_SESSION_SECRET: ${BACKEND_API_SESSION_SECRET}
-      BACKEND_API_SESSION_SALT: ${BACKEND_API_SESSION_SALT}
-      BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES: ${BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES}
-      # -------------------------------------------------------------
       BACKEND_API_USER_FEEDS_API_HOST: http://user-feeds-service:5000
       BACKEND_API_USER_FEEDS_API_KEY: ${USER_FEEDS_API_KEY}
       BACKEND_API_FEED_REQUESTS_API_HOST: http://feed-requests-service:5000
@@ -279,23 +270,13 @@ services:
   schedule-emitter-service:
     image: ghcr.io/synzen/monitorss-monolith:main
     restart: unless-stopped
-    command: ["node", "dist/scripts/schedule-emitter.js"]
+    command: npm run start:schedule-emitter
     depends_on:
       mongo:
         condition: service_started
       rabbitmq-broker:
         condition: service_healthy
     environment:
-      # --- CREDENCIAIS ADICIONADAS AQUI PARA PASSAR NA VALIDAÇÃO ---
-      BACKEND_API_DISCORD_BOT_TOKEN: ${BACKEND_API_DISCORD_BOT_TOKEN}
-      BACKEND_API_DISCORD_CLIENT_ID: ${BACKEND_API_DISCORD_CLIENT_ID}
-      BACKEND_API_DISCORD_CLIENT_SECRET: ${BACKEND_API_DISCORD_CLIENT_SECRET}
-      BACKEND_API_SESSION_SECRET: ${BACKEND_API_SESSION_SECRET}
-      BACKEND_API_SESSION_SALT: ${BACKEND_API_SESSION_SALT}
-      BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES: ${BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES}
-      BACKEND_API_DISCORD_REDIRECT_URI: ${BACKEND_API_DISCORD_REDIRECT_URI}
-      BACKEND_API_LOGIN_REDIRECT_URI: ${BACKEND_API_LOGIN_REDIRECT_URI}
-      # -------------------------------------------------------------
       BACKEND_API_USER_FEEDS_API_HOST: http://user-feeds-service:5000
       BACKEND_API_USER_FEEDS_API_KEY: ${USER_FEEDS_API_KEY}
       BACKEND_API_FEED_REQUESTS_API_HOST: http://feed-requests-service:5000
@@ -360,3 +341,115 @@ volumes:
 networks:
   dokploy-network:
     external: true
+
+```
+
+### template.toml
+```
+[variables]
+main_domain = "${domain}"
+postgres_user = "postgres"
+postgres_password = "${password:24}"
+feed_requests_api_key = "${password:32}"
+user_feeds_api_key = "${password:32}"
+session_secret = "${password:64}"
+session_salt = "${password:16}"
+discord_bot_token = ""
+discord_client_id = ""
+discord_client_secret = ""
+bot_presence_status = "online"
+bot_presence_activity_type = ""
+bot_presence_activity_name = ""
+log_level = "info"
+feed_requests_user_agent = "MonitoRSS [Self-Hosted]/1.0"
+mongo_database = "rss"
+feed_requests_postgres_db = "feedrequests"
+user_feeds_postgres_db = "userfeeds"
+discord_redirect_path = "/api/v1/discord/callback-v2"
+mongo_uri = "mongodb://mongo:27017/${mongo_database}"
+rabbitmq_uri = "amqp://guest:guest@rabbitmq-broker:5672/"
+feed_requests_postgres_uri = "postgres://${postgres_user}:${postgres_password}@feed-requests-postgres-db:5432/${feed_requests_postgres_db}"
+user_feeds_postgres_uri = "postgres://${postgres_user}:${postgres_password}@feed-requests-postgres-db:5432/${user_feeds_postgres_db}"
+
+[config]
+env = [
+  "POSTGRES_USER=postgres",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "BOT_PRESENCE_DISCORD_BOT_TOKEN=${discord_bot_token}",
+  "BOT_PRESENCE_STATUS=${bot_presence_status}",
+  "BOT_PRESENCE_ACTIVITY_TYPE=${bot_presence_activity_type}",
+  "BOT_PRESENCE_ACTIVITY_NAME=${bot_presence_activity_name}",
+  "BOT_PRESENCE_RABBITMQ_URL=${rabbitmq_uri}",
+  "DISCORD_REST_LISTENER_RABBITMQ_URI=${rabbitmq_uri}",
+  "DISCORD_REST_LISTENER_MAX_REQ_PER_SEC=40",
+  "DISCORD_REST_LISTENER_MONGO_URI=${mongo_uri}",
+  "DISCORD_REST_LISTENER_BOT_TOKEN=${discord_bot_token}",
+  "DISCORD_REST_LISTENER_BOT_CLIENT_ID=${discord_client_id}",
+  "FEED_REQUESTS_POSTGRES_URI=${feed_requests_postgres_uri}",
+  "FEED_REQUESTS_POSTGRES_SCHEMA=${feed_requests_postgres_db}",
+  "FEED_REQUESTS_API_KEY=${feed_requests_api_key}",
+  "FEED_REQUESTS_API_PORT=5000",
+  "FEED_REQUESTS_RABBITMQ_BROKER_URL=${rabbitmq_uri}",
+  "FEED_REQUESTS_FAILED_REQUEST_DURATION_THRESHOLD_HOURS=48",
+  "FEED_REQUESTS_REDIS_URI=redis://feed-requests-redis-cache:6379",
+  "FEED_REQUESTS_REDIS_DISABLE_CLUSTER=true",
+  "FEED_REQUESTS_FEEDS_MONGODB_URI=${mongo_uri}",
+  "FEED_REQUESTS_FEED_REQUEST_DEFAULT_USER_AGENT=${feed_requests_user_agent}",
+  "FEED_REQUESTS_HISTORY_PERSISTENCE_MONTHS=1",
+  "FEED_REQUESTS_MAX_FAIL_ATTEMPTS=11",
+  "FEED_REQUESTS_REQUEST_TIMEOUT_MS=15000",
+  "USER_FEEDS_POSTGRES_URI=${user_feeds_postgres_uri}",
+  "USER_FEEDS_API_PORT=5000",
+  "USER_FEEDS_RABBITMQ_BROKER_URL=${rabbitmq_uri}",
+  "USER_FEEDS_FEED_REQUESTS_API_URL=http://feed-requests-service:5000/v1/feed-requests",
+  "USER_FEEDS_FEED_REQUESTS_API_KEY=${feed_requests_api_key}",
+  "USER_FEEDS_API_KEY=${user_feeds_api_key}",
+  "USER_FEEDS_REDIS_URI=redis://feed-requests-redis-cache:6379",
+  "USER_FEEDS_REDIS_DISABLE_CLUSTER=true",
+  "USER_FEEDS_DISCORD_CLIENT_ID=${discord_client_id}",
+  "USER_FEEDS_DISCORD_API_TOKEN=${discord_bot_token}",
+  "USER_FEEDS_DELIVERY_RECORD_PERSISTENCE_MONTHS=1",
+  "USER_FEEDS_ARTICLE_PERSISTENCE_MONTHS=12",
+  "BACKEND_API_DEFAULT_MAX_FEEDS=999999",
+  "BACKEND_API_DEFAULT_MAX_USER_FEEDS=10000",
+  "BACKEND_API_MAX_DAILY_ARTICLES_DEFAULT=100000",
+  "BACKEND_API_FEED_USER_AGENT=${feed_requests_user_agent}",
+  "BACKEND_API_RABBITMQ_BROKER_URL=${rabbitmq_uri}",
+  "BACKEND_API_MONGODB_URI=${mongo_uri}",
+  "BACKEND_API_LOGIN_REDIRECT_URI=https://${main_domain}",
+  "BACKEND_API_DISCORD_REDIRECT_URI=https://${main_domain}${discord_redirect_path}",
+  "BACKEND_API_DISCORD_BOT_TOKEN=${discord_bot_token}",
+  "BACKEND_API_DISCORD_CLIENT_ID=${discord_client_id}",
+  "BACKEND_API_DISCORD_CLIENT_SECRET=${discord_client_secret}",
+  "BACKEND_API_SESSION_SECRET=${session_secret}",
+  "BACKEND_API_SESSION_SALT=${session_salt}",
+  "BACKEND_API_ALLOW_LEGACY_REVERSION=true",
+  "BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES=10",
+  "BACKEND_API_USER_FEEDS_API_KEY=${user_feeds_api_key}",
+  "BACKEND_API_FEED_REQUESTS_API_KEY=${feed_requests_api_key}",
+  "LOG_LEVEL=${log_level}",
+  "# Fill the Discord bot credentials above before deploying",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "monolith"
+port = 8_000
+host = "${main_domain}"
+
+```
+
+## 📝 Processing Summary
+
+- 📁 Directories processed (after blacklist): 0
+- 📄 Files processed (after blacklist): 4
+
+### 📁 List of Directories
+
+
+### 📄 List of Files
+
+- monitorss\docker-compose.yml
+- monitorss\extract-files-content.ps1
+- monitorss\logo.svg
+- monitorss\template.toml

@@ -6,8 +6,6 @@ services:
     command: redis-server --save 60 1
     volumes:
       - feed-requests-redis-data:/data
-    networks:
-      - monitorss-network
 
   rabbitmq-broker:
     image: rabbitmq:3-management-alpine
@@ -21,8 +19,6 @@ services:
       RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbit loopback_users []"
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
-    networks:
-      - monitorss-network
 
   mongo:
     image: mongo:8.0
@@ -32,8 +28,6 @@ services:
       driver: "none"
     volumes:
       - mongodb-data:/data/db
-    networks:
-      - monitorss-network
 
   feed-requests-postgres-db:
     image: postgres:17-alpine
@@ -51,8 +45,6 @@ services:
       driver: "none"
     volumes:
       - feed-requests-postgres17-data:/var/lib/postgresql/data
-    networks:
-      - monitorss-network
 
   init-dbs:
     image: postgres:17-alpine
@@ -73,8 +65,6 @@ services:
       psql -h feed-requests-postgres-db -tc \"SELECT 1 FROM pg_database WHERE datname = 'userfeeds'\" | grep -q 1 || psql -h feed-requests-postgres-db -c 'CREATE DATABASE userfeeds';
       echo 'Database initialization complete!';
       "
-    networks:
-      - monitorss-network
 
   bot-presence-service:
     image: ghcr.io/synzen/monitorss-bot-presence:latest
@@ -92,8 +82,6 @@ services:
       BOT_PRESENCE_ACTIVITY_NAME: ${BOT_PRESENCE_ACTIVITY_NAME}
       BOT_PRESENCE_RABBITMQ_URL: ${BOT_PRESENCE_RABBITMQ_URL}
       NODE_ENV: production
-    networks:
-      - monitorss-network
 
   discord-rest-listener-service:
     image: ghcr.io/synzen/monitorss-discord-rest-listener:latest
@@ -111,8 +99,6 @@ services:
       DISCORD_REST_LISTENER_BOT_TOKEN: ${DISCORD_REST_LISTENER_BOT_TOKEN}
       DISCORD_REST_LISTENER_BOT_CLIENT_ID: ${DISCORD_REST_LISTENER_BOT_CLIENT_ID}
       NODE_ENV: production
-    networks:
-      - monitorss-network
 
   feed-requests-service:
     image: ghcr.io/synzen/monitorss-feed-requests:latest
@@ -149,8 +135,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
-    networks:
-      - monitorss-network
 
   feed-requests-postgres-migration:
     image: ghcr.io/synzen/monitorss-feed-requests:latest
@@ -176,8 +160,6 @@ services:
       FEED_REQUESTS_MAX_FAIL_ATTEMPTS: ${FEED_REQUESTS_MAX_FAIL_ATTEMPTS}
       FEED_REQUESTS_REQUEST_TIMEOUT_MS: ${FEED_REQUESTS_REQUEST_TIMEOUT_MS}
       NODE_ENV: production
-    networks:
-      - monitorss-network
 
   user-feeds-service:
     image: ghcr.io/synzen/monitorss-user-feeds:latest
@@ -214,8 +196,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
-    networks:
-      - monitorss-network
 
   user-feeds-postgres-migration:
     image: ghcr.io/synzen/monitorss-user-feeds:latest
@@ -240,8 +220,6 @@ services:
       USER_FEEDS_API_KEY: ${USER_FEEDS_API_KEY}
       USER_FEEDS_FEED_REQUESTS_API_KEY: ${USER_FEEDS_FEED_REQUESTS_API_KEY}
       NODE_ENV: production
-    networks:
-      - monitorss-network
 
   legacy-feed-bulk-converter-service:
     image: ghcr.io/synzen/monitorss-monolith:main
@@ -273,8 +251,6 @@ services:
       BACKEND_API_RABBITMQ_BROKER_URL: ${BACKEND_API_RABBITMQ_BROKER_URL}
       BACKEND_API_MONGODB_URI: ${BACKEND_API_MONGODB_URI}
       LOG_LEVEL: ${LOG_LEVEL}
-    networks:
-      - monitorss-network
 
   schedule-emitter-service:
     image: ghcr.io/synzen/monitorss-monolith:main
@@ -308,8 +284,6 @@ services:
       BACKEND_API_MONGODB_URI: ${BACKEND_API_MONGODB_URI}
       LOG_LEVEL: ${LOG_LEVEL}
       NODE_ENV: production
-    networks:
-      - monitorss-network
 
   monolith:
     image: ghcr.io/synzen/monitorss-monolith:main
@@ -348,15 +322,9 @@ services:
       BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES: ${BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES}
       LOG_LEVEL: ${LOG_LEVEL}
       NODE_ENV: production
-    networks:
-      - monitorss-network
 
 volumes:
   mongodb-data:
   rabbitmq-data:
   feed-requests-postgres17-data:
   feed-requests-redis-data:
-
-networks:
-  monitorss-network:
-    external: true

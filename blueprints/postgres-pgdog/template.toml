@@ -1,5 +1,4 @@
 [variables]
-main_domain = "${domain}"
 postgres_user = "${username}"
 postgres_password = "${password:32}"
 postgres_db = "postgres"
@@ -27,11 +26,6 @@ name = "${postgres_user}"
 database = "${postgres_db}"
 password = "${postgres_password}"
 """
-
-[[config.domains]]
-serviceName = "postgres-pgdog"
-port = 6432
-host = "${main_domain}"
 
 [config.env]
 POSTGRES_USER = "${postgres_user}"

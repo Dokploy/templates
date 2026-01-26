@@ -3,6 +3,9 @@ services:
   postgres-pgdog:
     image: ${PGDOG_IMAGE}
     restart: unless-stopped
+    # Comment the line below to restrict to internal access only
+    ports:
+      - "6432:6432"
     volumes:
       - ../files/pgdog.toml:/pgdog/pgdog.toml
       - ../files/users.toml:/pgdog/users.toml

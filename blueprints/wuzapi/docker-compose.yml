@@ -15,10 +15,7 @@ services:
       - DB_PORT=5432
       - TZ=${TZ:-UTC}
     depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - wuzapi-network
+      - db
 
   db:
     image: postgres:16
@@ -29,17 +26,11 @@ services:
       POSTGRES_DB: ${DB_NAME:-wuzapi}
     volumes:
       - db_data:/var/lib/postgresql/data
-    networks:
-      - wuzapi-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${DB_USER:-wuzapi}"]
       interval: 5s
       timeout: 5s
       retries: 5
-
-networks:
-  wuzapi-network:
-    driver: bridge
 
 volumes:
   db_data:

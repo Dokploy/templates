@@ -1,11 +1,10 @@
-version: "3.8"
 services:
   postgres-pgdog:
     image: ${PGDOG_IMAGE}
     restart: unless-stopped
-    # Comment 'ports' settings below to restrict to internal access only
-    ports:
-      - 6432
+    # Uncomment 'ports' settings below to enable external access
+    # ports:
+    #   - "6432:6432"
     volumes:
       - ../files/pgdog.toml:/pgdog/pgdog.toml
       - ../files/users.toml:/pgdog/users.toml

@@ -6220,6 +6220,24 @@
     ]
   },
   {
+    "id": "wuzapi",
+    "name": "WuzAPI",
+    "version": "v1.0.0",
+    "description": "A RESTful API service for WhatsApp with multiple device support and concurrent sessions.",
+    "logo": "wuzapi.png",
+    "links": {
+      "github": "https://github.com/asternic/wuzapi",
+      "website": "https://www.wuzapi.app/",
+      "docs": "https://github.com/asternic/wuzapi/blob/main/README.md"
+    },
+    "tags": [
+      "api",
+      "whatsapp",
+      "messaging",
+      "automation"
+    ]
+  },
+  {
     "id": "xsshunter",
     "name": "XSSHunter",
     "version": "latest",

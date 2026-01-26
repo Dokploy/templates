@@ -12,7 +12,6 @@ content = """
 [general]
 host = "0.0.0.0"
 port = 6432
-admin_port = 6433
 
 [[databases]]
 name = "${postgres_db}"
@@ -33,12 +32,6 @@ password = "${postgres_password}"
 serviceName = "postgres-pgdog"
 port = 6432
 host = "${main_domain}"
-
-# Uncomment to expose PgDog admin interface
-# [[config.domains]]
-# serviceName = "postgres-pgdog"
-# port = 6433
-# host = "admin-${main_domain}"
 
 [config.env]
 POSTGRES_USER = "${postgres_user}"

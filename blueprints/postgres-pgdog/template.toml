@@ -1,0 +1,29 @@
+[variables]
+main_domain = "${domain}"
+postgres_user = "${username}"
+postgres_password = "${password:32}"
+postgres_db = "postgres"
+pgdog_image = "ghcr.io/pgdogdev/pgdog:v0.1.26"
+postgres_image = "postgres:18-alpine"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "postgres-pgdog"
+port = 6432
+host = "${main_domain}"
+
+# Uncomment to expose PgDog admin interface
+# [[config.domains]]
+# serviceName = "postgres-pgdog"
+# port = 6433
+# host = "admin-${main_domain}"
+
+[config.env]
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "${postgres_db}"
+PGDOG_IMAGE = "${pgdog_image}"
+POSTGRES_IMAGE = "${postgres_image}"
+RUST_LOG = "info"

@@ -4,7 +4,9 @@ services:
     image: ${PGDOG_IMAGE}
     restart: unless-stopped
     volumes:
-      - pgdog-config:/etc/pgdog
+      - ../files/pgdog.toml:/etc/pgdog/pgdog.toml
+      - ../files/users.toml:/etc/pgdog/users.toml
+    command: ["/pgdog/pgdog", "--config", "/etc/pgdog/pgdog.toml", "--users", "/etc/pgdog/users.toml"]
     environment:
       - RUST_LOG=${RUST_LOG}
     depends_on:
@@ -19,7 +21,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
@@ -28,4 +30,3 @@ services:
 
 volumes:
   postgres-data:
-  pgdog-config:

@@ -6,8 +6,28 @@ postgres_db = "postgres"
 pgdog_image = "ghcr.io/pgdogdev/pgdog:v0.1.26"
 postgres_image = "postgres:18-alpine"
 
-[config]
-mounts = []
+[[config.mounts]]
+filePath = "pgdog.toml"
+content = """
+[general]
+host = "0.0.0.0"
+port = 6432
+admin_port = 6433
+
+[[databases]]
+name = "${postgres_db}"
+host = "postgres"
+port = 5432
+"""
+
+[[config.mounts]]
+filePath = "users.toml"
+content = """
+[[users]]
+name = "${postgres_user}"
+database = "${postgres_db}"
+password = "${postgres_password}"
+"""
 
 [[config.domains]]
 serviceName = "postgres-pgdog"

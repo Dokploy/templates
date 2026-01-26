@@ -4,9 +4,8 @@ services:
     image: ${PGDOG_IMAGE}
     restart: unless-stopped
     volumes:
-      - ../files/pgdog.toml:/etc/pgdog/pgdog.toml
-      - ../files/users.toml:/etc/pgdog/users.toml
-    command: ["/pgdog/pgdog", "--config", "/etc/pgdog/pgdog.toml", "--users", "/etc/pgdog/users.toml"]
+      - ../files/pgdog.toml:/pgdog/pgdog.toml
+      - ../files/users.toml:/pgdog/users.toml
     environment:
       - RUST_LOG=${RUST_LOG}
     depends_on:

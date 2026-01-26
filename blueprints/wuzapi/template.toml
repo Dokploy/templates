@@ -18,7 +18,3 @@ WUZAPI_GLOBAL_ENCRYPTION_KEY = "${encryption_key}"
 DB_USER = "${db_user}"
 DB_PASSWORD = "${db_password}"
 DB_NAME = "${db_name}"
-
-[[config.mounts]]
-name = "db_data"
-mountPath = "/var/lib/postgresql/data"

@@ -1,0 +1,11 @@
+[variables]
+gateway_token = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "moltbot-gateway"
+port = 18789
+host = "${domain}"
+
+[config.env]
+CLAWDBOT_GATEWAY_TOKEN = "${gateway_token}"

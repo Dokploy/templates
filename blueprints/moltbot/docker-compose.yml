@@ -1,0 +1,31 @@
+services:
+  moltbot-gateway:
+    image: ghcr.io/moltbot/moltbot:latest
+    environment:
+      HOME: /home/node
+      TERM: xterm-256color
+      CLAWDBOT_GATEWAY_TOKEN: ${CLAWDBOT_GATEWAY_TOKEN}
+      CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY}
+      CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY}
+      CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE}
+    volumes:
+      - moltbot-config:/home/node/.clawdbot
+      - moltbot-workspace:/home/node/clawd
+    ports:
+      - 18789
+      - 18790
+    restart: unless-stopped
+    command:
+      [
+        "node",
+        "dist/index.js",
+        "gateway-daemon",
+        "--bind",
+        "lan",
+        "--port",
+        "18789"
+      ]
+
+volumes:
+  moltbot-config: {}
+  moltbot-workspace: {}

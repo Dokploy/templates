@@ -3956,6 +3956,23 @@
     ]
   },
   {
+    "id": "misaka-danmu-server",
+    "name": "Misaka Danmu Server",
+    "version": "latest",
+    "description": "A self-hosted danmaku (bullet comments) server for live streaming and video platforms.",
+    "logo": "misaka-danmu-server.png",
+    "links": {
+      "github": "https://github.com/l429609201/misaka_danmu_server",
+      "website": "https://github.com/l429609201/misaka_danmu_server",
+      "docs": "https://github.com/l429609201/misaka_danmu_server#readme"
+    },
+    "tags": [
+      "streaming",
+      "danmaku",
+      "live"
+    ]
+  },
+  {
     "id": "mixpost",
     "name": "Mixpost",
     "version": "latest",

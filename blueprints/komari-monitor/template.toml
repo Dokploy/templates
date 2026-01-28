@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:16}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "komari"
+port = 25_774
+host = "${main_domain}"
+
+[config.env]
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "${admin_password}"

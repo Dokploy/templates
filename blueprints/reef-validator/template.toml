@@ -1,0 +1,31 @@
+[variables]
+V1ADDR = "5GH14oJ4A3VDLoC6nXutsTwS4dMwebDipNdSugD5zFnnWKp5"
+V1SEED = "0x4beb11e380012110b0b072fbb3d8e7455921cf4658de06c33d970be82ccf9ed5"
+
+SPEC_URL = "http://reef.host:8000/local-chain-spec-raw.json"
+BOOTNODE_NODE_KEY="http://reef.host:8000/bootnode_node_key.txt"
+
+BOOTNODE_IP="72.60.35.83"
+
+VALIDATOR_NAME="Validator-1"
+
+P2P_PORT="30333"
+
+[[config.domains]]
+serviceName = "reef-validator"
+port = 30333
+host = "${domain}"
+path = "/"
+
+[config.env]
+V1ADDR = "5GH14oJ4A3VDLoC6nXutsTwS4dMwebDipNdSugD5zFnnWKp5"
+V1SEED = "0x4beb11e380012110b0b072fbb3d8e7455921cf4658de06c33d970be82ccf9ed5"
+
+SPEC_URL = "http://reef.host:8000/local-chain-spec-raw.json"
+BOOTNODE_NODE_KEY="http://reef.host:8000/bootnode_node_key.txt"
+
+BOOTNODE_IP="72.60.35.83"
+
+VALIDATOR_NAME="Validator-1"
+
+P2P_PORT="30333"

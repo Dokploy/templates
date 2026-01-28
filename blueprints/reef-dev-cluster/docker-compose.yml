@@ -1,0 +1,43 @@
+services:
+  reef-dev-cluster:
+    image: anukulpandey/reef-chain-node:linux-2
+    working_dir: /workspace
+
+    environment:
+      v1addr: "${v1addr}"
+      v2addr: "${v2addr}"
+      v3addr: "${v3addr}"
+      v1sec: "${v1sec}"
+      v2sec: "${v2sec}"
+      v3sec: "${v3sec}"
+      specgenurl: "${specgenurl}"
+
+    volumes:
+      - ./:/workspace
+
+    ports:
+      - "30335"
+      - "30333"
+      - "30334"
+      - "30336"
+      - "8001"
+      - "9944"
+
+    entrypoint: /bin/sh
+    command: -c "
+      set -e &&
+
+      echo '📦 Installing required tools...' &&
+      apt-get update &&
+      apt-get install -y make wget curl jq python3 &&
+
+      echo '📥 Downloading Makefile...' &&
+      wget -q -O /workspace/Makefile \
+        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/reef-cluster/Makefile &&
+
+      echo '🔧 Preparing build output...' &&
+      mkdir -p target/release &&
+      ln -sf /usr/local/bin/reef-node target/release/reef-node &&
+
+      echo '🚀 Starting local network...' &&
+      make run-local"

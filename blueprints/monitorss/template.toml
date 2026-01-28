@@ -25,7 +25,7 @@ user_feeds_postgres_uri = "postgres://${postgres_user}:${postgres_password}@feed
 
 [config]
 env = [
-  "# Fill the Discord bot credentials above before deploying",
+  "# Fill the Discord bot credentials above BEFORE deploying",
   "",
   "# Change the URLs above only if you customize public hostnames",
   "BACKEND_API_LOGIN_REDIRECT_URI=https://${main_domain}",

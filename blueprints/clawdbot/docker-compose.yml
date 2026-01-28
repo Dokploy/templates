@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  clawdbot:
+    image: ghcr.io/zekiblue/clawdbot-dokploy:${IMAGE_TAG:-v1.0.0}
+    restart: unless-stopped
+    environment:
+      - PORT=${PORT}
+      - SETUP_PASSWORD=${SETUP_PASSWORD}
+      - CLAWDBOT_STATE_DIR=${CLAWDBOT_STATE_DIR}
+      - CLAWDBOT_WORKSPACE_DIR=${CLAWDBOT_WORKSPACE_DIR}
+      - CLAWDBOT_GATEWAY_TOKEN=${CLAWDBOT_GATEWAY_TOKEN}
+    volumes:
+      - clawdbot-data:/data
+    expose:
+      - "8080"
+volumes:
+  clawdbot-data:

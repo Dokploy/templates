@@ -54,7 +54,7 @@ services:
       retries: 5
 
   op-api:
-    image: lindesvard/openpanel-api:2.0.0
+    image: lindesvard/openpanel-api:2
     restart: always
     command: >
       sh -c "
@@ -97,7 +97,7 @@ services:
         condition: service_healthy
 
   op-dashboard:
-    image: lindesvard/openpanel-dashboard:2.0.0
+    image: lindesvard/openpanel-dashboard:2
     restart: always
     depends_on:
       op-api:
@@ -111,7 +111,7 @@ services:
       retries: 5
 
   op-worker:
-    image: lindesvard/openpanel-worker:2.0.0
+    image: lindesvard/openpanel-worker:2
     restart: always
     depends_on:
       op-api:

@@ -1,0 +1,326 @@
+version: "3.8"
+services:
+  feed-requests-redis-cache:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --save 60 1
+    volumes:
+      - feed-requests-redis-data:/data
+
+  rabbitmq-broker:
+    image: rabbitmq:3-management-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    environment:
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbit loopback_users []"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
+  mongo:
+    image: mongo:8.0
+    restart: unless-stopped
+    command: mongod --port 27017
+    logging:
+      driver: "none"
+    volumes:
+      - mongodb-data:/data/db
+
+  feed-requests-postgres-db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test:
+        ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 45s
+      retries: 10
+    logging:
+      driver: "none"
+    volumes:
+      - feed-requests-postgres17-data:/var/lib/postgresql/data
+
+  init-dbs:
+    image: postgres:17-alpine
+    restart: "no"
+    depends_on:
+      feed-requests-postgres-db:
+        condition: service_healthy
+    environment:
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    command: >
+      sh -c "
+      echo 'Waiting for Postgres...';
+      until pg_isready -h feed-requests-postgres-db; do sleep 2; done;
+      echo 'Checking feedrequests database...';
+      psql -h feed-requests-postgres-db -tc \"SELECT 1 FROM pg_database WHERE datname = 'feedrequests'\" | grep -q 1 || psql -h feed-requests-postgres-db -c 'CREATE DATABASE feedrequests';
+      echo 'Checking userfeeds database...';
+      psql -h feed-requests-postgres-db -tc \"SELECT 1 FROM pg_database WHERE datname = 'userfeeds'\" | grep -q 1 || psql -h feed-requests-postgres-db -c 'CREATE DATABASE userfeeds';
+      echo 'Database initialization complete!';
+      "
+
+  bot-presence-service:
+    image: ghcr.io/synzen/monitorss-bot-presence:latest
+    restart: unless-stopped
+    command: ["node", "dist/main.js"]
+    depends_on:
+      rabbitmq-broker:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+    environment:
+      BOT_PRESENCE_DISCORD_BOT_TOKEN: ${BOT_PRESENCE_DISCORD_BOT_TOKEN}
+      BOT_PRESENCE_STATUS: ${BOT_PRESENCE_STATUS}
+      BOT_PRESENCE_ACTIVITY_TYPE: ${BOT_PRESENCE_ACTIVITY_TYPE}
+      BOT_PRESENCE_ACTIVITY_NAME: ${BOT_PRESENCE_ACTIVITY_NAME}
+      BOT_PRESENCE_RABBITMQ_URL: ${BOT_PRESENCE_RABBITMQ_URL}
+      NODE_ENV: production
+
+  discord-rest-listener-service:
+    image: ghcr.io/synzen/monitorss-discord-rest-listener:latest
+    restart: unless-stopped
+    command: ["node", "build/app.js"]
+    depends_on:
+      rabbitmq-broker:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+    environment:
+      DISCORD_REST_LISTENER_RABBITMQ_URI: ${DISCORD_REST_LISTENER_RABBITMQ_URI}
+      DISCORD_REST_LISTENER_MAX_REQ_PER_SEC: ${DISCORD_REST_LISTENER_MAX_REQ_PER_SEC}
+      DISCORD_REST_LISTENER_MONGO_URI: ${DISCORD_REST_LISTENER_MONGO_URI}
+      DISCORD_REST_LISTENER_BOT_TOKEN: ${DISCORD_REST_LISTENER_BOT_TOKEN}
+      DISCORD_REST_LISTENER_BOT_CLIENT_ID: ${DISCORD_REST_LISTENER_BOT_CLIENT_ID}
+      NODE_ENV: production
+
+  feed-requests-service:
+    image: ghcr.io/synzen/monitorss-feed-requests:latest
+    restart: unless-stopped
+    command: ["node", "dist/main.js"]
+    depends_on:
+      feed-requests-postgres-db:
+        condition: service_healthy
+      feed-requests-redis-cache:
+        condition: service_started
+      rabbitmq-broker:
+        condition: service_healthy
+      init-dbs:
+        condition: service_completed_successfully
+    environment:
+      FEED_REQUESTS_POSTGRES_URI: ${FEED_REQUESTS_POSTGRES_URI}
+      FEED_REQUESTS_POSTGRES_SCHEMA: ${FEED_REQUESTS_POSTGRES_SCHEMA}
+      FEED_REQUESTS_API_KEY: ${FEED_REQUESTS_API_KEY}
+      FEED_REQUESTS_API_PORT: ${FEED_REQUESTS_API_PORT}
+      FEED_REQUESTS_RABBITMQ_BROKER_URL: ${FEED_REQUESTS_RABBITMQ_BROKER_URL}
+      FEED_REQUESTS_FAILED_REQUEST_DURATION_THRESHOLD_HOURS: ${FEED_REQUESTS_FAILED_REQUEST_DURATION_THRESHOLD_HOURS}
+      FEED_REQUESTS_REDIS_URI: ${FEED_REQUESTS_REDIS_URI}
+      FEED_REQUESTS_REDIS_DISABLE_CLUSTER: ${FEED_REQUESTS_REDIS_DISABLE_CLUSTER}
+      FEED_REQUESTS_FEEDS_MONGODB_URI: ${FEED_REQUESTS_FEEDS_MONGODB_URI}
+      FEED_REQUESTS_FEED_REQUEST_DEFAULT_USER_AGENT: ${FEED_REQUESTS_FEED_REQUEST_DEFAULT_USER_AGENT}
+      FEED_REQUESTS_HISTORY_PERSISTENCE_MONTHS: ${FEED_REQUESTS_HISTORY_PERSISTENCE_MONTHS}
+      FEED_REQUESTS_MAX_FAIL_ATTEMPTS: ${FEED_REQUESTS_MAX_FAIL_ATTEMPTS}
+      FEED_REQUESTS_REQUEST_TIMEOUT_MS: ${FEED_REQUESTS_REQUEST_TIMEOUT_MS}
+      NODE_ENV: production
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - wget --no-verbose --tries=1 --spider http://127.0.0.1:5000/v1/feed-requests/health || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  feed-requests-postgres-migration:
+    image: ghcr.io/synzen/monitorss-feed-requests:latest
+    restart: unless-stopped
+    command: ["sh", "-c", "npm run migration:up && tail -f /dev/null"]
+    depends_on:
+      feed-requests-postgres-db:
+        condition: service_started
+      init-dbs:
+        condition: service_completed_successfully
+    environment:
+      FEED_REQUESTS_POSTGRES_URI: ${FEED_REQUESTS_POSTGRES_URI}
+      FEED_REQUESTS_POSTGRES_SCHEMA: ${FEED_REQUESTS_POSTGRES_SCHEMA}
+      FEED_REQUESTS_API_KEY: ${FEED_REQUESTS_API_KEY}
+      FEED_REQUESTS_API_PORT: ${FEED_REQUESTS_API_PORT}
+      FEED_REQUESTS_RABBITMQ_BROKER_URL: ${FEED_REQUESTS_RABBITMQ_BROKER_URL}
+      FEED_REQUESTS_FAILED_REQUEST_DURATION_THRESHOLD_HOURS: ${FEED_REQUESTS_FAILED_REQUEST_DURATION_THRESHOLD_HOURS}
+      FEED_REQUESTS_REDIS_URI: ${FEED_REQUESTS_REDIS_URI}
+      FEED_REQUESTS_REDIS_DISABLE_CLUSTER: ${FEED_REQUESTS_REDIS_DISABLE_CLUSTER}
+      FEED_REQUESTS_FEEDS_MONGODB_URI: ${FEED_REQUESTS_FEEDS_MONGODB_URI}
+      FEED_REQUESTS_FEED_REQUEST_DEFAULT_USER_AGENT: ${FEED_REQUESTS_FEED_REQUEST_DEFAULT_USER_AGENT}
+      FEED_REQUESTS_HISTORY_PERSISTENCE_MONTHS: ${FEED_REQUESTS_HISTORY_PERSISTENCE_MONTHS}
+      FEED_REQUESTS_MAX_FAIL_ATTEMPTS: ${FEED_REQUESTS_MAX_FAIL_ATTEMPTS}
+      FEED_REQUESTS_REQUEST_TIMEOUT_MS: ${FEED_REQUESTS_REQUEST_TIMEOUT_MS}
+      NODE_ENV: production
+
+  user-feeds-service:
+    image: ghcr.io/synzen/monitorss-user-feeds:latest
+    restart: unless-stopped
+    depends_on:
+      feed-requests-postgres-db:
+        condition: service_started
+      feed-requests-redis-cache:
+        condition: service_started
+      feed-requests-service:
+        condition: service_healthy
+      rabbitmq-broker:
+        condition: service_healthy
+      init-dbs:
+        condition: service_completed_successfully
+    environment:
+      USER_FEEDS_POSTGRES_URI: ${USER_FEEDS_POSTGRES_URI}
+      USER_FEEDS_API_PORT: ${USER_FEEDS_API_PORT}
+      USER_FEEDS_RABBITMQ_BROKER_URL: ${USER_FEEDS_RABBITMQ_BROKER_URL}
+      USER_FEEDS_FEED_REQUESTS_API_URL: ${USER_FEEDS_FEED_REQUESTS_API_URL}
+      USER_FEEDS_FEED_REQUESTS_API_KEY: ${USER_FEEDS_FEED_REQUESTS_API_KEY}
+      USER_FEEDS_API_KEY: ${USER_FEEDS_API_KEY}
+      USER_FEEDS_REDIS_URI: ${USER_FEEDS_REDIS_URI}
+      USER_FEEDS_REDIS_DISABLE_CLUSTER: ${USER_FEEDS_REDIS_DISABLE_CLUSTER}
+      USER_FEEDS_DISCORD_CLIENT_ID: ${USER_FEEDS_DISCORD_CLIENT_ID}
+      USER_FEEDS_DISCORD_API_TOKEN: ${USER_FEEDS_DISCORD_API_TOKEN}
+      USER_FEEDS_DELIVERY_RECORD_PERSISTENCE_MONTHS: ${USER_FEEDS_DELIVERY_RECORD_PERSISTENCE_MONTHS}
+      USER_FEEDS_ARTICLE_PERSISTENCE_MONTHS: ${USER_FEEDS_ARTICLE_PERSISTENCE_MONTHS}
+      NODE_ENV: production
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - wget --no-verbose --tries=1 --spider http://127.0.0.1:5000/v1/user-feeds/health || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  user-feeds-postgres-migration:
+    image: ghcr.io/synzen/monitorss-user-feeds:latest
+    restart: unless-stopped
+    command:
+      [
+        "sh",
+        "-c",
+        "node ./dist/src/scripts/run-migrations.js && tail -f /dev/null",
+      ]
+    depends_on:
+      feed-requests-postgres-db:
+        condition: service_started
+      init-dbs:
+        condition: service_completed_successfully
+    environment:
+      USER_FEEDS_POSTGRES_URI: ${USER_FEEDS_POSTGRES_URI}
+      USER_FEEDS_DISCORD_CLIENT_ID: ${USER_FEEDS_DISCORD_CLIENT_ID}
+      USER_FEEDS_DISCORD_API_TOKEN: ${USER_FEEDS_DISCORD_API_TOKEN}
+      USER_FEEDS_DELIVERY_RECORD_PERSISTENCE_MONTHS: ${USER_FEEDS_DELIVERY_RECORD_PERSISTENCE_MONTHS}
+      USER_FEEDS_ARTICLE_PERSISTENCE_MONTHS: ${USER_FEEDS_ARTICLE_PERSISTENCE_MONTHS}
+      USER_FEEDS_API_KEY: ${USER_FEEDS_API_KEY}
+      USER_FEEDS_FEED_REQUESTS_API_KEY: ${USER_FEEDS_FEED_REQUESTS_API_KEY}
+      NODE_ENV: production
+
+  legacy-feed-bulk-converter-service:
+    image: ghcr.io/synzen/monitorss-monolith:main
+    restart: unless-stopped
+    command: ["node", "dist/scripts/legacy-feed-bulk-converter.js"]
+    depends_on:
+      mongo:
+        condition: service_started
+    environment:
+      NODE_ENV: production
+      BACKEND_API_DISCORD_BOT_TOKEN: ${BACKEND_API_DISCORD_BOT_TOKEN}
+      BACKEND_API_DISCORD_CLIENT_ID: ${BACKEND_API_DISCORD_CLIENT_ID}
+      BACKEND_API_DISCORD_CLIENT_SECRET: ${BACKEND_API_DISCORD_CLIENT_SECRET}
+      BACKEND_API_SESSION_SECRET: ${BACKEND_API_SESSION_SECRET}
+      BACKEND_API_SESSION_SALT: ${BACKEND_API_SESSION_SALT}
+      BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES: ${BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES}
+      BACKEND_API_USER_FEEDS_API_HOST: http://user-feeds-service:5000
+      BACKEND_API_USER_FEEDS_API_KEY: ${USER_FEEDS_API_KEY}
+      BACKEND_API_FEED_REQUESTS_API_HOST: http://feed-requests-service:5000
+      BACKEND_API_FEED_REQUESTS_API_KEY: ${FEED_REQUESTS_API_KEY}
+      BACKEND_API_LOGIN_REDIRECT_URI: ${BACKEND_API_LOGIN_REDIRECT_URI}
+      BACKEND_API_DISCORD_REDIRECT_URI: ${BACKEND_API_DISCORD_REDIRECT_URI}
+      BACKEND_API_DEFAULT_MAX_FEEDS: ${BACKEND_API_DEFAULT_MAX_FEEDS}
+      BACKEND_API_DEFAULT_MAX_USER_FEEDS: ${BACKEND_API_DEFAULT_MAX_USER_FEEDS}
+      BACKEND_API_MAX_DAILY_ARTICLES_DEFAULT: ${BACKEND_API_MAX_DAILY_ARTICLES_DEFAULT}
+      BACKEND_API_FEED_USER_AGENT: ${BACKEND_API_FEED_USER_AGENT}
+      BACKEND_API_RABBITMQ_BROKER_URL: ${BACKEND_API_RABBITMQ_BROKER_URL}
+      BACKEND_API_MONGODB_URI: ${BACKEND_API_MONGODB_URI}
+      LOG_LEVEL: ${LOG_LEVEL}
+
+  schedule-emitter-service:
+    image: ghcr.io/synzen/monitorss-monolith:main
+    restart: unless-stopped
+    command: ["node", "dist/scripts/schedule-emitter.js"]
+    depends_on:
+      mongo:
+        condition: service_started
+      rabbitmq-broker:
+        condition: service_healthy
+    environment:
+      BACKEND_API_DISCORD_BOT_TOKEN: ${BACKEND_API_DISCORD_BOT_TOKEN}
+      BACKEND_API_DISCORD_CLIENT_ID: ${BACKEND_API_DISCORD_CLIENT_ID}
+      BACKEND_API_DISCORD_CLIENT_SECRET: ${BACKEND_API_DISCORD_CLIENT_SECRET}
+      BACKEND_API_SESSION_SECRET: ${BACKEND_API_SESSION_SECRET}
+      BACKEND_API_SESSION_SALT: ${BACKEND_API_SESSION_SALT}
+      BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES: ${BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES}
+      BACKEND_API_DISCORD_REDIRECT_URI: ${BACKEND_API_DISCORD_REDIRECT_URI}
+      BACKEND_API_LOGIN_REDIRECT_URI: ${BACKEND_API_LOGIN_REDIRECT_URI}
+      BACKEND_API_USER_FEEDS_API_HOST: http://user-feeds-service:5000
+      BACKEND_API_USER_FEEDS_API_KEY: ${USER_FEEDS_API_KEY}
+      BACKEND_API_FEED_REQUESTS_API_HOST: http://feed-requests-service:5000
+      BACKEND_API_FEED_REQUESTS_API_KEY: ${FEED_REQUESTS_API_KEY}
+      BACKEND_API_DEFAULT_MAX_FEEDS: ${BACKEND_API_DEFAULT_MAX_FEEDS}
+      BACKEND_API_DEFAULT_MAX_USER_FEEDS: ${BACKEND_API_DEFAULT_MAX_USER_FEEDS}
+      BACKEND_API_MAX_DAILY_ARTICLES_DEFAULT: ${BACKEND_API_MAX_DAILY_ARTICLES_DEFAULT}
+      BACKEND_API_FEED_USER_AGENT: ${BACKEND_API_FEED_USER_AGENT}
+      BACKEND_API_RABBITMQ_BROKER_URL: ${BACKEND_API_RABBITMQ_BROKER_URL}
+      BACKEND_API_MONGODB_URI: ${BACKEND_API_MONGODB_URI}
+      LOG_LEVEL: ${LOG_LEVEL}
+      NODE_ENV: production
+
+  monolith:
+    image: ghcr.io/synzen/monitorss-monolith:main
+    restart: unless-stopped
+    command: ["node", "dist/main.js"]
+    depends_on:
+      mongo:
+        condition: service_started
+      user-feeds-service:
+        condition: service_healthy
+      feed-requests-service:
+        condition: service_healthy
+    expose:
+      - "8000"
+    environment:
+      BACKEND_API_NODE_ENV: production
+      BACKEND_API_PORT: 8000
+      BACKEND_API_DEFAULT_MAX_FEEDS: ${BACKEND_API_DEFAULT_MAX_FEEDS}
+      BACKEND_API_DEFAULT_MAX_USER_FEEDS: ${BACKEND_API_DEFAULT_MAX_USER_FEEDS}
+      BACKEND_API_MAX_DAILY_ARTICLES_DEFAULT: ${BACKEND_API_MAX_DAILY_ARTICLES_DEFAULT}
+      BACKEND_API_USER_FEEDS_API_HOST: http://user-feeds-service:5000
+      BACKEND_API_FEED_REQUESTS_API_HOST: http://feed-requests-service:5000
+      BACKEND_API_FEED_USER_AGENT: ${BACKEND_API_FEED_USER_AGENT}
+      BACKEND_API_RABBITMQ_BROKER_URL: ${BACKEND_API_RABBITMQ_BROKER_URL}
+      BACKEND_API_USER_FEEDS_API_KEY: ${USER_FEEDS_API_KEY}
+      BACKEND_API_FEED_REQUESTS_API_KEY: ${FEED_REQUESTS_API_KEY}
+      BACKEND_API_DISCORD_BOT_TOKEN: ${BACKEND_API_DISCORD_BOT_TOKEN}
+      BACKEND_API_DISCORD_CLIENT_ID: ${BACKEND_API_DISCORD_CLIENT_ID}
+      BACKEND_API_DISCORD_CLIENT_SECRET: ${BACKEND_API_DISCORD_CLIENT_SECRET}
+      BACKEND_API_SESSION_SECRET: ${BACKEND_API_SESSION_SECRET}
+      BACKEND_API_SESSION_SALT: ${BACKEND_API_SESSION_SALT}
+      BACKEND_API_LOGIN_REDIRECT_URI: ${BACKEND_API_LOGIN_REDIRECT_URI}
+      BACKEND_API_DISCORD_REDIRECT_URI: ${BACKEND_API_DISCORD_REDIRECT_URI}
+      BACKEND_API_ALLOW_LEGACY_REVERSION: ${BACKEND_API_ALLOW_LEGACY_REVERSION}
+      BACKEND_API_MONGODB_URI: ${BACKEND_API_MONGODB_URI}
+      BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES: ${BACKEND_API_DEFAULT_REFRESH_RATE_MINUTES}
+      LOG_LEVEL: ${LOG_LEVEL}
+      NODE_ENV: production
+
+volumes:
+  mongodb-data:
+  rabbitmq-data:
+  feed-requests-postgres17-data:
+  feed-requests-redis-data:

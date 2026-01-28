@@ -5189,6 +5189,24 @@
     ]
   },
   {
+    "id": "qbitwebui",
+    "name": "qBittorrent Web UI",
+    "version": "latest",
+    "description": "A modern web interface for managing multiple qBittorrent instances. Built with React, Hono, and Bun.",
+    "logo": "qbitwebui.png",
+    "links": {
+      "github": "https://github.com/Maciejonos/qbitwebui",
+      "website": "https://github.com/Maciejonos/qbitwebui",
+      "docs": "https://github.com/Maciejonos/qbitwebui#readme"
+    },
+    "tags": [
+      "torrent",
+      "download",
+      "media",
+      "qbittorrent"
+    ]
+  },
+  {
     "id": "qdrant",
     "name": "Qdrant",
     "version": "latest",

@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+encryption_key = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "qbitwebui"
+port = 3000
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+ENCRYPTION_KEY = "${encryption_key}"
+PORT = "3000"
+DATABASE_PATH = "/data/qbitwebui.db"
+SALT_PATH = "/data/.salt"

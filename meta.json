@@ -3907,6 +3907,24 @@
     ]
   },
   {
+    "id": "minepanel",
+    "name": "Minepanel",
+    "version": "1.7.1",
+    "description": "Web panel for managing Minecraft servers with Docker. Create, configure, start/stop, and monitor multiple instances from a modern UI.",
+    "logo": "minepanel.webp",
+    "links": {
+      "github": "https://github.com/Ketbome/minepanel",
+      "website": "https://minepanel.ketbome.lat",
+      "docs": "https://minepanel.ketbome.lat"
+    },
+    "tags": [
+      "gaming",
+      "minecraft",
+      "server-management",
+      "docker"
+    ]
+  },
+  {
     "id": "minio",
     "name": "Minio",
     "description": "Minio is an open source object storage server compatible with Amazon S3 cloud storage service.",

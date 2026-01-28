@@ -9,7 +9,7 @@ secret_key = "${base64:48}"
 [config]
 env = [
 "Domain=${domain}",
-"WEB_URL=${Domain}",
+"WEB_URL=https://${Domain}",
 "PGHOST=plane-db",
 "PGDATABASE=plane",
 "POSTGRES_USER=${username}",
@@ -36,7 +36,7 @@ env = [
 "RABBITMQ_DEFAULT_PASS=${rabbitmq_pass}",
 "RABBITMQ_DEFAULT_VHOST=plane",
 "RABBITMQ_VHOST=plane",
-"API_BASE_URL=http://api:8000",
+"API_BASE_URL=https://${Domain}/api",
 "DEBUG=0",
 "SENTRY_DSN=",
 "SENTRY_ENVIRONMENT=production",

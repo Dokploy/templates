@@ -6260,6 +6260,24 @@
     ]
   },
   {
+    "id": "wazuh",
+    "name": "Wazuh",
+    "version": "4.14.1",
+    "description": "Wazuh is a free and open source security platform that unifies XDR and SIEM capabilities for endpoint and cloud workload protection.",
+    "logo": "wazuh.png",
+    "links": {
+      "github": "https://github.com/wazuh/wazuh",
+      "website": "https://wazuh.com/",
+      "docs": "https://documentation.wazuh.com/"
+    },
+    "tags": [
+      "security",
+      "monitoring",
+      "siem",
+      "xdr"
+    ]
+  },
+  {
     "id": "web-check",
     "name": "Web-Check",
     "version": "latest",

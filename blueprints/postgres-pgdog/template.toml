@@ -1,0 +1,36 @@
+[variables]
+postgres_user = "${username}"
+postgres_password = "${password:32}"
+postgres_db = "postgres"
+pgdog_image = "ghcr.io/pgdogdev/pgdog:v0.1.26"
+postgres_image = "postgres:18-alpine"
+
+[[config.mounts]]
+filePath = "pgdog.toml"
+content = """
+[general]
+host = "0.0.0.0"
+port = 6432
+
+[[databases]]
+name = "${postgres_db}"
+host = "postgres"
+port = 5432
+"""
+
+[[config.mounts]]
+filePath = "users.toml"
+content = """
+[[users]]
+name = "${postgres_user}"
+database = "${postgres_db}"
+password = "${postgres_password}"
+"""
+
+[config.env]
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "${postgres_db}"
+PGDOG_IMAGE = "${pgdog_image}"
+POSTGRES_IMAGE = "${postgres_image}"
+RUST_LOG = "info"

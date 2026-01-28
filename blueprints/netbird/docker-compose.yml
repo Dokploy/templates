@@ -1,0 +1,74 @@
+version: "3.8"
+
+services:
+  netbird-management:
+    image: ghcr.io/netbirdio/netbird:0.63.0-rootless
+    restart: unless-stopped
+    command: netbird-mgmt management
+    volumes:
+      - netbird-management:/var/lib/netbird
+      - netbird-ssl:/etc/letsencrypt:ro
+    environment:
+      - NETBIRD_MGMT_API_ENDPOINT=${NETBIRD_MGMT_API_ENDPOINT}
+      - NETBIRD_MGMT_SINGLE_ACCOUNT_MODE_DOMAIN=${NETBIRD_MGMT_SINGLE_ACCOUNT_MODE_DOMAIN}
+      - NETBIRD_MGMT_DNS_DOMAIN=${NETBIRD_MGMT_DNS_DOMAIN}
+      - NETBIRD_DISABLE_ANONYMOUS_METRICS=${NETBIRD_DISABLE_ANONYMOUS_METRICS}
+      - NETBIRD_STORE_ENGINE_POSTGRES_DSN=${NETBIRD_STORE_ENGINE_POSTGRES_DSN}
+      - NETBIRD_STORE_ENGINE_MYSQL_DSN=${NETBIRD_STORE_ENGINE_MYSQL_DSN}
+      - NETBIRD_MGMT_API_CERT_FILE=${NETBIRD_MGMT_API_CERT_FILE}
+      - NETBIRD_MGMT_API_CERT_KEY_FILE=${NETBIRD_MGMT_API_CERT_KEY_FILE}
+
+  netbird-signal:
+    image: ghcr.io/netbirdio/netbird:0.63.0-rootless
+    restart: unless-stopped
+    command: netbird-signal
+    volumes:
+      - netbird-signal:/var/lib/netbird
+      - netbird-ssl:/etc/letsencrypt:ro
+    environment:
+      - NETBIRD_SIGNAL_PORT=${NETBIRD_SIGNAL_PORT}
+      - NETBIRD_MGMT_API_CERT_FILE=${NETBIRD_MGMT_API_CERT_FILE}
+      - NETBIRD_MGMT_API_CERT_KEY_FILE=${NETBIRD_MGMT_API_CERT_KEY_FILE}
+    depends_on:
+      - netbird-management
+
+  netbird-relay:
+    image: ghcr.io/netbirdio/netbird:0.63.0-rootless
+    restart: unless-stopped
+    command: netbird-relay
+    environment:
+      - NB_LOG_LEVEL=${NB_LOG_LEVEL}
+      - NB_LISTEN_ADDRESS=${NB_LISTEN_ADDRESS}
+      - NB_EXPOSED_ADDRESS=${NB_EXPOSED_ADDRESS}
+      - NB_AUTH_SECRET=${NB_AUTH_SECRET}
+
+  netbird-dashboard:
+    image: ghcr.io/netbirdio/netbird:0.63.0-rootless
+    restart: unless-stopped
+    command: netbird-dashboard
+    volumes:
+      - netbird-ssl:/etc/letsencrypt:ro
+    environment:
+      - NETBIRD_MGMT_API_ENDPOINT=${NETBIRD_MGMT_API_ENDPOINT}
+      - NETBIRD_MGMT_GRPC_API_ENDPOINT=${NETBIRD_MGMT_GRPC_API_ENDPOINT}
+      - AUTH_AUDIENCE=${AUTH_AUDIENCE}
+      - AUTH_CLIENT_ID=${AUTH_CLIENT_ID}
+      - AUTH_CLIENT_SECRET=${AUTH_CLIENT_SECRET}
+      - AUTH_AUTHORITY=${AUTH_AUTHORITY}
+      - AUTH_REDIRECT_URI=${AUTH_REDIRECT_URI}
+      - AUTH_SILENT_REDIRECT_URI=${AUTH_SILENT_REDIRECT_URI}
+      - USE_AUTH0=${USE_AUTH0}
+      - LETSENCRYPT_DOMAIN=${LETSENCRYPT_DOMAIN}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+    depends_on:
+      - netbird-management
+
+  coturn:
+    image: coturn/coturn:latest
+    restart: unless-stopped
+    command: -c /etc/turnserver.conf
+
+volumes:
+  netbird-management:
+  netbird-signal:
+  netbird-ssl:

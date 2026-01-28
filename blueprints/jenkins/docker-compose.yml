@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  jenkins:
+    image: jenkins/jenkins:latest
+    volumes:
+      - jenkins-home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8080
+
+volumes:
+  jenkins-home: {}

@@ -9,5 +9,6 @@ port = 51821
 host = "${main_domain}"
 
 [config.env]
-WIREGUARD_HOST = "${main_domain}"
-WIREGUARD_PASSWORD = "${wg_password}"
+INIT_HOST = "${main_domain}"
+INIT_USERNAME = "wg-admin"
+INIT_PASSWORD = "${wg_password}"

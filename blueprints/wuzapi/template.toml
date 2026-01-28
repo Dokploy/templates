@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+admin_token = "${password:32}"
+encryption_key = "${password:32}"
+db_user = "wuzapi"
+db_password = "${password:32}"
+db_name = "wuzapi"
+
+[config]
+[[config.domains]]
+serviceName = "wuzapi-server"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+WUZAPI_ADMIN_TOKEN = "${admin_token}"
+WUZAPI_GLOBAL_ENCRYPTION_KEY = "${encryption_key}"
+DB_USER = "${db_user}"
+DB_PASSWORD = "${db_password}"
+DB_NAME = "${db_name}"

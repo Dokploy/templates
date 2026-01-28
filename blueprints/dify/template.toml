@@ -1,0 +1,186 @@
+[metadata]
+id = "dify"
+name = "Dify"
+description = "Open-source LLM app development platform with AI agents, workflows, and RAG capabilities. Includes API, vector database (Weaviate), and secure sandbox execution."
+version = "1.11.2"
+logo = "logo.png"
+tags = ["ai", "llm", "chatbot", "agents", "vector-database", "rag", "workflow", "no-code"]
+
+[metadata.links]
+github = "https://github.com/langgenius/dify"
+website = "https://dify.ai"
+docs = "https://docs.dify.ai"
+
+[variables]
+# Domain
+main_domain = "${domain}"
+
+# Core secrets
+secret_key = "${base64:32}"
+init_password = "${password:16}"
+
+# Database
+db_password = "${password:32}"
+
+# Redis
+redis_password = "${password:16}"
+
+# Vector store (Weaviate)
+weaviate_api_key = "${password:32}"
+
+# Sandbox
+sandbox_api_key = "${password:32}"
+
+# Plugin system
+plugin_daemon_key = "${password:32}"
+plugin_inner_api_key = "${password:32}"
+
+[[config.domains]]
+serviceName = "nginx"
+port = 80
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+# Core Configuration
+SECRET_KEY = "${secret_key}"
+INIT_PASSWORD = "${init_password}"
+LOG_LEVEL = "INFO"
+DEBUG = "false"
+MIGRATION_ENABLED = "true"
+
+# Domain URLs
+DIFY_DOMAIN = "${main_domain}"
+CONSOLE_WEB_URL = "https://${main_domain}"
+CONSOLE_API_URL = "https://${main_domain}"
+SERVICE_API_URL = "https://${main_domain}"
+APP_WEB_URL = "https://${main_domain}"
+APP_API_URL = "https://${main_domain}"
+WEB_API_URL = "https://${main_domain}"
+FILES_URL = "https://${main_domain}/files"
+
+# CORS Configuration
+WEB_API_CORS_ALLOW_ORIGINS = "https://${main_domain}"
+CONSOLE_CORS_ALLOW_ORIGINS = "https://${main_domain}"
+RESPECT_XFORWARD_HEADERS_ENABLED = "true"
+
+# Database Configuration
+POSTGRES_USER = "postgres"
+POSTGRES_PASSWORD = "${db_password}"
+POSTGRES_DB = "dify"
+DB_USERNAME = "postgres"
+DB_PASSWORD = "${db_password}"
+DB_HOST = "dify-db"
+DB_PORT = "5432"
+DB_DATABASE = "dify"
+DB_PLUGIN_DATABASE = "dify"
+PGUSER = "postgres"
+PGDATA = "/var/lib/postgresql/data/pgdata"
+POSTGRES_MAX_CONNECTIONS = "100"
+POSTGRES_SHARED_BUFFERS = "128MB"
+POSTGRES_WORK_MEM = "4MB"
+POSTGRES_MAINTENANCE_WORK_MEM = "64MB"
+POSTGRES_EFFECTIVE_CACHE_SIZE = "4096MB"
+
+# Redis Configuration
+REDIS_HOST = "dify-redis"
+REDIS_PORT = "6379"
+REDIS_PASSWORD = "${redis_password}"
+REDIS_USE_SSL = "false"
+REDIS_DB = "0"
+REDIS_USE_SENTINEL = "false"
+REDIS_USE_CLUSTERS = "false"
+CELERY_BROKER_URL = "redis://default:${redis_password}@dify-redis:6379/1"
+CELERY_BACKEND = "redis"
+BROKER_USE_SSL = "false"
+CELERY_USE_SENTINEL = "false"
+
+# Vector Store (Weaviate) Configuration
+VECTOR_STORE = "weaviate"
+WEAVIATE_ENDPOINT = "http://dify-weaviate:8080"
+WEAVIATE_API_KEY = "${weaviate_api_key}"
+WEAVIATE_PERSISTENCE_DATA_PATH = "/var/lib/weaviate"
+WEAVIATE_QUERY_DEFAULTS_LIMIT = "25"
+WEAVIATE_AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED = "false"
+WEAVIATE_DEFAULT_VECTORIZER_MODULE = "none"
+WEAVIATE_CLUSTER_HOSTNAME = "node1"
+WEAVIATE_AUTHENTICATION_APIKEY_ENABLED = "true"
+WEAVIATE_AUTHENTICATION_APIKEY_ALLOWED_KEYS = "${weaviate_api_key}"
+WEAVIATE_AUTHENTICATION_APIKEY_USERS = "hello@dify.ai"
+WEAVIATE_AUTHORIZATION_ADMINLIST_ENABLED = "true"
+WEAVIATE_AUTHORIZATION_ADMINLIST_USERS = "hello@dify.ai"
+
+# Storage Configuration
+STORAGE_TYPE = "local"
+STORAGE_LOCAL_PATH = "storage"
+UPLOAD_FILE_SIZE_LIMIT = "15"
+UPLOAD_FILE_BATCH_LIMIT = "5"
+UPLOAD_IMAGE_FILE_SIZE_LIMIT = "10"
+
+# Sandbox Configuration
+CODE_EXECUTION_ENDPOINT = "http://dify-sandbox:8194"
+CODE_EXECUTION_API_KEY = "${sandbox_api_key}"
+SANDBOX_API_KEY = "${sandbox_api_key}"
+SANDBOX_GIN_MODE = "release"
+SANDBOX_WORKER_TIMEOUT = "15"
+SANDBOX_ENABLE_NETWORK = "true"
+SANDBOX_PORT = "8194"
+CODE_MAX_NUMBER = "9223372036854775807"
+CODE_MIN_NUMBER = "-9223372036854775808"
+CODE_MAX_STRING_LENGTH = "80000"
+TEMPLATE_TRANSFORM_MAX_LENGTH = "80000"
+CODE_MAX_STRING_ARRAY_LENGTH = "30"
+CODE_MAX_OBJECT_ARRAY_LENGTH = "30"
+CODE_MAX_NUMBER_ARRAY_LENGTH = "1000"
+
+# Plugin Configuration
+PLUGIN_DAEMON_URL = "http://dify-plugin-daemon:5002"
+PLUGIN_DAEMON_PORT = "5002"
+PLUGIN_DAEMON_KEY = "${plugin_daemon_key}"
+PLUGIN_DIFY_INNER_API_KEY = "${plugin_inner_api_key}"
+INNER_API_KEY_FOR_PLUGIN = "${plugin_inner_api_key}"
+PLUGIN_DIFY_INNER_API_URL = "http://dify-api:5001"
+PLUGIN_MAX_PACKAGE_SIZE = "52428800"
+PLUGIN_PPROF_ENABLED = "false"
+PLUGIN_DEBUGGING_HOST = "0.0.0.0"
+PLUGIN_DEBUGGING_PORT = "5003"
+EXPOSE_PLUGIN_DEBUGGING_PORT = "5003"
+PLUGIN_WORKING_PATH = "/app/storage/cwd"
+FORCE_VERIFYING_SIGNATURE = "true"
+PLUGIN_PYTHON_ENV_INIT_TIMEOUT = "120"
+PLUGIN_MAX_EXECUTION_TIMEOUT = "600"
+PLUGIN_DAEMON_TIMEOUT = "600.0"
+PLUGIN_STORAGE_TYPE = "local"
+PLUGIN_STORAGE_LOCAL_ROOT = "/app/storage"
+PLUGIN_INSTALLED_PATH = "plugin"
+PLUGIN_PACKAGE_CACHE_PATH = "plugin_packages"
+PLUGIN_MEDIA_CACHE_PATH = "assets"
+MARKETPLACE_ENABLED = "true"
+MARKETPLACE_API_URL = "https://marketplace.dify.ai"
+MARKETPLACE_URL = "https://marketplace.dify.ai"
+ENFORCE_LANGGENIUS_PLUGIN_SIGNATURES = "true"
+
+# Web Application Configuration
+NEXT_TELEMETRY_DISABLED = "1"
+TEXT_GENERATION_TIMEOUT_MS = "60000"
+ALLOW_EMBED = "false"
+PM2_INSTANCES = "2"
+
+# Workflow Configuration
+WORKFLOW_MAX_EXECUTION_STEPS = "500"
+WORKFLOW_MAX_EXECUTION_TIME = "1200"
+WORKFLOW_CALL_MAX_DEPTH = "5"
+MAX_VARIABLE_SIZE = "204800"
+LOOP_NODE_MAX_COUNT = "100"
+MAX_TOOLS_NUM = "10"
+MAX_PARALLEL_LIMIT = "10"
+MAX_ITERATIONS_NUM = "99"
+
+# Graph Engine Configuration
+GRAPH_ENGINE_MIN_WORKERS = "1"
+GRAPH_ENGINE_MAX_WORKERS = "10"
+
+# Data Source Features
+ENABLE_WEBSITE_JINAREADER = "true"
+ENABLE_WEBSITE_FIRECRAWL = "true"
+ENABLE_WEBSITE_WATERCRAWL = "true"

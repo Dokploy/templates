@@ -1,0 +1,601 @@
+# --------------------------------------------------------------------
+# Dify - Open-source LLM App Development Platform
+# - External traffic hits Traefik → routes to nginx service (port 80)
+# - nginx proxies:
+#     /            → web:3000 (Next.js frontend)
+#     /console/api → api:5001 (Console API)
+#     /api         → api:5001 (Service API)
+#     /v1          → api:5001 (OpenAI-compatible API)
+#     /files       → api:5001 (signed file URLs)
+# - Internal services communicate over the Docker network.
+# --------------------------------------------------------------------
+
+x-shared-env: &shared-api-worker-env
+  # -------------------------------------------------------------
+  # Runtime & logging
+  # -------------------------------------------------------------
+  MODE: ${MODE:-api}
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  DEBUG: ${DEBUG:-false}
+  MIGRATION_ENABLED: ${MIGRATION_ENABLED:-true}
+  SENTRY_DSN: ${SENTRY_DSN:-}
+  API_SENTRY_DSN: ${API_SENTRY_DSN:-}
+  API_SENTRY_TRACES_SAMPLE_RATE: ${API_SENTRY_TRACES_SAMPLE_RATE:-1.0}
+  API_SENTRY_PROFILES_SAMPLE_RATE: ${API_SENTRY_PROFILES_SAMPLE_RATE:-1.0}
+
+  # -------------------------------------------------------------
+  # Core app secrets (set in your .env)
+  # -------------------------------------------------------------
+  SECRET_KEY: ${SECRET_KEY}
+  INIT_PASSWORD: ${INIT_PASSWORD}
+
+  # -------------------------------------------------------------
+  # Database (Postgres)
+  # -------------------------------------------------------------
+  DB_USERNAME: ${DB_USERNAME:-postgres}
+  DB_PASSWORD: ${DB_PASSWORD}
+  DB_HOST: ${DB_HOST:-dify-db}
+  DB_PORT: ${DB_PORT:-5432}
+  DB_DATABASE: ${DB_DATABASE:-dify}
+
+  # -------------------------------------------------------------
+  # Redis (cache + Celery broker/backend)
+  # -------------------------------------------------------------
+  REDIS_HOST: ${REDIS_HOST:-dify-redis}
+  REDIS_PORT: ${REDIS_PORT:-6379}
+  REDIS_USERNAME: ${REDIS_USERNAME:-}
+  REDIS_PASSWORD: ${REDIS_PASSWORD}
+  REDIS_USE_SSL: ${REDIS_USE_SSL:-false}
+  REDIS_SSL_CERT_REQS: ${REDIS_SSL_CERT_REQS:-CERT_NONE}
+  REDIS_SSL_CA_CERTS: ${REDIS_SSL_CA_CERTS:-}
+  REDIS_SSL_CERTFILE: ${REDIS_SSL_CERTFILE:-}
+  REDIS_SSL_KEYFILE: ${REDIS_SSL_KEYFILE:-}
+  REDIS_DB: ${REDIS_DB:-0}
+  REDIS_USE_SENTINEL: ${REDIS_USE_SENTINEL:-false}
+  REDIS_USE_CLUSTERS: ${REDIS_USE_CLUSTERS:-false}
+
+  # Celery configuration (derive from REDIS_PASSWORD; URL-encode if needed)
+  CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+  CELERY_BACKEND: ${CELERY_BACKEND:-redis}
+  BROKER_USE_SSL: ${BROKER_USE_SSL:-false}
+  CELERY_USE_SENTINEL: ${CELERY_USE_SENTINEL:-false}
+
+  # -------------------------------------------------------------
+  # Storage
+  # -------------------------------------------------------------
+  STORAGE_TYPE: ${STORAGE_TYPE:-local}
+  STORAGE_LOCAL_PATH: ${STORAGE_LOCAL_PATH:-storage}
+
+  # -------------------------------------------------------------
+  # Vector DB (Weaviate)
+  # -------------------------------------------------------------
+  VECTOR_STORE: ${VECTOR_STORE:-weaviate}
+  WEAVIATE_ENDPOINT: ${WEAVIATE_ENDPOINT:-http://dify-weaviate:8080}
+  WEAVIATE_API_KEY: ${WEAVIATE_API_KEY}
+
+  # -------------------------------------------------------------
+  # Upload limits
+  # -------------------------------------------------------------
+  UPLOAD_FILE_SIZE_LIMIT: ${UPLOAD_FILE_SIZE_LIMIT:-15}
+  UPLOAD_FILE_BATCH_LIMIT: ${UPLOAD_FILE_BATCH_LIMIT:-5}
+  UPLOAD_IMAGE_FILE_SIZE_LIMIT: ${UPLOAD_IMAGE_FILE_SIZE_LIMIT:-10}
+
+  # -------------------------------------------------------------
+  # Mail (optional)
+  # -------------------------------------------------------------
+  MAIL_TYPE: ${MAIL_TYPE:-}
+  MAIL_DEFAULT_SEND_FROM: ${MAIL_DEFAULT_SEND_FROM:-}
+  SMTP_SERVER: ${SMTP_SERVER:-}
+  SMTP_PORT: ${SMTP_PORT:-587}
+  SMTP_USERNAME: ${SMTP_USERNAME:-}
+  SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+  SMTP_USE_TLS: ${SMTP_USE_TLS:-true}
+  SMTP_OPPORTUNISTIC_TLS: ${SMTP_OPPORTUNISTIC_TLS:-false}
+
+  # -------------------------------------------------------------
+  # Public URLs (dynamic based on deployment domain)
+  # Dify needs these to generate absolute links and CORS.
+  # -------------------------------------------------------------
+  DIFY_DOMAIN: ${DIFY_DOMAIN}
+  CONSOLE_WEB_URL: ${CONSOLE_WEB_URL}
+  CONSOLE_API_URL: ${CONSOLE_API_URL}
+  SERVICE_API_URL: ${SERVICE_API_URL}
+  APP_WEB_URL: ${APP_WEB_URL}
+  APP_API_URL: ${APP_API_URL}
+  WEB_API_URL: ${WEB_API_URL}
+  FILES_URL: ${FILES_URL}
+  # Internal file URL for plugin daemon → API (inside Docker network)
+  INTERNAL_FILES_URL: ${INTERNAL_FILES_URL:-http://dify-api:5001}
+
+  # CORS (lock to your host)
+  WEB_API_CORS_ALLOW_ORIGINS: ${WEB_API_CORS_ALLOW_ORIGINS}
+  CONSOLE_CORS_ALLOW_ORIGINS: ${CONSOLE_CORS_ALLOW_ORIGINS}
+  # trust proxy headers so the app knows it's behind HTTPS
+  RESPECT_XFORWARD_HEADERS_ENABLED: ${RESPECT_XFORWARD_HEADERS_ENABLED:-true}
+
+  # -------------------------------------------------------------
+  # Plugins & Sandbox
+  # -------------------------------------------------------------
+  PLUGIN_DAEMON_URL: ${PLUGIN_DAEMON_URL:-http://dify-plugin-daemon:5002}
+  PLUGIN_DAEMON_KEY: ${PLUGIN_DAEMON_KEY}
+  PLUGIN_MAX_PACKAGE_SIZE: ${PLUGIN_MAX_PACKAGE_SIZE:-52428800}
+  INNER_API_KEY_FOR_PLUGIN: ${PLUGIN_DIFY_INNER_API_KEY}
+  CODE_EXECUTION_ENDPOINT: ${CODE_EXECUTION_ENDPOINT:-http://dify-sandbox:8194}
+  CODE_EXECUTION_API_KEY: ${CODE_EXECUTION_API_KEY}
+  CODE_MAX_NUMBER: ${CODE_MAX_NUMBER:-9223372036854775807}
+  CODE_MIN_NUMBER: ${CODE_MIN_NUMBER:--9223372036854775808}
+  CODE_MAX_STRING_LENGTH: ${CODE_MAX_STRING_LENGTH:-80000}
+  TEMPLATE_TRANSFORM_MAX_LENGTH: ${TEMPLATE_TRANSFORM_MAX_LENGTH:-80000}
+  CODE_MAX_STRING_ARRAY_LENGTH: ${CODE_MAX_STRING_ARRAY_LENGTH:-30}
+  CODE_MAX_OBJECT_ARRAY_LENGTH: ${CODE_MAX_OBJECT_ARRAY_LENGTH:-30}
+  CODE_MAX_NUMBER_ARRAY_LENGTH: ${CODE_MAX_NUMBER_ARRAY_LENGTH:-1000}
+
+  # -------------------------------------------------------------
+  # Workflow execution (v1.11+)
+  # -------------------------------------------------------------
+  WORKFLOW_MAX_EXECUTION_STEPS: ${WORKFLOW_MAX_EXECUTION_STEPS:-500}
+  WORKFLOW_MAX_EXECUTION_TIME: ${WORKFLOW_MAX_EXECUTION_TIME:-1200}
+  WORKFLOW_CALL_MAX_DEPTH: ${WORKFLOW_CALL_MAX_DEPTH:-5}
+  MAX_VARIABLE_SIZE: ${MAX_VARIABLE_SIZE:-204800}
+  LOOP_NODE_MAX_COUNT: ${LOOP_NODE_MAX_COUNT:-100}
+  MAX_TOOLS_NUM: ${MAX_TOOLS_NUM:-10}
+  MAX_PARALLEL_LIMIT: ${MAX_PARALLEL_LIMIT:-10}
+  MAX_ITERATIONS_NUM: ${MAX_ITERATIONS_NUM:-99}
+
+  # -------------------------------------------------------------
+  # Graph engine workers (v1.11+)
+  # -------------------------------------------------------------
+  GRAPH_ENGINE_MIN_WORKERS: ${GRAPH_ENGINE_MIN_WORKERS:-1}
+  GRAPH_ENGINE_MAX_WORKERS: ${GRAPH_ENGINE_MAX_WORKERS:-10}
+
+services:
+  # -----------------------------------------------------------
+  # Storage Initialization
+  # Fixes volume permissions for non-root Dify containers
+  # -----------------------------------------------------------
+  storage-init:
+    image: alpine:latest
+    command: sh -c "chown -R 1001:1001 /storage && chown -R 1001:1001 /plugin-storage"
+    volumes:
+      - dify-storage:/storage
+      - dify-plugin-storage:/plugin-storage
+    restart: "no"
+    networks:
+      - default
+
+  # -----------------------------------------------------------
+  # Dify API
+  # -----------------------------------------------------------
+  api:
+    image: langgenius/dify-api:1.11.2
+    restart: always
+    environment:
+      <<: *shared-api-worker-env
+      MODE: api
+    depends_on:
+      storage-init:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - dify-storage:/app/api/storage
+    expose:
+      - "5001"
+    networks:
+      ssrf_proxy_network:
+      default:
+        aliases:
+          - dify-api
+
+  # -----------------------------------------------------------
+  # Dify Worker (Celery)
+  # -----------------------------------------------------------
+  worker:
+    image: langgenius/dify-api:1.11.2
+    restart: always
+    environment:
+      <<: *shared-api-worker-env
+      MODE: worker
+    depends_on:
+      storage-init:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - dify-storage:/app/api/storage
+    networks:
+      default:
+        aliases:
+          - dify-worker
+
+  # -----------------------------------------------------------
+  # Frontend (Next.js)
+  # -----------------------------------------------------------
+  web:
+    image: langgenius/dify-web:1.11.2
+    restart: always
+    environment:
+      CONSOLE_API_URL: ${CONSOLE_API_URL}
+      APP_API_URL: ${APP_API_URL}
+      SENTRY_DSN: ${WEB_SENTRY_DSN:-}
+      NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED:-1}
+      TEXT_GENERATION_TIMEOUT_MS: ${TEXT_GENERATION_TIMEOUT_MS:-60000}
+      CSP_WHITELIST: ${CSP_WHITELIST:-}
+      ALLOW_EMBED: ${ALLOW_EMBED:-false}
+      ALLOW_UNSAFE_DATA_SCHEME: ${ALLOW_UNSAFE_DATA_SCHEME:-false}
+      MARKETPLACE_API_URL: ${MARKETPLACE_API_URL:-https://marketplace.dify.ai}
+      MARKETPLACE_URL: ${MARKETPLACE_URL:-https://marketplace.dify.ai}
+      PM2_INSTANCES: ${PM2_INSTANCES:-2}
+      LOOP_NODE_MAX_COUNT: ${LOOP_NODE_MAX_COUNT:-100}
+      MAX_TOOLS_NUM: ${MAX_TOOLS_NUM:-10}
+      MAX_PARALLEL_LIMIT: ${MAX_PARALLEL_LIMIT:-10}
+      MAX_ITERATIONS_NUM: ${MAX_ITERATIONS_NUM:-99}
+      ENABLE_WEBSITE_JINAREADER: ${ENABLE_WEBSITE_JINAREADER:-true}
+      ENABLE_WEBSITE_FIRECRAWL: ${ENABLE_WEBSITE_FIRECRAWL:-true}
+      ENABLE_WEBSITE_WATERCRAWL: ${ENABLE_WEBSITE_WATERCRAWL:-true}
+    expose:
+      - "3000"
+    depends_on:
+      api:
+        condition: service_started
+    networks:
+      default:
+        aliases:
+          - dify-web
+
+  # -----------------------------------------------------------
+  # Nginx reverse proxy (internal → API/Web)
+  # Traefik routes external traffic here.
+  # -----------------------------------------------------------
+  nginx:
+    image: nginx:latest
+    restart: always
+    expose:
+      - "80"
+    depends_on:
+      api:
+        condition: service_started
+      web:
+        condition: service_started
+    environment:
+      NGINX_SERVER_NAME: ${DIFY_DOMAIN:-dify.localhost}
+      NGINX_PORT: 80
+      NGINX_CLIENT_MAX_BODY_SIZE: ${NGINX_CLIENT_MAX_BODY_SIZE:-15M}
+      NGINX_KEEPALIVE_TIMEOUT: ${NGINX_KEEPALIVE_TIMEOUT:-65}
+      NGINX_WORKER_PROCESSES: ${NGINX_WORKER_PROCESSES:-auto}
+    command:
+      - /bin/bash
+      - -c
+      - |
+        apt-get update && apt-get install -y netcat-openbsd
+        echo "Waiting for API service..."
+        timeout=60
+        while ! nc -z dify-api 5001 && [ "$timeout" -gt 0 ]; do
+          echo "API service not ready, waiting... ($timeout seconds left)"
+          sleep 2
+          timeout=$((timeout-2))
+        done
+
+        echo "Waiting for Web service..."
+        timeout=60
+        while ! nc -z dify-web 3000 && [ "$timeout" -gt 0 ]; do
+          echo "Web service not ready, waiting... ($timeout seconds left)"
+          sleep 2
+          timeout=$((timeout-2))
+        done
+
+        if ! nc -z dify-api 5001; then
+          echo "WARNING: API service still not ready after 60s, but continuing..."
+        fi
+
+        if ! nc -z dify-web 3000; then
+          echo "WARNING: Web service still not ready after 60s, but continuing..."
+        fi
+
+        echo "Starting nginx with current service availability..."
+        rm -f /etc/nginx/conf.d/default.conf
+
+        # Configure nginx with proper web service routing
+        echo "Configuring nginx with web service routing"
+
+        cat > /etc/nginx/conf.d/default.conf << 'EOF'
+        resolver 127.0.0.11 valid=30s;
+        server {
+            listen 80;
+            server_name _;
+            client_max_body_size 15M;
+            location /console/api {
+                proxy_pass http://dify-api:5001;
+                proxy_set_header Host $$host;
+                proxy_set_header X-Real-IP $$remote_addr;
+                proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $$scheme;
+                proxy_buffering off;
+                proxy_request_buffering off;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $$http_upgrade;
+                proxy_set_header Connection upgrade;
+                proxy_connect_timeout 60s;
+                proxy_send_timeout 60s;
+                proxy_read_timeout 60s;
+            }
+            location /api {
+                proxy_pass http://dify-api:5001;
+                proxy_set_header Host $$host;
+                proxy_set_header X-Real-IP $$remote_addr;
+                proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $$scheme;
+                proxy_buffering off;
+                proxy_request_buffering off;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $$http_upgrade;
+                proxy_set_header Connection upgrade;
+                proxy_connect_timeout 60s;
+                proxy_send_timeout 60s;
+                proxy_read_timeout 60s;
+            }
+            location /v1 {
+                proxy_pass http://dify-api:5001;
+                proxy_set_header Host $$host;
+                proxy_set_header X-Real-IP $$remote_addr;
+                proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $$scheme;
+                proxy_buffering off;
+                proxy_request_buffering off;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $$http_upgrade;
+                proxy_set_header Connection upgrade;
+                proxy_connect_timeout 60s;
+                proxy_send_timeout 60s;
+                proxy_read_timeout 60s;
+            }
+            location /files {
+                proxy_pass http://dify-api:5001;
+                proxy_set_header Host $$host;
+                proxy_set_header X-Real-IP $$remote_addr;
+                proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $$scheme;
+                proxy_buffering off;
+                proxy_request_buffering off;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $$http_upgrade;
+                proxy_set_header Connection upgrade;
+                proxy_connect_timeout 60s;
+                proxy_send_timeout 60s;
+                proxy_read_timeout 60s;
+            }
+            location /health {
+                return 200 'healthy';
+                add_header Content-Type text/plain;
+            }
+            location / {
+                set $$upstream_web dify-web:3000;
+                proxy_pass http://$$upstream_web;
+                proxy_set_header Host $$host;
+                proxy_set_header X-Real-IP $$remote_addr;
+                proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $$scheme;
+                proxy_buffering off;
+                proxy_request_buffering off;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $$http_upgrade;
+                proxy_set_header Connection upgrade;
+                proxy_connect_timeout 60s;
+                proxy_send_timeout 60s;
+                proxy_read_timeout 60s;
+            }
+        }
+        EOF
+        echo "Generated nginx configuration:"
+        cat /etc/nginx/conf.d/default.conf
+        echo "Testing nginx configuration..."
+        nginx -t
+        echo "Starting nginx daemon..."
+        nginx -g 'daemon off;'
+    networks:
+      default:
+        aliases:
+          - dify-nginx
+
+  # -----------------------------------------------------------
+  # Postgres
+  # -----------------------------------------------------------
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-dify}
+      PGDATA: ${PGDATA:-/var/lib/postgresql/data/pgdata}
+    command: >
+      postgres -c 'max_connections=${POSTGRES_MAX_CONNECTIONS:-100}'
+               -c 'shared_buffers=${POSTGRES_SHARED_BUFFERS:-128MB}'
+               -c 'work_mem=${POSTGRES_WORK_MEM:-4MB}'
+               -c 'maintenance_work_mem=${POSTGRES_MAINTENANCE_WORK_MEM:-64MB}'
+               -c 'effective_cache_size=${POSTGRES_EFFECTIVE_CACHE_SIZE:-4096MB}'
+    volumes:
+      - dify-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ 'CMD', 'pg_isready', '-h', 'dify-db', '-U', '${PGUSER:-postgres}', '-d', '${POSTGRES_DB:-dify}' ]
+      interval: 1s
+      timeout: 3s
+      retries: 60
+    networks:
+      default:
+        aliases:
+          - dify-db
+
+  # -----------------------------------------------------------
+  # Redis (requirepass; safe command/healthcheck for special chars)
+  # -----------------------------------------------------------
+  redis:
+    image: redis:6-alpine
+    restart: always
+    environment:
+      REDISCLI_AUTH: ${REDIS_PASSWORD}
+    volumes:
+      - dify-redis-data:/data
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli --no-auth-warning --pass \"$REDIS_PASSWORD\" ping | grep -q PONG" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      default:
+        aliases:
+          - dify-redis
+
+  # -----------------------------------------------------------
+  # Sandbox (code execution)
+  # -----------------------------------------------------------
+  sandbox:
+    image: langgenius/dify-sandbox:0.2.12
+    restart: always
+    environment:
+      API_KEY: ${SANDBOX_API_KEY}
+      GIN_MODE: ${SANDBOX_GIN_MODE:-release}
+      WORKER_TIMEOUT: ${SANDBOX_WORKER_TIMEOUT:-15}
+      ENABLE_NETWORK: ${SANDBOX_ENABLE_NETWORK:-true}
+      SANDBOX_PORT: ${SANDBOX_PORT:-8194}
+      PIP_MIRROR_URL: ${PIP_MIRROR_URL:-}
+      HTTP_PROXY: http://dify-ssrf-proxy:3128
+      HTTPS_PROXY: http://dify-ssrf-proxy:3128
+    volumes:
+      - dify-sandbox-deps:/dependencies
+    healthcheck:
+      test: [ 'CMD', 'curl', '-f', 'http://localhost:8194/health' ]
+    command: ["sh", "-c", "mkdir -p /conf && echo 'server:\n  host: \"0.0.0.0\"\n  port: 8194\n  worker_timeout: 15\n  enable_network: true\n  sandbox_port: 8194\nsecurity:\n  api_key: \"dify-sandbox\"\nlogging:\n  level: \"info\"\nrunner:\n  nodejs:\n    enabled: true\n  python:\n    enabled: true' > /conf/config.yaml && /app/server"]
+    networks:
+      ssrf_proxy_network:
+        aliases:
+          - dify-sandbox
+    depends_on:
+      ssrf_proxy:
+        condition: service_started
+
+  # -----------------------------------------------------------
+  # Plugin daemon
+  # -----------------------------------------------------------
+  plugin_daemon:
+    image: langgenius/dify-plugin-daemon:0.5.2-local
+    restart: on-failure
+    environment:
+      <<: *shared-api-worker-env
+      DB_DATABASE: ${DB_PLUGIN_DATABASE:-dify}
+      SERVER_PORT: ${PLUGIN_DAEMON_PORT:-5002}
+      SERVER_KEY: ${PLUGIN_DAEMON_KEY}
+      MAX_PLUGIN_PACKAGE_SIZE: ${PLUGIN_MAX_PACKAGE_SIZE:-52428800}
+      PPROF_ENABLED: ${PLUGIN_PPROF_ENABLED:-false}
+      DIFY_INNER_API_URL: ${PLUGIN_DIFY_INNER_API_URL:-http://dify-api:5001}
+      DIFY_INNER_API_KEY: ${PLUGIN_DIFY_INNER_API_KEY}
+      PLUGIN_REMOTE_INSTALLING_HOST: ${PLUGIN_DEBUGGING_HOST:-0.0.0.0}
+      PLUGIN_REMOTE_INSTALLING_PORT: ${PLUGIN_DEBUGGING_PORT:-5003}
+      PLUGIN_WORKING_PATH: ${PLUGIN_WORKING_PATH:-/app/storage/cwd}
+      FORCE_VERIFYING_SIGNATURE: ${FORCE_VERIFYING_SIGNATURE:-true}
+      PYTHON_ENV_INIT_TIMEOUT: ${PLUGIN_PYTHON_ENV_INIT_TIMEOUT:-120}
+      PLUGIN_MAX_EXECUTION_TIMEOUT: ${PLUGIN_MAX_EXECUTION_TIMEOUT:-600}
+      PLUGIN_DAEMON_TIMEOUT: ${PLUGIN_DAEMON_TIMEOUT:-600.0}
+      PIP_MIRROR_URL: ${PIP_MIRROR_URL:-}
+      PLUGIN_STORAGE_TYPE: ${PLUGIN_STORAGE_TYPE:-local}
+      PLUGIN_STORAGE_LOCAL_ROOT: ${PLUGIN_STORAGE_LOCAL_ROOT:-/app/storage}
+      PLUGIN_INSTALLED_PATH: ${PLUGIN_INSTALLED_PATH:-plugin}
+      PLUGIN_PACKAGE_CACHE_PATH: ${PLUGIN_PACKAGE_CACHE_PATH:-plugin_packages}
+      PLUGIN_MEDIA_CACHE_PATH: ${PLUGIN_MEDIA_CACHE_PATH:-assets}
+      # Marketplace settings (v1.11+)
+      MARKETPLACE_ENABLED: ${MARKETPLACE_ENABLED:-true}
+      MARKETPLACE_API_URL: ${MARKETPLACE_API_URL:-https://marketplace.dify.ai}
+      ENFORCE_LANGGENIUS_PLUGIN_SIGNATURES: ${ENFORCE_LANGGENIUS_PLUGIN_SIGNATURES:-true}
+    ports:
+      - "${EXPOSE_PLUGIN_DEBUGGING_PORT:-5003}:${PLUGIN_DEBUGGING_PORT:-5003}"
+    volumes:
+      - dify-plugin-storage:/app/storage
+    depends_on:
+      storage-init:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      default:
+        aliases:
+          - dify-plugin-daemon
+
+  # -----------------------------------------------------------
+  # Weaviate (vector store)
+  # -----------------------------------------------------------
+  weaviate:
+    image: semitechnologies/weaviate:1.27.0
+    restart: always
+    volumes:
+      - dify-weaviate-data:/var/lib/weaviate
+    environment:
+      PERSISTENCE_DATA_PATH: ${WEAVIATE_PERSISTENCE_DATA_PATH:-/var/lib/weaviate}
+      QUERY_DEFAULTS_LIMIT: ${WEAVIATE_QUERY_DEFAULTS_LIMIT:-25}
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: ${WEAVIATE_AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED:-false}
+      DEFAULT_VECTORIZER_MODULE: ${WEAVIATE_DEFAULT_VECTORIZER_MODULE:-none}
+      CLUSTER_HOSTNAME: ${WEAVIATE_CLUSTER_HOSTNAME:-node1}
+      AUTHENTICATION_APIKEY_ENABLED: ${WEAVIATE_AUTHENTICATION_APIKEY_ENABLED:-true}
+      AUTHENTICATION_APIKEY_ALLOWED_KEYS: ${WEAVIATE_AUTHENTICATION_APIKEY_ALLOWED_KEYS}
+      AUTHENTICATION_APIKEY_USERS: ${WEAVIATE_AUTHENTICATION_APIKEY_USERS:-hello@dify.ai}
+      AUTHORIZATION_ADMINLIST_ENABLED: ${WEAVIATE_AUTHORIZATION_ADMINLIST_ENABLED:-true}
+      AUTHORIZATION_ADMINLIST_USERS: ${WEAVIATE_AUTHORIZATION_ADMINLIST_USERS:-hello@dify.ai}
+    expose:
+      - "8080"
+    networks:
+      default:
+        aliases:
+          - dify-weaviate
+
+  # -----------------------------------------------------------
+  # Internal SSRF proxy for sandbox (no external exposure)
+  # -----------------------------------------------------------
+  ssrf_proxy:
+    image: sameersbn/squid:3.5.27-2
+    restart: unless-stopped
+    environment:
+      SQUID_CACHE_DIR: /var/spool/squid
+      SQUID_LOG_DIR: /var/log/squid
+      SQUID_USER: proxy
+    volumes:
+      - dify-squid-cache:/var/spool/squid
+    expose:
+      - "3128"
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 5 bash -c '</dev/tcp/localhost/3128'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      ssrf_proxy_network:
+        aliases:
+          - dify-ssrf-proxy
+      default:
+        aliases:
+          - dify-ssrf-proxy
+
+networks:
+  # isolated internal net for sandbox <-> proxy <-> api
+  ssrf_proxy_network:
+    driver: bridge
+    internal: true
+  # Dokploy/Traefik shared network
+  default:
+    name: dokploy-network
+    external: true
+
+volumes:
+  dify-storage:
+  dify-db-data:
+  dify-redis-data:
+  dify-sandbox-deps:
+  dify-plugin-storage:
+  dify-weaviate-data:
+  dify-squid-cache:

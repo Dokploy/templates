@@ -5465,6 +5465,22 @@
     ]
   },
   {
+    "id": "scrutiny",
+    "name": "Scrutiny",
+    "version": "latest",
+    "description": "Hard Drive S.M.A.R.T Monitoring, Historical Trends & Real World Failure Thresholds",
+    "logo": "scrutiny.png",
+    "links": {
+      "github": "https://github.com/AnalogJ/scrutiny/",
+      "website": "",
+      "docs": ""
+    },
+    "tags": [
+      "monitoring",
+      "NAS"
+    ]
+  },
+  {
     "id": "scrypted",
     "name": "Scrypted",
     "version": "latest",
@@ -5728,6 +5744,25 @@
       "discussion",
       "community",
       "open-source"
+    ]
+  },
+  {
+    "id": "streamflow",
+    "name": "StreamFlow",
+    "version": "2.1",
+    "description": "StreamFlow is a multi-platform live streaming web application that enables simultaneous RTMP streaming to YouTube, Facebook, and other platforms with video gallery, scheduled streaming, and real-time monitoring.",
+    "logo": "streamflow.png",
+    "links": {
+      "github": "https://github.com/bangtutorial/streamflow",
+      "website": "https://github.com/bangtutorial/streamflow",
+      "docs": "https://github.com/bangtutorial/streamflow#readme"
+    },
+    "tags": [
+      "streaming",
+      "rtmp",
+      "video",
+      "live-streaming",
+      "media"
     ]
   },
   {

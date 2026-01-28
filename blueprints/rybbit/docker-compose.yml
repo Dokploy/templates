@@ -51,7 +51,8 @@ services:
     restart: unless-stopped
 
   rybbit_backend:
-    image: ghcr.io/rybbit-io/rybbit-backend:v1.5.1
+    image: ghcr.io/rybbit-io/rybbit-backend:v2.3.1
+    restart: unless-stopped
     environment:
       - NODE_ENV=production
       - CLICKHOUSE_HOST=http://rybbit_clickhouse:8123
@@ -67,21 +68,21 @@ services:
       - BASE_URL=${BASE_URL}
       - DOMAIN_NAME=${DOMAIN_NAME}
       - DISABLE_SIGNUP=${DISABLE_SIGNUP}
-    depends_on:
-      rybbit_clickhouse:
-        condition: service_healthy
-      rybbit_postgres:
-        condition: service_started
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3001/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
-    restart: unless-stopped
+    depends_on:
+      rybbit_clickhouse:
+        condition: service_healthy
+      rybbit_postgres:
+        condition: service_started
 
   rybbit_client:
-    image: ghcr.io/rybbit-io/rybbit-client:v1.5.1
+    image: ghcr.io/rybbit-io/rybbit-client:v2.3.1
+    restart: unless-stopped
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_BACKEND_URL=${BASE_URL}
@@ -89,7 +90,6 @@ services:
       - NEXT_PUBLIC_DISABLE_SIGNUP=${DISABLE_SIGNUP}
     depends_on:
       - rybbit_backend
-    restart: unless-stopped
 
 volumes:
   clickhouse_data:

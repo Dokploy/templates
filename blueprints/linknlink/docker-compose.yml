@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  backend:
+    image: ghcr.io/sonmezerekrem/linknlink/backend:latest
+    restart: unless-stopped
+    volumes:
+      - backend_data:/app/pb_data
+    working_dir: /app
+    environment:
+      - POCKETBASE_DOMAIN=${POCKETBASE_DOMAIN}
+      - POCKETBASE_ADMIN_EMAIL=${POCKETBASE_ADMIN_EMAIL}
+      - POCKETBASE_ADMIN_PASSWORD=${POCKETBASE_ADMIN_PASSWORD}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8090/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    expose:
+      - "8090"
+
+  frontend:
+    image: ghcr.io/sonmezerekrem/linknlink/frontend:latest
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - NODE_OPTIONS=--max-old-space-size=256
+      - POCKETBASE_URL=${POCKETBASE_URL}
+      - NEXT_PUBLIC_POCKETBASE_URL=${NEXT_PUBLIC_POCKETBASE_URL}
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    depends_on:
+      - backend
+    expose:
+      - "3000"
+
+volumes:
+  backend_data:

@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+frontend_domain = "${main_domain}"
+pocketbase_domain = "http://${main_domain}"
+pocketbase_admin_email = "${email}"
+pocketbase_admin_password = "${password:32}"
+pocketbase_url = "http://backend:8090"
+next_public_pocketbase_url = "http://backend:8090"
+
+[config]
+[[config.domains]]
+serviceName = "frontend"
+port = 3000
+host = "${frontend_domain}"
+
+env = [
+  "POCKETBASE_DOMAIN=${pocketbase_domain}",
+  "POCKETBASE_ADMIN_EMAIL=${pocketbase_admin_email}",
+  "POCKETBASE_ADMIN_PASSWORD=${pocketbase_admin_password}",
+  "NODE_ENV=production",
+  "NODE_OPTIONS=--max-old-space-size=256",
+  "POCKETBASE_URL=${pocketbase_url}",
+  "NEXT_PUBLIC_POCKETBASE_URL=${next_public_pocketbase_url}"
+]

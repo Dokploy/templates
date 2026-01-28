@@ -510,8 +510,8 @@
   {
     "id": "autobase",
     "name": "Autobase",
-    "version": "2.3.0",
-    "description": "Autobase for PostgreSQL® is an open-source alternative to cloud-managed databases (DBaaS) such as Amazon RDS, Google Cloud SQL, Azure Database, and more.",
+    "version": "2.5.2",
+    "description": "Autobase for PostgreSQL® is an open-source alternative to cloud-managed databases (self-hosted DBaaS).",
     "links": {
       "github": "https://github.com/vitabaks/autobase",
       "website": "https://autobase.tech/",
@@ -1315,6 +1315,24 @@
       "networking",
       "security",
       "tunnel"
+    ]
+  },
+  {
+    "id": "cloudreve",
+    "name": "Cloudreve",
+    "version": "4.10.1",
+    "description": "Self-hosted file management and sharing system with multi-cloud storage support. Compatible with local, OneDrive, S3, and various cloud providers.",
+    "logo": "cloudreve.png",
+    "links": {
+      "github": "https://github.com/cloudreve/Cloudreve",
+      "website": "https://cloudreve.org",
+      "docs": "https://docs.cloudreve.org"
+    },
+    "tags": [
+      "storage",
+      "file-sharing",
+      "cloud",
+      "self-hosted"
     ]
   },
   {
@@ -3219,6 +3237,25 @@
     ]
   },
   {
+    "id": "jenkins",
+    "name": "jenkins",
+    "version": "latest",
+    "description": "Jenkins is a free, open-source automation server that helps developers build, test, and deploy software by automating repetitive tasks in the software delivery pipeline.",
+    "logo": "jenkins.svg",
+    "links": {
+      "github": "https://github.com/jenkinsci/jenkins",
+      "website": "https://www.jenkins.io/",
+      "docs": "https://www.jenkins.io/doc/"
+    },
+    "tags": [
+      "ci-cd",
+      "devops",
+      "automation",
+      "pipelines",
+      "open-source"
+    ]
+  },
+  {
     "id": "kaneo",
     "name": "Kaneo",
     "version": "latest",
@@ -3376,6 +3413,22 @@
       "ai",
       "voice",
       "web"
+    ]
+  },
+  {
+    "id": "komari-monitor",
+    "name": "Komari Monitor",
+    "version": "latest",
+    "description": "A lightweight, self-hosted server monitoring tool for tracking server performance.",
+    "logo": "komari-monitor.ico",
+    "links": {
+      "github": "https://github.com/komari-monitor/komari",
+      "website": "https://github.com/komari-monitor/komari",
+      "docs": "https://github.com/komari-monitor/komari#readme"
+    },
+    "tags": [
+      "monitoring",
+      "self-hosted"
     ]
   },
   {
@@ -3907,6 +3960,24 @@
     ]
   },
   {
+    "id": "minepanel",
+    "name": "Minepanel",
+    "version": "1.7.1",
+    "description": "Web panel for managing Minecraft servers with Docker. Create, configure, start/stop, and monitor multiple instances from a modern UI.",
+    "logo": "minepanel.webp",
+    "links": {
+      "github": "https://github.com/Ketbome/minepanel",
+      "website": "https://minepanel.ketbome.lat",
+      "docs": "https://minepanel.ketbome.lat"
+    },
+    "tags": [
+      "gaming",
+      "minecraft",
+      "server-management",
+      "docker"
+    ]
+  },
+  {
     "id": "minio",
     "name": "Minio",
     "description": "Minio is an open source object storage server compatible with Amazon S3 cloud storage service.",
@@ -3919,6 +3990,23 @@
     },
     "tags": [
       "storage"
+    ]
+  },
+  {
+    "id": "misaka-danmu-server",
+    "name": "Misaka Danmu Server",
+    "version": "latest",
+    "description": "A self-hosted danmaku (bullet comments) server for live streaming and video platforms.",
+    "logo": "misaka-danmu-server.png",
+    "links": {
+      "github": "https://github.com/l429609201/misaka_danmu_server",
+      "website": "https://github.com/l429609201/misaka_danmu_server",
+      "docs": "https://github.com/l429609201/misaka_danmu_server#readme"
+    },
+    "tags": [
+      "streaming",
+      "danmaku",
+      "live"
     ]
   },
   {
@@ -5119,6 +5207,24 @@
     ]
   },
   {
+    "id": "qbitwebui",
+    "name": "qBittorrent Web UI",
+    "version": "latest",
+    "description": "A modern web interface for managing multiple qBittorrent instances. Built with React, Hono, and Bun.",
+    "logo": "qbitwebui.png",
+    "links": {
+      "github": "https://github.com/Maciejonos/qbitwebui",
+      "website": "https://github.com/Maciejonos/qbitwebui",
+      "docs": "https://github.com/Maciejonos/qbitwebui#readme"
+    },
+    "tags": [
+      "torrent",
+      "download",
+      "media",
+      "qbittorrent"
+    ]
+  },
+  {
     "id": "qdrant",
     "name": "Qdrant",
     "version": "latest",
@@ -5374,6 +5480,22 @@
       "media",
       "tracking",
       "self-hosted"
+    ]
+  },
+  {
+    "id": "scrutiny",
+    "name": "Scrutiny",
+    "version": "latest",
+    "description": "Hard Drive S.M.A.R.T Monitoring, Historical Trends & Real World Failure Thresholds",
+    "logo": "scrutiny.png",
+    "links": {
+      "github": "https://github.com/AnalogJ/scrutiny/",
+      "website": "",
+      "docs": ""
+    },
+    "tags": [
+      "monitoring",
+      "NAS"
     ]
   },
   {
@@ -5640,6 +5762,25 @@
       "discussion",
       "community",
       "open-source"
+    ]
+  },
+  {
+    "id": "streamflow",
+    "name": "StreamFlow",
+    "version": "2.1",
+    "description": "StreamFlow is a multi-platform live streaming web application that enables simultaneous RTMP streaming to YouTube, Facebook, and other platforms with video gallery, scheduled streaming, and real-time monitoring.",
+    "logo": "streamflow.png",
+    "links": {
+      "github": "https://github.com/bangtutorial/streamflow",
+      "website": "https://github.com/bangtutorial/streamflow",
+      "docs": "https://github.com/bangtutorial/streamflow#readme"
+    },
+    "tags": [
+      "streaming",
+      "rtmp",
+      "video",
+      "live-streaming",
+      "media"
     ]
   },
   {
@@ -5951,7 +6092,7 @@
   {
     "id": "umami",
     "name": "Umami",
-    "version": "v2.20.2",
+    "version": "v3.0.3",
     "description": "Umami is a simple, fast, privacy-focused alternative to Google Analytics.",
     "logo": "umami.png",
     "links": {

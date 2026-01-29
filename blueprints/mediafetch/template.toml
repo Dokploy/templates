@@ -12,4 +12,4 @@ port = 3002
 [[config.mounts]]
 name = "Downloads"
 filePath = "/data/downloads"
-serviceName = "mediafetch"
+content = "mediafetch"

@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  openmaxio:
+    image: ghcr.io/astrateam-net/minio-browser:latest
+    container_name: openmaxio
+    environment:
+      MINIO_URL: ${MINIO_URL}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_NOTIFY_URL: ${MINIO_NOTIFY_URL}
+      PORT: 9001
+    ports:
+      - 9001:9001
+    restart: always

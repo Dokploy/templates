@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "openmaxio"
+port = 9001
+host = "${main_domain}"
+
+[config.env]
+MINIO_URL = "http://${main_domain}:9000"
+MINIO_ACCESS_KEY = "minioadmin"
+MINIO_SECRET_KEY = "minioadmin"
+MINIO_NOTIFY_URL = "http://${main_domain}/api/v1/notifications"

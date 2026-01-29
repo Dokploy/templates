@@ -4576,6 +4576,25 @@
     ]
   },
   {
+    "id": "openmaxio-object-browser",
+    "name": "OpenMaxIO Object Browser",
+    "version": "latest",
+    "description": "OpenMaxIO Object Browser is a community-maintained fork of the MinIO Console, providing a graphical user interface for managing MinIO object storage servers.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/OpenMaxIO/openmaxio-object-browser",
+      "website": "https://github.com/OpenMaxIO/openmaxio-object-browser",
+      "docs": "https://github.com/OpenMaxIO/openmaxio-object-browser"
+    },
+    "tags": [
+      "minio",
+      "s3",
+      "storage",
+      "file-browser",
+      "object-storage"
+    ]
+  },
+  {
     "id": "openpanel",
     "name": "OpenPanel",
     "version": "latest",

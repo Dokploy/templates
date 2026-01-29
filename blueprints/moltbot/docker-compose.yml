@@ -8,12 +8,15 @@ services:
       CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY}
       CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY}
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE}
+      CLAWDBOT_GATEWAY_URL: ws://0.0.0.0:18789
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
     volumes:
       - moltbot-config:/home/node/.clawdbot
       - moltbot-workspace:/home/node/clawd
     ports:
-      - 18789
-      - 18790
+      - "18789"
+      - "18790"
+    init: true
     restart: unless-stopped
     command:
       [
@@ -21,12 +24,12 @@ services:
         "dist/index.js",
         "gateway",
         "--bind",
-        "lan",
+        "auto",
         "--port",
         "18789",
         "--allow-unconfigured"
       ]
 
 volumes:
-  moltbot-config: {}
-  moltbot-workspace: {}
+  moltbot-config:
+  moltbot-workspace:

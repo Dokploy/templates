@@ -3895,6 +3895,23 @@
     ]
   },
   {
+    "id": "mediafetch",
+    "name": "MediaFetch",
+    "version": "1.1.1",
+    "description": "A tiny, self-hosted web wrapper for yt-dlp to download video and audio. Optional basic auth.",
+    "logo": "mediafetch.svg",
+    "links": {
+      "github": "https://github.com/lukedunsmoto/mediafetch",
+      "website": "https://www.lukedunsmore.com/mediafetch",
+      "docs": "https://docs.lukedunsmore.com/docs/self-hosted/mediafetch/"
+    },
+    "tags": [
+      "utilities",
+      "media",
+      "downloader"
+    ]
+  },
+  {
     "id": "meilisearch",
     "name": "Meilisearch",
     "version": "v1.8.3",

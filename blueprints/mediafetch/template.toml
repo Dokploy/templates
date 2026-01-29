@@ -1,0 +1,15 @@
+[variables]
+BASIC_AUTH_USER = "admin"
+BASIC_AUTH_PASS = "${password:12}" # Generates a random 12-char password
+
+[config]
+[[config.domains]]
+name = "Domain"
+variable = "DOMAIN"
+service = "mediafetch"
+port = 3002
+
+[[config.mounts]]
+name = "Downloads"
+content = "/data/downloads"
+service = "mediafetch"

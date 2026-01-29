@@ -3962,13 +3962,13 @@
   {
     "id": "minepanel",
     "name": "Minepanel",
-    "version": "1.7.1",
+    "version": "1.7.3",
     "description": "Web panel for managing Minecraft servers with Docker. Create, configure, start/stop, and monitor multiple instances from a modern UI.",
     "logo": "minepanel.webp",
     "links": {
       "github": "https://github.com/Ketbome/minepanel",
-      "website": "https://minepanel.ketbome.lat",
-      "docs": "https://minepanel.ketbome.lat"
+      "website": "https://minepanel.ketbome.com",
+      "docs": "https://minepanel.ketbome.com"
     },
     "tags": [
       "gaming",

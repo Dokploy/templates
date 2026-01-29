@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   backend:
-    image: ketbom/minepanel-backend:1.7.1
+    image: ketbom/minepanel-backend:1.7.3
     restart: unless-stopped
     environment:
       - NODE_ENV=production
@@ -16,7 +16,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   frontend:
-    image: ketbom/minepanel-frontend:1.7.1
+    image: ketbom/minepanel-frontend:1.7.3
     restart: unless-stopped
     environment:
       - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}

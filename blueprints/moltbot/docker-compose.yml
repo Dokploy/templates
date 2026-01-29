@@ -1,6 +1,6 @@
 services:
   moltbot-gateway:
-    image: ghcr.io/moltbot/moltbot:latest
+    image: ghcr.io/moltbot/clawdbot:2026.1.24-1
     environment:
       HOME: /home/node
       TERM: xterm-256color
@@ -19,11 +19,12 @@ services:
       [
         "node",
         "dist/index.js",
-        "gateway-daemon",
+        "gateway",
         "--bind",
         "lan",
         "--port",
-        "18789"
+        "18789",
+        "--allow-unconfigured"
       ]
 
 volumes:

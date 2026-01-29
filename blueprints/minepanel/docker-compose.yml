@@ -11,8 +11,8 @@ services:
       - CLIENT_USERNAME=${CLIENT_USERNAME}
       - BASE_DIR=${BASE_DIR}
     volumes:
-      - minepanel-servers:/app/servers
-      - minepanel-data:/app/data
+      - ${BASE_DIR}:/app/servers
+      - ${DATA_DIR}:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
 
   frontend:
@@ -23,7 +23,3 @@ services:
       - NEXT_PUBLIC_DEFAULT_LANGUAGE=${NEXT_PUBLIC_DEFAULT_LANGUAGE}
     depends_on:
       - backend
-
-volumes:
-  minepanel-servers:
-  minepanel-data:

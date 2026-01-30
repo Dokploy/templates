@@ -4968,7 +4968,7 @@
   {
     "id": "plausible",
     "name": "Plausible",
-    "version": "v2.1.5",
+    "version": "v3.1.0",
     "description": "Plausible is a open source, self-hosted web analytics platform that lets you track website traffic and user behavior.",
     "logo": "logo.svg",
     "links": {

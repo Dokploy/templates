@@ -1734,6 +1734,28 @@
     ]
   },
   {
+    "id": "dify",
+    "name": "Dify",
+    "version": "1.11.2",
+    "description": "Open-source LLM app development platform with AI agents, workflows, and RAG capabilities. Includes API, vector database (Weaviate), and secure sandbox execution.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/langgenius/dify",
+      "website": "https://dify.ai",
+      "docs": "https://docs.dify.ai"
+    },
+    "tags": [
+      "ai",
+      "llm",
+      "chatbot",
+      "agents",
+      "vector-database",
+      "rag",
+      "workflow",
+      "no-code"
+    ]
+  },
+  {
     "id": "directus",
     "name": "Directus",
     "version": "11.0.2",

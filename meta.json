@@ -5612,6 +5612,25 @@
     ]
   },
   {
+    "id": "simstudio",
+    "name": "SimAi",
+    "version": "latest",
+    "description": "Sim ai is an open-source AI agent workflow platform that enables building and deploying intelligent automation workflows with real-time capabilities.",
+    "logo": "sim.png",
+    "links": {
+      "github": "https://github.com/simstudioai/simstudio",
+      "website": "https://simstudio.ai",
+      "docs": "https://docs.simstudio.ai"
+    },
+    "tags": [
+      "ai",
+      "automation",
+      "workflow",
+      "agents",
+      "real-time"
+    ]
+  },
+  {
     "id": "slash",
     "name": "Slash",
     "version": "latest",

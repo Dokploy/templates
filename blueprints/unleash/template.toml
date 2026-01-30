@@ -1,7 +1,7 @@
 [variables]
 main_domain = "${domain}"
 db_name = "unleash"
-db_user = "postgres"
+db_user = "unleash"
 db_password = "${password:32}"
 
 [config]

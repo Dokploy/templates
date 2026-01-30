@@ -1,7 +1,6 @@
-version: "3.8"
 services:
   affinepro:
-    image: ghcr.io/toeverything/affine-graphql:stable-780dd83
+    image: ghcr.io/toeverything/affine-graphql:stable
     restart: unless-stopped
     ports:
       - 3010
@@ -23,7 +22,7 @@ services:
       - redis
 
   migration:
-    image: ghcr.io/toeverything/affine-graphql:stable-780dd83
+    image: ghcr.io/toeverything/affine-graphql:stable
     command: node ./scripts/self-host-predeploy.js
     environment:
       - REDIS_SERVER_HOST=redis
@@ -35,15 +34,15 @@ services:
       - MAILER_USER=${MAILER_USER}
       - MAILER_PASSWORD=${MAILER_PASSWORD}
       - MAILER_SENDER=${MAILER_SENDER}
-    volumes:
-      - affine-storage:/root/.affine/storage
-      - affine-config:/root/.affine/config
     depends_on:
       - db
       - redis
+    volumes:
+      - affine-storage:/root/.affine/storage
+      - affine-config:/root/.affine/config
 
   db:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     restart: unless-stopped
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

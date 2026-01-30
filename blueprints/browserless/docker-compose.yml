@@ -1,6 +1,7 @@
 services:
   browserless:
     image: ghcr.io/browserless/chromium:latest
+    restart: unless-stopped
     environment:
       TOKEN: ${BROWSERLESS_TOKEN}
     expose:
@@ -14,3 +15,8 @@ services:
       interval: 2s
       timeout: 10s
       retries: 15
+    volumes:
+      - browserless_data:/user_data
+
+volumes:
+  browserless_data:

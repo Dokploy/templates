@@ -49,6 +49,3 @@ env = [
   "MYSQL_PASSWORD=${mysql_password}",
   "MYSQL_RANDOM_ROOT_PASSWORD=yes"
 ]
-
-# No custom mounts needed; volumes are already defined in compose.
-[[config.mounts]]

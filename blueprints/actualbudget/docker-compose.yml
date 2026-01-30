@@ -1,12 +1,12 @@
 services:
   actualbudget:
-    image: docker.io/actualbudget/actual-server:latest
+    image: actualbudget/actual-server:latest
+    restart: unless-stopped
     environment:
       # See all options at https://actualbudget.org/docs/config
       - ACTUAL_PORT=5006
     volumes:
       - actual-data:/data
-    restart: unless-stopped
 
 volumes:
   actual-data:

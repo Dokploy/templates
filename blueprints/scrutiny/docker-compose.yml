@@ -1,0 +1,55 @@
+services:
+  scrutiny:
+    restart: unless-stopped
+    container_name: scrutiny
+    image: ghcr.io/analogj/scrutiny:master-omnibus
+    cap_add:
+      - SYS_RAWIO
+    ports:
+      - 8080  # webapp
+      - 8086  # influxDB admin
+    volumes:
+      - /run/udev:/run/udev:ro
+      - ./config:/opt/scrutiny/config
+      - ./influxdb:/opt/scrutiny/influxdb
+    devices:
+      - "/dev/sda"
+      - "/dev/sdb"
+
+# PROXMOX USERS: Proxmox LXCs don't have access to S.M.A.R.T data, while this may be possible on VMs using PCI passthrough,
+# there's another way which is to run the scrutiny collector on proxmox host and have it send data to the scrutiny webapp running in an LXC or VM
+# so basically you can use the following commented docker-compose (web+db) and run the collector directly on the proxmox host (guide: https://github.com/AnalogJ/scrutiny/blob/master/docs/INSTALL_HUB_SPOKE.md#setting-up-a-spoke-without-docker)
+
+# services:
+#   influxdb:
+#     restart: unless-stopped
+#     image: influxdb:2.2
+#     ports:
+#       - '8086:8086'
+#     volumes:
+#       - './influxdb:/var/lib/influxdb2'
+#     healthcheck:
+#       test: ["CMD", "curl", "-f", "http://localhost:8086/health"]
+#       interval: 5s
+#       timeout: 10s
+#       retries: 20
+# 
+# 
+#   web:
+#     restart: unless-stopped
+#     image: 'ghcr.io/analogj/scrutiny:master-web'
+#     ports:
+#       - '8080:8080'
+#     volumes:
+#       - './config:/opt/scrutiny/config'
+#     environment:
+#       SCRUTINY_WEB_INFLUXDB_HOST: 'influxdb'
+#     depends_on:
+#       influxdb:
+#         condition: service_healthy
+#     healthcheck:
+#       test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+#       interval: 5s
+#       timeout: 10s
+#       retries: 20
+#       start_period: 10s

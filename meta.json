@@ -5090,6 +5090,25 @@
     ]
   },
   {
+    "id": "postgres-pgdog",
+    "name": "PostgreSQL with PgDog",
+    "version": "0.1.26",
+    "description": "PostgreSQL database with PgDog connection pooler, load balancer, and horizontal scaling proxy. A modern alternative to PgBouncer with multi-threading support.",
+    "logo": "postgres-pgdog.png",
+    "links": {
+      "github": "https://github.com/pgdogdev/pgdog",
+      "website": "https://pgdog.dev",
+      "docs": "https://docs.pgdog.dev"
+    },
+    "tags": [
+      "database",
+      "postgresql",
+      "pooler",
+      "proxy",
+      "load-balancer"
+    ]
+  },
+  {
     "id": "postgresus",
     "name": "Postgresus",
     "version": "latest",

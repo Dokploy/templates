@@ -4221,6 +4221,25 @@
     ]
   },
   {
+    "id": "netbird",
+    "name": "Netbird",
+    "version": "0.63.0",
+    "description": "Netbird is an open-source platform that combines a peer-to-peer private network with centralized access control, using WireGuard to create secure overlay networks without complex firewall configurations.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/netbirdio/netbird",
+      "website": "https://netbird.io/",
+      "docs": "https://docs.netbird.io/"
+    },
+    "tags": [
+      "networking",
+      "vpn",
+      "wireguard",
+      "self-hosted",
+      "security"
+    ]
+  },
+  {
     "id": "netdata",
     "name": "Netdata",
     "version": "latest",
@@ -4720,6 +4739,25 @@
       "file-sharing",
       "self-hosted",
       "open-source"
+    ]
+  },
+  {
+    "id": "pangolin",
+    "name": "Pangolin",
+    "version": "latest",
+    "description": "Identity-based remote access platform with reverse proxy and VPN capabilities built on WireGuard. ⚠️ This is a complex deployment - please check the README.md in the blueprint directory for detailed setup instructions, including catch-all routing configuration.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/fosrl/pangolin",
+      "website": "https://pangolin.net",
+      "docs": "https://docs.pangolin.net"
+    },
+    "tags": [
+      "vpn",
+      "remote-access",
+      "reverse-proxy",
+      "wireguard",
+      "networking"
     ]
   },
   {

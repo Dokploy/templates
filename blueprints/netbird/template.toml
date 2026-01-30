@@ -1,0 +1,86 @@
+[variables]
+main_domain = "${domain}"
+mgmt_api_port = "443"
+signal_port = "10000"
+relay_port = "33080"
+relay_auth_secret = "${password:32}"
+turn_username = "${username}"
+turn_password = "${password:32}"
+mgmt_api_endpoint = "https://${main_domain}"
+mgmt_grpc_api_endpoint = "https://${main_domain}"
+dns_domain = "netbird.selfhosted"
+letsencrypt_domain = "${main_domain}"
+letsencrypt_email = "${email}"
+auth_client_id = "${uuid}"
+auth_client_secret = "${password:32}"
+auth_authority = "https://${main_domain}/oauth2"
+auth_audience = "${uuid}"
+auth_redirect_uri = "https://${main_domain}/nb-auth"
+auth_silent_redirect_uri = "https://${main_domain}/nb-silent-auth"
+mgmt_cert_file = "/etc/letsencrypt/live/${letsencrypt_domain}/fullchain.pem"
+mgmt_cert_key_file = "/etc/letsencrypt/live/${letsencrypt_domain}/privkey.pem"
+nb_listen_address = ":${relay_port}"
+nb_exposed_address = "${main_domain}:${relay_port}"
+
+[config]
+[[config.domains]]
+serviceName = "netbird-dashboard"
+port = 80
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "netbird-management"
+port = 443
+host = "${main_domain}"
+
+env = [
+  "NETBIRD_MGMT_API_ENDPOINT=${mgmt_api_endpoint}",
+  "NETBIRD_MGMT_GRPC_API_ENDPOINT=${mgmt_grpc_api_endpoint}",
+  "NETBIRD_MGMT_SINGLE_ACCOUNT_MODE_DOMAIN=",
+  "NETBIRD_MGMT_DNS_DOMAIN=${dns_domain}",
+  "NETBIRD_DISABLE_ANONYMOUS_METRICS=false",
+  "NETBIRD_MGMT_API_CERT_FILE=${mgmt_cert_file}",
+  "NETBIRD_MGMT_API_CERT_KEY_FILE=${mgmt_cert_key_file}",
+  "NETBIRD_SIGNAL_PORT=${signal_port}",
+  "NB_LOG_LEVEL=info",
+  "NB_LISTEN_ADDRESS=${nb_listen_address}",
+  "NB_EXPOSED_ADDRESS=${nb_exposed_address}",
+  "NB_AUTH_SECRET=${relay_auth_secret}",
+  "AUTH_AUDIENCE=${auth_audience}",
+  "AUTH_CLIENT_ID=${auth_client_id}",
+  "AUTH_CLIENT_SECRET=${auth_client_secret}",
+  "AUTH_AUTHORITY=${auth_authority}",
+  "AUTH_REDIRECT_URI=${auth_redirect_uri}",
+  "AUTH_SILENT_REDIRECT_URI=${auth_silent_redirect_uri}",
+  "USE_AUTH0=false",
+  "LETSENCRYPT_DOMAIN=${letsencrypt_domain}",
+  "LETSENCRYPT_EMAIL=${letsencrypt_email}",
+  "TURN_USERNAME=${turn_username}",
+  "TURN_PASSWORD=${turn_password}"
+]
+
+[[config.mounts]]
+serviceName = "coturn"
+filePath = "/etc/turnserver.conf"
+content = """
+listening-port=3478
+tls-listening-port=5349
+listening-ip=0.0.0.0
+external-ip=${main_domain}
+relay-ip=0.0.0.0
+server-name=${main_domain}
+realm=${main_domain}
+user=${turn_username}:${turn_password}
+no-cli
+no-tls
+no-dtls
+no-stdout-log
+log-file=/var/log/turnserver.log
+verbose
+fingerprint
+lt-cred-mech
+userdb=/var/lib/turn/turndb
+web-admin
+web-admin-ip=0.0.0.0
+web-admin-port=8080
+"""

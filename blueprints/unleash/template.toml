@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+db_name = "unleash"
+db_user = "postgres"
+db_password = "${password:32}"
+
+[config]
+env = [
+  "DB_NAME=${db_name}",
+  "DB_USER=${db_user}",
+  "DB_PASSWORD=${db_password}"
+]
+
+[[config.domains]]
+serviceName = "unleash"
+port = 4242
+host = "${main_domain}" 

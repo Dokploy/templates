@@ -1851,6 +1851,23 @@
     ]
   },
   {
+    "id": "dokistry",
+    "name": "Dokistry",
+    "version": "v0.8.0",
+    "description": "Dokistry allows you to preview and manage Docker registries, images, and users from a single modern interface.",
+    "links": {
+      "github": "https://github.com/duneal/dokistry",
+      "website": "https://dokistry.duneal.com",
+      "docs": "https://dokistry.duneal.com"
+    },
+    "logo": "dokistry.png",
+    "tags": [
+      "docker",
+      "registry",
+      "monitoring"
+    ]
+  },
+  {
     "id": "dokploy-prom-monitoring-extension",
     "name": "Dokploy Prometheus Monitoring Extension",
     "version": "canary",

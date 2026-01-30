@@ -4027,6 +4027,27 @@
     ]
   },
   {
+    "id": "moltbot",
+    "name": "Moltbot",
+    "version": "2026.1.25",
+    "description": "WhatsApp gateway CLI with Pi RPC agent - self-hosted AI-powered messaging platform",
+    "logo": "moltbot.svg",
+    "links": {
+      "github": "https://github.com/moltbot/moltbot",
+      "website": "https://molt.bot",
+      "docs": "https://docs.molt.bot"
+    },
+    "tags": [
+      "whatsapp",
+      "ai",
+      "messaging",
+      "chatbot",
+      "gateway",
+      "self-hosted",
+      "automation"
+    ]
+  },
+  {
     "id": "morphos",
     "name": "Morphos",
     "version": "latest",

@@ -5299,6 +5299,132 @@
     ]
   },
   {
+    "id": "reef-bootnode",
+    "name": "Reef Chain - Bootnode Validator",
+    "version": "1",
+    "description": "Runs bootnode for a custom Reef Chain cluster",
+    "links": {
+      "github": "https://github.com/reef-chain/chain-upgrade",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "docs": "https://docs.reef.io/"
+    },
+    "logo": "reef.svg",
+    "tags": [
+      "reef-chain",
+      "validator",
+      "self-hosted",
+      "evm"
+    ]
+  },
+  {
+    "id": "reef-dev-cluster",
+    "name": "Reef Chain - Dev Cluster",
+    "version": "1",
+    "description": "Development cluster",
+    "links": {
+      "github": "https://github.com/reef-chain/chain-upgrade",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "docs": "https://docs.reef.io/"
+    },
+    "logo": "reef.svg",
+    "tags": [
+      "reef-chain",
+      "dev-cluster",
+      "self-hosted",
+      "evm"
+    ]
+  },
+  {
+    "id": "reef-eth-rpc",
+    "name": "Reef Chain - ETH RPC",
+    "version": "1",
+    "description": "EVM layer rpc for a custom Reef Chain cluster",
+    "links": {
+      "github": "https://github.com/reef-chain/chain-upgrade",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "docs": "https://docs.reef.io/"
+    },
+    "logo": "reef.svg",
+    "tags": [
+      "reef-chain",
+      "eth-rpc",
+      "self-hosted",
+      "keys"
+    ]
+  },
+  {
+    "id": "reef-keygen",
+    "name": "Reef Chain - Keys Generator",
+    "version": "1",
+    "description": "Generates 3 Validators keys for a custom Reef Chain cluster",
+    "links": {
+      "github": "https://github.com/reef-chain/chain-upgrade",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "docs": "https://docs.reef.io/"
+    },
+    "logo": "reef.svg",
+    "tags": [
+      "reef-chain",
+      "keys generator",
+      "self-hosted",
+      "keys"
+    ]
+  },
+  {
+    "id": "reef-rpc",
+    "name": "Reef Chain - RPC Node",
+    "version": "1",
+    "description": "Runs RPC which connects to bootnode for a custom Reef Chain cluster",
+    "links": {
+      "github": "https://github.com/reef-chain/chain-upgrade",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "docs": "https://docs.reef.io/"
+    },
+    "logo": "reef.svg",
+    "tags": [
+      "reef-chain",
+      "validator",
+      "self-hosted",
+      "reef-validator"
+    ]
+  },
+  {
+    "id": "reef-spec-gen",
+    "name": "Reef Chain - Custom Spec Generator",
+    "version": "1",
+    "description": "Generates spec file for a custom Reef Chain cluster",
+    "links": {
+      "github": "https://github.com/reef-chain/chain-upgrade",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "docs": "https://docs.reef.io/"
+    },
+    "logo": "reef.svg",
+    "tags": [
+      "reef-chain",
+      "rpc",
+      "self-hosted",
+      "evm"
+    ]
+  },
+  {
+    "id": "reef-validator",
+    "name": "Reef Chain - Validator",
+    "version": "1",
+    "description": "Runs Validator which connects to bootnode for a custom Reef Chain cluster",
+    "links": {
+      "github": "https://github.com/reef-chain/chain-upgrade",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "docs": "https://docs.reef.io/"
+    },
+    "logo": "reef.svg",
+    "tags": [
+      "reef-chain",
+      "validator",
+      "self-hosted",
+      "reef-validator"
+    ]
+  },
+  {
     "id": "registry",
     "name": "Docker Registry",
     "version": "2",

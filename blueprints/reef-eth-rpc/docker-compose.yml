@@ -1,0 +1,13 @@
+services:
+  reef-eth-rpc:
+    image: anukulpandey/reef-chain-eth-rpc:linux
+    working_dir: /workspace
+    volumes:
+      - ./output:/output
+    environment:
+      - PORT=${PORT}
+      - NODE_RPC_URL=${NODE_RPC_URL}
+    ports:
+      - "${PORT}:${PORT}"
+    entrypoint: /bin/sh
+    command: -c "eth-rpc --node-rpc-url $NODE_RPC_URL --rpc-port $PORT --rpc-external --rpc-cors all"

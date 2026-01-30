@@ -1,0 +1,29 @@
+[variables]
+SPEC_URL = "http://reef.host:8001/local-chain-spec-raw.json"
+BOOTNODE_NODE_KEY="http://reef.host:8001/bootnode_node_key.txt"
+
+BOOTNODE_IP="72.60.35.83"
+
+P2P_PORT="30339"
+RPC_PORT="9994"
+
+[[config.domains]]
+serviceName = "reef-rpc"
+port = 30339
+host = "${domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "reef-rpc"
+port = 9994
+host = "${domain}"
+path = "/"
+
+[config.env]
+SPEC_URL = "http://reef.host:8001/local-chain-spec-raw.json"
+BOOTNODE_NODE_KEY="http://reef.host:8001/bootnode_node_key.txt"
+
+BOOTNODE_IP="72.60.35.83"
+
+P2P_PORT="30339"
+RPC_PORT="9994"

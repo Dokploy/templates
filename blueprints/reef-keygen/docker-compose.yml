@@ -1,0 +1,38 @@
+services:
+  reef-keygen:
+    image: anukulpandey/reef-chain-node:linux-2
+    working_dir: /workspace
+    volumes:
+      - ./output:/output
+    ports:
+      - "${PORT}:${PORT}"
+    entrypoint: /bin/sh
+    command: -c "
+      set -e &&
+
+      echo '📦 Installing python3...' &&
+      apt-get update &&
+      apt-get install -y python3 &&
+
+      mkdir -p /output &&
+      chmod -R 777 /output &&
+
+      echo '=====================================' &&
+      echo '🔑 Generating Validator Keys' &&
+      echo '=====================================' &&
+
+      reef-node key generate --scheme Sr25519 --output-type json > /output/validator1.json &&
+      reef-node key generate-node-key --chain local > /output/v1_node_key.txt &&
+
+      reef-node key generate --scheme Sr25519 --output-type json > /output/validator2.json &&
+      reef-node key generate-node-key --chain local > /output/v2_node_key.txt &&
+
+      reef-node key generate --scheme Sr25519 --output-type json > /output/validator3.json &&
+      reef-node key generate-node-key --chain local > /output/v3_node_key.txt &&
+
+      echo '✅ Keys generated:' &&
+      ls -lah /output &&
+
+      echo '🌐 Starting HTTP server on port ${PORT}' &&
+      cd /output &&
+      python3 -m http.server ${PORT} --bind 0.0.0.0"

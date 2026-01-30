@@ -1,0 +1,37 @@
+[variables]
+V1_ADDR = "5GH14oJ4A3VDLoC6nXutsTwS4dMwebDipNdSugD5zFnnWKp5"
+V1_SEED = "0x4beb11e380012110b0b072fbb3d8e7455921cf4658de06c33d970be82ccf9ed5"
+
+V2_ADDR = "5CmKswtRQGFrt3CcP5waJVxgEJfRy1xsmwPLRPWkumLBz8nv"
+V2_SEED = "0x3348e15287dae612d9c8f008a468ff6c229a55c4b58d778f389cc03134e3efbe"
+
+V3_ADDR = "5HTmW3wtfs6h1D44QxfLPpwVzQ3Jc7S8eiQAuDRkmqEhrwMQ"
+V3_SEED = "0xba8ad5d3607f10c356860024a08ea279dbd529f0950fa752fc6c2d59981b89e5"
+
+PORT="8000"
+P2P_PORT="30335"
+
+[[config.domains]]
+serviceName = "reef-bootnode"
+port = 30335
+host = "${domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "reef-bootnode"
+port = 8000
+host = "${domain}"
+path = "/"
+
+[config.env]
+V1_ADDR = "5GH14oJ4A3VDLoC6nXutsTwS4dMwebDipNdSugD5zFnnWKp5"
+V1_SEED = "0x4beb11e380012110b0b072fbb3d8e7455921cf4658de06c33d970be82ccf9ed5"
+
+V2_ADDR = "5CmKswtRQGFrt3CcP5waJVxgEJfRy1xsmwPLRPWkumLBz8nv"
+V2_SEED = "0x3348e15287dae612d9c8f008a468ff6c229a55c4b58d778f389cc03134e3efbe"
+
+V3_ADDR = "5HTmW3wtfs6h1D44QxfLPpwVzQ3Jc7S8eiQAuDRkmqEhrwMQ"
+V3_SEED = "0xba8ad5d3607f10c356860024a08ea279dbd529f0950fa752fc6c2d59981b89e5"
+
+PORT="8000"
+P2P_PORT="30335"

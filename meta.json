@@ -4259,10 +4259,10 @@
   },
   {
     "id": "nextcloud-aio",
-    "name": "Nextcloud All in One",
-    "version": "30.0.2",
-    "description": "Nextcloud (AIO) is a self-hosted file storage and sync platform with powerful collaboration capabilities. It integrates Files, Talk, Groupware, Office, Assistant and more into a single platform for remote work and data protection.",
-    "logo": "nextcloud-aio.svg",
+    "name": "Nextcloud",
+    "version": "stable",
+    "description": "Nextcloud is a self-hosted file storage and sync platform with powerful collaboration capabilities. It integrates Files, Talk, Groupware, Office, Assistant and more into a single platform for remote work and data protection.",
+    "logo": "nextcloud.png",
     "links": {
       "github": "https://github.com/nextcloud/docker",
       "website": "https://nextcloud.com/",

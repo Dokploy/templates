@@ -1,31 +1,33 @@
 services:
   nextcloud:
-    image: nextcloud:30.0.2
+    image: nextcloud:stable
     restart: always
-
-    ports:
-      - 80
     volumes:
       - nextcloud_data:/var/www/html
+      - ../files/fix-nextcloud.sh:/usr/local/bin/fix-nextcloud.sh:ro
     environment:
-      - NEXTCLOUD_TRUSTED_DOMAINS=${NEXTCLOUD_DOMAIN}
       - MYSQL_HOST=nextcloud_db
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - MYSQL_PASSWORD=${MYSQL_SECRET_PASSWORD}
-      - OVERWRITEPROTOCOL=https
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    depends_on:
+      - nextcloud_db
+      - nextcloud_redis
 
   nextcloud_db:
-    image: mariadb
+    image: mariadb:10.11
     restart: always
-
     volumes:
       - nextcloud_db_data:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_SECRET_PASSWORD_ROOT}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - MYSQL_PASSWORD=${MYSQL_SECRET_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
+  nextcloud_redis:
+    image: redis:alpine
+    restart: always
 
 volumes:
   nextcloud_data:

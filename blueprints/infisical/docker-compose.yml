@@ -1,25 +1,4 @@
 services:
-  db-migration:
-    depends_on:
-      db:
-        condition: service_healthy
-    image: infisical/infisical:v0.135.0-postgres
-    environment:
-      - NODE_ENV=production
-      - ENCRYPTION_KEY
-      - AUTH_SECRET
-      - SITE_URL
-      - DB_CONNECTION_URI=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
-      - REDIS_URL=redis://redis:6379
-      - SMTP_HOST
-      - SMTP_PORT
-      - SMTP_FROM_NAME
-      - SMTP_USERNAME
-      - SMTP_PASSWORD
-      - SMTP_SECURE=true
-    command: npm run migration:latest
-    pull_policy: always
-
   backend:
     restart: unless-stopped
     depends_on:
@@ -29,7 +8,7 @@ services:
         condition: service_started
       db-migration:
         condition: service_completed_successfully
-    image: infisical/infisical:v0.135.0-postgres
+    image: infisical/infisical:v0.156.3
     pull_policy: always
     environment:
       - NODE_ENV=production
@@ -75,6 +54,3 @@ services:
 volumes:
   pg_infisical_data:
   redis_infisical_data:
-
-
-

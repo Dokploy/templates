@@ -14,4 +14,4 @@ env = [
 [[config.domains]]
 serviceName = "unleash"
 port = 4242
-host = "${main_domain}" 
+host = "${main_domain}"

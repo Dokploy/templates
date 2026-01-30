@@ -1,8 +1,13 @@
+# The default users credentials are:
+# Login: admin
+# Password: unleash4all
+# It is highly recommended to change the password after first login.
+# More info: https://github.com/Unleash/unleash?tab=readme-ov-file#unleash-open-source
 version: "3.8"
 
 services:
   unleash:
-    image: unleashorg/unleash-server:latest
+    image: unleashorg/unleash-server:7.4.0
     restart: unless-stopped
     environment:
       DATABASE_URL: "postgres://${DB_USER}:${DB_PASSWORD}@db/${DB_NAME}"

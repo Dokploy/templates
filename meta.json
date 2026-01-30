@@ -6126,7 +6126,7 @@
   {
     "id": "unleash",
     "name": "Unleash",
-    "version": "latest",
+    "version": "7.4.0",
     "description": "Open-source feature management platform",
     "logo": "unleash.png",
     "links": {

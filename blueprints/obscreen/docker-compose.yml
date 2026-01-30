@@ -1,0 +1,16 @@
+services:
+  obscreen:
+    image: obscreen/obscreen:latest
+    restart: unless-stopped
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - PORT=${PORT}
+      - FROZEN_VAR_EXTERNAL_URL=${FROZEN_VAR_EXTERNAL_URL}
+    volumes:
+      - obscreen-data:/app/data
+      - obscreen-license:/app/license
+      - /etc/localtime:/etc/localtime:ro
+
+volumes:
+  obscreen-data:
+  obscreen-license:

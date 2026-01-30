@@ -6124,6 +6124,24 @@
     ]
   },
   {
+    "id": "unleash",
+    "name": "Unleash",
+    "version": "7.4.0",
+    "description": "Open-source feature management platform",
+    "logo": "unleash.png",
+    "links": {
+      "github": "https://github.com/unleash/unleash",
+      "website": "https://www.getunleash.io/",
+      "docs": "https://docs.getunleash.io/"
+    },
+    "tags": [
+      "feature-flag",
+      "feature-management",
+      "feature-toggle",
+      "remote-configuration"
+    ]
+  },
+  {
     "id": "upsnap",
     "name": "Upsnap",
     "version": "5",

@@ -1,22 +1,70 @@
-version: "3.8"
-
 services:
   postiz-app:
     image: ghcr.io/gitroomhq/postiz-app:latest
     restart: always
 
     environment:
-      MAIN_URL: "https://${POSTIZ_HOST}"
-      FRONTEND_URL: "https://${POSTIZ_HOST}"
-      NEXT_PUBLIC_BACKEND_URL: "https://${POSTIZ_HOST}/api"
+      MAIN_URL: "http://${POSTIZ_HOST}"
+      FRONTEND_URL: "http://${POSTIZ_HOST}"
+      NEXT_PUBLIC_BACKEND_URL: "http://${POSTIZ_HOST}/api"
+
       JWT_SECRET: ${JWT_SECRET}
       DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@postiz-postgres:5432/${DB_NAME}"
       REDIS_URL: "redis://postiz-redis:6379"
       BACKEND_INTERNAL_URL: "http://localhost:3000"
+      TEMPORAL_ADDRESS: "temporal:7233"
+
       IS_GENERAL: "true"
-      STORAGE_PROVIDER: "local"
+
+      STORAGE_PROVIDER: "local" # Change to "cloudflare" to use Cloudflare R2
       UPLOAD_DIRECTORY: "/uploads"
       NEXT_PUBLIC_UPLOAD_DIRECTORY: "/uploads"
+
+      CLOUDFLARE_ACCOUNT_ID: ${CLOUDFLARE_ACCOUNT_ID}
+      CLOUDFLARE_ACCESS_KEY: ${CLOUDFLARE_ACCESS_KEY}
+      CLOUDFLARE_SECRET_ACCESS_KEY: ${CLOUDFLARE_SECRET_ACCESS_KEY}
+      CLOUDFLARE_BUCKETNAME: ${CLOUDFLARE_BUCKETNAME}
+      CLOUDFLARE_BUCKET_URL: ${CLOUDFLARE_BUCKET_URL}
+      CLOUDFLARE_REGION: ${CLOUDFLARE_REGION}
+      
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      EMAIL_SECURE: ${EMAIL_SECURE}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASS: ${EMAIL_PASS}
+
+      BEEHIIVE_API_KEY: ${BEEHIIVE_API_KEY}
+      BEEHIIVE_PUBLICATION_ID: ${BEEHIIVE_PUBLICATION_ID}
+      DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID}
+      DISCORD_CLIENT_SECRET: ${DISCORD_CLIENT_SECRET}
+      DISCORD_BOT_TOKEN_ID: ${DISCORD_BOT_TOKEN_ID}
+      DRIBBBLE_CLIENT_ID: ${DRIBBBLE_CLIENT_ID}
+      DRIBBBLE_CLIENT_SECRET: ${DRIBBBLE_CLIENT_SECRET}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET} 
+      FACEBOOK_APP_ID: ${FACEBOOK_APP_ID}
+      FACEBOOK_APP_SECRET: ${FACEBOOK_APP_SECRET}
+      LINKEDIN_CLIENT_ID: ${LINKEDIN_CLIENT_ID}
+      LINKEDIN_CLIENT_SECRET: ${LINKEDIN_CLIENT_SECRET}
+      MASTODON_CLIENT_ID: ${MASTODON_CLIENT_ID}
+      MASTODON_CLIENT_SECRET: ${MASTODON_CLIENT_SECRET}
+      PINTEREST_CLIENT_ID: ${PINTEREST_CLIENT_ID}
+      PINTEREST_CLIENT_SECRET: ${PINTEREST_CLIENT_SECRET}
+      REDDIT_CLIENT_ID: ${REDDIT_CLIENT_ID}
+      REDDIT_CLIENT_SECRET: ${REDDIT_CLIENT_SECRET}
+      SLACK_ID: ${SLACK_ID}
+      SLACK_SECRET: ${SLACK_SECRET}
+      SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET}
+      THREADS_APP_ID: ${THREADS_APP_ID}
+      THREADS_APP_SECRET: ${THREADS_APP_SECRET}
+      TIKTOK_CLIENT_ID: ${TIKTOK_CLIENT_ID}
+      TIKTOK_CLIENT_SECRET: ${TIKTOK_CLIENT_SECRET}
+      X_API_KEY: ${X_API_KEY}
+      X_API_SECRET: ${X_API_SECRET}
+      X_CLIENT: ${X_CLIENT}
+      X_SECRET: ${X_SECRET}
+      YOUTUBE_CLIENT_ID: ${YOUTUBE_CLIENT_ID}
+      YOUTUBE_CLIENT_SECRET: ${YOUTUBE_CLIENT_SECRET}
     volumes:
       - postiz-config:/config/
       - postiz-uploads:/uploads/
@@ -25,37 +73,114 @@ services:
         condition: service_healthy
       postiz-redis:
         condition: service_healthy
+      temporal:
+        condition: service_started
+    networks:
+      - dokploy-network
+      - temporal-network
 
   postiz-postgres:
     image: postgres:17-alpine
     restart: always
-
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_DB: ${DB_NAME}
-    volumes:
-      - postiz-postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: pg_isready -U ${DB_USER} -d ${DB_NAME}
       interval: 10s
       timeout: 3s
       retries: 3
+    volumes:
+      - postiz-postgres-data:/var/lib/postgresql/data
+    networks:
+      - dokploy-network
 
   postiz-redis:
     image: redis:7.2
     restart: always
-
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 512mb
+      --maxmemory-policy noeviction
+      --save ""
     healthcheck:
-      test: redis-cli ping
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postiz-redis-data:/data
+    networks:
+      - dokploy-network
+
+  temporal-elasticsearch:
+    image: elasticsearch:7.17.27
+    restart: always
+    environment:
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=512mb
+      - cluster.routing.allocation.disk.watermark.high=256mb
+      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - xpack.security.enabled=false
+    volumes:
+      - temporal-es-data:/usr/share/elasticsearch/data
+    networks:
+      - temporal-network
+
+  temporal-postgresql:
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: temporal
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_DB: temporal
+    healthcheck:
+      test: pg_isready -U temporal -d temporal
       interval: 10s
       timeout: 3s
       retries: 3
     volumes:
-      - postiz-redis-data:/data
+      - temporal-db-data:/var/lib/postgresql/data
+    networks:
+      - temporal-network
+
+  temporal:
+    image: temporalio/auto-setup:1.28.1
+    restart: always
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=temporal-postgresql
+      - ENABLE_ES=true
+      - ES_SEEDS=temporal-elasticsearch
+      - ES_VERSION=v7
+      - TEMPORAL_NAMESPACE=default
+    depends_on:
+      temporal-postgresql:
+        condition: service_healthy
+      temporal-elasticsearch:
+        condition: service_started
+    networks:
+      - temporal-network
+
+networks:
+  dokploy-network:
+    external: true
+  temporal-network:
+    driver: bridge
+    name: temporal-network
 
 volumes:
   postiz-postgres-data:
   postiz-redis-data:
   postiz-config:
-  postiz-uploads: 
+  postiz-uploads:
+  temporal-db-data:
+  temporal-es-data:

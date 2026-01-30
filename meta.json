@@ -5995,6 +5995,54 @@
     ]
   },
   {
+    "id": "triggerdotdev4",
+    "name": "Trigger.dev V4",
+    "version": "v4",
+    "description": "Trigger is a platform for building event-driven applications.",
+    "logo": "triggerdotdev.svg",
+    "links": {
+      "github": "https://github.com/triggerdotdev/trigger.dev",
+      "website": "https://trigger.dev/",
+      "docs": "https://trigger.dev/docs"
+    },
+    "tags": [
+      "event-driven",
+      "applications"
+    ]
+  },
+  {
+    "id": "triggerdotdev4-web",
+    "name": "Trigger.dev V4 Web",
+    "version": "v4",
+    "description": "Trigger is a platform for building event-driven applications.",
+    "logo": "triggerdotdev.svg",
+    "links": {
+      "github": "https://github.com/triggerdotdev/trigger.dev",
+      "website": "https://trigger.dev/",
+      "docs": "https://trigger.dev/docs"
+    },
+    "tags": [
+      "event-driven",
+      "applications"
+    ]
+  },
+  {
+    "id": "triggerdotdev4-worker",
+    "name": "Trigger.dev V4 Worker",
+    "version": "v4",
+    "description": "Trigger is a platform for building event-driven applications.",
+    "logo": "triggerdotdev.svg",
+    "links": {
+      "github": "https://github.com/triggerdotdev/trigger.dev",
+      "website": "https://trigger.dev/",
+      "docs": "https://trigger.dev/docs"
+    },
+    "tags": [
+      "event-driven",
+      "applications"
+    ]
+  },
+  {
     "id": "trilium",
     "name": "Trilium",
     "description": "Trilium Notes is a hierarchical note taking application with focus on building large personal knowledge bases.",

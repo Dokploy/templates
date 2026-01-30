@@ -1,0 +1,83 @@
+name: trigger
+
+x-logging: &logging-config
+  driver: local
+  options:
+    max-size: "20m"
+    max-file: "5"
+    compress: "true"
+
+services:
+  supervisor:
+    image: ghcr.io/triggerdotdev/supervisor:v4.0.4
+    restart: unless-stopped
+    logging: *logging-config
+    depends_on:
+      - docker-proxy
+    networks:
+      - supervisor
+      - docker-proxy
+      - webapp
+    volumes:
+      - shared:/home/node/shared
+    # Only needed for bootstrap
+    user: root
+    # Only needed for bootstrap
+    command: sh -c "chown -R node:node /home/node/shared && exec /usr/bin/dumb-init -- pnpm run --filter supervisor start"
+    environment:
+      # Use the bootstrap token created by the webapp
+      TRIGGER_WORKER_TOKEN: ${TRIGGER_WORKER_TOKEN}
+      MANAGED_WORKER_SECRET: ${MANAGED_WORKER_SECRET}
+      TRIGGER_API_URL: ${WEB_APP_URL}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${WEB_APP_URL}/otel
+      TRIGGER_WORKLOAD_API_DOMAIN: supervisor
+      TRIGGER_WORKLOAD_API_PORT_EXTERNAL: 8020
+      # Optional settings
+      DEBUG: 1
+      ENFORCE_MACHINE_PRESETS: 1
+      TRIGGER_DEQUEUE_INTERVAL_MS: 1000
+      DOCKER_HOST: tcp://docker-proxy:2375
+      DOCKER_RUNNER_NETWORKS: webapp,supervisor
+      DOCKER_REGISTRY_URL: ${DOCKER_REGISTRY_URL}
+      DOCKER_REGISTRY_USERNAME: ${DOCKER_REGISTRY_USERNAME}
+      DOCKER_REGISTRY_PASSWORD: ${DOCKER_REGISTRY_PASSWORD}
+      DOCKER_AUTOREMOVE_EXITED_CONTAINERS: 0
+    healthcheck:
+      test: ["CMD", "node", "-e", "http.get('http://localhost:8020/health', res => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  docker-proxy:
+    image: tecnativa/docker-socket-proxy:v0.4.1
+    restart: unless-stopped
+    logging: *logging-config
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - docker-proxy
+    environment:
+      - LOG_LEVEL=info
+      - POST=1
+      - CONTAINERS=1
+      - IMAGES=1
+      - INFO=1
+      - NETWORKS=1
+    healthcheck:
+      test: ["CMD", "nc", "-z", "127.0.0.1", "2375"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  shared:
+
+networks:
+  docker-proxy:
+    name: docker-proxy
+  supervisor:
+    name: supervisor
+  webapp:
+    name: webapp

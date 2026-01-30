@@ -1,0 +1,16 @@
+# For more details, see:
+# - https://github.com/favonia/cloudflare-ddns
+services:
+  cloudflare-ddns:
+    image: favonia/cloudflare-ddns:1
+    network_mode: host
+    restart: unless-stopped
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [all]
+    security_opt: [no-new-privileges:true]
+    environment:
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+      - DOMAINS=${DOMAINS}
+      - PROXIED=false
+      - IP6_PROVIDER=none

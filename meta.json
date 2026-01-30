@@ -5556,6 +5556,25 @@
     ]
   },
   {
+    "id": "seaweedfs",
+    "name": "SeaweedFS",
+    "version": "latest",
+    "description": "SeaweedFS is a fast distributed storage system for blobs, objects, and files. Features S3-compatible API, POSIX FUSE mount, and WebDAV support.",
+    "logo": "seaweedfs.svg",
+    "links": {
+      "github": "https://github.com/seaweedfs/seaweedfs",
+      "website": "https://seaweedfs.com/",
+      "docs": "https://github.com/seaweedfs/seaweedfs/wiki"
+    },
+    "tags": [
+      "storage",
+      "s3",
+      "distributed",
+      "object-storage",
+      "file-system"
+    ]
+  },
+  {
     "id": "shlink",
     "name": "Shlink",
     "version": "stable",

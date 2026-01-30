@@ -1,0 +1,550 @@
+x-custom-image: &custom_image
+  image: ${IMAGE_NAME:-frappe/erpnext}:${VERSION:-v15}
+  pull_policy: ${PULL_POLICY:-always}
+  deploy:
+    restart_policy:
+      condition: always
+
+services:
+  backend:
+    <<: *custom_image
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        cd /home/frappe/frappe-bench;
+        if [ -d "apps/lending" ] && ! ./env/bin/pip show lending > /dev/null 2>&1; then
+          echo "Installing lending app in Python environment...";
+          ./env/bin/pip install -e apps/lending || echo "Failed to install lending";
+        fi;
+        echo "Waiting for site to be ready...";
+        export start=`date +%s`;
+        while [ ! -f "sites/sites.txt" ] || [ ! -d "sites/${SITE_NAME}" ] || [ ! -f "sites/${SITE_NAME}/site_config.json" ]; do
+          echo "Waiting for site ${SITE_NAME} to be created and ready...";
+          sleep 2;
+          if (( `date +%s`-start > 300 )); then
+            echo "Timeout waiting for site to be ready";
+            echo "Checking sites directory:";
+            ls -la sites/ || echo "sites directory not found";
+            echo "Checking sites.txt:";
+            cat sites/sites.txt 2>/dev/null || echo "sites.txt not found";
+            break;
+          fi
+        done;
+        if [ -f "sites/sites.txt" ] && [ -d "sites/${SITE_NAME}" ] && [ -f "sites/${SITE_NAME}/site_config.json" ]; then
+          echo "Site ${SITE_NAME} is ready!";
+          echo "sites.txt contents:";
+          cat sites/sites.txt;
+          echo "Verifying site is accessible via bench...";
+          bench --site ${SITE_NAME} list-apps > /dev/null 2>&1 && echo "Site is accessible via bench" || echo "Warning: Site accessibility check via bench failed";
+          echo "Site directory structure:";
+          ls -la sites/${SITE_NAME}/ | head -10;
+          if [ -n "${MAIN_DOMAIN}" ]; then
+            echo "Updating host_name and SSL settings to https://${MAIN_DOMAIN} (ensuring correct domain for emails)...";
+            bench --site ${SITE_NAME} set-config host_name "https://${MAIN_DOMAIN}" || echo "Warning: Could not update host_name";
+            bench --site ${SITE_NAME} set-config host_url "https://${MAIN_DOMAIN}" || echo "Warning: Could not update host_url";
+            bench --site ${SITE_NAME} set-config use_ssl 1 || echo "Warning: Could not set use_ssl";
+            echo "Verifying configuration...";
+            bench --site ${SITE_NAME} get-config host_name 2>/dev/null || echo "Could not read host_name (this is OK if site is not fully initialized)";
+            echo "Clearing cache to apply new domain settings...";
+            bench --site ${SITE_NAME} clear-cache || echo "Warning: Could not clear cache";
+            bench --site ${SITE_NAME} clear-website-cache || echo "Warning: Could not clear website cache";
+          fi;
+        else
+          echo "Warning: Site may not be fully ready, but starting backend anyway";
+        fi;
+        echo "Starting bench serve (production-ready)";
+        export PYTHONUNBUFFERED=1;
+        bench serve --port 8000 2>&1 | awk '!/127\.0\.0\.1.*400/ {print}' || bench serve --port 8000;
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    environment:
+      SITE_NAME: ${SITE_NAME}
+      FRAPPE_SITE_NAME_HEADER: ""
+      MAIN_DOMAIN: ${MAIN_DOMAIN}
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+        required: true
+      create-site:
+        condition: service_completed_successfully
+        required: true
+    healthcheck:
+      test:
+        - CMD
+        - wait-for-it
+        - '0.0.0.0:8000'
+      interval: 2s
+      timeout: 10s
+      retries: 30
+
+  frontend:
+    <<: *custom_image
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        echo "Starting Nginx with port_in_redirect fix...";
+        nginx-entrypoint.sh &
+        NGINX_PID=$!;
+        sleep 3;
+        if [ -f /etc/nginx/conf.d/frappe.conf ]; then
+          if ! grep -q "port_in_redirect off" /etc/nginx/conf.d/frappe.conf; then
+            echo "Applying port_in_redirect fix to prevent :8080 in URLs...";
+            sed -i 's/listen 8080;/listen 8080;\n    port_in_redirect off;\n    absolute_redirect off;/' /etc/nginx/conf.d/frappe.conf;
+            echo "Nginx config updated - reloading...";
+            sleep 1;
+            nginx -s reload 2>/dev/null || echo "Nginx will use updated config on next reload";
+          else
+            echo "Nginx config already has port_in_redirect settings";
+          fi
+        else
+          echo "Warning: frappe.conf not found yet, will check again";
+          sleep 2;
+          if [ -f /etc/nginx/conf.d/frappe.conf ]; then
+            if ! grep -q "port_in_redirect off" /etc/nginx/conf.d/frappe.conf; then
+              sed -i 's/listen 8080;/listen 8080;\n    port_in_redirect off;\n    absolute_redirect off;/' /etc/nginx/conf.d/frappe.conf;
+              nginx -s reload 2>/dev/null || true;
+            fi
+          fi
+        fi;
+        wait $NGINX_PID
+    depends_on:
+      backend:
+        condition: service_started
+        required: true
+      websocket:
+        condition: service_started
+        required: true
+    environment:
+      BACKEND: backend:8000
+      FRAPPE_SITE_NAME_HEADER: ""
+      SOCKETIO: websocket:9000
+      UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
+      UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
+      UPSTREAM_REAL_IP_RECURSIVE: "off"
+      USE_X_FORWARDED_HOST: "1"
+      PROXY_FIX: "1"
+      X_FORWARDED_PROTO: "https"
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl -fsS http://127.0.0.1:8080/login || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  queue-default:
+    <<: *custom_image
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        cd /home/frappe/frappe-bench;
+        export start=`date +%s`;
+        while [ ! -d "apps/lending" ]; do
+          echo "Waiting for apps to be available...";
+          sleep 2;
+          if (( `date +%s`-start > 300 )); then
+            echo "Timeout waiting for apps";
+            break;
+          fi;
+        done;
+        if [ -d "apps/lending" ] && ! ./env/bin/pip show lending > /dev/null 2>&1; then
+          echo "Installing lending app in Python environment...";
+          ./env/bin/pip install -e apps/lending || echo "Failed to install lending";
+        fi;
+        exec bench worker --queue default
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    healthcheck:
+      test:
+        - CMD
+        - wait-for-it
+        - 'redis-queue:6379'
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+        required: true
+
+  queue-long:
+    <<: *custom_image
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        cd /home/frappe/frappe-bench;
+        export start=`date +%s`;
+        while [ ! -d "apps/lending" ]; do
+          echo "Waiting for apps to be available...";
+          sleep 2;
+          if (( `date +%s`-start > 300 )); then
+            echo "Timeout waiting for apps";
+            break;
+          fi;
+        done;
+        if [ -d "apps/lending" ] && ! ./env/bin/pip show lending > /dev/null 2>&1; then
+          echo "Installing lending app in Python environment...";
+          ./env/bin/pip install -e apps/lending || echo "Failed to install lending";
+        fi;
+        exec bench worker --queue long
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    healthcheck:
+      test:
+        - CMD
+        - wait-for-it
+        - 'redis-queue:6379'
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+        required: true
+
+  queue-short:
+    <<: *custom_image
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        cd /home/frappe/frappe-bench;
+        export start=`date +%s`;
+        while [ ! -d "apps/lending" ]; do
+          echo "Waiting for apps to be available...";
+          sleep 2;
+          if (( `date +%s`-start > 300 )); then
+            echo "Timeout waiting for apps";
+            break;
+          fi;
+        done;
+        if [ -d "apps/lending" ] && ! ./env/bin/pip show lending > /dev/null 2>&1; then
+          echo "Installing lending app in Python environment...";
+          ./env/bin/pip install -e apps/lending || echo "Failed to install lending";
+        fi;
+        exec bench worker --queue short
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    healthcheck:
+      test:
+        - CMD
+        - wait-for-it
+        - 'redis-queue:6379'
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+        required: true
+
+  scheduler:
+    <<: *custom_image
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        cd /home/frappe/frappe-bench;
+        export start=`date +%s`;
+        while [ ! -d "apps/lending" ]; do
+          echo "Waiting for apps to be available...";
+          sleep 2;
+          if (( `date +%s`-start > 300 )); then
+            echo "Timeout waiting for apps";
+            break;
+          fi;
+        done;
+        if [ -d "apps/lending" ] && ! ./env/bin/pip show lending > /dev/null 2>&1; then
+          echo "Installing lending app in Python environment...";
+          ./env/bin/pip install -e apps/lending || echo "Failed to install lending";
+        fi;
+        exec bench schedule
+    healthcheck:
+      test:
+        - CMD
+        - wait-for-it
+        - 'redis-queue:6379'
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+        required: true
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+
+  websocket:
+    <<: *custom_image
+    healthcheck:
+      test:
+        - CMD
+        - wait-for-it
+        - '0.0.0.0:9000'
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    command:
+      - node
+      - /home/frappe/frappe-bench/apps/frappe/socketio.js
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+        required: true
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+
+  configurator:
+    <<: *custom_image
+    deploy:
+      mode: replicated
+      replicas: ${CONFIGURE:-0}
+      restart_policy:
+        condition: none
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        [[ $${REGENERATE_APPS_TXT} == "1" ]] && ls -1 apps > sites/apps.txt;
+        [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".db_host // empty"` ]] && exit 0;
+        bench set-config -g db_host $$DB_HOST;
+        bench set-config -gp db_port $$DB_PORT;
+        bench set-config -g redis_cache "redis://$$REDIS_CACHE";
+        bench set-config -g redis_queue "redis://$$REDIS_QUEUE";
+        bench set-config -g redis_socketio "redis://$$REDIS_QUEUE";
+        bench set-config -gp socketio_port $$SOCKETIO_PORT;
+    environment:
+      DB_HOST: "${DB_HOST:-db}"
+      DB_PORT: "3306"
+      REDIS_CACHE: redis-cache:6379
+      REDIS_QUEUE: redis-queue:6379
+      SOCKETIO_PORT: "9000"
+      REGENERATE_APPS_TXT: "${REGENERATE_APPS_TXT:-0}"
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+
+  create-site:
+    <<: *custom_image
+    deploy:
+      mode: replicated
+      replicas: ${CREATE_SITE:-0}
+      restart_policy:
+        condition: none
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        wait-for-it -t 120 $$DB_HOST:$$DB_PORT;
+        wait-for-it -t 120 redis-cache:6379;
+        wait-for-it -t 120 redis-queue:6379;
+        export start=`date +%s`;
+        until [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".db_host // empty"` ]] && \
+          [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".redis_cache // empty"` ]] && \
+          [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".redis_queue // empty"` ]];
+        do
+          echo "Waiting for sites/common_site_config.json to be created";
+          sleep 5;
+          if (( `date +%s`-start > 120 )); then
+            echo "could not find sites/common_site_config.json with required keys";
+            exit 1
+          fi
+        done;
+        echo "sites/common_site_config.json found";
+        cd /home/frappe/frappe-bench;
+        if [ -d "sites/${SITE_NAME}" ] && [ -f "sites/${SITE_NAME}/site_config.json" ]; then
+          echo "Site ${SITE_NAME} already exists, skipping creation";
+          bench use $${SITE_NAME} || echo "Warning: Could not set current site";
+          echo "$${SITE_NAME}" > sites/sites.txt || echo "Warning: Could not update sites.txt";
+          bench set-config -g default_site $${SITE_NAME} || echo "Warning: Could not set default site";
+          if [ -n "$${ADMIN_PASSWORD}" ]; then
+            echo "Updating admin password for existing site...";
+            bench --site $${SITE_NAME} set-admin-password $${ADMIN_PASSWORD} || echo "Warning: Could not update admin password (may need to be done manually)";
+          fi;
+          if [ -n "$${MAIN_DOMAIN}" ]; then
+            echo "Setting host_name and SSL settings to https://${MAIN_DOMAIN} (with HTTPS)...";
+            bench --site $${SITE_NAME} set-config host_name "https://$${MAIN_DOMAIN}" || echo "Warning: Could not set host_name";
+            bench --site $${SITE_NAME} set-config host_url "https://$${MAIN_DOMAIN}" || echo "Warning: Could not set host_url";
+            bench --site $${SITE_NAME} set-config use_ssl 1 || echo "Warning: Could not set use_ssl";
+            echo "Clearing cache to apply new domain settings...";
+            bench --site $${SITE_NAME} clear-cache || echo "Warning: Could not clear cache";
+            bench --site $${SITE_NAME} clear-website-cache || echo "Warning: Could not clear website cache";
+          fi;
+          echo "Verifying existing site is accessible...";
+          bench --site $${SITE_NAME} list-apps > /dev/null 2>&1 && echo "Existing site is accessible and working" || echo "Warning: Site accessibility check failed";
+          exit 0;
+        fi;
+        if [ ! -d "apps/lending" ]; then
+          echo "Cloning lending app...";
+          git clone https://github.com/frappe/lending.git apps/lending || echo "Failed to clone lending app";
+        fi;
+        if [ -d "apps/lending" ]; then
+          echo "Installing lending app in Python environment...";
+          ./env/bin/pip install -e apps/lending || echo "Failed to install lending app";
+        fi;
+        echo "Regenerating apps.txt to include all apps...";
+        ls -1 apps > sites/apps.txt || (echo "frappe" > sites/apps.txt && echo "lending" >> sites/apps.txt);
+        echo "apps.txt contents:";
+        cat sites/apps.txt;
+        bench set-mariadb-host $${DB_HOST:-db};
+        bench new-site --mariadb-user-host-login-scope='%' --admin-password=$${ADMIN_PASSWORD} --db-root-username=root --db-root-password=$${DB_ROOT_PASSWORD} $${INSTALL_APP_ARGS} $${SITE_NAME};
+        if [ ! -d "sites/${SITE_NAME}" ]; then
+          echo "ERROR: Site ${SITE_NAME} was not created successfully";
+          exit 1;
+        fi;
+        echo "Site ${SITE_NAME} created successfully";
+        bench use $${SITE_NAME};
+        echo "Current site set to: $${SITE_NAME}";
+        if [ -d "apps/lending" ]; then
+          echo "Installing lending app on site...";
+          bench --site $${SITE_NAME} install-app lending || echo "Lending app may already be installed or failed to install";
+        fi;
+        echo "Building assets for all apps (this ensures lending JS is available)...";
+        bench build --apps lending || echo "Asset build completed";
+        echo "Clearing all caches...";
+        bench --site $${SITE_NAME} clear-cache || echo "Cache cleared";
+        bench --site $${SITE_NAME} clear-website-cache || echo "Website cache cleared";
+        echo "Creating sites.txt for site resolution...";
+        echo "$${SITE_NAME}" > sites/sites.txt || echo "Warning: Could not create sites.txt";
+        echo "Site registered in sites.txt:";
+        cat sites/sites.txt || echo "sites.txt not found";
+        echo "Verifying site directory and config exist...";
+        if [ -d "sites/${SITE_NAME}" ] && [ -f "sites/${SITE_NAME}/site_config.json" ]; then
+          echo "Site directory and config verified successfully";
+        else
+          echo "Warning: Site directory or config file missing";
+          ls -la sites/${SITE_NAME}/ 2>/dev/null || echo "Site directory listing failed";
+        fi;
+        echo "Setting default site in common_site_config.json...";
+        bench set-config -g default_site $${SITE_NAME} || echo "Warning: Could not set default site";
+        if [ -n "$${MAIN_DOMAIN}" ]; then
+          echo "Setting host_name and SSL settings to https://${MAIN_DOMAIN} (with HTTPS)...";
+          bench --site $${SITE_NAME} set-config host_name "https://$${MAIN_DOMAIN}" || echo "Warning: Could not set host_name";
+          bench --site $${SITE_NAME} set-config host_url "https://$${MAIN_DOMAIN}" || echo "Warning: Could not set host_url";
+          bench --site $${SITE_NAME} set-config use_ssl 1 || echo "Warning: Could not set use_ssl";
+          echo "Clearing cache to apply new domain settings...";
+          bench --site $${SITE_NAME} clear-cache || echo "Warning: Could not clear cache";
+          bench --site $${SITE_NAME} clear-website-cache || echo "Warning: Could not clear website cache";
+        fi;
+        echo "Verifying site is accessible...";
+        bench --site $${SITE_NAME} list-apps > /dev/null 2>&1 && echo "Site is accessible and working" || echo "Warning: Site accessibility check failed";
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+    environment:
+      SITE_NAME: ${SITE_NAME}
+      MAIN_DOMAIN: ${main_domain}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: "${DB_PORT:-3306}"
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      INSTALL_APP_ARGS: ${INSTALL_APP_ARGS}
+
+  migration:
+    <<: *custom_image
+    deploy:
+      mode: replicated
+      replicas: ${MIGRATE:-0}
+      restart_policy:
+        condition: none
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        curl -f http://${SITE_NAME}:8080/api/method/ping || echo "Site busy" && exit 0;
+        bench --site all set-config -p maintenance_mode 1;
+        bench --site all set-config -p pause_scheduler 1;
+        bench --site all migrate;
+        bench --site all set-config -p maintenance_mode 0;
+        bench --site all set-config -p pause_scheduler 0;
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - apps:/home/frappe/frappe-bench/apps
+
+  db:
+    image: mariadb:10.6
+    deploy:
+      mode: replicated
+      replicas: ${ENABLE_DB:-0}
+      restart_policy:
+        condition: always
+    healthcheck:
+      test: mysqladmin ping -h localhost --password=${DB_ROOT_PASSWORD}
+      interval: 1s
+      retries: 20
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+      - --skip-innodb-read-only-compressed
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+
+  redis-cache:
+    deploy:
+      restart_policy:
+        condition: always
+    image: redis:6.2-alpine
+    volumes:
+      - redis-cache-data:/data
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  redis-queue:
+    deploy:
+      restart_policy:
+        condition: always
+    image: redis:6.2-alpine
+    volumes:
+      - redis-queue-data:/data
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  redis-socketio:
+    deploy:
+      restart_policy:
+        condition: always
+    image: redis:6.2-alpine
+    volumes:
+      - redis-socketio-data:/data
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  db-data:
+  redis-cache-data:
+  redis-queue-data:
+  redis-socketio-data:
+  sites:
+    driver_opts:
+      type: "${SITE_VOLUME_TYPE}"
+      o: "${SITE_VOLUME_OPTS}"
+      device: "${SITE_VOLUME_DEV}"
+  apps:
+

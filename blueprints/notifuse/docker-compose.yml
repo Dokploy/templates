@@ -3,11 +3,11 @@ services:
     image: postgres:17-alpine
     restart: unless-stopped
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -21,38 +21,36 @@ services:
       - db
     environment:
       # Root user configuration
-      - ROOT_EMAIL=${ROOT_EMAIL}
+      ROOT_EMAIL: ${ROOT_EMAIL}
 
       # API configuration
-      - API_ENDPOINT=${API_ENDPOINT}
+      API_ENDPOINT: ${API_ENDPOINT}
 
       # Database configuration
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_PREFIX=notifuse
-      - DB_NAME=notifuse_system
-      - DB_SSLMODE=disable
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_PREFIX: notifuse
+      DB_NAME: notifuse_system
+      DB_SSLMODE: disable
 
-      # PASETO keys for authentication
-      # Default keys for testing - GENERATE YOUR OWN for production at https://paseto.notifuse.com/
-      - PASETO_PRIVATE_KEY=${PASETO_PRIVATE_KEY}
-      - PASETO_PUBLIC_KEY=${PASETO_PUBLIC_KEY}
-
-      # SMTP configuration
-      - SMTP_HOST=${SMTP_HOST}
-      - SMTP_PORT=${SMTP_PORT}
-      - SMTP_USERNAME=${SMTP_USERNAME}
-      - SMTP_PASSWORD=${SMTP_PASSWORD}
-      - SMTP_FROM_EMAIL=${SMTP_FROM_EMAIL}
-      - SMTP_FROM_NAME=${SMTP_FROM_NAME}
+      # Secret key for authentication (auto-generated)
+      SECRET_KEY: ${SECRET_KEY}
 
       # Server configuration
-      - SERVER_PORT=8080
-      - SERVER_HOST=0.0.0.0
-      - ENVIRONMENT=production
+      SERVER_PORT: 8080
+      SERVER_HOST: 0.0.0.0
+      ENVIRONMENT: production
+    volumes:
+      - notifuse_data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
 volumes:
-  db-data:
-    driver: local
+  db_data: {}
+  notifuse_data: {}

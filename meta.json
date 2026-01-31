@@ -4936,7 +4936,7 @@
   {
     "id": "plane",
     "name": "Plane",
-    "version": "v0.27.1",
+    "version": "v0.28.0",
     "description": "Easy, flexible, open source project management software",
     "logo": "plane.png",
     "links": {

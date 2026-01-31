@@ -20,8 +20,7 @@ services:
     image: invoiceshelf/invoiceshelf:nightly
 
     volumes:
-      - invoiceshelf-app-data:/data
-      - invoiceshelf-app-conf:/conf
+      - invoiceshelf-storage:/var/www/html/storage
     environment:
       - PHP_TZ=UTC
       - TIMEZONE=UTC
@@ -49,5 +48,4 @@ services:
 
 volumes:
   invoiceshelf-postgres-data:
-  invoiceshelf-app-data:
-  invoiceshelf-app-conf: 
+  invoiceshelf-storage:

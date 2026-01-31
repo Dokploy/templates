@@ -12,7 +12,7 @@ services:
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
     volumes:
       - openclaw-config:/home/node/.openclaw
-      - openclaw-workspace:/home/node/openclaw
+      - openclaw-workspace:/home/node/.openclaw/workspace
     ports:
       - "18789"
       - "18790"

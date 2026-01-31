@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+db_user = "cloudreve"
+db_name = "cloudreve"
+
+[config]
+[[config.domains]]
+serviceName = "cloudreve"
+port = 5212
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${db_password}"
+POSTGRES_USER = "${db_user}"
+POSTGRES_DB = "${db_name}"

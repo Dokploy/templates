@@ -1,0 +1,29 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+postgres_user = "instant"
+postgres_db = "instant"
+aws_access_key_id = "FILL-YOUR-CREDENTIALS"
+aws_secret_access_key = "FILL-YOUR-CREDENTIALS"
+aws_region = "us-east-1"
+
+[config]
+env = [
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_USER=${postgres_user}",
+  "POSTGRES_DB=${postgres_db}",
+  "DATABASE_URL=postgresql://${postgres_user}:${postgres_password}@postgres:5432/${postgres_db}",
+  "NREPL_BIND_ADDRESS=0.0.0.0",
+  "PORT=8888",
+  "HOST=0.0.0.0",
+  "AWS_ACCESS_KEY_ID=${aws_access_key_id}",
+  "AWS_SECRET_ACCESS_KEY=${aws_secret_access_key}",
+  "AWS_REGION=${aws_region}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "server"
+port = 8888
+host = "${main_domain}"
+

@@ -1,0 +1,30 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:24}"
+db_user = "danmuapi"
+db_name = "danmuapi"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "danmu-app"
+port = 7768
+host = "${main_domain}"
+
+[config.env]
+# PostgreSQL
+POSTGRES_PASSWORD = "${db_password}"
+POSTGRES_USER = "${db_user}"
+POSTGRES_DB = "${db_name}"
+
+# Danmu App Database Connection
+DANMUAPI_DATABASE__TYPE = "postgresql"
+DANMUAPI_DATABASE__HOST = "postgres"
+DANMUAPI_DATABASE__PORT = "5432"
+DANMUAPI_DATABASE__NAME = "${db_name}"
+DANMUAPI_DATABASE__USER = "${db_user}"
+DANMUAPI_DATABASE__PASSWORD = "${db_password}"
+
+# Admin
+DANMUAPI_ADMIN__INITIAL_USER = "admin"

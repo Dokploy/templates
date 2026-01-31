@@ -1,6 +1,6 @@
 services:
   openclaw-gateway:
-    image: ghcr.io/openclaw/openclaw:2026.1.24-1
+    image: ghcr.io/openclaw/openclaw:2026.1.29
     environment:
       HOME: /home/node
       TERM: xterm-256color

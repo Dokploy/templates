@@ -3,14 +3,27 @@ console_domain = "${domain}"
 api_domain = "${domain}"
 access_key = "rustfsadmin"
 secret_key = "${password:16}"
+console_enable = "true"
+cors_allowed_origins = "*"
+console_cors_allowed_origins = "*"
+address = "0.0.0.0:9000"
+console_address = "0.0.0.0:9001"
+region = "us-east-1"
+log_level = "debug"
 
 [config]
 env = [
   "RUSTFS_ACCESS_KEY=${access_key}",
   "RUSTFS_SECRET_KEY=${secret_key}",
-  "",
-  "## SET THE API URL IN CONSOLE CONFIG BY CLICKING THE COG",
-  "## API URL: ${api_domain}",
+  "RUSTFS_EXTERNAL_URL=${api_domain}",
+  "RUSTFS_CONSOLE_EXTERNAL_URL=${console_domain}",
+  "RUSTFS_CONSOLE_ENABLE=${console_enable}",
+  "RUSTFS_CORS_ALLOWED_ORIGINS=${cors_allowed_origins}",
+  "RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS=${console_cors_allowed_origins}",
+  "RUSTFS_ADDRESS=${address}",
+  "RUSTFS_CONSOLE_ADDRESS=${console_address}",
+  "RUSTFS_REGION=${region}",
+  "RUSTFS_LOG_LEVEL=${log_level}",
 ]
 mounts = []
 

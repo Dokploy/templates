@@ -3,7 +3,7 @@ services:
     image: performanc/nodelink:latest
     volumes:
       - ../files/config.js:/app/config.js
-    ports:
+    expose:
       - "3000"
     restart: unless-stopped
     environment:

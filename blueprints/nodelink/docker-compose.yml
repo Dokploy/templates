@@ -4,7 +4,7 @@ services:
     volumes:
       - ../files/config.js:/app/config.js
     ports:
-      - "3000:3000"
+      - "3000"
     restart: unless-stopped
     environment:
       NODELINK_SERVER_PASSWORD: "${NODELINK_SERVER_PASSWORD:-youshallnotpass}"

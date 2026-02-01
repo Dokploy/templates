@@ -4027,15 +4027,15 @@
     ]
   },
   {
-    "id": "moltbot",
-    "name": "Moltbot",
-    "version": "2026.1.25",
+    "id": "openclaw",
+    "name": "Openclaw",
+    "version": "2026.1.29",
     "description": "WhatsApp gateway CLI with Pi RPC agent - self-hosted AI-powered messaging platform",
-    "logo": "moltbot.svg",
+    "logo": "openclaw.svg",
     "links": {
-      "github": "https://github.com/moltbot/moltbot",
-      "website": "https://molt.bot",
-      "docs": "https://docs.molt.bot"
+      "github": "https://github.com/openclaw/openclaw",
+      "website": "https://openclaw.ai/",
+      "docs": "https://docs.openclaw.ai/"
     },
     "tags": [
       "whatsapp",

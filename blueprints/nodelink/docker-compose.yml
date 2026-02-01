@@ -3,8 +3,8 @@ services:
     image: performanc/nodelink:latest
     volumes:
       - ../files/config.js:/app/config.js
-    expose:
-      - "3000"
+    ports:
+      - "3000:3000"
     restart: unless-stopped
     environment:
       NODELINK_SERVER_PASSWORD: "${NODELINK_SERVER_PASSWORD:-youshallnotpass}"

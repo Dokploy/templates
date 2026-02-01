@@ -1307,8 +1307,8 @@
     "logo": "cloudflared.svg",
     "links": {
       "github": "https://github.com/cloudflare/cloudflared",
-      "website": "https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/",
-      "docs": "https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/"
+      "website": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/",
+      "docs": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/"
     },
     "tags": [
       "cloud",
@@ -4304,6 +4304,23 @@
       "spreadsheet",
       "low-code",
       "nocode"
+    ]
+  },
+  {
+    "id": "nodelink",
+    "name": "NodeLink",
+    "version": "latest",
+    "description": "NodeLink is a modern Lavalink alternative built entirely in Node.js.",
+    "links": {
+      "github": "https://github.com/PreformanC/NodeLink",
+      "website": "https://nodelink.js.org",
+      "docs": "https://nodelink.js.org/docs"
+    },
+    "logo": "nodelink.png",
+    "tags": [
+      "music",
+      "discord",
+      "audio"
     ]
   },
   {

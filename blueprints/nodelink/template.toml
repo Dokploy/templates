@@ -1,5 +1,5 @@
 [variables]
-main_domain = ${domain}
+main_domain = "${domain}"
 server_port = "3000"
 nodelink_server_password = "${password}"
 

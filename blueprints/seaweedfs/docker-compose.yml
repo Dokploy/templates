@@ -1,6 +1,6 @@
 services:
   master:
-    image: chrislusf/seaweedfs:latest
+    image: chrislusf/seaweedfs:4.02
     command: >
       -v=0
       master
@@ -27,7 +27,7 @@ services:
           memory: 256M
 
   volume:
-    image: chrislusf/seaweedfs:latest
+    image: chrislusf/seaweedfs:4.02
     command: >
       -v=0
       volume
@@ -51,7 +51,7 @@ services:
           memory: 512M
 
   filer:
-    image: chrislusf/seaweedfs:latest
+    image: chrislusf/seaweedfs:4.02
     command: >
       -v=0
       filer
@@ -88,7 +88,7 @@ services:
       - 8888
 
   s3:
-    image: chrislusf/seaweedfs:latest
+    image: chrislusf/seaweedfs:4.02
     command: >
       -v=0
       s3

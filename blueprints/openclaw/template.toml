@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+gateway_token = "${password:32}"
+openclaw_version = "latest"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "openclaw"
+port = 18_789
+host = "${main_domain}"
+path = ""
+
+[config.env]
+OPENCLAW_VERSION = "${openclaw_version}"
+OPENCLAW_GATEWAY_TOKEN = "${gateway_token}"
+CLAUDE_AI_SESSION_KEY = ""
+CLAUDE_WEB_SESSION_KEY = ""
+CLAUDE_WEB_COOKIE = ""

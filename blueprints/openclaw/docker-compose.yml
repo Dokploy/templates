@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+  openclaw:
+    image: hari1367709/openclaw:${OPENCLAW_VERSION:-latest}
+    restart: always
+    environment:
+      - HOME=/root
+      - TERM=xterm-256color
+      - OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}
+      - CLAUDE_AI_SESSION_KEY=${CLAUDE_AI_SESSION_KEY}
+      - CLAUDE_WEB_SESSION_KEY=${CLAUDE_WEB_SESSION_KEY}
+      - CLAUDE_WEB_COOKIE=${CLAUDE_WEB_COOKIE}
+    volumes:
+      - openclaw_config:/root/.openclaw
+      - openclaw_workspace:/root/.openclaw/workspace
+    expose:
+      - 18789
+      - 18790
+    init: true
+    command:
+      [
+        "node",
+        "dist/index.js",
+        "gateway",
+        "--allow-unconfigured",
+        "--bind",
+        "lan",
+        "--port",
+        "18789",
+      ]
+
+volumes:
+  openclaw_config:
+  openclaw_workspace:

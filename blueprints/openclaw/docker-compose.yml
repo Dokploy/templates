@@ -13,7 +13,7 @@ services:
     volumes:
       - openclaw-config:/home/node/.openclaw
       - openclaw-workspace:/home/node/.openclaw/workspace
-    ports:
+    expose:
       - "18789"
       - "18790"
     init: true
@@ -24,7 +24,7 @@ services:
         "dist/index.js",
         "gateway",
         "--bind",
-        "auto",
+        "lan",
         "--port",
         "18789",
         "--allow-unconfigured",

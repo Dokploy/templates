@@ -9,69 +9,11 @@ serviceName = "traefik"
 port = 80
 host = "${main_domain}"
 
+# PANGOLIN_CONFIG: single-line YAML with \n for newlines; pangolin writes it to /app/config/config.yml at startup.
+# This works even when Dokploy mounts config files only on one service (e.g. traefik).
 [config.env]
 SERVER_SECRET = "${pangolin_secret}"
-
-[[config.mounts]]
-serviceName = "pangolin"
-filePath = "/app/config/config.yml"
-content = """
-app:
-  dashboard_url: "https://${main_domain}"
-  log_level: "info"
-
-domains:
-  domain1:
-    base_domain: "${main_domain}"
-    cert_resolver: "letsencrypt"
-    prefer_wildcard_cert: false
-
-server:
-  integration_port: 3003
-  external_port: 3000
-  internal_port: 3001
-  next_port: 3002
-  internal_hostname: "pangolin"
-  session_cookie_name: "p_session_token"
-  resource_access_token_param: "p_token"
-  resource_access_token_headers:
-    id: "P-Access-Token-Id"
-    token: "P-Access-Token"
-  dashboard_session_length_hours: 720
-  resource_session_length_hours: 720
-  trust_proxy: 1
-  secret: "${pangolin_secret}"
-
-gerbil:
-  base_endpoint: "${gerbil_endpoint}"
-  use_subnet: false
-  subnet_group: "100.89.137.0/20"
-  block_size: 24
-  site_block_size: 30
-
-orgs:
-  block_size: 24
-  subnet_group: "100.90.128.0/20"
-  utility_subnet_group: "100.96.128.0/20"
-
-traefik:
-  http_entrypoint: "web"
-  https_entrypoint: "websecure"
-  cert_resolver: "letsencrypt"
-  prefer_wildcard_cert: false
-  file_mode: true
-  site_types: ["newt", "wireguard", "local"]
-  allow_raw_resources: true
-
-flags:
-  require_email_verification: false
-  disable_signup_without_invite: false
-  disable_user_create_org: false
-  allow_raw_resources: false
-  enable_integration_api: false
-  disable_local_sites: false
-  disable_basic_wireguard_sites: false
-"""
+PANGOLIN_CONFIG = "app:\n  dashboard_url: \"https://${main_domain}\"\n  log_level: \"info\"\n\ndomains:\n  domain1:\n    base_domain: \"${main_domain}\"\n    cert_resolver: \"letsencrypt\"\n    prefer_wildcard_cert: false\n\nserver:\n  integration_port: 3003\n  external_port: 3000\n  internal_port: 3001\n  next_port: 3002\n  internal_hostname: \"pangolin\"\n  session_cookie_name: \"p_session_token\"\n  resource_access_token_param: \"p_token\"\n  resource_access_token_headers:\n    id: \"P-Access-Token-Id\"\n    token: \"P-Access-Token\"\n  dashboard_session_length_hours: 720\n  resource_session_length_hours: 720\n  trust_proxy: 1\n  secret: \"${pangolin_secret}\"\n\ngerbil:\n  base_endpoint: \"${gerbil_endpoint}\"\n  use_subnet: false\n  subnet_group: \"100.89.137.0/20\"\n  block_size: 24\n  site_block_size: 30\n\norgs:\n  block_size: 24\n  subnet_group: \"100.90.128.0/20\"\n  utility_subnet_group: \"100.96.128.0/20\"\n\ntraefik:\n  http_entrypoint: \"web\"\n  https_entrypoint: \"websecure\"\n  cert_resolver: \"letsencrypt\"\n  prefer_wildcard_cert: false\n  file_mode: true\n  site_types: [\"newt\", \"wireguard\", \"local\"]\n  allow_raw_resources: true\n\nflags:\n  require_email_verification: false\n  disable_signup_without_invite: false\n  disable_user_create_org: false\n  allow_raw_resources: false\n  enable_integration_api: false\n  disable_local_sites: false\n  disable_basic_wireguard_sites: false"
 
 [[config.mounts]]
 serviceName = "traefik"

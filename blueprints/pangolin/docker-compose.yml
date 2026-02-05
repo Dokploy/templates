@@ -4,6 +4,12 @@ services:
   pangolin:
     image: fosrl/pangolin:latest
     restart: unless-stopped
+    env_file:
+      - .env
+    command:
+      - sh
+      - -c
+      - 'mkdir -p /app/config && printf "%b" "$$PANGOLIN_CONFIG" > /app/config/config.yml && exec npm run start'
     volumes:
       - pangolin-config:/app/config
     healthcheck:

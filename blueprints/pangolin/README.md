@@ -57,7 +57,7 @@ mylocalapp.example.com → Dokploy → Pangolin → Traefik → Local Resource
 
 The template automatically configures:
 
-- **Pangolin config** (`/app/config/config.yml`) - Main application configuration
+- **Pangolin config** (`/app/config/config.yml`) - Written at startup from the `PANGOLIN_CONFIG` environment variable (so it works even when Dokploy mounts config files only on one service). The container runs a small wrapper that writes the YAML to disk then starts the app.
 - **Traefik static config** (`/etc/traefik/traefik_config.yml`) - Traefik entrypoints and certificate resolver
 - **Traefik dynamic config** (`/etc/traefik/dynamic_config.yml`) - Routing rules for dashboard and API
 - **SSL certificates** - Managed via Let's Encrypt

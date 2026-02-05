@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "updated_at": "2026-02-05T00:00:00Z",
+  "templates": [
+    {
+      "id": "n8n",
+      "stars": 172774,
+      "tier": "gold"
+    },
+    {
+      "id": "langflow",
+      "stars": 144515,
+      "tier": "gold"
+    },
+    {
+      "id": "open-webui",
+      "stars": 122762,
+      "tier": "gold"
+    },
+    {
+      "id": "excalidraw",
+      "stars": 115943,
+      "tier": "gold"
+    },
+    {
+      "id": "supabase",
+      "stars": 97151,
+      "tier": "gold"
+    },
+    {
+      "id": "immich",
+      "stars": 91533,
+      "tier": "gold"
+    },
+    {
+      "id": "homeassistant",
+      "stars": 84557,
+      "tier": "gold"
+    },
+    {
+      "id": "uptime-kuma",
+      "stars": 82281,
+      "tier": "gold"
+    },
+    {
+      "id": "syncthing",
+      "stars": 79577,
+      "tier": "gold"
+    },
+    {
+      "id": "firecrawl",
+      "stars": 79338,
+      "tier": "gold"
+    },
+    {
+      "id": "hoppscotch",
+      "stars": 77764,
+      "tier": "silver"
+    },
+    {
+      "id": "netdata",
+      "stars": 77622,
+      "tier": "silver"
+    },
+    {
+      "id": "elastic-search",
+      "stars": 76014,
+      "tier": "silver"
+    },
+    {
+      "id": "stirling",
+      "stars": 73734,
+      "tier": "silver"
+    },
+    {
+      "id": "grafana",
+      "stars": 71987,
+      "tier": "silver"
+    },
+    {
+      "id": "lobe-chat",
+      "stars": 71873,
+      "tier": "silver"
+    },
+    {
+      "id": "appflowy",
+      "stars": 67901,
+      "tier": "silver"
+    },
+    {
+      "id": "openhands",
+      "stars": 67434,
+      "tier": "silver"
+    },
+    {
+      "id": "prometheus",
+      "stars": 62537,
+      "tier": "silver"
+    },
+    {
+      "id": "affinepro",
+      "stars": 62503,
+      "tier": "silver"
+    },
+    {
+      "id": "nocodb",
+      "stars": 61844,
+      "tier": "silver"
+    },
+    {
+      "id": "minio",
+      "stars": 60061,
+      "tier": "silver"
+    },
+    {
+      "id": "crawl4ai",
+      "stars": 59381,
+      "tier": "silver"
+    },
+    {
+      "id": "memos",
+      "stars": 56492,
+      "tier": "silver"
+    },
+    {
+      "id": "pocketbase",
+      "stars": 55800,
+      "tier": "silver"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "locally_modified": [
+    {
+      "id": "n8n",
+      "reason": "Self-managed version updates ahead of upstream"
+    },
+    {
+      "id": "wordpress",
+      "reason": "Custom healthcheck and swarm config"
+    },
+    {
+      "id": "ghost",
+      "reason": "Node.js healthcheck for 301 redirect issue"
+    }
+  ]
+}

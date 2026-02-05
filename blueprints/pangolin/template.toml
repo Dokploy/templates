@@ -13,6 +13,7 @@ host = "${main_domain}"
 SERVER_SECRET = "${pangolin_secret}"
 
 [[config.mounts]]
+serviceName = "pangolin"
 filePath = "/app/config/config.yml"
 content = """
 app:
@@ -73,6 +74,7 @@ flags:
 """
 
 [[config.mounts]]
+serviceName = "traefik"
 filePath = "/etc/traefik/traefik_config.yml"
 content = """
 api:
@@ -124,6 +126,7 @@ ping:
 """
 
 [[config.mounts]]
+serviceName = "traefik"
 filePath = "/etc/traefik/dynamic_config.yml"
 content = """
 http:

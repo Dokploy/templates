@@ -5,6 +5,8 @@ services:
     image: ghcr.io/netbirdio/netbird:0.63.0-rootless
     restart: unless-stopped
     command: netbird-mgmt management
+    expose:
+      - "443"
     volumes:
       - netbird-management:/var/lib/netbird
       - netbird-ssl:/etc/letsencrypt:ro
@@ -46,6 +48,8 @@ services:
     image: ghcr.io/netbirdio/netbird:0.63.0-rootless
     restart: unless-stopped
     command: netbird-dashboard
+    expose:
+      - "80"
     volumes:
       - netbird-ssl:/etc/letsencrypt:ro
     environment:
@@ -66,6 +70,7 @@ services:
   coturn:
     image: coturn/coturn:latest
     restart: unless-stopped
+    network_mode: host
     command: -c /etc/turnserver.conf
 
 volumes:

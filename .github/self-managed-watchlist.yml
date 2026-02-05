@@ -1,0 +1,15 @@
+templates:
+  - id: n8n
+    github_repo: n8n-io/n8n
+    tag_prefix: "n8n@"
+    image: "docker.n8n.io/n8nio/n8n"
+
+  - id: ghost
+    github_repo: TryGhost/Ghost
+    tag_prefix: "v"
+    image: "ghost"
+
+  - id: wordpress
+    github_repo: WordPress/WordPress
+    tag_prefix: ""
+    image: "wordpress"

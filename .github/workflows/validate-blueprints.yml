@@ -1,0 +1,242 @@
+name: Validate Changed Blueprints
+
+on:
+  pull_request:
+    paths:
+      - "blueprints/**"
+      - "meta.json"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Install build-scripts dependencies
+        run: cd build-scripts && pnpm install
+
+      - name: Detect changed blueprints
+        id: changed
+        run: |
+          BASE_SHA=$(git merge-base HEAD origin/${{ github.base_ref }})
+
+          CHANGED_BLUEPRINTS=$(git diff --name-only --diff-filter=ACMRT "$BASE_SHA" HEAD | \
+            grep -E '^blueprints/[^/]+/' | \
+            sed 's|blueprints/\([^/]*\)/.*|\1|' | \
+            sort -u)
+
+          if [ -z "$CHANGED_BLUEPRINTS" ]; then
+            echo "No blueprint directories changed."
+            echo "count=0" >> $GITHUB_OUTPUT
+          else
+            COUNT=$(echo "$CHANGED_BLUEPRINTS" | wc -l | tr -d ' ')
+            echo "count=$COUNT" >> $GITHUB_OUTPUT
+            echo "Changed blueprints (${COUNT}):"
+            echo "$CHANGED_BLUEPRINTS"
+          fi
+
+          echo "blueprints<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED_BLUEPRINTS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Validate docker-compose.yml files
+        if: steps.changed.outputs.count != '0'
+        run: |
+          BLUEPRINTS="${{ steps.changed.outputs.blueprints }}"
+          ERROR=0
+
+          mapfile -t BLUEPRINT_ARRAY <<< "$BLUEPRINTS"
+
+          for blueprint in "${BLUEPRINT_ARRAY[@]}"; do
+            [ -z "$blueprint" ] && continue
+
+            COMPOSE="blueprints/${blueprint}/docker-compose.yml"
+
+            if [ ! -f "$COMPOSE" ]; then
+              echo "FAIL: ${blueprint} - missing docker-compose.yml"
+              ERROR=1
+              continue
+            fi
+
+            echo "Validating compose: ${blueprint}..."
+
+            # YAML syntax check
+            if ! python3 -c "import yaml; yaml.safe_load(open('${COMPOSE}'))" 2>/dev/null; then
+              echo "FAIL: ${blueprint} - invalid YAML syntax in docker-compose.yml"
+              ERROR=1
+              continue
+            fi
+
+            # Docker compose config validation (dry-run)
+            if ! docker compose -f "$COMPOSE" config --quiet 2>/dev/null; then
+              echo "WARN: ${blueprint} - docker compose config returned warnings (may use template variables)"
+            fi
+
+            # Run build-scripts validator if available
+            if [ -f build-scripts/validate-docker-compose.ts ]; then
+              if ! (cd build-scripts && pnpm exec tsx validate-docker-compose.ts --file "../$COMPOSE" 2>/dev/null); then
+                echo "FAIL: ${blueprint} - build-scripts validation failed"
+                ERROR=1
+                continue
+              fi
+            fi
+
+            echo "OK: ${blueprint} - docker-compose.yml valid"
+          done
+
+          if [ $ERROR -eq 1 ]; then
+            echo ""
+            echo "Docker-compose validation failed for one or more blueprints."
+            exit 1
+          fi
+
+      - name: Validate template.toml files
+        if: steps.changed.outputs.count != '0'
+        run: |
+          BLUEPRINTS="${{ steps.changed.outputs.blueprints }}"
+          ERROR=0
+
+          mapfile -t BLUEPRINT_ARRAY <<< "$BLUEPRINTS"
+
+          for blueprint in "${BLUEPRINT_ARRAY[@]}"; do
+            [ -z "$blueprint" ] && continue
+
+            TOML="blueprints/${blueprint}/template.toml"
+
+            if [ ! -f "$TOML" ]; then
+              echo "FAIL: ${blueprint} - missing template.toml"
+              ERROR=1
+              continue
+            fi
+
+            echo "Validating TOML: ${blueprint}..."
+
+            # TOML syntax check
+            if ! python3 -c "
+          import tomllib
+          with open('${TOML}', 'rb') as f:
+              tomllib.load(f)
+          " 2>/dev/null; then
+              # Fallback for Python < 3.11
+              if ! python3 -c "
+          import pip._vendor.tomli as tomli
+          with open('${TOML}', 'rb') as f:
+              tomli.load(f)
+          " 2>/dev/null; then
+                echo "FAIL: ${blueprint} - invalid TOML syntax"
+                ERROR=1
+                continue
+              fi
+            fi
+
+            # Run build-scripts validator if available
+            if [ -f build-scripts/validate-template.ts ]; then
+              if ! (cd build-scripts && pnpm exec tsx validate-template.ts --dir "../blueprints/${blueprint}" 2>/dev/null); then
+                echo "FAIL: ${blueprint} - build-scripts template validation failed"
+                ERROR=1
+                continue
+              fi
+            fi
+
+            echo "OK: ${blueprint} - template.toml valid"
+          done
+
+          if [ $ERROR -eq 1 ]; then
+            echo ""
+            echo "TOML validation failed for one or more blueprints."
+            exit 1
+          fi
+
+      - name: Validate meta.json consistency
+        run: |
+          echo "Validating meta.json..."
+
+          # Check valid JSON
+          if ! python3 -c "import json; json.load(open('meta.json'))" 2>/dev/null; then
+            echo "FAIL: meta.json is not valid JSON"
+            exit 1
+          fi
+
+          ERROR=0
+
+          # Validate required fields
+          python3 -c "
+          import json, sys
+
+          with open('meta.json') as f:
+              data = json.load(f)
+
+          required_fields = ['id', 'name', 'version', 'description', 'logo', 'links', 'tags']
+          link_fields = ['github', 'website', 'docs']
+          errors = 0
+
+          for i, item in enumerate(data):
+              item_id = item.get('id', f'index-{i}')
+              for field in required_fields:
+                  if field not in item:
+                      print(f'FAIL: {item_id} missing required field: {field}')
+                      errors += 1
+
+              if 'links' in item:
+                  for lf in link_fields:
+                      if lf not in item['links']:
+                          print(f'FAIL: {item_id} missing links.{lf}')
+                          errors += 1
+
+              if 'tags' in item and len(item['tags']) == 0:
+                  print(f'FAIL: {item_id} has empty tags array')
+                  errors += 1
+
+          if errors > 0:
+              print(f'{errors} validation error(s) found.')
+              sys.exit(1)
+          else:
+              print(f'OK: {len(data)} entries validated.')
+          "
+
+          if [ $? -ne 0 ]; then
+            ERROR=1
+          fi
+
+          # Verify every meta.json ID has a blueprint directory
+          python3 -c "
+          import json, os, sys
+
+          with open('meta.json') as f:
+              data = json.load(f)
+
+          errors = 0
+          for item in data:
+              bp_dir = os.path.join('blueprints', item['id'])
+              if not os.path.isdir(bp_dir):
+                  print(f'FAIL: {item[\"id\"]} in meta.json but no blueprints/{item[\"id\"]}/ directory')
+                  errors += 1
+
+          if errors > 0:
+              sys.exit(1)
+          else:
+              print('OK: All meta.json entries have matching blueprint directories.')
+          "
+
+          if [ $? -ne 0 ]; then
+            ERROR=1
+          fi
+
+          if [ $ERROR -eq 1 ]; then
+            exit 1
+          fi
+
+          echo "meta.json validation passed."

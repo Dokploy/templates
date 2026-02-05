@@ -1,0 +1,186 @@
+name: Upstream Sync
+
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/Dokploy/templates.git || true
+          git fetch upstream canary
+
+      - name: Check for changes
+        id: check
+        run: |
+          DIFF=$(git diff HEAD...upstream/canary --stat)
+          if [ -z "$DIFF" ]; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No upstream changes detected."
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "$DIFF" > /tmp/diff-stat.txt
+
+            # Count changes
+            NEW=$(git diff HEAD...upstream/canary --diff-filter=A --name-only | wc -l | tr -d ' ')
+            MODIFIED=$(git diff HEAD...upstream/canary --diff-filter=M --name-only | wc -l | tr -d ' ')
+            DELETED=$(git diff HEAD...upstream/canary --diff-filter=D --name-only | wc -l | tr -d ' ')
+            echo "new=$NEW" >> $GITHUB_OUTPUT
+            echo "modified=$MODIFIED" >> $GITHUB_OUTPUT
+            echo "deleted=$DELETED" >> $GITHUB_OUTPUT
+
+            echo "Upstream changes: $NEW new, $MODIFIED modified, $DELETED deleted"
+          fi
+
+      - name: Create sync branch and merge
+        if: steps.check.outputs.changed == 'true'
+        id: merge
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          BRANCH="upstream-sync/${DATE}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "$BRANCH"
+
+          # Attempt merge
+          if ! git merge upstream/canary --no-edit; then
+            echo "Merge conflicts detected. Resolving overrides..."
+
+            # Read override manifest and resolve conflicts for our blueprints
+            if [ -f overrides/manifest.json ]; then
+              OVERRIDES=$(python3 -c "
+          import json, sys
+          with open('overrides/manifest.json') as f:
+              data = json.load(f)
+          for item in data.get('locally_modified', []):
+              print(item['id'])
+          ")
+
+              for OVERRIDE_ID in $OVERRIDES; do
+                # For overridden blueprints, keep our version
+                if git diff --name-only --diff-filter=U | grep -q "blueprints/${OVERRIDE_ID}/"; then
+                  echo "Preserving our override for: ${OVERRIDE_ID}"
+                  git checkout --ours "blueprints/${OVERRIDE_ID}/" 2>/dev/null || true
+                  git add "blueprints/${OVERRIDE_ID}/" 2>/dev/null || true
+                fi
+              done
+            fi
+
+            # For everything else, accept theirs on remaining conflicts
+            REMAINING=$(git diff --name-only --diff-filter=U)
+            if [ -n "$REMAINING" ]; then
+              echo "Accepting upstream version for remaining conflicts:"
+              echo "$REMAINING"
+              echo "$REMAINING" | while read -r file; do
+                git checkout --theirs "$file"
+                git add "$file"
+              done
+            fi
+
+            git commit --no-edit || true
+          fi
+
+          git push origin "$BRANCH"
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+
+      - name: Check curated impact
+        if: steps.check.outputs.changed == 'true'
+        id: curated
+        run: |
+          if [ ! -f curated/top-25.json ]; then
+            echo "affected=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          CURATED_IDS=$(python3 -c "
+          import json
+          with open('curated/top-25.json') as f:
+              data = json.load(f)
+          for t in data.get('templates', []):
+              print(t['id'])
+          ")
+
+          AFFECTED=""
+          CHANGED_FILES=$(git diff HEAD...upstream/canary --name-only)
+
+          for ID in $CURATED_IDS; do
+            if echo "$CHANGED_FILES" | grep -q "blueprints/${ID}/"; then
+              AFFECTED="${AFFECTED}- ${ID}\n"
+            fi
+          done
+
+          if [ -n "$AFFECTED" ]; then
+            echo "affected=true" >> $GITHUB_OUTPUT
+            echo -e "$AFFECTED" > /tmp/curated-affected.txt
+          else
+            echo "affected=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create PR
+        if: steps.check.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DATE=$(date +%Y-%m-%d)
+
+          CURATED_NOTE=""
+          if [ "${{ steps.curated.outputs.affected }}" == "true" ]; then
+            CURATED_NOTE="
+          ## Curated Template Impact
+
+          The following curated templates were modified upstream:
+          $(cat /tmp/curated-affected.txt)
+
+          Review these changes carefully."
+          fi
+
+          # Check if a PR already exists for this branch
+          EXISTING=$(gh pr list --head "${{ steps.merge.outputs.branch }}" --state open --json number --jq '.[0].number')
+          if [ -n "$EXISTING" ]; then
+            echo "PR #${EXISTING} already exists for this branch. Skipping creation."
+            exit 0
+          fi
+
+          gh pr create \
+            --title "Upstream sync ${DATE}" \
+            --body "$(cat <<EOF
+          ## Upstream Sync
+
+          Daily sync from \`Dokploy/templates:canary\`.
+
+          | Metric | Count |
+          |--------|-------|
+          | New files | ${{ steps.check.outputs.new }} |
+          | Modified | ${{ steps.check.outputs.modified }} |
+          | Deleted | ${{ steps.check.outputs.deleted }} |
+
+          <details>
+          <summary>Diff stat</summary>
+
+          \`\`\`
+          $(cat /tmp/diff-stat.txt)
+          \`\`\`
+          </details>
+
+          Blueprints in \`overrides/manifest.json\` were preserved (ours wins).
+          ${CURATED_NOTE}
+          EOF
+          )" \
+            --base main \
+            --head "${{ steps.merge.outputs.branch }}" \
+            --label "upstream-sync"

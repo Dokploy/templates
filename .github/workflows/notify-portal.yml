@@ -1,0 +1,150 @@
+name: Notify Client Portal
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "meta.json"
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Compute changeset
+        id: changeset
+        run: |
+          # Get list of template IDs that changed in meta.json
+          PREV_IDS=$(git show HEAD~1:meta.json 2>/dev/null | python3 -c "
+          import json, sys
+          try:
+              data = json.load(sys.stdin)
+              for item in data:
+                  print(item['id'] + '=' + item.get('version', 'unknown'))
+          except:
+              pass
+          " || echo "")
+
+          CURR_IDS=$(python3 -c "
+          import json
+          with open('meta.json') as f:
+              data = json.load(f)
+          for item in data:
+              print(item['id'] + '=' + item.get('version', 'unknown'))
+          ")
+
+          # Find version changes
+          CHANGED=""
+          ADDED=""
+          REMOVED=""
+
+          # Build associative lookups
+          declare -A PREV_MAP
+          for entry in $PREV_IDS; do
+            ID="${entry%%=*}"
+            VER="${entry#*=}"
+            PREV_MAP[$ID]="$VER"
+          done
+
+          declare -A CURR_MAP
+          for entry in $CURR_IDS; do
+            ID="${entry%%=*}"
+            VER="${entry#*=}"
+            CURR_MAP[$ID]="$VER"
+          done
+
+          # Detect changes and additions
+          for ID in "${!CURR_MAP[@]}"; do
+            if [ -z "${PREV_MAP[$ID]+x}" ]; then
+              ADDED="${ADDED}${ID},"
+            elif [ "${PREV_MAP[$ID]}" != "${CURR_MAP[$ID]}" ]; then
+              CHANGED="${CHANGED}${ID}:${PREV_MAP[$ID]}->${CURR_MAP[$ID]},"
+            fi
+          done
+
+          # Detect removals
+          for ID in "${!PREV_MAP[@]}"; do
+            if [ -z "${CURR_MAP[$ID]+x}" ]; then
+              REMOVED="${REMOVED}${ID},"
+            fi
+          done
+
+          # Remove trailing commas
+          CHANGED="${CHANGED%,}"
+          ADDED="${ADDED%,}"
+          REMOVED="${REMOVED%,}"
+
+          echo "changed=${CHANGED}" >> $GITHUB_OUTPUT
+          echo "added=${ADDED}" >> $GITHUB_OUTPUT
+          echo "removed=${REMOVED}" >> $GITHUB_OUTPUT
+
+          TOTAL=$(python3 -c "
+          import json
+          with open('meta.json') as f:
+              print(len(json.load(f)))
+          ")
+          echo "total=${TOTAL}" >> $GITHUB_OUTPUT
+
+          if [ -n "$CHANGED" ] || [ -n "$ADDED" ] || [ -n "$REMOVED" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Dispatch to client-portal
+        if: steps.changeset.outputs.has_changes == 'true'
+        env:
+          PORTAL_DISPATCH_TOKEN: ${{ secrets.PORTAL_DISPATCH_TOKEN }}
+          CHANGED: ${{ steps.changeset.outputs.changed }}
+          ADDED: ${{ steps.changeset.outputs.added }}
+          REMOVED: ${{ steps.changeset.outputs.removed }}
+          TOTAL: ${{ steps.changeset.outputs.total }}
+          COMMIT_SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ -z "$PORTAL_DISPATCH_TOKEN" ]; then
+            echo "PORTAL_DISPATCH_TOKEN not set. Skipping dispatch."
+            exit 0
+          fi
+
+          # Build payload with proper JSON encoding
+          PAYLOAD=$(python3 -c "
+          import json, os
+          changed = os.environ.get('CHANGED', '')
+          added = os.environ.get('ADDED', '')
+          removed = os.environ.get('REMOVED', '')
+          payload = {
+              'event_type': 'template-catalog-updated',
+              'client_payload': {
+                  'changed': [x for x in changed.split(',') if x],
+                  'added': [x for x in added.split(',') if x],
+                  'removed': [x for x in removed.split(',') if x],
+                  'total_templates': int(os.environ.get('TOTAL', '0')),
+                  'commit_sha': os.environ['COMMIT_SHA'],
+                  'commit_url': f'https://github.com/{os.environ[\"REPO\"]}/commit/{os.environ[\"COMMIT_SHA\"]}'
+              }
+          }
+          print(json.dumps(payload))
+          ")
+
+          curl -f -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${PORTAL_DISPATCH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/masonjames/client-portal/dispatches" \
+            -d "$PAYLOAD" \
+            --max-time 30 \
+            --retry 2
+
+          echo "Dispatched template-catalog-updated event to client-portal."
+          echo "  Changed: ${CHANGED}"
+          echo "  Added: ${ADDED}"
+          echo "  Removed: ${REMOVED}"

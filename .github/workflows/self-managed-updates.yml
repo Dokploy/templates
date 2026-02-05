@@ -1,0 +1,204 @@
+name: Self-Managed Updates
+
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Check for newer versions and create PRs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ ! -f .github/self-managed-watchlist.yml ]; then
+            echo "Watchlist not found at .github/self-managed-watchlist.yml"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          TEMPLATE_COUNT=$(yq '.templates | length' .github/self-managed-watchlist.yml)
+          UPDATES_FOUND=0
+          PRS_CREATED=0
+
+          for i in $(seq 0 $(( TEMPLATE_COUNT - 1 ))); do
+            ID=$(yq ".templates[$i].id" .github/self-managed-watchlist.yml)
+            REPO=$(yq ".templates[$i].github_repo" .github/self-managed-watchlist.yml)
+            TAG_PREFIX=$(yq ".templates[$i].tag_prefix" .github/self-managed-watchlist.yml)
+            IMAGE=$(yq ".templates[$i].image" .github/self-managed-watchlist.yml)
+
+            echo ""
+            echo "=========================================="
+            echo "Checking ${ID} (${REPO})..."
+            echo "=========================================="
+
+            # Get current version from meta.json
+            CURRENT=$(python3 -c "
+          import json
+          with open('meta.json') as f:
+              data = json.load(f)
+          for item in data:
+              if item['id'] == '${ID}':
+                  print(item.get('version', 'unknown'))
+                  break
+          else:
+              print('not-found')
+          ")
+
+            if [ "$CURRENT" = "not-found" ]; then
+              echo "  Template ${ID} not found in meta.json, skipping."
+              continue
+            fi
+
+            # Get latest release tag from GitHub
+            LATEST_TAG=$(gh api "repos/${REPO}/releases/latest" --jq '.tag_name' 2>/dev/null || echo "")
+            RELEASE_URL=""
+
+            if [ -n "$LATEST_TAG" ]; then
+              RELEASE_URL="https://github.com/${REPO}/releases/tag/${LATEST_TAG}"
+            else
+              # Fallback: try tags endpoint
+              LATEST_TAG=$(gh api "repos/${REPO}/tags?per_page=1" --jq '.[0].name' 2>/dev/null || echo "")
+              if [ -n "$LATEST_TAG" ]; then
+                RELEASE_URL="https://github.com/${REPO}/releases"
+              fi
+            fi
+
+            if [ -z "$LATEST_TAG" ]; then
+              echo "  Could not determine latest version for ${ID}, skipping."
+              continue
+            fi
+
+            # Strip tag prefix to get version number
+            LATEST_VERSION="${LATEST_TAG#${TAG_PREFIX}}"
+
+            echo "  Current: ${CURRENT}"
+            echo "  Latest:  ${LATEST_VERSION}"
+
+            if [ "$CURRENT" = "$LATEST_VERSION" ] || [ "$CURRENT" = "latest" ]; then
+              echo "  Up to date."
+              continue
+            fi
+
+            UPDATES_FOUND=$((UPDATES_FOUND + 1))
+            BRANCH="self-managed/${ID}-${LATEST_VERSION}"
+
+            # Check if branch or PR already exists
+            if git ls-remote --heads origin "$BRANCH" 2>/dev/null | grep -q "$BRANCH"; then
+              echo "  Branch ${BRANCH} already exists, skipping."
+              continue
+            fi
+
+            EXISTING_PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number' 2>/dev/null || echo "")
+            if [ -n "$EXISTING_PR" ]; then
+              echo "  PR #${EXISTING_PR} already exists for this update, skipping."
+              continue
+            fi
+
+            echo "  Creating branch: ${BRANCH}"
+
+            # Start from a clean main
+            git checkout main
+            git checkout -b "$BRANCH"
+
+            # Update version in meta.json
+            python3 -c "
+          import json
+          with open('meta.json', 'r') as f:
+              data = json.load(f)
+          for item in data:
+              if item['id'] == '${ID}':
+                  item['version'] = '${LATEST_VERSION}'
+                  break
+          with open('meta.json', 'w') as f:
+              json.dump(data, f, indent=2)
+              f.write('\n')
+          "
+
+            # Update docker-compose.yml image tag if applicable
+            COMPOSE="blueprints/${ID}/docker-compose.yml"
+            COMPOSE_UPDATED="no"
+            if [ -f "$COMPOSE" ] && [ -n "$IMAGE" ]; then
+              if grep -q "image: ${IMAGE}:" "$COMPOSE"; then
+                sed -i "s|image: ${IMAGE}:.*|image: ${IMAGE}:${LATEST_VERSION}|g" "$COMPOSE"
+                COMPOSE_UPDATED="yes"
+                echo "  Updated image tag in ${COMPOSE}"
+              fi
+            fi
+
+            # Commit and push
+            git add meta.json
+            if [ "$COMPOSE_UPDATED" = "yes" ]; then
+              git add "$COMPOSE"
+            fi
+
+            if git diff --cached --quiet; then
+              echo "  No changes to commit, skipping."
+              git checkout main
+              continue
+            fi
+
+            git commit -m "chore(${ID}): update to ${LATEST_VERSION}"
+            git push origin "$BRANCH"
+
+            # Build PR body
+            COMPOSE_NOTE=""
+            if [ "$COMPOSE_UPDATED" = "yes" ]; then
+              COMPOSE_NOTE="- Updated \`blueprints/${ID}/docker-compose.yml\` image tag to \`${IMAGE}:${LATEST_VERSION}\`"
+            else
+              COMPOSE_NOTE="- docker-compose.yml image tag was **not** auto-updated (manual review needed)"
+            fi
+
+            gh pr create \
+              --title "Update ${ID} to ${LATEST_VERSION}" \
+              --body "$(cat <<EOF
+          ## Self-Managed Version Update
+
+          | Field | Value |
+          |-------|-------|
+          | Template | ${ID} |
+          | Current version | ${CURRENT} |
+          | New version | ${LATEST_VERSION} |
+          | Release | [${LATEST_TAG}](${RELEASE_URL}) |
+
+          ### Changes
+          - Updated version in \`meta.json\`
+          ${COMPOSE_NOTE}
+
+          ### Review checklist
+          - [ ] Check [release notes](${RELEASE_URL}) for breaking changes
+          - [ ] Verify compose file works with the new version
+          - [ ] Confirm healthchecks are still valid
+          EOF
+          )" \
+              --base main \
+              --head "$BRANCH" \
+              --label "version-update"
+
+            PRS_CREATED=$((PRS_CREATED + 1))
+            echo "  PR created for ${ID} ${CURRENT} -> ${LATEST_VERSION}"
+
+            # Return to main for next iteration
+            git checkout main
+          done
+
+          echo ""
+          echo "=========================================="
+          echo "Summary: ${UPDATES_FOUND} update(s) found, ${PRS_CREATED} PR(s) created."
+          echo "=========================================="

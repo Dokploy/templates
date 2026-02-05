@@ -856,6 +856,7 @@ curl -I https://your-pangolin-domain.com
 4. Verify CORS configuration if needed
 
 **Common issues:**
+- **Pangolin container unhealthy**: Startup can take 2+ minutes (DB init, config load). Check pangolin container logs for errors; ensure config is mounted at `/app/config/config.yml`. If the app fails to bind to port 3001, the healthcheck will keep failing.
 - API not responding: Check pangolin healthcheck
 - Routing misconfiguration: Verify Traefik dynamic config
 - CORS errors: Check browser console for details

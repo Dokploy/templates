@@ -7,11 +7,11 @@ services:
     volumes:
       - pangolin-config:/app/config
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/api/v1/"]
-      interval: 3s
-      timeout: 3s
-      retries: 15
-      start_period: 90s
+      test: ["CMD", "curl", "-f", "--connect-timeout", "2", "--max-time", "5", "http://127.0.0.1:3001/api/v1/"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 120s
     expose:
       - "3001"
       - "3002"

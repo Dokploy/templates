@@ -1,0 +1,17 @@
+[variables]
+gateway_domain = "${domain}"
+api_domain = "${domain}"
+
+[config]
+env = []
+mounts = []
+
+[[config.domains]]
+serviceName = "ipfs"
+port = 8080
+host = "${gateway_domain}"
+
+[[config.domains]]
+serviceName = "ipfs"
+port = 5001
+host = "${api_domain}"

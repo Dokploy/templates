@@ -3170,6 +3170,24 @@
     ]
   },
   {
+    "id": "ipfs",
+    "name": "IPFS (Kubo)",
+    "version": "latest",
+    "description": "IPFS (Kubo) is a decentralized peer-to-peer file sharing and storage network node. Host your own IPFS gateway and API.",
+    "logo": "ipfs.svg",
+    "links": {
+      "github": "https://github.com/ipfs/kubo",
+      "website": "https://ipfs.tech/",
+      "docs": "https://docs.ipfs.tech/"
+    },
+    "tags": [
+      "storage",
+      "decentralized",
+      "p2p",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "it-tools",
     "name": "IT Tools",
     "version": "latest",

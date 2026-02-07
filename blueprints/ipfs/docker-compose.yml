@@ -9,8 +9,7 @@ services:
       - ipfs_data:/data/ipfs
       - ipfs_staging:/export
     ports:
-      - 4001:4001/tcp
-      - 4001:4001/udp
+      - 4001
       - 8080
       - 5001
 volumes:

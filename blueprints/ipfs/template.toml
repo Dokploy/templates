@@ -4,7 +4,6 @@ api_domain = "${domain}"
 
 [config]
 env = []
-mounts = []
 
 [[config.domains]]
 serviceName = "ipfs"
@@ -15,3 +14,12 @@ host = "${gateway_domain}"
 serviceName = "ipfs"
 port = 5001
 host = "${api_domain}"
+
+[[config.mounts]]
+filePath = "/container-init.d/001-configure-api.sh"
+content = """
+#!/bin/sh
+ipfs config Addresses.API /ip4/0.0.0.0/tcp/5001
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "POST", "GET"]'
+"""

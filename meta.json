@@ -1300,6 +1300,23 @@
     ]
   },
   {
+    "id": "cloudflare-ddns",
+    "name": "Cloudflare DDNS",
+    "version": "1.15.1",
+    "description": "A small, feature-rich, and robust Cloudflare DDNS updater.",
+    "logo": "cloudflare-ddns.svg",
+    "links": {
+      "github": "https://github.com/favonia/cloudflare-ddns",
+      "website": "https://github.com/favonia/cloudflare-ddns",
+      "docs": "https://github.com/favonia/cloudflare-ddns"
+    },
+    "tags": [
+      "cloud",
+      "networking",
+      "ddns"
+    ]
+  },
+  {
     "id": "cloudflared",
     "name": "Cloudflared",
     "version": "latest",

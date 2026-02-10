@@ -2,8 +2,8 @@ services:
   openclaw:
     image: "coollabsio/openclaw:2026.2.6"
     environment:
-      - AUTH_USERNAME=auth
-      - AUTH_PASSWORD=auth
+      - AUTH_USERNAME=${AUTH_USERNAME}
+      - AUTH_PASSWORD=${AUTH_PASSWORD}
       - OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}

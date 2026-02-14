@@ -1,0 +1,33 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+minio_user = "minioadmin"
+minio_password = "${password:32}"
+chrome_token = "${password:32}"
+access_token_secret = "${password:64}"
+refresh_token_secret = "${password:64}"
+mail_from = "noreply@${main_domain}"
+
+[config]
+env = [
+  "APP_DOMAIN=${main_domain}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "MINIO_ROOT_USER=${minio_user}",
+  "MINIO_ROOT_PASSWORD=${minio_password}",
+  "CHROME_TOKEN=${chrome_token}",
+  "ACCESS_TOKEN_SECRET=${access_token_secret}",
+  "REFRESH_TOKEN_SECRET=${refresh_token_secret}",
+  "MAIL_FROM=${mail_from}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "app"
+port = 3000
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "minio"
+port = 9000
+host = "${main_domain}"
+path = "/default"

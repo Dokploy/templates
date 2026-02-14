@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  backend:
+    image: ketbom/minepanel-backend:1.7.1
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - FRONTEND_URL=${FRONTEND_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - CLIENT_PASSWORD=${CLIENT_PASSWORD}
+      - CLIENT_USERNAME=${CLIENT_USERNAME}
+      - BASE_DIR=${BASE_DIR}
+    volumes:
+      - minepanel-servers:/app/servers
+      - minepanel-data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  frontend:
+    image: ketbom/minepanel-frontend:1.7.1
+    restart: unless-stopped
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
+      - NEXT_PUBLIC_DEFAULT_LANGUAGE=${NEXT_PUBLIC_DEFAULT_LANGUAGE}
+    depends_on:
+      - backend
+
+volumes:
+  minepanel-servers:
+  minepanel-data:

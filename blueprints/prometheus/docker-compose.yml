@@ -9,6 +9,7 @@ services:
       - "--web.console.templates=/usr/share/prometheus/consoles"
       - "--web.enable-lifecycle"
     volumes:
+      - ../files/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
 volumes:
   prometheus-data: {}

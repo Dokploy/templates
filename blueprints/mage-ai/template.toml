@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[[config.domains]]
+serviceName = "mage-ai"
+port = 6789
+host = "${main_domain}"
+
+[config.env]
+PROJECT_NAME = "mage-ai"
+ENV = "production"

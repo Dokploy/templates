@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "easyappointments"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+DOMAIN = "${main_domain}"
+DB_PASSWORD = "${db_password}"

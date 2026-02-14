@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  easyappointments:
+    image: alextselegidis/easyappointments:1.5.0
+    restart: unless-stopped
+    environment:
+      - BASE_URL=http://${DOMAIN}
+      - DB_HOST=mysql
+      - DB_NAME=easyappointments
+      - DB_USERNAME=root
+      - DB_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - easyappointments:/var/www/html
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=easyappointments
+    volumes:
+      - mysql:/var/lib/mysql
+
+volumes:
+  easyappointments:
+  mysql:

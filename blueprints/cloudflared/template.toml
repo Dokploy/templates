@@ -2,5 +2,7 @@ variables = {}
 
 [config]
 domains = []
-env = ["CLOUDFLARE_TUNNEL_TOKEN=\"<INSERT TOKEN>\""]
 mounts = []
+
+[config.env]
+CLOUDFLARE_TUNNEL_TOKEN = ""

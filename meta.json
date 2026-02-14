@@ -365,8 +365,8 @@
   {
     "id": "appwrite",
     "name": "Appwrite",
-    "version": "1.6.1",
-    "description": "Appwrite is an end-to-end backend server for Web, Mobile, Native, or Backend apps. Appwrite abstracts the complexity and repetitiveness required to build a modern backend API from scratch and allows you to build secure apps faster.\nUsing Appwrite, you can easily integrate your app with user authentication and multiple sign-in methods, a database for storing and querying users and team data, storage and file management, image manipulation, Cloud Functions, messaging, and more services.",
+    "version": "1.8.0",
+    "description": "Appwrite is an end-to-end platform for building Web, Mobile, Native, or Backend apps, packaged as a set of Docker microservices. It includes both a backend server and a fully integrated hosting solution for deploying static and server-side rendered frontends. Appwrite abstracts the complexity and repetitiveness required to build modern apps from scratch and allows you to build secure, full-stack applications faster.\nUsing Appwrite, you can easily integrate your app with user authentication and multiple sign-in methods, a database for storing and querying users and team data, storage and file management, image manipulation, Cloud Functions, messaging, and more services.",
     "links": {
       "github": "https://github.com/appwrite/appwrite",
       "website": "https://appwrite.io/",
@@ -376,7 +376,9 @@
     "tags": [
       "database",
       "firebase",
-      "postgres"
+      "mariadb",
+      "hosting",
+      "self-hosted"
     ]
   },
   {
@@ -508,8 +510,8 @@
   {
     "id": "autobase",
     "name": "Autobase",
-    "version": "2.3.0",
-    "description": "Autobase for PostgreSQL® is an open-source alternative to cloud-managed databases (DBaaS) such as Amazon RDS, Google Cloud SQL, Azure Database, and more.",
+    "version": "2.5.2",
+    "description": "Autobase for PostgreSQL® is an open-source alternative to cloud-managed databases (self-hosted DBaaS).",
     "links": {
       "github": "https://github.com/vitabaks/autobase",
       "website": "https://autobase.tech/",
@@ -1298,6 +1300,23 @@
     ]
   },
   {
+    "id": "cloudflare-ddns",
+    "name": "Cloudflare DDNS",
+    "version": "1.15.1",
+    "description": "A small, feature-rich, and robust Cloudflare DDNS updater.",
+    "logo": "cloudflare-ddns.svg",
+    "links": {
+      "github": "https://github.com/favonia/cloudflare-ddns",
+      "website": "https://github.com/favonia/cloudflare-ddns",
+      "docs": "https://github.com/favonia/cloudflare-ddns"
+    },
+    "tags": [
+      "cloud",
+      "networking",
+      "ddns"
+    ]
+  },
+  {
     "id": "cloudflared",
     "name": "Cloudflared",
     "version": "latest",
@@ -1305,14 +1324,32 @@
     "logo": "cloudflared.svg",
     "links": {
       "github": "https://github.com/cloudflare/cloudflared",
-      "website": "https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/",
-      "docs": "https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/"
+      "website": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/",
+      "docs": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/"
     },
     "tags": [
       "cloud",
       "networking",
       "security",
       "tunnel"
+    ]
+  },
+  {
+    "id": "cloudreve",
+    "name": "Cloudreve",
+    "version": "4.10.1",
+    "description": "Self-hosted file management and sharing system with multi-cloud storage support. Compatible with local, OneDrive, S3, and various cloud providers.",
+    "logo": "cloudreve.png",
+    "links": {
+      "github": "https://github.com/cloudreve/Cloudreve",
+      "website": "https://cloudreve.org",
+      "docs": "https://docs.cloudreve.org"
+    },
+    "tags": [
+      "storage",
+      "file-sharing",
+      "cloud",
+      "self-hosted"
     ]
   },
   {
@@ -1748,7 +1785,7 @@
   {
     "id": "discourse",
     "name": "Discourse",
-    "version": "3.3.2",
+    "version": "3.5.0",
     "description": "Discourse is a modern forum software for your community. Use it as a mailing list, discussion forum, or long-form chat room.",
     "logo": "discourse.svg",
     "links": {
@@ -1848,6 +1885,25 @@
       "observability",
       "docker",
       "grafana"
+    ]
+  },
+  {
+    "id": "dolibarr",
+    "name": "Dolibarr",
+    "version": "21.0.0",
+    "description": "Dolibarr ERP & CRM is a modern software package that helps manage your organization's activities (contacts, quotes, invoices, orders, stocks, agenda, human resources, ecm, manufacturing).",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/Dolibarr/dolibarr",
+      "website": "https://www.dolibarr.org/",
+      "docs": "https://wiki.dolibarr.org/"
+    },
+    "tags": [
+      "erp",
+      "crm",
+      "business",
+      "management",
+      "invoicing"
     ]
   },
   {
@@ -2034,6 +2090,23 @@
     ]
   },
   {
+    "id": "easyappointments",
+    "name": "Easy!Appointments",
+    "version": "1.5.0",
+    "description": "Easy!Appointments is a highly customizable web application that allows customers to book appointments with you via a sophisticated web interface.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/alextselegidis/easyappointments",
+      "website": "https://easyappointments.org",
+      "docs": "https://easyappointments.org/docs"
+    },
+    "tags": [
+      "scheduling",
+      "appointments",
+      "booking"
+    ]
+  },
+  {
     "id": "elastic-search",
     "name": "Elasticsearch",
     "version": "8.10.2",
@@ -2063,6 +2136,23 @@
     "tags": [
       "media",
       "media system"
+    ]
+  },
+  {
+    "id": "emqx",
+    "name": "EMQX",
+    "version": "6.0.1",
+    "description": "A scalable and reliable MQTT broker for AI, IoT, IIoT and connected vehicles",
+    "logo": "emqx.svg",
+    "links": {
+      "github": "https://github.com/emqx/emqx",
+      "website": "https://www.emqx.com",
+      "docs": "https://docs.emqx.com"
+    },
+    "tags": [
+      "broker",
+      "iot",
+      "mqtt"
     ]
   },
   {
@@ -3081,6 +3171,23 @@
     ]
   },
   {
+    "id": "instantdb",
+    "name": "InstantDB",
+    "version": "latest",
+    "description": "InstantDB is a real-time database server that provides instant data synchronization and real-time updates for applications.",
+    "logo": "instant.svg",
+    "links": {
+      "github": "https://github.com/instantdb/instant/tree/main/server",
+      "website": "https://github.com/instantdb/instant",
+      "docs": "https://github.com/instantdb/instant"
+    },
+    "tags": [
+      "database",
+      "real-time",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "invoiceshelf",
     "name": "InvoiceShelf",
     "version": "latest",
@@ -3144,6 +3251,25 @@
     },
     "tags": [
       "media system"
+    ]
+  },
+  {
+    "id": "jenkins",
+    "name": "jenkins",
+    "version": "latest",
+    "description": "Jenkins is a free, open-source automation server that helps developers build, test, and deploy software by automating repetitive tasks in the software delivery pipeline.",
+    "logo": "jenkins.svg",
+    "links": {
+      "github": "https://github.com/jenkinsci/jenkins",
+      "website": "https://www.jenkins.io/",
+      "docs": "https://www.jenkins.io/doc/"
+    },
+    "tags": [
+      "ci-cd",
+      "devops",
+      "automation",
+      "pipelines",
+      "open-source"
     ]
   },
   {
@@ -3307,6 +3433,22 @@
     ]
   },
   {
+    "id": "komari-monitor",
+    "name": "Komari Monitor",
+    "version": "latest",
+    "description": "A lightweight, self-hosted server monitoring tool for tracking server performance.",
+    "logo": "komari-monitor.ico",
+    "links": {
+      "github": "https://github.com/komari-monitor/komari",
+      "website": "https://github.com/komari-monitor/komari",
+      "docs": "https://github.com/komari-monitor/komari#readme"
+    },
+    "tags": [
+      "monitoring",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "kutt",
     "name": "Kutt",
     "version": "latest",
@@ -3335,6 +3477,22 @@
     },
     "tags": [
       "ai"
+    ]
+  },
+  {
+    "id": "lavalink",
+    "name": "Lavalink",
+    "version": "4.1.1",
+    "description": "Lavalink is an open source standalone audio sending node based on Lavaplayer.",
+    "logo": "lavalink.svg",
+    "links": {
+      "github": "https://github.com/lavalink-devs/Lavalink",
+      "website": "https://lavalink.dev/",
+      "docs": "https://lavalink.dev/getting-started/index.html"
+    },
+    "tags": [
+      "voice",
+      "discord"
     ]
   },
   {
@@ -3597,6 +3755,24 @@
     ]
   },
   {
+    "id": "mage-ai",
+    "name": "Mage AI",
+    "version": "0.9.78",
+    "description": "Build, run, and manage data pipelines for integrating and transforming data.",
+    "logo": "mage-ai.svg",
+    "links": {
+      "github": "https://github.com/mage-ai/mage-ai",
+      "website": "https://mage.ai",
+      "docs": "https://docs.mage.ai"
+    },
+    "tags": [
+      "data",
+      "dbt",
+      "etl",
+      "pipelines"
+    ]
+  },
+  {
     "id": "mailpit",
     "name": "Mailpit",
     "version": "v1.22.3",
@@ -3626,6 +3802,24 @@
     "tags": [
       "chat",
       "self-hosted"
+    ]
+  },
+  {
+    "id": "mautic",
+    "name": "Mautic",
+    "version": "5.1.1",
+    "description": "Mautic is the world's largest open-source marketing automation project. It allows you to automate the process of finding and nurturing contacts through landing pages and forms, sending email, text messages, web notifications, and tracking your contacts.",
+    "logo": "mautic.svg",
+    "links": {
+      "github": "https://github.com/mautic/mautic",
+      "website": "https://www.mautic.org/",
+      "docs": "https://docs.mautic.org/en"
+    },
+    "tags": [
+      "marketing",
+      "automation",
+      "email",
+      "crm"
     ]
   },
   {
@@ -3783,6 +3977,24 @@
     ]
   },
   {
+    "id": "minepanel",
+    "name": "Minepanel",
+    "version": "1.7.1",
+    "description": "Web panel for managing Minecraft servers with Docker. Create, configure, start/stop, and monitor multiple instances from a modern UI.",
+    "logo": "minepanel.webp",
+    "links": {
+      "github": "https://github.com/Ketbome/minepanel",
+      "website": "https://minepanel.ketbome.lat",
+      "docs": "https://minepanel.ketbome.lat"
+    },
+    "tags": [
+      "gaming",
+      "minecraft",
+      "server-management",
+      "docker"
+    ]
+  },
+  {
     "id": "minio",
     "name": "Minio",
     "description": "Minio is an open source object storage server compatible with Amazon S3 cloud storage service.",
@@ -3795,6 +4007,23 @@
     },
     "tags": [
       "storage"
+    ]
+  },
+  {
+    "id": "misaka-danmu-server",
+    "name": "Misaka Danmu Server",
+    "version": "latest",
+    "description": "A self-hosted danmaku (bullet comments) server for live streaming and video platforms.",
+    "logo": "misaka-danmu-server.png",
+    "links": {
+      "github": "https://github.com/l429609201/misaka_danmu_server",
+      "website": "https://github.com/l429609201/misaka_danmu_server",
+      "docs": "https://github.com/l429609201/misaka_danmu_server#readme"
+    },
+    "tags": [
+      "streaming",
+      "danmaku",
+      "live"
     ]
   },
   {
@@ -4328,6 +4557,27 @@
       "ai",
       "database",
       "surrealdb"
+    ]
+  },
+  {
+    "id": "openclaw",
+    "name": "Openclaw",
+    "version": "2026.1.29",
+    "description": "WhatsApp gateway CLI with Pi RPC agent - self-hosted AI-powered messaging platform",
+    "logo": "openclaw.svg",
+    "links": {
+      "github": "https://github.com/openclaw/openclaw",
+      "website": "https://openclaw.ai/",
+      "docs": "https://docs.openclaw.ai/"
+    },
+    "tags": [
+      "whatsapp",
+      "ai",
+      "messaging",
+      "chatbot",
+      "gateway",
+      "self-hosted",
+      "automation"
     ]
   },
   {
@@ -4999,6 +5249,24 @@
     ]
   },
   {
+    "id": "qbitwebui",
+    "name": "qBittorrent Web UI",
+    "version": "latest",
+    "description": "A modern web interface for managing multiple qBittorrent instances. Built with React, Hono, and Bun.",
+    "logo": "qbitwebui.png",
+    "links": {
+      "github": "https://github.com/Maciejonos/qbitwebui",
+      "website": "https://github.com/Maciejonos/qbitwebui",
+      "docs": "https://github.com/Maciejonos/qbitwebui#readme"
+    },
+    "tags": [
+      "torrent",
+      "download",
+      "media",
+      "qbittorrent"
+    ]
+  },
+  {
     "id": "qdrant",
     "name": "Qdrant",
     "version": "latest",
@@ -5049,6 +5317,24 @@
       "message-broker",
       "queue",
       "rabbitmq"
+    ]
+  },
+  {
+    "id": "reactive-resume",
+    "name": "Reactive Resume",
+    "version": "latest",
+    "description": "A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/AmruthPillai/Reactive-Resume",
+      "website": "https://rxresu.me/",
+      "docs": "https://docs.rxresu.me/"
+    },
+    "tags": [
+      "resume",
+      "cv",
+      "productivity",
+      "document"
     ]
   },
   {
@@ -5236,6 +5522,22 @@
       "media",
       "tracking",
       "self-hosted"
+    ]
+  },
+  {
+    "id": "scrutiny",
+    "name": "Scrutiny",
+    "version": "latest",
+    "description": "Hard Drive S.M.A.R.T Monitoring, Historical Trends & Real World Failure Thresholds",
+    "logo": "scrutiny.png",
+    "links": {
+      "github": "https://github.com/AnalogJ/scrutiny/",
+      "website": "",
+      "docs": ""
+    },
+    "tags": [
+      "monitoring",
+      "NAS"
     ]
   },
   {
@@ -5505,6 +5807,25 @@
     ]
   },
   {
+    "id": "streamflow",
+    "name": "StreamFlow",
+    "version": "2.1",
+    "description": "StreamFlow is a multi-platform live streaming web application that enables simultaneous RTMP streaming to YouTube, Facebook, and other platforms with video gallery, scheduled streaming, and real-time monitoring.",
+    "logo": "streamflow.png",
+    "links": {
+      "github": "https://github.com/bangtutorial/streamflow",
+      "website": "https://github.com/bangtutorial/streamflow",
+      "docs": "https://github.com/bangtutorial/streamflow#readme"
+    },
+    "tags": [
+      "streaming",
+      "rtmp",
+      "video",
+      "live-streaming",
+      "media"
+    ]
+  },
+  {
     "id": "supabase",
     "name": "SupaBase",
     "version": "1.25.04 / dokploy >= 0.22.5",
@@ -5556,6 +5877,23 @@
       "database",
       "sql",
       "surrealdb"
+    ]
+  },
+  {
+    "id": "syncthing",
+    "name": "Syncthing",
+    "version": "latest",
+    "description": "Syncthing is a continuous file synchronization program that synchronizes files between two or more computers in real time.",
+    "logo": "syncthing.svg",
+    "links": {
+      "github": "https://github.com/syncthing/syncthing",
+      "website": "https://syncthing.net/",
+      "docs": "https://docs.syncthing.net/"
+    },
+    "tags": [
+      "file-sync",
+      "synchronization",
+      "backup"
     ]
   },
   {
@@ -5796,7 +6134,7 @@
   {
     "id": "umami",
     "name": "Umami",
-    "version": "v2.19.0",
+    "version": "v3.0.3",
     "description": "Umami is a simple, fast, privacy-focused alternative to Google Analytics.",
     "logo": "umami.png",
     "links": {

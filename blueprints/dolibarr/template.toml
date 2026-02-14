@@ -1,0 +1,23 @@
+[variables]
+main_domain = "${domain}"
+db_name = "dolibarr"
+db_user = "dolibarr"
+db_password = "${password:32}"
+db_root_password = "${password:32}"
+admin_password = "${password:32}"
+
+[config]
+env = [
+  "DOLIBARR_HOST=${main_domain}",
+  "DB_NAME=${db_name}",
+  "DB_USER=${db_user}",
+  "DB_PASSWORD=${db_password}",
+  "DB_ROOT_PASSWORD=${db_root_password}",
+  "ADMIN_PASSWORD=${admin_password}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "dolibarr"
+port = 80
+host = "${main_domain}"

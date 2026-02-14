@@ -5,9 +5,6 @@ on:
     workflows: [Build Preview Deployment]
     types:
       - completed
-  pull_request:
-    branches:
-      - canary
 permissions:
   actions: read
   deployments: write

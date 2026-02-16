@@ -3,7 +3,6 @@ main_domain = "${domain}"
 secret_key = "${password:30}"
 postgres_password = "${password:30}"
 redis_password = "${password:30}"
-mapbox_api_key = ""
 
 [[config.domains]]
 serviceName = "superset"
@@ -12,7 +11,7 @@ host = "${main_domain}"
 
 [config.env]
 SECRET_KEY = "${secret_key}"
-MAPBOX_API_KEY = "${mapbox_api_key}"
+MAPBOX_API_KEY = ""
 POSTGRES_DB = "superset"
 POSTGRES_USER = "superset"
 POSTGRES_PASSWORD = "${postgres_password}"

@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   pulse:
-    image: rcourtman/pulse:latest
+    image: rcourtman/pulse:5.1
     restart: always
     expose:
       - 7655

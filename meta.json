@@ -6270,7 +6270,7 @@
   {
     "id": "uptime-kuma",
     "name": "Uptime Kuma",
-    "version": "1.23.15",
+    "version": "2.1.0",
     "description": "Uptime Kuma is a free and open source monitoring tool that allows you to monitor your websites and applications.",
     "logo": "uptime-kuma.png",
     "links": {

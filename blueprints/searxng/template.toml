@@ -12,11 +12,15 @@ env = [
 ]
 
 [[config.mounts]]
-filePath = "/etc/searxng/settings.yml"
+filePath = "/searxng/settings.yml"
 content = """
 use_default_settings: true
+
 server:
   secret_key: \"${secret_key}\"
   limiter: false
   image_proxy: false
+
+valkey:
+  url: valkey://valkey:6379/0
 """

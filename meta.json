@@ -6358,7 +6358,7 @@
     "description": "Vikunja is a self-hosted, open-source to-do list application to organize tasks, projects, and notes.",
     "logo": "image.png",
     "links": {
-      "github": "https://kolaente.dev/vikunja/",
+      "github": "https://github.com/go-vikunja/vikunja",
       "website": "https://vikunja.io/",
       "docs": "https://vikunja.io/docs/"
     },

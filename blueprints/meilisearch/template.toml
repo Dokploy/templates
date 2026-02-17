@@ -7,9 +7,8 @@ mounts = []
 
 [[config.domains]]
 serviceName = "meilisearch"
-port = 7_700
+port = 7700
 host = "${main_domain}"
 
 [config.env]
-MEILI_ENV = "development"
 MEILI_MASTER_KEY = "${master_key}"

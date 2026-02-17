@@ -1648,7 +1648,7 @@
     "name": "CyberChef",
     "version": "latest",
     "description": "CyberChef is a web application for encryption, encoding, compression, and data analysis, developed by GCHQ.",
-    "logo": "cyberchef.svg",
+    "logo": "cyberchef.png",
     "links": {
       "github": "https://github.com/gchq/CyberChef",
       "website": "https://gchq.github.io/CyberChef/",
@@ -3774,7 +3774,7 @@
   {
     "id": "meilisearch",
     "name": "Meilisearch",
-    "version": "v1.8.3",
+    "version": "v1.35.1",
     "description": "Meilisearch is a free and open-source search engine that allows you to easily add search functionality to your web applications.",
     "logo": "meilisearch.png",
     "links": {

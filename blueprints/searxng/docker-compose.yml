@@ -1,20 +1,18 @@
-version: "3.8"
 services:
-  redis:
+  valkey:
     image: valkey/valkey:8-alpine
     command: valkey-server --save 30 1 --loglevel warning
     restart: unless-stopped
     volumes:
-      - redis-data:/data
+      - valkey-data:/data
 
   searxng:
     image: searxng/searxng:latest
     restart: unless-stopped
     volumes:
-      - searxng-config:/etc/searxng
+      - ../files/searxng:/etc/searxng
       - searxng-data:/var/cache/searxng
 
 volumes:
-  redis-data: {}
-  searxng-config: {}
+  valkey-data: {}
   searxng-data: {}

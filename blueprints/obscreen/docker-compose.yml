@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   obscreen:
     image: obscreen/obscreen:v2026.1.6

@@ -1,6 +1,6 @@
 services:
   obscreen:
-    image: obscreen/obscreen:2026.1.6
+    image: obscreen/obscreen:v2026.1.6
     restart: unless-stopped
     environment:
       - SECRET_KEY=${SECRET_KEY}

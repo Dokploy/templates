@@ -4361,7 +4361,7 @@
     "id": "obscreen",
     "name": "Obscreen",
     "version": "v2026.1.6",
-    "description": "Obscreen organizes your media and displays it on your TV, computer, tablet, or any web browser.",
+    "description": "Obscreen organizes your media and displays it on your TV, computer, tablet, or any browser.",
     "logo": "obscreen.png",
     "links": {
       "github": "https://github.com/obscreen/obscreen",

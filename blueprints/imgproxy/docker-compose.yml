@@ -29,7 +29,7 @@ services:
   nginx:
     image: nginx:1.28.2-alpine
     restart: unless-stopped
-    ports:
+    expose:
       - 80
     environment:
       NGINX_CACHE_LEVELS: ${NGINX_CACHE_LEVELS:-1:2}

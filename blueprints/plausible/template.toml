@@ -12,9 +12,11 @@ host = "${main_domain}"
 BASE_URL = "http://${main_domain}"
 SECRET_KEY_BASE = "${secret_base}"
 TOTP_VAULT_KEY = "${totp_key}"
+DATABASE_URL = "postgres://postgres:postgres@plausible_db:5432/plausible_db"
+CLICKHOUSE_DATABASE_URL = "http://plausible_events_db:8123/plausible_events_db"
 
 [[config.mounts]]
-filePath = "/clickhouse/logs.xml"
+filePath = "./clickhouse/logs.xml"
 content = """
 <clickhouse>
   <logger>
@@ -41,7 +43,7 @@ content = """
 """
 
 [[config.mounts]]
-filePath = "/clickhouse/ipv4-only.xml"
+filePath = "./clickhouse/ipv4-only.xml"
 content = """
 <clickhouse>
   <listen_host>0.0.0.0</listen_host>
@@ -49,7 +51,7 @@ content = """
 """
 
 [[config.mounts]]
-filePath = "/clickhouse/low-resources.xml"
+filePath = "./clickhouse/low-resources.xml"
 content = """
 <clickhouse>
   <mark_cache_size>524288000</mark_cache_size>

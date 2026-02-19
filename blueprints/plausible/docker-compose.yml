@@ -34,8 +34,6 @@ services:
       - plausible_events_db
     env_file:
       - .env
-    ports:
-      - 8000
 
 volumes:
   db-data:

@@ -54,8 +54,3 @@ NGINX_CACHE_MAX_SIZE = "${nginx_cache_max_size}"
 NGINX_CACHE_INACTIVE = "${nginx_cache_inactive}"
 NGINX_CACHE_USE_TEMP_PATH = "${nginx_cache_use_temp_path}"
 NGINX_CACHE_EXPIRES = "${nginx_cache_expires}"
-
-[[config.mounts]]
-serviceName = "nginx"
-volumeName = "nginx-cache"
-mountPath = "/tmp/cache"

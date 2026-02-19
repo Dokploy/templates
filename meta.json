@@ -3100,6 +3100,25 @@
     ]
   },
   {
+    "id": "imgproxy",
+    "name": "imgproxy",
+    "version": "v3.30.1",
+    "description": "imgproxy is a fast and secure image processing server, fronted by nginx with built-in response caching for repeated transformations.",
+    "logo": "imgproxy.png",
+    "links": {
+      "github": "https://github.com/imgproxy/imgproxy",
+      "website": "https://imgproxy.net/",
+      "docs": "https://docs.imgproxy.net/"
+    },
+    "tags": [
+      "images",
+      "media",
+      "proxy",
+      "cdn",
+      "caching"
+    ]
+  },
+  {
     "id": "immich",
     "name": "Immich",
     "version": "v1.121.0",

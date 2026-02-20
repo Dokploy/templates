@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   fizzy:
-    image: ghcr.io/basecamp/fizzy:main
+    image: ghcr.io/basecamp/fizzy:1.0.0
     restart: unless-stopped
 
     environment:

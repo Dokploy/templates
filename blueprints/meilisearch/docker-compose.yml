@@ -1,6 +1,7 @@
 services:
   meilisearch:
     image: getmeili/meilisearch:v1.35.1
+    restart: unless-stopped
     volumes:
       - meili_data:/meili_data
     environment:

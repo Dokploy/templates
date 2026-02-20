@@ -2349,7 +2349,7 @@
   {
     "id": "fizzy",
     "name": "Fizzy",
-    "version": "main",
+    "version": "0.1.0",
     "description": "Fizzy is a Kanban-style tracker for issues and ideas from 37signals.",
     "logo": "fizzy.svg",
     "links": {

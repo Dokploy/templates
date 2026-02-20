@@ -1,5 +1,5 @@
 services:
-  web:
+  fizzy:
     image: ghcr.io/basecamp/fizzy:main
     restart: unless-stopped
 

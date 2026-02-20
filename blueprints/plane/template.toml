@@ -9,7 +9,7 @@ secret_key = "${base64:48}"
 [config]
 env = [
 "Domain=${domain}",
-"WEB_URL=${Domain}",
+"WEB_URL=http://${Domain}",
 "PGHOST=plane-db",
 "PGDATABASE=plane",
 "POSTGRES_USER=${username}",

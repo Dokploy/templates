@@ -56,15 +56,15 @@ services:
           location / {
             expires $${NGINX_CACHE_EXPIRES};
             access_log off;
-            set $$handle_webp 0;
-            if ($$http_accept ~* "image/webp") {
-              set $$handle_webp 1;
+            set \$$handle_webp 0;
+            if (\$$http_accept ~* "image/webp") {
+              set \$$handle_webp 1;
             }
             proxy_cache my_cache;
             proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
             proxy_cache_background_update on;
             proxy_cache_lock on;
-            proxy_cache_key "$$scheme$$host$$uri$$handle_webp";
+            proxy_cache_key "\$$scheme\$$host\$$uri\$$handle_webp";
             server_tokens off;
             proxy_pass http://imgproxy:8080;
           }

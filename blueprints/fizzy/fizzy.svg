@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Fizzy logo">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4b9cff"/>
+      <stop offset="100%" stop-color="#6dd5fa"/>
+    </linearGradient>
+  </defs>
+  <rect width="160" height="160" rx="28" fill="url(#g)"/>
+  <circle cx="52" cy="68" r="12" fill="#ffffff" opacity="0.9"/>
+  <circle cx="88" cy="52" r="10" fill="#ffffff" opacity="0.85"/>
+  <circle cx="112" cy="82" r="14" fill="#ffffff" opacity="0.9"/>
+  <path d="M46 110c18-18 44-18 68-4" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+  <path d="M54 104c2-20 14-40 32-48" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round" opacity="0.85"/>
+  <path d="M70 108l-22 12" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round" opacity="0.8"/>
+</svg>

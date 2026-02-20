@@ -1,0 +1,33 @@
+[variables]
+main_domain = "${domain}"
+secret_key_base = "${base64:64}"
+vapid_public_key = "${base64:64}"
+vapid_private_key = "${base64:64}"
+mailer_from_address = "fizzy@${main_domain}"
+smtp_address = "smtp.example.com"
+smtp_port = "2525"
+smtp_username = ""
+smtp_password = ""
+multi_tenant = "false"
+solid_queue_in_puma = "true"
+
+[config]
+mounts = []
+
+env = [
+  "SECRET_KEY_BASE=${secret_key_base}",
+  "VAPID_PUBLIC_KEY=${vapid_public_key}",
+  "VAPID_PRIVATE_KEY=${vapid_private_key}",
+  "MAILER_FROM_ADDRESS=${mailer_from_address}",
+  "SMTP_ADDRESS=${smtp_address}",
+  "SMTP_PORT=${smtp_port}",
+  "SMTP_USERNAME=${smtp_username}",
+  "SMTP_PASSWORD=${smtp_password}",
+  "MULTI_TENANT=${multi_tenant}",
+  "SOLID_QUEUE_IN_PUMA=${solid_queue_in_puma}",
+]
+
+[[config.domains]]
+serviceName = "web"
+port = 3_000
+host = "${main_domain}"

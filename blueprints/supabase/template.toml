@@ -177,7 +177,7 @@ env = [
 '',
 '# Google Cloud Project details',
 'GOOGLE_PROJECT_ID=GOOGLE_PROJECT_ID',
-'GOOGLE_PROJECT_NUMBER=GOOGLE_PROJECT_NUMBER'
+'GOOGLE_PROJECT_NUMBER=GOOGLE_PROJECT_NUMBER',
 '############',
 '# Storage - Configuration for the storage',
 '############',

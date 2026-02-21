@@ -7,7 +7,8 @@ serviceName = "go2rtc"
 port = 1984
 host = "${main_domain}"
 
-[config.env]
-TZ = ""
+env = [
+    "TZ=${TZ}"
+]
 
 [[config.mounts]]

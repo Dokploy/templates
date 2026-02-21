@@ -3932,7 +3932,7 @@
   {
     "id": "meilisearch",
     "name": "Meilisearch",
-    "version": "v1.8.3",
+    "version": "v1.35.1",
     "description": "Meilisearch is a free and open-source search engine that allows you to easily add search functionality to your web applications.",
     "logo": "meilisearch.png",
     "links": {

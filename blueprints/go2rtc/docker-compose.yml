@@ -5,9 +5,9 @@ services:
     image: alexxit/go2rtc:latest
     restart: unless-stopped
 
-    # Access to webcam
-    devices:
-      - /dev/video0:/dev/video0
+    # To use a local webcam, add the device to the service:
+    # devices:
+    #   - /dev/video0:/dev/video0  # Adjust path if your device is at /dev/video1, etc.
 
     expose:
       - 1984        # Web UI

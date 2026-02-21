@@ -10,7 +10,7 @@ port = 80
 host = "${main_domain}"
 
 [config.env]
-TZ = "Europe/Berlin"
+TZ = "UTC"
 SERVER_ADMIN = "${admin_email}"
 HTTP_SERVER_NAME = "${main_domain}"
 HTTPS_SERVER_NAME = "${main_domain}"

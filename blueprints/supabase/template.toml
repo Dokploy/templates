@@ -2,6 +2,7 @@
 main_domain = "${domain}"
 postgres_password = "${password:32}"
 dashboard_password = "${password:32}"
+logflare_api_key = "${password:32}"
 logflare_public = "${password:32}"
 logflare_private = "${password:32}"
 secret_key_base = "${password:64}"
@@ -165,6 +166,8 @@ env = [
 '# Logs - Configuration for Logflare',
 '# Please refer to https://supabase.com/docs/reference/self-hosting-analytics/introduction',
 '############',
+'',
+'LOGFLARE_API_KEY=${logflare_api_key}',
 '',
 'LOGFLARE_PUBLIC_ACCESS_TOKEN=${logflare_public}',
 'LOGFLARE_PRIVATE_ACCESS_TOKEN=${logflare_private}',

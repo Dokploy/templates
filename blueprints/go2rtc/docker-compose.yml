@@ -7,11 +7,10 @@ services:
     devices:
       - /dev/video0:/dev/video0
 
-    ports:
+    expose:
       - 1984        # Web UI
       - 8554        # RTSP
-      - 8555/tcp    # WebRTC
-      - 8555/udp
+      - 8555        # WebRTC
 
     environment:
       - TZ=${TZ}

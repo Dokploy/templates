@@ -1,4 +1,4 @@
-services:
+version: "3.8"
   go2rtc:
     image: alexxit/go2rtc:latest
     restart: unless-stopped

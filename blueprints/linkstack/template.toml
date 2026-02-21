@@ -19,5 +19,3 @@ LOG_LEVEL = "info"
 PHP_MEMORY_LIMIT = "256M"
 UPLOAD_MAX_FILESIZE = "8M"
 MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
-
-[[config.mounts]]

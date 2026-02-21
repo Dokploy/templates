@@ -3,10 +3,16 @@ main_domain = "${domain}"
 postgres_password = "${password:32}"
 dashboard_password = "${password:32}"
 logflare_api_key = "${password:32}"
+logflare_public = "${password:32},
+logflare_private = "${password:32},
 secret_key_base = "${password:64}"
 vault_enc_key = "${password:32}"
 jwt_secret = "${password:32}"
+pg_meta_crypto_key = "${password:32}"
 container_name_prefix = "${APP_NAME}-supabase"
+s3_protocol_id="${password:32}"
+s3_protocol_secret="${password:64}"
+minio_password="${password:32}"
 anon_key_payload = """{
   "role": "anon",
   "iss": "supabase",
@@ -59,6 +65,7 @@ env = [
 'DASHBOARD_PASSWORD=${dashboard_password}',
 'SECRET_KEY_BASE=${secret_key_base}',
 'VAULT_ENC_KEY=${vault_enc_key}',
+'PG_META_CRYPTO_KEY=${pg_meta_crypto_key}',
 '',
 '',
 '############',
@@ -78,6 +85,7 @@ env = [
 'POOLER_DEFAULT_POOL_SIZE=20',
 'POOLER_MAX_CLIENT_CONN=100',
 'POOLER_TENANT_ID=your-tenant-id',
+'POOLER_DB_POOL_SIZE=5',
 '',
 '',
 '############',
@@ -159,17 +167,28 @@ env = [
 '# Please refer to https://supabase.com/docs/reference/self-hosting-analytics/introduction',
 '############',
 '',
-'LOGFLARE_LOGGER_BACKEND_API_KEY=your-super-secret-and-long-logflare-key',
-'',
-'# Change vector.toml sinks to reflect this change',
-'LOGFLARE_API_KEY=${logflare_api_key}',
+'LOGFLARE_PUBLIC_ACCESS_TOKEN=${logflare_public}',
+'LOGFLARE_PRIVATE_ACCESS_TOKEN=${logflare_private}',
 '',
 '# Docker socket location - this value will differ depending on your OS',
 'DOCKER_SOCKET_LOCATION=/var/run/docker.sock',
 '',
 '# Google Cloud Project details',
 'GOOGLE_PROJECT_ID=GOOGLE_PROJECT_ID',
-'GOOGLE_PROJECT_NUMBER=GOOGLE_PROJECT_NUMBER']
+'GOOGLE_PROJECT_NUMBER=GOOGLE_PROJECT_NUMBER'
+'############',
+'# Storage - Configuration for the storage',
+'############',
+'',
+'STORAGE_TENANT_ID=stub',
+'GLOBAL_S3_BUCKET=stub',
+'REGION=stub',
+'S3_PROTOCOL_ACCESS_KEY_ID=${s3_protocol_id}',
+'S3_PROTOCOL_ACCESS_KEY_SECRET=${s3_protocol_secret}',
+'',
+'# Used in docker-compose.s3.yml for minio',
+'MINIO_ROOT_USER=supa-storage',
+'MINIO_ROOT_PASSWORD=${minio_password}']
 
 [[config.mounts]]
 filePath = "/volumes/api/kong.yml"
@@ -309,7 +328,7 @@ services:
   ## Secure Realtime routes
   - name: realtime-v1-ws
     _comment: 'Realtime: /realtime/v1/* -> ws://realtime:4000/socket/*'
-    url: http://realtime-dev.${CONTAINER_PREFIX}-realtime:4000/socket
+    url: http://realtime:4000/socket
     protocol: ws
     routes:
       - name: realtime-v1-ws
@@ -329,7 +348,7 @@ services:
             - anon
   - name: realtime-v1-rest
     _comment: 'Realtime: /realtime/v1/* -> ws://realtime:4000/socket/*'
-    url: http://realtime-dev.${CONTAINER_PREFIX}-realtime:4000/api
+    url: http://realtime:4000/api
     protocol: http
     routes:
       - name: realtime-v1-rest
@@ -717,8 +736,7 @@ serve(async () => {
 
 [[config.mounts]]
 filePath = "/volumes/functions/main/index.ts"
-content = """import { serve } from 'https://deno.land/std@0.131.0/http/server.ts'
-import * as jose from 'https://deno.land/x/jose@v4.14.4/index.ts'
+content = """import * as jose from 'https://deno.land/x/jose@v4.14.4/index.ts'
 
 console.log('main function started')
 
@@ -749,7 +767,7 @@ async function verifyJWT(jwt: string): Promise<boolean> {
   return true
 }
 
-serve(async (req: Request) => {
+Deno.serve(async (req: Request) => {
   if (req.method !== 'OPTIONS' && VERIFY_JWT) {
     try {
       const token = getAuthToken(req)
@@ -823,7 +841,7 @@ sources:
   docker_host:
     type: docker_logs
     exclude_containers:
-      - ${container_name_prefix}-vector
+      - supabase-vector
 
 transforms:
   project_logs:
@@ -833,7 +851,7 @@ transforms:
     source: |-
       .project = "default"
       .event_message = del(.message)
-      .appname = replace!(del(.container_name), "${container_name_prefix}", "supabase")
+      .appname = del(.container_name)
       del(.container_created_at)
       del(.container_id)
       del(.source_type)
@@ -847,13 +865,13 @@ transforms:
     inputs:
       - project_logs
     route:
-      kong: '.appname == "supabase-kong"'
-      auth: '.appname == "supabase-auth"'
-      rest: '.appname == "supabase-rest"'
-      realtime: '.appname == "realtime-dev.${CONTAINER_PREFIX}-realtime"'
-      storage: '.appname == "supabase-storage"'
-      functions: '.appname == "supabase-edge-functions"'
-      db: '.appname == "supabase-db"'
+      kong: '.appname == "${CONTAINER_PREFIX}-kong"'
+      auth: '.appname == "${CONTAINER_PREFIX}-auth"'
+      rest: '.appname == "${CONTAINER_PREFIX}-rest"'
+      realtime: '.appname == "${CONTAINER_PREFIX}-realtime"'
+      storage: '.appname == "${CONTAINER_PREFIX}-storage"'
+      functions: '.appname == "${CONTAINER_PREFIX}-edge-functions"'
+      db: '.appname == "${CONTAINER_PREFIX}-db"'
   # Ignores non nginx errors since they are related with kong booting up
   kong_logs:
     type: remap
@@ -866,10 +884,13 @@ transforms:
           .metadata.request.headers.referer = req.referer
           .metadata.request.headers.user_agent = req.agent
           .metadata.request.headers.cf_connecting_ip = req.client
-          .metadata.request.method = req.method
-          .metadata.request.path = req.path
-          .metadata.request.protocol = req.protocol
           .metadata.response.status_code = req.status
+          url, split_err = split(req.request, " ")
+          if split_err == null {
+              .metadata.request.method = url[0]
+              .metadata.request.path = url[1]
+              .metadata.request.protocol = url[2]
+          }
       }
       if err != null {
         abort
@@ -918,22 +939,35 @@ transforms:
       parsed, err = parse_regex(.event_message, r'^(?P<time>.*): (?P<msg>.*)$')
       if err == null {
           .event_message = parsed.msg
-          .timestamp = to_timestamp!(parsed.time)
+          .timestamp = parse_timestamp!(value: parsed.time,format: "%d/%b/%Y:%H:%M:%S %z")
           .metadata.host = .project
       }
+  # Filter out healthcheck logs from Realtime
+  realtime_logs_filtered:
+    type: filter
+    inputs:
+      - router.realtime
+    condition: '!contains(string!(.event_message), "/health")'
   # Realtime logs are structured so we parse the severity level using regex (ignore time because it has no date)
   realtime_logs:
     type: remap
     inputs:
-      - router.realtime
+      - realtime_logs_filtered
     source: |-
       .metadata.project = del(.project)
       .metadata.external_id = .metadata.project
-      parsed, err = parse_regex(.event_message, r'^(?P<time>\\d+:\\d+:\\d+\\.\\d+) \\[(?P<level>\\w+)\\] (?P<msg>.*)$')
+      parsed, err = parse_regex(.event_message, r'^(?P<time>\d+:\d+:\d+\.\d+) \[(?P<level>\w+)\] (?P<msg>.*)$')
       if err == null {
           .event_message = parsed.msg
           .metadata.level = parsed.level
       }
+  # Function logs are unstructured messages on stderr
+  functions_logs:
+    type: remap
+    inputs:
+      - router.functions
+    source: |-
+      .metadata.project_ref = del(.project)
   # Storage logs may contain json objects so we parse them for completeness
   storage_logs:
     type: remap
@@ -964,7 +998,7 @@ transforms:
       if err != null || parsed == null {
         .metadata.parsed.error_severity = "info"
       }
-      if parsed != null {
+      if parsed.level != null {
        .metadata.parsed.error_severity = parsed.level
       }
       if .metadata.parsed.error_severity == "info" {
@@ -981,8 +1015,11 @@ sinks:
       codec: 'json'
     method: 'post'
     request:
-      retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=gotrue.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+      retry_max_duration_secs: 30
+      retry_initial_backoff_secs: 1
+      headers:
+        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
+    uri: 'http://analytics:4000/api/logs?source_name=gotrue.logs.prod'
   logflare_realtime:
     type: 'http'
     inputs:
@@ -991,8 +1028,11 @@ sinks:
       codec: 'json'
     method: 'post'
     request:
-      retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=realtime.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+      retry_max_duration_secs: 30
+      retry_initial_backoff_secs: 1
+      headers:
+        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
+    uri: 'http://analytics:4000/api/logs?source_name=realtime.logs.prod'
   logflare_rest:
     type: 'http'
     inputs:
@@ -1001,8 +1041,11 @@ sinks:
       codec: 'json'
     method: 'post'
     request:
-      retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=postgREST.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+      retry_max_duration_secs: 30
+      retry_initial_backoff_secs: 1
+      headers:
+        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
+    uri: 'http://analytics:4000/api/logs?source_name=postgREST.logs.prod'
   logflare_db:
     type: 'http'
     inputs:
@@ -1011,21 +1054,26 @@ sinks:
       codec: 'json'
     method: 'post'
     request:
-      retry_max_duration_secs: 10
-    # We must route the sink through kong because ingesting logs before logflare is fully initialised will
-    # lead to broken queries from studio. This works by the assumption that containers are started in the
-    # following order: vector > db > logflare > kong
-    uri: 'http://kong:8000/analytics/v1/api/logs?source_name=postgres.logs&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+      retry_max_duration_secs: 30
+      retry_initial_backoff_secs: 1
+      headers:
+        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
+    # Route directly to analytics like other sinks. Retry handles the startup
+    # race where analytics may not be ready yet when early DB logs arrive.
+    uri: 'http://analytics:4000/api/logs?source_name=postgres.logs'
   logflare_functions:
     type: 'http'
     inputs:
-      - router.functions
+      - functions_logs
     encoding:
       codec: 'json'
     method: 'post'
     request:
-      retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=deno-relay-logs&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+      retry_max_duration_secs: 30
+      retry_initial_backoff_secs: 1
+      headers:
+        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
+    uri: 'http://analytics:4000/api/logs?source_name=deno-relay-logs'
   logflare_storage:
     type: 'http'
     inputs:
@@ -1034,8 +1082,11 @@ sinks:
       codec: 'json'
     method: 'post'
     request:
-      retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=storage.logs.prod.2&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+      retry_max_duration_secs: 30
+      retry_initial_backoff_secs: 1
+      headers:
+        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
+    uri: 'http://analytics:4000/api/logs?source_name=storage.logs.prod.2'
   logflare_kong:
     type: 'http'
     inputs:
@@ -1045,8 +1096,11 @@ sinks:
       codec: 'json'
     method: 'post'
     request:
-      retry_max_duration_secs: 10
-    uri: 'http://analytics:4000/api/logs?source_name=cloudflare.logs.prod&api_key=${LOGFLARE_API_KEY?LOGFLARE_API_KEY is required}'
+      retry_max_duration_secs: 30
+      retry_initial_backoff_secs: 1
+      headers:
+        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
+    uri: 'http://analytics:4000/api/logs?source_name=cloudflare.logs.prod'
 """
 
 [[config.mounts]]

@@ -486,7 +486,7 @@ services:
     container_name: ${CONTAINER_PREFIX}-pooler
     image: supabase/supavisor:2.7.4
     restart: unless-stopped
-    expose: # expose supavisor to the host to enable db pooler connection
+    expose: # expose supavisor ports to other services (internal network) for db pooler connections
       - ${POSTGRES_PORT}
       - ${POOLER_PROXY_PORT_TRANSACTION}
     volumes:

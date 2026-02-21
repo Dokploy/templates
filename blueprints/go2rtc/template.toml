@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "go2rtc"
+port = 1984
+host = "${main_domain}"
+
+[config.env]
+TZ = ""
+
+[[config.mounts]]

@@ -1,0 +1,23 @@
+services:
+  go2rtc:
+    image: alexxit/go2rtc:latest
+    restart: unless-stopped
+
+    # Access to webcam
+    devices:
+      - /dev/video0:/dev/video0
+
+    ports:
+      - 1984        # Web UI
+      - 8554        # RTSP
+      - 8555/tcp    # WebRTC
+      - 8555/udp
+
+    environment:
+      - TZ=${TZ}
+
+    volumes:
+      - go2rtc-config:/config
+
+volumes:
+  go2rtc-config: {}

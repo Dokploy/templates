@@ -20,9 +20,11 @@ UPLOAD_MAX_FILESIZE = "8M"
 MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
 
 [[config.mounts]]
-volume = "linkstack-data"
+type = "volume"
+name = "linkstack-data"
 target = "/htdocs"
 
 [[config.mounts]]
-volume = "mysql-data"
+type = "volume"
+name = "mysql-data"
 target = "/var/lib/mysql"

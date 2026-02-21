@@ -11,4 +11,3 @@ env = [
     "TZ=${TZ}"
 ]
 
-[[config.mounts]]

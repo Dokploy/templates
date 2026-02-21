@@ -4,7 +4,7 @@ services:
   linkstack:
     image: linkstackorg/linkstack:latest
     environment:
-      TZ: "Europe/Berlin"
+      TZ: "${TZ:-UTC}"
       SERVER_ADMIN: "${admin_email}"
       HTTP_SERVER_NAME: "${main_domain}"
       HTTPS_SERVER_NAME: "${main_domain}"

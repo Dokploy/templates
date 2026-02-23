@@ -5859,6 +5859,24 @@
     ]
   },
   {
+    "id": "strapi",
+    "name": "Strapi",
+    "version": "v5.33.0",
+    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
+    "logo": "strapi.svg",
+    "links": {
+      "github": "https://github.com/strapi/strapi",
+      "discord": "https://discord.com/invite/strapi",
+      "docs": "https://docs.strapi.io",
+      "website": "https://strapi.io"
+    },
+    "tags": [
+      "headless",
+      "cms",
+      "content-management"
+    ]
+  },
+  {
     "id": "streamflow",
     "name": "StreamFlow",
     "version": "2.1",
@@ -5875,24 +5893,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {
@@ -6150,6 +6150,24 @@
     },
     "tags": [
       "e-ink"
+    ]
+  },
+  {
+    "id": "tuwunel",
+    "name": "Tuwunel",
+    "version": "v1.5.0",
+    "description": "High performance Matrix homeserver written in Rust. Official successor to conduwuit - a scalable, low-cost, enterprise-ready alternative to Synapse.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/matrix-construct/tuwunel",
+      "website": "https://tuwunel.chat",
+      "docs": "https://matrix-construct.github.io/tuwunel/"
+    },
+    "tags": [
+      "matrix",
+      "chat",
+      "messaging",
+      "rust"
     ]
   },
   {

@@ -1,0 +1,69 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:1.34.3
+    restart: always
+    environment:
+      - DOMAIN=${DOMAIN}
+      - TZ=${TZ}
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
+      - WEBSOCKET_ENABLED=${WEBSOCKET_ENABLED}
+      - SIGNUPS_ALLOWED=${SIGNUPS_ALLOWED}
+      - INVITATIONS_ALLOWED=${INVITATIONS_ALLOWED}
+      - SHOW_PASSWORD_HINT=${SHOW_PASSWORD_HINT}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_FROM=${SMTP_FROM}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_SECURITY=${SMTP_SECURITY}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+    volumes:
+      - vaultwarden:/data
+    expose:
+      - 80
+
+  configurator:
+    image: alpine:3.20
+    restart: "no"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Generating Rclone config for Cloudflare R2..."
+        cat <<EOF > /config/rclone.conf
+        [r2backup]
+        type = s3
+        provider = Cloudflare
+        access_key_id = ${R2_ACCESS_KEY_ID}
+        secret_access_key = ${R2_SECRET_ACCESS_KEY}
+        endpoint = https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com
+        acl = private
+        no_check_bucket = true
+        EOF
+        echo "Configuration generated successfully."
+    volumes:
+      - vaultwarden-rclone-config:/config
+
+  backup:
+    image: ttionya/vaultwarden-backup:1.26.2
+    restart: always
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+    environment:
+      - TIMEZONE=${TZ}
+      - CRON=${BACKUP_CRON}
+      - BACKUP_KEEP_DAYS=${BACKUP_KEEP_DAYS}
+      - DATA_DIR=/data
+      - ZIP_PASSWORD=${ZIP_PASSWORD}
+      - RCLONE_CONFIG=/config/rclone.conf
+      - RCLONE_REMOTE_NAME=r2backup
+      - RCLONE_REMOTE_DIR=${R2_BUCKET_NAME}/backups
+      - RCLONE_GLOBAL_FLAG=--s3-no-check-bucket
+    volumes:
+      - vaultwarden:/data
+      - vaultwarden-backups:/backup
+      - vaultwarden-rclone-config:/config
+
+volumes:
+  vaultwarden:
+  vaultwarden-backups:
+  vaultwarden-rclone-config:

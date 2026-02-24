@@ -330,7 +330,7 @@ services:
   ## Secure Realtime routes
   - name: realtime-v1-ws
     _comment: 'Realtime: /realtime/v1/* -> ws://realtime:4000/socket/*'
-    url: http://realtime:4000/socket
+    url: http://realtime-dev.${CONTAINER_PREFIX}-realtime:4000/socket
     protocol: ws
     routes:
       - name: realtime-v1-ws
@@ -350,7 +350,7 @@ services:
             - anon
   - name: realtime-v1-rest
     _comment: 'Realtime: /realtime/v1/* -> ws://realtime:4000/socket/*'
-    url: http://realtime:4000/api
+    url: http://realtime-dev.${CONTAINER_PREFIX}-realtime:4000/api
     protocol: http
     routes:
       - name: realtime-v1-rest
@@ -870,7 +870,7 @@ transforms:
       kong: '.appname == "${CONTAINER_PREFIX}-kong"'
       auth: '.appname == "${CONTAINER_PREFIX}-auth"'
       rest: '.appname == "${CONTAINER_PREFIX}-rest"'
-      realtime: '.appname == "${CONTAINER_PREFIX}-realtime"'
+      realtime: '.appname == "realtime-dev.${CONTAINER_PREFIX}-realtime"'
       storage: '.appname == "${CONTAINER_PREFIX}-storage"'
       functions: '.appname == "${CONTAINER_PREFIX}-edge-functions"'
       db: '.appname == "${CONTAINER_PREFIX}-db"'

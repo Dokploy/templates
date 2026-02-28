@@ -2279,7 +2279,7 @@
   {
     "id": "fider",
     "name": "Fider",
-    "version": "stable",
+    "version": "0.32.0",
     "description": "Fider is an open-source feedback collection platform that helps you capture, organize, and prioritize customer feedback. It provides a public feedback board where users can submit and vote on feature requests.",
     "logo": "fider.png",
     "links": {

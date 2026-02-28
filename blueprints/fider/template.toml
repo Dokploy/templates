@@ -16,7 +16,7 @@ port = 3000
 host = "${main_domain}"
 
 [config.env]
-BASE_URL = "https://${main_domain}"
+BASE_URL = "http://${main_domain}"
 POSTGRES_PASSWORD = "${postgres_password}"
 JWT_SECRET = "${jwt_secret}"
 EMAIL_NOREPLY = "${email_noreply}"

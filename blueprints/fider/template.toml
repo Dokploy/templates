@@ -1,0 +1,27 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:16}"
+jwt_secret = "${password:32}"
+email_noreply = "noreply@example.com"
+email_smtp_host = ""
+email_smtp_port = "587"
+email_smtp_username = ""
+email_smtp_password = ""
+email_smtp_starttls = "true"
+
+[config]
+[[config.domains]]
+serviceName = "app"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+BASE_URL = "https://${main_domain}"
+POSTGRES_PASSWORD = "${postgres_password}"
+JWT_SECRET = "${jwt_secret}"
+EMAIL_NOREPLY = "${email_noreply}"
+EMAIL_SMTP_HOST = "${email_smtp_host}"
+EMAIL_SMTP_PORT = "${email_smtp_port}"
+EMAIL_SMTP_USERNAME = "${email_smtp_username}"
+EMAIL_SMTP_PASSWORD = "${email_smtp_password}"
+EMAIL_SMTP_ENABLE_STARTTLS = "${email_smtp_starttls}"

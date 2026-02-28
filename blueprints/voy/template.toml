@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+better_auth_secret = "${password:32}"
+searxng_secret = "${password:32}"
+instance_name = "Voy"
+max_request_timeout = "1.8"
+
+[config]
+[[config.domains]]
+serviceName = "app"
+port = 3000
+host = "${main_domain}"
+path = "/"
+
+env = [
+  "INSTANCE_NAME=${instance_name}",
+  "BETTER_AUTH_SECRET=${better_auth_secret}",
+  "DOMAIN=${main_domain}",
+  "SEARXNG_SECRET=${searxng_secret}",
+  "MAX_REQUEST_TIMEOUT=${max_request_timeout}"
+]

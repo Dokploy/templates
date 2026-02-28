@@ -1,0 +1,91 @@
+version: "3.8"
+services:
+  app:
+    image: ghcr.io/leomartindev/voy:latest
+    restart: unless-stopped
+    environment:
+      BUN_ENV: production
+      PORT: 3000
+      DATABASE_URL: /data/app.db
+      SEARXNG_URL: http://searxng:8080
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      INSTANCE_NAME: ${INSTANCE_NAME}
+      SITE_URL: https://${DOMAIN}
+    volumes:
+      - app-data:/data
+    depends_on:
+      searxng:
+        condition: service_healthy
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    restart: unless-stopped
+    command: valkey-server --save 30 1 --loglevel warning
+    volumes:
+      - valkey-data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  searxng:
+    image: searxng/searxng:latest
+    restart: unless-stopped
+    configs:
+      - source: searxng_settings
+        target: /etc/searxng/settings.yml
+    environment:
+      UWSGI_WORKERS: 2
+      UWSGI_THREADS: 2
+      UWSGI_ENABLE_THREADS: "true"
+    volumes:
+      - searxng-data:/var/cache/searxng
+    depends_on:
+      valkey:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+configs:
+  searxng_settings:
+    content: |
+      use_default_settings: true
+
+      server:
+        secret_key: ${SEARXNG_SECRET}
+        image_proxy: false
+        limiter: false
+        public_instance: false
+        max_results: 20
+
+      engines:
+        - name: yahoo
+          disabled: true
+
+      search:
+        autocomplete: duckduckgo
+        autocomplete_min: 3
+        max_page: 1
+        formats:
+          - json
+        categories:
+          - general
+          - images
+          - files
+
+      outgoing:
+        max_request_timeout: ${MAX_REQUEST_TIMEOUT}
+
+      enabled_plugins: []
+
+      valkey:
+        url: valkey://valkey:6379/0
+
+volumes:
+  app-data:
+  valkey-data:
+  searxng-data:

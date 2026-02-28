@@ -5859,6 +5859,24 @@
     ]
   },
   {
+    "id": "strapi",
+    "name": "Strapi",
+    "version": "v5.33.0",
+    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
+    "logo": "strapi.svg",
+    "links": {
+      "github": "https://github.com/strapi/strapi",
+      "discord": "https://discord.com/invite/strapi",
+      "docs": "https://docs.strapi.io",
+      "website": "https://strapi.io"
+    },
+    "tags": [
+      "headless",
+      "cms",
+      "content-management"
+    ]
+  },
+  {
     "id": "streamflow",
     "name": "StreamFlow",
     "version": "2.1",
@@ -5875,24 +5893,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {
@@ -6367,6 +6367,26 @@
       "tasks",
       "self-hosted",
       "project-management"
+    ]
+  },
+  {
+    "id": "voy",
+    "name": "Voy",
+    "version": "0.1.0",
+    "description": "A self-hosted, privacy-first metasearch engine built on top of SearXNG. All searches are proxied through your own server — no tracking, no data sent to third parties.",
+    "logo": "voy.jpg",
+    "links": {
+      "github": "https://github.com/LeoMartinDev/voy",
+      "website": "https://github.com/LeoMartinDev/voy",
+      "docs": "https://github.com/LeoMartinDev/voy#readme"
+    },
+    "tags": [
+      "search",
+      "search-engine",
+      "privacy",
+      "searxng",
+      "metasearch",
+      "privacy"
     ]
   },
   {

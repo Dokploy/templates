@@ -13,6 +13,8 @@ services:
   app:
     image: getfider/fider:stable
     restart: unless-stopped
+    ports:
+      - 3000
     environment:
       - BASE_URL=${BASE_URL}
       - DATABASE_URL=postgres://fider:${POSTGRES_PASSWORD}@db:5432/fider?sslmode=disable

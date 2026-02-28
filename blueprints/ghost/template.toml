@@ -1,9 +1,13 @@
 [variables]
 main_domain = "${domain}"
+mysql_root_password = "${password:32}"
 
 [config]
-env = ["GHOST_HOST=${main_domain}"]
 mounts = []
+
+[config.env]
+GHOST_HOST="${main_domain}"
+DATABASE_ROOT_PASSWORD="${mysql_root_password}"
 
 [[config.domains]]
 serviceName = "ghost"

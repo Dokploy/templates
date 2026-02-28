@@ -2617,7 +2617,7 @@
   {
     "id": "ghost",
     "name": "Ghost",
-    "version": "6.0.0",
+    "version": "6.19.3",
     "description": "Ghost is a free and open source, professional publishing platform built on a modern Node.js technology stack.",
     "logo": "ghost.jpeg",
     "links": {

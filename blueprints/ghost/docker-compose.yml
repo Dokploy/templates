@@ -1,13 +1,13 @@
 version: "3.8"
 services:
   ghost:
-    image: ghost:6-alpine
+    image: ghost:6.19.3-alpine
     restart: always
     environment:
       database__client: mysql
       database__connection__host: db
       database__connection__user: root
-      database__connection__password: example
+      database__connection__password: "${DATABASE_ROOT_PASSWORD}"
       database__connection__database: ghost
       url: http://${GHOST_HOST}
 
@@ -17,9 +17,8 @@ services:
   db:
     image: mysql:8.0
     restart: always
-
     environment:
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_ROOT_PASSWORD: "${DATABASE_ROOT_PASSWORD}"
     volumes:
       - db:/var/lib/mysql
 

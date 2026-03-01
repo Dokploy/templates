@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   voy:
-    image: ghcr.io/leomartindev/voy:latest
+    image: ghcr.io/leomartindev/voy:2026.03.01-1
     restart: unless-stopped
     expose:
       - "3000"

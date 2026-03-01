@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   app:
-    image: ghcr.io/leomartindev/voy:latest
+    image: ghcr.io/leomartindev/voy:b80c0f7
     restart: unless-stopped
     expose:
       - "3000"
@@ -32,7 +32,7 @@ services:
       retries: 5
 
   searxng:
-    image: searxng/searxng:latest
+    image: searxng/searxng:2026.3.1-162c04a1c
     restart: unless-stopped
     environment:
       SEARXNG_SECRET: ${SEARXNG_SECRET}

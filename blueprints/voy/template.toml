@@ -4,7 +4,7 @@ max_request_timeout = "1.8"
 
 [config]
 [[config.domains]]
-serviceName = "app"
+serviceName = "voy"
 port = 3000
 host = "${main_domain}"
 path = "/"

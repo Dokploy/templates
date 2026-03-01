@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  app:
+  voy:
     image: ghcr.io/leomartindev/voy:b80c0f7
     restart: unless-stopped
     expose:
@@ -14,7 +14,7 @@ services:
       INSTANCE_NAME: ${INSTANCE_NAME}
       SITE_URL: ${SITE_URL}
     volumes:
-      - app-data:/data
+      - voy-data:/data
     depends_on:
       searxng:
         condition: service_healthy
@@ -52,6 +52,6 @@ services:
       retries: 5
 
 volumes:
-  app-data: {}
+  voy-data: {}
   valkey-data: {}
   searxng-data: {}

@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  app:
+  voy:
     image: ghcr.io/leomartindev/voy:latest
     restart: unless-stopped
     expose:

@@ -40,6 +40,7 @@ services:
       UWSGI_THREADS: 2
       UWSGI_ENABLE_THREADS: true
     volumes:
+      - ../files/searxng:/etc/searxng
       - searxng-data:/var/cache/searxng
     depends_on:
       valkey:

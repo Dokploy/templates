@@ -19,12 +19,12 @@ INSTANCE_NAME = "Voy"
 SITE_URL = "https://${main_domain}"
 
 [[config.mounts]]
-filePath = "/etc/searxng/settings.yml"
+filePath = "/searxng/settings.yml"
 content = """
 use_default_settings: true
 
 server:
-  secret_key: ${SEARXNG_SECRET}
+  secret_key: "${SEARXNG_SECRET}"
   image_proxy: false
   limiter: false
   public_instance: false

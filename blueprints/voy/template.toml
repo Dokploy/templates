@@ -1,8 +1,5 @@
 [variables]
 main_domain = "${domain}"
-better_auth_secret = "${password:32}"
-searxng_secret = "${password:32}"
-instance_name = "Voy"
 max_request_timeout = "1.8"
 
 [config]
@@ -12,10 +9,43 @@ port = 3000
 host = "${main_domain}"
 path = "/"
 
-env = [
-  "INSTANCE_NAME=${instance_name}",
-  "BETTER_AUTH_SECRET=${better_auth_secret}",
-  "DOMAIN=${main_domain}",
-  "SEARXNG_SECRET=${searxng_secret}",
-  "MAX_REQUEST_TIMEOUT=${max_request_timeout}"
-]
+[config.env]
+BUN_ENV = "production"
+DATABASE_URL = "/data/app.db"
+SEARXNG_URL = "http://searxng:8080"
+BETTER_AUTH_SECRET = "${password:64}"
+SEARXNG_SECRET = "${password:32}"
+INSTANCE_NAME = "Voy"
+SITE_URL = "https://${main_domain}"
+
+[[config.mounts]]
+filePath = "/etc/searxng/settings.yml"
+content = """
+use_default_settings: true
+
+server:
+  secret_key: ${SEARXNG_SECRET}
+  image_proxy: false
+  limiter: false
+  public_instance: false
+  max_results: 20
+
+search:
+  autocomplete: duckduckgo
+  autocomplete_min: 3
+  max_page: 1
+  formats:
+    - json
+  categories:
+    - general
+    - images
+    - files
+
+outgoing:
+  max_request_timeout: ${max_request_timeout}
+
+enabled_plugins: []
+
+valkey:
+  url: valkey://valkey:6379/0
+"""

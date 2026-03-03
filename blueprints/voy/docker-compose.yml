@@ -1,8 +1,8 @@
-version: "3.8"
+ddddversion: "3.8"
 
 services:
   voy:
-    image: ghcr.io/leomartindev/voy:2026.03.02-2
+    image: ghcr.io/leomartindev/voy:2026.03.03-1
     restart: unless-stopped
     expose:
       - "3000"

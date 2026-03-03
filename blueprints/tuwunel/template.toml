@@ -5,8 +5,7 @@ registration_token = "${password:32}"
 [config]
 env = [
   "TUWUNEL_SERVER_NAME=${main_domain}",
-  "TUWUNEL_REGISTRATION_TOKEN=${registration_token}",
-  "TUWUNEL_ALLOW_REGISTRATION=true"
+  "TUWUNEL_REGISTRATION_TOKEN=${registration_token}"
 ]
 mounts = []
 

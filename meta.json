@@ -5880,6 +5880,24 @@
     ]
   },
   {
+    "id": "strapi",
+    "name": "Strapi",
+    "version": "v5.33.0",
+    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
+    "logo": "strapi.svg",
+    "links": {
+      "github": "https://github.com/strapi/strapi",
+      "discord": "https://discord.com/invite/strapi",
+      "docs": "https://docs.strapi.io",
+      "website": "https://strapi.io"
+    },
+    "tags": [
+      "headless",
+      "cms",
+      "content-management"
+    ]
+  },
+  {
     "id": "streamflow",
     "name": "StreamFlow",
     "version": "2.1",
@@ -5896,24 +5914,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {
@@ -6370,6 +6370,23 @@
     },
     "tags": [
       "open-source"
+    ]
+  },
+  {
+    "id": "verdaccio",
+    "name": "verdaccio",
+    "version": "6",
+    "description": "A lightweight Node.js private proxy registry",
+    "logo": "verdaccio.svg",
+    "links": {
+      "github": "https://github.com/verdaccio/verdaccio",
+      "website": "https://www.verdaccio.org/",
+      "docs": "https://www.verdaccio.org/docs/what-is-verdaccio"
+    },
+    "tags": [
+      "node.js",
+      "package-repository",
+      "npm"
     ]
   },
   {

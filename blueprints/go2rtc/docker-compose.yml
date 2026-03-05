@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   go2rtc:
-    image: alexxit/go2rtc:latest
+    image: alexxit/go2rtc:1.9.14
     restart: unless-stopped
 
     # To use a local webcam, add the device to the service:

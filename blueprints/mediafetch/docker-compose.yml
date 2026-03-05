@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  mediafetch:
+    image: lukedunsmoto/mediafetch:latest
+    restart: unless-stopped
+    expose:
+      - "3002"
+    volumes:
+      - mediafetch_data:/data/downloads
+    environment:
+      - PORT=3002
+      - BASIC_AUTH_USER=${BASIC_AUTH_USER}
+      - BASIC_AUTH_PASS=${BASIC_AUTH_PASS}
+      - PUBLIC_BASE_URL=https://${DOMAIN}
+      - OUTPUT_DIR=/data/downloads
+
+volumes:
+  mediafetch_data:

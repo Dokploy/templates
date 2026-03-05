@@ -1,17 +1,17 @@
-version: "3.8"
-
 services:
   vikunja:
     image: vikunja/vikunja
+    user: "0:0"
     environment:
-      VIKUNJA_SERVICE_PUBLICURL: http://vikunja.local
-      VIKUNJA_DATABASE_HOST: db
+      VIKUNJA_SERVICE_PUBLICURL: ${VIKUNJA_SERVICE_PUBLICURL}
+      VIKUNJA_PUBLIC_PORT: ${VIKUNJA_PUBLIC_PORT}
+      VIKUNJA_DATABASE_HOST: ${VIKUNJA_DATABASE_HOST}
       VIKUNJA_DATABASE_PASSWORD: ${VIKUNJA_DATABASE_PASSWORD}
-      VIKUNJA_DATABASE_TYPE: postgres
-      VIKUNJA_DATABASE_USER: vikunja
-      VIKUNJA_DATABASE_DATABASE: vikunja
+      VIKUNJA_DATABASE_TYPE: ${VIKUNJA_DATABASE_TYPE}
+      VIKUNJA_DATABASE_USER: ${VIKUNJA_DATABASE_USER}
+      VIKUNJA_DATABASE_DATABASE: ${VIKUNJA_DATABASE_DATABASE}
       VIKUNJA_SERVICE_JWTSECRET: ${VIKUNJA_SERVICE_JWTSECRET}
-    expose:
+    ports:
       - 3456
     volumes:
       - vikunja-files:/app/vikunja/files
@@ -24,15 +24,16 @@ services:
     image: postgres:17
     environment:
       POSTGRES_PASSWORD: ${VIKUNJA_DATABASE_PASSWORD}
-      POSTGRES_USER: vikunja
-      POSTGRES_DB: vikunja
+      POSTGRES_USER: ${VIKUNJA_DATABASE_USER}
+      POSTGRES_DB: ${VIKUNJA_DATABASE_DATABASE}
     volumes:
       - vikunja-db:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h localhost -U $$POSTGRES_USER"]
-      interval: 2s
-      start_period: 30s
+      test: ["CMD-SHELL", "pg_isready", "-U", "${VIKUNJA_DATABASE_USER}",  "-d", "${VIKUNJA_DATABASE_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 volumes:
   vikunja-files: {}

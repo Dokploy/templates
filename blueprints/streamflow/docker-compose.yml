@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  streamflow:
+    build:
+      context: https://github.com/bangtutorial/streamflow.git
+    restart: unless-stopped
+    environment:
+      - PORT=7575
+      - SESSION_SECRET=${SESSION_SECRET}
+      - NODE_ENV=production
+      - TZ=${TIMEZONE}
+    volumes:
+      - streamflow-db:/app/db
+      - streamflow-logs:/app/logs
+      - streamflow-uploads:/app/public/uploads
+    ports:
+      - 7575
+
+volumes:
+  streamflow-db: {}
+  streamflow-logs: {}
+  streamflow-uploads: {}

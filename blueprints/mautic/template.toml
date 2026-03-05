@@ -1,0 +1,52 @@
+[variables]
+# Domain 1: For the main Mautic Application
+mautic_domain = "${domain}"
+
+# Domain 2: For phpMyAdmin (Database Manager)
+pma_domain = "${domain}"
+
+# Security: Random passwords
+db_password = "${password:32}"
+root_password = "${password:32}"
+
+[config]
+
+# --- Service 1: Mautic Web ---
+[[config.domains]]
+serviceName = "mautic"
+port = 80
+host = "${mautic_domain}"
+path = "/"
+
+# --- Service 2: phpMyAdmin ---
+[[config.domains]]
+serviceName = "phpmyadmin"
+port = 80
+host = "${pma_domain}"
+path = "/"
+
+# --- Shared Environment Variables ---
+[config.env]
+
+# URL Configuration
+MAUTIC_URL = "https://${mautic_domain}"
+
+# Database Connections
+MAUTIC_DB_HOST = "mysql"
+MAUTIC_DB_PORT = "3306"
+MAUTIC_DB_DATABASE = "mautic"
+MAUTIC_DB_USER = "mautic"
+MAUTIC_DB_PASSWORD = "${db_password}"
+MYSQL_ROOT_PASSWORD = "${root_password}"
+
+# Security & Proxy (JSON ARRAY FIXED)
+# We use single quotes '...' so TOML treats the inner [...] as a string
+MAUTIC_TRUSTED_PROXIES = '["0.0.0.0/0"]'
+
+# Queue Settings
+MAUTIC_MESSENGER_DSN_EMAIL = "doctrine://default"
+MAUTIC_MESSENGER_DSN_HIT = "doctrine://default"
+
+# PHP Settings
+PHP_INI_DATE_TIMEZONE = "UTC"
+PHP_MEMORY_LIMIT = "512M"

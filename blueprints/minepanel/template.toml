@@ -1,0 +1,28 @@
+[variables]
+main_domain = "${domain}"
+jwt_secret = "${base64:32}"
+client_username = "admin"
+client_password = "${password:16}"
+default_language = "en"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "frontend"
+port = 3_000
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "backend"
+port = 8_091
+host = "api-${main_domain}"
+
+[config.env]
+JWT_SECRET = "${jwt_secret}"
+CLIENT_USERNAME = "${client_username}"
+CLIENT_PASSWORD = "${client_password}"
+FRONTEND_URL = "http://${main_domain}"
+NEXT_PUBLIC_BACKEND_URL = "http://api-${main_domain}"
+NEXT_PUBLIC_DEFAULT_LANGUAGE = "${default_language}"
+BASE_DIR = "/app"

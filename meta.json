@@ -6406,6 +6406,23 @@
     ]
   },
   {
+    "id": "verdaccio",
+    "name": "Verdaccio",
+    "version": "6",
+    "description": "A lightweight Node.js private proxy registry",
+    "logo": "verdaccio.svg",
+    "links": {
+      "github": "https://github.com/verdaccio/verdaccio",
+      "website": "https://www.verdaccio.org/",
+      "docs": "https://www.verdaccio.org/docs/what-is-verdaccio"
+    },
+    "tags": [
+      "node.js",
+      "package-repository",
+      "npm"
+    ]
+  },
+  {
     "id": "vikunja",
     "name": "Vikunja",
     "version": "0.23.0",

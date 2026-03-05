@@ -32,7 +32,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_PREFIX: notifuse
-      DB_NAME: notifuse_system
+      DB_NAME: postgres
       DB_SSLMODE: disable
 
       # Secret key for authentication (auto-generated)

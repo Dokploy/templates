@@ -5953,24 +5953,6 @@
     ]
   },
   {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
-    ]
-  },
-  {
     "id": "supabase",
     "name": "SupaBase",
     "version": "1.25.04 / dokploy >= 0.22.5",
@@ -6618,6 +6600,23 @@
       "self-hosted",
       "open-source",
       "os"
+    ]
+  },
+  {
+    "id": "windshift",
+    "name": "Windshift",
+    "version": "latest",
+    "description": "Self-hosted work management platform with projects, tasks, sprints, and team collaboration.",
+    "logo": "windshift.png",
+    "links": {
+      "github": "https://github.com/Windshiftapp/core",
+      "website": "https://windshift.sh/",
+      "docs": "https://windshift.sh/docs"
+    },
+    "tags": [
+      "project-management",
+      "productivity",
+      "postgres"
     ]
   },
   {

@@ -1,9 +1,9 @@
 services:
   backend:
-    image: ghcr.io/get-convex/convex-backend:33cef775a8a6228cbacee4a09ac2c4073d62ed13
-    ports:
-      - "${PORT:-3210}:3210"
-      - "${SITE_PROXY_PORT:-3211}:3211"
+    image: ghcr.io/get-convex/convex-backend:5cdea511cd6527a95dd24152ea0d3c3bb2ab379f
+    expose:
+      - "3210"
+      - "3211"
     volumes:
       - data:/convex/data
     environment:
@@ -14,7 +14,7 @@ services:
       - CONVEX_CLOUD_ORIGIN=${CONVEX_CLOUD_ORIGIN:-http://127.0.0.1:3210}
       - CONVEX_SITE_ORIGIN=${CONVEX_SITE_ORIGIN:-http://127.0.0.1:3211}
       - DATABASE_URL=${DATABASE_URL:-}
-      - DISABLE_BEACON=${DISABLE_BEACON:-}
+      - DISABLE_BEACON=${DISABLE_BEACON:-FALSE}
       - REDACT_LOGS_TO_CLIENT=${REDACT_LOGS_TO_CLIENT:-}
       - RUST_LOG=${RUST_LOG:-info}
       - RUST_BACKTRACE=${RUST_BACKTRACE:-}
@@ -24,9 +24,9 @@ services:
       start_period: 5s
 
   dashboard:
-    image: ghcr.io/get-convex/convex-dashboard:33cef775a8a6228cbacee4a09ac2c4073d62ed13
-    ports:
-      - "${DASHBOARD_PORT:-6791}:6791"
+    image: ghcr.io/get-convex/convex-dashboard:5cdea511cd6527a95dd24152ea0d3c3bb2ab379f
+    expose:
+      - "6791"
     environment:
       - NEXT_PUBLIC_DEPLOYMENT_URL=${NEXT_PUBLIC_DEPLOYMENT_URL:-http://127.0.0.1:3210}
     depends_on:

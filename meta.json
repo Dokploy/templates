@@ -1821,6 +1821,23 @@
     ]
   },
   {
+  "id": "dockge",
+  "name": "Dockge",
+  "version": "1",
+  "description": "A self-hosted, reactive Docker compose.yaml stack-oriented manager.",
+  "logo": "dockge.svg",
+  "links": {
+    "github": "https://github.com/louislam/dockge",
+    "website": "https://dockge.kuma.pet/",
+    "docs": "https://github.com/louislam/dockge/wiki"
+  },
+  "tags": [
+    "docker",
+    "self-hosted",
+    "management"
+  ]
+},
+  {
     "id": "docmost",
     "name": "Docmost",
     "version": "0.4.1",

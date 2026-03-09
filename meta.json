@@ -5567,7 +5567,7 @@
   {
     "id": "rustrak",
     "name": "Rustrak",
-    "version": "latest",
+    "version": "0.2.0",
     "description": "Rustrak is an ultra-lightweight, self-hosted error tracking system compatible with Sentry SDKs, featuring a Rust backend and Next.js dashboard.",
     "logo": "rustrak.svg",
     "links": {

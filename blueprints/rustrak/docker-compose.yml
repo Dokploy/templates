@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  rustrak:
+    image: abians7/rustrak-server:latest
+    restart: unless-stopped
+    volumes:
+      - rustrak-data:/data
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - RUST_LOG=info
+      - SSL_PROXY=true
+      - SESSION_SECRET_KEY=${SESSION_SECRET_KEY}
+      - CREATE_SUPERUSER=${CREATE_SUPERUSER}
+    ports:
+      - 8080
+
+  ui:
+    image: abians7/rustrak-ui:latest
+    restart: unless-stopped
+    depends_on:
+      - rustrak
+    environment:
+      - RUSTRAK_API_URL=${RUSTRAK_API_URL}
+    ports:
+      - 3000
+
+volumes:
+  rustrak-data:

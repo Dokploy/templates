@@ -1,0 +1,23 @@
+[variables]
+ui_domain = "${domain}"
+api_domain = "${domain}"
+session_secret = "${hash:64}"
+admin_password = "${password:16}"
+
+[config]
+env = [
+  "RUSTRAK_API_URL=https://${api_domain}",
+  "SESSION_SECRET_KEY=${session_secret}",
+  "CREATE_SUPERUSER=admin@example.com:${admin_password}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "ui"
+port = 3000
+host = "${ui_domain}"
+
+[[config.domains]]
+serviceName = "rustrak"
+port = 8080
+host = "${api_domain}"

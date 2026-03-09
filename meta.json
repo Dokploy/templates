@@ -165,7 +165,7 @@
     "id": "alist",
     "name": "AList",
     "version": "v3.55.0",
-    "description": "🗂️A file list/WebDAV program that supports multiple storages, powered by Gin and Solidjs.",
+    "description": "\ud83d\uddc2\ufe0fA file list/WebDAV program that supports multiple storages, powered by Gin and Solidjs.",
     "logo": "alist.svg",
     "links": {
       "github": "https://github.com/AlistGo/alist",
@@ -299,7 +299,7 @@
     "id": "anytype",
     "name": "Anytype",
     "version": "latest",
-    "description": "Anytype is a personal knowledge base—your digital brain—that lets you gather, connect and remix all kinds of information. Create pages, tasks, wikis, journals—even entire apps—and define your own data model while your data stays offline-first, private and encrypted across devices.\n\nAfter installation, you can view the Anytype client configuration by running `cat /data/client-config.yml` inside the service container.",
+    "description": "Anytype is a personal knowledge base\u2014your digital brain\u2014that lets you gather, connect and remix all kinds of information. Create pages, tasks, wikis, journals\u2014even entire apps\u2014and define your own data model while your data stays offline-first, private and encrypted across devices.\n\nAfter installation, you can view the Anytype client configuration by running `cat /data/client-config.yml` inside the service container.",
     "logo": "logo.png",
     "links": {
       "github": "https://github.com/grishy/any-sync-bundle",
@@ -511,7 +511,7 @@
     "id": "autobase",
     "name": "Autobase",
     "version": "2.5.2",
-    "description": "Autobase for PostgreSQL® is an open-source alternative to cloud-managed databases (self-hosted DBaaS).",
+    "description": "Autobase for PostgreSQL\u00ae is an open-source alternative to cloud-managed databases (self-hosted DBaaS).",
     "links": {
       "github": "https://github.com/vitabaks/autobase",
       "website": "https://autobase.tech/",
@@ -721,7 +721,7 @@
     "id": "blender",
     "name": "Blender",
     "version": "latest",
-    "description": "Blender is a free and open-source 3D creation suite. It supports the entire 3D pipeline—modeling, rigging, animation, simulation, rendering, compositing and motion tracking, video editing and 2D animation pipeline.",
+    "description": "Blender is a free and open-source 3D creation suite. It supports the entire 3D pipeline\u2014modeling, rigging, animation, simulation, rendering, compositing and motion tracking, video editing and 2D animation pipeline.",
     "logo": "blender.svg",
     "links": {
       "github": "https://github.com/linuxserver/docker-blender",
@@ -3047,7 +3047,7 @@
     "id": "huly",
     "name": "Huly",
     "version": "0.6.377",
-    "description": "Huly — All-in-One Project Management Platform (alternative to Linear, Jira, Slack, Notion, Motion)",
+    "description": "Huly \u2014 All-in-One Project Management Platform (alternative to Linear, Jira, Slack, Notion, Motion)",
     "logo": "huly.svg",
     "links": {
       "github": "https://github.com/hcengineering/huly-selfhost",
@@ -3553,7 +3553,7 @@
     "id": "librechat",
     "name": "LibreChat",
     "version": "latest",
-    "description": "LibreChat is the ultimate open-source app for all your AI conversations, fully customizable and compatible with any AI provider (Openai, Ollama, Google etc.) — all in one sleek interface.",
+    "description": "LibreChat is the ultimate open-source app for all your AI conversations, fully customizable and compatible with any AI provider (Openai, Ollama, Google etc.) \u2014 all in one sleek interface.",
     "logo": "librechat.png",
     "links": {
       "github": "https://github.com/danny-avila/librechat",
@@ -4962,7 +4962,7 @@
     "id": "photoprism",
     "name": "Photoprism",
     "version": "latest",
-    "description": "PhotoPrism® is an AI-Powered Photos App for the Decentralized Web. It makes use of the latest technologies to tag and find pictures automatically without getting in your way.",
+    "description": "PhotoPrism\u00ae is an AI-Powered Photos App for the Decentralized Web. It makes use of the latest technologies to tag and find pictures automatically without getting in your way.",
     "logo": "photoprism.svg",
     "links": {
       "github": "https://github.com/photoprism/photoprism",
@@ -5573,7 +5573,7 @@
     "links": {
       "github": "https://github.com/AbianS/rustrak",
       "website": "https://github.com/AbianS/rustrak",
-      "docs": "https://github.com/AbianS/rustrak#readme"
+      "docs": "https://abians.github.io/rustrak/"
     },
     "tags": [
       "monitoring",
@@ -6010,7 +6010,7 @@
     "id": "surrealdb",
     "name": "SurrealDB",
     "version": "2.3.10",
-    "description": "SurrealDB is a native, open-source, multi-model database that lets you store and manage data across relational, document, graph, time-series, vector & search, and geospatial models—all in one place.",
+    "description": "SurrealDB is a native, open-source, multi-model database that lets you store and manage data across relational, document, graph, time-series, vector & search, and geospatial models\u2014all in one place.",
     "logo": "surrealdb.svg",
     "links": {
       "github": "https://github.com/surrealdb/surrealdb",
@@ -6282,7 +6282,7 @@
     "id": "typecho",
     "name": "Typecho",
     "version": "stable",
-    "description": "Typecho 是一个轻量级的开源博客程序，基于 PHP 开发，支持多种数据库，简洁而强大。",
+    "description": "Typecho \u662f\u4e00\u4e2a\u8f7b\u91cf\u7ea7\u7684\u5f00\u6e90\u535a\u5ba2\u7a0b\u5e8f\uff0c\u57fa\u4e8e PHP \u5f00\u53d1\uff0c\u652f\u6301\u591a\u79cd\u6570\u636e\u5e93\uff0c\u7b80\u6d01\u800c\u5f3a\u5927\u3002",
     "logo": "typecho.png",
     "links": {
       "github": "https://github.com/typecho/typecho",

@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  tracearr:
+    image: ghcr.io/connorgallopo/tracearr:latest
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@timescale:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/0
+      - JWT_SECRET=${JWT_SECRET}
+      - COOKIE_SECRET=${COOKIE_SECRET}
+      - NEXT_PUBLIC_URL=https://${DOMAIN}
+      - NODE_ENV=production
+    volumes:
+      - tracearr-data:/app/data
+    depends_on:
+      timescale:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  timescale:
+    image: timescale/timescaledb-ha:pg18
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - timescale-data:/home/postgres/pgdata/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+
+volumes:
+  tracearr-data: {}
+  timescale-data: {}
+  redis-data: {}

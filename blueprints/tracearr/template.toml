@@ -1,0 +1,23 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:16}"
+redis_password = "${password:16}"
+jwt_secret = "${password:32}"
+cookie_secret = "${password:32}"
+
+[config]
+mounts = []
+env = [
+  "DOMAIN=${main_domain}",
+  "POSTGRES_USER=tracearr",
+  "POSTGRES_PASSWORD=${db_password}",
+  "POSTGRES_DB=tracearr",
+  "REDIS_PASSWORD=${redis_password}",
+  "JWT_SECRET=${jwt_secret}",
+  "COOKIE_SECRET=${cookie_secret}"
+]
+
+[[config.domains]]
+serviceName = "tracearr"
+port = 3000
+host = "${main_domain}"

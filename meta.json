@@ -5713,6 +5713,27 @@
     ]
   },
   {
+    "id": "tracearr",
+    "name": "Tracearr",
+    "version": "latest",
+    "description": "Tracearr is a real-time monitoring dashboard for Plex, Jellyfin, and Emby media servers. Track active streams, analyze playback metrics, and detect account sharing from a single interface.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/connorgallopo/tracearr",
+      "website": "https://tracearr.com/",
+      "docs": "https://tracearr.com/"
+    },
+    "tags": [
+      "plex",
+      "jellyfin",
+      "emby",
+      "media",
+      "monitoring",
+      "analytics",
+      "streaming"
+    ]
+  },
+  {
     "id": "trailbase",
     "name": "TrailBase",
     "version": "latest",

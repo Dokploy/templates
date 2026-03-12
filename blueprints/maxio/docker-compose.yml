@@ -1,8 +1,10 @@
+version: "3.8"
+
 services:
   maxio:
-    image: ghcr.io/coollabsio/maxio
+    image: ghcr.io/coollabsio/maxio:0.2.1
     ports:
-      - "9000:9000"
+      - 9000
     volumes:
       - maxio-data:/data
     environment:

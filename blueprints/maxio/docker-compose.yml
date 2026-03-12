@@ -1,0 +1,12 @@
+services:
+  maxio:
+    image: ghcr.io/coollabsio/maxio
+    ports:
+      - "9000:9000"
+    volumes:
+      - maxio-data:/data
+    environment:
+      - MAXIO_ACCESS_KEY=${MAXIO_ADMIN}
+      - MAXIO_SECRET_KEY=${MAXIO_PASSWORD}
+volumes:
+  maxio-data:

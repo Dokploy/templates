@@ -1,22 +1,5 @@
 [
   {
-    "id": "maxio",
-    "name": "Maxio",
-    "version": "latest",
-    "description": "MaxIO is a lightweight, single-binary S3-compatible object storage server written in Rust",
-    "logo": "maxio.png",
-    "links": {
-      "github": "https://github.com/coollabsio/maxio",
-      "website": "https://github.com/coollabsio/maxio",
-      "docs": "https://github.com/coollabsio/maxio/blob/main/README.md"
-    },
-    "tags": [
-      "s3",
-      "storage",
-      "object-storage"
-    ]
-  },
-  {
     "id": "ackee",
     "name": "Ackee",
     "version": "latest",
@@ -3877,6 +3860,23 @@
     ]
   },
   {
+    "id": "maxio",
+    "name": "Maxio",
+    "version": "latest",
+    "description": "MaxIO is a lightweight, single-binary S3-compatible object storage server written in Rust",
+    "logo": "maxio.png",
+    "links": {
+      "github": "https://github.com/coollabsio/maxio",
+      "website": "https://github.com/coollabsio/maxio",
+      "docs": "https://github.com/coollabsio/maxio/blob/main/README.md"
+    },
+    "tags": [
+      "s3",
+      "storage",
+      "object-storage"
+    ]
+  },
+  {
     "id": "maybe",
     "name": "Maybe",
     "version": "latest",
@@ -5967,24 +5967,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

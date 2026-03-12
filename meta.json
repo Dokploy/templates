@@ -3864,7 +3864,7 @@
     "name": "MaxIO",
     "version": "0.2.1",
     "description": "MaxIO is a lightweight, single-binary S3-compatible object storage server written in Rust",
-    "logo": "maxio.png",
+    "logo": "maxio.svg",
     "links": {
       "github": "https://github.com/coollabsio/maxio",
       "website": "https://github.com/coollabsio/maxio",

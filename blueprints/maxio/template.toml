@@ -3,6 +3,8 @@ serviceName = "maxio"
 port = 9000
 host = "${domain}"
 
-[config.env]
-MAXIO_ADMIN="${password:20}"
-MAXIO_PASSWORD="${password:20}"
+[config]
+env = [
+  "MAXIO_ACCESS_KEY=${password:20}",
+  "MAXIO_SECRET_KEY=${password:20}",
+]

@@ -3861,7 +3861,7 @@
   },
   {
     "id": "maxio",
-    "name": "Maxio",
+    "name": "MaxIO",
     "version": "latest",
     "description": "MaxIO is a lightweight, single-binary S3-compatible object storage server written in Rust",
     "logo": "maxio.png",

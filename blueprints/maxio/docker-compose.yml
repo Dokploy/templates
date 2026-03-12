@@ -10,5 +10,6 @@ services:
     environment:
       - MAXIO_ACCESS_KEY=${MAXIO_ADMIN}
       - MAXIO_SECRET_KEY=${MAXIO_PASSWORD}
+    restart: unless-stopped
 volumes:
   maxio-data:

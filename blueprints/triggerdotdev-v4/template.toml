@@ -1,7 +1,7 @@
 [variables]
 main_domain = "${domain}"
 registry_domain = "${domain}"
-trigger_image_tag = "main"
+trigger_image_tag = "v4.4.3"
 postgres_db = "trigger"
 postgres_password = "${password:32}"
 session_secret = "${base64:32}"

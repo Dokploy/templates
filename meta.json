@@ -5307,7 +5307,7 @@
   {
     "id": "pyrodactyl",
     "name": "Pyrodactyl",
-    "version": "main",
+    "version": "v4.4.3",
     "description": "Pyrodactyl is the Pterodactyl-based game server panel that's faster, smaller, safer, and more accessible than Pelican. ",
     "logo": "pyrodactyl.png",
     "links": {

@@ -42,6 +42,7 @@ REGISTRY_PASSWORD = "${registry_password}"
 REGISTRY_NAMESPACE = "${registry_namespace}"
 CLICKHOUSE_ADMIN_USER = "${clickhouse_admin_user}"
 CLICKHOUSE_ADMIN_PASSWORD = "${clickhouse_admin_password}"
+QUERY_CLICKHOUSE_URL = "http://${clickhouse_admin_user}:${clickhouse_admin_password}@clickhouse:8123"
 DOCKER_RUNNER_NETWORKS = "${docker_runner_networks}"
 
 [[config.mounts]]

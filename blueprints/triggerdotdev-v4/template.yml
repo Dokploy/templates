@@ -1,0 +1,63 @@
+variables:
+  main_domain: ${domain}
+  registry_domain: ${domain}
+  trigger_image_tag: main
+  postgres_db: trigger
+  postgres_password: ${password:32}
+  session_secret: ${base64:32}
+  magic_link_secret: ${base64:32}
+  encryption_key: ${base64:32}
+  managed_worker_secret: ${base64:32}
+  minio_root_password: ${password:32}
+  registry_username: trigger
+  registry_password: ${password:32}
+  registry_namespace: trigger
+  clickhouse_admin_user: default
+  clickhouse_admin_password: ${password:32}
+  docker_runner_networks: set-after-first-deploy
+
+config:
+  domains:
+    - serviceName: trigger
+      port: 3000
+      host: ${main_domain}
+    - serviceName: registry
+      port: 5000
+      host: ${registry_domain}
+
+  env:
+    TRIGGER_DOMAIN: ${main_domain}
+    REGISTRY_DOMAIN: ${registry_domain}
+    TRIGGER_IMAGE_TAG: ${trigger_image_tag}
+    POSTGRES_DB: ${postgres_db}
+    POSTGRES_PASSWORD: ${postgres_password}
+    SESSION_SECRET: ${session_secret}
+    MAGIC_LINK_SECRET: ${magic_link_secret}
+    ENCRYPTION_KEY: ${encryption_key}
+    MANAGED_WORKER_SECRET: ${managed_worker_secret}
+    MINIO_ROOT_PASSWORD: ${minio_root_password}
+    REGISTRY_USERNAME: ${registry_username}
+    REGISTRY_PASSWORD: ${registry_password}
+    REGISTRY_NAMESPACE: ${registry_namespace}
+    CLICKHOUSE_ADMIN_USER: ${clickhouse_admin_user}
+    CLICKHOUSE_ADMIN_PASSWORD: ${clickhouse_admin_password}
+    DOCKER_RUNNER_NETWORKS: ${docker_runner_networks}
+
+  mounts:
+    - filePath: /clickhouse/override.xml
+      content: |
+        <clickhouse>
+            <logger>
+                <level>warning</level>
+            </logger>
+            <mark_cache_size>524288000</mark_cache_size>
+            <concurrent_threads_soft_limit_num>1</concurrent_threads_soft_limit_num>
+            <profiles>
+                <default>
+                <max_block_size>8192</max_block_size>
+                <max_download_threads>1</max_download_threads>
+                <input_format_parallel_parsing>0</input_format_parallel_parsing>
+                <output_format_parallel_formatting>0</output_format_parallel_formatting>
+                </default>
+            </profiles>
+        </clickhouse>

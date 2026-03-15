@@ -6179,6 +6179,23 @@
     ]
   },
   {
+    "id": "triggerdotdev-v4",
+    "name": "Trigger.dev v4",
+    "version": "main",
+    "description": "Trigger.dev v4 template with PostgreSQL, Redis, ElectricSQL, ClickHouse, MinIO, and private Docker registry.",
+    "logo": "triggerdotdev-v4.svg",
+    "links": {
+      "github": "https://github.com/triggerdotdev/trigger.dev",
+      "website": "https://trigger.dev/",
+      "docs": "https://trigger.dev/docs"
+    },
+    "tags": [
+      "event-driven",
+      "automation",
+      "workflows"
+    ]
+  },
+  {
     "id": "trilium",
     "name": "Trilium",
     "description": "Trilium Notes is a hierarchical note taking application with focus on building large personal knowledge bases.",

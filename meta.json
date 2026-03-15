@@ -6553,6 +6553,23 @@
     ]
   },
   {
+    "id": "weblate",
+    "name": "Weblate",
+    "version": "latest",
+    "description": "Weblate is a web-based translation tool with tight version control integration. It provides a user-friendly interface for translators and developers to collaborate on localization projects.",
+    "logo": "weblate.svg",
+    "links": {
+      "github": "https://github.com/WeblateOrg/weblate",
+      "website": "https://weblate.org/",
+      "docs": "https://docs.weblate.org/"
+    },
+    "tags": [
+      "translation",
+      "localization",
+      "collaboration"
+    ]
+  },
+  {
     "id": "wg-easy",
     "name": "WG-Easy",
     "version": "15",

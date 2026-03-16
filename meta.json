@@ -6555,7 +6555,7 @@
   {
     "id": "weblate",
     "name": "Weblate",
-    "version": "latest",
+    "version": "5.16",
     "description": "Weblate is a web-based translation tool with tight version control integration. It provides a user-friendly interface for translators and developers to collaborate on localization projects.",
     "logo": "weblate.svg",
     "links": {

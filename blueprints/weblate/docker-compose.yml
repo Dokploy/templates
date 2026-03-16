@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   weblate:
-    image: weblate/weblate:latest
+    image: weblate/weblate:5.16
     environment:
       # Global settings
       WEBLATE_DEBUG: ${WEBLATE_DEBUG}

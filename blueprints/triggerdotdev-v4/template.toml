@@ -27,6 +27,7 @@ port = 5_000
 host = "${registry_domain}"
 
 [config.env]
+MAIN_DOMAIN = "${main_domain}"
 TRIGGER_DOMAIN = "${main_domain}"
 REGISTRY_DOMAIN = "${registry_domain}"
 TRIGGER_IMAGE_TAG = "${trigger_image_tag}"

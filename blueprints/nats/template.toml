@@ -1,6 +1,6 @@
 [variables]
-monitoring_domain = "${domain}"
-websocket_domain = "${domain}"
+monitoring_domain = "nats-monitor.example.com"
+websocket_domain = "nats.example.com"
 auth_token = "${password:32}"
 
 [[config.domains]]
@@ -17,7 +17,7 @@ host = "${websocket_domain}"
 NATS_AUTH_TOKEN = "${auth_token}"
 
 [[config.mounts]]
-filePath = "/etc/nats/nats.conf"
+filePath = "nats.conf"
 content = """
 http_port: 8222
 

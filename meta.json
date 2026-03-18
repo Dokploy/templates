@@ -4254,6 +4254,23 @@
     ]
   },
   {
+    "id": "nats",
+    "name": "NATS",
+    "version": "2.10.24-alpine",
+    "description": "NATS is a high-performance, open-source messaging system for cloud-native applications, IoT, and microservices.",
+    "logo": "nats.jpeg",
+    "links": {
+      "github": "https://github.com/nats-io/nats-server",
+      "website": "https://nats.io/",
+      "docs": "https://docs.nats.io/"
+    },
+    "tags": [
+      "messaging",
+      "pubsub",
+      "queue"
+    ]
+  },
+  {
     "id": "navidrome",
     "name": "Navidrome",
     "version": "latest",

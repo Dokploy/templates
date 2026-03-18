@@ -1,0 +1,32 @@
+[variables]
+monitoring_domain = "${domain}"
+websocket_domain = "${domain}"
+auth_token = "${password:32}"
+
+[[config.domains]]
+serviceName = "nats"
+port = 8222
+host = "${monitoring_domain}"
+
+[[config.domains]]
+serviceName = "nats"
+port = 8080
+host = "${websocket_domain}"
+
+[config.env]
+NATS_AUTH_TOKEN = "${auth_token}"
+
+[[config.mounts]]
+filePath = "/etc/nats/nats.conf"
+content = """
+http_port: 8222
+
+authorization {
+  token: "$NATS_AUTH_TOKEN"
+}
+
+websocket {
+  port: 8080
+  no_tls: true
+}
+"""

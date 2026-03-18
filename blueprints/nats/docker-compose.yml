@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  nats:
+    image: nats:2.10.24-alpine
+    restart: unless-stopped
+    expose:
+      - 4222
+      - 8222
+      - 8080
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - nats-data:/data
+
+volumes:
+  nats-data:

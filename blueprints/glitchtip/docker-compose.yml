@@ -20,7 +20,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: "trust"
     restart: unless-stopped
     volumes:
-      - pg-data:/var/lib/postgresql
+      - pg-data:/var/lib/postgresql/data
   valkey:
     image: valkey/valkey:9
     restart: unless-stopped

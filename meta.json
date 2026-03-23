@@ -2763,7 +2763,7 @@
   {
     "id": "glitchtip",
     "name": "Glitchtip",
-    "version": "v4.0",
+    "version": "v6.1.0",
     "description": "Glitchtip is simple, open source error tracking",
     "logo": "glitchtip.png",
     "links": {

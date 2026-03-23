@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+root_email = "${email}"
+root_password = "${password:32}"
+
+[config]
+env = [
+  "ZO_ROOT_USER_EMAIL=${root_email}",
+  "ZO_ROOT_USER_PASSWORD=${root_password}",
+  "ZO_HTTP_PORT=5080",
+  "ZO_GRPC_PORT=5081",
+  "ZO_DATA_DIR=/data",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "openobserve"
+port = 5080
+host = "${main_domain}"

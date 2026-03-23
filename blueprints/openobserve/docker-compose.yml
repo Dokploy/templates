@@ -1,0 +1,16 @@
+services:
+  openobserve:
+    image: public.ecr.aws/zinclabs/openobserve:latest
+    restart: unless-stopped
+    environment:
+      ZO_ROOT_USER_EMAIL: ${ZO_ROOT_USER_EMAIL}
+      ZO_ROOT_USER_PASSWORD: ${ZO_ROOT_USER_PASSWORD}
+      ZO_DATA_DIR: ${ZO_DATA_DIR}
+    ports:
+      - ${ZO_HTTP_PORT}
+      - ${ZO_GRPC_PORT}
+    volumes:
+      - data:${ZO_DATA_DIR}
+
+volumes:
+  data:

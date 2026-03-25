@@ -5760,6 +5760,25 @@
     ]
   },
   {
+    "id": "simstudio",
+    "name": "Sim Studio",
+    "version": "v0.6.10",
+    "description": "Sim Studio is an open-source AI workflow builder for simulating and testing multi-agent pipelines with real-time collaboration.",
+    "logo": "simstudio.svg",
+    "links": {
+      "github": "https://github.com/simstudioai/sim",
+      "website": "https://simstudio.ai/",
+      "docs": "https://docs.simstudio.ai/"
+    },
+    "tags": [
+      "ai",
+      "workflow",
+      "agents",
+      "llm",
+      "automation"
+    ]
+  },
+  {
     "id": "slash",
     "name": "Slash",
     "version": "latest",
@@ -5950,24 +5969,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

@@ -1,0 +1,30 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+better_auth_secret = "${password:32}"
+encryption_key = "${password:32}"
+internal_api_secret = "${password:32}"
+
+[config]
+env = [
+  "POSTGRES_USER=postgres",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_DB=simstudio",
+  "BETTER_AUTH_SECRET=${better_auth_secret}",
+  "ENCRYPTION_KEY=${encryption_key}",
+  "INTERNAL_API_SECRET=${internal_api_secret}",
+  "NEXT_PUBLIC_APP_URL=https://${main_domain}",
+  "BETTER_AUTH_URL=https://${main_domain}",
+  "NEXT_PUBLIC_SOCKET_URL=https://${main_domain}",
+  "API_ENCRYPTION_KEY=",
+  "REDIS_URL=",
+  "COPILOT_API_KEY=",
+  "SIM_AGENT_API_URL=",
+  "OLLAMA_URL=",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "simstudio"
+port = 3_000
+host = "${main_domain}"

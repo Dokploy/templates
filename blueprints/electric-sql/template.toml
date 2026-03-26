@@ -1,0 +1,19 @@
+[variables]
+DATABASE_URL = "postgresql://user:pass@host:5432/db"
+ELECTRIC_SECRET = "${password:32}"
+ELECTRIC_DATABASE_USE_IPV6 = "false"
+ELECTRIC_PORT = "3000"
+
+[config]
+[[config.domains]]
+serviceName = "electric-sql"
+port = 3000
+
+[[config.env]]
+env = [
+  "DATABASE_URL=${DATABASE_URL}",
+  "ELECTRIC_SECRET=${ELECTRIC_SECRET}",
+  "ELECTRIC_PORT=${ELECTRIC_PORT}",
+  "ELECTRIC_DATABASE_USE_IPV6=${ELECTRIC_DATABASE_USE_IPV6}"
+]
+

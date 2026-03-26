@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  electric-sql:
+    image: electricsql/electric:1.4.15
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - ELECTRIC_SECRET=${ELECTRIC_SECRET}
+      - ELECTRIC_PORT=${ELECTRIC_PORT}
+      - ELECTRIC_DATABASE_USE_IPV6=${ELECTRIC_DATABASE_USE_IPV6}
+      - ELECTRIC_STORAGE_DIR=/var/lib/electric/persistent
+    volumes:
+      - electric_data:/var/lib/electric/persistent
+
+volumes:
+  electric_data:

@@ -34,8 +34,10 @@ services:
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
     depends_on:
-      - cache
-      - database
+      cache:
+        condition: service_started
+      database:
+        condition: service_healthy
     volumes:
       - weblate-data:/app/data
       - weblate-cache:/app/cache

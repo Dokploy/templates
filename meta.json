@@ -718,6 +718,28 @@
     ]
   },
   {
+    "id": "billmora",
+    "name": "Billmora",
+    "version": "latest",
+    "description": "Billmora (Billing Management, Operation, and Recurring Automation) is a free, open-source platform for hosting providers to manage clients, invoicing, and server provisioning.",
+    "logo": "billmora.svg",
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://billmora.com"
+      },
+      {
+        "name": "GitHub",
+        "url": "https://github.com/Billmora/billmora"
+      },
+      {
+        "name": "Documentation",
+        "url": "https://billmora.com/docs/introduction"
+      }
+    ],
+    "tags": ["Billing", "Automation", "Open-Source"]
+  },
+  {
     "id": "blender",
     "name": "Blender",
     "version": "latest",

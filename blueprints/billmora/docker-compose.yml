@@ -1,0 +1,98 @@
+version: "3.8"
+
+services:
+  billmora-app:
+    image: ghcr.io/billmora/billmora:latest
+    restart: always
+    environment:
+      - APP_NAME=${APP_NAME}
+      - APP_ENV=${APP_ENV}
+      - APP_KEY=${APP_KEY}
+      - APP_DEBUG=${APP_DEBUG}
+      - APP_URL=${APP_URL}
+      - APP_TIMEZONE=${APP_TIMEZONE}
+      - DB_CONNECTION=${DB_CONNECTION}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      - SESSION_DRIVER=${SESSION_DRIVER}
+      - CACHE_STORE=${CACHE_STORE}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION}
+      - MAIL_MAILER=${MAIL_MAILER}
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_ENCRYPTION=${MAIL_ENCRYPTION}
+      - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
+      - MAIL_FROM_NAME=${MAIL_FROM_NAME}
+    volumes:
+      - billmora-storage:/var/www/html/storage
+    depends_on:
+      - billmora-db
+      - billmora-redis
+
+  billmora-worker:
+    image: ghcr.io/billmora/billmora:latest
+    restart: always
+    command: ["php", "artisan", "queue:work", "--tries=3"]
+    environment:
+      - APP_NAME=${APP_NAME}
+      - APP_ENV=${APP_ENV}
+      - APP_KEY=${APP_KEY}
+      - APP_DEBUG=${APP_DEBUG}
+      - APP_URL=${APP_URL}
+      - APP_TIMEZONE=${APP_TIMEZONE}
+      - DB_CONNECTION=${DB_CONNECTION}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      - SESSION_DRIVER=${SESSION_DRIVER}
+      - CACHE_STORE=${CACHE_STORE}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION}
+      - MAIL_MAILER=${MAIL_MAILER}
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_ENCRYPTION=${MAIL_ENCRYPTION}
+      - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
+      - MAIL_FROM_NAME=${MAIL_FROM_NAME}
+    volumes:
+      - billmora-storage:/var/www/html/storage
+    depends_on:
+      - billmora-db
+      - billmora-redis
+
+  billmora-db:
+    image: mariadb:11
+    restart: always
+    environment:
+      - MARIADB_DATABASE=${DB_DATABASE}
+      - MARIADB_USER=${DB_USERNAME}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    volumes:
+      - billmora-db-data:/var/lib/mysql
+
+  billmora-redis:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - billmora-redis-data:/data
+
+volumes:
+  billmora-storage:
+  billmora-db-data:
+  billmora-redis-data:

@@ -1,0 +1,69 @@
+[variables]
+# Application
+APP_KEY = "base64:${base64:32}"
+APP_URL = "http://${domain}"
+APP_TIMEZONE = "Asia/Jakarta"
+# Database
+DB_PASSWORD = "${password:16}"
+DB_ROOT_PASSWORD = "${password:16}"
+# Redis
+REDIS_PASSWORD = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "billmora-app"
+port = 8080
+host = "${domain}"
+
+[config.env]
+# General
+APP_NAME = "Billmora"
+APP_ENV = "production"
+APP_KEY = "${APP_KEY}"
+APP_DEBUG = "false"
+APP_URL = "${APP_URL}"
+APP_TIMEZONE = "${APP_TIMEZONE}"
+
+# Database
+DB_CONNECTION = "mariadb"
+DB_HOST = "billmora-db"
+DB_PORT = "3306"
+DB_DATABASE = "billmora"
+DB_USERNAME = "billmora"
+DB_PASSWORD = "${DB_PASSWORD}"
+DB_ROOT_PASSWORD = "${DB_ROOT_PASSWORD}"
+
+# Redis
+REDIS_HOST = "billmora-redis"
+REDIS_PASSWORD = "${REDIS_PASSWORD}"
+REDIS_PORT = "6379"
+
+# Drivers
+SESSION_DRIVER = "redis"
+CACHE_STORE = "redis"
+QUEUE_CONNECTION = "redis"
+
+# Mail
+MAIL_MAILER = "smtp"
+MAIL_HOST = "smtp.mailtrap.io"
+MAIL_PORT = "2525"
+MAIL_USERNAME = ""
+MAIL_PASSWORD = ""
+MAIL_ENCRYPTION = "tls"
+MAIL_FROM_ADDRESS = "hello@billmora.com"
+MAIL_FROM_NAME = "${APP_NAME}"
+
+[[config.mounts]]
+mountPath = "/var/www/html/storage"
+serviceName = "billmora-app"
+volumeName = "billmora-storage"
+
+[[config.mounts]]
+mountPath = "/var/lib/mysql"
+serviceName = "billmora-db"
+volumeName = "billmora-db-data"
+
+[[config.mounts]]
+mountPath = "/data"
+serviceName = "billmora-redis"
+volumeName = "billmora-redis-data"

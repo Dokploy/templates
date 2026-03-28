@@ -27,8 +27,68 @@ services:
       - AUTORUN_LARAVEL_MIGRATION_FORCE=true
       - AUTORUN_LARAVEL_MIGRATION_SEED=true
       - AUTORUN_LARAVEL_STORAGE_LINK=true
-      - AUTORUN_LARAVEL_WORKER=true
-      - AUTORUN_LARAVEL_SCHEDULER=true
+    volumes:
+      - billmora-storage:/var/www/html/storage
+    depends_on:
+      billmora-db:
+        condition: service_healthy
+      billmora-redis:
+        condition: service_healthy
+
+  billmora-worker:
+    image: ghcr.io/billmora/billmora:latest
+    restart: always
+    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3", "--max-time=3600"]
+    environment:
+      - APP_NAME=${APP_NAME}
+      - APP_ENV=${APP_ENV}
+      - APP_KEY=${APP_KEY}
+      - APP_URL=${APP_URL}
+      - APP_TIMEZONE=${APP_TIMEZONE}
+      - DB_CONNECTION=${DB_CONNECTION}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      - SESSION_DRIVER=${SESSION_DRIVER}
+      - CACHE_STORE=${CACHE_STORE}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION}
+      - AUTORUN_ENABLED=false
+    volumes:
+      - billmora-storage:/var/www/html/storage
+    depends_on:
+      billmora-db:
+        condition: service_healthy
+      billmora-redis:
+        condition: service_healthy
+
+  billmora-scheduler:
+    image: ghcr.io/billmora/billmora:latest
+    restart: always
+    command: ["/bin/sh", "-c", "while true; do php artisan schedule:run >> /dev/null 2>&1; sleep 60; done"]
+    environment:
+      - APP_NAME=${APP_NAME}
+      - APP_ENV=${APP_ENV}
+      - APP_KEY=${APP_KEY}
+      - APP_URL=${APP_URL}
+      - APP_TIMEZONE=${APP_TIMEZONE}
+      - DB_CONNECTION=${DB_CONNECTION}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      - SESSION_DRIVER=${SESSION_DRIVER}
+      - CACHE_STORE=${CACHE_STORE}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION}
+      - AUTORUN_ENABLED=false
     volumes:
       - billmora-storage:/var/www/html/storage
     depends_on:

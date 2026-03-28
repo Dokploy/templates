@@ -31,6 +31,11 @@ services:
       - MAIL_ENCRYPTION=${MAIL_ENCRYPTION}
       - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
       - MAIL_FROM_NAME=${MAIL_FROM_NAME}
+      - AUTORUN_ENABLED=true
+      - AUTORUN_LARAVEL_MIGRATION=true
+      - AUTORUN_LARAVEL_MIGRATION_FORCE=true
+      - AUTORUN_LARAVEL_MIGRATION_SEED=true
+      - AUTORUN_LARAVEL_STORAGE_LINK=true
     volumes:
       - billmora-storage:/var/www/html/storage
     depends_on:
@@ -68,6 +73,11 @@ services:
       - MAIL_ENCRYPTION=${MAIL_ENCRYPTION}
       - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
       - MAIL_FROM_NAME=${MAIL_FROM_NAME}
+      - AUTORUN_ENABLED=true
+      - AUTORUN_LARAVEL_MIGRATION=true
+      - AUTORUN_LARAVEL_MIGRATION_FORCE=true
+      - AUTORUN_LARAVEL_MIGRATION_SEED=true
+      - AUTORUN_LARAVEL_STORAGE_LINK=true
     volumes:
       - billmora-storage:/var/www/html/storage
     depends_on:

@@ -31,7 +31,6 @@ services:
       - AUTORUN_LARAVEL_SCHEDULER=true
     volumes:
       - billmora-storage:/var/www/html/storage
-      - billmora-env:/var/www/html/.env
     depends_on:
       billmora-db:
         condition: service_healthy
@@ -69,7 +68,6 @@ services:
       start_period: 10s
 
 volumes:
-  billmora-env:
   billmora-storage:
   billmora-db-data:
   billmora-redis-data:

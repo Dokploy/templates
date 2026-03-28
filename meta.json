@@ -1646,6 +1646,24 @@
     ]
   },
   {
+    "id": "crawlab",
+    "name": "Crawlab",
+    "version": "latest",
+    "description": "Crawlab is a distributed web crawler admin platform supporting multiple programming languages and frameworks. This template deploys the master node with MongoDB.",
+    "logo": "crawlab.png",
+    "links": {
+      "github": "https://github.com/crawlab-team/crawlab",
+      "website": "https://crawlab.cn",
+      "docs": "https://docs.crawlab.cn"
+    },
+    "tags": [
+      "crawler",
+      "scraping",
+      "distributed",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "crowdsec",
     "name": "Crowdsec",
     "version": "latest",

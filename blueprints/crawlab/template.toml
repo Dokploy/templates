@@ -1,0 +1,13 @@
+[variables]
+MONGO_USERNAME = "crawlab"
+MONGO_PASSWORD = "${password:24}"
+
+[config]
+[[config.domains]]
+serviceName = "master"
+port = 8080
+host = "${domain}"
+
+[config.env]
+MONGO_USERNAME = "${MONGO_USERNAME}"
+MONGO_PASSWORD = "${MONGO_PASSWORD}"

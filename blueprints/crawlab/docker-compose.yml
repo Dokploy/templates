@@ -3,7 +3,6 @@ version: "3.3"
 services:
   master:
     image: crawlabteam/crawlab:latest
-    container_name: crawlab_master
     restart: unless-stopped
     environment:
       - CRAWLAB_NODE_MASTER=Y

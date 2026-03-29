@@ -11,7 +11,7 @@ live_secret_key = "${base64:32}"
 [config]
 env = [
 "APP_DOMAIN=${main_domain}",
-"WEB_URL=https://${main_domain}",
+"WEB_URL=http://${main_domain}",
 "PGHOST=plane-db",
 "PGDATABASE=plane",
 "POSTGRES_USER=${postgres_user}",
@@ -46,7 +46,7 @@ env = [
 "AMQP_URL=amqp://${rabbitmq_user}:${rabbitmq_pass}@plane-mq:5672/plane",
 "API_BASE_URL=http://api:8000",
 "DEBUG=0",
-"CORS_ALLOWED_ORIGINS=https://${main_domain}",
+"CORS_ALLOWED_ORIGINS=http://${main_domain}",
 "GUNICORN_WORKERS=1",
 "USE_MINIO=1",
 "SECRET_KEY=${secret_key}",

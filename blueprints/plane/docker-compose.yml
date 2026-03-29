@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   web:
     image: makeplane/plane-frontend:${APP_RELEASE:-v1.2.3}
@@ -79,7 +81,7 @@ services:
 
   migrator:
     image: makeplane/plane-backend:${APP_RELEASE:-v1.2.3}
-    restart: "no"
+    restart: on-failure
     command: ./bin/docker-entrypoint-migrator.sh
     volumes:
       - logs_migrator:/code/plane/logs

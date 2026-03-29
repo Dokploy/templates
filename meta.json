@@ -5028,8 +5028,8 @@
   {
     "id": "plane",
     "name": "Plane",
-    "version": "v0.27.1",
-    "description": "Easy, flexible, open source project management software",
+    "version": "v1.2.3",
+    "description": "Open source project management — alternative to Jira, Linear, Asana",
     "logo": "plane.png",
     "links": {
       "github": "https://github.com/makeplane/plane",
@@ -5037,7 +5037,8 @@
       "docs": "https://docs.plane.so/"
     },
     "tags": [
-      "kanban"
+      "kanban",
+      "project-management"
     ]
   },
   {
@@ -5950,24 +5951,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

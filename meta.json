@@ -4098,6 +4098,24 @@
     ]
   },
   {
+    "id": "mlflow",
+    "name": "MLflow",
+    "version": "v3.10.1",
+    "description": "Open-source platform for managing the end-to-end machine learning lifecycle, including experiment tracking, model registry, and deployment.",
+    "logo": "mlflow.svg",
+    "links": {
+      "github": "https://github.com/mlflow/mlflow",
+      "website": "https://mlflow.org",
+      "docs": "https://mlflow.org/docs/latest/index.html"
+    },
+    "tags": [
+      "machine-learning",
+      "mlops",
+      "experiment-tracking",
+      "model-registry"
+    ]
+  },
+  {
     "id": "moltbot",
     "name": "Moltbot",
     "version": "2026.1.25",
@@ -5950,24 +5968,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

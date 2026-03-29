@@ -1,0 +1,22 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+s3_access_key = "${password:20}"
+s3_secret_key = "${password:40}"
+
+[config]
+env = [
+  "POSTGRES_USER=mlflow",
+  "POSTGRES_PASSWORD=${db_password}",
+  "POSTGRES_DB=mlflow",
+  "AWS_ACCESS_KEY_ID=${s3_access_key}",
+  "AWS_SECRET_ACCESS_KEY=${s3_secret_key}",
+  "AWS_DEFAULT_REGION=us-east-1",
+  "S3_BUCKET=mlflow",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "mlflow"
+port = 5000
+host = "${main_domain}"

@@ -1,0 +1,108 @@
+version: "3.8"
+
+volumes:
+  pgdata:
+  storage-data:
+
+services:
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v3.10.1
+    depends_on:
+      mlflow-db:
+        condition: service_healthy
+      mlflow-storage:
+        condition: service_healthy
+      mlflow-create-bucket:
+        condition: service_completed_successfully
+    environment:
+      MLFLOW_BACKEND_STORE_URI: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@mlflow-db:5432/${POSTGRES_DB}
+      MLFLOW_S3_ENDPOINT_URL: http://mlflow-storage:9000
+      MLFLOW_ARTIFACTS_DESTINATION: s3://${S3_BUCKET}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      MLFLOW_S3_IGNORE_TLS: "true"
+      MLFLOW_HOST: "0.0.0.0"
+      MLFLOW_PORT: "5000"
+    command:
+      - /bin/bash
+      - -c
+      - |
+        pip install --no-cache-dir psycopg2-binary boto3
+        mlflow server \
+          --backend-store-uri "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@mlflow-db:5432/${POSTGRES_DB}" \
+          --artifacts-destination "s3://${S3_BUCKET}" \
+          --serve-artifacts \
+          --host "0.0.0.0" \
+          --port "5000"
+    expose:
+      - 5000
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  mlflow-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mlflow-storage:
+    image: rustfs/rustfs:1.0.0-alpha.90
+    environment:
+      RUSTFS_ADDRESS: ":9000"
+      RUSTFS_SERVER_DOMAINS: "mlflow-storage:9000"
+      RUSTFS_REGION: ${AWS_DEFAULT_REGION}
+      RUSTFS_ACCESS_KEY: ${AWS_ACCESS_KEY_ID}
+      RUSTFS_SECRET_KEY: ${AWS_SECRET_ACCESS_KEY}
+      RUSTFS_CONSOLE_ENABLE: "false"
+    volumes:
+      - storage-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:9000/health | grep -q '\"status\":\"ok\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  mlflow-create-bucket:
+    image: amazon/aws-cli:2.33.25
+    depends_on:
+      mlflow-storage:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+        echo 'Waiting for S3 storage to be ready...';
+        if aws --endpoint-url=http://mlflow-storage:9000 s3api head-bucket --bucket ${S3_BUCKET} 2>/dev/null; then
+          echo 'Bucket ${S3_BUCKET} already exists. Skipping creation.';
+        else
+          echo 'Creating bucket ${S3_BUCKET}...';
+          aws --endpoint-url=http://mlflow-storage:9000 s3api create-bucket --bucket ${S3_BUCKET} --region ${AWS_DEFAULT_REGION};
+        fi
+      "
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      AWS_S3_ADDRESSING_STYLE: path
+      S3_BUCKET: ${S3_BUCKET}
+    restart: "no"

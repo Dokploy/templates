@@ -28,7 +28,7 @@ services:
       - /bin/bash
       - -c
       - |
-        pip install --no-cache-dir psycopg2-binary boto3
+        pip install --no-cache-dir psycopg2-binary==2.9.11 boto3==1.42.78
         mlflow server \
           --backend-store-uri "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@mlflow-db:5432/${POSTGRES_DB}" \
           --artifacts-destination "s3://${S3_BUCKET}" \
@@ -49,6 +49,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 30
+      start_period: 120s
 
   mlflow-db:
     image: postgres:15-alpine

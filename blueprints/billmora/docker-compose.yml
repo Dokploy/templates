@@ -9,7 +9,6 @@ services:
       - APP_ENV=${APP_ENV}
       - APP_KEY=${APP_KEY}
       - APP_URL=${APP_URL}
-      - APP_TIMEZONE=${APP_TIMEZONE}
       - DB_CONNECTION=${DB_CONNECTION}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
@@ -44,7 +43,6 @@ services:
       - APP_ENV=${APP_ENV}
       - APP_KEY=${APP_KEY}
       - APP_URL=${APP_URL}
-      - APP_TIMEZONE=${APP_TIMEZONE}
       - DB_CONNECTION=${DB_CONNECTION}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
@@ -75,7 +73,6 @@ services:
       - APP_ENV=${APP_ENV}
       - APP_KEY=${APP_KEY}
       - APP_URL=${APP_URL}
-      - APP_TIMEZONE=${APP_TIMEZONE}
       - DB_CONNECTION=${DB_CONNECTION}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}

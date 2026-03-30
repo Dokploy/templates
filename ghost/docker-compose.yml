@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  ghost:
+    image: ghost:5-alpine
+    restart: always
+    ports:
+      - 2368:2368
+    environment:
+      database__client: sqlite3
+      database__connection__filename: content/data/ghost.db
+      url: http://localhost:2368
+      NODE_ENV: production
+    volumes:
+      - ghost_data:/var/lib/ghost/content
+
+volumes:
+  ghost_data:

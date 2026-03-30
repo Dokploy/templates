@@ -1,0 +1,10 @@
+{
+  "name": "Ghost",
+  "description": "Turn your audience into a business. Publishing, newsletters, subscriptions and memberships.",
+  "version": "5.0",
+  "links": {
+    "repository": "https://github.com/TryGhost/Ghost",
+    "website": "https://ghost.org/"
+  },
+  "tags": ["cms", "blog", "publishing"]
+}

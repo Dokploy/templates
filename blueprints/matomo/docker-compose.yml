@@ -1,6 +1,7 @@
+version: "3.8"
 services:
   matomo:
-    image: matomo:latest
+    image: matomo:5.1-apache
     restart: always
     environment:
       - MATOMO_DATABASE_HOST=db
@@ -23,7 +24,7 @@ services:
       - "traefik.http.services.${DOKPLOY_SERVICE_ID}.loadbalancer.server.port=80"
 
   db:
-    image: mariadb:10
+    image: mariadb:11
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     restart: always
     environment:

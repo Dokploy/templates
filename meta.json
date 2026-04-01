@@ -6787,7 +6787,7 @@
     "description": "Leading open-source web analytics platform with global data ownership.",
     "logo": "matomo.png",
     "links": {
-      "github": "https://github.com/matomo-software/matomo",
+      "github": "https://github.com/matomo-org/matomo",
       "website": "https://matomo.org",
       "docs": "https://matomo.org/docs"
     },

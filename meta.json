@@ -3826,6 +3826,24 @@
     ]
   },
   {
+    "id": "matomo",
+    "name": "Matomo",
+    "version": "5.1-apache",
+    "description": "Leading open-source web analytics platform with global data ownership.",
+    "logo": "blueprints/matomo/matomo.png",
+    "links": {
+      "github": "https://github.com/matomo-org/matomo",
+      "website": "https://matomo.org",
+      "docs": "https://matomo.org/docs"
+    },
+    "tags": [
+      "analytics",
+      "privacy",
+      "self-hosted",
+      "metrics"
+    ]
+  },
+  {
     "id": "mattermost",
     "name": "Mattermost",
     "version": "10.6.1",
@@ -6778,24 +6796,6 @@
       "openid-connect",
       "saml",
       "multi-tenant"
-    ]
-  },
-  {
-    "id": "matomo",
-    "name": "Matomo",
-    "version": "5.1-apache",
-    "description": "Leading open-source web analytics platform with global data ownership.",
-    "logo": "blueprints/matomo/matomo.png",
-    "links": {
-      "github": "https://github.com/matomo-org/matomo",
-      "website": "https://matomo.org",
-      "docs": "https://matomo.org/docs"
-    },
-    "tags": [
-      "analytics",
-      "privacy",
-      "self-hosted",
-      "metrics"
     ]
   }
 ]

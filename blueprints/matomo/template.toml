@@ -1,29 +1,19 @@
-name = "Matomo"
-id = "matomo"
-description = "Leading open-source web analytics platform"
+[variables]
+MATOMO_DOMAIN = "${domain}"
+DATABASE_ROOT_PASSWORD = "${password:16}"
+DATABASE_PASSWORD = "${password:16}"
+DATABASE_NAME = "matomo"
+DATABASE_USERNAME = "matomo"
 
-[[variables]]
-name = "DOMAINS"
-label = "Matomo Domain"
-defaultValue = ""
-placeholder = "analytics.example.com"
+[config]
+[[config.domains]]
+serviceName = "matomo"
+port = 80
+host = "${MATOMO_DOMAIN}"
 
-[[variables]]
-name = "DATABASE_ROOT_PASSWORD"
-label = "MariaDB Root Password"
-defaultValue = "change-me-root"
-
-[[variables]]
-name = "DATABASE_NAME"
-label = "Database Name"
-defaultValue = "matomo"
-
-[[variables]]
-name = "DATABASE_USERNAME"
-label = "Database User"
-defaultValue = "matomo"
-
-[[variables]]
-name = "DATABASE_PASSWORD"
-label = "Database Password"
-defaultValue = "change-me-user"
+[config.env]
+DOMAINS = "${MATOMO_DOMAIN}"
+DATABASE_ROOT_PASSWORD = "${DATABASE_ROOT_PASSWORD}"
+DATABASE_PASSWORD = "${DATABASE_PASSWORD}"
+DATABASE_NAME = "${DATABASE_NAME}"
+DATABASE_USERNAME = "${DATABASE_USERNAME}"

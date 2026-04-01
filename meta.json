@@ -6783,7 +6783,7 @@
   {
     "id": "matomo",
     "name": "Matomo",
-    "version": "latest",
+    "version": "5.1-apache",
     "description": "Leading open-source web analytics platform with global data ownership.",
     "logo": "matomo.png",
     "links": {

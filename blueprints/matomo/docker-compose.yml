@@ -1,0 +1,43 @@
+services:
+  matomo:
+    image: matomo:latest
+    restart: always
+    environment:
+      - MATOMO_DATABASE_HOST=db
+      - MATOMO_DATABASE_ADAPTER=mysql
+      - MATOMO_DATABASE_TABLES_PREFIX=matomo_
+      - MATOMO_DATABASE_USERNAME=${DATABASE_USERNAME}
+      - MATOMO_DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - MATOMO_DATABASE_DBNAME=${DATABASE_NAME}
+    volumes:
+      - matomo_data:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${DOKPLOY_SERVICE_ID}.rule=Host(`${DOMAINS}`)"
+      - "traefik.http.routers.${DOKPLOY_SERVICE_ID}.entrypoints=websecure"
+      - "traefik.http.routers.${DOKPLOY_SERVICE_ID}.tls=true"
+      - "traefik.http.routers.${DOKPLOY_SERVICE_ID}.tls.certresolver=letsencrypt"
+      - "traefik.http.services.${DOKPLOY_SERVICE_ID}.loadbalancer.server.port=80"
+
+  db:
+    image: mariadb:10
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DATABASE_NAME}
+      - MYSQL_USER=${DATABASE_USERNAME}
+      - MYSQL_PASSWORD=${DATABASE_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DATABASE_ROOT_PASSWORD}"]
+      timeout: 5s
+      retries: 5
+
+volumes:
+  matomo_data:
+  db_data:

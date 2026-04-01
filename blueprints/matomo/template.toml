@@ -1,0 +1,29 @@
+name = "Matomo"
+id = "matomo"
+description = "Leading open-source web analytics platform"
+
+[[variables]]
+name = "DOMAINS"
+label = "Matomo Domain"
+defaultValue = ""
+placeholder = "analytics.example.com"
+
+[[variables]]
+name = "DATABASE_ROOT_PASSWORD"
+label = "MariaDB Root Password"
+defaultValue = "change-me-root"
+
+[[variables]]
+name = "DATABASE_NAME"
+label = "Database Name"
+defaultValue = "matomo"
+
+[[variables]]
+name = "DATABASE_USERNAME"
+label = "Database User"
+defaultValue = "matomo"
+
+[[variables]]
+name = "DATABASE_PASSWORD"
+label = "Database Password"
+defaultValue = "change-me-user"

@@ -1,37 +1,29 @@
-version: "3"
 services:
   matomo:
     image: matomo:5.1-apache
     restart: always
     environment:
-      - MATOMO_DATABASE_HOST=db
-      - MATOMO_DATABASE_ADAPTER=mysql
-      - MATOMO_DATABASE_TABLES_PREFIX=matomo_
-      - MATOMO_DATABASE_USERNAME=${DATABASE_USERNAME}
-      - MATOMO_DATABASE_PASSWORD=${DATABASE_PASSWORD}
-      - MATOMO_DATABASE_DBNAME=${DATABASE_NAME}
+      - MATOMO_DATABASE_HOST=${MATOMO_DATABASE_HOST}
+      - MATOMO_DATABASE_DB=${MATOMO_DATABASE_DB}
+      - MATOMO_DATABASE_USER=${MATOMO_DATABASE_USER}
+      - MATOMO_DATABASE_PASSWORD=${MATOMO_DATABASE_PASSWORD}
     volumes:
-      - matomo_data:/var/www/html
+      - matomo:/var/www/html
     depends_on:
-      db:
-        condition: service_healthy
+      - db
 
   db:
-    image: mariadb:11
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    image: mariadb:10.11
     restart: always
+    command: --max-allowed-packet=64MB
     environment:
-      - MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${DATABASE_NAME}
-      - MYSQL_USER=${DATABASE_USERNAME}
-      - MYSQL_PASSWORD=${DATABASE_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
-      - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DATABASE_ROOT_PASSWORD}"]
-      timeout: 5s
-      retries: 5
+      - db:/var/lib/mysql
 
 volumes:
-  matomo_data:
-  db_data:
+  matomo:
+  db:

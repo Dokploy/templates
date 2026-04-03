@@ -17,9 +17,9 @@ x-common-env: &common-env
   PLAYWRIGHT_MICROSERVICE_URL: ${PLAYWRIGHT_MICROSERVICE_URL:-http://playwright-service:3000/scrape}
   POSTGRES_HOST: ${POSTGRES_HOST:-nuq-postgres}
   POSTGRES_PORT: ${POSTGRES_PORT:-5432}
-  POSTGRES_USER: ${POSTGRES_USER:-firecrawl}
+  POSTGRES_USER: ${POSTGRES_USER:-postgres}
   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-firecrawl}
-  POSTGRES_DB: ${POSTGRES_DB:-firecrawl}
+  POSTGRES_DB: ${POSTGRES_DB:-postgres}
   NUQ_RABBITMQ_URL: ${NUQ_RABBITMQ_URL:-amqp://rabbitmq:5672}
   USE_DB_AUTHENTICATION: ${USE_DB_AUTHENTICATION:-false}
   NUM_WORKERS_PER_QUEUE: ${NUM_WORKERS_PER_QUEUE:-8}
@@ -118,9 +118,9 @@ services:
       context: "https://github.com/firecrawl/firecrawl.git#v2.8.0:apps/nuq-postgres"
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-firecrawl}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-firecrawl}
-      POSTGRES_DB: ${POSTGRES_DB:-firecrawl}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
     volumes:
       - nuq_pg_data:/var/lib/postgresql/data
     healthcheck:

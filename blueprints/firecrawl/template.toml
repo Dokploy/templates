@@ -1,8 +1,8 @@
 [variables]
 main_domain = "${domain}"
-postgres_user = "firecrawl"
+postgres_user = "postgres"
 postgres_password = "${password:32}"
-postgres_db = "firecrawl"
+postgres_db = "postgres"
 openai_api_key = "${OPENAI_API_KEY}"
 openai_base_url = "${OPENAI_BASE_URL}"
 openrouter_api_key = "${OPENROUTER_API_KEY}"

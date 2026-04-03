@@ -94,7 +94,7 @@ services:
     command: node dist/src/harness.js --start-docker
 
   redis:
-    image: redis:7.4-alpine
+    image: redis:7-alpine
     restart: unless-stopped
     command: redis-server --bind 0.0.0.0 --appendonly yes
     volumes:

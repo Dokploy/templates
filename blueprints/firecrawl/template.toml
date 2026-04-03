@@ -1,7 +1,11 @@
 [variables]
 main_domain = "${domain}"
+postgres_user = "firecrawl"
+postgres_password = "${password:32}"
+postgres_db = "firecrawl"
 openai_api_key = "${OPENAI_API_KEY}"
 openai_base_url = "${OPENAI_BASE_URL}"
+openrouter_api_key = "${OPENROUTER_API_KEY}"
 ollama_base_url = "${OLLAMA_BASE_URL}"
 model_name = "${MODEL_NAME}"
 model_embedding_name = "${MODEL_EMBEDDING_NAME}"
@@ -20,6 +24,15 @@ llamaparse_api_key = "${LLAMAPARSE_API_KEY}"
 slack_webhook_url = "${SLACK_WEBHOOK_URL}"
 posthog_api_key = "${POSTHOG_API_KEY}"
 posthog_host = "${POSTHOG_HOST}"
+self_hosted_webhook_url = "${SELF_HOSTED_WEBHOOK_URL}"
+autumn_secret_key = "${AUTUMN_SECRET_KEY}"
+allow_local_webhooks = "${ALLOW_LOCAL_WEBHOOKS}"
+block_media = "${BLOCK_MEDIA}"
+num_workers_per_queue = "${NUM_WORKERS_PER_QUEUE}"
+crawl_concurrent_requests = "${CRAWL_CONCURRENT_REQUESTS}"
+max_concurrent_jobs = "${MAX_CONCURRENT_JOBS}"
+browser_pool_size = "${BROWSER_POOL_SIZE}"
+logging_level = "${LOGGING_LEVEL}"
 max_cpu = "${MAX_CPU}"
 max_ram = "${MAX_RAM}"
 
@@ -27,13 +40,20 @@ max_ram = "${MAX_RAM}"
 env = [
   "PORT=3002",
   "HOST=0.0.0.0",
+  "POSTGRES_HOST=nuq-postgres",
+  "POSTGRES_PORT=5432",
+  "POSTGRES_USER=${postgres_user}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_DB=${postgres_db}",
   "USE_DB_AUTHENTICATION=false",
   "BULL_AUTH_KEY=${bull_auth_key}",
   "PLAYWRIGHT_MICROSERVICE_URL=http://playwright-service:3000/scrape",
   "REDIS_URL=redis://redis:6379",
   "REDIS_RATE_LIMIT_URL=redis://redis:6379",
+  "NUQ_RABBITMQ_URL=amqp://rabbitmq:5672",
   "OPENAI_API_KEY=${openai_api_key}",
   "OPENAI_BASE_URL=${openai_base_url}",
+  "OPENROUTER_API_KEY=${openrouter_api_key}",
   "OLLAMA_BASE_URL=${ollama_base_url}",
   "MODEL_NAME=${model_name}",
   "MODEL_EMBEDDING_NAME=${model_embedding_name}",
@@ -51,8 +71,17 @@ env = [
   "SLACK_WEBHOOK_URL=${slack_webhook_url}",
   "POSTHOG_API_KEY=${posthog_api_key}",
   "POSTHOG_HOST=${posthog_host}",
-  "MAX_CPU=0.8",
-  "MAX_RAM=0.8"
+  "SELF_HOSTED_WEBHOOK_URL=${self_hosted_webhook_url}",
+  "AUTUMN_SECRET_KEY=${autumn_secret_key}",
+  "ALLOW_LOCAL_WEBHOOKS=${allow_local_webhooks}",
+  "BLOCK_MEDIA=${block_media}",
+  "NUM_WORKERS_PER_QUEUE=${num_workers_per_queue}",
+  "CRAWL_CONCURRENT_REQUESTS=${crawl_concurrent_requests}",
+  "MAX_CONCURRENT_JOBS=${max_concurrent_jobs}",
+  "BROWSER_POOL_SIZE=${browser_pool_size}",
+  "LOGGING_LEVEL=${logging_level}",
+  "MAX_CPU=${max_cpu}",
+  "MAX_RAM=${max_ram}"
 ]
 mounts = []
 
@@ -61,5 +90,3 @@ serviceName = "api"
 port = 3002
 host = "${main_domain}"
 path = "/"
-
- 

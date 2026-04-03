@@ -2312,8 +2312,8 @@
   {
     "id": "firecrawl",
     "name": "Firecrawl",
-    "version": "latest",
-    "description": "Firecrawl is an API service that takes a URL, crawls it, and converts it into clean markdown or structured data. It can crawl all accessible subpages and provide clean data for each.",
+    "version": "v2.8.0",
+    "description": "Firecrawl is a self-hosted crawling and scraping API that can turn web pages into clean markdown or structured data, crawl accessible subpages, and power extract workflows with optional AI providers.",
     "logo": "firecrawl.svg",
     "links": {
       "github": "https://github.com/firecrawl/firecrawl",
@@ -5950,24 +5950,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

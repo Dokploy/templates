@@ -1,33 +1,49 @@
 [variables]
 main_domain = "${domain}"
+
+# Required for the bundled Firecrawl, NuQ, and PostgreSQL services.
 postgres_user = "postgres"
 postgres_password = "${password:32}"
 postgres_db = "postgres"
+bull_auth_key = "${password:32}"
+
+# Safe defaults for self-hosted deployments. Leave unchanged unless you know you need them.
+allow_local_webhooks = "false"
+block_media = "false"
+
+# Optional LLM provider settings. Leave empty unless you plan to use that provider.
 openai_api_key = "${OPENAI_API_KEY}"
 openai_base_url = "${OPENAI_BASE_URL}"
 openrouter_api_key = "${OPENROUTER_API_KEY}"
 ollama_base_url = "${OLLAMA_BASE_URL}"
 model_name = "${MODEL_NAME}"
 model_embedding_name = "${MODEL_EMBEDDING_NAME}"
+llamaparse_api_key = "${LLAMAPARSE_API_KEY}"
+
+# Optional outbound proxy settings for restricted networks or paid proxy pools.
 proxy_server = "${PROXY_SERVER}"
 proxy_username = "${PROXY_USERNAME}"
 proxy_password = "${PROXY_PASSWORD}"
+
+# Optional search provider settings used by Firecrawl search features.
 searxng_endpoint = "${SEARXNG_ENDPOINT}"
 searxng_engines = "${SEARXNG_ENGINES}"
 searxng_categories = "${SEARXNG_CATEGORIES}"
+
+# Optional integrations and telemetry. These can stay empty for a basic deployment.
+# Note: auth is bypassed in this template because USE_DB_AUTHENTICATION=false by default,
+# so TEST_API_KEY is stored for compatibility but is not enforced unless you customize auth.
 supabase_anon_token = "${SUPABASE_ANON_TOKEN}"
 supabase_url = "${SUPABASE_URL}"
 supabase_service_token = "${SUPABASE_SERVICE_TOKEN}"
 test_api_key = "${TEST_API_KEY}"
-bull_auth_key = "${password:32}"
-llamaparse_api_key = "${LLAMAPARSE_API_KEY}"
 slack_webhook_url = "${SLACK_WEBHOOK_URL}"
 posthog_api_key = "${POSTHOG_API_KEY}"
 posthog_host = "${POSTHOG_HOST}"
 self_hosted_webhook_url = "${SELF_HOSTED_WEBHOOK_URL}"
 autumn_secret_key = "${AUTUMN_SECRET_KEY}"
-allow_local_webhooks = "false"
-block_media = "false"
+
+# Optional tuning. Leave empty to use the defaults baked into docker-compose.
 num_workers_per_queue = "${NUM_WORKERS_PER_QUEUE}"
 crawl_concurrent_requests = "${CRAWL_CONCURRENT_REQUESTS}"
 max_concurrent_jobs = "${MAX_CONCURRENT_JOBS}"
@@ -38,6 +54,7 @@ max_ram = "${MAX_RAM}"
 
 [config]
 env = [
+  # Required runtime and bundled service wiring.
   "PORT=3002",
   "HOST=0.0.0.0",
   "POSTGRES_HOST=nuq-postgres",
@@ -45,36 +62,53 @@ env = [
   "POSTGRES_USER=${postgres_user}",
   "POSTGRES_PASSWORD=${postgres_password}",
   "POSTGRES_DB=${postgres_db}",
-  "USE_DB_AUTHENTICATION=false",
-  "BULL_AUTH_KEY=${bull_auth_key}",
-  "PLAYWRIGHT_MICROSERVICE_URL=http://playwright-service:3000/scrape",
   "REDIS_URL=redis://redis:6379",
   "REDIS_RATE_LIMIT_URL=redis://redis:6379",
   "NUQ_RABBITMQ_URL=amqp://rabbitmq:5672",
+  "PLAYWRIGHT_MICROSERVICE_URL=http://playwright-service:3000/scrape",
+
+  # Keep auth disabled for the default self-hosted template. Enabling it requires
+  # extra Supabase/ACUC configuration that is not wired by default here.
+  "USE_DB_AUTHENTICATION=false",
+
+  # Generated internal secret used by Firecrawl's worker and Bull auth flows.
+  "BULL_AUTH_KEY=${bull_auth_key}",
+
+  # Optional LLM provider settings. Leave empty unless you plan to use them.
   "OPENAI_API_KEY=${openai_api_key}",
   "OPENAI_BASE_URL=${openai_base_url}",
   "OPENROUTER_API_KEY=${openrouter_api_key}",
   "OLLAMA_BASE_URL=${ollama_base_url}",
   "MODEL_NAME=${model_name}",
   "MODEL_EMBEDDING_NAME=${model_embedding_name}",
+  "LLAMAPARSE_API_KEY=${llamaparse_api_key}",
+
+  # Optional outbound proxy settings.
   "PROXY_SERVER=${proxy_server}",
   "PROXY_USERNAME=${proxy_username}",
   "PROXY_PASSWORD=${proxy_password}",
+
+  # Optional search provider settings.
   "SEARXNG_ENDPOINT=${searxng_endpoint}",
   "SEARXNG_ENGINES=${searxng_engines}",
   "SEARXNG_CATEGORIES=${searxng_categories}",
+
+  # Optional integrations and telemetry. Safe to leave empty for a basic install.
   "SUPABASE_ANON_TOKEN=${supabase_anon_token}",
   "SUPABASE_URL=${supabase_url}",
   "SUPABASE_SERVICE_TOKEN=${supabase_service_token}",
   "TEST_API_KEY=${test_api_key}",
-  "LLAMAPARSE_API_KEY=${llamaparse_api_key}",
   "SLACK_WEBHOOK_URL=${slack_webhook_url}",
   "POSTHOG_API_KEY=${posthog_api_key}",
   "POSTHOG_HOST=${posthog_host}",
   "SELF_HOSTED_WEBHOOK_URL=${self_hosted_webhook_url}",
   "AUTUMN_SECRET_KEY=${autumn_secret_key}",
+
+  # Optional feature flags with safe defaults already set in [variables].
   "ALLOW_LOCAL_WEBHOOKS=${allow_local_webhooks}",
   "BLOCK_MEDIA=${block_media}",
+
+  # Optional tuning and resource limits. Leave empty to inherit compose defaults.
   "NUM_WORKERS_PER_QUEUE=${num_workers_per_queue}",
   "CRAWL_CONCURRENT_REQUESTS=${crawl_concurrent_requests}",
   "MAX_CONCURRENT_JOBS=${max_concurrent_jobs}",

@@ -8,6 +8,7 @@ postgres_db = "postgres"
 bull_auth_key = "${password:32}"
 
 # Safe defaults for self-hosted deployments. Leave unchanged unless you know you need them.
+use_db_authentication = "false"
 allow_local_webhooks = "false"
 block_media = "false"
 
@@ -30,12 +31,16 @@ searxng_endpoint = ""
 searxng_engines = ""
 searxng_categories = ""
 
-# Optional integrations and telemetry. These can stay empty for a basic deployment.
-# Note: auth is bypassed in this template because USE_DB_AUTHENTICATION=false by default,
-# so TEST_API_KEY is stored for compatibility but is not enforced unless you customize auth.
+# Optional auth, indexing, integrations, and telemetry.
+# Firecrawl DB auth mode requires Supabase URL, replica URL, and service token.
+# Index/search features may also use the separate index Supabase settings.
 supabase_anon_token = ""
 supabase_url = ""
+supabase_replica_url = ""
 supabase_service_token = ""
+index_supabase_url = ""
+index_supabase_service_token = ""
+search_index_supabase_url = ""
 test_api_key = ""
 slack_webhook_url = ""
 posthog_api_key = ""
@@ -67,9 +72,8 @@ env = [
   "NUQ_RABBITMQ_URL=amqp://rabbitmq:5672",
   "PLAYWRIGHT_MICROSERVICE_URL=http://playwright-service:3000/scrape",
 
-  # Keep auth disabled for the default self-hosted template. Enabling it requires
-  # extra Supabase/ACUC configuration that is not wired by default here.
-  "USE_DB_AUTHENTICATION=false",
+  # DB auth is off by default. If enabled, set the required Supabase auth values too.
+  "USE_DB_AUTHENTICATION=${use_db_authentication}",
 
   # Generated internal secret used by Firecrawl's worker and Bull auth flows.
   "BULL_AUTH_KEY=${bull_auth_key}",
@@ -93,10 +97,15 @@ env = [
   "SEARXNG_ENGINES=${searxng_engines}",
   "SEARXNG_CATEGORIES=${searxng_categories}",
 
-  # Optional integrations and telemetry. Safe to leave empty for a basic install.
+  # Optional auth, indexing, integrations, and telemetry. DB auth mode requires
+  # SUPABASE_URL, SUPABASE_REPLICA_URL, and SUPABASE_SERVICE_TOKEN.
   "SUPABASE_ANON_TOKEN=${supabase_anon_token}",
   "SUPABASE_URL=${supabase_url}",
+  "SUPABASE_REPLICA_URL=${supabase_replica_url}",
   "SUPABASE_SERVICE_TOKEN=${supabase_service_token}",
+  "INDEX_SUPABASE_URL=${index_supabase_url}",
+  "INDEX_SUPABASE_SERVICE_TOKEN=${index_supabase_service_token}",
+  "SEARCH_INDEX_SUPABASE_URL=${search_index_supabase_url}",
   "TEST_API_KEY=${test_api_key}",
   "SLACK_WEBHOOK_URL=${slack_webhook_url}",
   "POSTHOG_API_KEY=${posthog_api_key}",

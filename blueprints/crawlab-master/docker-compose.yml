@@ -1,7 +1,6 @@
-version: "3.3"
-
+version: "3.8"
 services:
-  master:
+  crawlab-master:
     image: crawlabteam/crawlab:latest
     restart: unless-stopped
     environment:
@@ -16,11 +15,15 @@ services:
       - crawlab-master-data:/root/.crawlab
       - crawlab-app-data:/data
       - crawlab-logs:/var/log/crawlab
-    ports:
+    expose:
       - "8080"
       - "9666"
     depends_on:
       - mongo
+    deploy:
+      resources:
+        limits:
+          cpus: "${CPU_LIMIT:-0.8}" # 0.8 will limit to 80% of CPU if one core. If 2 cores, you need to put 0.8*2=1.6
 
   mongo:
     image: mongo:4.2

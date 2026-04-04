@@ -2,22 +2,29 @@ version: "3.8"
 
 services:
   crawl4ai:
-    image: unclecode/crawl4ai:latest
+    image: unclecode/crawl4ai:0.8.0
     restart: unless-stopped
     shm_size: 1g
+    stop_grace_period: 30s
     expose:
       - 11235
     environment:
       - LLM_PROVIDER=${LLM_PROVIDER}
+      - LLM_TEMPERATURE=${LLM_TEMPERATURE}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL}
+      - OPENAI_TEMPERATURE=${OPENAI_TEMPERATURE}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
       - GROQ_API_KEY=${GROQ_API_KEY}
       - TOGETHER_API_KEY=${TOGETHER_API_KEY}
       - MISTRAL_API_KEY=${MISTRAL_API_KEY}
       - GEMINI_API_TOKEN=${GEMINI_API_TOKEN}
+    volumes:
+      - ../files/config.yml:/app/config.yml:ro
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11235/health"]
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:11235/health || exit 1"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
+      start_period: 30s

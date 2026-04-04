@@ -1,5 +1,10 @@
 [variables]
 main_domain = "${domain}"
+llm_provider = "openai/gpt-4o-mini"
+llm_temperature = "0.1"
+security_enabled = "true"
+jwt_enabled = "true"
+default_rate_limit = "120/minute"
 
 [config]
 [[config.domains]]
@@ -8,11 +13,76 @@ port = 11235
 host = "${main_domain}"
 
 [config.env]
-LLM_PROVIDER = "openai/gpt-4o-mini"
-OPENAI_API_KEY = "${password:48}"
+LLM_PROVIDER = "${llm_provider}"
+LLM_TEMPERATURE = "${llm_temperature}"
+OPENAI_API_KEY = ""
+OPENAI_BASE_URL = "https://openrouter.ai/api/v1"
+OPENAI_TEMPERATURE = "${llm_temperature}"
 ANTHROPIC_API_KEY = ""
 DEEPSEEK_API_KEY = ""
 GROQ_API_KEY = ""
 TOGETHER_API_KEY = ""
 MISTRAL_API_KEY = ""
 GEMINI_API_TOKEN = ""
+
+[[config.mounts]]
+filePath = "config.yml"
+serviceName = "crawl4ai"
+content = """
+app:
+  title: "Crawl4AI API"
+  version: "0.8.0"
+  host: "0.0.0.0"
+  port: 8020
+  reload: false
+  timeout_keep_alive: 300
+
+llm:
+  provider: "${llm_provider}"
+
+redis:
+  host: "localhost"
+  port: 6379
+  db: 0
+  password: ""
+
+rate_limiting:
+  enabled: true
+  default_limit: "${default_rate_limit}"
+  trusted_proxies: []
+  storage_uri: "memory://"
+
+security:
+  enabled: ${security_enabled}
+  jwt_enabled: ${jwt_enabled}
+  https_redirect: false
+  trusted_hosts:
+    - "${main_domain}"
+    - "localhost"
+    - "127.0.0.1"
+    - "crawl4ai"
+  headers:
+    x_content_type_options: "nosniff"
+    x_frame_options: "DENY"
+    content_security_policy: "default-src 'self'"
+    strict_transport_security: "max-age=63072000; includeSubDomains"
+
+crawler:
+  memory_threshold_percent: 90.0
+  rate_limiter:
+    base_delay: [1.0, 2.0]
+  timeouts:
+    stream_init: 30.0
+    batch_process: 300.0
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+observability:
+  prometheus:
+    enabled: true
+    endpoint: "/metrics"
+  health_check:
+    endpoint: "/health"
+"""

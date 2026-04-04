@@ -1629,13 +1629,13 @@
   {
     "id": "crawl4ai",
     "name": "Crawl4AI",
-    "version": "0.7.3",
-    "description": "Crawl4AI is a modern AI-powered web crawler with support for screenshots, PDFs, JavaScript execution, and LLM-based extraction. Includes an interactive playground and MCP (Model Context Protocol) integration.",
+    "version": "0.8.0",
+    "description": "Crawl4AI is a modern open-source AI-powered web crawler with screenshots, PDFs, JavaScript execution, LLM extraction, MCP, job queues, webhooks, and a built-in monitoring dashboard.",
     "logo": "image.png",
     "links": {
       "github": "https://github.com/unclecode/crawl4ai",
       "website": "https://crawl4ai.com",
-      "docs": "https://github.com/unclecode/crawl4ai#readme"
+      "docs": "https://docs.crawl4ai.com/"
     },
     "tags": [
       "crawler",

@@ -5,6 +5,8 @@ llm_temperature = "0.1"
 security_enabled = "true"
 jwt_enabled = "true"
 default_rate_limit = "120/minute"
+jwt_secret = "${password:48}"
+max_pages = "40"
 
 [config]
 [[config.domains]]
@@ -18,6 +20,7 @@ LLM_TEMPERATURE = "${llm_temperature}"
 OPENAI_API_KEY = ""
 OPENAI_BASE_URL = "https://openrouter.ai/api/v1"
 OPENAI_TEMPERATURE = "${llm_temperature}"
+SECRET_KEY = "${jwt_secret}"
 ANTHROPIC_API_KEY = ""
 DEEPSEEK_API_KEY = ""
 GROQ_API_KEY = ""
@@ -33,8 +36,9 @@ app:
   title: "Crawl4AI API"
   version: "0.8.0"
   host: "0.0.0.0"
-  port: 8020
+  port: 11235
   reload: false
+  workers: 1
   timeout_keep_alive: 300
 
 llm:
@@ -45,6 +49,11 @@ redis:
   port: 6379
   db: 0
   password: ""
+  ssl: false
+  ssl_cert_reqs: null
+  ssl_ca_certs: null
+  ssl_certfile: null
+  ssl_keyfile: null
 
 rate_limiting:
   enabled: true
@@ -68,12 +77,29 @@ security:
     strict_transport_security: "max-age=63072000; includeSubDomains"
 
 crawler:
+  base_config:
+    simulate_user: true
   memory_threshold_percent: 90.0
   rate_limiter:
+    enabled: true
     base_delay: [1.0, 2.0]
   timeouts:
     stream_init: 30.0
     batch_process: 300.0
+  pool:
+    max_pages: ${max_pages}
+    idle_ttl_sec: 300
+  browser:
+    kwargs:
+      headless: true
+      text_mode: true
+    extra_args:
+      - "--no-sandbox"
+      - "--disable-dev-shm-usage"
+      - "--disable-gpu"
+      - "--disable-software-rasterizer"
+      - "--allow-insecure-localhost"
+      - "--ignore-certificate-errors"
 
 logging:
   level: "INFO"
@@ -85,4 +111,16 @@ observability:
     endpoint: "/metrics"
   health_check:
     endpoint: "/health"
+
+webhooks:
+  enabled: true
+  default_url: null
+  data_in_payload: false
+  retry:
+    max_attempts: 5
+    initial_delay_ms: 1000
+    max_delay_ms: 32000
+    timeout_ms: 30000
+  headers:
+    User-Agent: "Crawl4AI-Webhook/1.0"
 """

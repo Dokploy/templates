@@ -29,28 +29,3 @@ REDIS_PORT = "6379"
 SESSION_DRIVER = "redis"
 CACHE_STORE = "redis"
 QUEUE_CONNECTION = "redis"
-
-[[config.mounts]]
-mountPath = "/var/www/html/storage"
-serviceName = "billmora-app"
-volumeName = "billmora-storage"
-
-[[config.mounts]]
-mountPath = "/var/www/html/storage"
-serviceName = "billmora-worker"
-volumeName = "billmora-storage"
-
-[[config.mounts]]
-mountPath = "/var/www/html/storage"
-serviceName = "billmora-scheduler"
-volumeName = "billmora-storage"
-
-[[config.mounts]]
-mountPath = "/var/lib/mysql"
-serviceName = "billmora-db"
-volumeName = "billmora-db-data"
-
-[[config.mounts]]
-mountPath = "/data"
-serviceName = "billmora-redis"
-volumeName = "billmora-redis-data"

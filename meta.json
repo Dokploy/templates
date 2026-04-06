@@ -363,9 +363,9 @@
     ]
   },
   {
-    "id": "appwrite",
-    "name": "Appwrite",
-    "version": "1.8.0",
+    "id": "appwrite-mariadb",
+    "name": "Appwrite (MariaDB)",
+    "version": "1.9.0",
     "description": "Appwrite is an end-to-end platform for building Web, Mobile, Native, or Backend apps, packaged as a set of Docker microservices. It includes both a backend server and a fully integrated hosting solution for deploying static and server-side rendered frontends. Appwrite abstracts the complexity and repetitiveness required to build modern apps from scratch and allows you to build secure, full-stack applications faster.\nUsing Appwrite, you can easily integrate your app with user authentication and multiple sign-in methods, a database for storing and querying users and team data, storage and file management, image manipulation, Cloud Functions, messaging, and more services.",
     "links": {
       "github": "https://github.com/appwrite/appwrite",
@@ -377,6 +377,25 @@
       "database",
       "firebase",
       "mariadb",
+      "hosting",
+      "self-hosted"
+    ]
+  },
+  {
+    "id": "appwrite-mongodb",
+    "name": "Appwrite (MongoDB)",
+    "version": "1.9.0",
+    "description": "Appwrite is an end-to-end platform for building Web, Mobile, Native, or Backend apps, packaged as a set of Docker microservices. It includes both a backend server and a fully integrated hosting solution for deploying static and server-side rendered frontends. Appwrite abstracts the complexity and repetitiveness required to build modern apps from scratch and allows you to build secure, full-stack applications faster.\nUsing Appwrite, you can easily integrate your app with user authentication and multiple sign-in methods, a database for storing and querying users and team data, storage and file management, image manipulation, Cloud Functions, messaging, and more services.",
+    "links": {
+      "github": "https://github.com/appwrite/appwrite",
+      "website": "https://appwrite.io/",
+      "docs": "https://appwrite.io/docs"
+    },
+    "logo": "appwrite.svg",
+    "tags": [
+      "database",
+      "firebase",
+      "mongodb",
       "hosting",
       "self-hosted"
     ]
@@ -5950,24 +5969,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

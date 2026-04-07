@@ -151,7 +151,7 @@ services:
         bench set-config -gp db_port $$DB_PORT;
         bench set-config -g redis_cache "redis://$$REDIS_CACHE";
         bench set-config -g redis_queue "redis://$$REDIS_QUEUE";
-        bench set-config -g redis_socketio "redis://$$REDIS_QUEUE";
+        bench set-config -g redis_socketio "redis://$$REDIS_SOCKETIO";
         bench set-config -gp socketio_port $$SOCKETIO_PORT;
         echo "[configurator] done";
     environment:
@@ -159,6 +159,7 @@ services:
       DB_PORT: "3306"
       REDIS_CACHE: redis-cache:6379
       REDIS_QUEUE: redis-queue:6379
+      REDIS_SOCKETIO: redis-socketio:6379
       SOCKETIO_PORT: "9000"
       REGENERATE_APPS_TXT: "${REGENERATE_APPS_TXT:-0}"
     volumes:

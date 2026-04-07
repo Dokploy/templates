@@ -27,5 +27,3 @@ DB_IMAGE = "mariadb:11.8"
 SITE_VOLUME_TYPE = ""
 SITE_VOLUME_OPTS = ""
 SITE_VOLUME_DEV = ""
-
-[[config.mounts]]

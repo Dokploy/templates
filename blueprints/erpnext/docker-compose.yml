@@ -106,7 +106,7 @@ services:
     command:
       [
         "bench",
-        "scheduler"
+        "schedule"
       ]
     depends_on:
       configurator:
@@ -140,14 +140,24 @@ services:
     entrypoint: ["bash", "-c"]
     command:
       - >
-        [[ $${REGENERATE_APPS_TXT} == "1" ]] && ls -1 apps > sites/apps.txt;
-        [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".db_host // empty"` ]] && exit 0;
+        echo "[configurator] starting";
+        if [[ $${REGENERATE_APPS_TXT} == "1" ]]; then
+          echo "[configurator] regenerating sites/apps.txt";
+          ls -1 apps > sites/apps.txt;
+        fi;
+        existing_db_host=$$(grep -hs '^' sites/common_site_config.json | jq -r ".db_host // empty" 2>/dev/null || true);
+        if [[ -n "$${existing_db_host}" ]]; then
+          echo "[configurator] common_site_config.json already configured, skipping";
+          exit 0;
+        fi;
+        echo "[configurator] applying bench global config";
         bench set-config -g db_host $$DB_HOST;
         bench set-config -gp db_port $$DB_PORT;
         bench set-config -g redis_cache "redis://$$REDIS_CACHE";
         bench set-config -g redis_queue "redis://$$REDIS_QUEUE";
         bench set-config -g redis_socketio "redis://$$REDIS_QUEUE";
         bench set-config -gp socketio_port $$SOCKETIO_PORT;
+        echo "[configurator] done";
     environment:
       DB_HOST: "${DB_HOST:-db}"
       DB_PORT: "3306"
@@ -165,12 +175,18 @@ services:
       replicas: ${CREATE_SITE:-0}
       restart_policy:
         condition: none
+    depends_on:
+      db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+      redis-queue:
+        condition: service_healthy
+      configurator:
+        condition: service_completed_successfully
     entrypoint: ["bash", "-c"]
     command:
       - >
-        wait-for-it -t 120 $$DB_HOST:$$DB_PORT;
-        wait-for-it -t 120 redis-cache:6379;
-        wait-for-it -t 120 redis-queue:6379;
         export start=`date +%s`;
         until [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".db_host // empty"` ]] && \
           [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".redis_cache // empty"` ]] && \
@@ -203,10 +219,17 @@ services:
       replicas: ${MIGRATE:-0}
       restart_policy:
         condition: none
+    depends_on:
+      frontend:
+        condition: service_healthy
+      configurator:
+        condition: service_completed_successfully
+      create-site:
+        condition: service_completed_successfully
     entrypoint: ["bash", "-c"]
     command:
       - >
-        curl -f http://frontend:8080/api/method/ping || { echo "Site busy"; exit 0; };
+        curl -f -H "Host: ${SITE_NAME}" http://frontend:8080/api/method/ping || { echo "Site busy"; exit 0; };
         bench --site all set-config -p maintenance_mode 1;
         bench --site all set-config -p pause_scheduler 1;
         bench --site all migrate;
@@ -216,28 +239,28 @@ services:
       - sites:/home/frappe/frappe-bench/sites
 
   db:
-    image: ${DB_IMAGE:-mariadb:11.8}
+    image: ${DB_IMAGE:-mariadb:11.8.6}
     deploy:
       mode: replicated
       replicas: ${ENABLE_DB:-0}
       restart_policy:
         condition: always
     healthcheck:
-      test: mysqladmin ping -h localhost --password=${DB_ROOT_PASSWORD}
-      interval: 1s
-      retries: 20
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
     command:
       [
         "--character-set-server=utf8mb4",
         "--collation-server=utf8mb4_unicode_ci",
-        "--skip-character-set-client-handshake",
-        "--skip-innodb-read-only-compressed"
+        "--skip-character-set-client-handshake"
       ]
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     volumes:
-      - db-data:/var/lib/mysql
+      - db-data:/var/lib/mysql/data
 
   redis-cache:
     deploy:

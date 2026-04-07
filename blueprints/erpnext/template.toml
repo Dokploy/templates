@@ -24,28 +24,8 @@ IMAGE_NAME = "docker.io/frappe/erpnext"
 VERSION = "version-16"
 FRAPPE_SITE_NAME_HEADER = ""
 DB_IMAGE = "mariadb:11.8"
+SITE_VOLUME_TYPE = ""
+SITE_VOLUME_OPTS = ""
+SITE_VOLUME_DEV = ""
 
 [[config.mounts]]
-type = "volume"
-source = "sites"
-target = "/home/frappe/frappe-bench/sites"
-
-[[config.mounts]]
-type = "volume"
-source = "db-data"
-target = "/var/lib/mysql"
-
-[[config.mounts]]
-type = "volume"
-source = "redis-cache-data"
-target = "/data"
-
-[[config.mounts]]
-type = "volume"
-source = "redis-queue-data"
-target = "/data"
-
-[[config.mounts]]
-type = "volume"
-source = "redis-socketio-data"
-target = "/data"

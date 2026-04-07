@@ -19,6 +19,9 @@ env = [
   "VERSION=version-16",
   "FRAPPE_SITE_NAME_HEADER=",
   "DB_IMAGE=mariadb:11.8",
+  "SITE_VOLUME_TYPE=none",
+  "SITE_VOLUME_OPTS=bind",
+  "SITE_VOLUME_DEV=/${main_domain}/sites",
 ]
 mounts = []
 

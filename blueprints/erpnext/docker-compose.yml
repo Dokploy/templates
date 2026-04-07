@@ -5,18 +5,15 @@ x-custom-image: &custom_image
     restart_policy:
       condition: always
 
+name: erpnext
+
 services:
   backend:
     <<: *custom_image
     volumes:
       - sites:/home/frappe/frappe-bench/sites
-    networks:
-      - bench-network
     healthcheck:
-      test:
-        - CMD
-        - wait-for-it
-        - '0.0.0.0:8000'
+      test: ["CMD", "wait-for-it", "0.0.0.0:8000"]
       interval: 2s
       timeout: 10s
       retries: 30
@@ -28,10 +25,8 @@ services:
     depends_on:
       backend:
         condition: service_started
-        required: true
       websocket:
         condition: service_started
-        required: true
     environment:
       BACKEND: backend:8000
       FRAPPE_SITE_NAME_HEADER: ${FRAPPE_SITE_NAME_HEADER:-$$host}
@@ -41,15 +36,8 @@ services:
       UPSTREAM_REAL_IP_RECURSIVE: "off"
     volumes:
       - sites:/home/frappe/frappe-bench/sites
-
-    networks:
-      - bench-network
-    
-    healthcheck:
-      test:
-        - CMD
-        - wait-for-it
-        - '0.0.0.0:8080'
+    healthcheck: 
+      test: ["CMD", "wait-for-it", "0.0.0.0:8080"]
       interval: 2s
       timeout: 30s
       retries: 30
@@ -63,44 +51,34 @@ services:
       - default
     volumes:
       - sites:/home/frappe/frappe-bench/sites
-    networks:
-      - bench-network
     healthcheck:
-      test:
-        - CMD
-        - wait-for-it
-        - 'redis-queue:6379'
+      test: ["CMD", "wait-for-it", "redis-queue:6379"]
       interval: 2s
       timeout: 10s
       retries: 30
     depends_on:
       configurator:
         condition: service_completed_successfully
-        required: true
 
   queue-long:
     <<: *custom_image
     command:
-      - bench
-      - worker
-      - --queue
-      - long
+      [
+        "bench",
+        "worker",
+        "--queue",
+        "long"
+      ]
     volumes:
       - sites:/home/frappe/frappe-bench/sites
-    networks:
-      - bench-network
     healthcheck:
-      test:
-        - CMD
-        - wait-for-it
-        - 'redis-queue:6379'
+      test: ["CMD", "wait-for-it", "redis-queue:6379"]
       interval: 2s
       timeout: 10s
       retries: 30
     depends_on:
       configurator:
         condition: service_completed_successfully
-        required: true
 
   queue-short:
     <<: *custom_image
@@ -111,50 +89,37 @@ services:
       - short
     volumes:
       - sites:/home/frappe/frappe-bench/sites
-    networks:
-      - bench-network
     healthcheck:
-      test:
-        - CMD
-        - wait-for-it
-        - 'redis-queue:6379'
+      test: ["CMD", "wait-for-it", "redis-queue:6379"]
       interval: 2s
       timeout: 10s
       retries: 30
     depends_on:
       configurator:
         condition: service_completed_successfully
-        required: true
 
   scheduler:
     <<: *custom_image
     healthcheck:
-      test:
-        - CMD
-        - wait-for-it
-        - 'redis-queue:6379'
+      test: ["CMD", "wait-for-it", "redis-queue:6379"]
       interval: 2s
       timeout: 10s
       retries: 30
     command:
-      - bench
-      - schedule
+      [
+        "bench",
+        "scheduler"
+      ]
     depends_on:
       configurator:
         condition: service_completed_successfully
-        required: true
     volumes:
       - sites:/home/frappe/frappe-bench/sites
-    networks:
-      - bench-network
 
   websocket:
     <<: *custom_image
     healthcheck:
-      test:
-        - CMD
-        - wait-for-it
-        - '0.0.0.0:9000'
+      test: ["CMD", "wait-for-it", "0.0.0.0:9000"]
       interval: 2s
       timeout: 10s
       retries: 30
@@ -164,11 +129,8 @@ services:
     depends_on:
       configurator:
         condition: service_completed_successfully
-        required: true
     volumes:
       - sites:/home/frappe/frappe-bench/sites
-    networks:
-      - bench-network
 
   configurator:
     <<: *custom_image
@@ -197,8 +159,6 @@ services:
       REGENERATE_APPS_TXT: "${REGENERATE_APPS_TXT:-0}"
     volumes:
       - sites:/home/frappe/frappe-bench/sites
-    networks:
-      - bench-network
 
   create-site:
     <<: *custom_image
@@ -237,8 +197,6 @@ services:
       DB_PORT: "${DB_PORT:-3306}"
       DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       INSTALL_APP_ARGS: ${INSTALL_APP_ARGS}
-    networks:
-      - bench-network
 
   migration:
     <<: *custom_image
@@ -258,8 +216,6 @@ services:
         bench --site all set-config -p pause_scheduler 0;
     volumes:
       - sites:/home/frappe/frappe-bench/sites
-    networks:
-      - bench-network
 
   db:
     image: ${DB_IMAGE:-mariadb:11.8}
@@ -273,17 +229,17 @@ services:
       interval: 1s
       retries: 20
     command:
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
-      - --skip-character-set-client-handshake
-      - --skip-innodb-read-only-compressed
+      [
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci",
+        "--skip-character-set-client-handshake",
+        "--skip-innodb-read-only-compressed"
+      ]
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     volumes:
       - db-data:/var/lib/mysql
-    networks:
-      - bench-network
 
   redis-cache:
     deploy:
@@ -292,13 +248,8 @@ services:
     image: redis:6.2-alpine
     volumes:
       - redis-cache-data:/data
-    networks:
-      - bench-network
     healthcheck:
-      test:
-        - CMD
-        - redis-cli
-        - ping
+      test: ["CMD", "redis-cli", "ping"]
       interval: 5s
       timeout: 5s
       retries: 3
@@ -310,13 +261,8 @@ services:
     image: redis:6.2-alpine
     volumes:
       - redis-queue-data:/data
-    networks:
-      - bench-network
     healthcheck:
-      test:
-        - CMD
-        - redis-cli
-        - ping
+      test: ["CMD", "redis-cli", "ping"]
       interval: 5s
       timeout: 5s
       retries: 3
@@ -328,13 +274,8 @@ services:
     image: redis:6.2-alpine
     volumes:
       - redis-socketio-data:/data
-    networks:
-      - bench-network
     healthcheck:
-      test:
-        - CMD
-        - redis-cli
-        - ping
+      test: ["CMD", "redis-cli", "ping"]
       interval: 5s
       timeout: 5s
       retries: 3
@@ -345,10 +286,3 @@ volumes:
   redis-queue-data:
   redis-socketio-data:
   sites:
-    driver_opts:
-      type: "${SITE_VOLUME_TYPE}"
-      o: "${SITE_VOLUME_OPTS}"
-      device: "${SITE_VOLUME_DEV}"
-
-networks:
-  bench-network:

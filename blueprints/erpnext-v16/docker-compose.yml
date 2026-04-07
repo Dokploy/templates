@@ -255,7 +255,7 @@ services:
     environment:
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     volumes:
-      - db-data:/var/lib/mysql/data
+      - db-data:/var/lib/mysql
 
   redis-cache:
     deploy:

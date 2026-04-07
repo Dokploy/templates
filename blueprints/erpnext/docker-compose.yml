@@ -250,7 +250,7 @@ services:
     entrypoint: ["bash", "-c"]
     command:
       - >
-        curl -f http://${SITE_NAME}:8080/api/method/ping || echo "Site busy" && exit 0;
+        curl -f http://${SITE_NAME}/api/method/ping || echo "Site busy" && exit 0;
         bench --site all set-config -p maintenance_mode 1;
         bench --site all set-config -p pause_scheduler 1;
         bench --site all migrate;

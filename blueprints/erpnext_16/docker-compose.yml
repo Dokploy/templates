@@ -1,0 +1,307 @@
+x-custom-image: &custom_image
+  image: ${IMAGE_NAME:-docker.io/frappe/erpnext}:${VERSION:-version-16}
+  pull_policy: ${PULL_POLICY:-always}
+  deploy:
+    restart_policy:
+      condition: always
+
+services:
+  backend:
+    <<: *custom_image
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+    healthcheck:
+      test: ["CMD", "wait-for-it", "127.0.0.1:8000"]
+      interval: 2s
+      timeout: 10s
+      retries: 30
+
+  frontend:
+    <<: *custom_image
+    command:
+      - nginx-entrypoint.sh
+    depends_on:
+      backend:
+        condition: service_started
+      websocket:
+        condition: service_started
+    environment:
+      BACKEND: backend:8000
+      FRAPPE_SITE_NAME_HEADER: ${FRAPPE_SITE_NAME_HEADER:-$$host}
+      SOCKETIO: websocket:9000
+      UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
+      UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
+      UPSTREAM_REAL_IP_RECURSIVE: "off"
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+    healthcheck: 
+      test: ["CMD", "wait-for-it", "127.0.0.1:8080"]
+      interval: 2s
+      timeout: 30s
+      retries: 30
+
+  queue-default:
+    <<: *custom_image
+    command:
+      - bench
+      - worker
+      - --queue
+      - default
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+    healthcheck:
+      test: ["CMD", "wait-for-it", "redis-queue:6379"]
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+
+  queue-long:
+    <<: *custom_image
+    command:
+      - bench
+      - worker
+      - --queue
+      - long
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+    healthcheck:
+      test: ["CMD", "wait-for-it", "redis-queue:6379"]
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+
+  queue-short:
+    <<: *custom_image
+    command:
+      - bench
+      - worker
+      - --queue
+      - short
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+    healthcheck:
+      test: ["CMD", "wait-for-it", "redis-queue:6379"]
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+
+  scheduler:
+    <<: *custom_image
+    healthcheck:
+      test: ["CMD", "wait-for-it", "redis-queue:6379"]
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    command:
+      - bench
+      - schedule
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+
+  websocket:
+    <<: *custom_image
+    healthcheck:
+      test: ["CMD", "wait-for-it", "websocket:9000"]
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    command:
+      - node
+      - /home/frappe/frappe-bench/apps/frappe/socketio.js
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+
+  configurator:
+    <<: *custom_image
+    deploy:
+      mode: replicated
+      replicas: ${CONFIGURE:-0}
+      restart_policy:
+        condition: none
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        echo "[configurator] starting";
+        if [[ $${REGENERATE_APPS_TXT} == "1" ]]; then
+          echo "[configurator] regenerating sites/apps.txt";
+          ls -1 apps > sites/apps.txt;
+        fi;
+        existing_db_host=$$(grep -hs '^' sites/common_site_config.json | jq -r ".db_host // empty" 2>/dev/null || true);
+        if [[ -n "$${existing_db_host}" ]]; then
+          echo "[configurator] common_site_config.json already configured, skipping";
+          exit 0;
+        fi;
+        echo "[configurator] applying bench global config";
+        bench set-config -g db_host $$DB_HOST;
+        bench set-config -gp db_port $$DB_PORT;
+        bench set-config -g redis_cache "redis://$$REDIS_CACHE";
+        bench set-config -g redis_queue "redis://$$REDIS_QUEUE";
+        bench set-config -g redis_socketio "redis://$$REDIS_QUEUE";
+        bench set-config -gp socketio_port $$SOCKETIO_PORT;
+        echo "[configurator] done";
+    environment:
+      DB_HOST: "${DB_HOST:-db}"
+      DB_PORT: "3306"
+      REDIS_CACHE: redis-cache:6379
+      REDIS_QUEUE: redis-queue:6379
+      SOCKETIO_PORT: "9000"
+      REGENERATE_APPS_TXT: "${REGENERATE_APPS_TXT:-0}"
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+
+  create-site:
+    <<: *custom_image
+    deploy:
+      mode: replicated
+      replicas: ${CREATE_SITE:-0}
+      restart_policy:
+        condition: none
+    depends_on:
+      db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+      redis-queue:
+        condition: service_healthy
+      configurator:
+        condition: service_completed_successfully
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        export start=`date +%s`;
+        until [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".db_host // empty"` ]] && \
+          [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".redis_cache // empty"` ]] && \
+          [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".redis_queue // empty"` ]];
+        do
+          echo "Waiting for sites/common_site_config.json to be created";
+          sleep 5;
+          if (( `date +%s`-start > 120 )); then
+            echo "could not find sites/common_site_config.json with required keys";
+            exit 1
+          fi
+        done;
+        echo "sites/common_site_config.json found";
+        [[ -d "sites/${SITE_NAME}" ]] && echo "${SITE_NAME} already exists" && exit 0;
+        bench new-site --mariadb-user-host-login-scope='%' --admin-password=$${ADMIN_PASSWORD} --db-root-username=root --db-root-password=$${DB_ROOT_PASSWORD} $${INSTALL_APP_ARGS} $${SITE_NAME};
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+    environment:
+      SITE_NAME: ${SITE_NAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: "${DB_PORT:-3306}"
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      INSTALL_APP_ARGS: ${INSTALL_APP_ARGS}
+
+  migration:
+    <<: *custom_image
+    deploy:
+      mode: replicated
+      replicas: ${MIGRATE:-0}
+      restart_policy:
+        condition: none
+    depends_on:
+      frontend:
+        condition: service_healthy
+      configurator:
+        condition: service_completed_successfully
+      create-site:
+        condition: service_completed_successfully
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        curl -f -H "Host: ${SITE_NAME}" http://frontend:8080/api/method/ping || { echo "Site busy"; exit 0; };
+        bench --site all set-config -p maintenance_mode 1;
+        bench --site all set-config -p pause_scheduler 1;
+        bench --site all migrate;
+        bench --site all set-config -p maintenance_mode 0;
+        bench --site all set-config -p pause_scheduler 0;
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+
+  db:
+    image: mariadb:${DB_VERSION:-11.8.6}
+    deploy:
+      mode: replicated
+      replicas: ${ENABLE_DB:-0}
+      restart_policy:
+        condition: always
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql/data
+
+  redis-cache:
+    deploy:
+      restart_policy:
+        condition: always
+    image: redis:6.2-alpine
+    volumes:
+      - redis-cache-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  redis-queue:
+    deploy:
+      restart_policy:
+        condition: always
+    image: redis:6.2-alpine
+    volumes:
+      - redis-queue-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  redis-socketio:
+    deploy:
+      restart_policy:
+        condition: always
+    image: redis:6.2-alpine
+    volumes:
+      - redis-socketio-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  db-data:
+  redis-cache-data:
+  redis-queue-data:
+  redis-socketio-data:
+  sites:
+    driver_opts:
+      type: "${SITE_VOLUME_TYPE}"
+      o: "${SITE_VOLUME_OPTS}"
+      device: "${SITE_VOLUME_DEV}"

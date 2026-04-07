@@ -199,6 +199,11 @@ services:
         echo "sites/common_site_config.json found";
         [[ -d "sites/${SITE_NAME}" ]] && echo "${SITE_NAME} already exists" && exit 0;
         bench new-site --mariadb-user-host-login-scope='%' --admin-password=$${ADMIN_PASSWORD} --db-root-username=root --db-root-password=$${DB_ROOT_PASSWORD} $${INSTALL_APP_ARGS} $${SITE_NAME};
+        if [[ $${ENABLE_SCHEDULER} == "1" ]]; then
+          bench --site $${SITE_NAME} enable-scheduler;
+        else
+          echo "Skipping scheduler enable";
+        fi;
     volumes:
       - sites:/home/frappe/frappe-bench/sites
     environment:
@@ -208,6 +213,7 @@ services:
       DB_PORT: "${DB_PORT:-3306}"
       DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       INSTALL_APP_ARGS: ${INSTALL_APP_ARGS}
+      ENABLE_SCHEDULER: "${ENABLE_SCHEDULER}"
 
   migration:
     <<: *custom_image

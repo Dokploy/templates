@@ -5,8 +5,6 @@ x-custom-image: &custom_image
     restart_policy:
       condition: always
 
-name: erpnext
-
 services:
   backend:
     <<: *custom_image

@@ -16,7 +16,7 @@ env = [
   "REGENERATE_APPS_TXT=1",
   "INSTALL_APP_ARGS=--install-app erpnext",
   "IMAGE_NAME=docker.io/frappe/erpnext",
-  "VERSION=version-15",
+  "VERSION=version-16",
   "FRAPPE_SITE_NAME_HEADER=",
 ]
 mounts = []

@@ -239,7 +239,7 @@ services:
       - sites:/home/frappe/frappe-bench/sites
 
   db:
-    image: ${DB_IMAGE:-mariadb:11.8.6}
+    image: mariadb:${DB_VERSION:-11.8.6}
     deploy:
       mode: replicated
       replicas: ${ENABLE_DB:-0}

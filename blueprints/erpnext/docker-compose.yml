@@ -262,7 +262,7 @@ services:
       - bench-network
 
   db:
-    image: mariadb:10.6
+    image: ${DB_IMAGE:-mariadb:11.8}
     deploy:
       mode: replicated
       replicas: ${ENABLE_DB:-0}

@@ -18,6 +18,7 @@ env = [
   "IMAGE_NAME=docker.io/frappe/erpnext",
   "VERSION=version-16",
   "FRAPPE_SITE_NAME_HEADER=",
+  "DB_IMAGE=mariadb:11.8",
 ]
 mounts = []
 

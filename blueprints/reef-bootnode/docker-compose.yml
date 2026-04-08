@@ -32,17 +32,17 @@ services:
       apt-get install -y python3 wget ca-certificates &&
 
       echo '📥 Downloading bootstrap scripts...' &&
-      mkdir -p /workspace &&
-      wget -O /workspace/run.sh \
-        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/bootstrap/scripts/run.sh &&
-      wget -O /workspace/update-spec.py \
-        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/bootstrap/scripts/update-spec.py &&
-      wget -O /workspace/update-spec.sh \
-        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/bootstrap/scripts/update-spec.sh &&
+      mkdir -p /workspace/bootstrap/scripts &&
+      wget -O /workspace/bootstrap/scripts/run.sh \
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/main/bootstrap/scripts/run.sh &&
+      wget -O /workspace/bootstrap/scripts/update-spec.py \
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/main/bootstrap/scripts/update-spec.py &&
+      wget -O /workspace/bootstrap/scripts/update-spec.sh \
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/main/bootstrap/scripts/update-spec.sh &&
 
       echo '🔧 Making scripts executable...' &&
-      chmod +x /workspace/run.sh &&
-      chmod +x /workspace/update-spec.sh &&
+      chmod +x /workspace/bootstrap/scripts/run.sh &&
+      chmod +x /workspace/bootstrap/scripts/update-spec.sh &&
 
       echo '🚀 Running spec generator + bootnode:' &&
-      /workspace/run.sh"
+      exec /workspace/bootstrap/scripts/run.sh"

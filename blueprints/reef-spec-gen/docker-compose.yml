@@ -15,19 +15,19 @@ services:
     command: -c "
       set -e &&
       apt-get update &&
-      apt-get install -y python3 python3-pip wget ca-certificates jq &&
+      apt-get install -y python3 python3-pip wget ca-certificates &&
 
       echo '📥 Downloading API + scripts...' &&
       mkdir -p /workspace/scripts &&
 
       wget -O /workspace/scripts/update-spec.py \
-        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/spec-generator/scripts/update-spec.py &&
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/main/spec-generator/scripts/update-spec.py &&
 
       wget -O /workspace/scripts/update-spec.sh \
-        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/spec-generator/scripts/update-spec.sh &&
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/main/spec-generator/scripts/update-spec.sh &&
 
       wget -O /workspace/api.py \
-        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/spec-generator/api/api.py &&
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/main/spec-generator/api/api.py &&
 
       chmod +x /workspace/scripts/update-spec.sh &&
 

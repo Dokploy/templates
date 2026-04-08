@@ -29,12 +29,12 @@ services:
       apt-get install -y wget ca-certificates &&
 
       echo '📥 Downloading start-validator.sh...' &&
-      mkdir -p /workspace/scripts &&
-      wget -O /workspace/scripts/start-validator.sh \
-        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/validator/scripts/start-validator.sh &&
+      mkdir -p /workspace/validator/scripts &&
+      wget -O /workspace/validator/scripts/start-validator.sh \
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/main/validator/scripts/start-validator.sh &&
 
       echo '🔧 Making script executable...' &&
-      chmod +x /workspace/scripts/start-validator.sh &&
+      chmod +x /workspace/validator/scripts/start-validator.sh &&
 
       echo '🚀 Starting validator $VALIDATOR_NAME' &&
-      exec /workspace/scripts/start-validator.sh"
+      exec /workspace/validator/scripts/start-validator.sh"

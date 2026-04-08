@@ -5108,7 +5108,7 @@
     "description": "Runs bootnode for a custom Reef Chain cluster",
     "links": {
       "github": "https://github.com/reef-chain/chain-upgrade",
-      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-chain-node",
       "docs": "https://docs.reef.io/"
     },
     "logo": "reef.svg",
@@ -5126,7 +5126,7 @@
     "description": "Development cluster",
     "links": {
       "github": "https://github.com/reef-chain/chain-upgrade",
-      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-chain-node",
       "docs": "https://docs.reef.io/"
     },
     "logo": "reef.svg",
@@ -5144,7 +5144,7 @@
     "description": "EVM layer rpc for a custom Reef Chain cluster",
     "links": {
       "github": "https://github.com/reef-chain/chain-upgrade",
-      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-chain-eth-rpc",
       "docs": "https://docs.reef.io/"
     },
     "logo": "reef.svg",
@@ -5162,7 +5162,7 @@
     "description": "Generates 3 Validators keys for a custom Reef Chain cluster",
     "links": {
       "github": "https://github.com/reef-chain/chain-upgrade",
-      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-chain-node",
       "docs": "https://docs.reef.io/"
     },
     "logo": "reef.svg",
@@ -5180,7 +5180,7 @@
     "description": "Runs RPC which connects to bootnode for a custom Reef Chain cluster",
     "links": {
       "github": "https://github.com/reef-chain/chain-upgrade",
-      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-chain-node",
       "docs": "https://docs.reef.io/"
     },
     "logo": "reef.svg",
@@ -5198,7 +5198,7 @@
     "description": "Generates spec file for a custom Reef Chain cluster",
     "links": {
       "github": "https://github.com/reef-chain/chain-upgrade",
-      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-chain-node",
       "docs": "https://docs.reef.io/"
     },
     "logo": "reef.svg",
@@ -5216,7 +5216,7 @@
     "description": "Runs Validator which connects to bootnode for a custom Reef Chain cluster",
     "links": {
       "github": "https://github.com/reef-chain/chain-upgrade",
-      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-node",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-chain-node",
       "docs": "https://docs.reef.io/"
     },
     "logo": "reef.svg",
@@ -5225,6 +5225,24 @@
       "validator",
       "self-hosted",
       "reef-validator"
+    ]
+  },
+  {
+    "id": "reef-faucet",
+    "name": "Reef Chain - Faucet",
+    "version": "1",
+    "description": "HTTP faucet for sending native Reef funds to EVM addresses on a custom Reef Chain cluster",
+    "links": {
+      "github": "https://github.com/anukulpandey/dokploy-reef-chain-scripts",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-chain-node",
+      "docs": "https://docs.reef.io/"
+    },
+    "logo": "reef.svg",
+    "tags": [
+      "reef-chain",
+      "faucet",
+      "self-hosted",
+      "evm"
     ]
   },
   {

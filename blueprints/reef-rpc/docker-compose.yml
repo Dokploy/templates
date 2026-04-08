@@ -27,13 +27,13 @@ services:
       apt-get update &&
       apt-get install -y wget ca-certificates &&
 
-      echo '📥 Downloading start-validator.sh...' &&
-      mkdir -p /workspace/scripts &&
-      wget -O /workspace/scripts/start-rpc.sh \
-        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/rpc/scripts/start-rpc.sh &&
+      echo '📥 Downloading start-rpc.sh...' &&
+      mkdir -p /workspace/rpc/scripts &&
+      wget -O /workspace/rpc/scripts/start-rpc.sh \
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/main/rpc/scripts/start-rpc.sh &&
 
       echo '🔧 Making script executable...' &&
-      chmod +x /workspace/scripts/start-rpc.sh &&
+      chmod +x /workspace/rpc/scripts/start-rpc.sh &&
 
       echo '🚀 Starting RPC' &&
-      exec /workspace/scripts/start-rpc.sh"
+      exec /workspace/rpc/scripts/start-rpc.sh"

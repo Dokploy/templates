@@ -22,6 +22,7 @@ services:
       - "30336"
       - "8001"
       - "9944"
+      - "8545"
 
     entrypoint: /bin/sh
     command: -c "
@@ -29,15 +30,15 @@ services:
 
       echo '📦 Installing required tools...' &&
       apt-get update &&
-      apt-get install -y make wget curl jq python3 &&
+      apt-get install -y wget curl python3 ca-certificates &&
 
-      echo '📥 Downloading Makefile...' &&
-      wget -q -O /workspace/Makefile \
-        https://raw.githubusercontent.com/anukulpandey/reef-dokploy-templates-v2/refs/heads/master/reef-cluster/Makefile &&
+      echo '📥 Downloading cluster launcher...' &&
+      mkdir -p /workspace/dev-cluster &&
+      wget -q -O /workspace/dev-cluster/start-cluster.sh \
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/main/dev-cluster/start-cluster.sh &&
 
-      echo '🔧 Preparing build output...' &&
-      mkdir -p target/release &&
-      ln -sf /usr/local/bin/reef-node target/release/reef-node &&
+      echo '🔧 Making script executable...' &&
+      chmod +x /workspace/dev-cluster/start-cluster.sh &&
 
       echo '🚀 Starting local network...' &&
-      make run-local"
+      exec /workspace/dev-cluster/start-cluster.sh"

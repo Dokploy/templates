@@ -2761,6 +2761,21 @@
     ]
   },
   {
+    "id": "glances",
+    "name": "Glances",
+    "version": "4.3.0.8",
+    "description": "Glances is a cross-platform system monitoring tool written in Python.",
+    "logo": "glances.svg",
+    "links": {
+      "github": "https://github.com/nicolargo/glances",
+      "website": "https://nicolargo.github.io/glances/",
+      "docs": "https://glances.readthedocs.io/"
+    },
+    "tags": [
+      "monitoring"
+    ]
+  },
+  {
     "id": "glitchtip",
     "name": "Glitchtip",
     "version": "v4.0",
@@ -5950,24 +5965,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

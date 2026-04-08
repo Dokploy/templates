@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  glances:
+    image: nicolargo/glances:4.3.0.8-full
+    restart: unless-stopped
+    pid: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - glances-data:/glances/exports
+    environment:
+      GLANCES_OPT: "-w"
+
+volumes:
+  glances-data:

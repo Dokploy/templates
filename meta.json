@@ -5721,6 +5721,25 @@
     ]
   },
   {
+    "id": "shopware",
+    "name": "Shopware",
+    "version": "6.7.8.2",
+    "description": "One-click Shopware 6 blueprint with bundled MySQL, Redis, bootstrap, init, worker, and scheduler services.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/shopware/shopware",
+      "website": "https://www.shopware.com/",
+      "docs": "https://developer.shopware.com/"
+    },
+    "tags": [
+      "e-commerce",
+      "shop",
+      "php",
+      "mysql",
+      "redis"
+    ]
+  },
+  {
     "id": "signoz",
     "name": "SigNoz",
     "version": "v0.97.1",

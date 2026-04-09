@@ -15,15 +15,15 @@ install_admin_username = "admin"
 install_admin_password = "${password:20}"
 shopware_version = "6.7.8.2"
 shopware_docker_version = "0.3.0"
-shopware_cli_image = "shopware/shopware-cli:latest-php-8.4"
-shopware_base_image = "shopware/docker-base:8.4-nginx"
+shopware_cli_image = "shopware/shopware-cli:0.14.3-php-8.4"
+shopware_base_image = "shopware/docker-base:8.4.19-nginx"
 enable_demo_data = "1"
 demo_data_version = "2.1.0"
 
 [config]
 
 [[config.domains]]
-serviceName = "web"
+serviceName = "shopware"
 port = 8000
 host = "${main_domain}"
 

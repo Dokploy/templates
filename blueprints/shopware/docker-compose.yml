@@ -103,7 +103,7 @@ services:
       - redis-data:/data
 
   bootstrap:
-    image: ${SHOPWARE_CLI_IMAGE:-shopware/shopware-cli:latest-php-8.4}
+    image: ${SHOPWARE_CLI_IMAGE:-shopware/shopware-cli:0.14.3-php-8.4}
     restart: "no"
     environment:
       <<: *shopware-env
@@ -182,7 +182,7 @@ services:
     volumes: *shopware-runtime-volumes
 
   init:
-    image: ${SHOPWARE_BASE_IMAGE:-shopware/docker-base:8.4-nginx}
+    image: ${SHOPWARE_BASE_IMAGE:-shopware/docker-base:8.4.19-nginx}
     restart: "no"
     entrypoint:
       - /bin/sh
@@ -265,8 +265,8 @@ services:
         condition: service_healthy
     volumes: *shopware-runtime-volumes
 
-  web:
-    image: ${SHOPWARE_BASE_IMAGE:-shopware/docker-base:8.4-nginx}
+  shopware:
+    image: ${SHOPWARE_BASE_IMAGE:-shopware/docker-base:8.4.19-nginx}
     restart: unless-stopped
     expose:
       - "8000"
@@ -284,7 +284,7 @@ services:
     volumes: *shopware-runtime-volumes
 
   worker:
-    image: ${SHOPWARE_BASE_IMAGE:-shopware/docker-base:8.4-nginx}
+    image: ${SHOPWARE_BASE_IMAGE:-shopware/docker-base:8.4.19-nginx}
     restart: unless-stopped
     entrypoint:
       - /bin/sh
@@ -300,7 +300,7 @@ services:
     volumes: *shopware-runtime-volumes
 
   scheduler:
-    image: ${SHOPWARE_BASE_IMAGE:-shopware/docker-base:8.4-nginx}
+    image: ${SHOPWARE_BASE_IMAGE:-shopware/docker-base:8.4.19-nginx}
     restart: unless-stopped
     entrypoint:
       - /bin/sh

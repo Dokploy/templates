@@ -4,6 +4,7 @@ version: "3.8"
 # - This stack is intentionally self-contained for one-click deployments.
 # - The first deployment is slower because bootstrap downloads Shopware into a persistent volume.
 # - Shopware source code and generated JWT keys live in named volumes so redeploys remain stable.
+# - Failed messenger jobs remain in the `failed` queue for manual retry via Shopware console commands.
 
 x-shopware-env: &shopware-env
   APP_ENV: "${APP_ENV:-prod}"
@@ -19,12 +20,12 @@ x-shopware-env: &shopware-env
   DATABASE_NAME: "${DATABASE_NAME:-shopware}"
   DATABASE_USER: "${DATABASE_USER:-shopware}"
   DATABASE_PASSWORD: "${DATABASE_PASSWORD}"
-  DATABASE_URL: "${DATABASE_URL:-mysql://${DATABASE_USER:-shopware}:${DATABASE_PASSWORD}@database:3306/${DATABASE_NAME:-shopware}?charset=utf8mb4}"
+  DATABASE_URL: "${DATABASE_URL}"
   REDIS_HOST: "redis"
   REDIS_PORT: "6379"
   REDIS_PASSWORD: "${REDIS_PASSWORD}"
   MAILER_DSN: "${MAILER_DSN:-null://localhost}"
-  LOCK_DSN: "${LOCK_DSN:-redis://:${REDIS_PASSWORD}@redis:6379/1}"
+  LOCK_DSN: "${LOCK_DSN}"
   MESSENGER_TRANSPORT_DSN: "${MESSENGER_TRANSPORT_DSN:-doctrine://default?queue_name=async}"
   MESSENGER_TRANSPORT_LOW_PRIORITY_DSN: "${MESSENGER_TRANSPORT_LOW_PRIORITY_DSN:-doctrine://default?queue_name=low_priority}"
   MESSENGER_TRANSPORT_FAILURE_DSN: "${MESSENGER_TRANSPORT_FAILURE_DSN:-doctrine://default?queue_name=failed}"
@@ -36,7 +37,7 @@ x-shopware-env: &shopware-env
   INSTALL_ADMIN_USERNAME: "${INSTALL_ADMIN_USERNAME:-admin}"
   INSTALL_ADMIN_PASSWORD: "${INSTALL_ADMIN_PASSWORD}"
   PHP_SESSION_HANDLER: "${PHP_SESSION_HANDLER:-redis}"
-  PHP_SESSION_SAVE_PATH: "${PHP_SESSION_SAVE_PATH:-tcp://redis:6379?auth=${REDIS_PASSWORD}}"
+  PHP_SESSION_SAVE_PATH: "${PHP_SESSION_SAVE_PATH}"
   PHP_SESSION_COOKIE_LIFETIME: "${PHP_SESSION_COOKIE_LIFETIME:-0}"
   PHP_SESSION_GC_MAXLIFETIME: "${PHP_SESSION_GC_MAXLIFETIME:-1440}"
   PHP_MAX_UPLOAD_SIZE: "${PHP_MAX_UPLOAD_SIZE:-128M}"

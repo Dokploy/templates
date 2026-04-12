@@ -1,5 +1,7 @@
 [variables]
 main_domain = "${domain}"
+db_password = "${password:16}"
+root_password = "${password:16}"
 
 [config]
 env = []
@@ -9,3 +11,5 @@ mounts = []
 serviceName = "wallabag"
 host = "${main_domain}"
 port = 80
+DB_PASSWORD = "${db_password}"
+ROOT_PASSWORD = "${root_password}"

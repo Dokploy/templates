@@ -6500,7 +6500,7 @@
   {
     "id": "wallabag",
     "name": "wallabag",
-    "version": "latest",
+    "version": "2.6.14",
     "description": "wallabag is a self hostable application for saving web pages: Save and classify articles",
     "logo": "wallabag.png",
     "links": {

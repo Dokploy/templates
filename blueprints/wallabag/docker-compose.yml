@@ -1,6 +1,8 @@
+version: "3.8"
 services:
   wallabag:
     image: wallabag/wallabag
+    restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=wallaroot
       - SYMFONY__ENV__DATABASE_DRIVER=pdo_mysql

@@ -18,7 +18,7 @@ services:
       - 'SYMFONY__ENV__DOMAIN_NAME=https://${DOMAIN}' 
       - 'SYMFONY__ENV__SERVER_NAME="wallabag"'
     volumes:
-      - '/opt/wallabag/images:/var/www/wallabag/web/assets/images'
+      - './images:/var/www/wallabag/web/assets/images'
     depends_on:
       - db
       - redis
@@ -27,11 +27,11 @@ services:
     image: mariadb
     restart: unless-stopped
     environment:
-      - MYSQL_ROOT_PASSWORD=wallaroot
+      - MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD} # Best practice to keep this synced with wallabag
     volumes:
-      - '/opt/wallabag/data:/var/lib/mysql'
+      - './data:/var/lib/mysql'
     healthcheck:
-      test: ["CMD", "/usr/local/bin/healthcheck.sh", "--innodb_initialized"]
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 20s
       timeout: 3s
       retries: 5

@@ -6501,7 +6501,7 @@
     "id": "wallabag",
     "name": "wallabag",
     "version": "latest",
-    "description": "",
+    "description": "wallabag is a self hostable application for saving web pages: Save and classify articles",
     "logo": "wallabag.png",
     "links": {
       "github": "https://github.com/wallabag/wallabag",

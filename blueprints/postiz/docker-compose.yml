@@ -4,7 +4,6 @@ services:
   postiz-app:
     image: ghcr.io/gitroomhq/postiz-app:latest
     restart: always
-
     environment:
       MAIN_URL: "https://${POSTIZ_HOST}"
       FRONTEND_URL: "https://${POSTIZ_HOST}"
@@ -17,6 +16,8 @@ services:
       STORAGE_PROVIDER: "local"
       UPLOAD_DIRECTORY: "/uploads"
       NEXT_PUBLIC_UPLOAD_DIRECTORY: "/uploads"
+      TEMPORAL_WORKER_URL: "postiz-temporal:7233"
+      TEMPORAL_URL: "postiz-temporal:7233"
     volumes:
       - postiz-config:/config/
       - postiz-uploads:/uploads/
@@ -25,11 +26,32 @@ services:
         condition: service_healthy
       postiz-redis:
         condition: service_healthy
+      postiz-temporal:
+        condition: service_healthy
+
+  postiz-temporal:
+    image: temporalio/auto-setup:latest
+    restart: always
+    environment:
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PWD=${DB_PASSWORD}
+      - POSTGRES_SEEDS=postiz-postgres
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+    depends_on:
+      postiz-postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "tctl", "--address", "postiz-temporal:7233", "cluster", "health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   postiz-postgres:
     image: postgres:17-alpine
     restart: always
-
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USER}
@@ -41,11 +63,10 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-
+      
   postiz-redis:
     image: redis:7.2
     restart: always
-
     healthcheck:
       test: redis-cli ping
       interval: 10s
@@ -58,4 +79,5 @@ volumes:
   postiz-postgres-data:
   postiz-redis-data:
   postiz-config:
-  postiz-uploads: 
+  postiz-uploads:
+  postiz-uploads:  

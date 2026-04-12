@@ -2,10 +2,10 @@
 main_domain = "${domain}"
 
 [config]
-env = {}
+env = []
 mounts = []
 
 [[config.domains]]
 serviceName = "wallabag"
 host = "${main_domain}"
-port = 3000
+port = 80

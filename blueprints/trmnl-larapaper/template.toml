@@ -5,7 +5,7 @@ main_domain = "${domain}"
 mounts = []
 
 [[config.domains]]
-serviceName = "trmnl-byos-laravel"
+serviceName = "trmnl-larapaper"
 port = 8080
 host = "${main_domain}"
 

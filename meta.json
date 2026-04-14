@@ -5953,24 +5953,6 @@
     ]
   },
   {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
-    ]
-  },
-  {
     "id": "supabase",
     "name": "SupaBase",
     "version": "1.25.04 / dokploy >= 0.22.5",
@@ -6213,15 +6195,15 @@
     ]
   },
   {
-    "id": "trmnl-byos-laravel",
-    "name": "TRMNL BYOS Laravel",
-    "version": "0.27.0",
-    "description": "TRMNL BYOS Laravel is a self-hosted application to manage TRMNL e-ink devices.",
-    "logo": "byos-laravel.svg",
+    "id": "trmnl-larapaper",
+    "name": "TRMNL LaraPaper",
+    "version": "0.32.1",
+    "description": "LaraPaper is a self-hosted application (BYOS) to manage TRMNL e-ink devices.",
+    "logo": "larapaper.svg",
     "links": {
-      "github": "https://github.com/usetrmnl/byos_laravel",
+      "github": "https://github.com/usetrmnl/larapaper",
       "website": "https://docs.usetrmnl.com/go/diy/byos",
-      "docs": "https://github.com/usetrmnl/byos_laravel/blob/main/README.md"
+      "docs": "https://github.com/usetrmnl/larapaper/blob/main/README.md"
     },
     "tags": [
       "e-ink"

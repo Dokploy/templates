@@ -30,7 +30,7 @@ services:
         condition: service_healthy
 
   postiz-temporal:
-    image: temporalio/auto-setup:latest
+    image: temporalio/auto-setup:1.27.2
     restart: always
     environment:
       - DB=postgresql
@@ -63,7 +63,7 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-      
+
   postiz-redis:
     image: redis:7.2
     restart: always
@@ -76,8 +76,7 @@ services:
       - postiz-redis-data:/data
 
 volumes:
-  postiz-postgres-data:
-  postiz-redis-data:
-  postiz-config:
-  postiz-uploads:
-  postiz-uploads:  
+    postiz-postgres-data:
+      postiz-redis-data:
+        postiz-config:
+          postiz-uploads:

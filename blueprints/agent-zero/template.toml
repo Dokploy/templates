@@ -1,7 +1,7 @@
 [variables]
 main_domain = "${domain}"
 auth_login = "${username}"
-auth_password = "${password}"
+auth_password = "${password:32}"
 
 [config]
 env = [

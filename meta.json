@@ -130,7 +130,8 @@
     "logo": "agent-zero.svg",
     "links": {
       "github": "https://github.com/agent0ai/agent-zero",
-      "website": "https://www.agent-zero.ai"
+      "website": "https://www.agent-zero.ai",
+      "docs": "https://www.agent-zero.ai/p/docs/"
     },
     "tags": [
       "ai",

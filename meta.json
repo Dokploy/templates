@@ -123,6 +123,22 @@
     ]
   },
   {
+    "id": "agent-zero",
+    "name": "Agent Zero",
+    "version": "v1.9",
+    "description": "Agent Zero is an open-source autonomous AI agent framework with memory and tool use capabilities.",
+    "logo": "agent-zero.svg",
+    "links": {
+      "github": "https://github.com/agent0ai/agent-zero",
+      "website": "https://www.agent-zero.ai"
+    },
+    "tags": [
+      "ai",
+      "agent",
+      "automation"
+    ]
+  },
+  {
     "id": "agentdvr",
     "name": "Agent DVR",
     "version": "latest",
@@ -5950,24 +5966,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

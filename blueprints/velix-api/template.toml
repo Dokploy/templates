@@ -12,5 +12,5 @@ mounts = []
 
 [[config.domains]]
 serviceName = "velix-api"
-port = 8_080
+port = 8080
 host = "${main_domain}"

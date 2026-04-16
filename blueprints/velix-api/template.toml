@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+DB_PASSWORD = "${password:32}"
+JWT_SECRET = "${password:64}"
+
+[config]
+env = [
+  "DB_PASSWORD=${DB_PASSWORD}",
+  "JWT_SECRET=${JWT_SECRET}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "velix-api"
+port = 8_080
+host = "${main_domain}"

@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   reef-dev-cluster:
-    image: anukulpandey/reef-chain-node:linux
+    image: anukulpandey/reef-chain-node:latest
     restart: unless-stopped
     working_dir: /workspace
 

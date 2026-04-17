@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   reef-eth-rpc:
-    image: anukulpandey/reef-chain-eth-rpc:linux
+    image: anukulpandey/reef-chain-eth-rpc:latest
     restart: unless-stopped
     working_dir: /workspace
     volumes:

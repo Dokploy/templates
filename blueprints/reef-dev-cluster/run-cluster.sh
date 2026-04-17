@@ -3,7 +3,6 @@
 set -euo pipefail
 
 NODE_BIN="${NODE_BIN:-reef-node}"
-REVIVE_BIN="${REVIVE_BIN:-eth-rpc}"
 CHAIN_TEMPLATE="${CHAIN_TEMPLATE:-testnet-new}"
 WORK_DIR="${WORK_DIR:-/tmp/reef-dev-cluster}"
 OUTPUT_DIR="${OUTPUT_DIR:-/workspace/download}"
@@ -11,7 +10,6 @@ PLAIN_SPEC="${PLAIN_SPEC:-$WORK_DIR/local-chain-spec.json}"
 UPDATED_SPEC="${UPDATED_SPEC:-$WORK_DIR/local-chain-spec-updated.json}"
 SPEC_FILE="${SPEC_FILE:-$OUTPUT_DIR/local-chain-spec-raw.json}"
 SPEC_HTTP_PORT="${SPEC_HTTP_PORT:-8001}"
-ETH_RPC_PORT="${ETH_RPC_PORT:-8545}"
 RPC_NODE_P2P_PORT="${RPC_NODE_P2P_PORT:-30337}"
 RPC_NODE_WS_PORT="${RPC_NODE_WS_PORT:-9944}"
 FAUCET_PORT="${FAUCET_PORT:-8080}"
@@ -75,20 +73,16 @@ V2_ADDR=$(derive_address "$v2sec")
 V3_ADDR=$(derive_address "$v3sec")
 
 HELPER_DIR="$WORK_DIR/spec-generator"
-FAUCET_DIR="$WORK_DIR/faucet"
+FAUCET_DIR="/workspace/faucet"
 
 rm -rf "$WORK_DIR" "$OUTPUT_DIR" /tmp/validator1 /tmp/validator2 /tmp/validator3 /tmp/rpc-node /tmp/bootnode
-mkdir -p "$HELPER_DIR" "$FAUCET_DIR" "$OUTPUT_DIR"
+mkdir -p "$HELPER_DIR" "$OUTPUT_DIR"
 
 echo "Downloading self-contained cluster helpers..."
 wget -q -O "$HELPER_DIR/update-spec.py" \
 	"https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/${SCRIPTS_COMMIT}/spec-generator/scripts/update-spec.py"
 wget -q -O "$HELPER_DIR/update-spec.sh" \
 	"https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/${SCRIPTS_COMMIT}/spec-generator/scripts/update-spec.sh"
-wget -q -O "$FAUCET_DIR/package.json" \
-	"https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/${SCRIPTS_COMMIT}/faucet/package.json"
-wget -q -O "$FAUCET_DIR/server.js" \
-	"https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/${SCRIPTS_COMMIT}/faucet/server.js"
 chmod +x "$HELPER_DIR/update-spec.sh"
 
 echo "Installing faucet dependencies..."
@@ -201,25 +195,16 @@ start_logged /tmp/rpc-node.log \
 	--name rpc-node \
 	--no-telemetry
 
-start_logged /tmp/eth-rpc.log \
-	"$REVIVE_BIN" \
-	--node-rpc-url "ws://127.0.0.1:${RPC_NODE_WS_PORT}" \
-	--rpc-port "$ETH_RPC_PORT" \
-	--rpc-cors all \
-	--rpc-external \
-	--rpc-methods Unsafe
-
 start_logged /tmp/faucet.log \
 	env \
 		PORT="$FAUCET_PORT" \
 		WS_ENDPOINT="ws://127.0.0.1:${RPC_NODE_WS_PORT}" \
-		EVM_RPC_URL="http://127.0.0.1:${ETH_RPC_PORT}" \
 		FAUCET_SEED="$FAUCET_SEED" \
 		DEFAULT_AMOUNT="$DEFAULT_AMOUNT" \
 		MAX_AMOUNT="$MAX_AMOUNT" \
 		npm --prefix "$FAUCET_DIR" start
 
-tail -F /tmp/spec-server.log /tmp/bootnode.log /tmp/validator1.log /tmp/validator2.log /tmp/validator3.log /tmp/rpc-node.log /tmp/eth-rpc.log /tmp/faucet.log &
+tail -F /tmp/spec-server.log /tmp/bootnode.log /tmp/validator1.log /tmp/validator2.log /tmp/validator3.log /tmp/rpc-node.log /tmp/faucet.log &
 TAIL_PID=$!
 
 wait -n "${PIDS[@]}"

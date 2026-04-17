@@ -5449,7 +5449,7 @@
     "id": "reef-dev-cluster",
     "name": "Reef Chain - Dev Cluster",
     "version": "1",
-    "description": "Self-contained Reef dev cluster with bootnode, validators, spec server, substrate RPC, EVM RPC, and faucet",
+    "description": "Self-contained Reef dev cluster with bootnode, validators, spec server, substrate RPC, and faucet",
     "links": {
       "github": "https://github.com/reef-chain/chain-upgrade",
       "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-chain-node",

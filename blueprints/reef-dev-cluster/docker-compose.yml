@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   reef-dev-cluster:
-    image: anukulpandey/reef-chain-node:linux-2
+    image: anukulpandey/reef-chain-node:linux
     restart: unless-stopped
     working_dir: /workspace
 
@@ -24,7 +24,6 @@ services:
       - "30336"
       - "8001"
       - "9944"
-      - "8545"
       - "8080"
 
     entrypoint: /bin/sh
@@ -33,7 +32,12 @@ services:
 
       echo '📦 Installing required tools...' &&
       apt-get update &&
-      apt-get install -y wget curl python3 nodejs npm ca-certificates &&
+      apt-get install -y wget curl python3 ca-certificates gnupg &&
+      mkdir -p /etc/apt/keyrings &&
+      curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg &&
+      echo 'deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main' > /etc/apt/sources.list.d/nodesource.list &&
+      apt-get update &&
+      apt-get install -y nodejs &&
 
       echo '🔧 Making script executable...' &&
       chmod +x /workspace/run-cluster.sh &&

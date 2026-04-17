@@ -45,12 +45,6 @@ path = "/"
 
 [[config.domains]]
 serviceName = "reef-dev-cluster"
-port = 8545
-host = "eth.${domain}"
-path = "/"
-
-[[config.domains]]
-serviceName = "reef-dev-cluster"
 port = 8080
 host = "faucet.${domain}"
 path = "/"

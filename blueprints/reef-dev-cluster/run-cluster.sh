@@ -19,6 +19,7 @@ VALIDATOR2_P2P_PORT="${VALIDATOR2_P2P_PORT:-30334}"
 VALIDATOR3_P2P_PORT="${VALIDATOR3_P2P_PORT:-30336}"
 RPC_NODE_P2P_PORT="${RPC_NODE_P2P_PORT:-30337}"
 RPC_NODE_WS_PORT="${RPC_NODE_WS_PORT:-9944}"
+RPC_NODE_PUBLIC_WS_PORT="${RPC_NODE_PUBLIC_WS_PORT:-9945}"
 ETH_RPC_PORT="${ETH_RPC_PORT:-8545}"
 FAUCET_PORT="${FAUCET_PORT:-8080}"
 BOOTNODE_PROMETHEUS_PORT="${BOOTNODE_PROMETHEUS_PORT:-9615}"
@@ -192,7 +193,7 @@ write_cluster_info() {
 		"$V3_ADDR" "$V3_SOURCE" "$VALIDATOR3_P2P_PORT" \
 		"$FAUCET_ADDR" "$FAUCET_SOURCE" "$FAUCET_PORT" \
 		"$BOOTNODE_PEER_ID" "$BOOTNODE_P2P_PORT" \
-		"$RPC_NODE_P2P_PORT" "$RPC_NODE_WS_PORT" "$ETH_RPC_PORT" \
+		"$RPC_NODE_P2P_PORT" "$RPC_NODE_PUBLIC_WS_PORT" "$ETH_RPC_PORT" \
 		"$SPEC_HTTP_PORT" "$STATE_DIR" <<'PY'
 import json
 import sys
@@ -480,10 +481,19 @@ start_logged /tmp/rpc-node.log \
 	--prometheus-port "$RPC_NODE_PROMETHEUS_PORT" \
 	--node-key-file "$RPC_NODE_KEY_FILE" \
 	--bootnodes "$BOOTNODE_MULTIADDR" \
-	--experimental-rpc-endpoint "listen-addr=0.0.0.0:${RPC_NODE_WS_PORT},cors=all,methods=unsafe,max-connections=10000" \
+	--rpc-external \
+	--rpc-port "$RPC_NODE_WS_PORT" \
+	--rpc-cors all \
+	--rpc-methods Unsafe \
+	--rpc-max-connections 10000 \
 	--pruning archive \
 	--name rpc-node \
 	--no-telemetry
+
+start_logged /tmp/ws-proxy.log \
+	socat \
+	"TCP-LISTEN:${RPC_NODE_PUBLIC_WS_PORT},fork,reuseaddr,bind=0.0.0.0" \
+	"TCP:127.0.0.1:${RPC_NODE_WS_PORT}"
 
 start_logged /tmp/faucet.log \
 	env \
@@ -496,7 +506,7 @@ start_logged /tmp/faucet.log \
 			MAX_AMOUNT="$MAX_AMOUNT" \
 			npm --prefix "$FAUCET_DIR" start
 
-tail -F /tmp/spec-server.log /tmp/bootnode.log /tmp/validator1.log /tmp/validator2.log /tmp/validator3.log /tmp/rpc-node.log /tmp/faucet.log &
+tail -F /tmp/spec-server.log /tmp/bootnode.log /tmp/validator1.log /tmp/validator2.log /tmp/validator3.log /tmp/rpc-node.log /tmp/ws-proxy.log /tmp/faucet.log &
 TAIL_PID=$!
 
 wait -n "${PIDS[@]}"

@@ -23,7 +23,7 @@ path = "/"
 
 [[config.domains]]
 serviceName = "reef-dev-cluster"
-port = 9944
+port = 9945
 host = "ws.${domain}"
 path = "/"
 

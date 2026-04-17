@@ -14,9 +14,6 @@ services:
       DEFAULT_AMOUNT: "${DEFAULT_AMOUNT}"
       MAX_AMOUNT: "${MAX_AMOUNT}"
 
-    volumes:
-      - ./:/workspace
-
     expose:
       - "30335"
       - "30333"
@@ -27,20 +24,26 @@ services:
       - "8080"
 
     entrypoint: /bin/sh
-    command: -c "
-      set -e &&
+    command:
+      - -c
+      - |
+        set -e
 
-      echo '📦 Installing required tools...' &&
-      apt-get update &&
-      apt-get install -y wget curl python3 ca-certificates gnupg &&
-      mkdir -p /etc/apt/keyrings &&
-      curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg &&
-      echo 'deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main' > /etc/apt/sources.list.d/nodesource.list &&
-      apt-get update &&
-      apt-get install -y nodejs &&
+        echo '📦 Installing required tools...'
+        apt-get update
+        apt-get install -y wget curl python3 ca-certificates gnupg
 
-      echo '🔧 Making script executable...' &&
-      chmod +x /workspace/run-cluster.sh &&
+        mkdir -p /etc/apt/keyrings /workspace
+        curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+        echo 'deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main' > /etc/apt/sources.list.d/nodesource.list
+        apt-get update
+        apt-get install -y nodejs
 
-      echo '🚀 Starting self-contained network...' &&
-      exec /workspace/run-cluster.sh"
+        echo '📥 Downloading cluster bootstrap...'
+        wget -O /workspace/run-cluster.sh https://raw.githubusercontent.com/anukulpandey/dokploy-templates/02da0d9fd6f8d88cb949d38eb8af8adca56b10bf/blueprints/reef-dev-cluster/run-cluster.sh
+
+        echo '🔧 Making script executable...'
+        chmod +x /workspace/run-cluster.sh
+
+        echo '🚀 Starting self-contained network...'
+        exec env TEMPLATE_ASSET_REF=02da0d9fd6f8d88cb949d38eb8af8adca56b10bf /workspace/run-cluster.sh

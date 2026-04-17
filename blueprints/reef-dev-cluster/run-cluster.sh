@@ -428,6 +428,7 @@ start_logged /tmp/bootnode.log \
 	--chain "$SPEC_FILE" \
 	--port "$BOOTNODE_P2P_PORT" \
 	--prometheus-port "$BOOTNODE_PROMETHEUS_PORT" \
+	--rpc-port 0 \
 	--node-key-file "$BOOTNODE_NODE_KEY_FILE" \
 	--name Bootnode \
 	--no-telemetry
@@ -438,6 +439,7 @@ start_logged /tmp/validator1.log \
 	--chain "$SPEC_FILE" \
 	--port "$VALIDATOR1_P2P_PORT" \
 	--prometheus-port "$VALIDATOR1_PROMETHEUS_PORT" \
+	--rpc-port 0 \
 	--node-key-file "$V1_NODE_KEY_FILE" \
 	--bootnodes "$BOOTNODE_MULTIADDR" \
 	--validator \
@@ -450,6 +452,7 @@ start_logged /tmp/validator2.log \
 	--chain "$SPEC_FILE" \
 	--port "$VALIDATOR2_P2P_PORT" \
 	--prometheus-port "$VALIDATOR2_PROMETHEUS_PORT" \
+	--rpc-port 0 \
 	--node-key-file "$V2_NODE_KEY_FILE" \
 	--bootnodes "$BOOTNODE_MULTIADDR" \
 	--validator \
@@ -462,6 +465,7 @@ start_logged /tmp/validator3.log \
 	--chain "$SPEC_FILE" \
 	--port "$VALIDATOR3_P2P_PORT" \
 	--prometheus-port "$VALIDATOR3_PROMETHEUS_PORT" \
+	--rpc-port 0 \
 	--node-key-file "$V3_NODE_KEY_FILE" \
 	--bootnodes "$BOOTNODE_MULTIADDR" \
 	--validator \
@@ -476,11 +480,7 @@ start_logged /tmp/rpc-node.log \
 	--prometheus-port "$RPC_NODE_PROMETHEUS_PORT" \
 	--node-key-file "$RPC_NODE_KEY_FILE" \
 	--bootnodes "$BOOTNODE_MULTIADDR" \
-	--rpc-external \
-	--rpc-port "$RPC_NODE_WS_PORT" \
-	--rpc-cors all \
-	--rpc-methods Unsafe \
-	--rpc-max-connections 10000 \
+	--experimental-rpc-endpoint "listen-addr=0.0.0.0:${RPC_NODE_WS_PORT},cors=all,methods=unsafe,max-connections=10000" \
 	--pruning archive \
 	--name rpc-node \
 	--no-telemetry

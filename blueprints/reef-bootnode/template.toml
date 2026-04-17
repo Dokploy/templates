@@ -13,14 +13,14 @@ P2P_PORT="30335"
 
 [[config.domains]]
 serviceName = "reef-bootnode"
-port = 30335
+port = 8000
 host = "${domain}"
 path = "/"
 
 [[config.domains]]
 serviceName = "reef-bootnode"
 port = 8000
-host = "${domain}"
+host = "spec.${domain}"
 path = "/"
 
 [config.env]

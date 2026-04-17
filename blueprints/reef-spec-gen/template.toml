@@ -3,6 +3,12 @@
 [[config.domains]]
 serviceName = "reef-spec-gen"
 port = 8000
+host = "${domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "reef-spec-gen"
+port = 8000
 host = "spec.${domain}"
 path = "/"
 

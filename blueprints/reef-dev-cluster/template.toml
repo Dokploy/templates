@@ -11,25 +11,7 @@ MAX_AMOUNT = "10"
 
 [[config.domains]]
 serviceName = "reef-dev-cluster"
-port = 30335
-host = "${domain}"
-path = "/"
-
-[[config.domains]]
-serviceName = "reef-dev-cluster"
-port = 30334
-host = "${domain}"
-path = "/"
-
-[[config.domains]]
-serviceName = "reef-dev-cluster"
-port = 30333
-host = "${domain}"
-path = "/"
-
-[[config.domains]]
-serviceName = "reef-dev-cluster"
-port = 30336
+port = 8001
 host = "${domain}"
 path = "/"
 

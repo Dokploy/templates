@@ -1,6 +1,6 @@
 [variables]
 PORT = "8545"
-NODE_RPC_URL = "ws://reef.host:9944"
+NODE_RPC_URL = "ws://ws.reef.host"
 
 [[config.domains]]
 serviceName = "reef-eth-rpc"
@@ -8,6 +8,12 @@ port = 8545
 host = "${domain}"
 path = "/"
 
+[[config.domains]]
+serviceName = "reef-eth-rpc"
+port = 8545
+host = "eth.${domain}"
+path = "/"
+
 [config.env]
 PORT = "8545"
-NODE_RPC_URL = "ws://reef.host:9944"
+NODE_RPC_URL = "ws://ws.reef.host"

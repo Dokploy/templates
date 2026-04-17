@@ -186,6 +186,39 @@ start_logged() {
 	PIDS+=("$!")
 }
 
+write_ws_proxy_config() {
+	cat > /tmp/rpc-nginx.conf <<EOF
+worker_processes 1;
+events {
+	worker_connections 1024;
+}
+http {
+	map \$http_upgrade \$connection_upgrade {
+		default upgrade;
+		'' close;
+	}
+
+	server {
+		listen 0.0.0.0:${RPC_NODE_PUBLIC_WS_PORT};
+		listen [::]:${RPC_NODE_PUBLIC_WS_PORT};
+
+		location / {
+			proxy_pass http://127.0.0.1:${RPC_NODE_WS_PORT};
+			proxy_http_version 1.1;
+			proxy_set_header Host 127.0.0.1:${RPC_NODE_WS_PORT};
+			proxy_set_header Upgrade \$http_upgrade;
+			proxy_set_header Connection \$connection_upgrade;
+			proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+			proxy_set_header X-Forwarded-Proto \$scheme;
+			proxy_buffering off;
+			proxy_read_timeout 86400;
+			proxy_send_timeout 86400;
+		}
+	}
+}
+EOF
+}
+
 write_cluster_info() {
 	python3 - "$CLUSTER_INFO_FILE" \
 		"$V1_ADDR" "$V1_SOURCE" "$VALIDATOR1_P2P_PORT" \
@@ -423,6 +456,8 @@ PIDS+=("$!")
 
 BOOTNODE_MULTIADDR="/ip4/127.0.0.1/tcp/${BOOTNODE_P2P_PORT}/p2p/${BOOTNODE_PEER_ID}"
 
+write_ws_proxy_config
+
 start_logged /tmp/bootnode.log \
 	"$NODE_BIN" \
 	--base-path /tmp/bootnode \
@@ -491,9 +526,9 @@ start_logged /tmp/rpc-node.log \
 	--no-telemetry
 
 start_logged /tmp/ws-proxy.log \
-	socat \
-	"TCP-LISTEN:${RPC_NODE_PUBLIC_WS_PORT},fork,reuseaddr,bind=0.0.0.0" \
-	"TCP:127.0.0.1:${RPC_NODE_WS_PORT}"
+	nginx \
+	-c /tmp/rpc-nginx.conf \
+	-g 'daemon off;'
 
 start_logged /tmp/faucet.log \
 	env \

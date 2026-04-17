@@ -7,7 +7,7 @@ v1addr = ""
 v2addr = ""
 v3addr = ""
 
-specgenurl = "http://reef.host:8000"
+specgenurl = "https://spec.${domain}"
 
 [[config.domains]]
 serviceName = "reef-dev-cluster"
@@ -60,4 +60,4 @@ v1addr = ""
 v2addr = ""
 v3addr = ""
 
-specgenurl = "http://reef.host:8000"
+specgenurl = "https://spec.${domain}"

@@ -19,6 +19,7 @@ VALIDATOR2_P2P_PORT="${VALIDATOR2_P2P_PORT:-30334}"
 VALIDATOR3_P2P_PORT="${VALIDATOR3_P2P_PORT:-30336}"
 RPC_NODE_P2P_PORT="${RPC_NODE_P2P_PORT:-30337}"
 RPC_NODE_WS_PORT="${RPC_NODE_WS_PORT:-9944}"
+ETH_RPC_PORT="${ETH_RPC_PORT:-8545}"
 FAUCET_PORT="${FAUCET_PORT:-8080}"
 BOOTNODE_PROMETHEUS_PORT="${BOOTNODE_PROMETHEUS_PORT:-9615}"
 VALIDATOR1_PROMETHEUS_PORT="${VALIDATOR1_PROMETHEUS_PORT:-9616}"
@@ -191,7 +192,7 @@ write_cluster_info() {
 		"$V3_ADDR" "$V3_SOURCE" "$VALIDATOR3_P2P_PORT" \
 		"$FAUCET_ADDR" "$FAUCET_SOURCE" "$FAUCET_PORT" \
 		"$BOOTNODE_PEER_ID" "$BOOTNODE_P2P_PORT" \
-		"$RPC_NODE_P2P_PORT" "$RPC_NODE_WS_PORT" \
+		"$RPC_NODE_P2P_PORT" "$RPC_NODE_WS_PORT" "$ETH_RPC_PORT" \
 		"$SPEC_HTTP_PORT" "$STATE_DIR" <<'PY'
 import json
 import sys
@@ -229,9 +230,10 @@ cluster_info = {
         "bootnodeP2P": int(sys.argv[15]),
         "rpcNodeP2P": int(sys.argv[16]),
         "rpcWs": int(sys.argv[17]),
-        "specHttp": int(sys.argv[18]),
+        "ethRpcHttp": int(sys.argv[18]),
+        "specHttp": int(sys.argv[19]),
     },
-    "statePath": sys.argv[19],
+    "statePath": sys.argv[20],
 }
 
 with open(output_file, "w", encoding="utf-8") as handle:

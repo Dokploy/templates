@@ -248,6 +248,28 @@ function enqueue(task) {
 
 const server = http.createServer(async (request, response) => {
   try {
+    if (request.method === "GET" && request.url === "/") {
+      jsonResponse(response, 200, {
+        service: "reef-dev-cluster-faucet",
+        status: "ok",
+        endpoints: {
+          health: {
+            method: "GET",
+            path: "/health",
+          },
+          drip: {
+            method: "POST",
+            path: "/drip",
+            body: {
+              to: "0x0000000000000000000000000000000000000000",
+              amount: config.defaultAmount,
+            },
+          },
+        },
+      });
+      return;
+    }
+
     if (request.method === "GET" && request.url === "/health") {
       jsonResponse(response, 200, { status: "ok" });
       return;

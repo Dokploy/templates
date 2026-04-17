@@ -25,6 +25,7 @@ services:
       - "30336"
       - "8001"
       - "9944"
+      - "8545"
       - "8080"
 
     entrypoint: /bin/sh
@@ -51,6 +52,26 @@ services:
 
         echo '🚀 Starting self-contained network...'
         exec env TEMPLATE_ASSET_REF=def2dca54efbc522d383d3aa67528a121233b9bc /workspace/run-cluster.sh
+
+  reef-dev-cluster-eth-rpc:
+    image: anukulpandey/reef-chain-eth-rpc:latest
+    restart: unless-stopped
+    working_dir: /workspace
+    depends_on:
+      - reef-dev-cluster
+    network_mode: "service:reef-dev-cluster"
+    environment:
+      NODE_RPC_URL: ws://127.0.0.1:9944
+      PORT: "8545"
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - |
+        set -e
+        until eth-rpc --node-rpc-url "$$NODE_RPC_URL" --rpc-port "$$PORT" --rpc-external --rpc-cors all; do
+          echo 'eth-rpc is waiting for the ws rpc node...'
+          sleep 2
+        done
 
 volumes:
   reef-dev-cluster-state:

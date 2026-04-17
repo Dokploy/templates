@@ -25,7 +25,6 @@ services:
       - "30336"
       - "8001"
       - "9944"
-      - "8545"
       - "8080"
 
     entrypoint: /bin/sh
@@ -59,15 +58,20 @@ services:
     working_dir: /workspace
     depends_on:
       - reef-dev-cluster
-    network_mode: "service:reef-dev-cluster"
+    expose:
+      - "8545"
     environment:
-      NODE_RPC_URL: ws://127.0.0.1:9944
+      NODE_RPC_URL: ws://reef-dev-cluster:9944
       PORT: "8545"
     entrypoint: /bin/sh
     command:
       - -c
       - |
         set -e
+        until bash -lc 'exec 3<>/dev/tcp/reef-dev-cluster/9944'; do
+          echo 'eth-rpc is waiting for the ws rpc socket...'
+          sleep 2
+        done
         until eth-rpc --node-rpc-url "$$NODE_RPC_URL" --rpc-port "$$PORT" --rpc-external --rpc-cors all; do
           echo 'eth-rpc is waiting for the ws rpc node...'
           sleep 2

@@ -28,7 +28,7 @@ host = "ws.${domain}"
 path = "/"
 
 [[config.domains]]
-serviceName = "reef-dev-cluster"
+serviceName = "reef-dev-cluster-eth-rpc"
 port = 8545
 host = "eth.${domain}"
 path = "/"

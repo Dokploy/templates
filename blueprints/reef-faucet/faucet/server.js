@@ -692,5 +692,5 @@ const server = http.createServer(async (request, response) => {
 });
 
 server.listen(config.port, "0.0.0.0", () => {
-  console.log(`reef dev-cluster faucet listening on ${config.port}`);
+  console.log(`${config.serviceName} listening on ${config.port}`);
 });

@@ -487,12 +487,14 @@ start_logged /tmp/rpc-node.log \
 
 start_logged /tmp/faucet.log \
 	env \
-		PORT="$FAUCET_PORT" \
-		WS_ENDPOINT="ws://127.0.0.1:${RPC_NODE_WS_PORT}" \
-		FAUCET_SEED="$FAUCET_SEED" \
-		DEFAULT_AMOUNT="$DEFAULT_AMOUNT" \
-		MAX_AMOUNT="$MAX_AMOUNT" \
-		npm --prefix "$FAUCET_DIR" start
+			SERVICE_NAME="reef-dev-cluster-faucet" \
+			PORT="$FAUCET_PORT" \
+			WS_ENDPOINT="ws://127.0.0.1:${RPC_NODE_WS_PORT}" \
+			EVM_RPC_URL="http://127.0.0.1:${ETH_RPC_PORT}" \
+			FAUCET_SEED="$FAUCET_SEED" \
+			DEFAULT_AMOUNT="$DEFAULT_AMOUNT" \
+			MAX_AMOUNT="$MAX_AMOUNT" \
+			npm --prefix "$FAUCET_DIR" start
 
 tail -F /tmp/spec-server.log /tmp/bootnode.log /tmp/validator1.log /tmp/validator2.log /tmp/validator3.log /tmp/rpc-node.log /tmp/faucet.log &
 TAIL_PID=$!

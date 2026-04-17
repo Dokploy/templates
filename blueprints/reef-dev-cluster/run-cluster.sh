@@ -17,6 +17,8 @@ DEFAULT_AMOUNT="${DEFAULT_AMOUNT:-1}"
 MAX_AMOUNT="${MAX_AMOUNT:-10}"
 FAUCET_SEED="${faucetsec:-${v1sec:-}}"
 SCRIPTS_COMMIT="52c3e30d06bba10936aea2db9740eafd76b3ac40"
+TEMPLATE_ASSET_REF="${TEMPLATE_ASSET_REF:-reef-chain}"
+TEMPLATE_ASSET_BASE_URL="${TEMPLATE_ASSET_BASE_URL:-https://raw.githubusercontent.com/anukulpandey/dokploy-templates/${TEMPLATE_ASSET_REF}/blueprints/reef-dev-cluster}"
 
 for var in v1sec v2sec v3sec; do
 	if [ -z "${!var:-}" ]; then
@@ -76,7 +78,7 @@ HELPER_DIR="$WORK_DIR/spec-generator"
 FAUCET_DIR="/workspace/faucet"
 
 rm -rf "$WORK_DIR" "$OUTPUT_DIR" /tmp/validator1 /tmp/validator2 /tmp/validator3 /tmp/rpc-node /tmp/bootnode
-mkdir -p "$HELPER_DIR" "$OUTPUT_DIR"
+mkdir -p "$HELPER_DIR" "$OUTPUT_DIR" "$FAUCET_DIR"
 
 echo "Downloading self-contained cluster helpers..."
 wget -q -O "$HELPER_DIR/update-spec.py" \
@@ -84,6 +86,12 @@ wget -q -O "$HELPER_DIR/update-spec.py" \
 wget -q -O "$HELPER_DIR/update-spec.sh" \
 	"https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/${SCRIPTS_COMMIT}/spec-generator/scripts/update-spec.sh"
 chmod +x "$HELPER_DIR/update-spec.sh"
+
+echo "Downloading local faucet sources..."
+wget -q -O "$FAUCET_DIR/package.json" \
+	"${TEMPLATE_ASSET_BASE_URL}/faucet/package.json"
+wget -q -O "$FAUCET_DIR/server.js" \
+	"${TEMPLATE_ASSET_BASE_URL}/faucet/server.js"
 
 echo "Installing faucet dependencies..."
 (

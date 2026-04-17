@@ -27,6 +27,15 @@ services:
       - "9944"
       - "8080"
 
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - bash -lc 'exec 3<>/dev/tcp/127.0.0.1/9944'
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 300s
+
     entrypoint: /bin/sh
     command:
       - -c
@@ -57,25 +66,25 @@ services:
     restart: unless-stopped
     working_dir: /workspace
     depends_on:
-      - reef-dev-cluster
+      reef-dev-cluster:
+        condition: service_healthy
     expose:
       - "8545"
     environment:
       NODE_RPC_URL: ws://reef-dev-cluster:9944
       PORT: "8545"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - bash -lc 'exec 3<>/dev/tcp/127.0.0.1/8545'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
     entrypoint: /bin/sh
     command:
       - -c
-      - |
-        set -e
-        until bash -lc 'exec 3<>/dev/tcp/reef-dev-cluster/9944'; do
-          echo 'eth-rpc is waiting for the ws rpc socket...'
-          sleep 2
-        done
-        until eth-rpc --node-rpc-url "$$NODE_RPC_URL" --rpc-port "$$PORT" --rpc-external --rpc-cors all; do
-          echo 'eth-rpc is waiting for the ws rpc node...'
-          sleep 2
-        done
+      - exec eth-rpc --node-rpc-url "$$NODE_RPC_URL" --rpc-port "$$PORT" --rpc-external --rpc-cors all
 
 volumes:
   reef-dev-cluster-state:

@@ -1,8 +1,10 @@
 [variables]
+# Optional advanced overrides. Leave blank to auto-generate and persist validator identities.
 v1sec = ""
 v2sec = ""
 v3sec = ""
 
+# Optional dedicated faucet seed. Leave blank to reuse validator 1.
 faucetsec = ""
 DEFAULT_AMOUNT = "1"
 MAX_AMOUNT = "10"
@@ -50,10 +52,12 @@ host = "faucet.${domain}"
 path = "/"
 
 [config.env]
+# Optional advanced overrides. Leave blank to auto-generate and persist validator identities.
 v1sec = ""
 v2sec = ""
 v3sec = ""
 
+# Optional dedicated faucet seed. Leave blank to reuse validator 1.
 faucetsec = ""
 DEFAULT_AMOUNT = "1"
 MAX_AMOUNT = "10"

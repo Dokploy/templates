@@ -4,7 +4,6 @@ services:
   postiz-app:
     image: ghcr.io/gitroomhq/postiz-app:latest
     restart: always
-
     environment:
       MAIN_URL: "https://${POSTIZ_HOST}"
       FRONTEND_URL: "https://${POSTIZ_HOST}"
@@ -17,6 +16,8 @@ services:
       STORAGE_PROVIDER: "local"
       UPLOAD_DIRECTORY: "/uploads"
       NEXT_PUBLIC_UPLOAD_DIRECTORY: "/uploads"
+      TEMPORAL_WORKER_URL: "postiz-temporal:7233"
+      TEMPORAL_URL: "postiz-temporal:7233"
     volumes:
       - postiz-config:/config/
       - postiz-uploads:/uploads/
@@ -25,11 +26,56 @@ services:
         condition: service_healthy
       postiz-redis:
         condition: service_healthy
+      postiz-temporal:
+        condition: service_healthy
+
+  postiz-temporal:
+    image: temporalio/auto-setup:1.27.2
+    restart: always
+    environment:
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PWD=${DB_PASSWORD}
+      - POSTGRES_SEEDS=postiz-temporal-postgres
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+    depends_on:
+      postiz-temporal-postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "tctl", "--address", "localhost:7233", "cluster", "health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  postiz-temporal-ui:
+    image: temporalio/ui:2.30.0
+    restart: always
+    environment:
+      - TEMPORAL_ADDRESS=postiz-temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:8080
+    depends_on:
+      postiz-temporal:
+        condition: service_healthy
+
+  postiz-temporal-postgres:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+    volumes:
+      - postiz-temporal-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U ${DB_USER}
+      interval: 10s
+      timeout: 3s
+      retries: 3
 
   postiz-postgres:
     image: postgres:17-alpine
     restart: always
-
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USER}
@@ -45,7 +91,6 @@ services:
   postiz-redis:
     image: redis:7.2
     restart: always
-
     healthcheck:
       test: redis-cli ping
       interval: 10s
@@ -58,4 +103,5 @@ volumes:
   postiz-postgres-data:
   postiz-redis-data:
   postiz-config:
-  postiz-uploads: 
+  postiz-uploads:
+  postiz-temporal-db-data:

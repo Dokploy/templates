@@ -1,13 +1,14 @@
-version: '3.8'
+version: "3.8"
 
 services:
   reef-rpc:
     image: anukulpandey/reef-chain-node:linux-2
+    restart: unless-stopped
     working_dir: /workspace
 
-    ports:
-      - "${P2P_PORT}:${P2P_PORT}"
-      - "${RPC_PORT}:${RPC_PORT}"
+    expose:
+      - "${P2P_PORT}"
+      - "${RPC_PORT}"
 
     environment:
       SPEC_URL: ${SPEC_URL}
@@ -30,7 +31,7 @@ services:
       echo '📥 Downloading start-rpc.sh...' &&
       mkdir -p /workspace/rpc/scripts &&
       wget -O /workspace/rpc/scripts/start-rpc.sh \
-        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/main/rpc/scripts/start-rpc.sh &&
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/52c3e30d06bba10936aea2db9740eafd76b3ac40/rpc/scripts/start-rpc.sh &&
 
       echo '🔧 Making script executable...' &&
       chmod +x /workspace/rpc/scripts/start-rpc.sh &&

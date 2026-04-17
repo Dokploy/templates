@@ -1,11 +1,14 @@
+version: "3.8"
+
 services:
   reef-keygen:
     image: anukulpandey/reef-chain-node:linux-2
+    restart: unless-stopped
     working_dir: /workspace
     volumes:
       - ./output:/output
-    ports:
-      - "${PORT}:${PORT}"
+    expose:
+      - "${PORT}"
     entrypoint: /bin/sh
     command: -c "
       set -e &&

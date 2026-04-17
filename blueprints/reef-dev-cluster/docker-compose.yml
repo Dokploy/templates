@@ -1,6 +1,9 @@
+version: "3.8"
+
 services:
   reef-dev-cluster:
     image: anukulpandey/reef-chain-node:linux-2
+    restart: unless-stopped
     working_dir: /workspace
 
     environment:
@@ -15,7 +18,7 @@ services:
     volumes:
       - ./:/workspace
 
-    ports:
+    expose:
       - "30335"
       - "30333"
       - "30334"
@@ -35,7 +38,7 @@ services:
       echo '📥 Downloading cluster launcher...' &&
       mkdir -p /workspace/dev-cluster &&
       wget -q -O /workspace/dev-cluster/start-cluster.sh \
-        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/main/dev-cluster/start-cluster.sh &&
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/52c3e30d06bba10936aea2db9740eafd76b3ac40/dev-cluster/start-cluster.sh &&
 
       echo '🔧 Making script executable...' &&
       chmod +x /workspace/dev-cluster/start-cluster.sh &&

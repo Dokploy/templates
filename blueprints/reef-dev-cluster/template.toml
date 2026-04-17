@@ -3,11 +3,9 @@ v1sec = ""
 v2sec = ""
 v3sec = ""
 
-v1addr = ""
-v2addr = ""
-v3addr = ""
-
-specgenurl = "https://spec.${domain}"
+faucetsec = ""
+DEFAULT_AMOUNT = "1"
+MAX_AMOUNT = "10"
 
 [[config.domains]]
 serviceName = "reef-dev-cluster"
@@ -36,19 +34,25 @@ path = "/"
 [[config.domains]]
 serviceName = "reef-dev-cluster"
 port = 8001
-host = "${domain}"
+host = "spec.${domain}"
 path = "/"
 
 [[config.domains]]
 serviceName = "reef-dev-cluster"
 port = 9944
-host = "${domain}"
+host = "ws.${domain}"
 path = "/"
 
 [[config.domains]]
 serviceName = "reef-dev-cluster"
 port = 8545
-host = "${domain}"
+host = "eth.${domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "reef-dev-cluster"
+port = 8080
+host = "faucet.${domain}"
 path = "/"
 
 [config.env]
@@ -56,8 +60,6 @@ v1sec = ""
 v2sec = ""
 v3sec = ""
 
-v1addr = ""
-v2addr = ""
-v3addr = ""
-
-specgenurl = "https://spec.${domain}"
+faucetsec = ""
+DEFAULT_AMOUNT = "1"
+MAX_AMOUNT = "10"

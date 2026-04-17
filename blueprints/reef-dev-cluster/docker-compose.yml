@@ -7,13 +7,12 @@ services:
     working_dir: /workspace
 
     environment:
-      v1addr: "${v1addr}"
-      v2addr: "${v2addr}"
-      v3addr: "${v3addr}"
       v1sec: "${v1sec}"
       v2sec: "${v2sec}"
       v3sec: "${v3sec}"
-      specgenurl: "${specgenurl}"
+      faucetsec: "${faucetsec}"
+      DEFAULT_AMOUNT: "${DEFAULT_AMOUNT}"
+      MAX_AMOUNT: "${MAX_AMOUNT}"
 
     volumes:
       - ./:/workspace
@@ -26,6 +25,7 @@ services:
       - "8001"
       - "9944"
       - "8545"
+      - "8080"
 
     entrypoint: /bin/sh
     command: -c "
@@ -33,15 +33,10 @@ services:
 
       echo '📦 Installing required tools...' &&
       apt-get update &&
-      apt-get install -y wget curl python3 ca-certificates &&
-
-      echo '📥 Downloading cluster launcher...' &&
-      mkdir -p /workspace/dev-cluster &&
-      wget -q -O /workspace/dev-cluster/start-cluster.sh \
-        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/52c3e30d06bba10936aea2db9740eafd76b3ac40/dev-cluster/start-cluster.sh &&
+      apt-get install -y wget curl python3 nodejs npm ca-certificates &&
 
       echo '🔧 Making script executable...' &&
-      chmod +x /workspace/dev-cluster/start-cluster.sh &&
+      chmod +x /workspace/run-cluster.sh &&
 
-      echo '🚀 Starting local network...' &&
-      exec /workspace/dev-cluster/start-cluster.sh"
+      echo '🚀 Starting self-contained network...' &&
+      exec /workspace/run-cluster.sh"

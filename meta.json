@@ -4183,6 +4183,27 @@
     ]
   },
   {
+    "id": "multica",
+    "name": "Multica",
+    "version": "latest",
+    "description": "Multica is an open-source managed agents platform for teams. Assign tasks to AI coding agents (Claude Code, Codex, OpenClaw and more) that execute autonomously, report progress, and build reusable skills over time.",
+    "logo": "multica.svg",
+    "links": {
+      "github": "https://github.com/multica-ai/multica",
+      "website": "https://multica.ai",
+      "docs": "https://github.com/multica-ai/multica/blob/main/SELF_HOSTING.md"
+    },
+    "tags": [
+      "ai",
+      "agents",
+      "automation",
+      "self-hosted",
+      "claude-code",
+      "codex",
+      "developer-tools"
+    ]
+  },
+  {
     "id": "mumble",
     "name": "Mumble",
     "version": "latest",

@@ -5482,6 +5482,24 @@
     ]
   },
   {
+    "id": "reef-faucet",
+    "name": "Reef Chain - Faucet",
+    "version": "1",
+    "description": "HTTP faucet for sending native Reef funds to EVM addresses on a custom Reef Chain cluster",
+    "links": {
+      "github": "https://github.com/anukulpandey/dokploy-reef-chain-scripts",
+      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-chain-node",
+      "docs": "https://docs.reef.io/"
+    },
+    "logo": "reef.svg",
+    "tags": [
+      "reef-chain",
+      "faucet",
+      "self-hosted",
+      "evm"
+    ]
+  },
+  {
     "id": "reef-keygen",
     "name": "Reef Chain - Keys Generator",
     "version": "1",
@@ -5551,24 +5569,6 @@
       "validator",
       "self-hosted",
       "reef-validator"
-    ]
-  },
-  {
-    "id": "reef-faucet",
-    "name": "Reef Chain - Faucet",
-    "version": "1",
-    "description": "HTTP faucet for sending native Reef funds to EVM addresses on a custom Reef Chain cluster",
-    "links": {
-      "github": "https://github.com/anukulpandey/dokploy-reef-chain-scripts",
-      "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-chain-node",
-      "docs": "https://docs.reef.io/"
-    },
-    "logo": "reef.svg",
-    "tags": [
-      "reef-chain",
-      "faucet",
-      "self-hosted",
-      "evm"
     ]
   },
   {
@@ -6094,24 +6094,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

@@ -38,12 +38,12 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PWD=${DB_PASSWORD}
       - POSTGRES_SEEDS=postiz-temporal-postgres
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/production-sql.yaml
     depends_on:
       postiz-temporal-postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "tctl", "--address", "localhost:7233", "cluster", "health"]
+      test: ["CMD-SHELL", "nc -z localhost 7233 || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -54,7 +54,7 @@ services:
     restart: always
     environment:
       - TEMPORAL_ADDRESS=postiz-temporal:7233
-      - TEMPORAL_CORS_ORIGINS=http://localhost:8080
+      - TEMPORAL_CORS_ORIGINS=https://${POSTIZ_HOST}
     depends_on:
       postiz-temporal:
         condition: service_healthy

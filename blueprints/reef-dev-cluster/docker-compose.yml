@@ -44,13 +44,13 @@ services:
         apt-get install -y nodejs
 
         echo '📥 Downloading cluster bootstrap...'
-        wget -O /workspace/run-cluster.sh https://raw.githubusercontent.com/anukulpandey/dokploy-templates/02da0d9fd6f8d88cb949d38eb8af8adca56b10bf/blueprints/reef-dev-cluster/run-cluster.sh
+        wget -O /workspace/run-cluster.sh https://raw.githubusercontent.com/anukulpandey/dokploy-templates/def2dca54efbc522d383d3aa67528a121233b9bc/blueprints/reef-dev-cluster/run-cluster.sh
 
         echo '🔧 Making script executable...'
         chmod +x /workspace/run-cluster.sh
 
         echo '🚀 Starting self-contained network...'
-        exec env TEMPLATE_ASSET_REF=02da0d9fd6f8d88cb949d38eb8af8adca56b10bf /workspace/run-cluster.sh
+        exec env TEMPLATE_ASSET_REF=def2dca54efbc522d383d3aa67528a121233b9bc /workspace/run-cluster.sh
 
 volumes:
   reef-dev-cluster-state:

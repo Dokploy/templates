@@ -1,4 +1,4 @@
 
 [config.env]
 TAILSCALE_HOSTNAME = ""
-TAILSCALE_APIKEY = ""
+TAILSCALE_AUTHKEY = ""

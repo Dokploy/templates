@@ -20,6 +20,11 @@ This project adheres to the [Contributor Covenant Code of Conduct](https://www.c
 
 For larger changes or questions, open an issue first to discuss your ideas.
 
+### Pull Request Guidelines
+
+- **Keep PRs small and focused.** Avoid very large PRs; prefer several smaller PRs (e.g., one template or one logical change per PR). This speeds up review and keeps the history clear.
+- **Test before submitting.** Any PR that has not been tested by the contributor will be closed. This keeps the PR queue tidy and ensures that only contributions that have been verified by their authors are considered.
+
 ## Adding a New Template
 
 To add a new template, follow these steps:

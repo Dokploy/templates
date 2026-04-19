@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "seanime"
+port = 43211
+host = "${main_domain}"
+
+
+[config.env]
+
+[[config.mounts]]

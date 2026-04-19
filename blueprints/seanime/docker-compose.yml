@@ -1,0 +1,22 @@
+services:
+  seanime-init:
+    image: busybox
+    user: "0:0"
+    volumes:
+      - ./seanime-config:/mnt/config
+      - ./anime:/mnt/anime
+      - ./downloads:/mnt/downloads
+    command: ["sh", "-c", "chown -R 1000:1000 /mnt/config /mnt/anime /mnt/downloads && chmod -R 755 /mnt/config /mnt/anime /mnt/downloads"]
+
+  seanime:
+    image: umagistr/seanime:latest-rootless
+    depends_on:
+      seanime-init:
+        condition: service_completed_successfully
+    environment:
+      - SEANIME_SERVER_HOST=0.0.0.0
+    volumes:
+      - ./seanime-config:/home/seanime/.config/Seanime
+      - ./anime:/anime
+      - ./downloads:/downloads
+    restart: unless-stopped

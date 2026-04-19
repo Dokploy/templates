@@ -1,6 +1,7 @@
+version: "3.8"
 services:
   seanime-init:
-    image: busybox
+    image: busybox:1.37.0
     user: "0:0"
     volumes:
       - ./seanime-config:/mnt/config

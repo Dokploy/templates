@@ -17,6 +17,8 @@ services:
         condition: service_completed_successfully
     environment:
       - SEANIME_SERVER_HOST=0.0.0.0
+    expose:
+      - "43211"
     volumes:
       - ./seanime-config:/home/seanime/.config/Seanime
       - ./anime:/anime

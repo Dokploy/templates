@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "duplicati"
+port = 8200
+host = "${main_domain}"
+
+[config.env]
+TZ = "Europe/Vienna"
+SETTINGS_ENCRYPTION_KEY = "${password:32}"
+DUPLICATI__WEBSERVICE_PASSWORD = "${password:16}"

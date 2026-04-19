@@ -5651,7 +5651,7 @@
   {
     "id": "seafile",
     "name": "Seafile",
-    "version": "3.6.1-rootless",
+    "version": "12.0-latest",
     "description": "Open source cloud storage system for file sync, share and document collaboration",
     "logo": "seafile.svg",
     "links": {
@@ -5668,7 +5668,7 @@
   {
     "id": "seanime",
     "name": "Seanime",
-    "version": "latest",
+    "version": "3.6.1-rootless",
     "description": "A self-hosted anime streaming platform.",
     "logo": "seanime.png",
     "links": {

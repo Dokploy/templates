@@ -30,7 +30,7 @@ services:
         condition: service_healthy
 
   postiz-temporal:
-    image: temporalio/auto-setup:1.27.2
+    image: temporalio/server:1.27.2
     restart: always
     environment:
       - DB=postgresql
@@ -39,11 +39,13 @@ services:
       - POSTGRES_PWD=${DB_PASSWORD}
       - POSTGRES_SEEDS=postiz-temporal-postgres
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/production-sql.yaml
+    volumes:
+      - postiz-temporal-config:/etc/temporal/config/dynamicconfig
     depends_on:
       postiz-temporal-postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "nc -z localhost 7233 || exit 1"]
+      test: ["CMD-SHELL", "tctl --address localhost:7233 cluster health || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -105,3 +107,4 @@ volumes:
   postiz-config:
   postiz-uploads:
   postiz-temporal-db-data:
+  postiz-temporal-config:

@@ -7,7 +7,12 @@ services:
       - ./seanime-config:/mnt/config
       - ./anime:/mnt/anime
       - ./downloads:/mnt/downloads
-    command: ["sh", "-c", "chown -R 1000:1000 /mnt/config /mnt/anime /mnt/downloads && chmod -R 755 /mnt/config /mnt/anime /mnt/downloads"]
+    command:
+      [
+        "sh",
+        "-c",
+        "chown -R 1000:1000 /mnt/config && find /mnt/config -type d -exec chmod 755 {} + && find /mnt/config -type f -exec chmod 644 {} +",
+      ]
 
   seanime:
     image: umagistr/seanime:v3.6.1-rootless

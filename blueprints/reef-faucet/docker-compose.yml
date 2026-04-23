@@ -37,9 +37,9 @@ services:
       echo '📥 Downloading faucet sources...' &&
       mkdir -p /workspace/faucet &&
       wget -O /workspace/faucet/package.json \
-        https://raw.githubusercontent.com/anukulpandey/dokploy-templates/182735be1afc163b0e99f28871ec5b6cb3c03cc3/blueprints/reef-faucet/faucet/package.json &&
+        https://raw.githubusercontent.com/anukulpandey/dokploy-templates/d8a82420dad013a3eb7e5d8afc0b9f2700a0045a/blueprints/reef-faucet/faucet/package.json &&
       wget -O /workspace/faucet/server.js \
-        https://raw.githubusercontent.com/anukulpandey/dokploy-templates/182735be1afc163b0e99f28871ec5b6cb3c03cc3/blueprints/reef-faucet/faucet/server.js &&
+        https://raw.githubusercontent.com/anukulpandey/dokploy-templates/d8a82420dad013a3eb7e5d8afc0b9f2700a0045a/blueprints/reef-faucet/faucet/server.js &&
 
       echo '📦 Installing faucet npm dependencies...' &&
       cd /workspace/faucet &&

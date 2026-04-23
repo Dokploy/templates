@@ -8,8 +8,8 @@ const config = {
   evmRpcUrl: process.env.EVM_RPC_URL || "",
   faucetSeed: process.env.FAUCET_SEED || "",
   port: Number.parseInt(process.env.PORT || "8080", 10),
-  defaultAmount: String(process.env.DEFAULT_AMOUNT || "1"),
-  maxAmount: String(process.env.MAX_AMOUNT || "10"),
+  defaultAmount: String(process.env.DEFAULT_AMOUNT || "2000"),
+  maxAmount: String(process.env.MAX_AMOUNT || "2000"),
   serviceName: process.env.SERVICE_NAME || "reef-faucet",
 };
 
@@ -444,7 +444,7 @@ function buildFrontendHtml() {
         <div class="hero">
           <p class="eyebrow">Reef Faucet</p>
           <h1>${title}</h1>
-          <p class="lede">Send a small amount of test REEF to any EVM address without reaching for curl first.</p>
+          <p class="lede">Send test REEF to any EVM address without reaching for curl first.</p>
         </div>
 
         <div class="meta">

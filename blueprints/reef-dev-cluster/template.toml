@@ -6,8 +6,8 @@ v3sec = ""
 
 # Optional dedicated faucet seed. Leave blank to reuse validator 1.
 faucetsec = ""
-DEFAULT_AMOUNT = "1"
-MAX_AMOUNT = "10"
+DEFAULT_AMOUNT = "2000"
+MAX_AMOUNT = "2000"
 
 [[config.domains]]
 serviceName = "reef-dev-cluster"
@@ -47,5 +47,5 @@ v3sec = ""
 
 # Optional dedicated faucet seed. Leave blank to reuse validator 1.
 faucetsec = ""
-DEFAULT_AMOUNT = "1"
-MAX_AMOUNT = "10"
+DEFAULT_AMOUNT = "2000"
+MAX_AMOUNT = "2000"

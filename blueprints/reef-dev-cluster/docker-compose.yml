@@ -11,8 +11,8 @@ services:
       v2sec: "${v2sec:-}"
       v3sec: "${v3sec:-}"
       faucetsec: "${faucetsec:-}"
-      DEFAULT_AMOUNT: "${DEFAULT_AMOUNT:-1}"
-      MAX_AMOUNT: "${MAX_AMOUNT:-10}"
+      DEFAULT_AMOUNT: "${DEFAULT_AMOUNT:-2000}"
+      MAX_AMOUNT: "${MAX_AMOUNT:-2000}"
 
     volumes:
       - reef-dev-cluster-state:/workspace/state

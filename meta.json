@@ -472,7 +472,7 @@
   {
     "id": "authentik",
     "name": "Authentik",
-    "version": "2025.6.3",
+    "version": "2026.2.2",
     "description": "Authentik is an open-source Identity Provider for authentication and authorization. It provides a comprehensive solution for managing user authentication, authorization, and identity federation with support for SAML, OAuth2, OIDC, and more.",
     "links": {
       "github": "https://github.com/goauthentik/authentik",

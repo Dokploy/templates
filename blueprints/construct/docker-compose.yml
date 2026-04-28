@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  construct:
+    image: ghcr.io/kumihoio/construct-os:2026.4.29
+    restart: unless-stopped
+    environment:
+      - API_KEY=${API_KEY}
+      - PROVIDER=openrouter
+      - CONSTRUCT_ALLOW_PUBLIC_BIND=true
+      - CONSTRUCT_GATEWAY_PORT=42617
+    volumes:
+      - construct-data:/construct-data
+    expose:
+      - 42617
+volumes:
+  construct-data: {}

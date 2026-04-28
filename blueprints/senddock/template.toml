@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+jwt_secret = "${password:64}"
+
+[config]
+[[config.domains]]
+serviceName = "senddock"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}"
+JWT_SECRET = "${jwt_secret}"
+PUBLIC_URL = "https://${main_domain}"
+SENDDOCK_LICENSE_KEY = ""

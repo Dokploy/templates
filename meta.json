@@ -5704,6 +5704,24 @@
     ]
   },
   {
+    "id": "senddock",
+    "name": "SendDock",
+    "version": "0.4.0",
+    "description": "Open-source, self-hosted email marketing platform with BYO SMTP. Manage subscribers, templates, broadcasts, and scheduled campaigns from one place.",
+    "logo": "senddock.svg",
+    "links": {
+      "github": "https://github.com/Arkhe-Systems/senddock",
+      "website": "https://senddock.com",
+      "docs": "https://docs.senddock.com"
+    },
+    "tags": [
+      "email",
+      "newsletter",
+      "mailing-list",
+      "marketing"
+    ]
+  },
+  {
     "id": "shlink",
     "name": "Shlink",
     "version": "stable",
@@ -5950,24 +5968,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

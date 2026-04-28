@@ -19,11 +19,9 @@ services:
 
   discourse-redis:
     image: redis:7-alpine
-
+    command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
-      - discourse-redis-data:/bitnami/redis
-    environment:
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      - discourse-redis-data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 10s

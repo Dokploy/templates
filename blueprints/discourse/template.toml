@@ -2,16 +2,22 @@
 main_domain = "${domain}"
 postgres_password = "${password}"
 redis_password = "${password}"
+discourse_username = "${username}"
+discourse_password = "${password}"
+discourse_email = "${email}"
 
 [config]
 env = [
   "DISCOURSE_HOST=${main_domain}",
   "POSTGRES_PASSWORD=${postgres_password}",
   "REDIS_PASSWORD=${redis_password}",
+  "DISCOURSE_USERNAME=${discourse_username}",
+  "DISCOURSE_PASSWORD=${discourse_password}",
+  "DISCOURSE_EMAIL=${discourse_email}",
 ]
 mounts = []
 
 [[config.domains]]
 serviceName = "discourse-app"
-port = 3_000
+port = 3000
 host = "${main_domain}"

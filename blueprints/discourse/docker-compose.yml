@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   discourse-db:
-    image: docker.io/bitnami/postgresql:17
+    image: postgres:16-alpine
 
     volumes:
       - discourse-postgresql-data:/bitnami/postgresql
@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
 
   discourse-redis:
-    image: docker.io/bitnami/redis:7.4
+    image: redis:7-alpine
 
     volumes:
       - discourse-redis-data:/bitnami/redis
@@ -32,7 +32,7 @@ services:
     restart: unless-stopped
 
   discourse-app:
-    image: docker.io/bitnamilegacy/discourse:3.5.0
+    image: bitnamilegacy/discourse:3.3.0
 
     volumes:
       - discourse-data:/bitnami/discourse
@@ -59,7 +59,7 @@ services:
     restart: unless-stopped
 
   discourse-sidekiq:
-    image: docker.io/bitnamilegacy/discourse:3.5.0
+    image: bitnamilegacy/discourse:3.3.0
 
     volumes:
       - discourse-sidekiq-data:/bitnami/discourse

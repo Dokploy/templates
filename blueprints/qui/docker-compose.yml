@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   qui:
-    image: ghcr.io/autobrr/qui:1.17.0
+    image: ghcr.io/autobrr/qui:latest
     restart: unless-stopped
     expose:
       - "7476"

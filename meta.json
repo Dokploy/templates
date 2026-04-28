@@ -5395,7 +5395,7 @@
   {
     "id": "qui",
     "name": "qui",
-    "version": "1.17.0",
+    "version": "latest",
     "description": "A fast, modern web interface for qBittorrent. Manage multiple qBittorrent instances from a single, lightweight application built by autobrr.",
     "logo": "qui.png",
     "links": {

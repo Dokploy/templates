@@ -16,3 +16,4 @@ services:
 
 volumes:
   console_postgres:
+  dbdesk_studio_data:

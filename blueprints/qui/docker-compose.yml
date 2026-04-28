@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  qui:
+    image: ghcr.io/autobrr/qui:1.17.0
+    restart: unless-stopped
+    expose:
+      - "7476"
+    volumes:
+      - qui-config:/config
+
+volumes:
+  qui-config:

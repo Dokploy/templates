@@ -5393,6 +5393,25 @@
     ]
   },
   {
+    "id": "qui",
+    "name": "qui",
+    "version": "1.17.0",
+    "description": "A fast, modern web interface for qBittorrent. Manage multiple qBittorrent instances from a single, lightweight application built by autobrr.",
+    "logo": "qui.png",
+    "links": {
+      "github": "https://github.com/autobrr/qui",
+      "website": "https://getqui.com",
+      "docs": "https://getqui.com"
+    },
+    "tags": [
+      "torrent",
+      "qbittorrent",
+      "download",
+      "media",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "rabbitmq",
     "name": "RabbitMQ",
     "version": "4.1-management",
@@ -5950,24 +5969,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

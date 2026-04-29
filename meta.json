@@ -1542,6 +1542,22 @@
     ]
   },
   {
+    "id": "construct",
+    "name": "Construct",
+    "version": "2026.5.2",
+    "description": "Fast, small, and fully autonomous AI personal assistant infrastructure. Deploy anywhere, swap anything. 100% Rust.",
+    "logo": "construct.png",
+    "links": {
+      "github": "https://github.com/KumihoIO/construct-os",
+      "website": "https://kumiho.io",
+      "docs": "https://github.com/KumihoIO/construct-os#readme"
+    },
+    "tags": [
+      "ai",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "convertx",
     "name": "ConvertX",
     "version": "latest",
@@ -5950,24 +5966,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

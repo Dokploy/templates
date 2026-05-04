@@ -1,0 +1,15 @@
+[variables]
+BASIC_AUTH_USER = "admin"
+BASIC_AUTH_PASS = "${password:12}"
+
+[config]
+[[config.domains]]
+name = "Domain"
+variable = "DOMAIN"
+serviceName = "mediafetch"
+port = 3002
+
+[[config.mounts]]
+name = "Downloads"
+filePath = "/data/downloads"
+content = "mediafetch"

@@ -1,17 +1,171 @@
 [variables]
-main_domain = "${domain}"
-db_password = "${password}"
-db_root_password = "${password}"
+  domain_name = "${domain}"
+  db_password = "${password:32}"
+  db_root_password = "${password:32}"
+  region = "DE"
 
 [config]
-mounts = []
+  env = [
+    "MYSQL_PASSWORD=${db_password}",
+    "MYSQL_ROOT_PASSWORD=${db_root_password}",
+    "DEFAULT_PHONE_REGION=${region}",
+    "NEXTCLOUD_DOMAIN=${domain_name}",
+    "OVERWRITEPROTOCOL=https",
+    "TRUSTED_PROXIES=10.0.0.0/8 172.16.0.0/12",
+    "REDIS_HOST=nextcloud_redis",
+    "MYSQL_DATABASE=nextcloud",
+    "MYSQL_USER=nextcloud"
+  ]
 
-[[config.domains]]
-serviceName = "nextcloud"
-port = 80
-host = "${main_domain}"
+  [[config.domains]]
+    serviceName = "nextcloud"
+    port = 80
+    host = "${domain_name}"
 
-[config.env]
-NEXTCLOUD_DOMAIN = "${main_domain}"
-MYSQL_SECRET_PASSWORD = "${db_password}"
-MYSQL_SECRET_PASSWORD_ROOT = "${db_root_password}"
+  [[config.mounts]]
+    filePath = "fix-nextcloud.sh"
+    content = """#!/bin/sh
+#
+# Nextcloud Optimization Script
+# ==============================
+# This script applies production-ready optimizations to Nextcloud.
+#
+# MANUAL EXECUTION REQUIRED
+# -------------------------
+# After Nextcloud completes its initial setup (create admin account, etc.),
+# run this script manually:
+#
+# Option 1 (From Dokploy UI):
+#   1. Go to your Nextcloud service in Dokploy
+#   2. Open the Terminal tab
+#   3. Run: su -s /bin/sh www-data -c "/bin/sh /usr/local/bin/fix-nextcloud.sh"
+#
+# Option 2 (From command line):
+#   docker exec -u www-data <container-name> /bin/sh /usr/local/bin/fix-nextcloud.sh
+#
+# Optimizations include:
+# - Trusted proxy configuration for reverse proxy support
+# - HTTPS protocol override
+# - Regional settings (phone region, maintenance window)
+# - Performance optimizations (database repair, missing indices)
+# - Redis caching configuration (APCu, distributed, locking)
+#
+# The script is idempotent - it creates a marker file to prevent re-running.
+# To re-run manually: delete /var/www/html/data/.nextcloud-optimized and restart container
+#
+
+MARKER_FILE="/var/www/html/data/.nextcloud-optimized"
+OCC="php /var/www/html/occ"
+
+# Check if already run
+if [ -f "$MARKER_FILE" ]; then
+  echo "Optimizations already applied (marker file exists)."
+  exit 0
+fi
+
+echo "=========================================="
+echo "  Nextcloud Optimization Script"
+echo "=========================================="
+echo ""
+
+# Check if running as www-data
+CURRENT_USER=$(whoami)
+if [ "$CURRENT_USER" = "www-data" ]; then
+  RUN_AS_WWWDATA=""
+else
+  RUN_AS_WWWDATA="su -s /bin/sh www-data -c"
+fi
+
+# Function to run occ command with error handling
+run_occ() {
+  description="$1"
+  shift
+  printf "  - %s... " "$description"
+  if [ -z "$RUN_AS_WWWDATA" ]; then
+    # Already running as www-data
+    if $OCC "$@" >/dev/null 2>&1; then
+      echo "✓"
+      return 0
+    else
+      echo "✗ (failed, but continuing)"
+      return 1
+    fi
+  else
+    # Need to switch to www-data
+    if $RUN_AS_WWWDATA "$OCC $*" >/dev/null 2>&1; then
+      echo "✓"
+      return 0
+    else
+      echo "✗ (failed, but continuing)"
+      return 1
+    fi
+  fi
+}
+
+# Test database connectivity
+echo "[1/5] Testing database connectivity..."
+if [ -z "$RUN_AS_WWWDATA" ]; then
+  if $OCC status >/dev/null 2>&1; then
+    echo "  ✓ Database is accessible"
+  else
+    echo "  ✗ Database not accessible"
+    exit 1
+  fi
+else
+  if $RUN_AS_WWWDATA "$OCC status" >/dev/null 2>&1; then
+    echo "  ✓ Database is accessible"
+  else
+    echo "  ✗ Database not accessible"
+    exit 1
+  fi
+fi
+
+# Configure trusted proxies
+echo "[2/5] Configuring trusted proxies..."
+run_occ "Set trusted proxy 10.0.0.0/8" config:system:set trusted_proxies 0 --value='10.0.0.0/8'
+run_occ "Set trusted proxy 172.16.0.0/12" config:system:set trusted_proxies 1 --value='172.16.0.0/12'
+run_occ "Set trusted proxy 192.168.0.0/16" config:system:set trusted_proxies 2 --value='192.168.0.0/16'
+run_occ "Set HTTPS protocol override" config:system:set overwriteprotocol --value='https'
+
+# Configure regional settings
+echo "[3/5] Configuring regional settings..."
+run_occ "Set phone region to DE" config:system:set default_phone_region --value='DE'
+run_occ "Set maintenance window start" config:system:set maintenance_window_start --value=1 --type=integer
+
+# Run performance optimizations
+echo "[4/5] Running performance optimizations..."
+echo "  - Running maintenance repair (this may take a while)..."
+if [ -z "$RUN_AS_WWWDATA" ]; then
+  if $OCC maintenance:repair --include-expensive 2>&1 | grep -q "No repair steps available"; then
+    echo "    ✓ No repairs needed"
+  else
+    echo "    ✓ Repair completed"
+  fi
+else
+  if $RUN_AS_WWWDATA "$OCC maintenance:repair --include-expensive" 2>&1 | grep -q "No repair steps available"; then
+    echo "    ✓ No repairs needed"
+  else
+    echo "    ✓ Repair completed"
+  fi
+fi
+run_occ "Add missing database indices" db:add-missing-indices
+
+# Configure Redis caching
+echo "[5/5] Configuring Redis caching..."
+run_occ "Set APCu for local cache" config:system:set memcache.local --value='\\OC\\Memcache\\APCu'
+run_occ "Set Redis for distributed cache" config:system:set memcache.distributed --value='\\OC\\Memcache\\Redis'
+run_occ "Set Redis for locking" config:system:set memcache.locking --value='\\OC\\Memcache\\Redis'
+run_occ "Set Redis host" config:system:set redis host --value='nextcloud_redis'
+run_occ "Set Redis port" config:system:set redis port --value=6379 --type=integer
+
+# Create marker file
+touch "$MARKER_FILE"
+
+echo ""
+echo "=========================================="
+echo "  Optimization Complete!"
+echo "=========================================="
+echo "All optimizations have been applied."
+echo "Marker file created at: $MARKER_FILE"
+echo ""
+"""

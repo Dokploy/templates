@@ -170,6 +170,16 @@ This document provides essential context for AI models interacting with this pro
   - **Env:** Array of strings: `env = ["KEY=VALUE", "DB_PASSWORD=${db_pass}"]`
   - **Available helpers:** `${domain}`, `${password:length}`, `${base64:length}`, `${hash:length}`, `${uuid}`, `${randomPort}`, `${email}`, `${username}`, `${timestamp}`, `${timestamps:datetime}`, `${timestampms:datetime}`, `${jwt:secret_var:payload_var}`
   - **JWT helper example:** `${jwt:mysecret:mypayload}` with payload containing `exp: ${timestamps:2030-01-01T00:00:00Z}`
+  - **Volume bind mounts (in docker-compose.yml):** When mounting host paths, do NOT use absolute paths like `"/folder:/path/in/container"`. Use relative paths instead:
+    ```yaml
+    # Invalid
+    volumes:
+      - "/folder:/path/in/container" ❌
+    # Valid
+    volumes:
+      - "../files/my-database:/var/lib/mysql" ✅
+      - "../files/my-configs:/etc/my-app/config" ✅
+    ```
 
 - **meta.json Requirements:**
 

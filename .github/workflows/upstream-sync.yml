@@ -157,11 +157,19 @@ jobs:
             exit 0
           fi
 
-          LABEL_ARGS=()
-          if [ "$(gh label list --search "upstream-sync" --json name --jq 'any(.[]; .name == "upstream-sync")')" = "true" ]; then
-            LABEL_ARGS=(--label "upstream-sync")
-          else
-            echo "::warning::Label 'upstream-sync' not found. Creating the sync PR without a label."
+          AHEAD_BY=""
+          for attempt in {1..6}; do
+            AHEAD_BY=$(gh api "repos/${GITHUB_REPOSITORY}/compare/main...${{ steps.merge.outputs.branch }}" --jq '.ahead_by' 2>/dev/null || true)
+            if [ -n "$AHEAD_BY" ]; then
+              break
+            fi
+            echo "Waiting for GitHub to index ${{ steps.merge.outputs.branch }}..."
+            sleep 5
+          done
+
+          if [ "${AHEAD_BY:-0}" = "0" ]; then
+            echo "No commits between main and ${{ steps.merge.outputs.branch }}. Skipping PR creation."
+            exit 0
           fi
 
           gh pr create \
@@ -190,5 +198,4 @@ jobs:
           EOF
           )" \
             --base main \
-            --head "${{ steps.merge.outputs.branch }}" \
-            "${LABEL_ARGS[@]}"
+            --head "${GITHUB_REPOSITORY_OWNER}:${{ steps.merge.outputs.branch }}"

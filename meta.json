@@ -1638,7 +1638,7 @@
   {
     "id": "duplicati",
     "name": "Duplicati",
-    "version": "latest",
+    "version": "2.3.0",
     "description": "Duplicati is a free, open-source backup solution that offers zero-trust, fully encrypted backups for your data",
     "logo": "logo.png",
     "links": {

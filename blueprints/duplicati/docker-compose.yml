@@ -1,6 +1,8 @@
+version: '3.8'
 services:
   duplicati:
-    image: 'lscr.io/linuxserver/duplicati:latest'
+    image: 'lscr.io/linuxserver/duplicati:${APP_RELEASE:-2.3.0}'
+    restart: unless-stopped
     environment:
       - SERVICE_URL_DUPLICATI_8200
       - PUID=0
@@ -10,9 +12,9 @@ services:
       - 'DUPLICATI__WEBSERVICE_PASSWORD=${SERVICE_PASSWORD_WEB}'
     volumes:
       - 'duplicati-config:/config'
-      - '/path/to/backups:/backups'
-      - '/path/to/source:/source'
-      - '/path/to/restore:/restore'
+      - '../files/backups:/backups'
+      - '../files/source:/source'
+      - '../files/restore:/restore'
 
     healthcheck:
       test:

@@ -9,5 +9,6 @@ host = "${main_domain}"
 
 [config.env]
 TZ = "Europe/Vienna"
+APP_RELEASE = "2.3.0"
 SETTINGS_ENCRYPTION_KEY = "${password:32}"
 DUPLICATI__WEBSERVICE_PASSWORD = "${password:16}"

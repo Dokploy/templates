@@ -2,7 +2,8 @@ name: Upstream Sync
 
 on:
   schedule:
-    - cron: "0 8 * * *"
+    # Run weekly on Mondays at 08:00 UTC.
+    - cron: "0 8 * * 1"
   workflow_dispatch:
 
 permissions:
@@ -156,12 +157,19 @@ jobs:
             exit 0
           fi
 
+          LABEL_ARGS=()
+          if [ "$(gh label list --search "upstream-sync" --json name --jq 'any(.[]; .name == "upstream-sync")')" = "true" ]; then
+            LABEL_ARGS=(--label "upstream-sync")
+          else
+            echo "::warning::Label 'upstream-sync' not found. Creating the sync PR without a label."
+          fi
+
           gh pr create \
             --title "Upstream sync ${DATE}" \
             --body "$(cat <<EOF
           ## Upstream Sync
 
-          Daily sync from \`Dokploy/templates:canary\`.
+          Weekly sync from \`Dokploy/templates:canary\`.
 
           | Metric | Count |
           |--------|-------|
@@ -183,4 +191,4 @@ jobs:
           )" \
             --base main \
             --head "${{ steps.merge.outputs.branch }}" \
-            --label "upstream-sync"
+            "${LABEL_ARGS[@]}"

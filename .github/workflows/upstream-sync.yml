@@ -56,7 +56,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git checkout -b "$BRANCH"
+          git checkout -B "$BRANCH"
 
           # Attempt merge
           if ! git merge upstream/canary --no-edit; then
@@ -96,7 +96,7 @@ jobs:
             git commit --no-edit || true
           fi
 
-          git push origin "$BRANCH"
+          git push --force-with-lease origin "$BRANCH"
           echo "branch=$BRANCH" >> $GITHUB_OUTPUT
 
       - name: Check curated impact

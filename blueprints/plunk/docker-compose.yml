@@ -60,24 +60,6 @@ services:
       timeout: 20s
       retries: 3
 
-  ntfy:
-    image: binwiederhier/ntfy:latest
-    restart: unless-stopped
-    command: serve
-    environment:
-      - TZ=UTC
-      - NTFY_UPSTREAM_BASE_URL=https://ntfy.sh
-      - NTFY_BASE_URL=${NTFY_URL}
-    volumes:
-      - ntfy_cache:/var/cache/ntfy
-      - ntfy_etc:/etc/ntfy
-    healthcheck:
-      test: ["CMD-SHELL", "wget -q --tries=1 http://localhost:80/v1/health -O - | grep -Eo '\"healthy\"\\s*:\\s*true' || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
   # ============================================
   # Plunk Application
   # ============================================
@@ -143,9 +125,6 @@ services:
       PORT_SECURE: ${PORT_SECURE}
       PORT_SUBMISSION: ${PORT_SUBMISSION}
 
-      # Notifications (ntfy.sh)
-      NTFY_URL: ${NTFY_URL}
-
       # Internal
       PLUNK_API_KEY: ${PLUNK_API_KEY}
       PLUNK_FROM_ADDRESS: ${PLUNK_FROM_ADDRESS}
@@ -184,8 +163,4 @@ volumes:
   minio_data:
     driver: local
   plunk_data:
-    driver: local
-  ntfy_cache:
-    driver: local
-  ntfy_etc:
     driver: local

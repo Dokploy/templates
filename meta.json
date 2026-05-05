@@ -6815,5 +6815,23 @@
     "time-series",
     "prometheus"
   ]
+},
+  {
+  "id": "gel",
+  "name": "Gel",
+  "version": "6",
+  "description": "Gel is a next-generation graph-relational database (formerly EdgeDB) with a built-in migration system, expressive query language, and first-class TypeScript/Python support.",
+  "logo": "gel.png",
+  "links": {
+    "github": "https://github.com/geldata/gel",
+    "website": "https://www.geldata.com/",
+    "docs": "https://docs.geldata.com/"
+  },
+  "tags": [
+    "database",
+    "graph-database",
+    "edgedb",
+    "typescript"
+  ]
 }
 ]

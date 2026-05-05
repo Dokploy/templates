@@ -6833,5 +6833,58 @@
     "edgedb",
     "typescript"
   ]
+},
+  {
+  "id": "matomo",
+  "name": "Matomo",
+  "version": "5",
+  "description": "Matomo is the leading open-source web analytics platform that gives you full ownership of your data. A privacy-focused alternative to Google Analytics.",
+  "logo": "matomo.png",
+  "links": {
+    "github": "https://github.com/matomo-org/matomo",
+    "website": "https://matomo.org/",
+    "docs": "https://matomo.org/guides/"
+  },
+  "tags": [
+    "analytics",
+    "privacy",
+    "self-hosted"
+  ]
+},
+{
+  "id": "flarum",
+  "name": "Flarum",
+  "version": "latest",
+  "description": "Flarum is a delightfully simple, modern forum software. It is fast, free, and easy to use with a clean and extensible architecture.",
+  "logo": "flarum.png",
+  "links": {
+    "github": "https://github.com/flarum/flarum",
+    "website": "https://flarum.org/",
+    "docs": "https://docs.flarum.org/"
+  },
+  "tags": [
+    "forum",
+    "community",
+    "discussion",
+    "php"
+  ]
+},
+{
+  "id": "leantime",
+  "name": "Leantime",
+  "version": "latest",
+  "description": "Leantime is an open-source project management system for small teams and startups, built with PHP and MySQL.",
+  "logo": "leantime.png",
+  "links": {
+    "github": "https://github.com/Leantime/leantime",
+    "website": "https://leantime.io/",
+    "docs": "https://docs.leantime.io/"
+  },
+  "tags": [
+    "project-management",
+    "productivity",
+    "self-hosted",
+    "php"
+  ]
 }
 ]

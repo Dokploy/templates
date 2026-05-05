@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:16}"
+db_root_password = "${password:16}"
+db_user = "matomo"
+db_name = "matomo"
+
+[config]
+[[config.domains]]
+serviceName = "matomo"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+MATOMO_DB_USER = "${db_user}"
+MATOMO_DB_PASSWORD = "${db_password}"
+MATOMO_DB_NAME = "${db_name}"
+MYSQL_ROOT_PASSWORD = "${db_root_password}"

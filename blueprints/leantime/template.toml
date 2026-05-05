@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:16}"
+db_root_password = "${password:16}"
+db_user = "leantime"
+db_name = "leantime"
+
+[config]
+[[config.domains]]
+serviceName = "leantime"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+LEAN_DB_USER = "${db_user}"
+LEAN_DB_PASSWORD = "${db_password}"
+LEAN_DB_DATABASE = "${db_name}"
+MYSQL_ROOT_PASSWORD = "${db_root_password}"

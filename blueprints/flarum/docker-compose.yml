@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  flarum:
+    image: crazymax/flarum:latest
+    restart: unless-stopped
+    ports:
+      - 8000
+    environment:
+      - FLARUM_BASE_URL=https://${FLARUM_DOMAIN}
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - flarum-data:/data
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  flarum-data: {}
+  db-data: {}

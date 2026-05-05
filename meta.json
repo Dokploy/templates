@@ -6797,5 +6797,23 @@
     "redis",
     "key-value"
   ]
+},
+{
+  "id": "victoriametrics",
+  "name": "VictoriaMetrics",
+  "version": "v1.108.1",
+  "description": "VictoriaMetrics is a fast, cost-effective, and scalable monitoring solution and time series database. It is a drop-in replacement for Prometheus.",
+  "logo": "victoriametrics.png",
+  "links": {
+    "github": "https://github.com/VictoriaMetrics/VictoriaMetrics",
+    "website": "https://victoriametrics.com/",
+    "docs": "https://docs.victoriametrics.com/"
+  },
+  "tags": [
+    "monitoring",
+    "metrics",
+    "time-series",
+    "prometheus"
+  ]
 }
 ]

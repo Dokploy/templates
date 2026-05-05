@@ -6779,5 +6779,23 @@
       "saml",
       "multi-tenant"
     ]
-  }
+  },
+  {
+  "id": "keydb",
+  "name": "KeyDB",
+  "version": "latest",
+  "description": "KeyDB is a high-performance fork of Redis with multithreading, active replication, and flash storage support.",
+  "logo": "keydb.png",
+  "links": {
+    "github": "https://github.com/Snapchat/KeyDB",
+    "website": "https://docs.keydb.dev/",
+    "docs": "https://docs.keydb.dev/docs/"
+  },
+  "tags": [
+    "database",
+    "cache",
+    "redis",
+    "key-value"
+  ]
+}
 ]

@@ -16,7 +16,7 @@ port = 3000
 host = "${main_domain}"
 
 [config.env]
-NEXT_PUBLIC_BASE_URL = "https://${main_domain}"
+NEXT_PUBLIC_BASE_URL = "http://${main_domain}"
 DATABASE_URL = "postgres://postgres:${postgres_password}@db:5432/rallly"
 S3_ENDPOINT = "http://garage:3900"
 S3_BUCKET_NAME = "rallly"
@@ -45,6 +45,8 @@ data_dir = "/var/lib/garage/data"
 db_engine = "sqlite"
 replication_factor = 1
 rpc_bind_addr = "[::]:3901"
+rpc_public_addr = "localhost:3901"
+rpc_secret = "${garage_rpc_secret}"
 
 [s3_api]
 api_bind_addr = "[::]:3900"

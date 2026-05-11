@@ -5412,7 +5412,7 @@
   {
     "id": "rallly",
     "name": "Rallly",
-    "version": "4",
+    "version": "4.10.0",
     "description": "Rallly is an open-source scheduling and collaboration tool for organizing meetings and events.",
     "logo": "rallly.svg",
     "links": {

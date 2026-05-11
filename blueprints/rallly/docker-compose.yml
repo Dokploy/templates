@@ -1,0 +1,72 @@
+version: "3.8"
+
+services:
+  rallly:
+    image: lukevella/rallly:4
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      garage:
+        condition: service_healthy
+    environment:
+      NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
+      DATABASE_URL: ${DATABASE_URL}
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_BUCKET_NAME: ${S3_BUCKET_NAME}
+      S3_REGION: ${S3_REGION}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
+      SECRET_PASSWORD: ${SECRET_PASSWORD}
+      SUPPORT_EMAIL: ${SUPPORT_EMAIL}
+      NOREPLY_EMAIL: ${NOREPLY_EMAIL}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PWD: ${SMTP_PWD}
+      SMTP_SECURE: ${SMTP_SECURE}
+      ALLOWED_EMAILS: ${ALLOWED_EMAILS}
+      INITIAL_ADMIN_EMAIL: ${INITIAL_ADMIN_EMAIL}
+    expose:
+      - "3000"
+
+  db:
+    image: postgres:14-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: rallly
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d rallly"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  garage:
+    image: dxflrs/garage:v2.3.0
+    restart: unless-stopped
+    command: /garage server --single-node --default-bucket
+    environment:
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET}
+      GARAGE_DEFAULT_ACCESS_KEY: ${S3_ACCESS_KEY_ID}
+      GARAGE_DEFAULT_SECRET_KEY: ${S3_SECRET_ACCESS_KEY}
+      GARAGE_DEFAULT_BUCKET: rallly
+    volumes:
+      - ../files/garage.toml:/etc/garage.toml:ro
+      - garage-meta:/var/lib/garage/meta
+      - garage-data:/var/lib/garage/data
+    healthcheck:
+      test: ["CMD", "/garage", "stats", "-a"]
+      interval: 1h
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+      start_interval: 5s
+
+volumes:
+  db-data:
+  garage-meta:
+  garage-data:

@@ -5410,6 +5410,24 @@
     ]
   },
   {
+    "id": "rallly",
+    "name": "Rallly",
+    "version": "4",
+    "description": "Rallly is an open-source scheduling and collaboration tool for organizing meetings and events.",
+    "logo": "rallly.svg",
+    "links": {
+      "github": "https://github.com/lukevella/rallly",
+      "website": "https://rallly.co",
+      "docs": "https://support.rallly.co/self-hosting/introduction"
+    },
+    "tags": [
+      "scheduling",
+      "collaboration",
+      "productivity",
+      "meetings"
+    ]
+  },
+  {
     "id": "reactive-resume",
     "name": "Reactive Resume",
     "version": "latest",
@@ -5950,24 +5968,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

@@ -5711,8 +5711,8 @@
     "logo": "senddock.svg",
     "links": {
       "github": "https://github.com/Arkhe-Systems/senddock",
-      "website": "https://senddock.com",
-      "docs": "https://docs.senddock.com"
+      "website": "https://senddock.dev",
+      "docs": "https://docs.senddock.dev"
     },
     "tags": [
       "email",

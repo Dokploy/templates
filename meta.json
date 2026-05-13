@@ -3864,6 +3864,25 @@
     ]
   },
   {
+    "id": "marketing-dashboard",
+    "name": "Marketing Dashboard",
+    "version": "latest",
+    "description": "Self-hosted marketing operations dashboard for product-led growth, checkout analytics, paid media, SEO signals, and Stripe readiness.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/abel-yelin/marketing-dashboard",
+      "website": "https://github.com/abel-yelin/marketing-dashboard",
+      "docs": "https://github.com/abel-yelin/marketing-dashboard/blob/main/docs/production-deployment.md"
+    },
+    "tags": [
+      "analytics",
+      "marketing",
+      "self-hosted",
+      "postgresql",
+      "nextjs"
+    ]
+  },
+  {
     "id": "mattermost",
     "name": "Mattermost",
     "version": "10.6.1",

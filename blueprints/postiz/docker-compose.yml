@@ -38,9 +38,6 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PWD=${DB_PASSWORD}
       - POSTGRES_SEEDS=postiz-temporal-postgres
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/production-sql.yaml
-    volumes:
-      - postiz-temporal-config:/etc/temporal/config/dynamicconfig
     depends_on:
       postiz-temporal-postgres:
         condition: service_healthy
@@ -107,4 +104,3 @@ volumes:
   postiz-config:
   postiz-uploads:
   postiz-temporal-db-data:
-  postiz-temporal-config:

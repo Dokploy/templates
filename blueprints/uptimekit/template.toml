@@ -16,8 +16,8 @@ host = "${second_domain}"
 
 [config.env]
 BETTER_AUTH_SECRET = "${secret_base}"
-BETTER_AUTH_URL = "${main_domain}"
-NEXT_PUBLIC_URL = "${main_domain}"
+BETTER_AUTH_URL = "http://${main_domain}"
+NEXT_PUBLIC_URL = "http://${main_domain}"
 DASH_PORT=3000
 STATUS_PAGE_PORT=3001
 

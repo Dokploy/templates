@@ -42,10 +42,9 @@ const TemplateGrid: React.FC<TemplateGridProps> = ({ view }) => {
     filteredTemplates,
     setFilteredTemplates,
   } = useStore();
+  const searchQuery = useStore((state) => state.searchQuery);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const searchQuery = useStore((state) => state.searchQuery);
-  const selectedTags = useStore((state) => state.selectedTags);
   const { addSelectedTag } = useStore();
 
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
@@ -104,25 +103,6 @@ const TemplateGrid: React.FC<TemplateGridProps> = ({ view }) => {
     setTemplateFiles(null); // Reset previous files
     fetchTemplateFiles(template.id);
   };
-
-  useEffect(() => {
-    const filtered = templates.filter((template) => {
-      // Filter by search query
-      const matchesSearch = template.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-
-      // Filter by selected tags
-      const matchesTags =
-        selectedTags.length === 0 ||
-        selectedTags.every((tag) => template.tags.includes(tag));
-
-      return matchesSearch && matchesTags;
-    });
-
-    setTemplatesCount(filtered.length);
-    setFilteredTemplates(filtered);
-  }, [searchQuery, selectedTags]);
 
   if (loading) {
     return (

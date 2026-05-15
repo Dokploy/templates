@@ -1,8 +1,10 @@
 [variables]
 main_domain = "${domain}"
+# Your PostgreSQL connection string. PowerSync connects directly to replicate + sync.
+# Must have logical replication enabled (wal_level=logical).
 data_source_uri = "postgresql://user:password@host:5432/db?sslmode=require"
+# Auto-generated admin token for API access.
 admin_token = "${password:32}"
-jwks_url = ""
 
 [config]
 [[config.domains]]
@@ -11,10 +13,15 @@ port = 8080
 host = "${main_domain}"
 
 [config.env]
+# PowerSync listens on port 8080 internally. Dokproxy/Traefik handles HTTPS.
 PS_PORT = "8080"
+# Source + bucket storage URI. PowerSync uses PostgreSQL for both.
 PS_DATA_SOURCE_URI = "${data_source_uri}"
+# Secret token for the admin API (used in Authorization header).
 PS_ADMIN_TOKEN = "${admin_token}"
-PS_JWKS_URL = "${jwks_url}"
+# NODE_OPTIONS --max-old-space-size=1000 limits memory to ~1GB
 NODE_OPTIONS = "--max-old-space-size=1000"
-POWERSYNC_CONFIG_B64 = "dGVsZW1ldHJ5OgogIGRpc2FibGVfdGVsZW1ldHJ5X3NoYXJpbmc6IHRydWUKcmVwbGljYXRpb246CiAgY29ubmVjdGlvbnM6CiAgICAtIHR5cGU6IHBvc3RncmVzcWwKICAgICAgdXJpOiAhZW52IFBTX0RBVEFfU09VUkNFX1VSSQogICAgICBzc2xtb2RlOiByZXF1aXJlCnN0b3JhZ2U6CiAgdHlwZTogcG9zdGdyZXNxbAogIHVyaTogIWVudiBQU19EQVRBX1NPVVJDRV9VUkkKcG9ydDogIWVudiBQU19QT1JUCnN5bmNfY29uZmlnOgogIHBhdGg6IHN5bmMtY29uZmlnLnlhbWwKY2xpZW50X2F1dGg6CiAgandrc191cmk6ICFlbnYgUFNfSldLU19VUkwKICBhdWRpZW5jZTogWyJwb3dlcnN5bmMiXQphcGk6CiAgdG9rZW5zOgogICAgLSAhZW52IFBTX0FETUlOX1RPS0VOCnN5c3RlbToKICBsb2dnaW5nOgogICAgbGV2ZWw6IGluZm8KICAgIGZvcm1hdDogdGV4dAo="
-POWERSYNC_SYNC_CONFIG_B64 = "Y29uZmlnOgogIGVkaXRpb246IDMKc3RyZWFtczoKICBnbG9iYWw6CiAgICBhdXRvX3N1YnNjcmliZTogdHJ1ZQogICAgcXVlcmllczoKICAgICAgLSBTRUxFQ1QgKiBGUk9NIGluZm9ybWF0aW9uX3NjaGVtYS50YWJsZXMgV0hFUkUgdGFibGVfc2NoZW1hID0gJ3B1YmxpYycK"
+# Base64-encoded PowerSync service config.
+# Contains replication, storage, auth, and sync rules — all via !env PS_* vars.
+# Decode with: echo '<base64>' | base64 -d
+POWERSYNC_CONFIG_B64 = "dGVsZW1ldHJ5OgogIGRpc2FibGVfdGVsZW1ldHJ5X3NoYXJpbmc6IHRydWUKcmVwbGljYXRpb246CiAgY29ubmVjdGlvbnM6CiAgICAtIHR5cGU6IHBvc3RncmVzcWwKICAgICAgdXJpOiAhZW52IFBTX0RBVEFfU09VUkNFX1VSSQogICAgICBzc2xtb2RlOiBkaXNhYmxlCnN0b3JhZ2U6CiAgdHlwZTogcG9zdGdyZXNxbAogIHVyaTogIWVudiBQU19EQVRBX1NPVVJDRV9VUkkKcG9ydDogIWVudiBQU19QT1JUCnN5bmNfY29uZmlnOgogIGNvbnRlbnQ6IHwKICAgIGNvbmZpZzoKICAgICAgZWRpdGlvbjogMwogICAgc3RyZWFtczoKICAgICAgZ2xvYmFsOgogICAgICAgIGF1dG9fc3Vic2NyaWJlOiB0cnVlCiAgICAgICAgcXVlcmllczoKICAgICAgICAgIC0gU0VMRUNUICogRlJPTSBpbmZvcm1hdGlvbl9zY2hlbWEudGFibGVzIFdIRVJFIHRhYmxlX3NjaGVtYSA9ICdwdWJsaWMnCmNsaWVudF9hdXRoOgogIGF1ZGllbmNlOiBbInBvd2Vyc3luYyJdCmFwaToKICB0b2tlbnM6CiAgICAtICFlbnYgUFNfQURNSU5fVE9LRU4Kc3lzdGVtOgogIGxvZ2dpbmc6CiAgICBsZXZlbDogaW5mbwogICAgZm9ybWF0OiB0ZXh0Cg=="

@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+data_source_uri = "postgresql://user:password@host:5432/db?sslmode=require"
+admin_token = "${password:32}"
+jwks_url = ""
+
+[config]
+[[config.domains]]
+serviceName = "powersync"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+PS_PORT = "8080"
+PS_DATA_SOURCE_URI = "${data_source_uri}"
+PS_ADMIN_TOKEN = "${admin_token}"
+PS_JWKS_URL = "${jwks_url}"
+NODE_OPTIONS = "--max-old-space-size=1000"
+POWERSYNC_CONFIG_B64 = "dGVsZW1ldHJ5OgogIGRpc2FibGVfdGVsZW1ldHJ5X3NoYXJpbmc6IHRydWUKcmVwbGljYXRpb246CiAgY29ubmVjdGlvbnM6CiAgICAtIHR5cGU6IHBvc3RncmVzcWwKICAgICAgdXJpOiAhZW52IFBTX0RBVEFfU09VUkNFX1VSSQogICAgICBzc2xtb2RlOiByZXF1aXJlCnN0b3JhZ2U6CiAgdHlwZTogcG9zdGdyZXNxbAogIHVyaTogIWVudiBQU19EQVRBX1NPVVJDRV9VUkkKcG9ydDogIWVudiBQU19QT1JUCnN5bmNfY29uZmlnOgogIHBhdGg6IHN5bmMtY29uZmlnLnlhbWwKY2xpZW50X2F1dGg6CiAgandrc191cmk6ICFlbnYgUFNfSldLU19VUkwKICBhdWRpZW5jZTogWyJwb3dlcnN5bmMiXQphcGk6CiAgdG9rZW5zOgogICAgLSAhZW52IFBTX0FETUlOX1RPS0VOCnN5c3RlbToKICBsb2dnaW5nOgogICAgbGV2ZWw6IGluZm8KICAgIGZvcm1hdDogdGV4dAo="
+POWERSYNC_SYNC_CONFIG_B64 = "Y29uZmlnOgogIGVkaXRpb246IDMKc3RyZWFtczoKICBnbG9iYWw6CiAgICBhdXRvX3N1YnNjcmliZTogdHJ1ZQogICAgcXVlcmllczoKICAgICAgLSBTRUxFQ1QgKiBGUk9NIGluZm9ybWF0aW9uX3NjaGVtYS50YWJsZXMgV0hFUkUgdGFibGVfc2NoZW1hID0gJ3B1YmxpYycK"

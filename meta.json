@@ -6414,6 +6414,24 @@
     ]
   },
   {
+    "id": "uptimekit",
+    "name": "Uptimekit",
+    "version": "3.1.0",
+    "description": "The modern open-source status page and monitoring solution.",
+    "logo": "uptimekit.svg",
+    "links": {
+      "github": "https://github.com/uptimekit/uptimekit",
+      "website": "https://uptimekit.dev/",
+      "docs": "https://docs.uptimekit.dev/"
+    },
+    "tags": [
+      "monitoring",
+      "uptime",
+      "status-page",
+      "distributed"
+    ]
+  },
+  {
     "id": "usesend",
     "name": "useSend",
     "version": "latest",

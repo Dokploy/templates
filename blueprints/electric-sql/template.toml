@@ -16,8 +16,3 @@ DATABASE_URL = "${DATABASE_URL}"
 ELECTRIC_SECRET = "${ELECTRIC_SECRET}"
 ELECTRIC_PORT = "${ELECTRIC_PORT}"
 ELECTRIC_DATABASE_USE_IPV6 = "${ELECTRIC_DATABASE_USE_IPV6}"
-
-[[config.mounts]]
-serviceName = "electric-sql"
-volumeName = "electric_data"
-mountPath = "/var/lib/electric/persistent"

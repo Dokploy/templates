@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:32}"
+
+[config]
+env = [
+  "SEQ_HOST=${main_domain}",
+  "SEQ_ADMIN_PASSWORD=${admin_password}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "seq"
+port = 80
+host = "${main_domain}"

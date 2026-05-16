@@ -5742,7 +5742,7 @@
     ]
   },
   {
-        "id": "seq",
+    "id": "seq",
     "name": "Seq",
     "version": "latest",
     "description": "Seq is a self-hosted search and analysis server for structured application logs and traces.",
@@ -5759,7 +5759,7 @@
     ]
   },
   {
-"id": "shlink",
+    "id": "shlink",
     "name": "Shlink",
     "version": "stable",
     "description": "URL shortener that can be used to serve shortened URLs under your own domain.",

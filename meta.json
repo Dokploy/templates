@@ -5742,7 +5742,24 @@
     ]
   },
   {
-    "id": "shlink",
+        "id": "seq",
+    "name": "Seq",
+    "version": "latest",
+    "description": "Seq is a self-hosted search and analysis server for structured application logs and traces.",
+    "logo": "seq.svg",
+    "links": {
+      "github": "https://github.com/datalust/seq-tickets",
+      "website": "https://datalust.co/seq",
+      "docs": "https://docs.datalust.co/"
+    },
+    "tags": [
+      "logs",
+      "monitoring",
+      "observability"
+    ]
+  },
+  {
+"id": "shlink",
     "name": "Shlink",
     "version": "stable",
     "description": "URL shortener that can be used to serve shortened URLs under your own domain.",

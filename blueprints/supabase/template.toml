@@ -11,7 +11,6 @@ secret_key_base = "${password:64}"
 vault_enc_key = "${password:32}"
 jwt_secret = "${password:32}"
 pooler_tenant_id = "${uuid}"
-container_name_prefix = "${APP_NAME}-supabase"
 anon_key_payload = """{
   "role": "anon",
   "iss": "supabase",
@@ -39,12 +38,7 @@ env = [
 '# - ADDITIONAL_REDIRECT_URLS, SITE_URL should point to application using supabase for authentication',
 '#   They are used for redirecting after login/signup and gotrue will check them before sending emails',
 '# - POSTGRES_PORT, POOLER_PROXY_PORT_TRANSACTION should be changed if you are already running other instances of supabase',
-'#',
-'# Supabase uses container names in part of its configuration so it is important to keep them',
-'# This template generates a random prefix for the container names to avoid conflicts',
-'# If you change it you will need to update routes in the vector.yml file in advanced->mounts section',
 '############',
-'CONTAINER_PREFIX=${container_name_prefix}',
 '',
 '############',
 '# Secrets',
@@ -1022,8 +1016,6 @@ content = """api:
 sources:
   docker_host:
     type: docker_logs
-    exclude_containers:
-      - ${container_name_prefix}-vector
 
 transforms:
   project_logs:
@@ -1033,7 +1025,15 @@ transforms:
     source: |-
       .project = "default"
       .event_message = del(.message)
-      .appname = replace!(del(.container_name), "${container_name_prefix}", "supabase")
+      compose_service, label_err = get(.label, ["com.docker.compose.service"])
+      if label_err != null || compose_service == null {
+        abort
+      }
+      compose_service = to_string!(compose_service)
+      if compose_service == "vector" {
+        abort
+      }
+      .appname = "supabase-" + compose_service
       del(.container_created_at)
       del(.container_id)
       del(.source_type)
@@ -1050,9 +1050,9 @@ transforms:
       kong: '.appname == "supabase-kong" || .appname == "supabase-envoy"'
       auth: '.appname == "supabase-auth"'
       rest: '.appname == "supabase-rest"'
-      realtime: '.appname == "realtime-dev.supabase-realtime"'
+      realtime: '.appname == "supabase-realtime"'
       storage: '.appname == "supabase-storage"'
-      functions: '.appname == "supabase-edge-functions"'
+      functions: '.appname == "supabase-functions"'
       db: '.appname == "supabase-db"'
   # Ignores non nginx errors since they are related with kong booting up
   kong_logs:

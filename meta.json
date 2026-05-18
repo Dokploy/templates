@@ -5989,6 +5989,24 @@
     "dokploy_version": ">=0.22.5"
   },
   {
+    "id": "supabase-2026.04",
+    "name": "SupaBase (2026.04)",
+    "version": "1.26.04 / dokploy >= 0.22.5",
+    "description": "The open source Firebase alternative. Supabase gives you a dedicated Postgres database to build your web, mobile, and AI applications. Updated to the latest Supabase release (studio 2026.04.27, postgres 15.8.1.085, postgrest v14.8, kong 3.9.1, gotrue v2.186.0, realtime v2.76.5, storage v1.48.26, supavisor 2.7.4) with new asymmetric JWT, S3 protocol, and Logflare access tokens.",
+    "links": {
+      "github": "https://github.com/supabase/supabase",
+      "website": "https://supabase.com/",
+      "docs": "https://supabase.com/docs/guides/self-hosting"
+    },
+    "logo": "supabase.svg",
+    "tags": [
+      "database",
+      "firebase",
+      "postgres"
+    ],
+    "dokploy_version": ">=0.22.5"
+  },
+  {
     "id": "superset",
     "name": "Superset (Unofficial)",
     "version": "6.0.0",

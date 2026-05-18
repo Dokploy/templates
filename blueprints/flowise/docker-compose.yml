@@ -1,56 +1,45 @@
 version: "3.8"
-
 services:
-  redis:
-    image: redis:alpine
+  db:
+    image: postgres:15-alpine
     restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${database_password}
+      - POSTGRES_DB=flowise
     volumes:
-      - redis_data:/data
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
   flowise:
     image: flowiseai/flowise:latest
     restart: always
-    expose:
-      - 3000
+    environment:
+      - DATABASE_TYPE=postgres
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=${database_password}
+      - DATABASE_NAME=flowise
+      - PORT=3000
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
       - flowise_data:/root/.flowise
-    environment:
-      PORT: 3000
-      DATABASE_PATH: /root/.flowise
-      REDIS_URL: redis://redis:6379
-      JWT_AUTH_TOKEN_SECRET: ${JWT_AUTH_TOKEN_SECRET}
-      JWT_REFRESH_TOKEN_SECRET: ${JWT_REFRESH_TOKEN_SECRET}
-      EXPRESS_SESSION_SECRET: ${EXPRESS_SESSION_SECRET}
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1/ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    entrypoint: /bin/sh -c "sleep 3; flowise start"
-    depends_on:
-      - redis
-
-  flowise-worker:
-    image: flowiseai/flowise-worker:latest
-    restart: always
-    volumes:
-      - flowise_data:/root/.flowise
-    environment:
-      WORKER_PORT: 5566
-      DATABASE_PATH: /root/.flowise
-      REDIS_URL: redis://redis:6379
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5566/healthz"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    entrypoint: /bin/sh -c "node /app/healthcheck/healthcheck.js & sleep 5 && pnpm run start-worker"
-    depends_on:
-      - redis
-      - flowise
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
 
 volumes:
-  redis_data:
-  flowise_data:
+  db_data: {}
+  flowise_data: {}

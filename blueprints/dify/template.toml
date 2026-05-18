@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password}"
+redis_password = "${password}"
+secret_key = "${password}"
+
+[config]
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "${main_domain}"

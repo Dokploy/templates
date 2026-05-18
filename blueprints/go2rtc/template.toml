@@ -1,9 +1,13 @@
 [variables]
 main_domain = "${domain}"
-database_password = "${password}"
 
 [config]
 [[config.domains]]
-serviceName = "flowise"
-port = 3000
+serviceName = "go2rtc"
+port = 1984
 host = "${main_domain}"
+
+env = [
+    "TZ=${TZ}"
+]
+

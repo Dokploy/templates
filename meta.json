@@ -3642,6 +3642,23 @@
     ]
   },
   {
+    "id": "limesurvey",
+    "name": "LimeSurvey",
+    "version": "6.17.2+260507",
+    "description": "LimeSurvey is a powerful, open-source survey platform, making it simple to create online surveys and forms with unmatched flexibility.",
+    "logo": "limesurvey.svg",
+    "links": {
+      "github": "https://github.com/LimeSurvey/LimeSurvey",
+      "website": "https://www.limesurvey.org",
+      "docs": "https://www.limesurvey.org/manual/"
+    },
+    "tags": [
+      "forms",
+      "questionnaire",
+      "survey"
+    ]
+  },
+  {
     "id": "linkding",
     "name": "Linkding",
     "version": "latest",

@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  ipfs:
+    image: ipfs/kubo:latest
+    restart: unless-stopped
+    environment:
+      - IPFS_PROFILE=server
+    volumes:
+      - ipfs_data:/data/ipfs
+      - ipfs_staging:/export
+    ports:
+      - 4001
+      - 8080
+      - 5001
+volumes:
+  ipfs_data: {}
+  ipfs_staging: {}

@@ -1,7 +1,8 @@
 [variables]
+main_domain = "${domain}"
 PORT=3002
-PUBLIC_BASE_URL=http://localhost:3002
-OUTPUT_DIR=/data/downloads
+PUBLIC_BASE_URL="https://${main_domain}"
+OUTPUT_DIR="/data/downloads"
 BASIC_AUTH_USER = "admin"
 BASIC_AUTH_PASS = "changeme"
 MAX_CONCURRENT_JOBS=2
@@ -9,11 +10,12 @@ JOB_TIMEOUT_MS=600000
 VERSION_CHECK_TTL_MS=21600000
 
 [config]
+
 [[config.domains]]
 name = "Domain"
-variable = "DOMAIN"
 serviceName = "mediafetch"
 port = 3002
+host = "${main_domain}"
 
 [[config.mounts]]
 name = "Downloads"

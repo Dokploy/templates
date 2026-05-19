@@ -18,10 +18,6 @@ VIKUNJA_DATABASE_USER = "vikunja"
 VIKUNJA_DATABASE_DATABASE = "vikunja"
 VIKUNJA_SERVICE_JWTSECRET = "${jwt_secret}"
 
-POSTGRES_PASSWORD = "${db_password}"
-POSTGRES_USER = "vikunja"
-POSTGRES_DB = "vikunja"
-
 [[config.mounts]]
 serviceName = "vikunja"
 volumeName = "vikunja-files"

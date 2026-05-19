@@ -12,15 +12,14 @@ services:
       - FORGEJO__database__USER=forgejo
       - FORGEJO__database__PASSWD=forgejo
       - FORGEJO__server__DOMAIN=${FORGEJO_DOMAIN}
-      - FORGEJO__server__SSH_DOMAIN=${FORGEJO_DOMAIN}
+      - FORGEJO__server__SSH_DOMAIN=${FORGEJO_SSH_DOMAIN}
       - FORGEJO__server__ROOT_URL=https://${FORGEJO_DOMAIN}/
-      - FORGEJO__server__SSH_PORT=2222
+      - FORGEJO__server__SSH_PORT=
       - FORGEJO__server__SSH_LISTEN_PORT=22
     restart: always
     ports:
-      ## Avoids conflicting with host ssh server.
-      ## Make sure port 2222 is open to connections on host machine.
-      - "2222:22"
+      - 3000
+      - 22
     volumes:
       - forgejo_server:/data
       - /etc/timezone:/etc/timezone:ro

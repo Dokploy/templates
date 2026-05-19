@@ -1,11 +1,25 @@
 [variables]
 main_domain = "${domain}"
+ssh_domain = "${domain}"
 
 [config]
-env = ["USER_UID=1000", "USER_GID=1000", "FORGEJO_DOMAIN=${main_domain}"]
+env = [
+    "USER_UID=1000",
+    "USER_GID=1000",
+    "FORGEJO_DOMAIN=${main_domain}",
+    "FORGEJO_SSH_DOMAIN=${ssh_domain}",
+    "",
+    "## SET THE API URL IN CONSOLE CONFIG BY CLICKING THE COG",
+    "## FORGEJO_SSH_DOMAIN: ${ssh_domain}"
+]
 mounts = []
 
 [[config.domains]]
 serviceName = "forgejo"
 port = 3_000
 host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "forgejo"
+port = 22
+host = "${ssh_domain}"

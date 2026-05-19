@@ -2,7 +2,7 @@
 main_domain = "${domain}"
 
 [config]
-env = ["USER_UID=1000", "USER_GID=1000"]
+env = ["USER_UID=1000", "USER_GID=1000", "FORGEJO_DOMAIN=${main_domain}"]
 mounts = []
 
 [[config.domains]]

@@ -2494,7 +2494,7 @@
   {
     "id": "forgejo",
     "name": "Forgejo",
-    "version": "10",
+    "version": "15",
     "description": "Forgejo is a self-hosted lightweight software forge. Easy to install and low maintenance, it just does the job",
     "logo": "forgejo.svg",
     "links": {

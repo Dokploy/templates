@@ -1,7 +1,8 @@
-version: "3.8"
 services:
   forgejo:
-    image: codeberg.org/forgejo/forgejo:10
+    image: codeberg.org/forgejo/forgejo:15
+    depends_on:
+      - db
     environment:
       - USER_UID=${USER_UID}
       - USER_GID=${USER_GID}
@@ -10,15 +11,20 @@ services:
       - FORGEJO__database__NAME=forgejo
       - FORGEJO__database__USER=forgejo
       - FORGEJO__database__PASSWD=forgejo
+      - FORGEJO__server__DOMAIN=${FORGEJO_DOMAIN}
+      - FORGEJO__server__SSH_DOMAIN=${FORGEJO_DOMAIN}
+      - FORGEJO__server__ROOT_URL=https://${FORGEJO_DOMAIN}/
+      - FORGEJO__server__SSH_PORT=2222
+      - FORGEJO__server__SSH_LISTEN_PORT=22
     restart: always
-
+    ports:
+      ## Avoids conflicting with host ssh server.
+      ## Make sure port 2222 is open to connections on host machine.
+      - "2222:22"
     volumes:
       - forgejo_server:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    depends_on:
-      - db
-
   db:
     image: postgres:17
     restart: always
@@ -26,10 +32,8 @@ services:
       - POSTGRES_USER=forgejo
       - POSTGRES_PASSWORD=forgejo
       - POSTGRES_DB=forgejo
-
     volumes:
       - forgejo_db:/var/lib/postgresql/data
-
 volumes:
   forgejo_db:
     driver: local

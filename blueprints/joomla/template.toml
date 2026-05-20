@@ -24,9 +24,9 @@ This template deploys Joomla CMS with MariaDB using the official Joomla Apache i
 ## Access
 
 - URL: `http://${main_domain}`
-- Administrator username: the generated `admin_username` value
+- Administrator username: the configured `admin_username` value
 - Administrator password: the generated `admin_password` value
-- Administrator email: the generated `admin_email` value
+- Administrator email: the configured `admin_email` value
 
 The template uses Joomla's auto-deployment environment variables so the site and administrator account are initialized on first start.
 

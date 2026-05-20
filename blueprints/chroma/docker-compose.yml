@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  chroma:
+    image: chromadb/chroma:1.5.6
+    restart: unless-stopped
+    expose:
+      - "8000"
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/chroma
+      - ANONYMIZED_TELEMETRY=FALSE
+    volumes:
+      - chroma-data:/chroma/chroma
+
+volumes:
+  chroma-data:

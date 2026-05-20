@@ -1,0 +1,5 @@
+[config]
+[[config.domains]]
+serviceName = "languagetool"
+port = 8010
+host = "${domain}"

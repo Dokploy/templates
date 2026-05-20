@@ -1,0 +1,5 @@
+[config]
+[[config.domains]]
+serviceName = "chroma"
+port = 8000
+host = "${domain}"

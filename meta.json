@@ -1213,6 +1213,24 @@
     ]
   },
   {
+    "id": "chroma",
+    "name": "Chroma",
+    "version": "1.5.6",
+    "description": "Chroma is an open-source embedding database for AI applications, with persistent vector storage and a simple HTTP API.",
+    "logo": "chroma.svg",
+    "links": {
+      "github": "https://github.com/chroma-core/chroma",
+      "website": "https://www.trychroma.com/",
+      "docs": "https://docs.trychroma.com/"
+    },
+    "tags": [
+      "ai",
+      "vector-database",
+      "embeddings",
+      "database"
+    ]
+  },
+  {
     "id": "chromium",
     "name": "Chromium",
     "version": "5f5dd27e-ls102",
@@ -3555,6 +3573,24 @@
     ]
   },
   {
+    "id": "languagetool",
+    "name": "LanguageTool",
+    "version": "6.6",
+    "description": "LanguageTool is an open-source grammar, style, and spell checker that can run as a self-hosted HTTP service.",
+    "logo": "languagetool.svg",
+    "links": {
+      "github": "https://github.com/languagetool-org/languagetool",
+      "website": "https://languagetool.org/",
+      "docs": "https://dev.languagetool.org/http-server"
+    },
+    "tags": [
+      "writing",
+      "grammar",
+      "spellcheck",
+      "api"
+    ]
+  },
+  {
     "id": "lavalink",
     "name": "Lavalink",
     "version": "4.1.1",
@@ -5739,6 +5775,24 @@
       "distributed",
       "object-storage",
       "file-system"
+    ]
+  },
+  {
+    "id": "shiori",
+    "name": "Shiori",
+    "version": "v1.8.0-2-g585ea34",
+    "description": "Shiori is a simple self-hosted bookmark manager with offline archive support and a web interface.",
+    "logo": "shiori.svg",
+    "links": {
+      "github": "https://github.com/go-shiori/shiori",
+      "website": "https://go-shiori.github.io/shiori/",
+      "docs": "https://go-shiori.github.io/shiori/"
+    },
+    "tags": [
+      "bookmarks",
+      "read-it-later",
+      "archiving",
+      "self-hosted"
     ]
   },
   {

@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  soft-serve:
+    image: charmcli/soft-serve:v0.11.6
+    restart: unless-stopped
+    expose:
+      - "23231"
+      - "23232"
+      - "23233"
+      - "9418"
+    environment:
+      SOFT_SERVE_NAME: ${SOFT_SERVE_NAME}
+      SOFT_SERVE_DATA_PATH: /soft-serve
+      SOFT_SERVE_INITIAL_ADMIN_KEYS: ${SOFT_SERVE_INITIAL_ADMIN_KEYS}
+      SOFT_SERVE_SSH_LISTEN_ADDR: :23231
+      SOFT_SERVE_SSH_PUBLIC_URL: ${SOFT_SERVE_SSH_PUBLIC_URL}
+      SOFT_SERVE_HTTP_LISTEN_ADDR: :23232
+      SOFT_SERVE_HTTP_PUBLIC_URL: ${SOFT_SERVE_HTTP_PUBLIC_URL}
+      SOFT_SERVE_GIT_LISTEN_ADDR: :9418
+      SOFT_SERVE_STATS_LISTEN_ADDR: :23233
+      SOFT_SERVE_LOG_LEVEL: ${SOFT_SERVE_LOG_LEVEL}
+    volumes:
+      - soft-serve-data:/soft-serve
+
+volumes:
+  soft-serve-data:

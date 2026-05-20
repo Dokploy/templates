@@ -1,0 +1,5 @@
+[config]
+[[config.domains]]
+serviceName = "privatebin"
+port = 8080
+host = "${domain}"

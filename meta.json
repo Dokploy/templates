@@ -5363,6 +5363,24 @@
     "dokploy_version": "<0.22.5"
   },
   {
+    "id": "privatebin",
+    "name": "PrivateBin",
+    "version": "latest",
+    "description": "PrivateBin is a minimalist pastebin where pasted data is encrypted and decrypted in the browser.",
+    "logo": "privatebin.svg",
+    "links": {
+      "github": "https://github.com/PrivateBin/PrivateBin",
+      "website": "https://privatebin.info/",
+      "docs": "https://github.com/PrivateBin/docker-nginx-fpm-alpine"
+    },
+    "tags": [
+      "pastebin",
+      "privacy",
+      "encryption",
+      "sharing"
+    ]
+  },
+  {
     "id": "prometheus",
     "name": "Prometheus",
     "version": "latest",
@@ -6256,6 +6274,24 @@
     ]
   },
   {
+    "id": "traccar",
+    "name": "Traccar",
+    "version": "6.13.3",
+    "description": "Traccar is an open-source GPS tracking platform with a web interface and support for many device protocols.",
+    "logo": "traccar.svg",
+    "links": {
+      "github": "https://github.com/traccar/traccar",
+      "website": "https://www.traccar.org/",
+      "docs": "https://www.traccar.org/docker/"
+    },
+    "tags": [
+      "gps",
+      "tracking",
+      "fleet",
+      "iot"
+    ]
+  },
+  {
     "id": "trailbase",
     "name": "TrailBase",
     "version": "latest",
@@ -6605,6 +6641,24 @@
       "tasks",
       "self-hosted",
       "project-management"
+    ]
+  },
+  {
+    "id": "wakapi",
+    "name": "Wakapi",
+    "version": "latest",
+    "description": "Wakapi is a self-hosted WakaTime-compatible backend for tracking coding activity and developer statistics.",
+    "logo": "wakapi.svg",
+    "links": {
+      "github": "https://github.com/muety/wakapi",
+      "website": "https://wakapi.dev/",
+      "docs": "https://github.com/muety/wakapi#-installation"
+    },
+    "tags": [
+      "developer-tools",
+      "analytics",
+      "wakatime",
+      "self-hosted"
     ]
   },
   {

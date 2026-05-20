@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  privatebin:
+    image: privatebin/nginx-fpm-alpine:latest
+    restart: unless-stopped
+    read_only: true
+    expose:
+      - "8080"
+    volumes:
+      - privatebin-data:/srv/data
+    tmpfs:
+      - /tmp
+      - /var/tmp
+      - /var/run
+      - /var/lib/nginx/tmp
+
+volumes:
+  privatebin-data:

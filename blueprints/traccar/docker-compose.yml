@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  traccar:
+    image: traccar/traccar:6.13.3
+    restart: unless-stopped
+    expose:
+      - "8082"
+    volumes:
+      - traccar-data:/opt/traccar/data
+      - traccar-logs:/opt/traccar/logs
+
+volumes:
+  traccar-data:
+  traccar-logs:

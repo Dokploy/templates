@@ -1,0 +1,5 @@
+[config]
+[[config.domains]]
+serviceName = "traccar"
+port = 8082
+host = "${domain}"

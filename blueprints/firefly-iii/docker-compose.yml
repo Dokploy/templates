@@ -1,0 +1,82 @@
+version: "3.8"
+
+services:
+  firefly-iii:
+    image: fireflyiii/core:version-6.6.2
+    restart: unless-stopped
+    depends_on:
+      firefly-iii-db:
+        condition: service_healthy
+    expose:
+      - 8080
+    environment:
+      APP_KEY: ${APP_KEY}
+      APP_URL: ${APP_URL}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES}
+      DB_CONNECTION: mysql
+      DB_HOST: firefly-iii-db
+      DB_PORT: 3306
+      DB_DATABASE: firefly
+      DB_USERNAME: firefly
+      DB_PASSWORD: ${DB_PASSWORD}
+      STATIC_CRON_TOKEN: ${STATIC_CRON_TOKEN}
+      TZ: ${TZ}
+      DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE}
+      LOG_CHANNEL: stack
+    volumes:
+      - firefly-iii-upload:/var/www/html/storage/upload
+
+  firefly-iii-db:
+    image: mariadb:11.8
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: firefly
+      MYSQL_USER: firefly
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - firefly-iii-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "healthcheck.sh --connect --innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  firefly-iii-importer:
+    image: fireflyiii/data-importer:version-2.3.2
+    restart: unless-stopped
+    depends_on:
+      - firefly-iii
+    expose:
+      - 8080
+    environment:
+      FIREFLY_III_URL: http://firefly-iii:8080
+      VANITY_URL: ${APP_URL}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES}
+      TZ: ${TZ}
+      LOG_CHANNEL: stack
+      LOG_LEVEL: info
+    volumes:
+      - firefly-iii-import:/import
+
+  firefly-iii-cron:
+    image: alpine:3.22
+    restart: unless-stopped
+    depends_on:
+      - firefly-iii
+    environment:
+      STATIC_CRON_TOKEN: ${STATIC_CRON_TOKEN}
+      TZ: ${TZ}
+    command:
+      - sh
+      - -c
+      - |
+        apk add --no-cache tzdata wget
+        ln -s /usr/share/zoneinfo/$$TZ /etc/localtime || true
+        echo "0 3 * * * wget -qO- http://firefly-iii:8080/api/v1/cron/$$STATIC_CRON_TOKEN;echo" | crontab -
+        crond -f -L /dev/stdout
+
+volumes:
+  firefly-iii-upload: {}
+  firefly-iii-db: {}
+  firefly-iii-import: {}

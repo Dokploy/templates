@@ -1,0 +1,31 @@
+[variables]
+main_domain = "${domain}"
+importer_domain = "importer.${domain}"
+app_key = "${hash:16}"
+db_password = "${password:32}"
+mysql_root_password = "${password:32}"
+static_cron_token = "${hash:16}"
+app_url = "http://${main_domain}"
+timezone = "UTC"
+default_language = "en_US"
+
+[config]
+[[config.domains]]
+serviceName = "firefly-iii"
+port = 8080
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "firefly-iii-importer"
+port = 8080
+host = "${importer_domain}"
+
+[config.env]
+APP_KEY = "${app_key}"
+APP_URL = "${app_url}"
+TRUSTED_PROXIES = "**"
+DB_PASSWORD = "${db_password}"
+MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
+STATIC_CRON_TOKEN = "${static_cron_token}"
+TZ = "${timezone}"
+DEFAULT_LANGUAGE = "${default_language}"

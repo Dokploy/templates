@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  nodelink:
+    image: performanc/nodelink:3.8.0
+    restart: unless-stopped
+    expose:
+      - "2333"
+    environment:
+      NODELINK_SERVER_HOST: 0.0.0.0
+      NODELINK_SERVER_PORT: "2333"
+      NODELINK_SERVER_PASSWORD: ${NODELINK_SERVER_PASSWORD}
+      NODELINK_LOGGING_LEVEL: ${NODELINK_LOGGING_LEVEL}
+      NODELINK_LOGGING_FILE_ENABLED: ${NODELINK_LOGGING_FILE_ENABLED}
+      NODELINK_SOURCES_LOCAL_ENABLED: ${NODELINK_SOURCES_LOCAL_ENABLED}
+      NODELINK_SOURCES_LOCAL_BASEPATH: /app/local-music/
+      NODELINK_METRICS_ENABLED: ${NODELINK_METRICS_ENABLED}
+    volumes:
+      - nodelink-cache:/app/.cache
+      - nodelink-local-music:/app/local-music
+      - nodelink-logs:/app/logs
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://127.0.0.1:2333/version').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\"",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  nodelink-cache:
+  nodelink-local-music:
+  nodelink-logs:

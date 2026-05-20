@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+paperless_secret_key = "${password:64}"
+paperless_url = "https://${main_domain}"
+paperless_timezone = "UTC"
+paperless_ocr_language = "eng"
+
+[config]
+[[config.domains]]
+serviceName = "paperless-ngx"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}"
+PAPERLESS_SECRET_KEY = "${paperless_secret_key}"
+PAPERLESS_URL = "${paperless_url}"
+PAPERLESS_TIME_ZONE = "${paperless_timezone}"
+PAPERLESS_OCR_LANGUAGE = "${paperless_ocr_language}"

@@ -4853,6 +4853,24 @@
     ]
   },
   {
+    "id": "paperless-ngx",
+    "name": "Paperless-ngx",
+    "version": "2.20.15",
+    "description": "Paperless-ngx is a self-hosted document management system for scanning, indexing, and archiving documents.",
+    "logo": "paperless-ngx.svg",
+    "links": {
+      "github": "https://github.com/paperless-ngx/paperless-ngx",
+      "website": "https://paperless-ngx.com/",
+      "docs": "https://docs.paperless-ngx.com/"
+    },
+    "tags": [
+      "documents",
+      "ocr",
+      "productivity",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "parseable",
     "name": "Parseable",
     "version": "v1.6.5",

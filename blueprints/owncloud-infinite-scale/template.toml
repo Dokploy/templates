@@ -1,0 +1,41 @@
+[variables]
+main_domain = "${domain}"
+owncloud_url = "https://${main_domain}"
+admin_password = "${password:32}"
+log_level = "info"
+
+[[config.domains]]
+serviceName = "owncloud-infinite-scale"
+port = 9200
+host = "${main_domain}"
+path = "/"
+
+[[config.mounts]]
+filePath = "README.md"
+content = """# ownCloud Infinite Scale
+
+This template deploys ownCloud Infinite Scale (oCIS), a modern file sync and share platform with WebDAV and ownCloud client support.
+
+## Access
+
+- URL: `https://${main_domain}`
+- Admin user: `admin`
+- Admin password: the generated `admin_password` value
+
+The `owncloud_url` value is written into the initial oCIS configuration. Change it before the first deployment if your public URL is different, because `ocis init` does not rewrite an existing `ocis.yaml` file.
+
+## Storage
+
+The template creates persistent volumes for:
+
+- `/etc/ocis` configuration
+- `/var/lib/ocis` application data and user storage
+- `/var/lib/ocis-thumbnails` generated thumbnails
+
+Back up these volumes together before upgrades or migrations.
+"""
+
+[config.env]
+OCIS_URL = "${owncloud_url}"
+IDM_ADMIN_PASSWORD = "${admin_password}"
+OCIS_LOG_LEVEL = "${log_level}"

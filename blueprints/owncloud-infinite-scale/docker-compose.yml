@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  owncloud-infinite-scale:
+    image: owncloud/ocis:8.0.3
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+    command: ["-c", "ocis init --insecure yes || true; ocis server"]
+    expose:
+      - "9200"
+    environment:
+      OCIS_URL: ${OCIS_URL}
+      OCIS_LOG_LEVEL: ${OCIS_LOG_LEVEL}
+      OCIS_INSECURE: "true"
+      PROXY_TLS: "false"
+      PROXY_HTTP_ADDR: 0.0.0.0:9200
+      IDM_ADMIN_PASSWORD: ${IDM_ADMIN_PASSWORD}
+      SETTINGS_GRPC_ADDR: 0.0.0.0:9191
+      GATEWAY_GRPC_ADDR: 0.0.0.0:9142
+      STORAGE_USERS_DATA_GATEWAY_URL: http://owncloud-infinite-scale:9200/data
+      THUMBNAILS_FILESYSTEMSTORAGE_ROOT: /var/lib/ocis-thumbnails
+    volumes:
+      - owncloud-infinite-scale-config:/etc/ocis
+      - owncloud-infinite-scale-data:/var/lib/ocis
+      - owncloud-infinite-scale-thumbnails:/var/lib/ocis-thumbnails
+
+volumes:
+  owncloud-infinite-scale-config:
+  owncloud-infinite-scale-data:
+  owncloud-infinite-scale-thumbnails:

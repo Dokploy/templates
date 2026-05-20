@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  joomla:
+    image: joomla:6.1.0-apache
+    restart: unless-stopped
+    depends_on:
+      joomla-db:
+        condition: service_healthy
+    expose:
+      - "80"
+    environment:
+      JOOMLA_DB_HOST: joomla-db
+      JOOMLA_DB_USER: ${JOOMLA_DB_USER}
+      JOOMLA_DB_PASSWORD: ${JOOMLA_DB_PASSWORD}
+      JOOMLA_DB_NAME: ${JOOMLA_DB_NAME}
+      JOOMLA_SITE_NAME: ${JOOMLA_SITE_NAME}
+      JOOMLA_ADMIN_USER: ${JOOMLA_ADMIN_USER}
+      JOOMLA_ADMIN_USERNAME: ${JOOMLA_ADMIN_USERNAME}
+      JOOMLA_ADMIN_PASSWORD: ${JOOMLA_ADMIN_PASSWORD}
+      JOOMLA_ADMIN_EMAIL: ${JOOMLA_ADMIN_EMAIL}
+    volumes:
+      - joomla-data:/var/www/html
+
+  joomla-db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${JOOMLA_DB_NAME}
+      MARIADB_USER: ${JOOMLA_DB_USER}
+      MARIADB_PASSWORD: ${JOOMLA_DB_PASSWORD}
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    volumes:
+      - joomla-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "healthcheck.sh --connect --innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  joomla-data:
+  joomla-db:

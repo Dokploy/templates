@@ -1,0 +1,5 @@
+[config]
+[[config.domains]]
+serviceName = "kavita"
+port = 5000
+host = "${domain}"

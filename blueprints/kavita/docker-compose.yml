@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  kavita:
+    image: jvmilazz0/kavita:latest
+    restart: unless-stopped
+    expose:
+      - "5000"
+    environment:
+      - TZ=Etc/UTC
+    volumes:
+      - kavita-config:/kavita/config
+      - kavita-media:/manga
+      - kavita-books:/books
+      - kavita-comics:/comics
+
+volumes:
+  kavita-config:
+  kavita-media:
+  kavita-books:
+  kavita-comics:

@@ -3456,6 +3456,24 @@
     ]
   },
   {
+    "id": "kavita",
+    "name": "Kavita",
+    "version": "latest",
+    "description": "Kavita is a self-hosted digital library server for reading manga, comics, and ebooks from any device.",
+    "logo": "kavita.svg",
+    "links": {
+      "github": "https://github.com/Kareadita/Kavita",
+      "website": "https://www.kavitareader.com/",
+      "docs": "https://wiki.kavitareader.com/installation/docker/"
+    },
+    "tags": [
+      "media",
+      "ebooks",
+      "comics",
+      "library"
+    ]
+  },
+  {
     "id": "kener",
     "name": "Kener",
     "version": "latest",
@@ -4174,6 +4192,24 @@
       "minecraft",
       "server-management",
       "docker"
+    ]
+  },
+  {
+    "id": "miniflux",
+    "name": "Miniflux",
+    "version": "latest",
+    "description": "Miniflux is a minimalist and opinionated feed reader built for self-hosted RSS and Atom subscriptions.",
+    "logo": "miniflux.svg",
+    "links": {
+      "github": "https://github.com/miniflux/v2",
+      "website": "https://miniflux.app/",
+      "docs": "https://miniflux.app/docs/docker.html"
+    },
+    "tags": [
+      "rss",
+      "feed-reader",
+      "news",
+      "self-hosted"
     ]
   },
   {
@@ -4958,6 +4994,24 @@
       "file-sharing",
       "self-hosted",
       "open-source"
+    ]
+  },
+  {
+    "id": "paperless-ngx",
+    "name": "Paperless-ngx",
+    "version": "latest",
+    "description": "Paperless-ngx is a self-hosted document management system that indexes, archives, and organizes scanned documents.",
+    "logo": "paperless-ngx.svg",
+    "links": {
+      "github": "https://github.com/paperless-ngx/paperless-ngx",
+      "website": "https://paperless-ngx.com/",
+      "docs": "https://docs.paperless-ngx.com/setup/"
+    },
+    "tags": [
+      "documents",
+      "ocr",
+      "archive",
+      "productivity"
     ]
   },
   {

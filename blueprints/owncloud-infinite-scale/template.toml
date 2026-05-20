@@ -1,6 +1,6 @@
 [variables]
 main_domain = "${domain}"
-owncloud_url = "https://${main_domain}"
+owncloud_url = "http://${main_domain}"
 admin_password = "${password:32}"
 log_level = "info"
 
@@ -18,11 +18,11 @@ This template deploys ownCloud Infinite Scale (oCIS), a modern file sync and sha
 
 ## Access
 
-- URL: `https://${main_domain}`
+- URL: `http://${main_domain}`
 - Admin user: `admin`
 - Admin password: the generated `admin_password` value
 
-The `owncloud_url` value is written into the initial oCIS configuration. Change it before the first deployment if your public URL is different, because `ocis init` does not rewrite an existing `ocis.yaml` file.
+The `owncloud_url` value is written into the initial oCIS configuration. Set it to `https://${main_domain}` before the first deployment if your Dokploy domain enforces TLS. Change it before the first deployment if your public URL is different, because `ocis init` does not rewrite an existing `ocis.yaml` file.
 
 ## Storage
 

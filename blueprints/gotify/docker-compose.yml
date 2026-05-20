@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  gotify:
+    image: gotify/server:latest
+    restart: unless-stopped
+    expose:
+      - "80"
+    volumes:
+      - gotify-data:/app/data
+
+volumes:
+  gotify-data:

@@ -1,0 +1,5 @@
+[config]
+[[config.domains]]
+serviceName = "gotify"
+port = 80
+host = "${domain}"

@@ -2885,6 +2885,24 @@
     ]
   },
   {
+    "id": "gotify",
+    "name": "Gotify",
+    "version": "latest",
+    "description": "Gotify is a simple self-hosted push notification server with a web UI and HTTP API for application alerts.",
+    "logo": "gotify.svg",
+    "links": {
+      "github": "https://github.com/gotify/server",
+      "website": "https://gotify.net/",
+      "docs": "https://gotify.net/docs/"
+    },
+    "tags": [
+      "notifications",
+      "alerting",
+      "api",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "grafana",
     "name": "Grafana",
     "version": "12.4",
@@ -4869,6 +4887,24 @@
       "broadcasting",
       "self-hosted",
       "rtmp"
+    ]
+  },
+  {
+    "id": "pairdrop",
+    "name": "PairDrop",
+    "version": "latest",
+    "description": "PairDrop is a self-hosted local file sharing web app for sending files and text between nearby devices.",
+    "logo": "pairdrop.svg",
+    "links": {
+      "github": "https://github.com/schlagmichdoch/PairDrop",
+      "website": "https://pairdrop.net/",
+      "docs": "https://github.com/schlagmichdoch/PairDrop/blob/master/docs/host-your-own.md"
+    },
+    "tags": [
+      "file-sharing",
+      "p2p",
+      "web-app",
+      "self-hosted"
     ]
   },
   {

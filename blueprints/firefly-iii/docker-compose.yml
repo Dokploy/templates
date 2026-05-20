@@ -51,7 +51,7 @@ services:
       - 8080
     environment:
       FIREFLY_III_URL: http://firefly-iii:8080
-      VANITY_URL: ${APP_URL}
+      VANITY_URL: ${FIREFLY_III_VANITY_URL}
       TRUSTED_PROXIES: ${TRUSTED_PROXIES}
       TZ: ${TZ}
       LOG_CHANNEL: stack

@@ -47,6 +47,7 @@ services:
         touch /data/.thingsboard-installed
     environment:
       TB_SERVICE_ID: tb-ce-node
+      TB_QUEUE_TYPE: in-memory
       JAVA_OPTS: ${JAVA_OPTS}
       LOAD_DEMO: ${LOAD_DEMO}
       SPRING_DATASOURCE_URL: jdbc:postgresql://thingsboard-db:5432/${POSTGRES_DB}

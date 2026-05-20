@@ -2,7 +2,7 @@
 main_domain = "${domain}"
 postgres_password = "${password:32}"
 paperless_secret_key = "${password:64}"
-paperless_url = "https://${main_domain}"
+paperless_url = "http://${main_domain}"
 paperless_timezone = "UTC"
 paperless_ocr_language = "eng"
 

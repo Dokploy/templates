@@ -3060,6 +3060,24 @@
     ]
   },
   {
+    "id": "homebox",
+    "name": "Homebox",
+    "version": "latest",
+    "description": "Homebox is a self-hosted home inventory and organization app for tracking belongings, locations, and labels.",
+    "logo": "homebox.svg",
+    "links": {
+      "github": "https://github.com/sysadminsmedia/homebox",
+      "website": "https://homebox.software/",
+      "docs": "https://homebox.software/en/"
+    },
+    "tags": [
+      "inventory",
+      "home",
+      "organization",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "homebridge",
     "name": "Homebridge",
     "version": "latest",
@@ -3362,6 +3380,24 @@
     },
     "tags": [
       "media system"
+    ]
+  },
+  {
+    "id": "jellyseerr",
+    "name": "Jellyseerr",
+    "version": "latest",
+    "description": "Jellyseerr is a self-hosted media request and discovery manager for Jellyfin, Plex, and Emby libraries.",
+    "logo": "jellyseerr.svg",
+    "links": {
+      "github": "https://github.com/Fallenbagel/jellyseerr",
+      "website": "https://docs.jellyseerr.dev/",
+      "docs": "https://docs.jellyseerr.dev/getting-started"
+    },
+    "tags": [
+      "media",
+      "requests",
+      "jellyfin",
+      "plex"
     ]
   },
   {
@@ -5970,6 +6006,24 @@
       "file-manager",
       "vdfs",
       "storage"
+    ]
+  },
+  {
+    "id": "speedtest-tracker",
+    "name": "Speedtest Tracker",
+    "version": "latest",
+    "description": "Speedtest Tracker is a self-hosted internet performance tracker that runs scheduled speed tests and stores results.",
+    "logo": "speedtest-tracker.svg",
+    "links": {
+      "github": "https://github.com/alexjustesen/speedtest-tracker",
+      "website": "https://speedtest-tracker.dev/",
+      "docs": "https://docs.speedtest-tracker.dev/getting-started/installation/using-docker-compose"
+    },
+    "tags": [
+      "monitoring",
+      "network",
+      "speedtest",
+      "analytics"
     ]
   },
   {

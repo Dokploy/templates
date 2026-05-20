@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+app_key = "base64:${base64:32}"
+
+[config]
+env = [
+  "APP_KEY=${app_key}",
+  "APP_URL=https://${main_domain}",
+  "DB_CONNECTION=sqlite",
+  "PUID=1000",
+  "PGID=1000",
+  "TZ=Etc/UTC",
+  "DISPLAY_TIMEZONE=Etc/UTC",
+  "SPEEDTEST_SCHEDULE=0 */6 * * *",
+]
+
+[[config.domains]]
+serviceName = "speedtest-tracker"
+port = 80
+host = "${main_domain}"

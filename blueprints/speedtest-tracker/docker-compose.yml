@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  speedtest-tracker:
+    image: lscr.io/linuxserver/speedtest-tracker:latest
+    restart: unless-stopped
+    expose:
+      - "80"
+    environment:
+      - APP_KEY
+      - APP_URL
+      - DB_CONNECTION
+      - PUID
+      - PGID
+      - TZ
+      - DISPLAY_TIMEZONE
+      - SPEEDTEST_SCHEDULE
+    volumes:
+      - speedtest-tracker-config:/config
+
+volumes:
+  speedtest-tracker-config:

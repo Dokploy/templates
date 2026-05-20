@@ -1,0 +1,5 @@
+[config]
+[[config.domains]]
+serviceName = "homebox"
+port = 7745
+host = "${domain}"

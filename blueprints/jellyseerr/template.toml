@@ -1,0 +1,5 @@
+[config]
+[[config.domains]]
+serviceName = "jellyseerr"
+port = 5055
+host = "${domain}"

@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  homebox:
+    image: ghcr.io/sysadminsmedia/homebox:latest
+    restart: unless-stopped
+    expose:
+      - "7745"
+    environment:
+      - TZ=Etc/UTC
+    volumes:
+      - homebox-data:/data
+
+volumes:
+  homebox-data:

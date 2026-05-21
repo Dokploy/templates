@@ -1,5 +1,11 @@
+[variables]
+timezone = "Etc/UTC"
+
 [config]
 [[config.domains]]
 serviceName = "pairdrop"
 port = 3000
 host = "${domain}"
+
+[config.env]
+TZ = "${timezone}"

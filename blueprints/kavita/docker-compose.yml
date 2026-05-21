@@ -7,7 +7,7 @@ services:
     expose:
       - "5000"
     environment:
-      - TZ=Etc/UTC
+      - TZ=${TZ}
     volumes:
       - kavita-config:/kavita/config
       - kavita-media:/manga

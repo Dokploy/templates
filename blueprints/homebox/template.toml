@@ -1,5 +1,11 @@
+[variables]
+timezone = "Etc/UTC"
+
 [config]
 [[config.domains]]
 serviceName = "homebox"
 port = 7745
 host = "${domain}"
+
+[config.env]
+TZ = "${timezone}"

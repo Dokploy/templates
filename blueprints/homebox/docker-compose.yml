@@ -7,7 +7,7 @@ services:
     expose:
       - "7745"
     environment:
-      - TZ=Etc/UTC
+      - TZ=${TZ}
     volumes:
       - homebox-data:/data
 

@@ -1,6 +1,7 @@
 [variables]
 main_domain = "${domain}"
 app_key = "base64:${base64:32}"
+timezone = "Etc/UTC"
 
 [config]
 env = [
@@ -9,8 +10,8 @@ env = [
   "DB_CONNECTION=sqlite",
   "PUID=1000",
   "PGID=1000",
-  "TZ=Etc/UTC",
-  "DISPLAY_TIMEZONE=Etc/UTC",
+  "TZ=${timezone}",
+  "DISPLAY_TIMEZONE=${timezone}",
   "SPEEDTEST_SCHEDULE=0 */6 * * *",
 ]
 

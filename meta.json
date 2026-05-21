@@ -6346,24 +6346,6 @@
     ]
   },
   {
-    "id": "traccar",
-    "name": "Traccar",
-    "version": "6.13.3",
-    "description": "Traccar is an open-source GPS tracking platform with a web interface and support for many device protocols.",
-    "logo": "traccar.svg",
-    "links": {
-      "github": "https://github.com/traccar/traccar",
-      "website": "https://www.traccar.org/",
-      "docs": "https://www.traccar.org/docker/"
-    },
-    "tags": [
-      "gps",
-      "tracking",
-      "fleet",
-      "iot"
-    ]
-  },
-  {
     "id": "trailbase",
     "name": "TrailBase",
     "version": "latest",

@@ -11,6 +11,14 @@ services:
       - ZEROCLAW_providers__models__openrouter__default__api_key=${API_KEY}
     volumes:
       - zeroclaw-data:/zeroclaw-data
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 512M
+        reservations:
+          cpus: "0.5"
+          memory: 32M
     healthcheck:
       test: ["CMD", "zeroclaw", "status", "--format=exit-code"]
       interval: 60s

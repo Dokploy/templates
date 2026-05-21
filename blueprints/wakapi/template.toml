@@ -1,5 +1,11 @@
+[variables]
+password_salt = "${password:64}"
+
 [config]
 [[config.domains]]
 serviceName = "wakapi"
 port = 3000
 host = "${domain}"
+
+[config.env]
+WAKAPI_PASSWORD_SALT = "${password_salt}"

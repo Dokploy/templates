@@ -7,7 +7,7 @@ services:
     expose:
       - "3000"
     environment:
-      - WAKAPI_PASSWORD_SALT=change-me
+      - WAKAPI_PASSWORD_SALT=${WAKAPI_PASSWORD_SALT}
       - WAKAPI_DB_TYPE=sqlite3
       - WAKAPI_DB_NAME=/data/wakapi.db
       - WAKAPI_LISTEN_IPV4=0.0.0.0

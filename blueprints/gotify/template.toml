@@ -1,5 +1,11 @@
+[variables]
+admin_password = "${password:32}"
+
 [config]
 [[config.domains]]
 serviceName = "gotify"
 port = 80
 host = "${domain}"
+
+[config.env]
+GOTIFY_DEFAULTUSER_PASS = "${admin_password}"

@@ -7,7 +7,7 @@ services:
     expose:
       - "5055"
     environment:
-      - LOG_LEVEL=debug
+      - LOG_LEVEL=info
       - TZ=Etc/UTC
     volumes:
       - jellyseerr-config:/app/config

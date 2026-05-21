@@ -4195,24 +4195,6 @@
     ]
   },
   {
-    "id": "miniflux",
-    "name": "Miniflux",
-    "version": "latest",
-    "description": "Miniflux is a minimalist and opinionated feed reader built for self-hosted RSS and Atom subscriptions.",
-    "logo": "miniflux.svg",
-    "links": {
-      "github": "https://github.com/miniflux/v2",
-      "website": "https://miniflux.app/",
-      "docs": "https://miniflux.app/docs/docker.html"
-    },
-    "tags": [
-      "rss",
-      "feed-reader",
-      "news",
-      "self-hosted"
-    ]
-  },
-  {
     "id": "minio",
     "name": "Minio",
     "description": "Minio is an open source object storage server compatible with Amazon S3 cloud storage service.",
@@ -4994,24 +4976,6 @@
       "file-sharing",
       "self-hosted",
       "open-source"
-    ]
-  },
-  {
-    "id": "paperless-ngx",
-    "name": "Paperless-ngx",
-    "version": "latest",
-    "description": "Paperless-ngx is a self-hosted document management system that indexes, archives, and organizes scanned documents.",
-    "logo": "paperless-ngx.svg",
-    "links": {
-      "github": "https://github.com/paperless-ngx/paperless-ngx",
-      "website": "https://paperless-ngx.com/",
-      "docs": "https://docs.paperless-ngx.com/setup/"
-    },
-    "tags": [
-      "documents",
-      "ocr",
-      "archive",
-      "productivity"
     ]
   },
   {

@@ -6,6 +6,8 @@ services:
     restart: unless-stopped
     expose:
       - "80"
+    environment:
+      - GOTIFY_DEFAULTUSER_PASS=${GOTIFY_DEFAULTUSER_PASS}
     volumes:
       - gotify-data:/app/data
 

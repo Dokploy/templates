@@ -4815,6 +4815,25 @@
     ]
   },
   {
+    "id": "paperless-ngx",
+    "name": "Paperless-ngx",
+    "version": "latest",
+    "description": "A community-supported document management system that transforms physical documents into a searchable online archive.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/paperless-ngx/paperless-ngx",
+      "website": "https://docs.paperless-ngx.com/",
+      "docs": "https://docs.paperless-ngx.com/"
+    },
+    "tags": [
+      "document-management",
+      "scanning",
+      "archiving",
+      "dms",
+      "ocr"
+    ]
+  },
+  {
     "id": "parseable",
     "name": "Parseable",
     "version": "v1.6.5",

@@ -3813,6 +3813,24 @@
     ]
   },
   {
+    "id": "lubelogger",
+    "name": "LubeLogger",
+    "version": "v1.6.5",
+    "description": "LubeLogger is a self-hosted vehicle maintenance and fuel mileage tracker for managing service records, reminders, fuel logs, and vehicle expenses.",
+    "logo": "lubelogger.png",
+    "links": {
+      "github": "https://github.com/hargata/lubelog",
+      "website": "https://lubelogger.com/",
+      "docs": "https://docs.lubelogger.com/"
+    },
+    "tags": [
+      "vehicle",
+      "maintenance",
+      "fleet",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "macos",
     "name": "MacOS (dockerized)",
     "version": "1.14",

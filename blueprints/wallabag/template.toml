@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+db_root_password = "${password:32}"
+db_password = "${password:32}"
+from_email = "wallabag@example.com"
+
+[config]
+[[config.domains]]
+serviceName = "wallabag"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+MYSQL_ROOT_PASSWORD = "${db_root_password}"
+SYMFONY__ENV__DATABASE_PASSWORD = "${db_password}"
+SYMFONY__ENV__DOMAIN_NAME = "https://${main_domain}"
+SYMFONY__ENV__FROM_EMAIL = "${from_email}"
+SYMFONY__ENV__SERVER_NAME = "wallabag"

@@ -6762,6 +6762,25 @@
     ]
   },
   {
+    "id": "zeroclaw",
+    "name": "ZeroClaw",
+    "version": "latest",
+    "description": "Fast, small, and fully autonomous AI personal assistant infrastructure. Self-hosted AI agent gateway with multi-provider LLM support.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/zeroclaw-labs/zeroclaw",
+      "website": "https://zeroclaw.com",
+      "docs": "https://github.com/zeroclaw-labs/zeroclaw"
+    },
+    "tags": [
+      "ai",
+      "agent",
+      "llm",
+      "automation",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "zipline",
     "name": "Zipline",
     "version": "v3.7.9",

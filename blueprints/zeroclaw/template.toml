@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+api_key = ""
+
+[config]
+[[config.domains]]
+serviceName = "zeroclaw"
+port = 42617
+host = "${main_domain}"
+
+[[config.env]]
+ZEROCLAW_providers__models__openrouter__default__api_key = "${api_key}"

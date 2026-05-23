@@ -79,6 +79,7 @@ services:
     volumes:
       # https://github.com/supabase/supabase/issues/12661
       - ../files/volumes/api/kong.yml:/home/kong/temp.yml:ro,z
+      - ../files/volumes/api/kong-entrypoint.sh:/home/kong/kong-entrypoint.sh:ro,z
     depends_on:
       analytics:
         condition: service_healthy
@@ -100,10 +101,11 @@ services:
       SERVICE_ROLE_KEY_ASYMMETRIC: ${SERVICE_ROLE_KEY_ASYMMETRIC:-}
       DASHBOARD_USERNAME: ${DASHBOARD_USERNAME}
       DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
-    # https://unix.stackexchange.com/a/294837
-    # kong/kong:3.9.x runs as the non-root "kong" user, so /home/kong is not
-    # writable; render the templated config into /tmp instead.
-    entrypoint: bash -c 'eval "echo \"$$(cat /home/kong/temp.yml)\"" > /tmp/kong.yml && /docker-entrypoint.sh kong docker-start'
+    # kong/kong:3.9.x runs as the non-root "kong" user and its launcher is
+    # /entrypoint.sh. The mounted script substitutes env vars into the
+    # declarative config with awk (eval/echo strips YAML quoting) and writes
+    # to the world-writable /tmp path set in KONG_DECLARATIVE_CONFIG.
+    entrypoint: ["bash", "/home/kong/kong-entrypoint.sh"]
 
   auth:
     image: supabase/gotrue:v2.186.0

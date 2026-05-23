@@ -147,8 +147,14 @@ services:
       GOTRUE_JWT_AUD: authenticated
       GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
       GOTRUE_JWT_EXP: ${JWT_EXPIRY}
+      # Legacy symmetric HS256 key
       GOTRUE_JWT_SECRET: ${JWT_SECRET}
       GOTRUE_JWT_ISSUER: ${API_EXTERNAL_URL}/auth/v1
+      # To enable the asymmetric ES256 key pair, generate keys per-install with
+      # Supabase's add-new-auth-keys.sh, set JWT_KEYS in the environment, and
+      # uncomment the line below. See:
+      # https://supabase.com/docs/guides/self-hosting/self-hosted-auth-keys
+      # GOTRUE_JWT_KEYS: ${JWT_KEYS:-[]}
 
       GOTRUE_EXTERNAL_EMAIL_ENABLED: ${ENABLE_EMAIL_SIGNUP}
       GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED: ${ENABLE_ANONYMOUS_USERS}
@@ -207,7 +213,9 @@ services:
       PGRST_DB_MAX_ROWS: ${PGRST_DB_MAX_ROWS:-1000}
       PGRST_DB_EXTRA_SEARCH_PATH: ${PGRST_DB_EXTRA_SEARCH_PATH:-public}
       PGRST_DB_ANON_ROLE: anon
-      PGRST_JWT_SECRET: ${JWT_SECRET}
+      # Accepts the JWKS (asymmetric + legacy) when JWT_JWKS is set, otherwise
+      # falls back to the symmetric HS256 secret.
+      PGRST_JWT_SECRET: ${JWT_JWKS:-${JWT_SECRET}}
       PGRST_DB_USE_LEGACY_GUCS: "false"
       PGRST_APP_SETTINGS_JWT_SECRET: ${JWT_SECRET}
       PGRST_APP_SETTINGS_JWT_EXP: ${JWT_EXPIRY}
@@ -255,7 +263,11 @@ services:
       DB_NAME: ${POSTGRES_DB}
       DB_AFTER_CONNECT_QUERY: 'SET search_path TO _realtime'
       DB_ENC_KEY: supabaserealtime
+      # Legacy symmetric HS256 key
       API_JWT_SECRET: ${JWT_SECRET}
+      # To verify asymmetric ES256 tokens, set JWT_JWKS (add-new-auth-keys.sh)
+      # and uncomment the line below.
+      # API_JWT_JWKS: ${JWT_JWKS:-{"keys":[]}}
       METRICS_JWT_SECRET: ${JWT_SECRET}
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       ERL_AFLAGS: -proto_dist inet_tcp
@@ -298,8 +310,12 @@ services:
       ANON_KEY: ${ANON_KEY}
       SERVICE_KEY: ${SERVICE_ROLE_KEY}
       POSTGREST_URL: http://rest:3000
+      # Legacy symmetric HS256 key
       AUTH_JWT_SECRET: ${JWT_SECRET}
       PGRST_JWT_SECRET: ${JWT_SECRET}
+      # To verify asymmetric ES256 tokens, set JWT_JWKS (add-new-auth-keys.sh)
+      # and uncomment the line below.
+      # JWT_JWKS: ${JWT_JWKS:-{"keys":[]}}
       DATABASE_URL: postgres://supabase_storage_admin:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
       STORAGE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
       REQUEST_ALLOW_X_FORWARDED_PATH: "true"

@@ -213,15 +213,12 @@ services:
       ]
 
   realtime:
-    # Realtime parses the tenant id from the first subdomain of the request host.
-    # The network alias below makes kong's URL `http://realtime-dev.realtime:4000/...`
-    # resolve to this container while keeping the tenant label `realtime-dev`.
+    # Realtime parses the tenant id from the first label of the request Host header.
+    # Kong proxies to this service via an upstream whose host_header is
+    # `realtime-dev.realtime`, so the tenant id stays `realtime-dev` without
+    # relying on a container_name or explicit docker network.
     image: supabase/realtime:v2.76.5
     restart: unless-stopped
-    networks:
-      default:
-        aliases:
-          - realtime-dev.realtime
     depends_on:
       db:
         # Disable this if you are using an external Postgres database

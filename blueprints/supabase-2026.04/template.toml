@@ -230,6 +230,19 @@ basicauth_credentials:
     password: $DASHBOARD_PASSWORD
 
 ###
+### Upstreams
+###
+# Realtime derives its tenant id from the first label of the Host header.
+# We connect to the plain `realtime` service (Docker DNS resolves it) but force
+# the Host header to `realtime-dev.realtime` so the tenant stays `realtime-dev`
+# without needing a container_name or explicit docker network.
+upstreams:
+  - name: realtime-dev.realtime
+    host_header: realtime-dev.realtime
+    targets:
+      - target: realtime:4000
+
+###
 ### API Routes
 ###
 services:

@@ -10,7 +10,6 @@ jwt_secret = "${password:32}"
 pg_meta_crypto_key = "${password:32}"
 s3_protocol_access_key_id = "${password:32}"
 s3_protocol_access_key_secret = "${password:64}"
-container_name_prefix = "${APP_NAME}-supabase"
 anon_key_payload = """{
   "role": "anon",
   "iss": "supabase",
@@ -37,13 +36,10 @@ env = [
 '# - SMTP_* are required for auth mail sending',
 '# - ADDITIONAL_REDIRECT_URLS, SITE_URL should point to application using supabase for authentication',
 '#   They are used for redirecting after login/signup and gotrue will check them before sending emails',
-'# - POSTGRES_PORT, POOLER_PROXY_PORT_TRANSACTION should be changed if you are already running other instances of supabase',
 '#',
-'# Supabase uses container names in part of its configuration so it is important to keep them',
-'# This template generates a random prefix for the container names to avoid conflicts',
-'# If you change it you will need to update routes in the vector.yml file in advanced->mounts section',
+'# Container names are managed by Dokploy; multi-tenancy is provided by Dokploy projects,',
+'# so no manual prefix is needed. Vector routes logs by the docker-compose service label.',
 '############',
-'CONTAINER_PREFIX=${container_name_prefix}',
 '',
 '############',
 '# Secrets',
@@ -337,7 +333,7 @@ services:
   ## Secure Realtime routes
   - name: realtime-v1-ws
     _comment: 'Realtime: /realtime/v1/* -> ws://realtime:4000/socket/*'
-    url: http://realtime-dev.${CONTAINER_PREFIX}-realtime:4000/socket
+    url: http://realtime-dev.realtime:4000/socket
     protocol: ws
     routes:
       - name: realtime-v1-ws
@@ -357,7 +353,7 @@ services:
             - anon
   - name: realtime-v1-rest
     _comment: 'Realtime: /realtime/v1/* -> ws://realtime:4000/socket/*'
-    url: http://realtime-dev.${CONTAINER_PREFIX}-realtime:4000/api
+    url: http://realtime-dev.realtime:4000/api
     protocol: http
     routes:
       - name: realtime-v1-rest
@@ -850,8 +846,8 @@ content = """api:
 sources:
   docker_host:
     type: docker_logs
-    exclude_containers:
-      - ${container_name_prefix}-vector
+    # vector excluded via VRL abort in the transform below (we can't filter by label here)
+    exclude_containers: []
 
 transforms:
   project_logs:
@@ -861,7 +857,12 @@ transforms:
     source: |-
       .project = "default"
       .event_message = del(.message)
-      .appname = replace!(del(.container_name), "${container_name_prefix}", "supabase")
+      # Route by docker-compose service label so we don't depend on container_name.
+      .appname = .label."com.docker.compose.service"
+      # Drop vector's own logs to avoid an ingestion loop.
+      if .appname == "vector" {
+        abort
+      }
       del(.container_created_at)
       del(.container_id)
       del(.source_type)
@@ -875,13 +876,13 @@ transforms:
     inputs:
       - project_logs
     route:
-      kong: '.appname == "supabase-kong"'
-      auth: '.appname == "supabase-auth"'
-      rest: '.appname == "supabase-rest"'
-      realtime: '.appname == "realtime-dev.${CONTAINER_PREFIX}-realtime"'
-      storage: '.appname == "supabase-storage"'
-      functions: '.appname == "supabase-edge-functions"'
-      db: '.appname == "supabase-db"'
+      kong: '.appname == "kong"'
+      auth: '.appname == "auth"'
+      rest: '.appname == "rest"'
+      realtime: '.appname == "realtime"'
+      storage: '.appname == "storage"'
+      functions: '.appname == "functions"'
+      db: '.appname == "db"'
   # Ignores non nginx errors since they are related with kong booting up
   kong_logs:
     type: remap

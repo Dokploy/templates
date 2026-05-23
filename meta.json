@@ -1685,7 +1685,7 @@
     "name": "CyberChef",
     "version": "latest",
     "description": "CyberChef is a web application for encryption, encoding, compression, and data analysis, developed by GCHQ.",
-    "logo": "cyberchef.svg",
+    "logo": "cyberchef.png",
     "links": {
       "github": "https://github.com/gchq/CyberChef",
       "website": "https://gchq.github.io/CyberChef/",
@@ -2544,6 +2544,26 @@
     ]
   },
   {
+    "id": "frappe-lending",
+    "name": "Frappe Lending",
+    "version": "latest",
+    "description": "A comprehensive loan management system built on Frappe Framework. 100% open source and customizable for managing loans, repayments, and lending operations.",
+    "logo": "frappe-lending.png",
+    "links": {
+      "github": "https://github.com/frappe/lending",
+      "docs": "https://docs.frappe.io/lending",
+      "website": "https://frappe.io"
+    },
+    "tags": [
+      "lending",
+      "finance",
+      "loans",
+      "payments",
+      "accounting",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "freescout",
     "name": "FreeScout",
     "version": "latest",
@@ -2808,6 +2828,24 @@
       "self-hosted",
       "open-source",
       "api"
+    ]
+  },
+  {
+    "id": "go2rtc",
+    "name": "go2rtc",
+    "version": "latest",
+    "description": "Ultimate camera streaming application with support for dozens formats and protocols.",
+    "logo": "go2rtc.png",
+    "links": {
+      "github": "https://github.com/AlexxIT/go2rtc",
+      "website": "https://go2rtc.org/",
+      "docs": "https://go2rtc.org/"
+    },
+    "tags": [
+      "streaming",
+      "webrtc",
+      "video",
+      "home assistant"
     ]
   },
   {
@@ -3968,7 +4006,7 @@
   {
     "id": "meilisearch",
     "name": "Meilisearch",
-    "version": "v1.8.3",
+    "version": "v1.35.1",
     "description": "Meilisearch is a free and open-source search engine that allows you to easily add search functionality to your web applications.",
     "logo": "meilisearch.png",
     "links": {
@@ -5950,24 +5988,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

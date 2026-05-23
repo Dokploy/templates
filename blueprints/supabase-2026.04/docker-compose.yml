@@ -500,7 +500,7 @@ services:
           "--no-verbose",
           "--tries=1",
           "--spider",
-          "http://vector:9001/health"
+          "http://127.0.0.1:9001/health"
         ]
       timeout: 5s
       interval: 5s

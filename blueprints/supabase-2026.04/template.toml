@@ -859,23 +859,24 @@ content = """api:
 sources:
   docker_host:
     type: docker_logs
-    # vector excluded via VRL abort in the transform below (we can't filter by label here)
-    exclude_containers: []
 
 transforms:
+  # Drop vector's own logs (replaces exclude_containers; matched by compose service label
+  # so it does not depend on container_name).
+  not_vector:
+    type: filter
+    inputs:
+      - docker_host
+    condition: '.label."com.docker.compose.service" != "vector"'
   project_logs:
     type: remap
     inputs:
-      - docker_host
+      - not_vector
     source: |-
       .project = "default"
       .event_message = del(.message)
       # Route by docker-compose service label so we don't depend on container_name.
       .appname = .label."com.docker.compose.service"
-      # Drop vector's own logs to avoid an ingestion loop.
-      if .appname == "vector" {
-        abort
-      }
       del(.container_created_at)
       del(.container_id)
       del(.source_type)

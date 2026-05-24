@@ -2936,6 +2936,23 @@
     ]
   },
   {
+    "id": "hermes-agent",
+    "name": "Hermes Agent",
+    "version": "v2026.5.16",
+    "description": "The self-improving AI agent built by Nous Research. Autonomous agent with persistent memory, skill creation, and multi-platform messaging (Telegram, Discord, Slack, WhatsApp).",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/NousResearch/hermes-agent",
+      "website": "https://hermes-agent.nousresearch.com/",
+      "docs": "https://hermes-agent.nousresearch.com/docs/"
+    },
+    "tags": [
+      "ai",
+      "automation",
+      "chatbot"
+    ]
+  },
+  {
     "id": "heyform",
     "name": "HeyForm",
     "version": "latest",

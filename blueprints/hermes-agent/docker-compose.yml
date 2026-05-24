@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  hermes-agent:
+    image: nousresearch/hermes-agent:v2026.5.16
+    restart: unless-stopped
+    command: ["gateway", "run"]
+    environment:
+      - HERMES_DASHBOARD=1
+      - HERMES_DASHBOARD_HOST=0.0.0.0
+      - API_SERVER_ENABLED=true
+      - API_SERVER_HOST=0.0.0.0
+      - API_SERVER_KEY=${API_SERVER_KEY}
+    volumes:
+      - hermes-agent-data:/opt/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8642/health && curl -fsS http://localhost:9119/api/status || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  hermes-agent-data:

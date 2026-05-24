@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+api_server_key = "${password:64}"
+
+[config]
+
+[[config.domains]]
+serviceName = "hermes-agent"
+port = 9119
+host = "${main_domain}"
+
+env = [
+  "API_SERVER_KEY=${api_server_key}"
+]
+
+mounts = []

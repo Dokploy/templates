@@ -1,29 +1,24 @@
-version: '3.7'
-
 services:
   discourse-db:
-    image: docker.io/bitnami/postgresql:17
-
+    image: pgvector/pgvector:pg16
     volumes:
-      - discourse-postgresql-data:/bitnami/postgresql
+      - discourse-postgresql-data:/var/lib/postgresql/data
     environment:
-      POSTGRESQL_USERNAME: bn_discourse
-      POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRESQL_DATABASE: bitnami_discourse
+      POSTGRES_USER: discourse
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: discourse
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U bn_discourse -d bitnami_discourse"]
+      test: ["CMD-SHELL", "pg_isready -U discourse -d discourse"]
       interval: 10s
       timeout: 5s
       retries: 5
     restart: unless-stopped
 
   discourse-redis:
-    image: docker.io/bitnami/redis:7.4
-
+    image: redis:7-alpine
     volumes:
-      - discourse-redis-data:/bitnami/redis
-    environment:
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      - discourse-redis-data:/data
+    command: redis-server --requirepass ${REDIS_PASSWORD}
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 10s
@@ -32,59 +27,39 @@ services:
     restart: unless-stopped
 
   discourse-app:
-    image: docker.io/bitnamilegacy/discourse:3.5.0
-
+    image: discourse/discourse:2026.1.4
     volumes:
-      - discourse-data:/bitnami/discourse
+      - discourse-data:/shared
     depends_on:
       discourse-db:
         condition: service_healthy
       discourse-redis:
         condition: service_healthy
     environment:
-      DISCOURSE_HOST: ${DISCOURSE_HOST}
-      DISCOURSE_DATABASE_HOST: discourse-db
-      DISCOURSE_DATABASE_PORT_NUMBER: 5432
-      DISCOURSE_DATABASE_USER: bn_discourse
-      DISCOURSE_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
-      DISCOURSE_DATABASE_NAME: bitnami_discourse
+      DISCOURSE_HOSTNAME: ${DISCOURSE_HOST}
+      DISCOURSE_DB_HOST: discourse-db
+      DISCOURSE_DB_PORT: 5432
+      DISCOURSE_DB_USERNAME: discourse
+      DISCOURSE_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DISCOURSE_DB_NAME: discourse
       DISCOURSE_REDIS_HOST: discourse-redis
-      DISCOURSE_REDIS_PORT_NUMBER: 6379
+      DISCOURSE_REDIS_PORT: 6379
       DISCOURSE_REDIS_PASSWORD: ${REDIS_PASSWORD}
-      # Optional: Configure SMTP for email delivery
-      # DISCOURSE_SMTP_HOST: ${SMTP_HOST}
+      DISCOURSE_DEVELOPER_EMAILS: ${DISCOURSE_ADMIN_EMAIL}
+      UNICORN_BIND_ALL: "true"
+      # Required for email delivery - Discourse will not function correctly without SMTP
+      # DISCOURSE_SMTP_ADDRESS: ${SMTP_HOST}
       # DISCOURSE_SMTP_PORT: ${SMTP_PORT}
-      # DISCOURSE_SMTP_USER: ${SMTP_USER}
+      # DISCOURSE_SMTP_USER_NAME: ${SMTP_USER}
       # DISCOURSE_SMTP_PASSWORD: ${SMTP_PASSWORD}
-    restart: unless-stopped
-
-  discourse-sidekiq:
-    image: docker.io/bitnamilegacy/discourse:3.5.0
-
-    volumes:
-      - discourse-sidekiq-data:/bitnami/discourse
-    depends_on:
-      - discourse-app
-    command: /opt/bitnami/scripts/discourse-sidekiq/run.sh
-    environment:
-      DISCOURSE_HOST: ${DISCOURSE_HOST}
-      DISCOURSE_DATABASE_HOST: discourse-db
-      DISCOURSE_DATABASE_PORT_NUMBER: 5432
-      DISCOURSE_DATABASE_USER: bn_discourse
-      DISCOURSE_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
-      DISCOURSE_DATABASE_NAME: bitnami_discourse
-      DISCOURSE_REDIS_HOST: discourse-redis
-      DISCOURSE_REDIS_PORT_NUMBER: 6379
-      DISCOURSE_REDIS_PASSWORD: ${REDIS_PASSWORD}
-      # Optional: Configure SMTP for email delivery
-      # DISCOURSE_SMTP_HOST: ${SMTP_HOST}
-      # DISCOURSE_SMTP_PORT: ${SMTP_PORT}
-      # DISCOURSE_SMTP_USER: ${SMTP_USER}
-      # DISCOURSE_SMTP_PASSWORD: ${SMTP_PASSWORD}
+      # DISCOURSE_SMTP_ENABLE_START_TLS: "true"
+      # DISCOURSE_NOTIFICATION_EMAIL: [email protected]
+      # DISCOURSE_DEVELOPER_EMAILS: [email protected]
+    ports:
+      - 3000
     restart: unless-stopped
 
 volumes:
   discourse-postgresql-data:
   discourse-redis-data:
   discourse-data:
-  discourse-sidekiq-data: 

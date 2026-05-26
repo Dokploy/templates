@@ -46,9 +46,6 @@ services:
       DISCOURSE_REDIS_PORT: 6379
       DISCOURSE_REDIS_PASSWORD: ${REDIS_PASSWORD}
       DISCOURSE_DEVELOPER_EMAILS: ${DISCOURSE_ADMIN_EMAIL}
-      UNICORN_BIND_ALL: "true"
-      # Required for production
-      # DISCOURSE_FORCE_HTTPS: "true"
       # Required for email delivery - Discourse will not function correctly without SMTP
       # DISCOURSE_SMTP_ADDRESS: ${SMTP_HOST}
       # DISCOURSE_SMTP_PORT: ${SMTP_PORT}
@@ -58,7 +55,7 @@ services:
       # DISCOURSE_NOTIFICATION_EMAIL: [email protected]
       # DISCOURSE_DEVELOPER_EMAILS: [email protected]
     ports:
-      - 3000
+      - 80
     restart: unless-stopped
 
 volumes:

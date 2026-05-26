@@ -15,5 +15,5 @@ mounts = []
 
 [[config.domains]]
 serviceName = "discourse-app"
-port = 3_000
+port = 80
 host = "${main_domain}"

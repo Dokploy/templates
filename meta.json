@@ -2957,7 +2957,7 @@
   {
     "id": "hi-events",
     "name": "Hi.events",
-    "version": "0.8.0-beta.1",
+    "version": "1.9.0-beta",
     "description": "Hi.Events is a self-hosted event management and ticket selling platform that allows you to create, manage and promote events easily.",
     "logo": "hi-events.svg",
     "links": {

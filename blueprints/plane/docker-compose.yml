@@ -1,12 +1,12 @@
 version: "3.8"
 
-# Anti-colisão de DNS em multi-stack Dokploy:
-# Services internos renomeados com prefix `plane-*` (únicos cluster-wide) e
-# `links:` no service `proxy` cria entries em /etc/hosts (`<IP-do-plane-web>
-# web`, etc.) — /etc/hosts tem prioridade absoluta sobre DNS, então o Caddy
-# interno do plane-proxy (que tem `reverse_proxy web:3000`/`api:8000`
-# hardcoded) resolve direto pros nossos containers, ignorando containers
-# `web`/`api` de outros stacks na dokploy-network compartilhada.
+# DNS collision avoidance for multi-stack Dokploy:
+# Internal services renamed with `plane-*` prefix (unique cluster-wide) and
+# `links:` on the `proxy` service creates /etc/hosts entries (`<plane-web-IP>
+# web`, etc.) — /etc/hosts takes absolute priority over DNS, so the Caddy
+# inside plane-proxy (which has `reverse_proxy web:3000`/`api:8000`
+# hardcoded) resolves straight to our containers, ignoring any `web`/`api`
+# containers from other stacks on the shared dokploy-network.
 
 x-db-env: &db-env
   PGHOST: ${PGHOST:-plane-db}

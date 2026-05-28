@@ -1,5 +1,13 @@
 version: "3.8"
 
+# Anti-colisão de DNS em multi-stack Dokploy:
+# Services internos renomeados com prefix `plane-*` (únicos cluster-wide) e
+# `links:` no service `proxy` cria entries em /etc/hosts (`<IP-do-plane-web>
+# web`, etc.) — /etc/hosts tem prioridade absoluta sobre DNS, então o Caddy
+# interno do plane-proxy (que tem `reverse_proxy web:3000`/`api:8000`
+# hardcoded) resolve direto pros nossos containers, ignorando containers
+# `web`/`api` de outros stacks na dokploy-network compartilhada.
+
 x-db-env: &db-env
   PGHOST: ${PGHOST:-plane-db}
   PGDATABASE: ${PGDATABASE:-plane}
@@ -39,7 +47,7 @@ x-mq-env: &mq-env
   RABBITMQ_VHOST: ${RABBITMQ_VHOST:-plane}
 
 x-live-env: &live-env
-  API_BASE_URL: ${API_BASE_URL:-http://api:8000}
+  API_BASE_URL: ${API_BASE_URL:-http://plane-api:8000}
   LIVE_SERVER_SECRET_KEY: ${LIVE_SERVER_SECRET_KEY:-dev-only-change-me}
 
 x-app-env: &app-env
@@ -58,47 +66,47 @@ x-app-env: &app-env
   WEBHOOK_ALLOWED_HOSTS: ${WEBHOOK_ALLOWED_HOSTS:-}
 
 services:
-  web:
+  plane-web:
     image: makeplane/plane-frontend:${APP_RELEASE:-v1.3.1}
     restart: unless-stopped
     depends_on:
-      api:
+      plane-api:
         condition: service_started
-      worker:
+      plane-worker:
         condition: service_started
 
-  space:
+  plane-space:
     image: makeplane/plane-space:${APP_RELEASE:-v1.3.1}
     restart: unless-stopped
     depends_on:
-      api:
+      plane-api:
         condition: service_started
-      worker:
+      plane-worker:
         condition: service_started
-      web:
+      plane-web:
         condition: service_started
 
-  admin:
+  plane-admin:
     image: makeplane/plane-admin:${APP_RELEASE:-v1.3.1}
     restart: unless-stopped
     depends_on:
-      api:
+      plane-api:
         condition: service_started
-      web:
+      plane-web:
         condition: service_started
 
-  live:
+  plane-live:
     image: makeplane/plane-live:${APP_RELEASE:-v1.3.1}
     restart: unless-stopped
     environment:
       <<: [*live-env, *redis-env]
     depends_on:
-      api:
+      plane-api:
         condition: service_started
-      web:
+      plane-web:
         condition: service_started
 
-  api:
+  plane-api:
     image: makeplane/plane-backend:${APP_RELEASE:-v1.3.1}
     restart: unless-stopped
     command: ./bin/docker-entrypoint-api.sh
@@ -113,10 +121,10 @@ services:
         condition: service_healthy
       plane-mq:
         condition: service_healthy
-      migrator:
+      plane-migrator:
         condition: service_completed_successfully
 
-  worker:
+  plane-worker:
     image: makeplane/plane-backend:${APP_RELEASE:-v1.3.1}
     restart: unless-stopped
     command: ./bin/docker-entrypoint-worker.sh
@@ -131,10 +139,10 @@ services:
         condition: service_healthy
       plane-mq:
         condition: service_healthy
-      migrator:
+      plane-migrator:
         condition: service_completed_successfully
 
-  beat-worker:
+  plane-beat-worker:
     image: makeplane/plane-backend:${APP_RELEASE:-v1.3.1}
     restart: unless-stopped
     command: ./bin/docker-entrypoint-beat.sh
@@ -149,10 +157,10 @@ services:
         condition: service_healthy
       plane-mq:
         condition: service_healthy
-      migrator:
+      plane-migrator:
         condition: service_completed_successfully
 
-  migrator:
+  plane-migrator:
     image: makeplane/plane-backend:${APP_RELEASE:-v1.3.1}
     restart: on-failure
     command: ./bin/docker-entrypoint-migrator.sh
@@ -226,16 +234,22 @@ services:
     volumes:
       - proxy_config:/config
       - proxy_data:/data
+    links:
+      - "plane-web:web"
+      - "plane-api:api"
+      - "plane-space:space"
+      - "plane-admin:admin"
+      - "plane-live:live"
     depends_on:
-      web:
+      plane-web:
         condition: service_started
-      api:
+      plane-api:
         condition: service_started
-      space:
+      plane-space:
         condition: service_started
-      admin:
+      plane-admin:
         condition: service_started
-      live:
+      plane-live:
         condition: service_started
 
 volumes:

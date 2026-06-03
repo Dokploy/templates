@@ -45,6 +45,10 @@ env = [
   "AWS_S3_ENDPOINT_URL=http://plane-minio:9000",
   "AWS_S3_BUCKET_NAME=uploads",
   "FILE_SIZE_LIMIT=5242880",
+  # Caddy proxy listen address + trusted proxies (required by the plane-proxy Caddyfile;
+  # SITE_ADDRESS has no upstream default, so leaving it unset crashes the proxy)
+  "SITE_ADDRESS=:80",
+  "TRUSTED_PROXIES=0.0.0.0/0",
   "MINIO_ENDPOINT_SSL=0",
   "DEBUG=0",
   "GUNICORN_WORKERS=1",

@@ -37,6 +37,10 @@ x-proxy-env: &proxy-env
   APP_DOMAIN: ${APP_DOMAIN:-localhost}
   FILE_SIZE_LIMIT: ${FILE_SIZE_LIMIT:-5242880}
   BUCKET_NAME: ${AWS_S3_BUCKET_NAME:-uploads}
+  # Caddy proxy: listen address (no upstream default in Caddyfile -> must be set,
+  # else the `{$SITE_ADDRESS} { ... }` block is keyless and Caddy aborts) + trusted proxies
+  SITE_ADDRESS: ${SITE_ADDRESS:-:80}
+  TRUSTED_PROXIES: ${TRUSTED_PROXIES:-0.0.0.0/0}
 
 x-mq-env: &mq-env
   RABBITMQ_HOST: ${RABBITMQ_HOST:-plane-mq}

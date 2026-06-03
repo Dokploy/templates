@@ -8,11 +8,6 @@ secret_key = "${base64:48}"
 live_secret_key = "${base64:48}"
 
 [config]
-[[config.domains]]
-serviceName = "proxy"
-port = 80
-host = "${main_domain}"
-
 env = [
   "APP_RELEASE=${app_release}",
   "APP_DOMAIN=${main_domain}",
@@ -60,3 +55,8 @@ env = [
 ]
 
 mounts = []
+
+[[config.domains]]
+serviceName = "proxy"
+port = 80
+host = "${main_domain}"

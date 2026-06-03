@@ -38,9 +38,13 @@ x-proxy-env: &proxy-env
   FILE_SIZE_LIMIT: ${FILE_SIZE_LIMIT:-5242880}
   BUCKET_NAME: ${AWS_S3_BUCKET_NAME:-uploads}
   # Caddy proxy: listen address (no upstream default in Caddyfile -> must be set,
-  # else the `{$SITE_ADDRESS} { ... }` block is keyless and Caddy aborts) + trusted proxies
+  # else the `{$SITE_ADDRESS} { ... }` block is keyless and Caddy aborts).
   SITE_ADDRESS: ${SITE_ADDRESS:-:80}
-  TRUSTED_PROXIES: ${TRUSTED_PROXIES:-0.0.0.0/0}
+  # trusted_proxies decides which peers may set X-Forwarded-For/X-Real-IP. Dokploy's
+  # Traefik upstream always lives on the private dokploy-network, so trust only private
+  # ranges (Caddy built-in) instead of 0.0.0.0/0 to prevent client-IP spoofing if the
+  # proxy is ever exposed directly. Override with your real upstream CIDR if needed.
+  TRUSTED_PROXIES: ${TRUSTED_PROXIES:-private_ranges}
 
 x-mq-env: &mq-env
   RABBITMQ_HOST: ${RABBITMQ_HOST:-plane-mq}

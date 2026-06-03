@@ -46,9 +46,11 @@ env = [
   "AWS_S3_BUCKET_NAME=uploads",
   "FILE_SIZE_LIMIT=5242880",
   # Caddy proxy listen address + trusted proxies (required by the plane-proxy Caddyfile;
-  # SITE_ADDRESS has no upstream default, so leaving it unset crashes the proxy)
+  # SITE_ADDRESS has no upstream default, so leaving it unset crashes the proxy).
+  # TRUSTED_PROXIES=private_ranges trusts only Dokploy's private-network upstream (Traefik),
+  # avoiding client-IP spoofing from 0.0.0.0/0. Set a narrower CIDR if exposing directly.
   "SITE_ADDRESS=:80",
-  "TRUSTED_PROXIES=0.0.0.0/0",
+  "TRUSTED_PROXIES=private_ranges",
   "MINIO_ENDPOINT_SSL=0",
   "DEBUG=0",
   "GUNICORN_WORKERS=1",

@@ -5291,6 +5291,24 @@
     "dokploy_version": "<0.22.5"
   },
   {
+    "id": "prefect",
+    "name": "Prefect",
+    "version": "3-latest",
+    "description": "Prefect is an open-source workflow orchestration platform for building, scheduling, and monitoring data pipelines.",
+    "logo": "prefect.png",
+    "links": {
+      "github": "https://github.com/PrefectHQ/prefect",
+      "website": "https://www.prefect.io/",
+      "docs": "https://docs.prefect.io/"
+    },
+    "tags": [
+      "workflow",
+      "automation",
+      "orchestration",
+      "data"
+    ]
+  },
+  {
     "id": "prometheus",
     "name": "Prometheus",
     "version": "latest",

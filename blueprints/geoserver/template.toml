@@ -16,13 +16,3 @@ POSTGRES_DB = "gis"
 [[config.domains]]
 serviceName = "geoserver"
 port = 8080
-
-[[config.mounts]]
-serviceName = "geoserver"
-volumeName = "geoserver-data"
-mountPath = "/opt/geoserver/data_dir"
-
-[[config.mounts]]
-serviceName = "db"
-volumeName = "postgis-data"
-mountPath = "/var/lib/postgresql/data"

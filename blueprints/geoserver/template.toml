@@ -12,10 +12,17 @@ POSTGRES_USER = "postgres"
 POSTGRES_PASSWORD = "postgres_secure"
 POSTGRES_DB = "gis"
 
+[config]
 [[config.domains]]
-name = "geoserver"
+serviceName = "geoserver"
 port = 8080
 
-[config.mounts]
-geoserver-data = "/opt/geoserver/data_dir"
-postgis-data = "/var/lib/postgresql/data"
+[[config.mounts]]
+serviceName = "geoserver"
+volumeName = "geoserver-data"
+mountPath = "/opt/geoserver/data_dir"
+
+[[config.mounts]]
+serviceName = "db"
+volumeName = "postgis-data"
+mountPath = "/var/lib/postgresql/data"

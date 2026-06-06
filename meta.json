@@ -6799,5 +6799,22 @@
       "saml",
       "multi-tenant"
     ]
+  },
+  {
+    "id": "geoserver",
+    "name": "GeoServer & PostGIS",
+    "version": "2.24.1",
+    "description": "An open-source server for sharing geospatial data, paired with a PostGIS database. Template created and maintained by OpenGeoCity Tanzania (info@ogctz.org). For further assistance contact +255759968919 or visit https://opengeocity.org or github: https://github.com/ShabaniMagawila or linkedin: https://www.linkedin.com/in/shabani-magawila/",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/geoserver/geoserver",
+      "website": "https://geoserver.org/",
+      "docs": "https://docs.geoserver.org/"
+    },
+    "tags": [
+      "geospatial",
+      "gis",
+      "postgis"
+    ]
   }
 ]

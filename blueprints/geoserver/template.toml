@@ -1,0 +1,21 @@
+[info]
+name = "GeoServer & PostGIS"
+description = "An open-source server for sharing geospatial data, paired with a PostGIS database. Template created and maintained by OpenGeoCity Tanzania (info@ogctz.org). For further assistance contact +255759968919 or visit https://opengeocity.org or github: https://github.com/ShabaniMagawila or linkedin: https://www.linkedin.com/in/shabani-magawila/"
+version = "2.24.1"
+
+[variables]
+GEOSERVER_ADMIN_USER = "admin"
+GEOSERVER_ADMIN_PASSWORD = "geoserver_secure"
+INITIAL_MEMORY = "2G"
+MAXIMUM_MEMORY = "4G"
+POSTGRES_USER = "postgres"
+POSTGRES_PASSWORD = "postgres_secure"
+POSTGRES_DB = "gis"
+
+[[config.domains]]
+name = "geoserver"
+port = 8080
+
+[config.mounts]
+geoserver-data = "/opt/geoserver/data_dir"
+postgis-data = "/var/lib/postgresql/data"

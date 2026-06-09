@@ -1,9 +1,9 @@
 services:
   omniroute:
-    image: diegosouzapw/omniroute:latest
+    image: diegosouzapw/omniroute:3.8.17
     restart: unless-stopped
 
-    ports:
+    expose:
       - "20128"
       - "20129"
 

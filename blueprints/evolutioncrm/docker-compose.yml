@@ -3,6 +3,12 @@ services:
     image: evoapicloud/evo-auth-service-community:latest
     command: sh -c "bundle exec rails db:prepare && bundle exec rails s -p 3001 -b 0.0.0.0"
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3001/up"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 120s        
     depends_on:
       postgres:
         condition: service_healthy
@@ -36,10 +42,8 @@ services:
     healthcheck:
       disable: true    
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      evo-auth:
+        condition: service_healthy        
     environment:
       - RAILS_ENV=production
       - SECRET_KEY_BASE=${SECRET_KEY_BASE}
@@ -62,11 +66,13 @@ services:
     image: evoapicloud/evo-ai-crm-community:latest
     command: sh -c "bundle exec rails db:prepare && bundle exec rails s -p 3000 -b 0.0.0.0"
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:3000/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 120s    
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
       evo-auth:
         condition: service_healthy        
     environment:
@@ -81,11 +87,11 @@ services:
       - POSTGRES_DATABASE=evo_crm_production
       - POSTGRES_SSLMODE=disable
       - REDIS_URL=${REDIS_URL}
-      - EVO_AUTH_SERVICE_URL=${AUTH_URL}
+      - EVO_AUTH_SERVICE_URL=http://evo-auth:3001
       - EVO_AI_CORE_SERVICE_URL=http://evo-core:5555
       - BACKEND_URL=${BACK_URL}
       - FRONTEND_URL=${FRONT_URL}
-      - CORS_ORIGINS=${FRONT_URL},${BACK_URL},${AUTH_URL}
+      - CORS_ORIGINS=${FRONT_URL},${BACK_URL}
       - DISABLE_TELEMETRY=true
       - LOG_LEVEL=info
       - ENABLE_ACCOUNT_SIGNUP=true
@@ -100,6 +106,11 @@ services:
   evo-crm-sidekiq:
     image: evoapicloud/evo-ai-crm-community:latest
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
+    healthcheck:
+      disable: true       
+    depends_on: 
+      evo-crm:
+        condition: service_healthy     
     environment:
       - RAILS_ENV=production
       - SECRET_KEY_BASE=${SECRET_KEY_BASE}
@@ -157,12 +168,8 @@ services:
   evo-processor:
     image: evoapicloud/evo-ai-processor-community:latest
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy    
       evo-crm:
-        condition: service_healthy    
+        condition: service_healthy       
     environment:
       - POSTGRES_CONNECTION_STRING=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/evo_crm_production
       - REDIS_HOST=redis
@@ -236,6 +243,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
 volumes:
   postgres-data:
   redis-data:

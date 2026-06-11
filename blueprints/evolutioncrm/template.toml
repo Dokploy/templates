@@ -1,0 +1,62 @@
+[variables]
+auth_domain = "${domain}"
+front_domain = "${domain}"
+api_domain = "${domain}"
+processor_domain = "${domain}"
+postgres_password = "${password}"
+secret_key_base = "${base64:64}"
+jwt_secret_key = "${base64:64}"
+api_token = "${base64:64}"
+redis_password = "${password}"
+doorkeeper_jwt_secret_key = "${base64:64}"
+bot_runtime_secret = "${base64:64}"
+encryption_key = "${base64:32}"
+global_api_key = "${base64:64}"
+
+[config]
+env = [
+  "SECRET_KEY_BASE=${secret_key_base}",
+  "JWT_SECRET_KEY=${jwt_secret_key}",
+  "EVOAI_CRM_API_TOKEN=${api_token}",
+  "GLOBAL_API_KEY=${global_api_key}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_DATABASE=evo_crm_community",
+  "POSTGRES_USERNAME=postgres",
+  "REDIS_URL=redis://:${redis_password}@redis:6379/3",
+  "REDIS_PASSWORD=${redis_password}",
+  "FRONT_DOMAIN=${front_domain}",  
+  "BACK_DOMAIN=${api_domain}",
+  "AUTH_DOMAIN=${auth_domain}",
+  "PROCESSOR_DOMAIN=${processor_domain}",
+  "DOORKEEPER_JWT_SECRET_KEY=${doorkeeper_jwt_secret_key}",
+  "DOORKEEPER_JWT_ALGORITHM=hs256",
+  "DOORKEEPER_JWT_ISS=evo-auth-service",
+  "MFA_ISSUER=EvoCRM",
+  "BOT_RUNTIME_SECRET=${bot_runtime_secret}",
+  "ENCRYPTION_KEY=${encryption_key}",
+]
+
+mounts = []
+
+[[config.domains]]
+serviceName = "evo-auth"
+port = 3001
+host = "${auth_domain}"
+
+
+[[config.domains]]
+serviceName = "evo-crm-frontend"
+port = 5173
+host = "${front_domain}"
+
+
+[[config.domains]]
+serviceName = "evo-crm"
+port = 3000
+host = "${api_domain}"
+
+
+[[config.domains]]
+serviceName = "evo-processor"
+port = 8000
+host = "${processor_domain}"

@@ -2242,6 +2242,43 @@
     ]
   },
   {
+    "id": "evolutioncrm",
+    "name": "Evolution CRM",
+    "version": "latest",
+    "description": "Evo CRM Community is the open-source edition of the Evo CRM platform — a complete suite for AI-assisted customer support. It brings together authentication, CRM, AI agents, agent processing, bot pipelines and a modern frontend into a unified, self-hostable stack.",
+    "logo": "evolutionapi.png",
+    "links": {
+      "github": "https://github.com/evolution-foundation/evo-crm-community",
+      "docs": "https://docs.evolutionfoundation.com.br",
+      "website": "https://evolutionfoundation.com.br"
+    },
+    "tags": [
+      "crm",
+      "ai",
+      "agent",
+      "processing",
+      "bot",
+      "pipeline"
+    ]
+  },
+  {
+    "id": "evolutiongo",
+    "name": "Evolution GO",
+    "version": "latest",
+    "description": "Evolution Go is a high-performance implementation of the WhatsApp API, written in Go. Built with Go’s standard library and modern development practices, it provides a robust and efficient solution for WhatsApp integration using the whatsmeow library.",
+    "logo": "evolutionapi.png",
+    "links": {
+      "github": "https://github.com/evolution-foundation/evolution-go",
+      "docs": "https://docs.evolutionfoundation.com.br/evolution-go",
+      "website": "https://docs.evolutionfoundation.com.br/evolution-go"
+    },
+    "tags": [
+      "api",
+      "whatsapp",
+      "messaging"
+    ]
+  },
+  {
     "id": "excalidraw",
     "name": "Excalidraw",
     "version": "latest",

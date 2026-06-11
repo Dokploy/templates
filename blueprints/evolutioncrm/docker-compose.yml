@@ -1,0 +1,244 @@
+services:
+  evo-auth:
+    image: evoapicloud/evo-auth-service-community:latest
+    command: sh -c "bundle exec rails db:prepare && bundle exec rails s -p 3001 -b 0.0.0.0"
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - RAILS_ENV=production
+      - RAILS_MAX_THREADS=5
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - EVOAI_CRM_API_TOKEN=${EVOAI_CRM_API_TOKEN}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=evo_crm_production
+      - POSTGRES_SSLMODE=disable
+      - REDIS_URL=${REDIS_URL}
+      - FRONTEND_URL=https://${FRONT_DOMAIN}
+      - BACKEND_URL=https://${BACK_DOMAIN}
+      - CORS_ORIGINS=${FRONT_DOMAIN},${BACK_DOMAIN}
+      - DOORKEEPER_JWT_SECRET_KEY=${DOORKEEPER_JWT_SECRET_KEY}
+      - DOORKEEPER_JWT_ALGORITHM=${DOORKEEPER_JWT_ALGORITHM}
+      - DOORKEEPER_JWT_ISS=${DOORKEEPER_JWT_ISS}
+      - MFA_ISSUER=${MFA_ISSUER}
+
+  evo-auth-sidekiq:
+    image: evoapicloud/evo-auth-service-community:latest
+    command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
+    restart: always
+    healthcheck:
+      disable: true    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - RAILS_ENV=production
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - EVOAI_CRM_API_TOKEN=${EVOAI_CRM_API_TOKEN}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=evo_crm_production
+      - POSTGRES_SSLMODE=disable
+      - REDIS_URL=${REDIS_URL}
+      - DOORKEEPER_JWT_SECRET_KEY=${DOORKEEPER_JWT_SECRET_KEY}
+      - DOORKEEPER_JWT_ALGORITHM=${DOORKEEPER_JWT_ALGORITHM}
+      - DOORKEEPER_JWT_ISS=${DOORKEEPER_JWT_ISS}
+      - MFA_ISSUER=EvoCRM
+      - SIDEKIQ_CONCURRENCY=10
+
+  evo-crm:
+    image: evoapicloud/evo-ai-crm-community:latest
+    command: sh -c "bundle exec rails db:prepare && bundle exec rails s -p 3000 -b 0.0.0.0"
+    restart: always
+    healthcheck:
+      disable: true    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      evo-auth:
+        condition: service_healthy        
+    environment:
+      - RAILS_ENV=production
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - EVOAI_CRM_API_TOKEN=${EVOAI_CRM_API_TOKEN}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=evo_crm_production
+      - POSTGRES_SSLMODE=disable
+      - REDIS_URL=${REDIS_URL}
+      - EVO_AUTH_SERVICE_URL=http://${AUTH_DOMAIN}
+      - EVO_AI_CORE_SERVICE_URL=http://evo-core:5555
+      - BACKEND_URL=http://${BACK_DOMAIN}
+      - FRONTEND_URL=https://${FRONT_DOMAIN}
+      - CORS_ORIGINS=https://${FRONT_DOMAIN},https://${BACK_DOMAIN},https://${AUTH_DOMAIN}
+      - DISABLE_TELEMETRY=true
+      - LOG_LEVEL=info
+      - ENABLE_ACCOUNT_SIGNUP=true
+      - ENABLE_PUSH_RELAY_SERVER=true
+      - ENABLE_INBOX_EVENTS=true
+      - BOT_RUNTIME_URL=http://evo-bot-runtime:8080
+      - BOT_RUNTIME_SECRET=${BOT_RUNTIME_SECRET}
+      - BOT_RUNTIME_POSTBACK_BASE_URL=http://${BACK_DOMAIN}
+    volumes:
+      - evo-crm-data:/app/storage
+
+  evo-crm-sidekiq:
+    image: evoapicloud/evo-ai-crm-community:latest
+    command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
+    environment:
+      - RAILS_ENV=production
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - EVOAI_CRM_API_TOKEN=${EVOAI_CRM_API_TOKEN}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=evo_crm_production
+      - POSTGRES_SSLMODE=disable
+      - REDIS_URL=${REDIS_URL}
+      - EVO_AUTH_SERVICE_URL=http://${AUTH_DOMAIN}
+      - EVO_AI_CORE_SERVICE_URL=http://evo-core:5555
+      - BACKEND_URL=http://${BACK_DOMAIN}
+      - FRONTEND_URL=https://${FRONT_DOMAIN}
+      - CORS_ORIGINS=https://${FRONT_DOMAIN},https://${BACK_DOMAIN},https://${AUTH_DOMAIN}
+      - DISABLE_TELEMETRY=true
+      - LOG_LEVEL=info
+      - ENABLE_ACCOUNT_SIGNUP=true
+      - ENABLE_PUSH_RELAY_SERVER=true
+      - ENABLE_INBOX_EVENTS=true
+      - BOT_RUNTIME_URL=http://evo-bot-runtime:8080
+      - BOT_RUNTIME_SECRET=${BOT_RUNTIME_SECRET}
+      - BOT_RUNTIME_POSTBACK_BASE_URL=http://${BACK_DOMAIN}
+      - SIDEKIQ_CONCURRENCY=10
+
+  evo-core:
+    image: evoapicloud/evo-ai-core-service-community:latest
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy    
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_NAME=evo_crm_production
+      - DB_SSLMODE=disable
+      - DB_MAX_IDLE_CONNS=10
+      - DB_MAX_OPEN_CONNS=100
+      - DB_CONN_MAX_LIFETIME=1h
+      - DB_CONN_MAX_IDLE_TIME=30m
+      - PORT=5555
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_ALGORITHM=HS256
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - EVOLUTION_BASE_URL=http://evo-crm:3000
+      - EVO_AUTH_BASE_URL=http://evo-auth:3001
+      - AI_PROCESSOR_URL=http://evo-processor:8000
+      - AI_PROCESSOR_VERSION=v1
+
+  evo-processor:
+    image: evoapicloud/evo-ai-processor-community:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy    
+    environment:
+      - POSTGRES_CONNECTION_STRING=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/evo_crm_production
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_SSL=false
+      - REDIS_DB=3
+      - REDIS_KEY_PREFIX="a2a:"
+      - REDIS_TTL=3600
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=false
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - EVOAI_CRM_API_TOKEN=${EVOAI_CRM_API_TOKEN}
+      - EVO_AI_CRM_URL=http://evo-crm:3000
+      - CORE_SERVICE_URL=http://evo-core:5555/api/v1
+      - EVO_AUTH_BASE_URL=http://evo-auth:3001
+      - APP_URL=https://${PROCESSOR_DOMAIN}
+      - API_URL=https://${PROCESSOR_DOMAIN}
+      - API_TITLE=Agent Processor Community
+      - API_DESCRIPTION=Agent Processor Community for Evolution AI
+      - API_VERSION=1.0.0  
+      - ORGANIZATION_NAME=Evolution CRM  
+      - TOOLS_CACHE_ENABLED=true
+      - TOOLS_CACHE_TTL=3600
+
+  evo-bot-runtime:
+    image: evoapicloud/evo-bot-runtime:latest
+    environment:
+      - LISTEN_ADDR=0.0.0.0:8080
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/3
+      - AI_PROCESSOR_URL=http://evo-processor:8000
+      - BOT_RUNTIME_SECRET=${BOT_RUNTIME_SECRET}
+      - AI_CALL_TIMEOUT_SECONDS=30
+
+  evo-crm-frontend:
+    image: evoapicloud/evo-ai-frontend-community:latest
+    environment:
+      - VITE_APP_ENV=production
+      - VITE_API_URL=https://${BACK_DOMAIN}
+      - VITE_AUTH_API_URL=http://${AUTH_DOMAIN}
+      - VITE_EVOAI_API_URL=https://${PROCESSOR_DOMAIN}
+      - VITE_AGENT_PROCESSOR_URL=https://${PROCESSOR_DOMAIN}
+      - VITE_WS_URL=wss://${BACK_DOMAIN}
+
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+                
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  postgres-data:
+  redis-data:
+  evo-processor-data:
+  evo-crm-data:
+  evolution-go-logs:
+  evolution-go-data:

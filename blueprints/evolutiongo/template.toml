@@ -1,0 +1,25 @@
+[variables]
+main_domain = "${domain}"
+api_key = "${base64:64}"
+postgres_password = "${password}"
+
+[config]
+env = [
+  "SERVER_URL=https://${main_domain}",
+  "SERVER_PORT=8080",
+  "AUTHENTICATION_API_KEY=${api_key}",
+  "CLIENT_NAME=Evolution",
+  "DATABASE_SAVE_MESSAGES=false",
+  "WADEBUG=INFO",
+  "LOGTYPE=console",
+  "POSTGRES_DATABASE=evolution",
+  "POSTGRES_USERNAME=postgresql",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "DATABASE_CONNECTION_URI=postgres://postgresql:${postgres_password}@evolution-postgres:5432",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "evolution-go"
+port = 8_080
+host = "${main_domain}"

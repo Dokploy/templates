@@ -26,7 +26,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DATABASE=evo_crm_production
       - POSTGRES_SSLMODE=disable
-      - REDIS_URL=${REDIS_URL}
+      - REDIS_URL=redis://redis:6379/3
       - FRONTEND_URL=${FRONT_URL}
       - BACKEND_URL=${BACK_URL}
       - CORS_ORIGINS=${FRONT_URL},${BACK_URL}
@@ -55,7 +55,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DATABASE=evo_crm_production
       - POSTGRES_SSLMODE=disable
-      - REDIS_URL=${REDIS_URL}
+      - REDIS_URL=redis://redis:6379/3
       - DOORKEEPER_JWT_SECRET_KEY=${DOORKEEPER_JWT_SECRET_KEY}
       - DOORKEEPER_JWT_ALGORITHM=${DOORKEEPER_JWT_ALGORITHM}
       - DOORKEEPER_JWT_ISS=${DOORKEEPER_JWT_ISS}
@@ -86,7 +86,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DATABASE=evo_crm_production
       - POSTGRES_SSLMODE=disable
-      - REDIS_URL=${REDIS_URL}
+      - REDIS_URL=redis://redis:6379/3
       - EVO_AUTH_SERVICE_URL=http://evo-auth:3001
       - EVO_AI_CORE_SERVICE_URL=http://evo-core:5555
       - BACKEND_URL=${BACK_URL}
@@ -122,7 +122,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DATABASE=evo_crm_production
       - POSTGRES_SSLMODE=disable
-      - REDIS_URL=${REDIS_URL}
+      - REDIS_URL=redis://redis:6379/3
       - EVO_AUTH_SERVICE_URL=${AUTH_URL}
       - EVO_AI_CORE_SERVICE_URL=http://evo-core:5555
       - BACKEND_URL=${BACK_URL}
@@ -174,7 +174,6 @@ services:
       - POSTGRES_CONNECTION_STRING=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/evo_crm_production
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - REDIS_SSL=false
       - REDIS_DB=3
       - REDIS_KEY_PREFIX="a2a:"
@@ -188,7 +187,7 @@ services:
       - EVO_AI_CRM_URL=http://evo-crm:3000
       - CORE_SERVICE_URL=http://evo-core:5555/api/v1
       - EVO_AUTH_BASE_URL=http://evo-auth:3001
-      - APP_URL=${PROCESSOR_URL}
+      - APP_URL=${FRONT_URL}
       - API_URL=${PROCESSOR_URL}
       - API_TITLE=Agent Processor Community
       - API_DESCRIPTION=Agent Processor Community for Evolution AI
@@ -212,9 +211,9 @@ services:
       - VITE_APP_ENV=production
       - VITE_API_URL=${BACK_URL}
       - VITE_AUTH_API_URL=${AUTH_URL}
-      - VITE_EVOAI_API_URL=${PROCESSOR_URL}
+      - VITE_EVOAI_API_URL=${EVOIA_URL}
       - VITE_AGENT_PROCESSOR_URL=${PROCESSOR_URL}
-      - VITE_WS_URL=wss://${BACK_URL}
+      - VITE_WS_URL=wss://${BACK_DOMAIN}
       - VITE_FRONT_URL=${FRONT_URL}
 
   postgres:
@@ -239,7 +238,7 @@ services:
     volumes:
       - redis-data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      test: ["CMD-SHELL", "redis-cli ping"]
       interval: 5s
       timeout: 5s
       retries: 10

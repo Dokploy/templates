@@ -1,5 +1,4 @@
 [variables]
-main_domain = "${domain}"
 api_server_key = "${password:64}"
 anthropic_api_key = ""
 openai_api_key = ""
@@ -9,20 +8,18 @@ groq_api_key = ""
 mistral_api_key = ""
 
 [config]
+mounts = []
 
 [[config.domains]]
 serviceName = "hermes-agent"
 port = 9119
 host = "${main_domain}"
 
-env = [
-  "API_SERVER_KEY=${api_server_key}",
-  "ANTHROPIC_API_KEY=${anthropic_api_key}",
-  "OPENAI_API_KEY=${openai_api_key}",
-  "OPENROUTER_API_KEY=${openrouter_api_key}",
-  "GOOGLE_API_KEY=${google_api_key}",
-  "GROQ_API_KEY=${groq_api_key}",
-  "MISTRAL_API_KEY=${mistral_api_key}"
-]
-
-mounts = []
+[config.env]
+API_SERVER_KEY = "${api_server_key}"
+ANTHROPIC_API_KEY = "${anthropic_api_key}"
+OPENAI_API_KEY = "${openai_api_key}"
+OPENROUTER_API_KEY = "${openrouter_api_key}"
+GOOGLE_API_KEY = "${google_api_key}"
+GROQ_API_KEY = "${groq_api_key}"
+MISTRAL_API_KEY = "${mistral_api_key}"

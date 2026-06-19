@@ -1,0 +1,37 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: engram
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: engram_cloud
+    volumes:
+      - engram-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U engram -d engram_cloud"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  engram:
+    image: ghcr.io/gentleman-programming/engram:1.16.3
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ENGRAM_DATABASE_URL: ${ENGRAM_DATABASE_URL}
+      ENGRAM_JWT_SECRET: ${ENGRAM_JWT_SECRET}
+      ENGRAM_CLOUD_TOKEN: ${ENGRAM_CLOUD_TOKEN}
+      ENGRAM_CLOUD_ADMIN: ${ENGRAM_CLOUD_ADMIN}
+      ENGRAM_CLOUD_ALLOWED_PROJECTS: ${ENGRAM_CLOUD_ALLOWED_PROJECTS}
+      ENGRAM_CLOUD_HOST: "0.0.0.0"
+      ENGRAM_PORT: "8080"
+    command: ["cloud", "serve"]
+    expose:
+      - 8080
+
+volumes:
+  engram-postgres:

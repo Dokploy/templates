@@ -1,14 +1,11 @@
 [variables]
 main_domain = "${domain}"
-pg_password = "${password:32}"
 jwt_secret = "${password:64}"
 cloud_token = "${password:48}"
 admin_token = "${password:48}"
 
 [config]
 env = [
-  "POSTGRES_PASSWORD=${pg_password}",
-  "ENGRAM_DATABASE_URL=postgres://engram:${pg_password}@postgres:5432/engram_cloud?sslmode=disable",
   "ENGRAM_JWT_SECRET=${jwt_secret}",
   "ENGRAM_CLOUD_TOKEN=${cloud_token}",
   "ENGRAM_CLOUD_ADMIN=${admin_token}",

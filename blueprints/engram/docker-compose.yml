@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: engram
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: engram
       POSTGRES_DB: engram_cloud
     volumes:
       - engram-postgres:/var/lib/postgresql/data
@@ -22,7 +22,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      ENGRAM_DATABASE_URL: ${ENGRAM_DATABASE_URL}
+      ENGRAM_DATABASE_URL: postgres://engram:engram@postgres:5432/engram_cloud?sslmode=disable
       ENGRAM_JWT_SECRET: ${ENGRAM_JWT_SECRET}
       ENGRAM_CLOUD_TOKEN: ${ENGRAM_CLOUD_TOKEN}
       ENGRAM_CLOUD_ADMIN: ${ENGRAM_CLOUD_ADMIN}

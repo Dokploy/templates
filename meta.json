@@ -3618,7 +3618,10 @@
       "website": "https://libredb.org/",
       "docs": "https://libredb.org/"
     },
-    "tags": ["database", "sql"]
+   "tags": [
+      "database",
+      "sql"
+    ]
   },
   {
     "id": "libredesk",

@@ -12,13 +12,15 @@ services:
     environment:
       - PREFECT_API_DATABASE_CONNECTION_URL=postgresql+asyncpg://prefect:${POSTGRES_PASSWORD}@prefect-postgres:5432/prefect
       - PREFECT_SERVER_API_HOST=0.0.0.0
-      - PREFECT_SERVER_UI_API_URL=http://${PREFECT_DOMAIN}/api
+      - PREFECT_SERVER_UI_API_URL=https://${PREFECT_DOMAIN}/api
       - PREFECT_MESSAGING_BROKER=prefect_redis.messaging
       - PREFECT_MESSAGING_CACHE=prefect_redis.messaging
       - PREFECT_REDIS_MESSAGING_HOST=prefect-redis
       - PREFECT_REDIS_MESSAGING_PORT=6379
       - PREFECT_REDIS_MESSAGING_DB=0
     command: prefect server start --no-services
+    expose:
+      - 4200
     healthcheck:
       test:
         [

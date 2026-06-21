@@ -16,6 +16,3 @@ USER_PASSWORD = "${user_password}"
 
 [[config.env]]
 JWT_SECRET = "${jwt_secret}"
-
-[[config.mounts]]
-filePath = "/app/data"

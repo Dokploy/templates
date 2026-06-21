@@ -1,0 +1,21 @@
+[variables]
+admin_password = "${password:32}"
+user_password = "${password:32}"
+jwt_secret = "${password:64}"
+
+[config]
+[[config.domains]]
+serviceName = "libredb-studio"
+port = 3000
+
+[[config.env]]
+ADMIN_PASSWORD = "${admin_password}"
+
+[[config.env]]
+USER_PASSWORD = "${user_password}"
+
+[[config.env]]
+JWT_SECRET = "${jwt_secret}"
+
+[[config.mounts]]
+filePath = "/app/data"

@@ -5291,6 +5291,23 @@
     "dokploy_version": "<0.22.5"
   },
   {
+    "id": "prefect",
+    "name": "Prefect",
+    "version": "3.7.5-python3.12",
+    "description": "Prefect is an open-source workflow orchestration platform for building, scheduling, monitoring, and managing data pipelines and Python workflows.",
+    "logo": "prefect.svg",
+    "links": {
+      "github": "https://github.com/PrefectHQ/prefect",
+      "website": "https://www.prefect.io/",
+      "docs": "https://docs.prefect.io/"
+    },
+    "tags": [
+      "automation",
+      "workflow",
+      "data"
+    ]
+  },
+  {
     "id": "prometheus",
     "name": "Prometheus",
     "version": "latest",

@@ -1,4 +1,4 @@
-﻿[variables]
+[variables]
 main_domain = "${domain}"
 mysql_user = "filerun"
 mysql_database = "filerun"

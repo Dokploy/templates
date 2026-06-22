@@ -10,7 +10,7 @@ services:
       - tandoor_db_data:/var/lib/postgresql/data
 
   tandoor-recipes:
-    image: vabene1111/recipes:latest
+    image: vabene1111/recipes:2.6.11
     restart: unless-stopped
     depends_on:
       - tandoor-db

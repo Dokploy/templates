@@ -6079,7 +6079,7 @@
   {
     "id": "tandoor-recipes",
     "name": "Tandoor Recipes",
-    "version": "latest",
+    "version": "2.6.11",
     "description": "Tandoor Recipes is a self-hosted recipe manager, meal planner, and shopping list application.",
     "logo": "tandoor-recipes.svg",
     "links": {

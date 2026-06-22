@@ -1,6 +1,6 @@
 services:
   privatebin:
-    image: privatebin/nginx-fpm-alpine:latest
+    image: privatebin/nginx-fpm-alpine:2.0.4
     restart: unless-stopped
     volumes:
       - privatebin_data:/srv/data

@@ -5293,7 +5293,7 @@
   {
     "id": "privatebin",
     "name": "PrivateBin",
-    "version": "latest",
+    "version": "2.0.4",
     "description": "PrivateBin is a minimalist, open-source online pastebin where the server has zero knowledge of pasted data.",
     "logo": "privatebin.svg",
     "links": {

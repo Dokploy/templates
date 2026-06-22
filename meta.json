@@ -3350,7 +3350,7 @@
   {
     "id": "joplin-server",
     "name": "Joplin Server",
-    "version": "latest",
+    "version": "3.7.1",
     "description": "Joplin Server is the self-hosted sync backend for Joplin notes, notebooks, and attachments.",
     "logo": "joplin-server.svg",
     "links": {

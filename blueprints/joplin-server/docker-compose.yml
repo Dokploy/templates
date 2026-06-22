@@ -10,7 +10,7 @@ services:
       - joplin_db_data:/var/lib/postgresql/data
 
   joplin-server:
-    image: joplin/server:latest
+    image: joplin/server:3.7.1
     restart: unless-stopped
     depends_on:
       - joplin-db

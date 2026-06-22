@@ -5742,6 +5742,23 @@
     ]
   },
   {
+    "id": "seq",
+    "name": "Seq",
+    "version": "2025.2",
+    "description": "Seq is a self-hosted search, analysis, and alerting server for structured application logs and events.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/datalust/seq-tickets",
+      "website": "https://datalust.co/seq",
+      "docs": "https://datalust.co/docs"
+    },
+    "tags": [
+      "logging",
+      "observability",
+      "monitoring"
+    ]
+  },
+  {
     "id": "shlink",
     "name": "Shlink",
     "version": "stable",

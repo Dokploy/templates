@@ -17,8 +17,8 @@ port = 5_556
 host = "${dex_domain}"
 
 [config.env]
-URL = "http://${main_domain}"
-DEX_URL = "http://${dex_domain}"
+URL = "https://${main_domain}"
+DEX_URL = "https://${dex_domain}"
 DOMAIN_NAME = "${main_domain}"
 POSTGRES_PASSWORD = "${postgres_password}"
 SECRET_KEY = "${secret_key}"
@@ -28,7 +28,7 @@ CLIENT_SECRET = "${client_secret}"
 [[config.mounts]]
 filePath = "/etc/dex/config.yaml"
 content = """
-issuer: http://${dex_domain}
+issuer: https://${dex_domain}
 
 web:
   http: 0.0.0.0:5556
@@ -60,7 +60,7 @@ oauth2:
 staticClients:
   - id: "outline"
     redirectURIs:
-      - http://${main_domain}/auth/oidc.callback
+      - https://${main_domain}/auth/oidc.callback
     name: "Outline"
     secret: "${client_secret}" 
 """

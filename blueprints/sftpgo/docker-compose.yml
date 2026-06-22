@@ -1,0 +1,14 @@
+services:
+  sftpgo:
+    image: drakkan/sftpgo:latest
+    restart: unless-stopped
+    volumes:
+      - sftpgo_data:/srv/sftpgo
+      - sftpgo_home:/var/lib/sftpgo
+    ports:
+      - "8080"
+      - "2022:2022"
+
+volumes:
+  sftpgo_data:
+  sftpgo_home:

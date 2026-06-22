@@ -2293,6 +2293,23 @@
     ]
   },
   {
+    "id": "filerun",
+    "name": "FileRun",
+    "version": "latest",
+    "description": "FileRun is a self-hosted file manager and file sharing platform.",
+    "logo": "filerun.svg",
+    "links": {
+      "website": "https://filerun.com/",
+      "docs": "https://docs.filerun.com/docker",
+      "github": "https://github.com/filerun/docker"
+    },
+    "tags": [
+      "file-manager",
+      "file-sharing",
+      "storage"
+    ]
+  },
+  {
     "id": "filestash",
     "name": "Filestash",
     "version": "latest",

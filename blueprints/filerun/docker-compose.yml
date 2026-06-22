@@ -1,0 +1,35 @@
+﻿version: "3.8"
+
+services:
+  filerun:
+    image: filerun/filerun:latest
+    restart: unless-stopped
+    user: "1001:1001"
+    depends_on:
+      - db
+    environment:
+      FR_DB_HOST: db
+      FR_DB_PORT: 3306
+      FR_DB_NAME: ${MYSQL_DATABASE}
+      FR_DB_USER: ${MYSQL_USER}
+      FR_DB_PASS: ${MYSQL_PASSWORD}
+    volumes:
+      - filerun-html:/var/www/html
+      - filerun-user-files:/user-files
+
+  db:
+    image: mariadb:12.2
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MARIADB_AUTO_UPGRADE: "1"
+    volumes:
+      - filerun-db:/var/lib/mysql
+
+volumes:
+  filerun-html:
+  filerun-user-files:
+  filerun-db:

@@ -1,6 +1,6 @@
 services:
   sftpgo:
-    image: drakkan/sftpgo:latest
+    image: drakkan/sftpgo:v2.7.3
     restart: unless-stopped
     volumes:
       - sftpgo_data:/srv/sftpgo

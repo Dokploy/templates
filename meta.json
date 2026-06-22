@@ -5744,7 +5744,7 @@
   {
     "id": "sftpgo",
     "name": "SFTPGo",
-    "version": "latest",
+    "version": "2.7.3",
     "description": "SFTPGo is a full-featured and highly configurable SFTP, HTTP/S, FTP/S, and WebDAV server.",
     "logo": "sftpgo.svg",
     "links": {

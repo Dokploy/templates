@@ -16,14 +16,17 @@ services:
       MONGO_URI: 'mongodb://mongo:27017/heyform'
       REDIS_HOST: redis
       REDIS_PORT: 6379
-    networks:
-      - heyform-network
+      SMTP_FROM: ${SMTP_FROM}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_SECURE: ${SMTP_SECURE}
+      SMTP_IGNORE_CERT: ${SMTP_IGNORE_CERT}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
 
   mongo:
     image: percona/percona-server-mongodb:4.4
     restart: always
-    networks:
-      - heyform-network
     volumes:
       # Persist MongoDB data
       - mongo-data:/data/db
@@ -32,15 +35,9 @@ services:
     image: redis
     restart: always
     command: "redis-server --appendonly yes"
-    networks:
-      - heyform-network
     volumes:
       # Persist KeyDB data
       - redis-data:/data
-
-networks:
-  heyform-network:
-    driver: bridge
 
 volumes:
   heyform-data:

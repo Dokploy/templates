@@ -2867,6 +2867,23 @@
     ]
   },
   {
+    "id": "gotify",
+    "name": "Gotify",
+    "version": "latest",
+    "description": "Gotify is a simple server for sending and receiving self-hosted push notifications.",
+    "logo": "gotify.svg",
+    "links": {
+      "github": "https://github.com/gotify/server",
+      "website": "https://gotify.net/",
+      "docs": "https://gotify.net/docs/"
+    },
+    "tags": [
+      "notifications",
+      "self-hosted",
+      "push"
+    ]
+  },
+  {
     "id": "grafana",
     "name": "Grafana",
     "version": "12.4",

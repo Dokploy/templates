@@ -2295,7 +2295,7 @@
   {
     "id": "filegator",
     "name": "FileGator",
-    "version": "latest",
+    "version": "7.14.3",
     "description": "FileGator is a simple self-hosted web file manager with multi-user support.",
     "logo": "filegator.svg",
     "links": {

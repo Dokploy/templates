@@ -1,0 +1,26 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+jwt_secret = "${password:64}"
+
+[config]
+env = [
+  "POSTGRES_USER=fider",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_DB=fider",
+  "BASE_URL=https://${main_domain}",
+  "DATABASE_URL=postgres://fider:${postgres_password}@db:5432/fider?sslmode=disable",
+  "JWT_SECRET=${jwt_secret}",
+  "EMAIL_NOREPLY=noreply@${main_domain}",
+  "EMAIL_SMTP_HOST=",
+  "EMAIL_SMTP_PORT=587",
+  "EMAIL_SMTP_USERNAME=",
+  "EMAIL_SMTP_PASSWORD=",
+  "EMAIL_SMTP_ENABLE_STARTTLS=true",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "fider"
+port = 3000
+host = "${main_domain}"

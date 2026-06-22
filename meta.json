@@ -2277,6 +2277,24 @@
     ]
   },
   {
+    "id": "fider",
+    "name": "Fider",
+    "version": "0.21.1",
+    "description": "Fider is an open-source feedback portal for collecting, discussing, and prioritizing feature requests.",
+    "logo": "fider.svg",
+    "links": {
+      "github": "https://github.com/getfider/fider",
+      "website": "https://fider.io/",
+      "docs": "https://docs.fider.io/hosting-instance/"
+    },
+    "tags": [
+      "feedback",
+      "product",
+      "roadmap",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "filebrowser",
     "name": "File Browser",
     "version": "2.31.2",

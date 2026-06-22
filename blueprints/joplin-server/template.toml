@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "joplin-server"
+port = 22300
+host = "${main_domain}"
+
+[config.env]
+APP_BASE_URL = "https://${main_domain}"
+APP_PORT = "22300"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_USER = "joplin"
+POSTGRES_DATABASE = "joplin"

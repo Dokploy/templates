@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+  "ALLOWED_HOSTNAMES=${main_domain}",
+  "FORCE_HTTPS=true",
+  "PHP_TIMEZONE=UTC",
+  "MYSQL_ROOT_PASSWORD=${password:32}",
+  "MYSQL_DATABASE=ospos",
+  "MYSQL_USER=ospos",
+  "MYSQL_PASSWORD=${password:32}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "opensourcepos"
+port = 80
+host = "${main_domain}"

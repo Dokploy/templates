@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Open Source POS</title>
+  <desc id="desc">Open Source Point of Sale template logo</desc>
+  <rect width="256" height="256" rx="48" fill="#1d4ed8"/>
+  <path d="M58 78c0-12 10-22 22-22h96c12 0 22 10 22 22v72c0 12-10 22-22 22H80c-12 0-22-10-22-22V78z" fill="#eff6ff"/>
+  <path d="M82 88h92v24H82z" fill="#1d4ed8"/>
+  <circle cx="92" cy="140" r="9" fill="#1d4ed8"/>
+  <circle cx="128" cy="140" r="9" fill="#1d4ed8"/>
+  <circle cx="164" cy="140" r="9" fill="#1d4ed8"/>
+  <path d="M74 188h108c7 0 12 5 12 12v8H62v-8c0-7 5-12 12-12z" fill="#dbeafe"/>
+</svg>

@@ -4762,6 +4762,24 @@
     ]
   },
   {
+    "id": "opensourcepos",
+    "name": "Open Source POS",
+    "version": "master",
+    "description": "Open Source Point of Sale is a PHP and MySQL-based web point-of-sale system for inventory, customers, sales, receipts, and reporting.",
+    "logo": "opensourcepos.svg",
+    "links": {
+      "github": "https://github.com/opensourcepos/opensourcepos",
+      "website": "https://opensourcepos.org/",
+      "docs": "https://github.com/opensourcepos/opensourcepos/blob/master/INSTALL.md"
+    },
+    "tags": [
+      "pos",
+      "retail",
+      "inventory",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "openspeedtest",
     "name": "OpenSpeedTest",
     "version": "latest",

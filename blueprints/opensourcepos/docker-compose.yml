@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mariadb:10.5
+    restart: unless-stopped
+    volumes:
+      - opensourceposMysqlData:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+  opensourcepos:
+    image: jekkos/opensourcepos:master
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    volumes:
+      - opensourceposUploads:/app/public/uploads
+      - opensourceposLogs:/app/writable/logs
+    environment:
+      CI_ENVIRONMENT: production
+      ALLOWED_HOSTNAMES: ${ALLOWED_HOSTNAMES}
+      FORCE_HTTPS: ${FORCE_HTTPS}
+      PHP_TIMEZONE: ${PHP_TIMEZONE}
+      MYSQL_USERNAME: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DB_NAME: ${MYSQL_DATABASE}
+      MYSQL_HOST_NAME: mysql
+
+volumes:
+  opensourceposMysqlData:
+  opensourceposUploads:
+  opensourceposLogs:

@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${password:64}"
+postgres_password = "${password:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "tandoor-recipes"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+SECRET_KEY = "${secret_key}"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_USER = "tandoor"
+POSTGRES_DB = "tandoor"

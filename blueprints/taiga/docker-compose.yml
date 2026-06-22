@@ -1,0 +1,158 @@
+services:
+  taiga-db:
+    image: postgres:12.3
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: taiga
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - taigaDbData:/var/lib/postgresql/data
+
+  taiga-back:
+    image: taigaio/taiga-back:latest
+    restart: unless-stopped
+    depends_on:
+      taiga-db:
+        condition: service_healthy
+      taiga-events-rabbitmq:
+        condition: service_started
+      taiga-async-rabbitmq:
+        condition: service_started
+    volumes:
+      - taigaStaticData:/taiga-back/static
+      - taigaMediaData:/taiga-back/media
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_HOST
+      - TAIGA_SECRET_KEY
+      - TAIGA_SITES_SCHEME
+      - TAIGA_SITES_DOMAIN
+      - TAIGA_SUBPATH
+      - EMAIL_BACKEND
+      - DEFAULT_FROM_EMAIL
+      - EMAIL_USE_TLS
+      - EMAIL_USE_SSL
+      - EMAIL_HOST
+      - EMAIL_PORT
+      - EMAIL_HOST_USER
+      - EMAIL_HOST_PASSWORD
+      - RABBITMQ_USER
+      - RABBITMQ_PASS
+      - ENABLE_TELEMETRY
+
+  taiga-async:
+    image: taigaio/taiga-back:latest
+    restart: unless-stopped
+    entrypoint: ["/taiga-back/docker/async_entrypoint.sh"]
+    depends_on:
+      taiga-db:
+        condition: service_healthy
+      taiga-events-rabbitmq:
+        condition: service_started
+      taiga-async-rabbitmq:
+        condition: service_started
+    volumes:
+      - taigaStaticData:/taiga-back/static
+      - taigaMediaData:/taiga-back/media
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_HOST
+      - TAIGA_SECRET_KEY
+      - TAIGA_SITES_SCHEME
+      - TAIGA_SITES_DOMAIN
+      - TAIGA_SUBPATH
+      - EMAIL_BACKEND
+      - DEFAULT_FROM_EMAIL
+      - EMAIL_USE_TLS
+      - EMAIL_USE_SSL
+      - EMAIL_HOST
+      - EMAIL_PORT
+      - EMAIL_HOST_USER
+      - EMAIL_HOST_PASSWORD
+      - RABBITMQ_USER
+      - RABBITMQ_PASS
+      - ENABLE_TELEMETRY
+
+  taiga-async-rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    restart: unless-stopped
+    hostname: taiga-async-rabbitmq
+    volumes:
+      - taigaAsyncRabbitmqData:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST}
+
+  taiga-front:
+    image: taigaio/taiga-front:latest
+    restart: unless-stopped
+    environment:
+      TAIGA_URL: ${TAIGA_SCHEME}://${TAIGA_DOMAIN}
+      TAIGA_WEBSOCKETS_URL: ${WEBSOCKETS_SCHEME}://${TAIGA_DOMAIN}
+      TAIGA_SUBPATH: ${TAIGA_SUBPATH}
+
+  taiga-events:
+    image: taigaio/taiga-events:latest
+    restart: unless-stopped
+    depends_on:
+      taiga-events-rabbitmq:
+        condition: service_started
+    environment:
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASS: ${RABBITMQ_PASS}
+      TAIGA_SECRET_KEY: ${TAIGA_SECRET_KEY}
+
+  taiga-events-rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    restart: unless-stopped
+    hostname: taiga-events-rabbitmq
+    volumes:
+      - taigaEventsRabbitmqData:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST}
+
+  taiga-protected:
+    image: taigaio/taiga-protected:latest
+    restart: unless-stopped
+    environment:
+      MAX_AGE: ${ATTACHMENTS_MAX_AGE}
+      SECRET_KEY: ${TAIGA_SECRET_KEY}
+
+  taiga-gateway:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - taiga-front
+      - taiga-back
+      - taiga-events
+    volumes:
+      - ../files/etc/nginx/taiga.conf:/etc/nginx/conf.d/default.conf:ro
+      - taigaStaticData:/taiga/static:ro
+      - taigaMediaData:/taiga/media:ro
+
+volumes:
+  taigaStaticData:
+    driver: local
+  taigaMediaData:
+    driver: local
+  taigaDbData:
+    driver: local
+  taigaAsyncRabbitmqData:
+    driver: local
+  taigaEventsRabbitmqData:
+    driver: local

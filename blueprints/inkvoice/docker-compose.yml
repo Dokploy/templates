@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  inkvoice:
+    image: ghcr.io/pigontech/inkvoice:0.1.0
+    restart: unless-stopped
+    environment:
+      - ADMIN_USER=${ADMIN_USER}
+      - ADMIN_PASS=${ADMIN_PASS}
+      - JWT_SECRET=${JWT_SECRET}
+      - DATABASE_PATH=/app/data/invoice.db
+      - PORT=3000
+      - HOST=0.0.0.0
+      # Dokploy's auto-generated domain is HTTP (sslip.io); keep false so login
+      # works out of the box. Set true once you attach an HTTPS custom domain.
+      - COOKIE_SECURE=false
+    volumes:
+      - inkvoice-data:/app/data
+    expose:
+      - 3000
+
+volumes:
+  inkvoice-data:

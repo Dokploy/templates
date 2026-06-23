@@ -3209,6 +3209,24 @@
     ]
   },
   {
+    "id": "inkvoice",
+    "name": "Inkvoice",
+    "version": "0.1.0",
+    "description": "Open-source invoicing for freelancers and small teams: invoices, online payments (Stripe & PayPal), expenses, multi-currency and reports.",
+    "logo": "inkvoice.svg",
+    "links": {
+      "github": "https://github.com/pigontech/inkvoice",
+      "website": "https://inkvoice.app",
+      "docs": "https://docs.inkvoice.app"
+    },
+    "tags": [
+      "invoicing",
+      "billing",
+      "finance",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "inngest",
     "name": "Inngest",
     "version": "v1.12.1",

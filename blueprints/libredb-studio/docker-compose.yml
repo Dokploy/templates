@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   libredb-studio:
-    image: ghcr.io/libredb/libredb-studio:v0.9.27
+    image: ghcr.io/libredb/libredb-studio:0.9.27
     restart: unless-stopped
     environment:
       - ADMIN_EMAIL=admin@libredb.org

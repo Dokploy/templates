@@ -3610,7 +3610,7 @@
   {
     "id": "libredb-studio",
     "name": "LibreDB Studio",
-    "version": "v0.9.13",
+    "version": "v0.9.27",
     "description": "The modern, AI-powered open-source SQL IDE. Query PostgreSQL, MySQL, Oracle, SQL Server, SQLite, MongoDB and Redis from your browser.",
     "logo": "libredb-studio.svg",
     "links": {

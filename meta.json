@@ -1088,6 +1088,24 @@
     ]
   },
   {
+    "id": "chatto",
+    "name": "Chatto (single binary)",
+    "version": "0.3.8",
+    "description": "A fully-featured real-time chat application for teams and communities. This template deploys the single Chatto binary with embedded NATS. Note: email/password registration requires SMTP to be configured after deployment; voice/video calls are not included in the single-binary setup.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/chattocorp/chatto",
+      "website": "https://chatto.run",
+      "docs": "https://docs.chatto.run"
+    },
+    "tags": [
+      "chat",
+      "communication",
+      "messaging",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "chatwoot",
     "name": "Chatwoot",
     "version": "v3.14.1",

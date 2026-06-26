@@ -1,0 +1,35 @@
+[variables]
+main_domain = "${domain}"
+cookie_secret = "${hash:64}"
+core_secret = "${hash:64}"
+assets_secret = "${hash:64}"
+owner_email = "${email}"
+smtp_enabled = "false"
+smtp_host = ""
+smtp_port = "587"
+smtp_tls = "mandatory"
+smtp_username = ""
+smtp_password = ""
+smtp_from = ""
+
+[config]
+env = [
+  "CHATTO_HOST=${main_domain}",
+  "CHATTO_COOKIE_SECRET=${cookie_secret}",
+  "CHATTO_CORE_SECRET=${core_secret}",
+  "CHATTO_ASSETS_SECRET=${assets_secret}",
+  "CHATTO_OWNER_EMAIL=${owner_email}",
+  "CHATTO_SMTP_ENABLED=${smtp_enabled}",
+  "CHATTO_SMTP_HOST=${smtp_host}",
+  "CHATTO_SMTP_PORT=${smtp_port}",
+  "CHATTO_SMTP_TLS=${smtp_tls}",
+  "CHATTO_SMTP_USERNAME=${smtp_username}",
+  "CHATTO_SMTP_PASSWORD=${smtp_password}",
+  "CHATTO_SMTP_FROM=${smtp_from}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "chatto"
+port = 4_000
+host = "${main_domain}"

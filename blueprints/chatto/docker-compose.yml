@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  chatto:
+    image: ghcr.io/chattocorp/chatto:0.3.8
+    restart: unless-stopped
+    expose:
+      - "4000"
+    environment:
+      CHATTO_WEBSERVER_URL: https://${CHATTO_HOST}
+      CHATTO_WEBSERVER_PORT: "4000"
+      CHATTO_WEBSERVER_COOKIE_SIGNING_SECRET: ${CHATTO_COOKIE_SECRET}
+      CHATTO_CORE_SECRET_KEY: ${CHATTO_CORE_SECRET}
+      CHATTO_CORE_ASSETS_SIGNING_SECRET: ${CHATTO_ASSETS_SECRET}
+      CHATTO_NATS_EMBEDDED_DATA_DIR: /data
+      CHATTO_OWNERS_EMAILS: ${CHATTO_OWNER_EMAIL}
+      CHATTO_SMTP_ENABLED: ${CHATTO_SMTP_ENABLED:-false}
+      CHATTO_SMTP_HOST: ${CHATTO_SMTP_HOST:-}
+      CHATTO_SMTP_PORT: ${CHATTO_SMTP_PORT:-587}
+      CHATTO_SMTP_TLS: ${CHATTO_SMTP_TLS:-mandatory}
+      CHATTO_SMTP_USERNAME: ${CHATTO_SMTP_USERNAME:-}
+      CHATTO_SMTP_PASSWORD: ${CHATTO_SMTP_PASSWORD:-}
+      CHATTO_SMTP_FROM: ${CHATTO_SMTP_FROM:-}
+    volumes:
+      - chatto-data:/data
+
+volumes:
+  chatto-data:

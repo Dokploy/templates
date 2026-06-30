@@ -5445,6 +5445,22 @@
     ]
   },
   {
+    "id": "revka",
+    "name": "Revka",
+    "version": "2026.6.30",
+    "description": "Fast, small, and fully autonomous AI personal assistant infrastructure. Deploy anywhere, swap anything. 100% Rust.",
+    "logo": "revka.png",
+    "links": {
+      "github": "https://github.com/KumihoIO/Revka",
+      "website": "https://kumiho.io",
+      "docs": "https://github.com/KumihoIO/Revka#readme"
+    },
+    "tags": [
+      "ai",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "rocketchat",
     "name": "Rocketchat",
     "version": "6.9.2",
@@ -5950,24 +5966,6 @@
       "video",
       "live-streaming",
       "media"
-    ]
-  },
-  {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
     ]
   },
   {

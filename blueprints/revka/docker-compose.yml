@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  revka:
+    image: ghcr.io/kumihoio/revka:2026.6.30
+    restart: unless-stopped
+    environment:
+      - API_KEY=${API_KEY}
+      - PROVIDER=openrouter
+      - REVKA_ALLOW_PUBLIC_BIND=true
+      - REVKA_GATEWAY_PORT=42617
+    volumes:
+      - revka-data:/revka-data
+    expose:
+      - 42617
+volumes:
+  revka-data: {}

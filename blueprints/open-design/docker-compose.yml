@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  open-design:
+    image: ghcr.io/nexu-io/od:latest
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=192
+      OD_BIND_HOST: 0.0.0.0
+      OD_PORT: 7456
+      OD_API_TOKEN: ${OD_API_TOKEN}
+      OD_ALLOWED_ORIGINS: ${OD_ALLOWED_ORIGINS}
+    volumes:
+      - open_design_data:/app/.od
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:7456/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  open_design_data: {}

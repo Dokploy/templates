@@ -20,5 +20,5 @@ DB_DATA_LOCATION = "/data/${project_name}/database"
 DB_DATABASE     = "${project_name}"
 
 # --- PostgreSQL ---
-POSTGRES_PRISMA_URL       = "postgresql://${DB_USERNAME}:${DB_PASSWORD}@${project_name}_db:5432/${DB_DATABASE}"
-POSTGRES_URL_NON_POOLING  = "postgresql://${DB_USERNAME}:${DB_PASSWORD}@${project_name}_db:5432/${DB_DATABASE}"
+POSTGRES_PRISMA_URL       = "postgresql://${DB_USERNAME}:${DB_PASSWORD}@${project_name}-db:5432/${DB_DATABASE}"
+POSTGRES_URL_NON_POOLING  = "postgresql://${DB_USERNAME}:${DB_PASSWORD}@${project_name}-db:5432/${DB_DATABASE}"

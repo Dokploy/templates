@@ -162,6 +162,23 @@
     ]
   },
   {
+    "id": "alarik",
+    "name": "Alarik",
+    "description": "Alarik is a high-performance, S3-compatible object storage.",
+    "logo": "alarik.png",
+    "version": "latest",
+    "links": {
+      "github": "https://github.com/achtungsoftware/alarik",
+      "website": "https://alarik.io/",
+      "docs": "https://alarik.io/docs"
+    },
+    "tags": [
+      "storage",
+      "s3",
+      "object-storage"
+    ]
+  },
+  {
     "id": "alist",
     "name": "AList",
     "version": "v3.55.0",

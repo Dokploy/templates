@@ -377,6 +377,7 @@
       "database",
       "firebase",
       "mariadb",
+      "mongodb",
       "hosting",
       "self-hosted"
     ]

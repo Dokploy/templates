@@ -1,0 +1,43 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_DB
+      - TZ=Asia/Shanghai
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U danmuapi -d danmuapi"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  danmu-app:
+    image: l429609201/misaka_danmu_server:latest
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=0022
+      - TZ=Asia/Shanghai
+      - DANMUAPI_DATABASE__TYPE
+      - DANMUAPI_DATABASE__HOST
+      - DANMUAPI_DATABASE__PORT
+      - DANMUAPI_DATABASE__NAME
+      - DANMUAPI_DATABASE__USER
+      - DANMUAPI_DATABASE__PASSWORD
+      - DANMUAPI_ADMIN__INITIAL_USER
+    volumes:
+      - danmu-config:/app/config
+
+volumes:
+  postgres-data: {}
+  danmu-config: {}

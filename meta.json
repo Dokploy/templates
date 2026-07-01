@@ -164,13 +164,13 @@
   {
     "id": "alist",
     "name": "AList",
-    "version": "v3.41.0",
+    "version": "v3.55.0",
     "description": "🗂️A file list/WebDAV program that supports multiple storages, powered by Gin and Solidjs.",
     "logo": "alist.svg",
     "links": {
       "github": "https://github.com/AlistGo/alist",
-      "website": "https://alist.nn.ci",
-      "docs": "https://alist.nn.ci/guide/install/docker.html"
+      "website": "https://alistgo.com/",
+      "docs": "https://alistgo.com/guide/install/docker.html"
     },
     "tags": [
       "file",
@@ -350,7 +350,7 @@
   {
     "id": "appsmith",
     "name": "Appsmith",
-    "version": "v1.29",
+    "version": "v1.94",
     "description": "Appsmith is a free and open source platform for building internal tools and applications.",
     "logo": "appsmith.png",
     "links": {
@@ -510,8 +510,8 @@
   {
     "id": "autobase",
     "name": "Autobase",
-    "version": "2.3.0",
-    "description": "Autobase for PostgreSQL® is an open-source alternative to cloud-managed databases (DBaaS) such as Amazon RDS, Google Cloud SQL, Azure Database, and more.",
+    "version": "2.5.2",
+    "description": "Autobase for PostgreSQL® is an open-source alternative to cloud-managed databases (self-hosted DBaaS).",
     "links": {
       "github": "https://github.com/vitabaks/autobase",
       "website": "https://autobase.tech/",
@@ -896,7 +896,7 @@
   {
     "id": "budibase",
     "name": "Budibase",
-    "version": "3.5.3",
+    "version": "3.23.47",
     "description": "Budibase is an open-source low-code platform that saves engineers 100s of hours building forms, portals, and approval apps, securely.",
     "logo": "budibase.svg",
     "links": {
@@ -1300,6 +1300,23 @@
     ]
   },
   {
+    "id": "cloudflare-ddns",
+    "name": "Cloudflare DDNS",
+    "version": "1.15.1",
+    "description": "A small, feature-rich, and robust Cloudflare DDNS updater.",
+    "logo": "cloudflare-ddns.svg",
+    "links": {
+      "github": "https://github.com/favonia/cloudflare-ddns",
+      "website": "https://github.com/favonia/cloudflare-ddns",
+      "docs": "https://github.com/favonia/cloudflare-ddns"
+    },
+    "tags": [
+      "cloud",
+      "networking",
+      "ddns"
+    ]
+  },
+  {
     "id": "cloudflared",
     "name": "Cloudflared",
     "version": "latest",
@@ -1307,14 +1324,32 @@
     "logo": "cloudflared.svg",
     "links": {
       "github": "https://github.com/cloudflare/cloudflared",
-      "website": "https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/",
-      "docs": "https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/"
+      "website": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/",
+      "docs": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/"
     },
     "tags": [
       "cloud",
       "networking",
       "security",
       "tunnel"
+    ]
+  },
+  {
+    "id": "cloudreve",
+    "name": "Cloudreve",
+    "version": "4.10.1",
+    "description": "Self-hosted file management and sharing system with multi-cloud storage support. Compatible with local, OneDrive, S3, and various cloud providers.",
+    "logo": "cloudreve.png",
+    "links": {
+      "github": "https://github.com/cloudreve/Cloudreve",
+      "website": "https://cloudreve.org",
+      "docs": "https://docs.cloudreve.org"
+    },
+    "tags": [
+      "storage",
+      "file-sharing",
+      "cloud",
+      "self-hosted"
     ]
   },
   {
@@ -1650,7 +1685,7 @@
     "name": "CyberChef",
     "version": "latest",
     "description": "CyberChef is a web application for encryption, encoding, compression, and data analysis, developed by GCHQ.",
-    "logo": "cyberchef.svg",
+    "logo": "cyberchef.png",
     "links": {
       "github": "https://github.com/gchq/CyberChef",
       "website": "https://gchq.github.io/CyberChef/",
@@ -2509,6 +2544,26 @@
     ]
   },
   {
+    "id": "frappe-lending",
+    "name": "Frappe Lending",
+    "version": "latest",
+    "description": "A comprehensive loan management system built on Frappe Framework. 100% open source and customizable for managing loans, repayments, and lending operations.",
+    "logo": "frappe-lending.png",
+    "links": {
+      "github": "https://github.com/frappe/lending",
+      "docs": "https://docs.frappe.io/lending",
+      "website": "https://frappe.io"
+    },
+    "tags": [
+      "lending",
+      "finance",
+      "loans",
+      "payments",
+      "accounting",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "freescout",
     "name": "FreeScout",
     "version": "latest",
@@ -2776,6 +2831,24 @@
     ]
   },
   {
+    "id": "go2rtc",
+    "name": "go2rtc",
+    "version": "latest",
+    "description": "Ultimate camera streaming application with support for dozens formats and protocols.",
+    "logo": "go2rtc.png",
+    "links": {
+      "github": "https://github.com/AlexxIT/go2rtc",
+      "website": "https://go2rtc.org/",
+      "docs": "https://go2rtc.org/"
+    },
+    "tags": [
+      "streaming",
+      "webrtc",
+      "video",
+      "home assistant"
+    ]
+  },
+  {
     "id": "gotenberg",
     "name": "Gotenberg",
     "version": "latest",
@@ -2796,7 +2869,7 @@
   {
     "id": "grafana",
     "name": "Grafana",
-    "version": "9.5.20",
+    "version": "12.4",
     "description": "Grafana is an open source platform for data visualization and monitoring.",
     "logo": "grafana.svg",
     "links": {
@@ -3065,6 +3138,25 @@
     ]
   },
   {
+    "id": "imgproxy",
+    "name": "imgproxy",
+    "version": "v3.30.1",
+    "description": "imgproxy is a fast and secure image processing server, fronted by nginx with built-in response caching for repeated transformations.",
+    "logo": "imgproxy.png",
+    "links": {
+      "github": "https://github.com/imgproxy/imgproxy",
+      "website": "https://imgproxy.net/",
+      "docs": "https://docs.imgproxy.net/"
+    },
+    "tags": [
+      "images",
+      "media",
+      "proxy",
+      "cdn",
+      "caching"
+    ]
+  },
+  {
     "id": "immich",
     "name": "Immich",
     "version": "v1.121.0",
@@ -3170,6 +3262,24 @@
     ]
   },
   {
+    "id": "ipfs",
+    "name": "IPFS (Kubo)",
+    "version": "latest",
+    "description": "IPFS (Kubo) is a decentralized peer-to-peer file sharing and storage network node. Host your own IPFS gateway and API.",
+    "logo": "ipfs.svg",
+    "links": {
+      "github": "https://github.com/ipfs/kubo",
+      "website": "https://ipfs.tech/",
+      "docs": "https://docs.ipfs.tech/"
+    },
+    "tags": [
+      "storage",
+      "decentralized",
+      "p2p",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "it-tools",
     "name": "IT Tools",
     "version": "latest",
@@ -3216,6 +3326,25 @@
     },
     "tags": [
       "media system"
+    ]
+  },
+  {
+    "id": "jenkins",
+    "name": "jenkins",
+    "version": "latest",
+    "description": "Jenkins is a free, open-source automation server that helps developers build, test, and deploy software by automating repetitive tasks in the software delivery pipeline.",
+    "logo": "jenkins.svg",
+    "links": {
+      "github": "https://github.com/jenkinsci/jenkins",
+      "website": "https://www.jenkins.io/",
+      "docs": "https://www.jenkins.io/doc/"
+    },
+    "tags": [
+      "ci-cd",
+      "devops",
+      "automation",
+      "pipelines",
+      "open-source"
     ]
   },
   {
@@ -3376,6 +3505,22 @@
       "ai",
       "voice",
       "web"
+    ]
+  },
+  {
+    "id": "komari-monitor",
+    "name": "Komari Monitor",
+    "version": "latest",
+    "description": "A lightweight, self-hosted server monitoring tool for tracking server performance.",
+    "logo": "komari-monitor.ico",
+    "links": {
+      "github": "https://github.com/komari-monitor/komari",
+      "website": "https://github.com/komari-monitor/komari",
+      "docs": "https://github.com/komari-monitor/komari#readme"
+    },
+    "tags": [
+      "monitoring",
+      "self-hosted"
     ]
   },
   {
@@ -3842,9 +3987,26 @@
     ]
   },
   {
+    "id": "mediafetch",
+    "name": "MediaFetch",
+    "version": "1.1.1",
+    "description": "A tiny, self-hosted web wrapper for yt-dlp to download video and audio. Optional basic auth.",
+    "logo": "mediafetch.svg",
+    "links": {
+      "github": "https://github.com/lukedunsmoto/mediafetch",
+      "website": "https://www.lukedunsmore.com/mediafetch",
+      "docs": "https://docs.lukedunsmore.com/docs/self-hosted/mediafetch/"
+    },
+    "tags": [
+      "utilities",
+      "media",
+      "downloader"
+    ]
+  },
+  {
     "id": "meilisearch",
     "name": "Meilisearch",
-    "version": "v1.8.3",
+    "version": "v1.35.1",
     "description": "Meilisearch is a free and open-source search engine that allows you to easily add search functionality to your web applications.",
     "logo": "meilisearch.png",
     "links": {
@@ -3907,6 +4069,24 @@
     ]
   },
   {
+    "id": "minepanel",
+    "name": "Minepanel",
+    "version": "1.7.1",
+    "description": "Web panel for managing Minecraft servers with Docker. Create, configure, start/stop, and monitor multiple instances from a modern UI.",
+    "logo": "minepanel.webp",
+    "links": {
+      "github": "https://github.com/Ketbome/minepanel",
+      "website": "https://minepanel.ketbome.lat",
+      "docs": "https://minepanel.ketbome.lat"
+    },
+    "tags": [
+      "gaming",
+      "minecraft",
+      "server-management",
+      "docker"
+    ]
+  },
+  {
     "id": "minio",
     "name": "Minio",
     "description": "Minio is an open source object storage server compatible with Amazon S3 cloud storage service.",
@@ -3919,6 +4099,23 @@
     },
     "tags": [
       "storage"
+    ]
+  },
+  {
+    "id": "misaka-danmu-server",
+    "name": "Misaka Danmu Server",
+    "version": "latest",
+    "description": "A self-hosted danmaku (bullet comments) server for live streaming and video platforms.",
+    "logo": "misaka-danmu-server.png",
+    "links": {
+      "github": "https://github.com/l429609201/misaka_danmu_server",
+      "website": "https://github.com/l429609201/misaka_danmu_server",
+      "docs": "https://github.com/l429609201/misaka_danmu_server#readme"
+    },
+    "tags": [
+      "streaming",
+      "danmaku",
+      "live"
     ]
   },
   {
@@ -3936,6 +4133,27 @@
       "social-media",
       "management",
       "scheduling"
+    ]
+  },
+  {
+    "id": "moltbot",
+    "name": "Moltbot",
+    "version": "2026.1.25",
+    "description": "WhatsApp gateway CLI with Pi RPC agent - self-hosted AI-powered messaging platform",
+    "logo": "moltbot.svg",
+    "links": {
+      "github": "https://github.com/moltbot/moltbot",
+      "website": "https://molt.bot",
+      "docs": "https://docs.molt.bot"
+    },
+    "tags": [
+      "whatsapp",
+      "ai",
+      "messaging",
+      "chatbot",
+      "gateway",
+      "self-hosted",
+      "automation"
     ]
   },
   {
@@ -4150,10 +4368,10 @@
   },
   {
     "id": "nextcloud-aio",
-    "name": "Nextcloud All in One",
-    "version": "30.0.2",
-    "description": "Nextcloud (AIO) is a self-hosted file storage and sync platform with powerful collaboration capabilities. It integrates Files, Talk, Groupware, Office, Assistant and more into a single platform for remote work and data protection.",
-    "logo": "nextcloud-aio.svg",
+    "name": "Nextcloud",
+    "version": "stable",
+    "description": "Nextcloud is a self-hosted file storage and sync platform with powerful collaboration capabilities. It integrates Files, Talk, Groupware, Office, Assistant and more into a single platform for remote work and data protection.",
+    "logo": "nextcloud.png",
     "links": {
       "github": "https://github.com/nextcloud/docker",
       "website": "https://nextcloud.com/",
@@ -4241,8 +4459,8 @@
     "description": "Obsidian LiveSync with CouchDB for real-time note synchronization.",
     "logo": "obsidian.png",
     "links": {
-      "github": "https://github.com/apache/couchdb",
-      "website": "https://couchdb.apache.org/",
+      "github": "https://github.com/vrtmrz/obsidian-livesync",
+      "website": "https://obsidian.md/sync",
       "docs": "https://docs.couchdb.apache.org/"
     },
     "tags": [
@@ -4430,6 +4648,27 @@
       "ai",
       "database",
       "surrealdb"
+    ]
+  },
+  {
+    "id": "openclaw",
+    "name": "Openclaw",
+    "version": "2026.1.29",
+    "description": "WhatsApp gateway CLI with Pi RPC agent - self-hosted AI-powered messaging platform",
+    "logo": "openclaw.svg",
+    "links": {
+      "github": "https://github.com/openclaw/openclaw",
+      "website": "https://openclaw.ai/",
+      "docs": "https://docs.openclaw.ai/"
+    },
+    "tags": [
+      "whatsapp",
+      "ai",
+      "messaging",
+      "chatbot",
+      "gateway",
+      "self-hosted",
+      "automation"
     ]
   },
   {
@@ -4981,6 +5220,25 @@
     ]
   },
   {
+    "id": "postgres-pgdog",
+    "name": "PostgreSQL with PgDog",
+    "version": "0.1.26",
+    "description": "PostgreSQL database with PgDog connection pooler, load balancer, and horizontal scaling proxy. A modern alternative to PgBouncer with multi-threading support.",
+    "logo": "postgres-pgdog.png",
+    "links": {
+      "github": "https://github.com/pgdogdev/pgdog",
+      "website": "https://pgdog.dev",
+      "docs": "https://docs.pgdog.dev"
+    },
+    "tags": [
+      "database",
+      "postgresql",
+      "pooler",
+      "proxy",
+      "load-balancer"
+    ]
+  },
+  {
     "id": "postgresus",
     "name": "Postgresus",
     "version": "latest",
@@ -5067,6 +5325,24 @@
     ]
   },
   {
+    "id": "pulse",
+    "name": "Pulse",
+    "version": "latest",
+    "description": "A responsive monitoring platform for Proxmox VE, PBS, and Docker with real-time metrics across nodes and containers.",
+    "logo": "pulse.svg",
+    "links": {
+      "github": "https://github.com/rcourtman/Pulse",
+      "website": "https://pulserelay.pro/",
+      "docs": "https://github.com/rcourtman/Pulse/blob/main/docs/README.md"
+    },
+    "tags": [
+      "monitoring",
+      "proxmox",
+      "docker",
+      "metrics"
+    ]
+  },
+  {
     "id": "pyrodactyl",
     "name": "Pyrodactyl",
     "version": "main",
@@ -5098,6 +5374,24 @@
       "torrent",
       "download",
       "file-sharing"
+    ]
+  },
+  {
+    "id": "qbitwebui",
+    "name": "qBittorrent Web UI",
+    "version": "latest",
+    "description": "A modern web interface for managing multiple qBittorrent instances. Built with React, Hono, and Bun.",
+    "logo": "qbitwebui.png",
+    "links": {
+      "github": "https://github.com/Maciejonos/qbitwebui",
+      "website": "https://github.com/Maciejonos/qbitwebui",
+      "docs": "https://github.com/Maciejonos/qbitwebui#readme"
+    },
+    "tags": [
+      "torrent",
+      "download",
+      "media",
+      "qbittorrent"
     ]
   },
   {
@@ -5359,6 +5653,22 @@
     ]
   },
   {
+    "id": "scrutiny",
+    "name": "Scrutiny",
+    "version": "latest",
+    "description": "Hard Drive S.M.A.R.T Monitoring, Historical Trends & Real World Failure Thresholds",
+    "logo": "scrutiny.png",
+    "links": {
+      "github": "https://github.com/AnalogJ/scrutiny/",
+      "website": "",
+      "docs": ""
+    },
+    "tags": [
+      "monitoring",
+      "NAS"
+    ]
+  },
+  {
     "id": "scrypted",
     "name": "Scrypted",
     "version": "latest",
@@ -5410,6 +5720,25 @@
       "privacy",
       "self-hosted",
       "aggregator"
+    ]
+  },
+  {
+    "id": "seaweedfs",
+    "name": "SeaweedFS",
+    "version": "latest",
+    "description": "SeaweedFS is a fast distributed storage system for blobs, objects, and files. Features S3-compatible API, POSIX FUSE mount, and WebDAV support.",
+    "logo": "seaweedfs.svg",
+    "links": {
+      "github": "https://github.com/seaweedfs/seaweedfs",
+      "website": "https://seaweedfs.com/",
+      "docs": "https://github.com/seaweedfs/seaweedfs/wiki"
+    },
+    "tags": [
+      "storage",
+      "s3",
+      "distributed",
+      "object-storage",
+      "file-system"
     ]
   },
   {
@@ -5642,6 +5971,43 @@
     ]
   },
   {
+    "id": "strapi",
+    "name": "Strapi",
+    "version": "v5.33.0",
+    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
+    "logo": "strapi.svg",
+    "links": {
+      "github": "https://github.com/strapi/strapi",
+      "discord": "https://discord.com/invite/strapi",
+      "docs": "https://docs.strapi.io",
+      "website": "https://strapi.io"
+    },
+    "tags": [
+      "headless",
+      "cms",
+      "content-management"
+    ]
+  },
+  {
+    "id": "streamflow",
+    "name": "StreamFlow",
+    "version": "2.1",
+    "description": "StreamFlow is a multi-platform live streaming web application that enables simultaneous RTMP streaming to YouTube, Facebook, and other platforms with video gallery, scheduled streaming, and real-time monitoring.",
+    "logo": "streamflow.png",
+    "links": {
+      "github": "https://github.com/bangtutorial/streamflow",
+      "website": "https://github.com/bangtutorial/streamflow",
+      "docs": "https://github.com/bangtutorial/streamflow#readme"
+    },
+    "tags": [
+      "streaming",
+      "rtmp",
+      "video",
+      "live-streaming",
+      "media"
+    ]
+  },
+  {
     "id": "supabase",
     "name": "SupaBase",
     "version": "1.25.04 / dokploy >= 0.22.5",
@@ -5662,7 +6028,7 @@
   {
     "id": "superset",
     "name": "Superset (Unofficial)",
-    "version": "latest",
+    "version": "6.0.0",
     "description": "Data visualization and data exploration platform.",
     "logo": "superset.svg",
     "links": {
@@ -5867,9 +6233,26 @@
     ]
   },
   {
+    "id": "trilium-next",
+    "name": "TriliumNext",
+    "version": "latest",
+    "description": "Is a free and open-source, cross-platform hierarchical note taking application with focus on building large personal knowledge bases.",
+    "logo": "trilium-next-logo.svg",
+    "links": {
+      "github": "https://github.com/TriliumNext/Trilium",
+      "website": "https://triliumnotes.org/",
+      "docs": "https://docs.triliumnotes.org/"
+    },
+    "tags": [
+      "self-hosted",
+      "productivity",
+      "personal-use"
+    ]
+  },
+  {
     "id": "trmnl-byos-laravel",
     "name": "TRMNL BYOS Laravel",
-    "version": "0.21.0",
+    "version": "0.27.0",
     "description": "TRMNL BYOS Laravel is a self-hosted application to manage TRMNL e-ink devices.",
     "logo": "byos-laravel.svg",
     "links": {
@@ -5879,6 +6262,24 @@
     },
     "tags": [
       "e-ink"
+    ]
+  },
+  {
+    "id": "tuwunel",
+    "name": "Tuwunel",
+    "version": "v1.5.0",
+    "description": "High performance Matrix homeserver written in Rust. Official successor to conduwuit - a scalable, low-cost, enterprise-ready alternative to Synapse.",
+    "logo": "tuwunel.svg",
+    "links": {
+      "github": "https://github.com/matrix-construct/tuwunel",
+      "website": "https://tuwunel.chat",
+      "docs": "https://matrix-construct.github.io/tuwunel/"
+    },
+    "tags": [
+      "matrix",
+      "chat",
+      "messaging",
+      "rust"
     ]
   },
   {
@@ -5950,7 +6351,7 @@
   {
     "id": "umami",
     "name": "Umami",
-    "version": "v2.20.2",
+    "version": "v3.0.3",
     "description": "Umami is a simple, fast, privacy-focused alternative to Google Analytics.",
     "logo": "umami.png",
     "links": {
@@ -5979,6 +6380,24 @@
     ]
   },
   {
+    "id": "unleash",
+    "name": "Unleash",
+    "version": "7.4.0",
+    "description": "Open-source feature management platform",
+    "logo": "unleash.png",
+    "links": {
+      "github": "https://github.com/unleash/unleash",
+      "website": "https://www.getunleash.io/",
+      "docs": "https://docs.getunleash.io/"
+    },
+    "tags": [
+      "feature-flag",
+      "feature-management",
+      "feature-toggle",
+      "remote-configuration"
+    ]
+  },
+  {
     "id": "upsnap",
     "name": "Upsnap",
     "version": "5",
@@ -5999,7 +6418,7 @@
   {
     "id": "uptime-kuma",
     "name": "Uptime Kuma",
-    "version": "1.23.15",
+    "version": "2.1.0",
     "description": "Uptime Kuma is a free and open source monitoring tool that allows you to monitor your websites and applications.",
     "logo": "uptime-kuma.png",
     "links": {
@@ -6081,13 +6500,30 @@
     ]
   },
   {
+    "id": "verdaccio",
+    "name": "Verdaccio",
+    "version": "6",
+    "description": "A lightweight Node.js private proxy registry",
+    "logo": "verdaccio.svg",
+    "links": {
+      "github": "https://github.com/verdaccio/verdaccio",
+      "website": "https://www.verdaccio.org/",
+      "docs": "https://www.verdaccio.org/docs/what-is-verdaccio"
+    },
+    "tags": [
+      "node.js",
+      "package-repository",
+      "npm"
+    ]
+  },
+  {
     "id": "vikunja",
     "name": "Vikunja",
     "version": "0.23.0",
     "description": "Vikunja is a self-hosted, open-source to-do list application to organize tasks, projects, and notes.",
     "logo": "image.png",
     "links": {
-      "github": "https://kolaente.dev/vikunja/",
+      "github": "https://github.com/go-vikunja/vikunja",
       "website": "https://vikunja.io/",
       "docs": "https://vikunja.io/docs/"
     },
@@ -6234,6 +6670,24 @@
     },
     "tags": [
       "cms"
+    ]
+  },
+  {
+    "id": "wuzapi",
+    "name": "WuzAPI",
+    "version": "v1.0.0",
+    "description": "A RESTful API service for WhatsApp with multiple device support and concurrent sessions.",
+    "logo": "wuzapi.png",
+    "links": {
+      "github": "https://github.com/asternic/wuzapi",
+      "website": "https://www.wuzapi.app/",
+      "docs": "https://github.com/asternic/wuzapi/blob/main/README.md"
+    },
+    "tags": [
+      "api",
+      "whatsapp",
+      "messaging",
+      "automation"
     ]
   },
   {

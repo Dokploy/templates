@@ -11,5 +11,4 @@ port = 7_700
 host = "${main_domain}"
 
 [config.env]
-MEILI_ENV = "development"
 MEILI_MASTER_KEY = "${master_key}"

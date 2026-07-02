@@ -6,14 +6,14 @@ services:
     environment:
       APP_NAME: "Ollama Chat Tone"
       ADDR: ":8080"
-      SESSION_SECRET: "${session_secret}"
+      SESSION_SECRET: "${SESSION_SECRET}"
       DB_PATH: "/data/app.db"
-      OLLAMA_URL: "${ollama_url}"
-      OLLAMA_TIMEOUT: "${ollama_timeout}"
-      DEFAULT_MODEL: "${default_model}"
+      OLLAMA_URL: "${OLLAMA_URL}"
+      OLLAMA_TIMEOUT: "${OLLAMA_TIMEOUT}"
+      DEFAULT_MODEL: "${DEFAULT_MODEL}"
       OPEN_BROWSER: "false"
-      BASIC_AUTH_USER: "${basic_auth_user}"
-      BASIC_AUTH_PASSWORD: "${basic_auth_password}"
+      BASIC_AUTH_USER: "${BASIC_AUTH_USER}"
+      BASIC_AUTH_PASSWORD: "${BASIC_AUTH_PASSWORD}"
     volumes:
       - ollama-chat-tone-data:/data
 

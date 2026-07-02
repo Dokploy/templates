@@ -1,11 +1,11 @@
 [variables]
 main_domain = "${domain}"
-session_secret = "${password:32}"
+session_secret = "change-me......32charsOrMore"
 ollama_url = "http://your-ollama-host:11434"
 ollama_timeout = "5"
 default_model = "llama3.2"
 basic_auth_user = "admin"
-basic_auth_password = "${password:16}"
+basic_auth_password = "change-me"
 
 [config]
 [[config.domains]]

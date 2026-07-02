@@ -1,0 +1,32 @@
+[variables]
+main_domain = "${domain}"
+session_secret = "${password:32}"
+ollama_url = "http://your-ollama-host:11434"
+ollama_timeout = "5"
+default_model = "llama3.2"
+basic_auth_user = "admin"
+basic_auth_password = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "ollama-chat-tone"
+port = 8080
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+APP_NAME = "Ollama Chat Tone"
+ADDR = ":8080"
+SESSION_SECRET = "${session_secret}"
+DB_PATH = "/data/app.db"
+OLLAMA_URL = "${ollama_url}"
+OLLAMA_TIMEOUT = "${ollama_timeout}"
+DEFAULT_MODEL = "${default_model}"
+OPEN_BROWSER = "false"
+BASIC_AUTH_USER = "${basic_auth_user}"
+BASIC_AUTH_PASSWORD = "${basic_auth_password}"
+
+[[config.mounts]]
+serviceName = "ollama-chat-tone"
+filePath = "/data/app.db"
+content = ""

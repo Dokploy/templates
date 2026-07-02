@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5b5dff" />
+      <stop offset="100%" stop-color="#00d1b2" />
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="24" fill="#0b1225" />
+  <circle cx="64" cy="64" r="38" fill="url(#g)" opacity="0.95" />
+  <path d="M43 52c5-6 10-8 20-8s15 3 20 8c4 5 4 13 0 18-5 6-10 8-20 8s-15-3-20-8c-4-5-4-13 0-18z" fill="#fff" />
+  <path d="M50 74c6-6 13-7 22-7s16 2 22 7" stroke="#0b1225" stroke-width="6" stroke-linecap="round" fill="none" />
+  <text x="64" y="110" fill="#fff" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle">ChatTone</text>
+</svg>

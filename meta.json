@@ -4533,6 +4533,24 @@
     ]
   },
   {
+    "id": "ollama-chat-tone",
+    "name": "Ollama Chat Tone",
+    "version": "latest",
+    "description": "Self-contained Ollama chat client with local auth, streaming responses, and per-user conversations.",
+    "logo": "ollama-chat-tone.svg",
+    "links": {
+      "github": "https://github.com/billnice/ollama-chat-client",
+      "website": "https://hub.docker.com/r/billnice250/chattone",
+      "docs": "https://hub.docker.com/r/billnice250/chattone"
+    },
+    "tags": [
+      "chatbot",
+      "ai",
+      "ollama",
+      "docker"
+    ]
+  },
+  {
     "id": "omni-tools",
     "name": "Omni-Tools",
     "version": "latest",
@@ -6798,23 +6816,6 @@
       "openid-connect",
       "saml",
       "multi-tenant"
-    ]
-  },
-  {
-    "id": "ollama-chat-tone",
-    "name": "Ollama Chat Tone",
-    "version": "latest",
-    "description": "Self-contained Ollama chat client with local auth, streaming responses, and per-user conversations.",
-    "logo": "ollama-chat-tone.svg",
-    "links": {
-      "github": "https://github.com/billnice/ollama-chat-client",
-      "website": "https://hub.docker.com/r/billnice250/chattone"
-    },
-    "tags": [
-      "chatbot",
-      "ai",
-      "ollama",
-      "docker"
     ]
   }
 ]

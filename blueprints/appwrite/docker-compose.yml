@@ -14,6 +14,26 @@ services:
     labels:
       - traefik.enable=true
       - traefik.constraint-label-stack=appwrite
+      # Wildcard routing for per-site/per-function subdomains (e.g. <id>.sites.<domain>).
+      # Dokploy domains only support exact hosts, so these HostRegexp routers are needed
+      # for Appwrite's generated preview/execution URLs to reach the Appwrite router.
+      # HTTPS for these subdomains additionally requires a wildcard certificate
+      # (DNS-01 resolver or uploaded wildcard/Origin CA cert) in Dokploy's Traefik.
+      - 'traefik.http.routers.appwrite-sites-wildcard.rule=HostRegexp(`^.+\.${_APP_DOMAIN_SITES}$$`)'
+      - traefik.http.routers.appwrite-sites-wildcard.entrypoints=web
+      - traefik.http.routers.appwrite-sites-wildcard.service=appwrite-wildcard
+      - 'traefik.http.routers.appwrite-sites-wildcard-secure.rule=HostRegexp(`^.+\.${_APP_DOMAIN_SITES}$$`)'
+      - traefik.http.routers.appwrite-sites-wildcard-secure.entrypoints=websecure
+      - traefik.http.routers.appwrite-sites-wildcard-secure.tls=true
+      - traefik.http.routers.appwrite-sites-wildcard-secure.service=appwrite-wildcard
+      - 'traefik.http.routers.appwrite-functions-wildcard.rule=HostRegexp(`^.+\.${_APP_DOMAIN_FUNCTIONS}$$`)'
+      - traefik.http.routers.appwrite-functions-wildcard.entrypoints=web
+      - traefik.http.routers.appwrite-functions-wildcard.service=appwrite-wildcard
+      - 'traefik.http.routers.appwrite-functions-wildcard-secure.rule=HostRegexp(`^.+\.${_APP_DOMAIN_FUNCTIONS}$$`)'
+      - traefik.http.routers.appwrite-functions-wildcard-secure.entrypoints=websecure
+      - traefik.http.routers.appwrite-functions-wildcard-secure.tls=true
+      - traefik.http.routers.appwrite-functions-wildcard-secure.service=appwrite-wildcard
+      - traefik.http.services.appwrite-wildcard.loadbalancer.server.port=80
     healthcheck:
       test:
         - CMD

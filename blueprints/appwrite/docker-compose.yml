@@ -14,11 +14,6 @@ services:
     labels:
       - traefik.enable=true
       - traefik.constraint-label-stack=appwrite
-      # Wildcard routing for per-site/per-function subdomains (e.g. <id>.sites.<domain>).
-      # Dokploy domains only support exact hosts, so these HostRegexp routers are needed
-      # for Appwrite's generated preview/execution URLs to reach the Appwrite router.
-      # HTTPS for these subdomains additionally requires a wildcard certificate
-      # (DNS-01 resolver or uploaded wildcard/Origin CA cert) in Dokploy's Traefik.
       - 'traefik.http.routers.appwrite-sites-wildcard.rule=HostRegexp(`^.+\.${_APP_DOMAIN_SITES}$$`)'
       - traefik.http.routers.appwrite-sites-wildcard.entrypoints=web
       - traefik.http.routers.appwrite-sites-wildcard.service=appwrite-wildcard

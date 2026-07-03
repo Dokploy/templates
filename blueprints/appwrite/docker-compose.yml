@@ -1015,8 +1015,7 @@ services:
     restart: unless-stopped
 
   openruntimes-executor:
-    container_name: exc1
-    hostname: exc1
+    hostname: openruntimes-executor
     <<: *x-logging
     restart: unless-stopped
     stop_signal: SIGINT
@@ -1096,7 +1095,7 @@ services:
     healthcheck:
       test: |
         bash -c "
-          mongosh -u root -p ${_APP_DB_ROOT_PASS} --authenticationDatabase admin --quiet --eval \"
+          mongosh -u root -p \"$$MONGO_INITDB_ROOT_PASSWORD\" --authenticationDatabase admin --quiet --eval \"
             try {
               const hello = db.adminCommand({hello: 1});
               if (hello.isWritablePrimary) {

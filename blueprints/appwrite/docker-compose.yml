@@ -1000,6 +1000,7 @@ services:
     restart: unless-stopped
 
   openruntimes-executor:
+    container_name: exc1
     hostname: exc1
     <<: *x-logging
     restart: unless-stopped

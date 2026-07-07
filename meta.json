@@ -789,6 +789,24 @@
     ]
   },
   {
+    "id": "billmora",
+    "name": "Billmora",
+    "version": "latest",
+    "description": "Billmora (Billing Management, Operation, and Recurring Automation) is a free, open-source platform for hosting providers to manage clients, invoicing, and server provisioning.",
+    "logo": "billmora.svg",
+    "links": {
+      "website": "https://billmora.com",
+      "github": "https://github.com/Billmora/billmora",
+      "docs": "https://billmora.com/docs/introduction"
+    },
+    "tags": [
+      "laravel",
+      "billing",
+      "hosting",
+      "automation"
+    ]
+  },
+  {
     "id": "blender",
     "name": "Blender",
     "version": "latest",

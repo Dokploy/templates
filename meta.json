@@ -6104,6 +6104,23 @@
     ]
   },
   {
+    "id": "seanime",
+    "name": "Seanime",
+    "version": "3.6.1-rootless",
+    "description": "A self-hosted anime streaming platform.",
+    "logo": "seanime.png",
+    "links": {
+      "github": "https://github.com/5rahim/seanime",
+      "website": "https://seanime.app/",
+      "docs": "https://seanime.app/docs"
+    },
+    "tags": [
+      "media",
+      "anime",
+      "streaming"
+    ]
+  },
+  {
     "id": "searxng",
     "name": "SearXNG",
     "version": "latest",

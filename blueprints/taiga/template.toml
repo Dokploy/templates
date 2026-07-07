@@ -16,6 +16,8 @@ host = "${main_domain}"
 [config.env]
 TAIGA_DOMAIN = "${main_domain}"
 TAIGA_SCHEME = "https"
+TAIGA_SITES_DOMAIN = "${main_domain}"
+TAIGA_SITES_SCHEME = "https"
 WEBSOCKETS_SCHEME = "wss"
 TAIGA_SUBPATH = ""
 POSTGRES_DB = "taiga"
@@ -35,11 +37,12 @@ EMAIL_PORT = "587"
 EMAIL_HOST_USER = ""
 EMAIL_HOST_PASSWORD = ""
 EMAIL_DEFAULT_FROM = "taiga@example.com"
+DEFAULT_FROM_EMAIL = "taiga@example.com"
 EMAIL_USE_TLS = "False"
 EMAIL_USE_SSL = "False"
 
 [[config.mounts]]
-filePath = "/etc/nginx/conf.d/default.conf"
+filePath = "/etc/nginx/taiga.conf"
 content = """
 server {
     listen 80 default_server;

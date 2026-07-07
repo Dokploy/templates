@@ -6062,6 +6062,24 @@
     ]
   },
   {
+    "id": "taiga",
+    "name": "Taiga",
+    "version": "latest",
+    "description": "Taiga is an open-source project management platform for agile teams, issues, sprints, and kanban workflows.",
+    "links": {
+      "github": "https://github.com/taigaio/taiga-docker",
+      "website": "https://taiga.io/",
+      "docs": "https://docs.taiga.io/setup-production.html"
+    },
+    "logo": "taiga.svg",
+    "tags": [
+      "project-management",
+      "agile",
+      "kanban",
+      "scrum"
+    ]
+  },
+  {
     "id": "tailscale-exitnode",
     "name": "Tailscale Exit nodes",
     "version": "1.0.0",

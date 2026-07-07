@@ -22,11 +22,13 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS}
     volumes:
       - tandoor_staticfiles:/opt/recipes/staticfiles
       - tandoor_mediafiles:/opt/recipes/mediafiles
     ports:
-      - "8080"
+      - "80"
 
 volumes:
   tandoor_db_data:

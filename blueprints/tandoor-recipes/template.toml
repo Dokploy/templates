@@ -8,11 +8,13 @@ mounts = []
 
 [[config.domains]]
 serviceName = "tandoor-recipes"
-port = 8080
+port = 80
 host = "${main_domain}"
 
 [config.env]
 SECRET_KEY = "${secret_key}"
+ALLOWED_HOSTS = "${main_domain}"
+CSRF_TRUSTED_ORIGINS = "https://${main_domain}"
 POSTGRES_PASSWORD = "${postgres_password}"
 POSTGRES_USER = "tandoor"
 POSTGRES_DB = "tandoor"

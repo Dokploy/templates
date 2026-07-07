@@ -1,0 +1,30 @@
+services:
+  alarik:
+    image: ghcr.io/achtungsoftware/alarik:latest
+    restart: unless-stopped
+    volumes:
+      - alarik-storage:/app/Storage
+    environment:
+      - API_BASE_URL=${API_BASE_URL}
+      - CONSOLE_BASE_URL=${CONSOLE_BASE_URL}
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - JWT=${JWT}
+      - ALLOW_ACCOUNT_CREATION=${ALLOW_ACCOUNT_CREATION}
+    expose:
+      - 8080
+
+  console:
+    image: ghcr.io/achtungsoftware/alarik-console:latest
+    restart: unless-stopped
+    environment:
+      - NUXT_PUBLIC_API_BASE_URL=${API_BASE_URL}
+      - NUXT_PUBLIC_CONSOLE_BASE_URL=${CONSOLE_BASE_URL}
+      - NUXT_PUBLIC_ALLOW_ACCOUNT_CREATION=${ALLOW_ACCOUNT_CREATION}
+    expose:
+      - 3000
+    depends_on:
+      - alarik
+
+volumes:
+  alarik-storage:

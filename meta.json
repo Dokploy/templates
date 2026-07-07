@@ -1871,7 +1871,7 @@
   {
     "id": "discourse",
     "name": "Discourse",
-    "version": "3.5.0",
+    "version": "2026.1.4",
     "description": "Discourse is a modern forum software for your community. Use it as a mailing list, discussion forum, or long-form chat room.",
     "logo": "discourse.svg",
     "links": {

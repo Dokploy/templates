@@ -11,7 +11,7 @@ port = 22300
 host = "${main_domain}"
 
 [config.env]
-APP_BASE_URL = "https://${main_domain}"
+APP_BASE_URL = "http://${main_domain}"
 APP_PORT = "22300"
 POSTGRES_PASSWORD = "${postgres_password}"
 POSTGRES_USER = "joplin"

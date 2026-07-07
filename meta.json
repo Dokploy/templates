@@ -6411,6 +6411,24 @@
     ]
   },
   {
+    "id": "soft-serve",
+    "name": "Soft Serve",
+    "version": "v0.11.6",
+    "description": "Soft Serve is a self-hosted Git server with an SSH TUI, HTTP Git access, Git LFS support, and simple repository management.",
+    "logo": "soft-serve.svg",
+    "links": {
+      "github": "https://github.com/charmbracelet/soft-serve",
+      "website": "https://charm.sh/",
+      "docs": "https://github.com/charmbracelet/soft-serve/blob/main/README.md"
+    },
+    "tags": [
+      "git",
+      "ssh",
+      "developer-tools",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "soketi",
     "name": "Soketi",
     "version": "v1.6.1-16",

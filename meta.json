@@ -1852,6 +1852,23 @@
     ]
   },
   {
+    "id": "dockge",
+    "name": "Dockge",
+    "version": "1",
+    "description": "Dockge is a reactive, self-hosted Docker Compose stack manager from the creator of Uptime Kuma.",
+    "logo": "dockge.svg",
+    "links": {
+      "github": "https://github.com/louislam/dockge",
+      "website": "https://dockge.kuma.pet/",
+      "docs": "https://github.com/louislam/dockge"
+    },
+    "tags": [
+      "docker",
+      "compose",
+      "management"
+    ]
+  },
+  {
     "id": "docling-serve",
     "name": "Docling Serve",
     "version": "latest",

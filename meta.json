@@ -561,8 +561,8 @@
   {
     "id": "autobase",
     "name": "Autobase",
-    "version": "2.5.2",
-    "description": "Autobase for PostgreSQLÂ® is an open-source alternative to cloud-managed databases (self-hosted DBaaS).",
+    "version": "2.7.2",
+    "description": "Autobase for PostgreSQL® is an open-source alternative to cloud-managed databases (self-hosted DBaaS).",
     "links": {
       "github": "https://github.com/vitabaks/autobase",
       "website": "https://autobase.tech/",

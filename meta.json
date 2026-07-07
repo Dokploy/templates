@@ -5257,6 +5257,27 @@
     ]
   },
   {
+    "id": "openobserve",
+    "name": "Openobserve",
+    "version": "latest",
+    "description": "OpenObserve (O2) is a cloud-native observability platform that unifies logs, metrics, and traces into one solution. ",
+    "logo": "openobserve.svg",
+    "links": {
+      "github": "https://github.com/openobserve/openobserve",
+      "website": "https://openobserve.ai/",
+      "docs": "https://openobserve.ai/docs/"
+    },
+    "tags": [
+      "apm",
+      "logs",
+      "metrics",
+      "monitoring",
+      "observability",
+      "opentelemetry",
+      "traces"
+    ]
+  },
+  {
     "id": "openpanel",
     "name": "OpenPanel",
     "version": "latest",

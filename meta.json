@@ -6128,6 +6128,45 @@
     ]
   },
   {
+    "id": "rustrak",
+    "name": "Rustrak",
+    "version": "0.2.1",
+    "description": "Self-hosted error tracking compatible with Sentry SDKs. Server only, written in Rust with <100MB memory footprint and SQLite storage. No external database required.",
+    "logo": "rustrak.svg",
+    "links": {
+      "github": "https://github.com/AbianS/rustrak",
+      "website": "https://abians.github.io/rustrak/",
+      "docs": "https://abians.github.io/rustrak/"
+    },
+    "tags": [
+      "monitoring",
+      "error-tracking",
+      "sentry",
+      "rust",
+      "observability"
+    ]
+  },
+  {
+    "id": "rustrak-full",
+    "name": "Rustrak (Full Stack)",
+    "version": "0.2.1",
+    "description": "Self-hosted error tracking compatible with Sentry SDKs. Includes server, web dashboard UI, and PostgreSQL. Written in Rust with <100MB memory footprint.",
+    "logo": "rustrak.svg",
+    "links": {
+      "github": "https://github.com/AbianS/rustrak",
+      "website": "https://abians.github.io/rustrak/",
+      "docs": "https://abians.github.io/rustrak/"
+    },
+    "tags": [
+      "monitoring",
+      "error-tracking",
+      "sentry",
+      "rust",
+      "observability",
+      "postgresql"
+    ]
+  },
+  {
     "id": "rutorrent",
     "name": "ruTorrent",
     "version": "latest",

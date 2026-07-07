@@ -162,10 +162,27 @@
     ]
   },
   {
+    "id": "alarik",
+    "name": "Alarik",
+    "description": "Alarik is a high-performance, S3-compatible object storage.",
+    "logo": "alarik.png",
+    "version": "latest",
+    "links": {
+      "github": "https://github.com/achtungsoftware/alarik",
+      "website": "https://alarik.io/",
+      "docs": "https://alarik.io/docs"
+    },
+    "tags": [
+      "storage",
+      "s3",
+      "object-storage"
+    ]
+  },
+  {
     "id": "alist",
     "name": "AList",
     "version": "v3.55.0",
-    "description": "🗂️A file list/WebDAV program that supports multiple storages, powered by Gin and Solidjs.",
+    "description": "ðŸ—‚ï¸A file list/WebDAV program that supports multiple storages, powered by Gin and Solidjs.",
     "logo": "alist.svg",
     "links": {
       "github": "https://github.com/AlistGo/alist",
@@ -299,7 +316,7 @@
     "id": "anytype",
     "name": "Anytype",
     "version": "latest",
-    "description": "Anytype is a personal knowledge base—your digital brain—that lets you gather, connect and remix all kinds of information. Create pages, tasks, wikis, journals—even entire apps—and define your own data model while your data stays offline-first, private and encrypted across devices.\n\nAfter installation, you can view the Anytype client configuration by running `cat /data/client-config.yml` inside the service container.",
+    "description": "Anytype is a personal knowledge baseâ€”your digital brainâ€”that lets you gather, connect and remix all kinds of information. Create pages, tasks, wikis, journalsâ€”even entire appsâ€”and define your own data model while your data stays offline-first, private and encrypted across devices.\n\nAfter installation, you can view the Anytype client configuration by running `cat /data/client-config.yml` inside the service container.",
     "logo": "logo.png",
     "links": {
       "github": "https://github.com/grishy/any-sync-bundle",
@@ -415,6 +432,23 @@
     ]
   },
   {
+    "id": "archivebox",
+    "name": "ArchiveBox",
+    "version": "latest",
+    "description": "ArchiveBox is a self-hosted internet archiving solution for saving websites, media, and documents.",
+    "logo": "archivebox.svg",
+    "links": {
+      "github": "https://github.com/ArchiveBox/ArchiveBox",
+      "website": "https://archivebox.io/",
+      "docs": "https://docs.archivebox.io/"
+    },
+    "tags": [
+      "archive",
+      "bookmarks",
+      "web"
+    ]
+  },
+  {
     "id": "argilla",
     "name": "Argilla",
     "version": "latest",
@@ -511,7 +545,7 @@
     "id": "autobase",
     "name": "Autobase",
     "version": "2.5.2",
-    "description": "Autobase for PostgreSQL® is an open-source alternative to cloud-managed databases (self-hosted DBaaS).",
+    "description": "Autobase for PostgreSQLÂ® is an open-source alternative to cloud-managed databases (self-hosted DBaaS).",
     "links": {
       "github": "https://github.com/vitabaks/autobase",
       "website": "https://autobase.tech/",
@@ -721,7 +755,7 @@
     "id": "blender",
     "name": "Blender",
     "version": "latest",
-    "description": "Blender is a free and open-source 3D creation suite. It supports the entire 3D pipeline—modeling, rigging, animation, simulation, rendering, compositing and motion tracking, video editing and 2D animation pipeline.",
+    "description": "Blender is a free and open-source 3D creation suite. It supports the entire 3D pipelineâ€”modeling, rigging, animation, simulation, rendering, compositing and motion tracking, video editing and 2D animation pipeline.",
     "logo": "blender.svg",
     "links": {
       "github": "https://github.com/linuxserver/docker-blender",
@@ -1085,6 +1119,24 @@
       "Monitoring",
       "Data",
       "Notifications"
+    ]
+  },
+  {
+    "id": "chatto",
+    "name": "Chatto (single binary)",
+    "version": "0.3.8",
+    "description": "A fully-featured real-time chat application for teams and communities. This template deploys the single Chatto binary with embedded NATS. Note: email/password registration requires SMTP to be configured after deployment; voice/video calls are not included in the single-binary setup.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/chattocorp/chatto",
+      "website": "https://chatto.run",
+      "docs": "https://docs.chatto.run"
+    },
+    "tags": [
+      "chat",
+      "communication",
+      "messaging",
+      "self-hosted"
     ]
   },
   {
@@ -1800,6 +1852,23 @@
     ]
   },
   {
+    "id": "dockge",
+    "name": "Dockge",
+    "version": "1",
+    "description": "Dockge is a reactive, self-hosted Docker Compose stack manager from the creator of Uptime Kuma.",
+    "logo": "dockge.svg",
+    "links": {
+      "github": "https://github.com/louislam/dockge",
+      "website": "https://dockge.kuma.pet/",
+      "docs": "https://github.com/louislam/dockge"
+    },
+    "tags": [
+      "docker",
+      "compose",
+      "management"
+    ]
+  },
+  {
     "id": "docling-serve",
     "name": "Docling Serve",
     "version": "latest",
@@ -2293,6 +2362,23 @@
     ]
   },
   {
+    "id": "filegator",
+    "name": "FileGator",
+    "version": "7.14.3",
+    "description": "FileGator is a simple self-hosted web file manager with multi-user support.",
+    "logo": "filegator.svg",
+    "links": {
+      "github": "https://github.com/filegator/filegator",
+      "website": "https://filegator.io/",
+      "docs": "https://docs.filegator.io/"
+    },
+    "tags": [
+      "files",
+      "file-manager",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "filerun",
     "name": "FileRun",
     "version": "latest",
@@ -2343,6 +2429,23 @@
       "scraping",
       "data-extraction",
       "llm"
+    ]
+  },
+  {
+    "id": "firefly-iii",
+    "name": "Firefly III",
+    "version": "6.6.3",
+    "description": "Firefly III is a self-hosted personal finance manager for tracking expenses, budgets, accounts, and financial reports.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/firefly-iii/firefly-iii",
+      "website": "https://www.firefly-iii.org/",
+      "docs": "https://docs.firefly-iii.org/"
+    },
+    "tags": [
+      "finance",
+      "budgeting",
+      "self-hosted"
     ]
   },
   {
@@ -2884,6 +2987,23 @@
     ]
   },
   {
+    "id": "gotify",
+    "name": "Gotify",
+    "version": "2.9.1",
+    "description": "Gotify is a simple server for sending and receiving self-hosted push notifications.",
+    "logo": "gotify.svg",
+    "links": {
+      "github": "https://github.com/gotify/server",
+      "website": "https://gotify.net/",
+      "docs": "https://gotify.net/docs/"
+    },
+    "tags": [
+      "notifications",
+      "self-hosted",
+      "push"
+    ]
+  },
+  {
     "id": "grafana",
     "name": "Grafana",
     "version": "12.4",
@@ -2949,6 +3069,24 @@
       "productivity",
       "gamification",
       "habits",
+      "self-hosted"
+    ]
+  },
+  {
+    "id": "hermes",
+    "name": "Hermes",
+    "version": "v2026.6.19",
+    "description": "Hermes is an open agent runtime from Nous Research, exposing an OpenAI-compatible gateway API and a supervised web dashboard for building and running AI agents.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/NousResearch/hermes-agent",
+      "website": "https://hermes-agent.nousresearch.com/",
+      "docs": "https://hermes-agent.nousresearch.com/docs/user-guide/docker"
+    },
+    "tags": [
+      "ai",
+      "agent",
+      "llm",
       "self-hosted"
     ]
   },
@@ -3102,7 +3240,7 @@
     "id": "huly",
     "name": "Huly",
     "version": "0.6.377",
-    "description": "Huly — All-in-One Project Management Platform (alternative to Linear, Jira, Slack, Notion, Motion)",
+    "description": "Huly â€” All-in-One Project Management Platform (alternative to Linear, Jira, Slack, Notion, Motion)",
     "logo": "huly.svg",
     "links": {
       "github": "https://github.com/hcengineering/huly-selfhost",
@@ -3226,6 +3364,24 @@
     ]
   },
   {
+    "id": "inkvoice",
+    "name": "Inkvoice",
+    "version": "0.1.0",
+    "description": "Open-source invoicing for freelancers and small teams: invoices, online payments (Stripe & PayPal), expenses, multi-currency and reports.",
+    "logo": "inkvoice.svg",
+    "links": {
+      "github": "https://github.com/pigontech/inkvoice",
+      "website": "https://inkvoice.app",
+      "docs": "https://docs.inkvoice.app"
+    },
+    "tags": [
+      "invoicing",
+      "billing",
+      "finance",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "inngest",
     "name": "Inngest",
     "version": "v1.12.1",
@@ -3346,6 +3502,23 @@
     ]
   },
   {
+    "id": "jellyseerr",
+    "name": "Jellyseerr",
+    "version": "2.7.3",
+    "description": "Jellyseerr is a media request and discovery manager for Jellyfin, Plex, and Emby users.",
+    "logo": "jellyseerr.svg",
+    "links": {
+      "github": "https://github.com/Fallenbagel/jellyseerr",
+      "website": "https://docs.jellyseerr.dev/",
+      "docs": "https://docs.jellyseerr.dev/"
+    },
+    "tags": [
+      "media",
+      "requests",
+      "jellyfin"
+    ]
+  },
+  {
     "id": "jenkins",
     "name": "jenkins",
     "version": "latest",
@@ -3362,6 +3535,23 @@
       "automation",
       "pipelines",
       "open-source"
+    ]
+  },
+  {
+    "id": "joplin-server",
+    "name": "Joplin Server",
+    "version": "3.7.1",
+    "description": "Joplin Server is the self-hosted sync backend for Joplin notes, notebooks, and attachments.",
+    "logo": "joplin-server.svg",
+    "links": {
+      "github": "https://github.com/laurent22/joplin",
+      "website": "https://joplinapp.org/",
+      "docs": "https://github.com/laurent22/joplin/tree/dev/packages/server"
+    },
+    "tags": [
+      "notes",
+      "sync",
+      "productivity"
     ]
   },
   {
@@ -3608,7 +3798,7 @@
     "id": "librechat",
     "name": "LibreChat",
     "version": "latest",
-    "description": "LibreChat is the ultimate open-source app for all your AI conversations, fully customizable and compatible with any AI provider (Openai, Ollama, Google etc.) — all in one sleek interface.",
+    "description": "LibreChat is the ultimate open-source app for all your AI conversations, fully customizable and compatible with any AI provider (Openai, Ollama, Google etc.) â€” all in one sleek interface.",
     "logo": "librechat.png",
     "links": {
       "github": "https://github.com/danny-avila/librechat",
@@ -4550,6 +4740,24 @@
     ]
   },
   {
+    "id": "ollama-chat-tone",
+    "name": "Ollama Chat Tone",
+    "version": "latest",
+    "description": "Self-contained Ollama chat client with local auth, streaming responses, and per-user conversations.",
+    "logo": "ollama-chat-tone.svg",
+    "links": {
+      "github": "https://github.com/billnice250/ollama-chat-client",
+      "website": "https://hub.docker.com/r/billnice250/chattone",
+      "docs": "https://hub.docker.com/r/billnice250/chattone"
+    },
+    "tags": [
+      "chatbot",
+      "ai",
+      "ollama",
+      "docker"
+    ]
+  },
+  {
     "id": "omni-tools",
     "name": "Omni-Tools",
     "version": "latest",
@@ -5017,7 +5225,7 @@
     "id": "photoprism",
     "name": "Photoprism",
     "version": "latest",
-    "description": "PhotoPrism® is an AI-Powered Photos App for the Decentralized Web. It makes use of the latest technologies to tag and find pictures automatically without getting in your way.",
+    "description": "PhotoPrismÂ® is an AI-Powered Photos App for the Decentralized Web. It makes use of the latest technologies to tag and find pictures automatically without getting in your way.",
     "logo": "photoprism.svg",
     "links": {
       "github": "https://github.com/photoprism/photoprism",
@@ -5759,6 +5967,23 @@
     ]
   },
   {
+    "id": "sftpgo",
+    "name": "SFTPGo",
+    "version": "2.7.3",
+    "description": "SFTPGo is a full-featured and highly configurable SFTP, HTTP/S, FTP/S, and WebDAV server.",
+    "logo": "sftpgo.svg",
+    "links": {
+      "github": "https://github.com/drakkan/sftpgo",
+      "website": "https://sftpgo.com/",
+      "docs": "https://docs.sftpgo.com/"
+    },
+    "tags": [
+      "sftp",
+      "files",
+      "webdav"
+    ]
+  },
+  {
     "id": "shlink",
     "name": "Shlink",
     "version": "stable",
@@ -5879,6 +6104,23 @@
       "file-manager",
       "vdfs",
       "storage"
+    ]
+  },
+  {
+    "id": "spliit",
+    "name": "Spliit",
+    "version": "latest",
+    "description": "Spliit is a lightweight, self-hosted alternative to Auth0 and Clerk. Open-source, cost-effective, and developer-friendly, it provides secure authentication (OAuth, email/password, social logins) with full control over your data. No per-user fees, easy to integrate, and perfect for startups or privacy-focused projects.",
+    "logo": "spliit.png",
+    "links": {
+      "github": "https://github.com/spliit-app/spliit",
+      "website": "https://spliit.app/",
+      "docs": "https://github.com/spliit-app"
+    },
+    "tags": [
+      "budgeting",
+      "finance",
+      "money"
     ]
   },
   {
@@ -6048,7 +6290,7 @@
     "id": "surrealdb",
     "name": "SurrealDB",
     "version": "2.3.10",
-    "description": "SurrealDB is a native, open-source, multi-model database that lets you store and manage data across relational, document, graph, time-series, vector & search, and geospatial models—all in one place.",
+    "description": "SurrealDB is a native, open-source, multi-model database that lets you store and manage data across relational, document, graph, time-series, vector & search, and geospatial modelsâ€”all in one place.",
     "logo": "surrealdb.svg",
     "links": {
       "github": "https://github.com/surrealdb/surrealdb",
@@ -6320,7 +6562,7 @@
     "id": "typecho",
     "name": "Typecho",
     "version": "stable",
-    "description": "Typecho 是一个轻量级的开源博客程序，基于 PHP 开发，支持多种数据库，简洁而强大。",
+    "description": "Typecho æ˜¯ä¸€ä¸ªè½»é‡çº§çš„å¼€æºåšå®¢ç¨‹åºï¼ŒåŸºäºŽ PHP å¼€å‘ï¼Œæ”¯æŒå¤šç§æ•°æ®åº“ï¼Œç®€æ´è€Œå¼ºå¤§ã€‚",
     "logo": "typecho.png",
     "links": {
       "github": "https://github.com/typecho/typecho",

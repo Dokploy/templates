@@ -3589,6 +3589,24 @@
     ]
   },
   {
+    "id": "joomla",
+    "name": "Joomla",
+    "version": "6.1.0-apache",
+    "description": "Joomla is a flexible open-source content management system for building websites, portals, and online applications.",
+    "logo": "joomla.svg",
+    "links": {
+      "github": "https://github.com/joomla/joomla-cms",
+      "website": "https://www.joomla.org/",
+      "docs": "https://manual.joomla.org/"
+    },
+    "tags": [
+      "cms",
+      "website",
+      "php",
+      "mariadb"
+    ]
+  },
+  {
     "id": "joplin-server",
     "name": "Joplin Server",
     "version": "3.7.1",

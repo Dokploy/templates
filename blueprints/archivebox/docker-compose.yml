@@ -1,0 +1,16 @@
+services:
+  archivebox:
+    image: archivebox/archivebox:latest
+    restart: unless-stopped
+    command: server --quick-init 0.0.0.0:8000
+    environment:
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      PUBLIC_INDEX: ${PUBLIC_INDEX}
+      PUBLIC_SNAPSHOTS: ${PUBLIC_SNAPSHOTS}
+    volumes:
+      - archivebox_data:/data
+    ports:
+      - "8000"
+
+volumes:
+  archivebox_data:

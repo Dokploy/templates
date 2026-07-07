@@ -1,0 +1,37 @@
+services:
+  cut:
+    image: ghcr.io/mendylanda/cut:latest
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      # Injected by Dokploy from template.toml (generated strong password).
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      # Bundled Redis below, private to the project network.
+      - REDIS_URL=redis://redis:6379
+    # Expose the container port only; Dokploy maps the domain to it.
+    ports:
+      - 3000
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # appendonly = durable across restarts; noeviction because this is Cut's
+    # primary datastore, not a cache (don't drop links under memory pressure).
+    command: redis-server --appendonly yes --maxmemory-policy noeviction
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  redis-data:

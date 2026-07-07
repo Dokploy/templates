@@ -2971,6 +2971,24 @@
     ]
   },
   {
+    "id": "hermes",
+    "name": "Hermes",
+    "version": "v2026.6.19",
+    "description": "Hermes is an open agent runtime from Nous Research, exposing an OpenAI-compatible gateway API and a supervised web dashboard for building and running AI agents.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/NousResearch/hermes-agent",
+      "website": "https://hermes-agent.nousresearch.com/",
+      "docs": "https://hermes-agent.nousresearch.com/docs/user-guide/docker"
+    },
+    "tags": [
+      "ai",
+      "agent",
+      "llm",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "heyform",
     "name": "HeyForm",
     "version": "latest",

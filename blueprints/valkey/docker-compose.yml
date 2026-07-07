@@ -4,8 +4,6 @@ services:
   valkey:
     image: valkey/valkey:8.1.4
     restart: unless-stopped
-    ports:
-      - 6379
     volumes:
       - ../files/valkey.conf:/etc/valkey/valkey.conf
       - valkey-data:/data

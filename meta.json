@@ -1733,6 +1733,22 @@
     ]
   },
   {
+    "id": "cut",
+    "name": "Cut",
+    "version": "0.1.0",
+    "description": "A tiny, self-hosted URL shortener — short links that are entirely yours, with per-link passwords, expiries, and click limits.",
+    "logo": "cut.svg",
+    "links": {
+      "github": "https://github.com/MendyLanda/cut",
+      "website": "https://github.com/MendyLanda/cut",
+      "docs": "https://github.com/MendyLanda/cut#readme"
+    },
+    "tags": [
+      "url-shortener",
+      "links"
+    ]
+  },
+  {
     "id": "cyberchef",
     "name": "CyberChef",
     "version": "latest",

@@ -7110,6 +7110,24 @@
     ]
   },
   {
+    "id": "windshift",
+    "name": "Windshift",
+    "version": "v0.5.0",
+    "description": "Self-hosted work management platform with projects, tasks, sprints, and team collaboration.",
+    "logo": "windshift.png",
+    "links": {
+      "github": "https://github.com/Windshiftapp/core",
+      "website": "https://windshift.sh/",
+      "docs": "https://windshift.sh/docs"
+    },
+    "tags": [
+      "project-management",
+      "collaboration",
+      "productivity",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "wordpress",
     "name": "Wordpress",
     "version": "latest",

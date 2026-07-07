@@ -123,6 +123,23 @@
     ]
   },
   {
+    "id": "agent-zero",
+    "name": "Agent Zero",
+    "version": "v1.9",
+    "description": "Agent Zero is an open-source autonomous AI agent framework with memory and tool use capabilities.",
+    "logo": "agent-zero.svg",
+    "links": {
+      "github": "https://github.com/agent0ai/agent-zero",
+      "website": "https://www.agent-zero.ai",
+      "docs": "https://www.agent-zero.ai/p/docs/"
+    },
+    "tags": [
+      "ai",
+      "agent",
+      "automation"
+    ]
+  },
+  {
     "id": "agentdvr",
     "name": "Agent DVR",
     "version": "latest",
@@ -162,10 +179,27 @@
     ]
   },
   {
+    "id": "alarik",
+    "name": "Alarik",
+    "description": "Alarik is a high-performance, S3-compatible object storage.",
+    "logo": "alarik.png",
+    "version": "latest",
+    "links": {
+      "github": "https://github.com/achtungsoftware/alarik",
+      "website": "https://alarik.io/",
+      "docs": "https://alarik.io/docs"
+    },
+    "tags": [
+      "storage",
+      "s3",
+      "object-storage"
+    ]
+  },
+  {
     "id": "alist",
     "name": "AList",
     "version": "v3.55.0",
-    "description": "🗂️A file list/WebDAV program that supports multiple storages, powered by Gin and Solidjs.",
+    "description": "ðŸ—‚ï¸A file list/WebDAV program that supports multiple storages, powered by Gin and Solidjs.",
     "logo": "alist.svg",
     "links": {
       "github": "https://github.com/AlistGo/alist",
@@ -299,7 +333,7 @@
     "id": "anytype",
     "name": "Anytype",
     "version": "latest",
-    "description": "Anytype is a personal knowledge base—your digital brain—that lets you gather, connect and remix all kinds of information. Create pages, tasks, wikis, journals—even entire apps—and define your own data model while your data stays offline-first, private and encrypted across devices.\n\nAfter installation, you can view the Anytype client configuration by running `cat /data/client-config.yml` inside the service container.",
+    "description": "Anytype is a personal knowledge baseâ€”your digital brainâ€”that lets you gather, connect and remix all kinds of information. Create pages, tasks, wikis, journalsâ€”even entire appsâ€”and define your own data model while your data stays offline-first, private and encrypted across devices.\n\nAfter installation, you can view the Anytype client configuration by running `cat /data/client-config.yml` inside the service container.",
     "logo": "logo.png",
     "links": {
       "github": "https://github.com/grishy/any-sync-bundle",
@@ -365,7 +399,7 @@
   {
     "id": "appwrite",
     "name": "Appwrite",
-    "version": "1.8.0",
+    "version": "1.9.5",
     "description": "Appwrite is an end-to-end platform for building Web, Mobile, Native, or Backend apps, packaged as a set of Docker microservices. It includes both a backend server and a fully integrated hosting solution for deploying static and server-side rendered frontends. Appwrite abstracts the complexity and repetitiveness required to build modern apps from scratch and allows you to build secure, full-stack applications faster.\nUsing Appwrite, you can easily integrate your app with user authentication and multiple sign-in methods, a database for storing and querying users and team data, storage and file management, image manipulation, Cloud Functions, messaging, and more services.",
     "links": {
       "github": "https://github.com/appwrite/appwrite",
@@ -377,6 +411,7 @@
       "database",
       "firebase",
       "mariadb",
+      "mongodb",
       "hosting",
       "self-hosted"
     ]
@@ -412,6 +447,42 @@
       "database",
       "graph-database",
       "nosql"
+    ]
+  },
+  {
+    "id": "arche",
+    "name": "Arche",
+    "version": "latest",
+    "description": "Arche is a self-hosted AI workspace platform that spawns per-user OpenCode coding containers backed by a shared Knowledge Base. Requires the `arche-internal` external Docker network and `/opt/arche/{kb-content,kb-config,users}` directories on the host before deploy. Images are linux/amd64 by default; override `ARCHE_WEB_IMAGE` and `ARCHE_WORKSPACE_IMAGE` to the `-arm64` tag variants for ARM64 hosts.",
+    "logo": "arche.svg",
+    "links": {
+      "github": "https://github.com/peaberry-studio/arche",
+      "website": "https://github.com/peaberry-studio/arche",
+      "docs": "https://github.com/peaberry-studio/arche#readme"
+    },
+    "tags": [
+      "ai",
+      "coding",
+      "workspace",
+      "self-hosted",
+      "llm"
+    ]
+  },
+  {
+    "id": "archivebox",
+    "name": "ArchiveBox",
+    "version": "latest",
+    "description": "ArchiveBox is a self-hosted internet archiving solution for saving websites, media, and documents.",
+    "logo": "archivebox.svg",
+    "links": {
+      "github": "https://github.com/ArchiveBox/ArchiveBox",
+      "website": "https://archivebox.io/",
+      "docs": "https://docs.archivebox.io/"
+    },
+    "tags": [
+      "archive",
+      "bookmarks",
+      "web"
     ]
   },
   {
@@ -510,7 +581,7 @@
   {
     "id": "autobase",
     "name": "Autobase",
-    "version": "2.5.2",
+    "version": "2.7.2",
     "description": "Autobase for PostgreSQL® is an open-source alternative to cloud-managed databases (self-hosted DBaaS).",
     "links": {
       "github": "https://github.com/vitabaks/autobase",
@@ -718,10 +789,28 @@
     ]
   },
   {
+    "id": "billmora",
+    "name": "Billmora",
+    "version": "latest",
+    "description": "Billmora (Billing Management, Operation, and Recurring Automation) is a free, open-source platform for hosting providers to manage clients, invoicing, and server provisioning.",
+    "logo": "billmora.svg",
+    "links": {
+      "website": "https://billmora.com",
+      "github": "https://github.com/Billmora/billmora",
+      "docs": "https://billmora.com/docs/introduction"
+    },
+    "tags": [
+      "laravel",
+      "billing",
+      "hosting",
+      "automation"
+    ]
+  },
+  {
     "id": "blender",
     "name": "Blender",
     "version": "latest",
-    "description": "Blender is a free and open-source 3D creation suite. It supports the entire 3D pipeline—modeling, rigging, animation, simulation, rendering, compositing and motion tracking, video editing and 2D animation pipeline.",
+    "description": "Blender is a free and open-source 3D creation suite. It supports the entire 3D pipelineâ€”modeling, rigging, animation, simulation, rendering, compositing and motion tracking, video editing and 2D animation pipeline.",
     "logo": "blender.svg",
     "links": {
       "github": "https://github.com/linuxserver/docker-blender",
@@ -1085,6 +1174,24 @@
       "Monitoring",
       "Data",
       "Notifications"
+    ]
+  },
+  {
+    "id": "chatto",
+    "name": "Chatto (single binary)",
+    "version": "0.3.8",
+    "description": "A fully-featured real-time chat application for teams and communities. This template deploys the single Chatto binary with embedded NATS. Note: email/password registration requires SMTP to be configured after deployment; voice/video calls are not included in the single-binary setup.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/chattocorp/chatto",
+      "website": "https://chatto.run",
+      "docs": "https://docs.chatto.run"
+    },
+    "tags": [
+      "chat",
+      "communication",
+      "messaging",
+      "self-hosted"
     ]
   },
   {
@@ -1646,6 +1753,42 @@
     ]
   },
   {
+    "id": "crawlab-master",
+    "name": "Crawlab (Master)",
+    "version": "latest",
+    "description": "Crawlab is a distributed web crawler admin platform supporting multiple programming languages and frameworks. This template deploys the master node with MongoDB.",
+    "logo": "crawlab.jpeg",
+    "links": {
+      "github": "https://github.com/crawlab-team/crawlab",
+      "website": "https://crawlab.cn",
+      "docs": "https://docs.crawlab.cn"
+    },
+    "tags": [
+      "crawler",
+      "scraping",
+      "distributed",
+      "self-hosted"
+    ]
+  },
+  {
+    "id": "crawlab-worker",
+    "name": "Crawlab (Worker)",
+    "version": "latest",
+    "description": "Crawlab worker node for distributed web crawling. Connects to an existing Crawlab master node via gRPC.",
+    "logo": "crawlab.jpeg",
+    "links": {
+      "github": "https://github.com/crawlab-team/crawlab",
+      "website": "https://crawlab.cn",
+      "docs": "https://docs.crawlab.cn"
+    },
+    "tags": [
+      "crawler",
+      "scraping",
+      "distributed",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "crowdsec",
     "name": "Crowdsec",
     "version": "latest",
@@ -1681,11 +1824,27 @@
     ]
   },
   {
+    "id": "cut",
+    "name": "Cut",
+    "version": "0.1.0",
+    "description": "A tiny, self-hosted URL shortener — short links that are entirely yours, with per-link passwords, expiries, and click limits.",
+    "logo": "cut.svg",
+    "links": {
+      "github": "https://github.com/MendyLanda/cut",
+      "website": "https://github.com/MendyLanda/cut",
+      "docs": "https://github.com/MendyLanda/cut#readme"
+    },
+    "tags": [
+      "url-shortener",
+      "links"
+    ]
+  },
+  {
     "id": "cyberchef",
     "name": "CyberChef",
     "version": "latest",
     "description": "CyberChef is a web application for encryption, encoding, compression, and data analysis, developed by GCHQ.",
-    "logo": "cyberchef.svg",
+    "logo": "cyberchef.png",
     "links": {
       "github": "https://github.com/gchq/CyberChef",
       "website": "https://gchq.github.io/CyberChef/",
@@ -1785,7 +1944,7 @@
   {
     "id": "discourse",
     "name": "Discourse",
-    "version": "3.5.0",
+    "version": "2026.1.4",
     "description": "Discourse is a modern forum software for your community. Use it as a mailing list, discussion forum, or long-form chat room.",
     "logo": "discourse.svg",
     "links": {
@@ -1797,6 +1956,23 @@
       "forum",
       "community",
       "discussion"
+    ]
+  },
+  {
+    "id": "dockge",
+    "name": "Dockge",
+    "version": "1",
+    "description": "Dockge is a reactive, self-hosted Docker Compose stack manager from the creator of Uptime Kuma.",
+    "logo": "dockge.svg",
+    "links": {
+      "github": "https://github.com/louislam/dockge",
+      "website": "https://dockge.kuma.pet/",
+      "docs": "https://github.com/louislam/dockge"
+    },
+    "tags": [
+      "docker",
+      "compose",
+      "management"
     ]
   },
   {
@@ -2277,6 +2453,24 @@
     ]
   },
   {
+    "id": "fider",
+    "name": "Fider",
+    "version": "0.21.1",
+    "description": "Fider is an open-source feedback portal for collecting, discussing, and prioritizing feature requests.",
+    "logo": "fider.svg",
+    "links": {
+      "github": "https://github.com/getfider/fider",
+      "website": "https://fider.io/",
+      "docs": "https://docs.fider.io/hosting-instance/"
+    },
+    "tags": [
+      "feedback",
+      "product",
+      "roadmap",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "filebrowser",
     "name": "File Browser",
     "version": "2.31.2",
@@ -2290,6 +2484,23 @@
     "tags": [
       "file-manager",
       "storage"
+    ]
+  },
+  {
+    "id": "filegator",
+    "name": "FileGator",
+    "version": "7.14.3",
+    "description": "FileGator is a simple self-hosted web file manager with multi-user support.",
+    "logo": "filegator.svg",
+    "links": {
+      "github": "https://github.com/filegator/filegator",
+      "website": "https://filegator.io/",
+      "docs": "https://docs.filegator.io/"
+    },
+    "tags": [
+      "files",
+      "file-manager",
+      "self-hosted"
     ]
   },
   {
@@ -2326,6 +2537,23 @@
       "scraping",
       "data-extraction",
       "llm"
+    ]
+  },
+  {
+    "id": "firefly-iii",
+    "name": "Firefly III",
+    "version": "6.6.3",
+    "description": "Firefly III is a self-hosted personal finance manager for tracking expenses, budgets, accounts, and financial reports.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/firefly-iii/firefly-iii",
+      "website": "https://www.firefly-iii.org/",
+      "docs": "https://docs.firefly-iii.org/"
+    },
+    "tags": [
+      "finance",
+      "budgeting",
+      "self-hosted"
     ]
   },
   {
@@ -2544,6 +2772,26 @@
     ]
   },
   {
+    "id": "frappe-lending",
+    "name": "Frappe Lending",
+    "version": "latest",
+    "description": "A comprehensive loan management system built on Frappe Framework. 100% open source and customizable for managing loans, repayments, and lending operations.",
+    "logo": "frappe-lending.png",
+    "links": {
+      "github": "https://github.com/frappe/lending",
+      "docs": "https://docs.frappe.io/lending",
+      "website": "https://frappe.io"
+    },
+    "tags": [
+      "lending",
+      "finance",
+      "loans",
+      "payments",
+      "accounting",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "freescout",
     "name": "FreeScout",
     "version": "latest",
@@ -2612,6 +2860,23 @@
     "tags": [
       "storage",
       "object-storage"
+    ]
+  },
+  {
+    "id": "geoserver",
+    "name": "GeoServer & PostGIS",
+    "version": "2.24.1",
+    "description": "An open-source server for sharing geospatial data, paired with a PostGIS database. Template created and maintained by OpenGeoCity Tanzania (info@ogctz.org). For further assistance contact +255759968919 or visit https://opengeocity.org or github: https://github.com/ShabaniMagawila or linkedin: https://www.linkedin.com/in/shabani-magawila/",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/geoserver/geoserver",
+      "website": "https://geoserver.org/",
+      "docs": "https://docs.geoserver.org/"
+    },
+    "tags": [
+      "geospatial",
+      "gis",
+      "postgis"
     ]
   },
   {
@@ -2763,7 +3028,7 @@
   {
     "id": "glitchtip",
     "name": "Glitchtip",
-    "version": "v4.0",
+    "version": "6.1.0",
     "description": "Glitchtip is simple, open source error tracking",
     "logo": "glitchtip.png",
     "links": {
@@ -2811,6 +3076,24 @@
     ]
   },
   {
+    "id": "go2rtc",
+    "name": "go2rtc",
+    "version": "latest",
+    "description": "Ultimate camera streaming application with support for dozens formats and protocols.",
+    "logo": "go2rtc.png",
+    "links": {
+      "github": "https://github.com/AlexxIT/go2rtc",
+      "website": "https://go2rtc.org/",
+      "docs": "https://go2rtc.org/"
+    },
+    "tags": [
+      "streaming",
+      "webrtc",
+      "video",
+      "home assistant"
+    ]
+  },
+  {
     "id": "gotenberg",
     "name": "Gotenberg",
     "version": "latest",
@@ -2826,6 +3109,23 @@
       "backend",
       "pdf",
       "tools"
+    ]
+  },
+  {
+    "id": "gotify",
+    "name": "Gotify",
+    "version": "2.9.1",
+    "description": "Gotify is a simple server for sending and receiving self-hosted push notifications.",
+    "logo": "gotify.svg",
+    "links": {
+      "github": "https://github.com/gotify/server",
+      "website": "https://gotify.net/",
+      "docs": "https://gotify.net/docs/"
+    },
+    "tags": [
+      "notifications",
+      "self-hosted",
+      "push"
     ]
   },
   {
@@ -2898,6 +3198,43 @@
     ]
   },
   {
+    "id": "hedgedoc",
+    "name": "HedgeDoc",
+    "version": "1.10.8",
+    "description": "HedgeDoc is a collaborative Markdown editor for teams that need real-time notes, documentation, and knowledge sharing.",
+    "logo": "hedgedoc.svg",
+    "links": {
+      "github": "https://github.com/hedgedoc/hedgedoc",
+      "website": "https://hedgedoc.org/",
+      "docs": "https://docs.hedgedoc.org/"
+    },
+    "tags": [
+      "markdown",
+      "notes",
+      "documentation",
+      "collaboration",
+      "wiki"
+    ]
+  },
+  {
+    "id": "hermes",
+    "name": "Hermes",
+    "version": "v2026.6.19",
+    "description": "Hermes is an open agent runtime from Nous Research, exposing an OpenAI-compatible gateway API and a supervised web dashboard for building and running AI agents.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/NousResearch/hermes-agent",
+      "website": "https://hermes-agent.nousresearch.com/",
+      "docs": "https://hermes-agent.nousresearch.com/docs/user-guide/docker"
+    },
+    "tags": [
+      "ai",
+      "agent",
+      "llm",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "heyform",
     "name": "HeyForm",
     "version": "latest",
@@ -2919,7 +3256,7 @@
   {
     "id": "hi-events",
     "name": "Hi.events",
-    "version": "0.8.0-beta.1",
+    "version": "1.9.0-beta",
     "description": "Hi.Events is a self-hosted event management and ticket selling platform that allows you to create, manage and promote events easily.",
     "logo": "hi-events.svg",
     "links": {
@@ -3005,6 +3342,24 @@
     ]
   },
   {
+    "id": "homepage",
+    "name": "Homepage",
+    "version": "1.13.1",
+    "description": "Homepage is a highly customizable self-hosted application dashboard and startpage with service and widget integrations.",
+    "logo": "homepage.png",
+    "links": {
+      "github": "https://github.com/gethomepage/homepage",
+      "website": "https://gethomepage.dev/",
+      "docs": "https://gethomepage.dev/installation/"
+    },
+    "tags": [
+      "dashboard",
+      "startpage",
+      "self-hosted",
+      "productivity"
+    ]
+  },
+  {
     "id": "hoppscotch",
     "name": "Hoppscotch (AIO + Migrations)",
     "version": "latest",
@@ -3047,7 +3402,7 @@
     "id": "huly",
     "name": "Huly",
     "version": "0.6.377",
-    "description": "Huly — All-in-One Project Management Platform (alternative to Linear, Jira, Slack, Notion, Motion)",
+    "description": "Huly â€” All-in-One Project Management Platform (alternative to Linear, Jira, Slack, Notion, Motion)",
     "logo": "huly.svg",
     "links": {
       "github": "https://github.com/hcengineering/huly-selfhost",
@@ -3171,6 +3526,24 @@
     ]
   },
   {
+    "id": "inkvoice",
+    "name": "Inkvoice",
+    "version": "0.1.0",
+    "description": "Open-source invoicing for freelancers and small teams: invoices, online payments (Stripe & PayPal), expenses, multi-currency and reports.",
+    "logo": "inkvoice.svg",
+    "links": {
+      "github": "https://github.com/pigontech/inkvoice",
+      "website": "https://inkvoice.app",
+      "docs": "https://docs.inkvoice.app"
+    },
+    "tags": [
+      "invoicing",
+      "billing",
+      "finance",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "inngest",
     "name": "Inngest",
     "version": "v1.12.1",
@@ -3291,6 +3664,23 @@
     ]
   },
   {
+    "id": "jellyseerr",
+    "name": "Jellyseerr",
+    "version": "2.7.3",
+    "description": "Jellyseerr is a media request and discovery manager for Jellyfin, Plex, and Emby users.",
+    "logo": "jellyseerr.svg",
+    "links": {
+      "github": "https://github.com/Fallenbagel/jellyseerr",
+      "website": "https://docs.jellyseerr.dev/",
+      "docs": "https://docs.jellyseerr.dev/"
+    },
+    "tags": [
+      "media",
+      "requests",
+      "jellyfin"
+    ]
+  },
+  {
     "id": "jenkins",
     "name": "jenkins",
     "version": "latest",
@@ -3307,6 +3697,41 @@
       "automation",
       "pipelines",
       "open-source"
+    ]
+  },
+  {
+    "id": "joomla",
+    "name": "Joomla",
+    "version": "6.1.0-apache",
+    "description": "Joomla is a flexible open-source content management system for building websites, portals, and online applications.",
+    "logo": "joomla.svg",
+    "links": {
+      "github": "https://github.com/joomla/joomla-cms",
+      "website": "https://www.joomla.org/",
+      "docs": "https://manual.joomla.org/"
+    },
+    "tags": [
+      "cms",
+      "website",
+      "php",
+      "mariadb"
+    ]
+  },
+  {
+    "id": "joplin-server",
+    "name": "Joplin Server",
+    "version": "3.7.1",
+    "description": "Joplin Server is the self-hosted sync backend for Joplin notes, notebooks, and attachments.",
+    "logo": "joplin-server.svg",
+    "links": {
+      "github": "https://github.com/laurent22/joplin",
+      "website": "https://joplinapp.org/",
+      "docs": "https://github.com/laurent22/joplin/tree/dev/packages/server"
+    },
+    "tags": [
+      "notes",
+      "sync",
+      "productivity"
     ]
   },
   {
@@ -3553,7 +3978,7 @@
     "id": "librechat",
     "name": "LibreChat",
     "version": "latest",
-    "description": "LibreChat is the ultimate open-source app for all your AI conversations, fully customizable and compatible with any AI provider (Openai, Ollama, Google etc.) — all in one sleek interface.",
+    "description": "LibreChat is the ultimate open-source app for all your AI conversations, fully customizable and compatible with any AI provider (Openai, Ollama, Google etc.) â€” all in one sleek interface.",
     "logo": "librechat.png",
     "links": {
       "github": "https://github.com/danny-avila/librechat",
@@ -3567,6 +3992,22 @@
       "MIT-license",
       "BYOK",
       "generative-ai"
+    ]
+  },
+  {
+    "id": "libredb-studio",
+    "name": "LibreDB Studio",
+    "version": "0.9.27",
+    "description": "The modern, AI-powered open-source SQL IDE. Query PostgreSQL, MySQL, Oracle, SQL Server, SQLite, MongoDB and Redis from your browser.",
+    "logo": "libredb-studio.svg",
+    "links": {
+      "github": "https://github.com/libredb/libredb-studio",
+      "website": "https://libredb.org/",
+      "docs": "https://libredb.org/"
+    },
+    "tags": [
+      "database",
+      "sql"
     ]
   },
   {
@@ -3586,6 +4027,24 @@
     ]
   },
   {
+    "id": "librespeed",
+    "name": "LibreSpeed",
+    "version": "latest",
+    "description": "LibreSpeed is a lightweight, self-hosted HTML5 speed test for measuring download, upload, ping, and jitter in modern browsers.",
+    "logo": "librespeed.svg",
+    "links": {
+      "github": "https://github.com/librespeed/speedtest",
+      "website": "https://librespeed.org",
+      "docs": "https://docs.linuxserver.io/images/docker-librespeed/"
+    },
+    "tags": [
+      "speedtest",
+      "networking",
+      "monitoring",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "libretranslate",
     "name": "LibreTranslate",
     "version": "1.7.3",
@@ -3601,6 +4060,23 @@
       "api",
       "nlp",
       "language"
+    ]
+  },
+  {
+    "id": "limesurvey",
+    "name": "LimeSurvey",
+    "version": "6.17.2+260507",
+    "description": "LimeSurvey is a powerful, open-source survey platform, making it simple to create online surveys and forms with unmatched flexibility.",
+    "logo": "limesurvey.svg",
+    "links": {
+      "github": "https://github.com/LimeSurvey/LimeSurvey",
+      "website": "https://www.limesurvey.org",
+      "docs": "https://www.limesurvey.org/manual/"
+    },
+    "tags": [
+      "forms",
+      "questionnaire",
+      "survey"
     ]
   },
   {
@@ -3775,6 +4251,24 @@
     ]
   },
   {
+    "id": "lubelogger",
+    "name": "LubeLogger",
+    "version": "v1.6.5",
+    "description": "LubeLogger is a self-hosted vehicle maintenance and fuel mileage tracker for managing service records, reminders, fuel logs, and vehicle expenses.",
+    "logo": "lubelogger.png",
+    "links": {
+      "github": "https://github.com/hargata/lubelog",
+      "website": "https://lubelogger.com/",
+      "docs": "https://docs.lubelogger.com/"
+    },
+    "tags": [
+      "vehicle",
+      "maintenance",
+      "fleet",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "macos",
     "name": "MacOS (dockerized)",
     "version": "1.14",
@@ -3823,6 +4317,25 @@
     "tags": [
       "email",
       "smtp"
+    ]
+  },
+  {
+    "id": "marketing-dashboard",
+    "name": "Marketing Dashboard",
+    "version": "latest",
+    "description": "Self-hosted marketing operations dashboard for product-led growth, checkout analytics, paid media, SEO signals, and Stripe readiness.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/abel-yelin/marketing-dashboard",
+      "website": "https://github.com/abel-yelin/marketing-dashboard",
+      "docs": "https://github.com/abel-yelin/marketing-dashboard/blob/main/docs/production-deployment.md"
+    },
+    "tags": [
+      "analytics",
+      "marketing",
+      "self-hosted",
+      "postgresql",
+      "nextjs"
     ]
   },
   {
@@ -3875,6 +4388,23 @@
       "automation",
       "email",
       "crm"
+    ]
+  },
+  {
+    "id": "maxio",
+    "name": "MaxIO",
+    "version": "0.2.1",
+    "description": "MaxIO is a lightweight, single-binary S3-compatible object storage server written in Rust",
+    "logo": "maxio.svg",
+    "links": {
+      "github": "https://github.com/coollabsio/maxio",
+      "website": "https://github.com/coollabsio/maxio",
+      "docs": "https://github.com/coollabsio/maxio/blob/main/README.md"
+    },
+    "tags": [
+      "s3",
+      "storage",
+      "object-storage"
     ]
   },
   {
@@ -3969,7 +4499,7 @@
   {
     "id": "mediafetch",
     "name": "MediaFetch",
-    "version": "1.1.1",
+    "version": "1.3.5",
     "description": "A tiny, self-hosted web wrapper for yt-dlp to download video and audio. Optional basic auth.",
     "logo": "mediafetch.svg",
     "links": {
@@ -3986,7 +4516,7 @@
   {
     "id": "meilisearch",
     "name": "Meilisearch",
-    "version": "v1.8.3",
+    "version": "v1.35.1",
     "description": "Meilisearch is a free and open-source search engine that allows you to easily add search functionality to your web applications.",
     "logo": "meilisearch.png",
     "links": {
@@ -4064,6 +4594,23 @@
       "minecraft",
       "server-management",
       "docker"
+    ]
+  },
+  {
+    "id": "miniflux",
+    "name": "Miniflux",
+    "version": "2.2.19",
+    "description": "Miniflux is a minimalist and opinionated feed reader for self-hosted RSS and Atom subscriptions.",
+    "logo": "miniflux.svg",
+    "links": {
+      "github": "https://github.com/miniflux/v2",
+      "website": "https://miniflux.app/",
+      "docs": "https://miniflux.app/docs/"
+    },
+    "tags": [
+      "rss",
+      "feed-reader",
+      "news"
     ]
   },
   {
@@ -4513,6 +5060,24 @@
     ]
   },
   {
+    "id": "ollama-chat-tone",
+    "name": "Ollama Chat Tone",
+    "version": "latest",
+    "description": "Self-contained Ollama chat client with local auth, streaming responses, and per-user conversations.",
+    "logo": "ollama-chat-tone.svg",
+    "links": {
+      "github": "https://github.com/billnice250/ollama-chat-client",
+      "website": "https://hub.docker.com/r/billnice250/chattone",
+      "docs": "https://hub.docker.com/r/billnice250/chattone"
+    },
+    "tags": [
+      "chatbot",
+      "ai",
+      "ollama",
+      "docker"
+    ]
+  },
+  {
     "id": "omni-tools",
     "name": "Omni-Tools",
     "version": "latest",
@@ -4528,6 +5093,26 @@
       "utilities",
       "collection",
       "self-hosted"
+    ]
+  },
+  {
+    "id": "omniroute",
+    "name": "OmniRoute",
+    "version": "3.8.17",
+    "description": "The Free AI Gateway - Never stop coding. Connect every AI tool to 177 providers — 50+ free — through one endpoint.  Auto-fallback. RTK + Caveman compression saves 15–95% tokens. Never hit limits. ~1.9B+ documented free tokens/month — up to ~2.5B in your first month with signup credits.",
+    "logo": "omniroute.png",
+    "links": {
+      "github": "https://github.com/diegosouzapw/OmniRoute",
+      "website": "https://github.com/diegosouzapw/OmniRoute",
+      "docs": "https://github.com/diegosouzapw/OmniRoute/wiki"
+    },
+    "tags": [
+      "artificial-intelligence",
+      "gateway",
+      "generative-ai",
+      "llm",
+      "monitoring",
+      "routing"
     ]
   },
   {
@@ -4707,6 +5292,27 @@
     ]
   },
   {
+    "id": "openobserve",
+    "name": "Openobserve",
+    "version": "latest",
+    "description": "OpenObserve (O2) is a cloud-native observability platform that unifies logs, metrics, and traces into one solution. ",
+    "logo": "openobserve.svg",
+    "links": {
+      "github": "https://github.com/openobserve/openobserve",
+      "website": "https://openobserve.ai/",
+      "docs": "https://openobserve.ai/docs/"
+    },
+    "tags": [
+      "apm",
+      "logs",
+      "metrics",
+      "monitoring",
+      "observability",
+      "opentelemetry",
+      "traces"
+    ]
+  },
+  {
     "id": "openpanel",
     "name": "OpenPanel",
     "version": "latest",
@@ -4739,6 +5345,25 @@
       "self-hosted",
       "openresty",
       "nginx"
+    ]
+  },
+  {
+    "id": "opensourcepos",
+    "name": "OpenSourcePOS",
+    "version": "master",
+    "description": "OpenSourcePOS is a web-based point of sale system for managing sales, inventory, customers, and reports.",
+    "logo": "opensourcepos.svg",
+    "links": {
+      "github": "https://github.com/opensourcepos/opensourcepos",
+      "website": "https://opensourcepos.org/",
+      "docs": "https://github.com/opensourcepos/opensourcepos/blob/master/README.md"
+    },
+    "tags": [
+      "pos",
+      "retail",
+      "inventory",
+      "sales",
+      "business"
     ]
   },
   {
@@ -4830,6 +5455,24 @@
       "file-sharing",
       "self-hosted",
       "open-source"
+    ]
+  },
+  {
+    "id": "paperclip",
+    "name": "Paperclip",
+    "version": "latest",
+    "description": "Paperclip is an open-source control plane for managing teams of AI agents, goals, budgets, tickets, and recurring work.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/paperclipai/paperclip",
+      "website": "https://paperclip.ing/",
+      "docs": "https://docs.paperclip.ing/"
+    },
+    "tags": [
+      "ai",
+      "agents",
+      "automation",
+      "self-hosted"
     ]
   },
   {
@@ -4980,7 +5623,7 @@
     "id": "photoprism",
     "name": "Photoprism",
     "version": "latest",
-    "description": "PhotoPrism® is an AI-Powered Photos App for the Decentralized Web. It makes use of the latest technologies to tag and find pictures automatically without getting in your way.",
+    "description": "PhotoPrismÂ® is an AI-Powered Photos App for the Decentralized Web. It makes use of the latest technologies to tag and find pictures automatically without getting in your way.",
     "logo": "photoprism.svg",
     "links": {
       "github": "https://github.com/photoprism/photoprism",
@@ -5046,8 +5689,8 @@
   {
     "id": "plane",
     "name": "Plane",
-    "version": "v0.27.1",
-    "description": "Easy, flexible, open source project management software",
+    "version": "v1.2.3",
+    "description": "Open source project management — alternative to Jira, Linear, Asana",
     "logo": "plane.png",
     "links": {
       "github": "https://github.com/makeplane/plane",
@@ -5055,7 +5698,8 @@
       "docs": "https://docs.plane.so/"
     },
     "tags": [
-      "kanban"
+      "kanban",
+      "project-management"
     ]
   },
   {
@@ -5271,6 +5915,40 @@
     "dokploy_version": "<0.22.5"
   },
   {
+    "id": "prefect",
+    "name": "Prefect",
+    "version": "3.7.5-python3.12",
+    "description": "Prefect is an open-source workflow orchestration platform for building, scheduling, monitoring, and managing data pipelines and Python workflows.",
+    "logo": "prefect.svg",
+    "links": {
+      "github": "https://github.com/PrefectHQ/prefect",
+      "website": "https://www.prefect.io/",
+      "docs": "https://docs.prefect.io/"
+    },
+    "tags": [
+      "automation",
+      "workflow",
+      "data"
+    ]
+  },
+  {
+    "id": "privatebin",
+    "name": "PrivateBin",
+    "version": "2.0.4",
+    "description": "PrivateBin is a minimalist, open-source online pastebin where the server has zero knowledge of pasted data.",
+    "logo": "privatebin.svg",
+    "links": {
+      "github": "https://github.com/PrivateBin/PrivateBin",
+      "website": "https://privatebin.info/",
+      "docs": "https://github.com/PrivateBin/docker-nginx-fpm-alpine"
+    },
+    "tags": [
+      "pastebin",
+      "privacy",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "prometheus",
     "name": "Prometheus",
     "version": "latest",
@@ -5411,6 +6089,25 @@
     ]
   },
   {
+    "id": "qui",
+    "name": "qui",
+    "version": "latest",
+    "description": "A fast, modern web interface for qBittorrent. Manage multiple qBittorrent instances from a single, lightweight application built by autobrr.",
+    "logo": "qui.png",
+    "links": {
+      "github": "https://github.com/autobrr/qui",
+      "website": "https://getqui.com",
+      "docs": "https://getqui.com"
+    },
+    "tags": [
+      "torrent",
+      "qbittorrent",
+      "download",
+      "media",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "rabbitmq",
     "name": "RabbitMQ",
     "version": "4.1-management",
@@ -5425,6 +6122,23 @@
       "message-broker",
       "queue",
       "rabbitmq"
+    ]
+  },
+  {
+    "id": "rallly",
+    "name": "Rallly",
+    "version": "4.11.1",
+    "description": "Rallly is an open-source scheduling and collaboration tool for organizing events and meetings.",
+    "logo": "rallly.svg",
+    "links": {
+      "website": "https://rallly.co/",
+      "docs": "https://support.rallly.co/self-hosting/introduction",
+      "github": "https://github.com/lukevella/rallly"
+    },
+    "tags": [
+      "scheduling",
+      "polls",
+      "collaboration"
     ]
   },
   {
@@ -5583,6 +6297,45 @@
     ]
   },
   {
+    "id": "rustrak",
+    "name": "Rustrak",
+    "version": "0.2.1",
+    "description": "Self-hosted error tracking compatible with Sentry SDKs. Server only, written in Rust with <100MB memory footprint and SQLite storage. No external database required.",
+    "logo": "rustrak.svg",
+    "links": {
+      "github": "https://github.com/AbianS/rustrak",
+      "website": "https://abians.github.io/rustrak/",
+      "docs": "https://abians.github.io/rustrak/"
+    },
+    "tags": [
+      "monitoring",
+      "error-tracking",
+      "sentry",
+      "rust",
+      "observability"
+    ]
+  },
+  {
+    "id": "rustrak-full",
+    "name": "Rustrak (Full Stack)",
+    "version": "0.2.1",
+    "description": "Self-hosted error tracking compatible with Sentry SDKs. Includes server, web dashboard UI, and PostgreSQL. Written in Rust with <100MB memory footprint.",
+    "logo": "rustrak.svg",
+    "links": {
+      "github": "https://github.com/AbianS/rustrak",
+      "website": "https://abians.github.io/rustrak/",
+      "docs": "https://abians.github.io/rustrak/"
+    },
+    "tags": [
+      "monitoring",
+      "error-tracking",
+      "sentry",
+      "rust",
+      "observability",
+      "postgresql"
+    ]
+  },
+  {
     "id": "rutorrent",
     "name": "ruTorrent",
     "version": "latest",
@@ -5684,6 +6437,23 @@
     ]
   },
   {
+    "id": "seanime",
+    "name": "Seanime",
+    "version": "3.6.1-rootless",
+    "description": "A self-hosted anime streaming platform.",
+    "logo": "seanime.png",
+    "links": {
+      "github": "https://github.com/5rahim/seanime",
+      "website": "https://seanime.app/",
+      "docs": "https://seanime.app/docs"
+    },
+    "tags": [
+      "media",
+      "anime",
+      "streaming"
+    ]
+  },
+  {
     "id": "searxng",
     "name": "SearXNG",
     "version": "latest",
@@ -5719,6 +6489,58 @@
       "distributed",
       "object-storage",
       "file-system"
+    ]
+  },
+  {
+    "id": "senddock",
+    "name": "SendDock",
+    "version": "0.6.5.1",
+    "description": "Open-source, self-hosted email marketing platform with BYO SMTP. Manage subscribers, templates, broadcasts, and scheduled campaigns from one place.",
+    "logo": "senddock.svg",
+    "links": {
+      "github": "https://github.com/Arkhe-Systems/senddock",
+      "website": "https://senddock.dev",
+      "docs": "https://docs.senddock.dev"
+    },
+    "tags": [
+      "email",
+      "newsletter",
+      "mailing-list",
+      "marketing"
+    ]
+  },
+  {
+    "id": "seq",
+    "name": "Seq",
+    "version": "2025.2",
+    "description": "Seq is a self-hosted search, analysis, and alerting server for structured application logs and events.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/datalust/seq-tickets",
+      "website": "https://datalust.co/seq",
+      "docs": "https://datalust.co/docs"
+    },
+    "tags": [
+      "logging",
+      "observability",
+      "monitoring"
+    ]
+  },
+  {
+    "id": "sftpgo",
+    "name": "SFTPGo",
+    "version": "2.7.3",
+    "description": "SFTPGo is a full-featured and highly configurable SFTP, HTTP/S, FTP/S, and WebDAV server.",
+    "logo": "sftpgo.svg",
+    "links": {
+      "github": "https://github.com/drakkan/sftpgo",
+      "website": "https://sftpgo.com/",
+      "docs": "https://docs.sftpgo.com/"
+    },
+    "tags": [
+      "sftp",
+      "files",
+      "webdav"
     ]
   },
   {
@@ -5813,6 +6635,42 @@
     ]
   },
   {
+    "id": "snipe-it",
+    "name": "Snipe-IT",
+    "version": "v8.5.0",
+    "description": "Snipe-IT is an open-source asset management system for tracking hardware, software licenses, accessories, and consumables.",
+    "logo": "snipe-it.png",
+    "links": {
+      "github": "https://github.com/grokability/snipe-it",
+      "website": "https://snipeitapp.com/",
+      "docs": "https://snipe-it.readme.io/docs"
+    },
+    "tags": [
+      "asset-management",
+      "inventory",
+      "business",
+      "self-hosted"
+    ]
+  },
+  {
+    "id": "soft-serve",
+    "name": "Soft Serve",
+    "version": "v0.11.6",
+    "description": "Soft Serve is a self-hosted Git server with an SSH TUI, HTTP Git access, Git LFS support, and simple repository management.",
+    "logo": "soft-serve.svg",
+    "links": {
+      "github": "https://github.com/charmbracelet/soft-serve",
+      "website": "https://charm.sh/",
+      "docs": "https://github.com/charmbracelet/soft-serve/blob/main/README.md"
+    },
+    "tags": [
+      "git",
+      "ssh",
+      "developer-tools",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "soketi",
     "name": "Soketi",
     "version": "v1.6.1-16",
@@ -5842,6 +6700,40 @@
       "file-manager",
       "vdfs",
       "storage"
+    ]
+  },
+  {
+    "id": "speedtest-tracker",
+    "name": "Speedtest Tracker",
+    "version": "latest",
+    "description": "Speedtest Tracker runs scheduled internet speed tests and stores the results in a self-hosted dashboard.",
+    "logo": "speedtest-tracker.svg",
+    "links": {
+      "github": "https://github.com/alexjustesen/speedtest-tracker",
+      "website": "https://docs.speedtest-tracker.dev/",
+      "docs": "https://docs.speedtest-tracker.dev/"
+    },
+    "tags": [
+      "monitoring",
+      "network",
+      "speedtest"
+    ]
+  },
+  {
+    "id": "spliit",
+    "name": "Spliit",
+    "version": "latest",
+    "description": "Spliit is a lightweight, self-hosted alternative to Auth0 and Clerk. Open-source, cost-effective, and developer-friendly, it provides secure authentication (OAuth, email/password, social logins) with full control over your data. No per-user fees, easy to integrate, and perfect for startups or privacy-focused projects.",
+    "logo": "spliit.png",
+    "links": {
+      "github": "https://github.com/spliit-app/spliit",
+      "website": "https://spliit.app/",
+      "docs": "https://github.com/spliit-app"
+    },
+    "tags": [
+      "budgeting",
+      "finance",
+      "money"
     ]
   },
   {
@@ -5971,24 +6863,6 @@
     ]
   },
   {
-    "id": "strapi",
-    "name": "Strapi",
-    "version": "v5.33.0",
-    "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
-    "logo": "strapi.svg",
-    "links": {
-      "github": "https://github.com/strapi/strapi",
-      "discord": "https://discord.com/invite/strapi",
-      "docs": "https://docs.strapi.io",
-      "website": "https://strapi.io"
-    },
-    "tags": [
-      "headless",
-      "cms",
-      "content-management"
-    ]
-  },
-  {
     "id": "supabase",
     "name": "SupaBase",
     "version": "1.25.04 / dokploy >= 0.22.5",
@@ -6029,7 +6903,7 @@
     "id": "surrealdb",
     "name": "SurrealDB",
     "version": "2.3.10",
-    "description": "SurrealDB is a native, open-source, multi-model database that lets you store and manage data across relational, document, graph, time-series, vector & search, and geospatial models—all in one place.",
+    "description": "SurrealDB is a native, open-source, multi-model database that lets you store and manage data across relational, document, graph, time-series, vector & search, and geospatial modelsâ€”all in one place.",
     "logo": "surrealdb.svg",
     "links": {
       "github": "https://github.com/surrealdb/surrealdb",
@@ -6057,6 +6931,24 @@
       "file-sync",
       "synchronization",
       "backup"
+    ]
+  },
+  {
+    "id": "taiga",
+    "name": "Taiga",
+    "version": "latest",
+    "description": "Taiga is a free and open-source project management platform for agile developers, designers and project managers.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/taigaio/taiga-docker",
+      "website": "https://taiga.io/",
+      "docs": "https://docs.taiga.io/"
+    },
+    "tags": [
+      "project-management",
+      "agile",
+      "scrum",
+      "kanban"
     ]
   },
   {
@@ -6093,6 +6985,26 @@
     ]
   },
   {
+    "id": "tela",
+    "name": "tela",
+    "version": "0.7.0",
+    "description": "Self-hostable, markdown-native team wiki with live collaboration, full-text and semantic search, WebDAV sync, public spaces, Slidev decks, PDF export, and a built-in MCP server so AI agents are first-class editors.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/zcag/tela",
+      "website": "https://telawiki.com",
+      "docs": "https://telawiki.com/public/spaces/16"
+    },
+    "tags": [
+      "wiki",
+      "documentation",
+      "knowledge-base",
+      "markdown",
+      "collaboration",
+      "ai"
+    ]
+  },
+  {
     "id": "tianji",
     "name": "Tianji",
     "version": "latest",
@@ -6108,6 +7020,25 @@
       "monitoring",
       "web",
       "uptime"
+    ]
+  },
+  {
+    "id": "timescaledb",
+    "name": "TimescaleDB",
+    "version": "2.26.4-pg17",
+    "description": "TimescaleDB is an open-source time-series database packaged as a PostgreSQL extension, optimized for fast ingest and real-time analytics with standard SQL.",
+    "logo": "timescaledb.svg",
+    "links": {
+      "github": "https://github.com/timescale/timescaledb",
+      "website": "https://www.tigerdata.com/",
+      "docs": "https://docs.timescale.com/"
+    },
+    "tags": [
+      "database",
+      "postgresql",
+      "time-series",
+      "analytics",
+      "sql"
     ]
   },
   {
@@ -6231,15 +7162,15 @@
     ]
   },
   {
-    "id": "trmnl-byos-laravel",
-    "name": "TRMNL BYOS Laravel",
-    "version": "0.27.0",
-    "description": "TRMNL BYOS Laravel is a self-hosted application to manage TRMNL e-ink devices.",
-    "logo": "byos-laravel.svg",
+    "id": "trmnl-larapaper",
+    "name": "TRMNL LaraPaper",
+    "version": "0.32.1",
+    "description": "LaraPaper is a self-hosted application (BYOS) to manage TRMNL e-ink devices.",
+    "logo": "larapaper.svg",
     "links": {
-      "github": "https://github.com/usetrmnl/byos_laravel",
+      "github": "https://github.com/usetrmnl/larapaper",
       "website": "https://docs.usetrmnl.com/go/diy/byos",
-      "docs": "https://github.com/usetrmnl/byos_laravel/blob/main/README.md"
+      "docs": "https://github.com/usetrmnl/larapaper/blob/main/README.md"
     },
     "tags": [
       "e-ink"
@@ -6301,7 +7232,7 @@
     "id": "typecho",
     "name": "Typecho",
     "version": "stable",
-    "description": "Typecho 是一个轻量级的开源博客程序，基于 PHP 开发，支持多种数据库，简洁而强大。",
+    "description": "Typecho æ˜¯ä¸€ä¸ªè½»é‡çº§çš„å¼€æºåšå®¢ç¨‹åºï¼ŒåŸºäºŽ PHP å¼€å‘ï¼Œæ”¯æŒå¤šç§æ•°æ®åº“ï¼Œç®€æ´è€Œå¼ºå¤§ã€‚",
     "logo": "typecho.png",
     "links": {
       "github": "https://github.com/typecho/typecho",
@@ -6468,7 +7399,7 @@
   {
     "id": "vaultwarden",
     "name": "Vaultwarden",
-    "version": "1.34.3",
+    "version": "1.36.0",
     "description": "Unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs",
     "logo": "vaultwarden.svg",
     "links": {
@@ -6636,6 +7567,24 @@
       "self-hosted",
       "open-source",
       "os"
+    ]
+  },
+  {
+    "id": "windshift",
+    "name": "Windshift",
+    "version": "v0.5.0",
+    "description": "Self-hosted work management platform with projects, tasks, sprints, and team collaboration.",
+    "logo": "windshift.png",
+    "links": {
+      "github": "https://github.com/Windshiftapp/core",
+      "website": "https://windshift.sh/",
+      "docs": "https://windshift.sh/docs"
+    },
+    "tags": [
+      "project-management",
+      "collaboration",
+      "productivity",
+      "self-hosted"
     ]
   },
   {

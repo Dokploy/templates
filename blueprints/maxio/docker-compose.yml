@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  maxio:
+    image: ghcr.io/coollabsio/maxio:0.2.1
+    expose:
+      - 9000
+    volumes:
+      - maxio-data:/data
+    environment:
+      - MAXIO_ACCESS_KEY=${MAXIO_ACCESS_KEY}
+      - MAXIO_SECRET_KEY=${MAXIO_SECRET_KEY}
+    restart: unless-stopped
+volumes:
+  maxio-data:

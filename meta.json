@@ -6702,15 +6702,15 @@
     ]
   },
   {
-    "id": "trmnl-byos-laravel",
-    "name": "TRMNL BYOS Laravel",
-    "version": "0.27.0",
-    "description": "TRMNL BYOS Laravel is a self-hosted application to manage TRMNL e-ink devices.",
-    "logo": "byos-laravel.svg",
+    "id": "trmnl-larapaper",
+    "name": "TRMNL LaraPaper",
+    "version": "0.32.1",
+    "description": "LaraPaper is a self-hosted application (BYOS) to manage TRMNL e-ink devices.",
+    "logo": "larapaper.svg",
     "links": {
-      "github": "https://github.com/usetrmnl/byos_laravel",
+      "github": "https://github.com/usetrmnl/larapaper",
       "website": "https://docs.usetrmnl.com/go/diy/byos",
-      "docs": "https://github.com/usetrmnl/byos_laravel/blob/main/README.md"
+      "docs": "https://github.com/usetrmnl/larapaper/blob/main/README.md"
     },
     "tags": [
       "e-ink"

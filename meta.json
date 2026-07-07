@@ -5586,6 +5586,23 @@
     "dokploy_version": "<0.22.5"
   },
   {
+    "id": "privatebin",
+    "name": "PrivateBin",
+    "version": "2.0.4",
+    "description": "PrivateBin is a minimalist, open-source online pastebin where the server has zero knowledge of pasted data.",
+    "logo": "privatebin.svg",
+    "links": {
+      "github": "https://github.com/PrivateBin/PrivateBin",
+      "website": "https://privatebin.info/",
+      "docs": "https://github.com/PrivateBin/docker-nginx-fpm-alpine"
+    },
+    "tags": [
+      "pastebin",
+      "privacy",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "prometheus",
     "name": "Prometheus",
     "version": "latest",

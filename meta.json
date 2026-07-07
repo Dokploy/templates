@@ -5220,6 +5220,25 @@
     ]
   },
   {
+    "id": "opensourcepos",
+    "name": "OpenSourcePOS",
+    "version": "master",
+    "description": "OpenSourcePOS is a web-based point of sale system for managing sales, inventory, customers, and reports.",
+    "logo": "opensourcepos.svg",
+    "links": {
+      "github": "https://github.com/opensourcepos/opensourcepos",
+      "website": "https://opensourcepos.org/",
+      "docs": "https://github.com/opensourcepos/opensourcepos/blob/master/README.md"
+    },
+    "tags": [
+      "pos",
+      "retail",
+      "inventory",
+      "sales",
+      "business"
+    ]
+  },
+  {
     "id": "openspeedtest",
     "name": "OpenSpeedTest",
     "version": "latest",

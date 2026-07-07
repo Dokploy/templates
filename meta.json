@@ -4346,6 +4346,23 @@
     ]
   },
   {
+    "id": "miniflux",
+    "name": "Miniflux",
+    "version": "2.2.19",
+    "description": "Miniflux is a minimalist and opinionated feed reader for self-hosted RSS and Atom subscriptions.",
+    "logo": "miniflux.svg",
+    "links": {
+      "github": "https://github.com/miniflux/v2",
+      "website": "https://miniflux.app/",
+      "docs": "https://miniflux.app/docs/"
+    },
+    "tags": [
+      "rss",
+      "feed-reader",
+      "news"
+    ]
+  },
+  {
     "id": "minio",
     "name": "Minio",
     "description": "Minio is an open source object storage server compatible with Amazon S3 cloud storage service.",

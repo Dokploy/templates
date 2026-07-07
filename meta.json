@@ -399,7 +399,7 @@
   {
     "id": "appwrite",
     "name": "Appwrite",
-    "version": "1.8.0",
+    "version": "1.9.5",
     "description": "Appwrite is an end-to-end platform for building Web, Mobile, Native, or Backend apps, packaged as a set of Docker microservices. It includes both a backend server and a fully integrated hosting solution for deploying static and server-side rendered frontends. Appwrite abstracts the complexity and repetitiveness required to build modern apps from scratch and allows you to build secure, full-stack applications faster.\nUsing Appwrite, you can easily integrate your app with user authentication and multiple sign-in methods, a database for storing and querying users and team data, storage and file management, image manipulation, Cloud Functions, messaging, and more services.",
     "links": {
       "github": "https://github.com/appwrite/appwrite",
@@ -411,6 +411,7 @@
       "database",
       "firebase",
       "mariadb",
+      "mongodb",
       "hosting",
       "self-hosted"
     ]
@@ -446,6 +447,23 @@
       "database",
       "graph-database",
       "nosql"
+    ]
+  },
+  {
+    "id": "arche",
+    "name": "Arche",
+    "version": "latest",
+    "description": "Arche is a self-hosted AI workspace platform that spawns per-user OpenCode coding containers backed by a shared Knowledge Base. Requires the `arche-internal` external Docker network and `/opt/arche/{kb-content,kb-config,users}` directories on the host before deploy. Images are linux/amd64 by default; override `ARCHE_WEB_IMAGE` and `ARCHE_WORKSPACE_IMAGE` to the `-arm64` tag variants for ARM64 hosts.",
+    "logo": "arche.svg",
+    "links": {
+      "github": "https://github.com/peaberry-studio/arche"
+    },
+    "tags": [
+      "ai",
+      "coding",
+      "workspace",
+      "self-hosted",
+      "llm"
     ]
   },
   {
@@ -561,8 +579,8 @@
   {
     "id": "autobase",
     "name": "Autobase",
-    "version": "2.5.2",
-    "description": "Autobase for PostgreSQLÂ® is an open-source alternative to cloud-managed databases (self-hosted DBaaS).",
+    "version": "2.7.2",
+    "description": "Autobase for PostgreSQL® is an open-source alternative to cloud-managed databases (self-hosted DBaaS).",
     "links": {
       "github": "https://github.com/vitabaks/autobase",
       "website": "https://autobase.tech/",
@@ -1870,7 +1888,7 @@
   {
     "id": "discourse",
     "name": "Discourse",
-    "version": "3.5.0",
+    "version": "2026.1.4",
     "description": "Discourse is a modern forum software for your community. Use it as a mailing list, discussion forum, or long-form chat room.",
     "logo": "discourse.svg",
     "links": {
@@ -3106,6 +3124,25 @@
     ]
   },
   {
+    "id": "hedgedoc",
+    "name": "HedgeDoc",
+    "version": "1.10.8",
+    "description": "HedgeDoc is a collaborative Markdown editor for teams that need real-time notes, documentation, and knowledge sharing.",
+    "logo": "hedgedoc.svg",
+    "links": {
+      "github": "https://github.com/hedgedoc/hedgedoc",
+      "website": "https://hedgedoc.org/",
+      "docs": "https://docs.hedgedoc.org/"
+    },
+    "tags": [
+      "markdown",
+      "notes",
+      "documentation",
+      "collaboration",
+      "wiki"
+    ]
+  },
+  {
     "id": "hermes",
     "name": "Hermes",
     "version": "v2026.6.19",
@@ -3589,6 +3626,24 @@
     ]
   },
   {
+    "id": "joomla",
+    "name": "Joomla",
+    "version": "6.1.0-apache",
+    "description": "Joomla is a flexible open-source content management system for building websites, portals, and online applications.",
+    "logo": "joomla.svg",
+    "links": {
+      "github": "https://github.com/joomla/joomla-cms",
+      "website": "https://www.joomla.org/",
+      "docs": "https://manual.joomla.org/"
+    },
+    "tags": [
+      "cms",
+      "website",
+      "php",
+      "mariadb"
+    ]
+  },
+  {
     "id": "joplin-server",
     "name": "Joplin Server",
     "version": "3.7.1",
@@ -3863,6 +3918,22 @@
       "MIT-license",
       "BYOK",
       "generative-ai"
+    ]
+  },
+  {
+    "id": "libredb-studio",
+    "name": "LibreDB Studio",
+    "version": "0.9.27",
+    "description": "The modern, AI-powered open-source SQL IDE. Query PostgreSQL, MySQL, Oracle, SQL Server, SQLite, MongoDB and Redis from your browser.",
+    "logo": "libredb-studio.svg",
+    "links": {
+      "github": "https://github.com/libredb/libredb-studio",
+      "website": "https://libredb.org/",
+      "docs": "https://libredb.org/"
+    },
+    "tags": [
+      "database",
+      "sql"
     ]
   },
   {
@@ -4172,6 +4243,25 @@
     "tags": [
       "email",
       "smtp"
+    ]
+  },
+  {
+    "id": "marketing-dashboard",
+    "name": "Marketing Dashboard",
+    "version": "latest",
+    "description": "Self-hosted marketing operations dashboard for product-led growth, checkout analytics, paid media, SEO signals, and Stripe readiness.",
+    "logo": "logo.svg",
+    "links": {
+      "github": "https://github.com/abel-yelin/marketing-dashboard",
+      "website": "https://github.com/abel-yelin/marketing-dashboard",
+      "docs": "https://github.com/abel-yelin/marketing-dashboard/blob/main/docs/production-deployment.md"
+    },
+    "tags": [
+      "analytics",
+      "marketing",
+      "self-hosted",
+      "postgresql",
+      "nextjs"
     ]
   },
   {
@@ -4894,6 +4984,26 @@
       "utilities",
       "collection",
       "self-hosted"
+    ]
+  },
+  {
+    "id": "omniroute",
+    "name": "OmniRoute",
+    "version": "3.8.17",
+    "description": "The Free AI Gateway - Never stop coding. Connect every AI tool to 177 providers — 50+ free — through one endpoint.  Auto-fallback. RTK + Caveman compression saves 15–95% tokens. Never hit limits. ~1.9B+ documented free tokens/month — up to ~2.5B in your first month with signup credits.",
+    "logo": "omniroute.png",
+    "links": {
+      "github": "https://github.com/diegosouzapw/OmniRoute",
+      "website": "https://github.com/diegosouzapw/OmniRoute",
+      "docs": "https://github.com/diegosouzapw/OmniRoute/wiki"
+    },
+    "tags": [
+      "artificial-intelligence",
+      "gateway",
+      "generative-ai",
+      "llm",
+      "monitoring",
+      "routing"
     ]
   },
   {
@@ -5655,6 +5765,23 @@
     "dokploy_version": "<0.22.5"
   },
   {
+    "id": "prefect",
+    "name": "Prefect",
+    "version": "3.7.5-python3.12",
+    "description": "Prefect is an open-source workflow orchestration platform for building, scheduling, monitoring, and managing data pipelines and Python workflows.",
+    "logo": "prefect.svg",
+    "links": {
+      "github": "https://github.com/PrefectHQ/prefect",
+      "website": "https://www.prefect.io/",
+      "docs": "https://docs.prefect.io/"
+    },
+    "tags": [
+      "automation",
+      "workflow",
+      "data"
+    ]
+  },
+  {
     "id": "privatebin",
     "name": "PrivateBin",
     "version": "2.0.4",
@@ -6020,6 +6147,45 @@
     ]
   },
   {
+    "id": "rustrak",
+    "name": "Rustrak",
+    "version": "0.2.1",
+    "description": "Self-hosted error tracking compatible with Sentry SDKs. Server only, written in Rust with <100MB memory footprint and SQLite storage. No external database required.",
+    "logo": "rustrak.svg",
+    "links": {
+      "github": "https://github.com/AbianS/rustrak",
+      "website": "https://abians.github.io/rustrak/",
+      "docs": "https://abians.github.io/rustrak/"
+    },
+    "tags": [
+      "monitoring",
+      "error-tracking",
+      "sentry",
+      "rust",
+      "observability"
+    ]
+  },
+  {
+    "id": "rustrak-full",
+    "name": "Rustrak (Full Stack)",
+    "version": "0.2.1",
+    "description": "Self-hosted error tracking compatible with Sentry SDKs. Includes server, web dashboard UI, and PostgreSQL. Written in Rust with <100MB memory footprint.",
+    "logo": "rustrak.svg",
+    "links": {
+      "github": "https://github.com/AbianS/rustrak",
+      "website": "https://abians.github.io/rustrak/",
+      "docs": "https://abians.github.io/rustrak/"
+    },
+    "tags": [
+      "monitoring",
+      "error-tracking",
+      "sentry",
+      "rust",
+      "observability",
+      "postgresql"
+    ]
+  },
+  {
     "id": "rutorrent",
     "name": "ruTorrent",
     "version": "latest",
@@ -6176,6 +6342,24 @@
     ]
   },
   {
+    "id": "senddock",
+    "name": "SendDock",
+    "version": "0.6.5.1",
+    "description": "Open-source, self-hosted email marketing platform with BYO SMTP. Manage subscribers, templates, broadcasts, and scheduled campaigns from one place.",
+    "logo": "senddock.svg",
+    "links": {
+      "github": "https://github.com/Arkhe-Systems/senddock",
+      "website": "https://senddock.dev",
+      "docs": "https://docs.senddock.dev"
+    },
+    "tags": [
+      "email",
+      "newsletter",
+      "mailing-list",
+      "marketing"
+    ]
+  },
+  {
     "id": "seq",
     "name": "Seq",
     "version": "2025.2",
@@ -6319,6 +6503,24 @@
     ]
   },
   {
+    "id": "soft-serve",
+    "name": "Soft Serve",
+    "version": "v0.11.6",
+    "description": "Soft Serve is a self-hosted Git server with an SSH TUI, HTTP Git access, Git LFS support, and simple repository management.",
+    "logo": "soft-serve.svg",
+    "links": {
+      "github": "https://github.com/charmbracelet/soft-serve",
+      "website": "https://charm.sh/",
+      "docs": "https://github.com/charmbracelet/soft-serve/blob/main/README.md"
+    },
+    "tags": [
+      "git",
+      "ssh",
+      "developer-tools",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "soketi",
     "name": "Soketi",
     "version": "v1.6.1-16",
@@ -6348,6 +6550,23 @@
       "file-manager",
       "vdfs",
       "storage"
+    ]
+  },
+  {
+    "id": "speedtest-tracker",
+    "name": "Speedtest Tracker",
+    "version": "latest",
+    "description": "Speedtest Tracker runs scheduled internet speed tests and stores the results in a self-hosted dashboard.",
+    "logo": "speedtest-tracker.svg",
+    "links": {
+      "github": "https://github.com/alexjustesen/speedtest-tracker",
+      "website": "https://docs.speedtest-tracker.dev/",
+      "docs": "https://docs.speedtest-tracker.dev/"
+    },
+    "tags": [
+      "monitoring",
+      "network",
+      "speedtest"
     ]
   },
   {
@@ -6565,6 +6784,24 @@
     ]
   },
   {
+    "id": "taiga",
+    "name": "Taiga",
+    "version": "latest",
+    "description": "Taiga is a free and open-source project management platform for agile developers, designers and project managers.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/taigaio/taiga-docker",
+      "website": "https://taiga.io/",
+      "docs": "https://docs.taiga.io/"
+    },
+    "tags": [
+      "project-management",
+      "agile",
+      "scrum",
+      "kanban"
+    ]
+  },
+  {
     "id": "tailscale-exitnode",
     "name": "Tailscale Exit nodes",
     "version": "1.0.0",
@@ -6598,6 +6835,26 @@
     ]
   },
   {
+    "id": "tela",
+    "name": "tela",
+    "version": "0.7.0",
+    "description": "Self-hostable, markdown-native team wiki with live collaboration, full-text and semantic search, WebDAV sync, public spaces, Slidev decks, PDF export, and a built-in MCP server so AI agents are first-class editors.",
+    "logo": "logo.png",
+    "links": {
+      "github": "https://github.com/zcag/tela",
+      "website": "https://telawiki.com",
+      "docs": "https://telawiki.com/public/spaces/16"
+    },
+    "tags": [
+      "wiki",
+      "documentation",
+      "knowledge-base",
+      "markdown",
+      "collaboration",
+      "ai"
+    ]
+  },
+  {
     "id": "tianji",
     "name": "Tianji",
     "version": "latest",
@@ -6613,6 +6870,25 @@
       "monitoring",
       "web",
       "uptime"
+    ]
+  },
+  {
+    "id": "timescaledb",
+    "name": "TimescaleDB",
+    "version": "2.26.4-pg17",
+    "description": "TimescaleDB is an open-source time-series database packaged as a PostgreSQL extension, optimized for fast ingest and real-time analytics with standard SQL.",
+    "logo": "timescaledb.svg",
+    "links": {
+      "github": "https://github.com/timescale/timescaledb",
+      "website": "https://www.tigerdata.com/",
+      "docs": "https://docs.timescale.com/"
+    },
+    "tags": [
+      "database",
+      "postgresql",
+      "time-series",
+      "analytics",
+      "sql"
     ]
   },
   {

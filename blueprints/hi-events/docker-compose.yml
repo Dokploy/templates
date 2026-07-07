@@ -1,6 +1,6 @@
 services:
   all-in-one:
-    image: daveearley/hi.events-all-in-one:v0.8.0-beta.1
+    image: daveearley/hi.events-all-in-one:v1.9.0-beta
     restart: always
     environment:
       - VITE_FRONTEND_URL=https://${DOMAIN}
@@ -20,6 +20,8 @@ services:
       - MAIL_MAILER
       - MAIL_HOST
       - MAIL_PORT
+      - MAIL_USERNAME
+      - MAIL_PASSWORD
       - MAIL_FROM_ADDRESS
       - MAIL_FROM_NAME
     depends_on:

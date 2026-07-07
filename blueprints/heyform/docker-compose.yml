@@ -7,14 +7,14 @@ services:
       - heyform-data:/app/static/upload
     depends_on:
       - mongo
-      - redis
+      - keydb
     ports:
       - 8000
     env_file:
       - .env
     environment:
       MONGO_URI: 'mongodb://mongo:27017/heyform'
-      REDIS_HOST: redis
+      REDIS_HOST: keydb
       REDIS_PORT: 6379
       SMTP_FROM: ${SMTP_FROM}
       SMTP_HOST: ${SMTP_HOST}
@@ -31,15 +31,15 @@ services:
       # Persist MongoDB data
       - mongo-data:/data/db
 
-  redis:
-    image: redis
+  keydb:
+    image: eqalpha/keydb:6.3.3
     restart: always
-    command: "redis-server --appendonly yes"
+    command: keydb-server --appendonly yes --protected-mode no
     volumes:
       # Persist KeyDB data
-      - redis-data:/data
+      - keydb-data:/data
 
 volumes:
   heyform-data:
   mongo-data:
-  redis-data:
+  keydb-data:

@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+admin_username = "admin"
+admin_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "miniflux"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+MINIFLUX_DOMAIN = "${main_domain}"
+POSTGRES_PASSWORD = "${postgres_password}"
+ADMIN_USERNAME = "${admin_username}"
+ADMIN_PASSWORD = "${admin_password}"

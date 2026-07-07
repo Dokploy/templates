@@ -123,6 +123,23 @@
     ]
   },
   {
+    "id": "agent-zero",
+    "name": "Agent Zero",
+    "version": "v1.9",
+    "description": "Agent Zero is an open-source autonomous AI agent framework with memory and tool use capabilities.",
+    "logo": "agent-zero.svg",
+    "links": {
+      "github": "https://github.com/agent0ai/agent-zero",
+      "website": "https://www.agent-zero.ai",
+      "docs": "https://www.agent-zero.ai/p/docs/"
+    },
+    "tags": [
+      "ai",
+      "agent",
+      "automation"
+    ]
+  },
+  {
     "id": "agentdvr",
     "name": "Agent DVR",
     "version": "latest",

@@ -4,9 +4,11 @@ services:
   filerun:
     image: filerun/filerun:latest
     restart: unless-stopped
-    user: "1001:1001"
+    user: "99:100"
     depends_on:
       - db
+    links:
+      - db:db
     environment:
       FR_DB_HOST: db
       FR_DB_PORT: 3306
@@ -20,6 +22,7 @@ services:
   db:
     image: mariadb:12.2
     restart: unless-stopped
+    command: --old-mode=NO_PROGRESS_INFO
     environment:
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
       MYSQL_USER: ${MYSQL_USER}

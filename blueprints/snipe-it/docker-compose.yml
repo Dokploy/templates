@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+  snipe-it:
+    image: snipe/snipe-it:v8.5.0
+    restart: unless-stopped
+    expose:
+      - 80
+    volumes:
+      - snipe-it-storage:/var/lib/snipeit
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_KEY=${APP_KEY}
+      - APP_URL=${APP_URL}
+      - APP_TIMEZONE=${APP_TIMEZONE}
+      - APP_LOCALE=${APP_LOCALE}
+      - APP_TRUSTED_PROXIES=${APP_TRUSTED_PROXIES}
+      - APP_FORCE_TLS=${APP_FORCE_TLS}
+      - SECURE_COOKIES=${SECURE_COOKIES}
+      - PRIVATE_FILESYSTEM_DISK=local
+      - PUBLIC_FILESYSTEM_DISK=local_public
+      - DB_CONNECTION=mysql
+      - DB_HOST=snipe-it-db
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PREFIX=null
+      - DB_DUMP_PATH=/usr/bin
+      - DB_DUMP_SKIP_SSL=true
+      - DB_CHARSET=utf8mb4
+      - DB_COLLATION=utf8mb4_unicode_ci
+      - MAIL_MAILER=log
+      - MAIL_FROM_ADDR=${MAIL_FROM_ADDR}
+      - MAIL_FROM_NAME=Snipe-IT
+      - MAIL_REPLYTO_ADDR=${MAIL_FROM_ADDR}
+      - MAIL_REPLYTO_NAME=Snipe-IT
+      - ALLOW_BACKUP_DELETE=false
+      - ALLOW_DATA_PURGE=false
+      - IMAGE_LIB=gd
+      - LOG_CHANNEL=stderr
+      - CACHE_DRIVER=file
+      - SESSION_DRIVER=file
+      - QUEUE_DRIVER=sync
+    depends_on:
+      snipe-it-db:
+        condition: service_healthy
+
+  snipe-it-db:
+    image: mariadb:11.4.7
+    restart: unless-stopped
+    volumes:
+      - snipe-it-db-data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 2s
+      retries: 10
+
+volumes:
+  snipe-it-storage:
+  snipe-it-db-data:

@@ -6109,6 +6109,24 @@
     ]
   },
   {
+    "id": "snipe-it",
+    "name": "Snipe-IT",
+    "version": "v8.5.0",
+    "description": "Snipe-IT is an open-source asset management system for tracking hardware, software licenses, accessories, and consumables.",
+    "logo": "snipe-it.png",
+    "links": {
+      "github": "https://github.com/grokability/snipe-it",
+      "website": "https://snipeitapp.com/",
+      "docs": "https://snipe-it.readme.io/docs"
+    },
+    "tags": [
+      "asset-management",
+      "inventory",
+      "business",
+      "self-hosted"
+    ]
+  },
+  {
     "id": "soketi",
     "name": "Soketi",
     "version": "v1.6.1-16",

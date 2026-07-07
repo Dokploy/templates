@@ -16,16 +16,22 @@ services:
     restart: unless-stopped
     depends_on:
       - db
+      - mailhog
     environment:
       BASE_URL: ${BASE_URL}
       DATABASE_URL: ${DATABASE_URL}
       JWT_SECRET: ${JWT_SECRET}
+      EMAIL: ${EMAIL}
       EMAIL_NOREPLY: ${EMAIL_NOREPLY}
       EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST}
       EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
       EMAIL_SMTP_USERNAME: ${EMAIL_SMTP_USERNAME}
       EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
       EMAIL_SMTP_ENABLE_STARTTLS: ${EMAIL_SMTP_ENABLE_STARTTLS}
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    restart: unless-stopped
 
 volumes:
   fiderPostgresData:

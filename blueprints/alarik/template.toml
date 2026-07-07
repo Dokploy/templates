@@ -1,0 +1,26 @@
+[variables]
+console_domain = "${domain}"
+api_domain = "${domain}"
+
+[config]
+mounts = []
+
+# S3-compatible API - point AWS CLI / SDKs / rclone / backup tools at this domain
+[[config.domains]]
+serviceName = "alarik"
+port = 8_080
+host = "${api_domain}"
+
+# Web management console - log in with the generated admin credentials below
+[[config.domains]]
+serviceName = "console"
+port = 3_000
+host = "${console_domain}"
+
+[config.env]
+API_BASE_URL = "http://${api_domain}"
+CONSOLE_BASE_URL = "http://${console_domain}"
+ADMIN_USERNAME = "alarik"
+ADMIN_PASSWORD = "${password:16}"
+JWT = "${base64:64}"
+ALLOW_ACCOUNT_CREATION = "false"

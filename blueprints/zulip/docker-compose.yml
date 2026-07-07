@@ -65,7 +65,7 @@ services:
       - zulipRedisData:/data
 
   zulip:
-    image: ghcr.io/zulip/zulip-server:12.0-1
+    image: ghcr.io/zulip/zulip-server:12.1-0
     restart: unless-stopped
     depends_on:
       - database
@@ -85,8 +85,8 @@ services:
       SETTING_MEMCACHED_LOCATION: memcached:11211
       SETTING_RABBITMQ_HOST: rabbitmq
       SETTING_REDIS_HOST: redis
-      DISABLE_HTTPS: "True"
-      SSL_CERTIFICATE_GENERATION: self-signed
+      CONFIG_application_server__http_only: "true"
+      TRUST_GATEWAY_IP: ${ZULIP_TRUST_GATEWAY_IP}
     volumes:
       - zulipData:/data
     ulimits:

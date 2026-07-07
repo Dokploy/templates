@@ -11,6 +11,7 @@ env = [
   "ZULIP_RABBITMQ_PASSWORD=${password:32}",
   "ZULIP_REDIS_PASSWORD=${password:32}",
   "ZULIP_SECRET_KEY=${password:64}",
+  "ZULIP_TRUST_GATEWAY_IP=True",
 ]
 mounts = []
 

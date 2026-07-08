@@ -4,12 +4,12 @@ services:
     image: 'lscr.io/linuxserver/duplicati:${APP_RELEASE:-2.3.0}'
     restart: unless-stopped
     environment:
-      - SERVICE_URL_DUPLICATI_8200
       - PUID=0
       - PGID=0
       - 'TZ=${TZ:-Europe/London}'
-      - 'SETTINGS_ENCRYPTION_KEY=${SERVICE_PASSWORD_ENCRYPT}'
-      - 'DUPLICATI__WEBSERVICE_PASSWORD=${SERVICE_PASSWORD_WEB}'
+      - 'SETTINGS_ENCRYPTION_KEY=${SETTINGS_ENCRYPTION_KEY}'
+      - 'DUPLICATI__WEBSERVICE_PASSWORD=${DUPLICATI__WEBSERVICE_PASSWORD}'
+      - 'DUPLICATI__WEBSERVICE_ALLOWED_HOSTNAMES=*'
     volumes:
       - 'duplicati-config:/config'
       - '../files/backups:/backups'

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">TimescaleDB</title>
+  <desc id="desc">A layered database mark with a time-series pulse.</desc>
+  <rect width="128" height="128" rx="24" fill="#0b1f3a"/>
+  <ellipse cx="64" cy="33" rx="38" ry="14" fill="#2bd4bd"/>
+  <path d="M26 33v46c0 8 17 15 38 15s38-7 38-15V33" fill="none" stroke="#2bd4bd" stroke-width="10"/>
+  <path d="M26 56c0 8 17 15 38 15s38-7 38-15" fill="none" stroke="#77e5d7" stroke-width="8"/>
+  <path d="M31 83c8 7 20 11 33 11 21 0 38-7 38-15" fill="none" stroke="#77e5d7" stroke-width="8" stroke-linecap="round"/>
+  <path d="M31 50h14l8-12 13 31 10-19h21" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -8,12 +8,34 @@ x-logging: &x-logging
       max-size: "10m"
 services:
   appwrite:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     <<: *x-logging
     restart: unless-stopped
     labels:
       - traefik.enable=true
       - traefik.constraint-label-stack=appwrite
+      - 'traefik.http.routers.appwrite-sites-wildcard.rule=HostRegexp(`^.+\.${_APP_DOMAIN_SITES}$$`)'
+      - traefik.http.routers.appwrite-sites-wildcard.entrypoints=web
+      - traefik.http.routers.appwrite-sites-wildcard.service=appwrite-wildcard
+      - 'traefik.http.routers.appwrite-sites-wildcard-secure.rule=HostRegexp(`^.+\.${_APP_DOMAIN_SITES}$$`)'
+      - traefik.http.routers.appwrite-sites-wildcard-secure.entrypoints=websecure
+      - traefik.http.routers.appwrite-sites-wildcard-secure.tls=true
+      - traefik.http.routers.appwrite-sites-wildcard-secure.service=appwrite-wildcard
+      - 'traefik.http.routers.appwrite-functions-wildcard.rule=HostRegexp(`^.+\.${_APP_DOMAIN_FUNCTIONS}$$`)'
+      - traefik.http.routers.appwrite-functions-wildcard.entrypoints=web
+      - traefik.http.routers.appwrite-functions-wildcard.service=appwrite-wildcard
+      - 'traefik.http.routers.appwrite-functions-wildcard-secure.rule=HostRegexp(`^.+\.${_APP_DOMAIN_FUNCTIONS}$$`)'
+      - traefik.http.routers.appwrite-functions-wildcard-secure.entrypoints=websecure
+      - traefik.http.routers.appwrite-functions-wildcard-secure.tls=true
+      - traefik.http.routers.appwrite-functions-wildcard-secure.service=appwrite-wildcard
+      - traefik.http.services.appwrite-wildcard.loadbalancer.server.port=80
+    healthcheck:
+      test:
+        - CMD
+        - doctor
+      interval: 5s
+      timeout: 5s
+      retries: 12
     volumes:
       - appwrite-uploads:/storage/uploads:rw
       - appwrite-imports:/storage/imports:rw
@@ -24,21 +46,25 @@ services:
       - appwrite-sites:/storage/sites:rw
       - appwrite-builds:/storage/builds:rw
     depends_on:
-      - mariadb
       - redis
-    #      - clamav
+      - ${_APP_DB_HOST:-mongodb}
     environment:
       - _APP_ENV
+      - _APP_EDITION
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_LOCALE
+      - _APP_COMPRESSION_ENABLED
       - _APP_COMPRESSION_MIN_SIZE_BYTES
       - _APP_CONSOLE_WHITELIST_ROOT
       - _APP_CONSOLE_WHITELIST_EMAILS
       - _APP_CONSOLE_SESSION_ALERTS
       - _APP_CONSOLE_WHITELIST_IPS
       - _APP_CONSOLE_HOSTNAMES
+      - _APP_CONSOLE_SCHEMA
       - _APP_SYSTEM_EMAIL_NAME
       - _APP_SYSTEM_EMAIL_ADDRESS
+      - _APP_SYSTEM_TEAM_EMAIL
       - _APP_EMAIL_SECURITY
       - _APP_SYSTEM_RESPONSE_FORMAT
       - _APP_OPTIONS_ABUSE
@@ -47,6 +73,8 @@ services:
       - _APP_OPTIONS_ROUTER_FORCE_HTTPS
       - _APP_OPENSSL_KEY_V1
       - _APP_DOMAIN
+      - _APP_CONSOLE_DOMAIN
+      - _APP_CONSOLE_TRUSTED_PROJECTS
       - _APP_DOMAIN_TARGET_CNAME
       - _APP_DOMAIN_TARGET_AAAA
       - _APP_DOMAIN_TARGET_A
@@ -57,11 +85,18 @@ services:
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
+      - _APP_DB_ADAPTER_VECTORSDB
+      - _APP_DB_HOST_VECTORSDB
+      - _APP_DB_PORT_VECTORSDB
+      - _APP_DB_SCHEMA_VECTORSDB
+      - _APP_DB_USER_VECTORSDB
+      - _APP_DB_PASS_VECTORSDB
       - _APP_SMTP_HOST
       - _APP_SMTP_PORT
       - _APP_SMTP_SECURE
@@ -108,8 +143,6 @@ services:
       - _APP_EXECUTOR_HOST
       - _APP_LOGGING_CONFIG
       - _APP_MAINTENANCE_INTERVAL
-      - _APP_MAINTENANCE_DELAY
-      - _APP_MAINTENANCE_START_TIME
       - _APP_MAINTENANCE_RETENTION_EXECUTION
       - _APP_MAINTENANCE_RETENTION_CACHE
       - _APP_MAINTENANCE_RETENTION_ABUSE
@@ -119,6 +152,7 @@ services:
       - _APP_MAINTENANCE_RETENTION_SCHEDULES
       - _APP_SMS_PROVIDER
       - _APP_SMS_FROM
+      - _APP_GRAPHQL_INTROSPECTION
       - _APP_GRAPHQL_MAX_BATCH_SIZE
       - _APP_GRAPHQL_MAX_COMPLEXITY
       - _APP_GRAPHQL_MAX_DEPTH
@@ -131,16 +165,26 @@ services:
       - _APP_MIGRATIONS_FIREBASE_CLIENT_ID
       - _APP_MIGRATIONS_FIREBASE_CLIENT_SECRET
       - _APP_ASSISTANT_OPENAI_API_KEY
+      - _APP_CONSOLE_COUNTRIES_DENYLIST
+      - _APP_EXPERIMENT_LOGGING_PROVIDER
+      - _APP_EXPERIMENT_LOGGING_CONFIG
+      - _APP_DATABASE_SHARED_TABLES
+      - _APP_DATABASE_SHARED_NAMESPACE
+      - _APP_FUNCTIONS_CREATION_ABUSE_LIMIT
+      - _APP_CUSTOM_DOMAIN_DENY_LIST
+      - _APP_TRUSTED_HEADERS
+      - _APP_MIGRATION_HOST
+
   appwrite-console:
     <<: *x-logging
-    image: appwrite/console:7.4.7
+    image: appwrite/console:8.7.5
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.constraint-label-stack=appwrite"
 
   appwrite-realtime:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: realtime
     <<: *x-logging
     restart: unless-stopped
@@ -148,7 +192,7 @@ services:
       - "traefik.enable=true"
       - "traefik.constraint-label-stack=appwrite"
     depends_on:
-      - mariadb
+      - ${_APP_DB_HOST:-mongodb}
       - redis
     environment:
       - _APP_ENV
@@ -160,51 +204,69 @@ services:
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
+      - _APP_DB_ADAPTER_VECTORSDB
+      - _APP_DB_HOST_VECTORSDB
+      - _APP_DB_PORT_VECTORSDB
+      - _APP_DB_SCHEMA_VECTORSDB
+      - _APP_DB_USER_VECTORSDB
+      - _APP_DB_PASS_VECTORSDB
       - _APP_USAGE_STATS
       - _APP_LOGGING_CONFIG
+      - _APP_LOGGING_CONFIG_REALTIME
+      - _APP_DATABASE_SHARED_TABLES
+      - _APP_POOL_ADAPTER=swoole
 
   appwrite-worker-audits:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: worker-audits
     <<: *x-logging
     restart: unless-stopped
     depends_on:
       - redis
-      - mariadb
+      - ${_APP_DB_HOST:-mongodb}
     environment:
       - _APP_ENV
+      - _APP_WORKERS_NUM=1
+      - _APP_WORKER_MAX_COROUTINES=1
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
       - _APP_REDIS_HOST
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
       - _APP_LOGGING_CONFIG
+      - _APP_DATABASE_SHARED_TABLES
 
   appwrite-worker-webhooks:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: worker-webhooks
     <<: *x-logging
     restart: unless-stopped
     depends_on:
       - redis
-      - mariadb
+      - ${_APP_DB_HOST:-mongodb}
     environment:
       - _APP_ENV
+      - _APP_WORKERS_NUM=1
+      - _APP_WORKER_MAX_COROUTINES=8
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
       - _APP_EMAIL_SECURITY
-      - _APP_SYSTEM_SECURITY_EMAIL_ADDRESS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
@@ -215,15 +277,17 @@ services:
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
       - _APP_LOGGING_CONFIG
+      - _APP_WEBHOOK_MAX_FAILED_ATTEMPTS
+      - _APP_DATABASE_SHARED_TABLES
 
   appwrite-worker-deletes:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: worker-deletes
     <<: *x-logging
     restart: unless-stopped
     depends_on:
       - redis
-      - mariadb
+      - ${_APP_DB_HOST:-mongodb}
     volumes:
       - appwrite-uploads:/storage/uploads:rw
       - appwrite-cache:/storage/cache:rw
@@ -233,12 +297,16 @@ services:
       - appwrite-certificates:/storage/certificates:rw
     environment:
       - _APP_ENV
+      - _APP_WORKERS_NUM=1
+      - _APP_WORKER_MAX_COROUTINES=8
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
       - _APP_REDIS_HOST
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
@@ -269,52 +337,64 @@ services:
       - _APP_LOGGING_CONFIG
       - _APP_EXECUTOR_SECRET
       - _APP_EXECUTOR_HOST
-      - _APP_MAINTENANCE_RETENTION_ABUSE
+      - _APP_DATABASE_SHARED_TABLES
+      - _APP_EMAIL_CERTIFICATES
       - _APP_MAINTENANCE_RETENTION_AUDIT
       - _APP_MAINTENANCE_RETENTION_AUDIT_CONSOLE
-      - _APP_MAINTENANCE_RETENTION_EXECUTION
-      - _APP_SYSTEM_SECURITY_EMAIL_ADDRESS
-      - _APP_EMAIL_CERTIFICATES
 
   appwrite-worker-databases:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: worker-databases
     <<: *x-logging
     restart: unless-stopped
     depends_on:
       - redis
-      - mariadb
+      - ${_APP_DB_HOST:-mongodb}
     environment:
       - _APP_ENV
+      - _APP_WORKERS_NUM=1
+      - _APP_WORKER_MAX_COROUTINES=1
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
       - _APP_REDIS_HOST
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
+      - _APP_DB_ADAPTER_VECTORSDB
+      - _APP_DB_HOST_VECTORSDB
+      - _APP_DB_PORT_VECTORSDB
+      - _APP_DB_SCHEMA_VECTORSDB
+      - _APP_DB_USER_VECTORSDB
+      - _APP_DB_PASS_VECTORSDB
       - _APP_LOGGING_CONFIG
+      - _APP_QUEUE_NAME
+      - _APP_DATABASE_SHARED_TABLES
 
   appwrite-worker-builds:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: worker-builds
     <<: *x-logging
     restart: unless-stopped
     depends_on:
       - redis
-      - mariadb
+      - ${_APP_DB_HOST:-mongodb}
     volumes:
       - appwrite-functions:/storage/functions:rw
       - appwrite-sites:/storage/sites:rw
       - appwrite-builds:/storage/builds:rw
-      - appwrite-uploads:/storage/uploads:rw
     environment:
       - _APP_ENV
+      - _APP_WORKERS_NUM=1
+      - _APP_WORKER_MAX_COROUTINES=8
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
       - _APP_EXECUTOR_SECRET
       - _APP_EXECUTOR_HOST
@@ -322,6 +402,7 @@ services:
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
@@ -336,10 +417,13 @@ services:
       - _APP_COMPUTE_BUILD_TIMEOUT
       - _APP_COMPUTE_CPUS
       - _APP_COMPUTE_MEMORY
+      - _APP_OPEN_RUNTIMES_NFT
       - _APP_COMPUTE_SIZE_LIMIT
       - _APP_OPTIONS_FORCE_HTTPS
       - _APP_OPTIONS_ROUTER_FORCE_HTTPS
       - _APP_DOMAIN
+      - _APP_CONSOLE_DOMAIN
+      - _APP_CONSOLE_TRUSTED_PROJECTS
       - _APP_STORAGE_DEVICE
       - _APP_STORAGE_S3_ACCESS_KEY
       - _APP_STORAGE_S3_SECRET
@@ -362,22 +446,85 @@ services:
       - _APP_STORAGE_WASABI_SECRET
       - _APP_STORAGE_WASABI_REGION
       - _APP_STORAGE_WASABI_BUCKET
+      - _APP_DATABASE_SHARED_TABLES
       - _APP_DOMAIN_SITES
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  appwrite-worker-screenshots:
+    image: appwrite/appwrite:1.9.5
+    entrypoint: worker-screenshots
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - ${_APP_DB_HOST:-mongodb}
+    volumes:
+      - appwrite-uploads:/storage/uploads:rw
+    environment:
+      - _APP_BROWSER_HOST
+      - _APP_WORKER_SCREENSHOTS_ROUTER
+      - _APP_OPTIONS_FORCE_HTTPS
+      - _APP_ENV
+      - _APP_WORKERS_NUM=1
+      - _APP_WORKER_MAX_COROUTINES=8
+      - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
+      - _APP_LOGGING_CONFIG
+      - _APP_OPENSSL_KEY_V1
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_DATABASE_SHARED_TABLES
+      - _APP_STORAGE_DEVICE
+      - _APP_STORAGE_S3_ACCESS_KEY
+      - _APP_STORAGE_S3_SECRET
+      - _APP_STORAGE_S3_REGION
+      - _APP_STORAGE_S3_BUCKET
+      - _APP_STORAGE_S3_ENDPOINT
+      - _APP_STORAGE_DO_SPACES_ACCESS_KEY
+      - _APP_STORAGE_DO_SPACES_SECRET
+      - _APP_STORAGE_DO_SPACES_REGION
+      - _APP_STORAGE_DO_SPACES_BUCKET
+      - _APP_STORAGE_BACKBLAZE_ACCESS_KEY
+      - _APP_STORAGE_BACKBLAZE_SECRET
+      - _APP_STORAGE_BACKBLAZE_REGION
+      - _APP_STORAGE_BACKBLAZE_BUCKET
+      - _APP_STORAGE_LINODE_ACCESS_KEY
+      - _APP_STORAGE_LINODE_SECRET
+      - _APP_STORAGE_LINODE_REGION
+      - _APP_STORAGE_LINODE_BUCKET
+      - _APP_STORAGE_WASABI_ACCESS_KEY
+      - _APP_STORAGE_WASABI_SECRET
+      - _APP_STORAGE_WASABI_REGION
+      - _APP_STORAGE_WASABI_BUCKET
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   appwrite-worker-certificates:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: worker-certificates
     <<: *x-logging
     restart: unless-stopped
     depends_on:
       - redis
-      - mariadb
+      - ${_APP_DB_HOST:-mongodb}
     volumes:
       - appwrite-config:/storage/config:rw
       - appwrite-certificates:/storage/certificates:rw
     environment:
       - _APP_ENV
+      - _APP_WORKERS_NUM=1
+      - _APP_WORKER_MAX_COROUTINES=8
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
       - _APP_DOMAIN
       - _APP_DOMAIN_TARGET_CNAME
@@ -386,30 +533,64 @@ services:
       - _APP_DOMAIN_TARGET_CAA
       - _APP_DNS
       - _APP_DOMAIN_FUNCTIONS
+      - _APP_DOMAIN_SITES
       - _APP_EMAIL_CERTIFICATES
       - _APP_REDIS_HOST
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
       - _APP_LOGGING_CONFIG
+      - _APP_DATABASE_SHARED_TABLES
 
-  appwrite-worker-functions:
-    image: appwrite/appwrite:1.8.0
-    entrypoint: worker-functions
+  appwrite-worker-executions:
+    image: appwrite/appwrite:1.9.5
+    entrypoint: worker-executions
     <<: *x-logging
     restart: unless-stopped
     depends_on:
       - redis
-      - mariadb
+      - ${_APP_DB_HOST:-mongodb}
+    environment:
+      - _APP_ENV
+      - _APP_WORKERS_NUM=1
+      - _APP_WORKER_MAX_COROUTINES=8
+      - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
+      - _APP_OPENSSL_KEY_V1
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_LOGGING_CONFIG
+      - _APP_DATABASE_SHARED_TABLES
+
+  appwrite-worker-functions:
+    image: appwrite/appwrite:1.9.5
+    entrypoint: worker-functions
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - ${_APP_DB_HOST:-mongodb}
+      - redis
       - openruntimes-executor
     environment:
       - _APP_ENV
+      - _APP_WORKERS_NUM=1
+      - _APP_WORKER_MAX_COROUTINES=8
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
       - _APP_DOMAIN
       - _APP_OPTIONS_FORCE_HTTPS
@@ -417,6 +598,7 @@ services:
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
@@ -433,9 +615,11 @@ services:
       - _APP_DOCKER_HUB_USERNAME
       - _APP_DOCKER_HUB_PASSWORD
       - _APP_LOGGING_CONFIG
+      - _APP_LOGGING_PROVIDER
+      - _APP_DATABASE_SHARED_TABLES
 
   appwrite-worker-mails:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: worker-mails
     <<: *x-logging
     restart: unless-stopped
@@ -443,19 +627,23 @@ services:
       - redis
     environment:
       - _APP_ENV
+      - _APP_WORKERS_NUM=1
+      - _APP_WORKER_MAX_COROUTINES=1
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
       - _APP_SYSTEM_EMAIL_NAME
       - _APP_SYSTEM_EMAIL_ADDRESS
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
-      - _APP_REDIS_HOST
-      - _APP_REDIS_PORT
-      - _APP_REDIS_USER
-      - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_SMTP_HOST
       - _APP_SMTP_PORT
       - _APP_SMTP_SECURE
@@ -464,9 +652,10 @@ services:
       - _APP_LOGGING_CONFIG
       - _APP_DOMAIN
       - _APP_OPTIONS_FORCE_HTTPS
+      - _APP_DATABASE_SHARED_TABLES
 
   appwrite-worker-messaging:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: worker-messaging
     <<: *x-logging
     restart: unless-stopped
@@ -476,12 +665,16 @@ services:
       - redis
     environment:
       - _APP_ENV
+      - _APP_WORKERS_NUM=1
+      - _APP_WORKER_MAX_COROUTINES=1
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
       - _APP_REDIS_HOST
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
@@ -490,6 +683,7 @@ services:
       - _APP_LOGGING_CONFIG
       - _APP_SMS_FROM
       - _APP_SMS_PROVIDER
+      - _APP_SMS_PROJECTS_DENY_LIST
       - _APP_STORAGE_DEVICE
       - _APP_STORAGE_S3_ACCESS_KEY
       - _APP_STORAGE_S3_SECRET
@@ -512,19 +706,24 @@ services:
       - _APP_STORAGE_WASABI_SECRET
       - _APP_STORAGE_WASABI_REGION
       - _APP_STORAGE_WASABI_BUCKET
+      - _APP_DATABASE_SHARED_TABLES
 
   appwrite-worker-migrations:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: worker-migrations
     <<: *x-logging
     restart: unless-stopped
     volumes:
       - appwrite-imports:/storage/imports:rw
+      - appwrite-uploads:/storage/uploads:rw
     depends_on:
-      - mariadb
+      - ${_APP_DB_HOST:-mongodb}
     environment:
       - _APP_ENV
+      - _APP_WORKERS_NUM=1
+      - _APP_WORKER_MAX_COROUTINES=1
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
       - _APP_DOMAIN
       - _APP_DOMAIN_TARGET_CNAME
@@ -537,6 +736,7 @@ services:
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
@@ -545,17 +745,22 @@ services:
       - _APP_LOGGING_CONFIG
       - _APP_MIGRATIONS_FIREBASE_CLIENT_ID
       - _APP_MIGRATIONS_FIREBASE_CLIENT_SECRET
+      - _APP_DATABASE_SHARED_TABLES
+      - _APP_OPTIONS_FORCE_HTTPS
+      - _APP_MIGRATION_HOST
 
   appwrite-task-maintenance:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: maintenance
     <<: *x-logging
     restart: unless-stopped
     depends_on:
+      - ${_APP_DB_HOST:-mongodb}
       - redis
     environment:
       - _APP_ENV
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_DOMAIN
       - _APP_DOMAIN_TARGET_CNAME
       - _APP_DOMAIN_TARGET_AAAA
@@ -568,6 +773,7 @@ services:
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
@@ -581,19 +787,58 @@ services:
       - _APP_MAINTENANCE_RETENTION_AUDIT_CONSOLE
       - _APP_MAINTENANCE_RETENTION_USAGE_HOURLY
       - _APP_MAINTENANCE_RETENTION_SCHEDULES
+      - _APP_MAINTENANCE_START_TIME
+      - _APP_DATABASE_SHARED_TABLES
+
+  appwrite-task-interval:
+    image: appwrite/appwrite:1.9.5
+    entrypoint: interval
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - ${_APP_DB_HOST:-mongodb}
+      - redis
+    environment:
+      - _APP_ENV
+      - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
+      - _APP_DOMAIN
+      - _APP_DOMAIN_TARGET_CNAME
+      - _APP_DOMAIN_TARGET_AAAA
+      - _APP_DOMAIN_TARGET_A
+      - _APP_DOMAIN_TARGET_CAA
+      - _APP_DNS
+      - _APP_DOMAIN_FUNCTIONS
+      - _APP_DOMAIN_SITES
+      - _APP_OPENSSL_KEY_V1
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_DATABASE_SHARED_TABLES
+      - _APP_INTERVAL_DOMAIN_VERIFICATION
+      - _APP_INTERVAL_CLEANUP_STALE_EXECUTIONS
 
   appwrite-task-stats-resources:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: stats-resources
     <<: *x-logging
     restart: unless-stopped
     depends_on:
       - redis
-      - mariadb
+      - ${_APP_DB_HOST:-mongodb}
     environment:
       - _APP_ENV
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
@@ -609,42 +854,21 @@ services:
       - _APP_STATS_RESOURCES_INTERVAL
 
   appwrite-worker-stats-resources:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: worker-stats-resources
     <<: *x-logging
     restart: unless-stopped
     depends_on:
       - redis
-      - mariadb
+      - ${_APP_DB_HOST:-mongodb}
     environment:
       - _APP_ENV
+      - _APP_WORKERS_NUM=1
+      - _APP_WORKER_MAX_COROUTINES=1
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
-      - _APP_DB_HOST
-      - _APP_DB_PORT
-      - _APP_DB_SCHEMA
-      - _APP_DB_USER
-      - _APP_DB_PASS
-      - _APP_REDIS_HOST
-      - _APP_REDIS_PORT
-      - _APP_REDIS_USER
-      - _APP_REDIS_PASS
-      - _APP_USAGE_STATS
-      - _APP_LOGGING_CONFIG
-      - _APP_STATS_RESOURCES_INTERVAL
-
-  appwrite-worker-stats-usage:
-    image: appwrite/appwrite:1.8.0
-    entrypoint: worker-stats-usage
-    <<: *x-logging
-    restart: unless-stopped
-    depends_on:
-      - redis
-      - mariadb
-    environment:
-      - _APP_ENV
-      - _APP_WORKER_PER_CORE
-      - _APP_OPENSSL_KEY_V1
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
@@ -657,91 +881,145 @@ services:
       - _APP_USAGE_STATS
       - _APP_LOGGING_CONFIG
       - _APP_USAGE_AGGREGATION_INTERVAL
+      - _APP_DATABASE_SHARED_TABLES
+
+  appwrite-worker-stats-usage:
+    image: appwrite/appwrite:1.9.5
+    entrypoint: worker-stats-usage
+    <<: *x-logging
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - ${_APP_DB_HOST:-mongodb}
+    environment:
+      - _APP_ENV
+      - _APP_WORKERS_NUM=1
+      - _APP_WORKER_MAX_COROUTINES=1
+      - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
+      - _APP_OPENSSL_KEY_V1
+      - _APP_DB_ADAPTER
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_USAGE_STATS
+      - _APP_LOGGING_CONFIG
+      - _APP_USAGE_AGGREGATION_INTERVAL
+      - _APP_DATABASE_SHARED_TABLES
 
   appwrite-task-scheduler-functions:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: schedule-functions
     <<: *x-logging
     restart: unless-stopped
     depends_on:
-      - mariadb
+      - ${_APP_DB_HOST:-mongodb}
       - redis
     environment:
       - _APP_ENV
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
+      - _APP_OPTIONS_FORCE_HTTPS
+      - _APP_DOMAIN
+      - _APP_CONSOLE_DOMAIN
+      - _APP_DOMAIN_FUNCTIONS
+      - _APP_DOMAIN_SITES
+      - _APP_MIGRATION_HOST
+      - _APP_CONSOLE_SCHEMA
       - _APP_REDIS_HOST
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
+      - _APP_DATABASE_SHARED_TABLES
 
   appwrite-task-scheduler-executions:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: schedule-executions
     <<: *x-logging
     restart: unless-stopped
     depends_on:
-      - mariadb
+      - ${_APP_DB_HOST:-mongodb}
       - redis
     environment:
       - _APP_ENV
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
+      - _APP_OPTIONS_FORCE_HTTPS
+      - _APP_DOMAIN
+      - _APP_CONSOLE_DOMAIN
+      - _APP_DOMAIN_FUNCTIONS
+      - _APP_DOMAIN_SITES
+      - _APP_MIGRATION_HOST
+      - _APP_CONSOLE_SCHEMA
       - _APP_REDIS_HOST
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
+      - _APP_DATABASE_SHARED_TABLES
 
   appwrite-task-scheduler-messages:
-    image: appwrite/appwrite:1.8.0
+    image: appwrite/appwrite:1.9.5
     entrypoint: schedule-messages
     <<: *x-logging
     restart: unless-stopped
     depends_on:
-      - mariadb
+      - ${_APP_DB_HOST:-mongodb}
       - redis
     environment:
       - _APP_ENV
       - _APP_WORKER_PER_CORE
+      - _APP_POOL_ADAPTER
       - _APP_OPENSSL_KEY_V1
       - _APP_REDIS_HOST
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
+      - _APP_DB_ADAPTER
       - _APP_DB_HOST
       - _APP_DB_PORT
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
+      - _APP_DATABASE_SHARED_TABLES
 
   appwrite-assistant:
-    image: appwrite/assistant:0.8.3
+    image: appwrite/assistant:0.8.4
     <<: *x-logging
     restart: unless-stopped
     environment:
       - _APP_ASSISTANT_OPENAI_API_KEY
 
   appwrite-browser:
-    image: appwrite/browser:0.2.4
+    image: appwrite/browser:0.3.2
     <<: *x-logging
     restart: unless-stopped
 
   openruntimes-executor:
-    hostname: exc1
+    hostname: openruntimes-executor
     <<: *x-logging
     restart: unless-stopped
     stop_signal: SIGINT
-    image: openruntimes/executor:0.7.22
+    image: openruntimes/executor:0.25.1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - appwrite-builds:/storage/builds:rw
@@ -751,7 +1029,10 @@ services:
       # It's not possible to share mount file between 2 containers without host mount (copying is too slow)
       - /tmp:/tmp:rw
     environment:
-      - OPR_EXECUTOR_INACTIVE_TRESHOLD=$_APP_COMPUTE_INACTIVE_THRESHOLD
+      - OPR_EXECUTOR_CONNECTION_STORAGE=local://localhost
+      - OPR_EXECUTOR_CONNECTION_BUILD_CACHE_STORAGE=
+      - OPR_EXECUTOR_IMAGES=$_APP_EXECUTOR_IMAGES
+      - OPR_EXECUTOR_INACTIVE_THRESHOLD=$_APP_COMPUTE_INACTIVE_THRESHOLD
       - OPR_EXECUTOR_MAINTENANCE_INTERVAL=$_APP_COMPUTE_MAINTENANCE_INTERVAL
       - OPR_EXECUTOR_NETWORK=$_APP_COMPUTE_RUNTIMES_NETWORK
       - OPR_EXECUTOR_DOCKER_HUB_USERNAME=$_APP_DOCKER_HUB_USERNAME
@@ -760,6 +1041,7 @@ services:
       - OPR_EXECUTOR_RUNTIMES=$_APP_FUNCTIONS_RUNTIMES,$_APP_SITES_RUNTIMES
       - OPR_EXECUTOR_SECRET=$_APP_EXECUTOR_SECRET
       - OPR_EXECUTOR_RUNTIME_VERSIONS=v5
+      - OPEN_RUNTIMES_NFT=$_APP_OPEN_RUNTIMES_NFT
       - OPR_EXECUTOR_LOGGING_CONFIG=$_APP_LOGGING_CONFIG
       - OPR_EXECUTOR_STORAGE_DEVICE=$_APP_STORAGE_DEVICE
       - OPR_EXECUTOR_STORAGE_S3_ACCESS_KEY=$_APP_STORAGE_S3_ACCESS_KEY
@@ -783,6 +1065,55 @@ services:
       - OPR_EXECUTOR_STORAGE_WASABI_SECRET=$_APP_STORAGE_WASABI_SECRET
       - OPR_EXECUTOR_STORAGE_WASABI_REGION=$_APP_STORAGE_WASABI_REGION
       - OPR_EXECUTOR_STORAGE_WASABI_BUCKET=$_APP_STORAGE_WASABI_BUCKET
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'curl -fsS -H "Authorization: Bearer $$OPR_EXECUTOR_SECRET" http://localhost/v1/health >/dev/null'
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+
+  mongodb:
+    image: mongo:8.2.5
+    <<: *x-logging
+    restart: unless-stopped
+    volumes:
+      - appwrite-mongodb:/data/db
+      - appwrite-mongodb-keyfile:/data/keyfile
+      - ../files/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ../files/mongo-entrypoint.sh:/mongo-entrypoint.sh:ro
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=${_APP_DB_ROOT_PASS}
+      - MONGO_INITDB_DATABASE=${_APP_DB_SCHEMA}
+      - MONGO_INITDB_USERNAME=${_APP_DB_USER}
+      - MONGO_INITDB_PASSWORD=${_APP_DB_PASS}
+    entrypoint:
+      - /bin/bash
+      - /mongo-entrypoint.sh
+    healthcheck:
+      test: |
+        bash -c "
+          mongosh -u root -p \"$$MONGO_INITDB_ROOT_PASSWORD\" --authenticationDatabase admin --quiet --eval \"
+            try {
+              const hello = db.adminCommand({hello: 1});
+              if (hello.isWritablePrimary) {
+                quit(0);
+              }
+            } catch (e) {}
+
+            try {
+              rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'mongodb:27017'}]});
+            } catch (e) {}
+
+            quit(1);
+          \" 2>/dev/null
+        "
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
 
   mariadb:
     image: mariadb:10.11 # fix issues when upgrading using: mysql_upgrade -u root -p
@@ -799,7 +1130,7 @@ services:
     command: "mysqld --innodb-flush-method=fsync"
 
   redis:
-    image: redis:7.2.4-alpine
+    image: redis:7.4.7-alpine
     <<: *x-logging
     restart: unless-stopped
     command: >
@@ -818,6 +1149,8 @@ services:
 
 volumes:
   appwrite-mariadb:
+  appwrite-mongodb:
+  appwrite-mongodb-keyfile:
   appwrite-redis:
   appwrite-cache:
   appwrite-uploads:

@@ -1,0 +1,15 @@
+{
+  "id": "umami",
+  "name": "Umami",
+  "version": "v3.0.3",
+  "description": "Umami is a simple, fast, privacy-focused alternative to Google Analytics.",
+  "logo": "umami.png",
+  "links": {
+    "github": "https://github.com/umami-software/umami",
+    "website": "https://umami.is",
+    "docs": "https://umami.is/docs"
+  },
+  "tags": [
+    "analytics"
+  ]
+}

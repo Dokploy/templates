@@ -2,11 +2,16 @@ version: "3.8"
 
 services:
   firefly-iii:
+<<<<<<< HEAD
     image: fireflyiii/core:version-6.6.2
+=======
+    image: fireflyiii/core:version-6.6.3
+>>>>>>> origin/canary
     restart: unless-stopped
     depends_on:
       firefly-iii-db:
         condition: service_healthy
+<<<<<<< HEAD
     expose:
       - 8080
     environment:
@@ -23,6 +28,25 @@ services:
       TZ: ${TZ}
       DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE}
       LOG_CHANNEL: stack
+=======
+    environment:
+      APP_KEY: ${APP_KEY}
+      APP_URL: ${APP_URL}
+      TRUSTED_PROXIES: "**"
+      TZ: ${TZ}
+      SITE_OWNER: ${SITE_OWNER}
+      DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE}
+      DEFAULT_LOCALE: ${DEFAULT_LOCALE}
+      DB_CONNECTION: mysql
+      DB_HOST: firefly-iii-db
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      STATIC_CRON_TOKEN: ${STATIC_CRON_TOKEN}
+    expose:
+      - "8080"
+>>>>>>> origin/canary
     volumes:
       - firefly-iii-upload:/var/www/html/storage/upload
 
@@ -30,6 +54,7 @@ services:
     image: mariadb:11.8
     restart: unless-stopped
     environment:
+<<<<<<< HEAD
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: firefly
       MYSQL_USER: firefly
@@ -58,6 +83,19 @@ services:
       LOG_LEVEL: info
     volumes:
       - firefly-iii-import:/import
+=======
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - firefly-iii-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+>>>>>>> origin/canary
 
   firefly-iii-cron:
     image: alpine:3.22
@@ -65,18 +103,32 @@ services:
     depends_on:
       - firefly-iii
     environment:
+<<<<<<< HEAD
       STATIC_CRON_TOKEN: ${STATIC_CRON_TOKEN}
       TZ: ${TZ}
+=======
+      TZ: ${TZ}
+      STATIC_CRON_TOKEN: ${STATIC_CRON_TOKEN}
+>>>>>>> origin/canary
     command:
       - sh
       - -c
       - |
+<<<<<<< HEAD
         apk add --no-cache tzdata wget
         ln -s /usr/share/zoneinfo/$$TZ /etc/localtime || true
         echo "0 3 * * * wget -qO- http://firefly-iii:8080/api/v1/cron/$$STATIC_CRON_TOKEN;echo" | crontab -
+=======
+        apk add --no-cache tzdata wget && \
+        (ln -snf /usr/share/zoneinfo/$$TZ /etc/localtime || true) && \
+        echo "0 3 * * * wget -qO- http://firefly-iii:8080/api/v1/cron/$$STATIC_CRON_TOKEN; echo" | crontab - && \
+>>>>>>> origin/canary
         crond -f -L /dev/stdout
 
 volumes:
   firefly-iii-upload: {}
   firefly-iii-db: {}
+<<<<<<< HEAD
   firefly-iii-import: {}
+=======
+>>>>>>> origin/canary

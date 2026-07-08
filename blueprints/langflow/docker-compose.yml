@@ -1,31 +1,44 @@
-version: "3.8"
-
 services:
   langflow:
-    image: langflowai/langflow:v1.1.1
+    image: langflowai/langflow:latest
+    user: root
+    restart: always
+    pull_policy: always
     ports:
       - 7860
     depends_on:
       - postgres-langflow
     environment:
       - LANGFLOW_DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@postgres-langflow:5432/langflow
-      # This variable defines where the logs, file storage, monitor data and secret keys are stored.
+      - LANGFLOW_CONFIG_DIR=/app/config
+      - LANGFLOW_SUPERUSER=email@domain.com
+      - LANGFLOW_SUPERUSER_PASSWORD=changepassword
+      - LANGFLOW_SECRET_KEY=PP_G4Gwm1lOkyG8r8N0LrdlpWXZ7Tyq5CVyfBquuj6g=
+      - DO_NOT_TRACK=True
+      - LANGFLOW_AUTO_SAVING=True
+      - LANGFLOW_AUTO_LOGIN=False
+      - LANGFLOW_NEW_USER_IS_ACTIVE=False
+      - LANGFLOW_ENABLE_SUPERUSER_CLI=False
     volumes:
-      - langflow-data:/app/langflow
-
-
+      - app-data:/app/langflow
+      - app-config:/app/config
+  
   postgres-langflow:
     image: postgres:16
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d langflow"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: langflow
-    ports:
-      - 5432
     volumes:
-      - langflow-postgres:/var/lib/postgresql/data
-
+      - postgres-data:/var/lib/postgresql/data
 
 volumes:
-  langflow-postgres:
-  langflow-data:
+  postgres-data:
+  app-data:
+  app-config:

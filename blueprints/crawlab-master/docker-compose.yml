@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  crawlab-master:
+    image: crawlabteam/crawlab:latest
+    restart: unless-stopped
+    environment:
+      - CRAWLAB_NODE_MASTER=Y
+      - CRAWLAB_MONGO_HOST=mongo
+      - CRAWLAB_MONGO_PORT=27017
+      - CRAWLAB_MONGO_DB=crawlab
+      - CRAWLAB_MONGO_USERNAME=${MONGO_USERNAME}
+      - CRAWLAB_MONGO_PASSWORD=${MONGO_PASSWORD}
+      - CRAWLAB_MONGO_AUTHSOURCE=admin
+    volumes:
+      - crawlab-master-data:/root/.crawlab
+      - crawlab-app-data:/data
+      - crawlab-logs:/var/log/crawlab
+    expose:
+      - "8080"
+      - "9666"
+    depends_on:
+      - mongo
+    deploy:
+      resources:
+        limits:
+          cpus: "${CPU_LIMIT:-0.8}" # 0.8 will limit to 80% of CPU if one core. If 2 cores, you need to put 0.8*2=1.6
+
+  mongo:
+    image: mongo:4.2
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  crawlab-master-data:
+  crawlab-app-data:
+  crawlab-logs:
+  mongo-data:

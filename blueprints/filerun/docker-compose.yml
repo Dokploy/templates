@@ -1,14 +1,20 @@
-﻿version: "3.8"
-
 services:
+  filerun-init:
+    image: busybox:1.37
+    restart: "no"
+    command: chown -R 1001:1001 /var/www/html /user-files
+    volumes:
+      - filerun-html:/var/www/html
+      - filerun-user-files:/user-files
+
   filerun:
     image: filerun/filerun:latest
     restart: unless-stopped
-    user: "99:100"
     depends_on:
-      - db
-    links:
-      - db:db
+      filerun-init:
+        condition: service_completed_successfully
+      db:
+        condition: service_started
     environment:
       FR_DB_HOST: db
       FR_DB_PORT: 3306

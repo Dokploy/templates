@@ -1,0 +1,17 @@
+{
+  "id": "rallly",
+  "name": "Rallly",
+  "version": "4.11.1",
+  "description": "Rallly is an open-source scheduling and collaboration tool for organizing events and meetings.",
+  "logo": "rallly.svg",
+  "links": {
+    "website": "https://rallly.co/",
+    "docs": "https://support.rallly.co/self-hosting/introduction",
+    "github": "https://github.com/lukevella/rallly"
+  },
+  "tags": [
+    "scheduling",
+    "polls",
+    "collaboration"
+  ]
+}

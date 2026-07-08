@@ -1,0 +1,19 @@
+{
+  "id": "quant-ux",
+  "name": "Quant-UX",
+  "version": "latest",
+  "description": "Quant-UX is an open-source UX design and prototyping tool that allows you to create interactive prototypes, conduct user research, and analyze user behavior.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/KlausSchaefers/quant-ux",
+    "website": "https://www.quant-ux.com/",
+    "docs": "https://www.quant-ux.com/"
+  },
+  "tags": [
+    "design",
+    "ux",
+    "prototyping",
+    "user-research",
+    "analytics"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "reef-spec-gen",
+  "name": "Reef Chain - Custom Spec Generator",
+  "version": "1",
+  "description": "Generates spec file for a custom Reef Chain cluster",
+  "links": {
+    "github": "https://github.com/reef-chain/chain-upgrade",
+    "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-chain-node",
+    "docs": "https://docs.reef.io/"
+  },
+  "logo": "reef.svg",
+  "tags": [
+    "reef-chain",
+    "rpc",
+    "self-hosted",
+    "evm"
+  ]
+}

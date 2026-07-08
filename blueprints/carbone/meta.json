@@ -1,0 +1,18 @@
+{
+  "id": "carbone",
+  "name": "Carbone",
+  "version": "4.25.5",
+  "description": "Carbone is a high-performance, self-hosted document generation engine. It allows you to generate reports, invoices, and documents in various formats (e.g., PDF, DOCX, XLSX) using JSON data and template-based rendering.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/carboneio/carbone",
+    "website": "https://carbone.io/",
+    "docs": "https://carbone.io/documentation/design/overview/getting-started.html"
+  },
+  "tags": [
+    "Document Generation",
+    "Automation",
+    "Reporting",
+    "Productivity"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "reef-eth-rpc",
+  "name": "Reef Chain - ETH RPC",
+  "version": "1",
+  "description": "EVM layer rpc for a custom Reef Chain cluster",
+  "links": {
+    "github": "https://github.com/reef-chain/chain-upgrade",
+    "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-chain-eth-rpc",
+    "docs": "https://docs.reef.io/"
+  },
+  "logo": "reef.svg",
+  "tags": [
+    "reef-chain",
+    "eth-rpc",
+    "self-hosted",
+    "keys"
+  ]
+}

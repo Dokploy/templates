@@ -1,0 +1,18 @@
+{
+  "id": "zabbix",
+  "name": "Zabbix",
+  "version": "7.4",
+  "description": "Zabbix is an open-source enterprise-grade monitoring platform for networks, servers, virtual machines, and cloud services. This template includes PostgreSQL, Nginx frontend, SNMP traps, and Java gateway.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/zabbix/zabbix-docker",
+    "website": "https://www.zabbix.com/",
+    "docs": "https://www.zabbix.com/documentation/current/en/manual/installation/containers"
+  },
+  "tags": [
+    "monitoring",
+    "infrastructure",
+    "observability",
+    "alerting"
+  ]
+}

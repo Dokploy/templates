@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+database_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "hedgedoc"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${database_password}"
+CMD_DB_URL = "postgres://hedgedoc:${database_password}@database:5432/hedgedoc"
+CMD_DOMAIN = "${main_domain}"
+CMD_PROTOCOL_USESSL = "true"
+CMD_URL_ADDPORT = "false"

@@ -17,3 +17,4 @@ mounts = []
 serviceName = "engram"
 port = 8080
 host = "${main_domain}"
+path = "/dashboard"

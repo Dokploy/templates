@@ -1,0 +1,21 @@
+services:
+  ollama-chat-tone:
+    image: billnice250/chattone:latest
+    ports:
+      - 8080
+    environment:
+      APP_NAME: "Ollama Chat Tone"
+      ADDR: ":8080"
+      SESSION_SECRET: "${SESSION_SECRET}"
+      DB_PATH: "/data/app.db"
+      OLLAMA_URL: "${OLLAMA_URL}"
+      OLLAMA_TIMEOUT: "${OLLAMA_TIMEOUT}"
+      DEFAULT_MODEL: "${DEFAULT_MODEL}"
+      OPEN_BROWSER: "false"
+      BASIC_AUTH_USER: "${BASIC_AUTH_USER}"
+      BASIC_AUTH_PASSWORD: "${BASIC_AUTH_PASSWORD}"
+    volumes:
+      - ollama-chat-tone-data:/data
+
+volumes:
+  ollama-chat-tone-data: {}

@@ -225,4 +225,4 @@ services:
 6. Now you can click on the Deploy Button and wait for the deployment to finish, and try to access to the service, if everything is correct you should access to the service and see the template working.
 
 
-use the command `node dedupe-and-sort-meta.js` to deduplicate and sort the meta.json file.
+Each template's metadata lives in `blueprints/<id>/meta.json`; the global `meta.json` is generated at build time. Use `node build-scripts/generate-meta.js --check` to validate all template metadata.

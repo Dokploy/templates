@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:v1.108.1
+    restart: unless-stopped
+    ports:
+      - 8428
+    command:
+      - "--storageDataPath=/storage"
+      - "--retentionPeriod=${RETENTION_PERIOD}"
+      - "--httpListenAddr=:8428"
+    volumes:
+      - vm-data:/storage
+
+volumes:
+  vm-data: {}

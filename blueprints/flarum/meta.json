@@ -1,0 +1,18 @@
+{
+  "id": "flarum",
+  "name": "Flarum",
+  "version": "latest",
+  "description": "Flarum is a delightfully simple, modern forum software. It is fast, free, and easy to use with a clean and extensible architecture.",
+  "logo": "flarum.png",
+  "links": {
+    "github": "https://github.com/flarum/flarum",
+    "website": "https://flarum.org/",
+    "docs": "https://docs.flarum.org/"
+  },
+  "tags": [
+    "forum",
+    "community",
+    "discussion",
+    "php"
+  ]
+}

@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  gel:
+    image: geldata/gel:6
+    restart: unless-stopped
+    ports:
+      - 5656
+    environment:
+      - GEL_SERVER_SECURITY=${GEL_SERVER_SECURITY}
+      - GEL_SERVER_PASSWORD=${GEL_SERVER_PASSWORD}
+      - GEL_SERVER_TLS_CERT_MODE=generate_self_signed
+      - GEL_SERVER_HTTP_ENDPOINT_SECURITY=optional
+      - GEL_SERVER_ADMIN_UI=enabled
+    volumes:
+      - gel-data:/var/lib/gel/data
+
+volumes:
+  gel-data: {}

@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  librespeed:
+    image: lscr.io/linuxserver/librespeed:latest
+    restart: unless-stopped
+    expose:
+      - 80
+    volumes:
+      - librespeed-config:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - PASSWORD=${PASSWORD}
+      - CUSTOM_RESULTS=${CUSTOM_RESULTS}
+      - DB_TYPE=sqlite
+
+volumes:
+  librespeed-config:

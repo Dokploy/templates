@@ -11,11 +11,9 @@ export default defineConfig({
 				{
 					src: '../blueprints/*',
 					dest: 'blueprints' // raíz de dist (public root)
-				},
-				{
-					src: '../meta.json',
-					dest: '' // raíz de dist
 				}
+				// meta.json is no longer copied from the repo root: it is
+				// generated into app/public/meta.json by build-scripts/generate-meta.js
 			]
 		})
 

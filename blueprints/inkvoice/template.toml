@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+admin_user = "admin"
+admin_pass = "${password:16}"
+jwt_secret = "${password:48}"
+
+[config]
+env = [
+  "ADMIN_USER=${admin_user}",
+  "ADMIN_PASS=${admin_pass}",
+  "JWT_SECRET=${jwt_secret}",
+]
+
+[[config.domains]]
+serviceName = "inkvoice"
+port = 3000
+host = "${main_domain}"

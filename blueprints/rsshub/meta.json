@@ -1,0 +1,17 @@
+{
+  "id": "rsshub",
+  "name": "RSSHub",
+  "version": "1.0.0",
+  "description": "RSSHub is the world's largest RSS network, consisting of over 5,000 global instances.RSSHub delivers millions of contents aggregated from all kinds of sources, our vibrant open source community is ensuring the deliver of RSSHub's new routes, new features and bug fixes.",
+  "logo": "rsshub.png",
+  "links": {
+    "github": "https://github.com/DIYgod/RSSHub",
+    "website": "https://rsshub.app/",
+    "docs": "https://docs.rsshub.app/"
+  },
+  "tags": [
+    "rss",
+    "api",
+    "self-hosted"
+  ]
+}

@@ -1,6 +1,7 @@
 [variables]
 main_domain = "${domain}"
-registry_http_secret = "${password:30}"
+username = "${username}"
+password = "${password:32}"
 
 [[config.domains]]
 serviceName = "registry"
@@ -8,11 +9,48 @@ port = 5_000
 host = "${main_domain}"
 
 [config.env]
-REGISTRY_HTTP_SECRET = "${registry_http_secret}"
+USERNAME = "${username}"
+PASSWORD = "${password}"
 
 [[config.mounts]]
-filePath = "/auth/registry.password"
+filePath = "./config.yml"
 content = """
-# from: docker run --rm --entrypoint htpasswd httpd:2 -Bbn docker password
-docker:$2y$10$qWZoWev/u5PV7WneFoRAMuoGpRcAQOgUuIIdLnU7pJXogrBSY23/2 
+version: 0.1
+
+log:
+  fields:
+    service: registry
+storage:
+  cache:
+    blobdescriptor: inmemory
+  filesystem:
+    rootdirectory: /var/lib/registry
+http:
+  addr: :5000
+  headers:
+    X-Content-Type-Options: [nosniff]
+health:
+  storagedriver:
+    enabled: true
+    interval: 10s
+    threshold: 3
+"""
+
+[[config.mounts]]
+filePath = "./entrypoint.sh"
+content = """
+#!/usr/bin/env sh
+
+set -e 
+
+if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
+    echo "Error: USERNAME and PASSWORD environment variables must be set"
+    exit 1
+fi
+
+apk add --no-cache apache2-utils
+mkdir -p "$(dirname "$REGISTRY_AUTH_HTPASSWD_PATH")"
+chmod 755 "$(dirname "$REGISTRY_AUTH_HTPASSWD_PATH")"
+htpasswd -Bbc "$REGISTRY_AUTH_HTPASSWD_PATH" "$USERNAME" "$PASSWORD"
+registry serve /etc/docker/registry/config.yml
 """

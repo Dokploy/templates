@@ -1,0 +1,16 @@
+{
+  "id": "linkding",
+  "name": "Linkding",
+  "version": "latest",
+  "description": "Linkding is a self-hosted bookmark manager with a clean and simple interface.",
+  "logo": "linkding.svg",
+  "links": {
+    "github": "https://github.com/sissbruecker/linkding",
+    "website": "https://linkding.link/",
+    "docs": "https://github.com/sissbruecker/linkding/tree/master/docs"
+  },
+  "tags": [
+    "bookmark-manager",
+    "self-hosted"
+  ]
+}

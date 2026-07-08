@@ -1,0 +1,18 @@
+{
+  "id": "open-fiesta",
+  "name": "Open Fiesta",
+  "version": "latest",
+  "description": "Open Fiesta is an open-source AI chat and inference UI, supporting multiple backends such as OpenRouter, Gemini, and Ollama.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/jaainil/open-fiesta",
+    "website": "https://github.com/jaainil/open-fiesta",
+    "docs": "https://github.com/jaainil/open-fiesta#readme"
+  },
+  "tags": [
+    "ai",
+    "chatbot",
+    "inference",
+    "frontend"
+  ]
+}

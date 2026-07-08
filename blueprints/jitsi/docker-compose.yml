@@ -1,0 +1,105 @@
+services:
+  web:
+    image: jitsi/web:${JITSI_IMAGE_VERSION:-unstable}
+    restart: unless-stopped
+    depends_on:
+      - prosody
+    volumes:
+      - jitsiWebConfig:/config
+      - jitsiWebTranscripts:/usr/share/jitsi-meet/transcripts
+    environment:
+      - PUBLIC_URL
+      - TZ
+      - XMPP_DOMAIN
+      - XMPP_AUTH_DOMAIN
+      - XMPP_BOSH_URL_BASE
+      - XMPP_MUC_DOMAIN
+      - XMPP_GUEST_DOMAIN
+      - XMPP_RECORDER_DOMAIN
+      - ENABLE_AUTH
+      - ENABLE_GUESTS
+      - ENABLE_LETSENCRYPT
+      - ENABLE_HTTP_REDIRECT
+      - ENABLE_XMPP_WEBSOCKET
+      - ENABLE_COLIBRI_WEBSOCKET
+      - DISABLE_HTTPS
+      - JICOFO_AUTH_USER
+      - JVB_AUTH_USER
+      - JICOFO_AUTH_PASSWORD
+      - JVB_AUTH_PASSWORD
+
+  prosody:
+    image: jitsi/prosody:${JITSI_IMAGE_VERSION:-unstable}
+    restart: unless-stopped
+    volumes:
+      - jitsiProsodyConfig:/config
+      - jitsiProsodyPlugins:/prosody-plugins-custom
+    environment:
+      - TZ
+      - XMPP_DOMAIN
+      - XMPP_AUTH_DOMAIN
+      - XMPP_MUC_DOMAIN
+      - XMPP_GUEST_DOMAIN
+      - XMPP_RECORDER_DOMAIN
+      - JICOFO_AUTH_USER
+      - JVB_AUTH_USER
+      - JICOFO_AUTH_PASSWORD
+      - JVB_AUTH_PASSWORD
+      - JICOFO_COMPONENT_SECRET
+      - JWT_APP_ID
+      - JWT_APP_SECRET
+      - ENABLE_AUTH
+      - ENABLE_GUESTS
+
+  jicofo:
+    image: jitsi/jicofo:${JITSI_IMAGE_VERSION:-unstable}
+    restart: unless-stopped
+    depends_on:
+      - prosody
+    volumes:
+      - jitsiJicofoConfig:/config
+    environment:
+      - TZ
+      - XMPP_DOMAIN
+      - XMPP_AUTH_DOMAIN
+      - XMPP_MUC_DOMAIN
+      - XMPP_INTERNAL_MUC_DOMAIN
+      - JICOFO_AUTH_USER
+      - JICOFO_AUTH_PASSWORD
+      - JICOFO_COMPONENT_SECRET
+      - JVB_BREWERY_MUC
+
+  jvb:
+    image: jitsi/jvb:${JITSI_IMAGE_VERSION:-unstable}
+    restart: unless-stopped
+    depends_on:
+      - prosody
+    ports:
+      - 10000
+    volumes:
+      - jitsiJvbConfig:/config
+    environment:
+      - TZ
+      - XMPP_AUTH_DOMAIN
+      - XMPP_INTERNAL_MUC_DOMAIN
+      - JVB_AUTH_USER
+      - JVB_AUTH_PASSWORD
+      - JVB_BREWERY_MUC
+      - JVB_PORT
+      - JVB_ADVERTISE_IPS
+      - PUBLIC_URL
+
+volumes:
+  jitsiWebConfig:
+    driver: local
+  jitsiWebTranscripts:
+    driver: local
+  jitsiProsodyConfig:
+    driver: local
+  jitsiProsodyPlugins:
+    driver: local
+  jitsiJicofoConfig:
+    driver: local
+  jitsiJvbConfig:
+    driver: local
+

@@ -7,11 +7,9 @@ services:
     expose:
       - "8000"
     environment:
-      - IS_PERSISTENT=TRUE
-      - PERSIST_DIRECTORY=/chroma/chroma
       - ANONYMIZED_TELEMETRY=FALSE
     volumes:
-      - chroma-data:/chroma/chroma
+      - chroma-data:/data
 
 volumes:
   chroma-data:

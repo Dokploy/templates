@@ -1,5 +1,6 @@
 [variables]
 timezone = "Etc/UTC"
+api_key_pepper = "${password:64}"
 
 [config]
 [[config.domains]]
@@ -9,3 +10,4 @@ host = "${domain}"
 
 [config.env]
 TZ = "${timezone}"
+HBOX_AUTH_API_KEY_PEPPER = "${api_key_pepper}"

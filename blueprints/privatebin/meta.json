@@ -1,8 +1,8 @@
 {
   "id": "privatebin",
   "name": "PrivateBin",
-  "version": "latest",
-  "description": "PrivateBin is a minimalist pastebin where pasted data is encrypted and decrypted in the browser.",
+  "version": "2.0.4",
+  "description": "PrivateBin is a minimalist, open-source online pastebin where the server has zero knowledge of pasted data.",
   "logo": "privatebin.svg",
   "links": {
     "github": "https://github.com/PrivateBin/PrivateBin",
@@ -12,7 +12,6 @@
   "tags": [
     "pastebin",
     "privacy",
-    "encryption",
-    "sharing"
+    "self-hosted"
   ]
 }

@@ -3,3 +3,4 @@
 serviceName = "languagetool"
 port = 8010
 host = "${domain}"
+path = "/v2/languages"

@@ -8,6 +8,7 @@ services:
       - "7745"
     environment:
       - TZ=${TZ}
+      - HBOX_AUTH_API_KEY_PEPPER=${HBOX_AUTH_API_KEY_PEPPER}
     volumes:
       - homebox-data:/data
 

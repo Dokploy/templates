@@ -1,0 +1,18 @@
+{
+  "id": "kavita",
+  "name": "Kavita",
+  "version": "latest",
+  "description": "Kavita is a self-hosted digital library server for reading manga, comics, and ebooks from any device.",
+  "logo": "kavita.svg",
+  "links": {
+    "github": "https://github.com/Kareadita/Kavita",
+    "website": "https://www.kavitareader.com/",
+    "docs": "https://wiki.kavitareader.com/installation/docker/"
+  },
+  "tags": [
+    "media",
+    "ebooks",
+    "comics",
+    "library"
+  ]
+}

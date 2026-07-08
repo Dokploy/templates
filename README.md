@@ -8,7 +8,7 @@ This is the official repository for the Dokploy Open Source Templates.
 1. Fork the repository
 2. Create a new branch
 3. Add the template to the `blueprints` folder (`docker-compose.yml`, `template.toml`)
-4. Add the template metadata (name, description, version, logo, links, tags) to the `meta.json` file
+4. Add the template metadata (name, description, version, logo, links, tags) in a `meta.json` file inside your template folder (`blueprints/<id>/meta.json`) — do NOT create or edit a root-level `meta.json`, it is generated at build time
 5. Add the logo to the template folder
 6. Commit and push your changes
 7. Create a pull request (PR)
@@ -62,7 +62,7 @@ host = "${main_domain}"
 
 [[config.mounts]]
 ```
-4. Add meta information to the `meta.json` file in the root folder
+4. Add the meta information in `blueprints/<id>/meta.json` (a single JSON object; the root `meta.json` is generated automatically at build time)
 
 ```json
 {
@@ -225,4 +225,4 @@ services:
 6. Now you can click on the Deploy Button and wait for the deployment to finish, and try to access to the service, if everything is correct you should access to the service and see the template working.
 
 
-use the command `node dedupe-and-sort-meta.js` to deduplicate and sort the meta.json file.
+Each template's metadata lives in `blueprints/<id>/meta.json`; the global `meta.json` is generated at build time. Use `node build-scripts/generate-meta.js --check` to validate all template metadata.

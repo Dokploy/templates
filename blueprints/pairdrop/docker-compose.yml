@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  pairdrop:
+    image: lscr.io/linuxserver/pairdrop:latest
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - pairdrop-config:/config
+
+volumes:
+  pairdrop-config:

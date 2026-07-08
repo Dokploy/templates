@@ -1,48 +1,45 @@
 services:
   heyform:
-    image: heyform/community-edition:latest
+    image: heyform/community-edition:v0.1.0
     restart: always
     volumes:
       # Persist uploaded images
       - heyform-data:/app/static/upload
     depends_on:
       - mongo
-      - redis
+      - keydb
     ports:
       - 8000
     env_file:
       - .env
     environment:
       MONGO_URI: 'mongodb://mongo:27017/heyform'
-      REDIS_HOST: redis
+      REDIS_HOST: keydb
       REDIS_PORT: 6379
-    networks:
-      - heyform-network
+      SMTP_FROM: ${SMTP_FROM}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_SECURE: ${SMTP_SECURE}
+      SMTP_IGNORE_CERT: ${SMTP_IGNORE_CERT}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
 
   mongo:
     image: percona/percona-server-mongodb:4.4
     restart: always
-    networks:
-      - heyform-network
     volumes:
       # Persist MongoDB data
       - mongo-data:/data/db
 
-  redis:
-    image: redis
+  keydb:
+    image: eqalpha/keydb:alpine
     restart: always
-    command: "redis-server --appendonly yes"
-    networks:
-      - heyform-network
+    command: keydb-server --appendonly yes --protected-mode no
     volumes:
       # Persist KeyDB data
-      - redis-data:/data
-
-networks:
-  heyform-network:
-    driver: bridge
+      - keydb-data:/data
 
 volumes:
   heyform-data:
   mongo-data:
-  redis-data:
+  keydb-data:

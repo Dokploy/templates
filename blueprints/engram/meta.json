@@ -1,0 +1,17 @@
+{
+  "id": "engram",
+  "name": "Engram",
+  "version": "1.16.3",
+  "description": "Persistent memory for AI coding agents — self-hosted Engram Cloud sync server with a web dashboard, backed by PostgreSQL.",
+  "logo": "engram.png",
+  "links": {
+    "github": "https://github.com/Gentleman-Programming/engram",
+    "website": "",
+    "docs": "https://github.com/Gentleman-Programming/engram/blob/main/docs/engram-cloud/README.md"
+  },
+  "tags": [
+    "ai",
+    "memory",
+    "developer-tools"
+  ]
+}

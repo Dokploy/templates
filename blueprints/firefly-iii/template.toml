@@ -1,0 +1,36 @@
+[variables]
+main_domain = "${domain}"
+app_key = "${base64:32}"
+db_name = "firefly"
+db_user = "firefly"
+db_password = "${password:32}"
+cron_token = "${hash:32}"
+site_owner = "${email}"
+timezone = "UTC"
+default_language = "en_US"
+default_locale = "equal"
+
+[config]
+env = [
+  "APP_KEY=base64:${app_key}",
+  "APP_URL=https://${main_domain}",
+  "TRUSTED_PROXIES=**",
+  "TZ=${timezone}",
+  "SITE_OWNER=${site_owner}",
+  "DEFAULT_LANGUAGE=${default_language}",
+  "DEFAULT_LOCALE=${default_locale}",
+  "DB_DATABASE=${db_name}",
+  "DB_USERNAME=${db_user}",
+  "DB_PASSWORD=${db_password}",
+  "STATIC_CRON_TOKEN=${cron_token}",
+  "MYSQL_DATABASE=${db_name}",
+  "MYSQL_USER=${db_user}",
+  "MYSQL_PASSWORD=${db_password}",
+  "MYSQL_RANDOM_ROOT_PASSWORD=yes"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "firefly-iii"
+port = 8080
+host = "${main_domain}"

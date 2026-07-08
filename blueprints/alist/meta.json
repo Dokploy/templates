@@ -1,0 +1,17 @@
+{
+  "id": "alist",
+  "name": "AList",
+  "version": "v3.55.0",
+  "description": "ðŸ—‚ï¸A file list/WebDAV program that supports multiple storages, powered by Gin and Solidjs.",
+  "logo": "alist.svg",
+  "links": {
+    "github": "https://github.com/AlistGo/alist",
+    "website": "https://alistgo.com/",
+    "docs": "https://alistgo.com/guide/install/docker.html"
+  },
+  "tags": [
+    "file",
+    "webdav",
+    "storage"
+  ]
+}

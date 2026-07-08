@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+gel_password = "${password:24}"
+gel_security = "strict"
+
+[config]
+[[config.domains]]
+serviceName = "gel"
+port = 5656
+host = "${main_domain}"
+path = "/ui"
+
+[config.env]
+GEL_SERVER_PASSWORD = "${gel_password}"
+GEL_SERVER_SECURITY = "${gel_security}"

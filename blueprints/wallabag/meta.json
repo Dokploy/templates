@@ -1,0 +1,18 @@
+{
+  "id": "wallabag",
+  "name": "wallabag",
+  "version": "2.6.14",
+  "description": "wallabag is a self-hosted read-it-later application for saving, classifying, and reading web articles.",
+  "logo": "wallabag.svg",
+  "links": {
+    "github": "https://github.com/wallabag/wallabag",
+    "website": "https://wallabag.org/",
+    "docs": "https://doc.wallabag.org/"
+  },
+  "tags": [
+    "read-it-later",
+    "bookmarks",
+    "articles",
+    "self-hosted"
+  ]
+}

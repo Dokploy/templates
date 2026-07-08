@@ -1,0 +1,37 @@
+services:
+  tandoor-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - tandoor_db_data:/var/lib/postgresql/data
+
+  tandoor-recipes:
+    image: vabene1111/recipes:2.6.11
+    restart: unless-stopped
+    depends_on:
+      - tandoor-db
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      TANDOOR_PORT: "8080"
+      DB_ENGINE: django.db.backends.postgresql
+      POSTGRES_HOST: tandoor-db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS}
+    volumes:
+      - tandoor_staticfiles:/opt/recipes/staticfiles
+      - tandoor_mediafiles:/opt/recipes/mediafiles
+    ports:
+      - "8080"
+
+volumes:
+  tandoor_db_data:
+  tandoor_staticfiles:
+  tandoor_mediafiles:

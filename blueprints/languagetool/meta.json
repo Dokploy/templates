@@ -1,0 +1,18 @@
+{
+  "id": "languagetool",
+  "name": "LanguageTool",
+  "version": "6.6",
+  "description": "LanguageTool is an open-source grammar, style, and spell checker that can run as a self-hosted HTTP service.",
+  "logo": "languagetool.svg",
+  "links": {
+    "github": "https://github.com/languagetool-org/languagetool",
+    "website": "https://languagetool.org/",
+    "docs": "https://dev.languagetool.org/http-server"
+  },
+  "tags": [
+    "writing",
+    "grammar",
+    "spellcheck",
+    "api"
+  ]
+}

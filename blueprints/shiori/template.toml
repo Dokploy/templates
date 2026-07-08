@@ -1,0 +1,5 @@
+[config]
+[[config.domains]]
+serviceName = "shiori"
+port = 8080
+host = "${domain}"

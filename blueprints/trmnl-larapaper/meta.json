@@ -1,0 +1,15 @@
+{
+  "id": "trmnl-larapaper",
+  "name": "TRMNL LaraPaper",
+  "version": "0.32.1",
+  "description": "LaraPaper is a self-hosted application (BYOS) to manage TRMNL e-ink devices.",
+  "logo": "larapaper.svg",
+  "links": {
+    "github": "https://github.com/usetrmnl/larapaper",
+    "website": "https://docs.usetrmnl.com/go/diy/byos",
+    "docs": "https://github.com/usetrmnl/larapaper/blob/main/README.md"
+  },
+  "tags": [
+    "e-ink"
+  ]
+}

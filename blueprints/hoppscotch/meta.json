@@ -1,0 +1,19 @@
+{
+  "id": "hoppscotch",
+  "name": "Hoppscotch (AIO + Migrations)",
+  "version": "latest",
+  "description": "Hoppscotch Community Edition (All-in-One) with automatic database migrations. Includes backend, frontend, and admin under unified subpath routing.",
+  "logo": "image.png",
+  "tags": [
+    "api",
+    "testing",
+    "development",
+    "postman-alternative",
+    "graphql"
+  ],
+  "links": {
+    "website": "https://hoppscotch.io/",
+    "github": "https://github.com/hoppscotch/hoppscotch",
+    "docs": "https://docs.hoppscotch.io/documentation/self-host/community-edition/install-and-build"
+  }
+}

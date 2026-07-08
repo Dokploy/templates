@@ -1,19 +1,35 @@
 services:
   registry:
-    restart: always
-    image: registry:2
-    ports:
-      - 5000
-    volumes:
-      - ../files/auth/registry.password:/auth/registry.password
-      - registry-data:/var/lib/registry
+    image: registry:3
+    restart: unless-stopped
     environment:
-      REGISTRY_STORAGE_DELETE_ENABLED: true
-      REGISTRY_HEALTH_STORAGEDRIVER_ENABLED: false
-      REGISTRY_HTTP_SECRET: ${REGISTRY_HTTP_SECRET}
-      REGISTRY_AUTH: htpasswd
-      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
-      REGISTRY_AUTH_HTPASSWD_PATH: /auth/registry.password
+      - USERNAME=${USERNAME}
+      - PASSWORD=${PASSWORD}
+      - REGISTRY_AUTH=htpasswd
+      - REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm
+      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/registry.password
+      - REGISTRY_HTTP_RELATIVEURLS=true
+    entrypoint: ["sh", "/entrypoint.sh"]
+    volumes:
+      - registry-data:/var/lib/registry
+      - type: bind
+        source: ../files/entrypoint.sh
+        target: /entrypoint.sh
+      - type: bind
+        source: ../files/config.yml
+        target: /etc/docker/registry/config.yml
+    expose:
+      - 5000
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - "-q"
+        - "--spider"     
+        - "http://localhost:5000/"  
+      interval: 5s
+      timeout: 20s
+      retries: 10
 
 volumes:
   registry-data:

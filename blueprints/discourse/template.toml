@@ -1,5 +1,6 @@
 [variables]
 main_domain = "${domain}"
+admin_email = "${email}"
 postgres_password = "${password}"
 redis_password = "${password}"
 discourse_username = "${username}"
@@ -9,6 +10,7 @@ discourse_email = "${email}"
 [config]
 env = [
   "DISCOURSE_HOST=${main_domain}",
+  "DISCOURSE_ADMIN_EMAIL=${admin_email}",
   "POSTGRES_PASSWORD=${postgres_password}",
   "REDIS_PASSWORD=${redis_password}",
   "DISCOURSE_USERNAME=${discourse_username}",
@@ -19,5 +21,10 @@ mounts = []
 
 [[config.domains]]
 serviceName = "discourse-app"
+<<<<<<< HEAD
 port = 3000
 host = "${main_domain}"
+=======
+port = 80
+host = "${main_domain}"
+>>>>>>> origin/canary

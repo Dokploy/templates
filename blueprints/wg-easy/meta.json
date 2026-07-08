@@ -1,0 +1,17 @@
+{
+  "id": "wg-easy",
+  "name": "WG-Easy",
+  "version": "15",
+  "description": "WG-Easy is a simple and user-friendly WireGuard VPN server with a web interface for easy management.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/wg-easy/wg-easy",
+    "website": "https://wg-easy.github.io/",
+    "docs": "https://github.com/wg-easy/wg-easy/wiki"
+  },
+  "tags": [
+    "vpn",
+    "wireguard",
+    "networking"
+  ]
+}

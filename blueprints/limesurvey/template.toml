@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+mysql_root_password = "${password:32}"
+mysql_user_password = "${password:32}"
+admin_email = "${email}"
+admin_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "limesurvey"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+PUBLIC_URL = "http://${main_domain}"
+ADMIN_EMAIL = "${admin_email}"
+ADMIN_PASSWORD = "${admin_password}"
+MYSQL_PASSWORD = "${mysql_user_password}"
+MYSQL_ROOT_PASSWORD = "${mysql_root_password}"

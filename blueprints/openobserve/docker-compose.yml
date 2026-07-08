@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  openobserve:
+    image: public.ecr.aws/zinclabs/openobserve:v0.70.0
+    restart: unless-stopped
+    environment:
+      ZO_ROOT_USER_EMAIL: ${ZO_ROOT_USER_EMAIL}
+      ZO_ROOT_USER_PASSWORD: ${ZO_ROOT_USER_PASSWORD}
+      ZO_DATA_DIR: ${ZO_DATA_DIR}
+    expose:
+      - 5080
+      - 5081
+    volumes:
+      - data:${ZO_DATA_DIR}
+
+volumes:
+  data:

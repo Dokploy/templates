@@ -1,0 +1,19 @@
+{
+  "id": "akaunting",
+  "name": "Akaunting",
+  "version": "latest",
+  "description": "Akaunting is a self-hosted, open-source accounting app for small businesses.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/akaunting/akaunting",
+    "website": "https://akaunting.com",
+    "docs": "https://akaunting.com/docs"
+  },
+  "tags": [
+    "finance",
+    "accounting",
+    "php",
+    "mariadb",
+    "self-hosted"
+  ]
+}

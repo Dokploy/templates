@@ -28,7 +28,7 @@ services:
       REDIS_DBINDEX: ${REDIS_DBINDEX}
       # Server Configuration
       TZ: ${TZ}
-    restart: always
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:2283/server-info/ping"]
       interval: 30s
@@ -44,7 +44,7 @@ services:
       REDIS_HOSTNAME: ${REDIS_HOSTNAME}
       REDIS_PORT: ${REDIS_PORT}
       REDIS_DBINDEX: ${REDIS_DBINDEX}
-    restart: always
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3003/ping"]
       interval: 30s
@@ -61,7 +61,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    restart: always
+    restart: unless-stopped
 
   immich-database:
     image: tensorchord/pgvecto-rs:pg14-v0.3.0
@@ -94,10 +94,10 @@ services:
         '-c',
         'wal_compression=on',
       ]
-    restart: always
+    restart: unless-stopped
 
 volumes:
   immich-model-cache:
   immich-postgres:
   immich-library:
-  immich-redis-data: 
+  immich-redis-data:

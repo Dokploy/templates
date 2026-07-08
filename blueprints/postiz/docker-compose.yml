@@ -12,12 +12,30 @@ services:
       DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@postiz-postgres:5432/${DB_NAME}"
       REDIS_URL: "redis://postiz-redis:6379"
       BACKEND_INTERNAL_URL: "http://localhost:3000"
+      TEMPORAL_ADDRESS: "temporal:7233"
       IS_GENERAL: "true"
+      DISABLE_REGISTRATION: "false"
+      RUN_CRON: "true"
+      NOT_SECURED: "true"
       STORAGE_PROVIDER: "local"
       UPLOAD_DIRECTORY: "/uploads"
       NEXT_PUBLIC_UPLOAD_DIRECTORY: "/uploads"
+<<<<<<< HEAD
       TEMPORAL_WORKER_URL: "postiz-temporal:7233"
       TEMPORAL_URL: "postiz-temporal:7233"
+=======
+      
+      # === Social Media API Settings ===
+      # These variables should be defined in the Dokploy Environment tab.
+      # For more configuration options and details, please refer to the official documentation.
+      FACEBOOK_APP_ID: ${FACEBOOK_APP_ID}
+      FACEBOOK_APP_SECRET: ${FACEBOOK_APP_SECRET}
+      LINKEDIN_CLIENT_ID: ${LINKEDIN_CLIENT_ID}
+      LINKEDIN_CLIENT_SECRET: ${LINKEDIN_CLIENT_SECRET}
+      X_API_KEY: ${X_API_KEY}
+      X_API_SECRET: ${X_API_SECRET}
+
+>>>>>>> origin/canary
     volumes:
       - postiz-config:/config/
       - postiz-uploads:/uploads/
@@ -26,6 +44,7 @@ services:
         condition: service_healthy
       postiz-redis:
         condition: service_healthy
+<<<<<<< HEAD
       postiz-temporal:
         condition: service_healthy
 
@@ -71,6 +90,10 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
+=======
+      temporal:
+        condition: service_started
+>>>>>>> origin/canary
 
   postiz-postgres:
     image: postgres:17-alpine
@@ -80,27 +103,83 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_DB: ${DB_NAME}
     volumes:
-      - postiz-postgres-data:/var/lib/postgresql/data
+      - postgres-volume:/var/lib/postgresql/data
     healthcheck:
-      test: pg_isready -U ${DB_USER} -d ${DB_NAME}
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       timeout: 3s
       retries: 3
+      start_period: 10s
 
   postiz-redis:
     image: redis:7.2
     restart: always
     healthcheck:
-      test: redis-cli ping
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 3s
       retries: 3
     volumes:
       - postiz-redis-data:/data
 
+  temporal-elasticsearch:
+    image: elasticsearch:7.17.27
+    environment:
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=512mb
+      - cluster.routing.allocation.disk.watermark.high=256mb
+      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - xpack.security.enabled=false
+    volumes:
+      - temporal-es-data:/usr/share/elasticsearch/data
+
+  temporal-postgresql:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: ${TEMPORAL_PASSWORD}
+      POSTGRES_USER: ${TEMPORAL_USER}
+    volumes:
+      - temporal-pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${TEMPORAL_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  temporal:
+    image: temporalio/auto-setup:1.28.1
+    depends_on:
+      temporal-postgresql:
+        condition: service_healthy
+      temporal-elasticsearch:
+        condition: service_started
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=${TEMPORAL_USER}
+      - POSTGRES_PWD=${TEMPORAL_PASSWORD}
+      - POSTGRES_SEEDS=temporal-postgresql
+      - ENABLE_ES=true
+      - ES_SEEDS=temporal-elasticsearch
+      - ES_VERSION=v7
+      - TEMPORAL_NAMESPACE=default
+    healthcheck:
+      test: ["CMD", "tctl", "--address", "127.0.0.1:7233", "workflow", "list"]
+      interval: 15s
+      timeout: 10s
+      retries: 30
+      start_period: 120s
+
 volumes:
-  postiz-postgres-data:
+  postgres-volume:
   postiz-redis-data:
   postiz-config:
   postiz-uploads:
+<<<<<<< HEAD
   postiz-temporal-db-data:
+=======
+  temporal-es-data:
+  temporal-pg-data:
+>>>>>>> origin/canary

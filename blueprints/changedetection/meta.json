@@ -1,0 +1,17 @@
+{
+  "id": "changedetection",
+  "name": "Change Detection",
+  "version": "0.49",
+  "description": "Changedetection.io is an intelligent tool designed to monitor changes on websites. Perfect for smart shoppers, data journalists, research engineers, data scientists, and security researchers.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/dgtlmoon/changedetection.io",
+    "website": "https://changedetection.io",
+    "docs": "https://github.com/dgtlmoon/changedetection.io/wiki"
+  },
+  "tags": [
+    "Monitoring",
+    "Data",
+    "Notifications"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "librespeed",
+  "name": "LibreSpeed",
+  "version": "latest",
+  "description": "LibreSpeed is a lightweight, self-hosted HTML5 speed test for measuring download, upload, ping, and jitter in modern browsers.",
+  "logo": "librespeed.svg",
+  "links": {
+    "github": "https://github.com/librespeed/speedtest",
+    "website": "https://librespeed.org",
+    "docs": "https://docs.linuxserver.io/images/docker-librespeed/"
+  },
+  "tags": [
+    "speedtest",
+    "networking",
+    "monitoring",
+    "self-hosted"
+  ]
+}

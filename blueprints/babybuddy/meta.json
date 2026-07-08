@@ -1,0 +1,17 @@
+{
+  "id": "babybuddy",
+  "name": "BabyBuddy",
+  "version": "2.7.0",
+  "description": "BabyBuddy is a comprehensive, user-friendly platform designed to help parents and caregivers manage essential details about their child's growth and development. It provides tools for tracking feedings, sleep schedules, diaper changes, and milestones.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/babybuddy/babybuddy",
+    "website": "https://babybuddy.app",
+    "docs": "https://docs.babybuddy.app"
+  },
+  "tags": [
+    "parenting",
+    "tracking",
+    "family"
+  ]
+}

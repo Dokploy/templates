@@ -1,0 +1,15 @@
+{
+  "id": "ghost",
+  "name": "Ghost",
+  "version": "6.0.0",
+  "description": "Ghost is a free and open source, professional publishing platform built on a modern Node.js technology stack.",
+  "logo": "ghost.jpeg",
+  "links": {
+    "github": "https://github.com/TryGhost/Ghost",
+    "website": "https://ghost.org/",
+    "docs": "https://ghost.org/docs/"
+  },
+  "tags": [
+    "cms"
+  ]
+}

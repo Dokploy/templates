@@ -1,0 +1,17 @@
+{
+  "id": "prometheus",
+  "name": "Prometheus",
+  "version": "latest",
+  "description": "Prometheus is an open-source monitoring and alerting toolkit designed for reliability and scalability.",
+  "logo": "Prometheus.svg",
+  "links": {
+    "github": "https://github.com/prometheus/prometheus",
+    "website": "https://prometheus.io/",
+    "docs": "https://prometheus.io/docs/introduction/overview/"
+  },
+  "tags": [
+    "monitoring",
+    "alerting",
+    "metrics"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "chiefonboarding",
+  "name": "Chief-Onboarding",
+  "version": "v2.2.5",
+  "description": "Chief-Onboarding is a comprehensive, self-hosted onboarding and employee management platform designed for businesses to streamline their onboarding processes.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/chiefonboarding/chiefonboarding",
+    "website": "https://demo.chiefonboarding.com/",
+    "docs": "https://docs.chiefonboarding.com/"
+  },
+  "tags": [
+    "Employee Onboarding",
+    "HR Management",
+    "Task Tracking",
+    "Role-Based Access",
+    "Document Management"
+  ]
+}

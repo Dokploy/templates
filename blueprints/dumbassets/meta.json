@@ -1,0 +1,17 @@
+{
+  "id": "dumbassets",
+  "name": "DumbAssets",
+  "version": "latest",
+  "description": "DumbAssets is a simple, self-hosted asset tracking service with no database or authentication required.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/dumbwareio/dumbassets",
+    "website": "https://www.dumbware.io/software/DumbAssets/",
+    "docs": "https://github.com/dumbwareio/dumbassets"
+  },
+  "tags": [
+    "asset-tracking",
+    "self-hosted",
+    "simple"
+  ]
+}

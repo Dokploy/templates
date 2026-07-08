@@ -1,0 +1,19 @@
+{
+  "id": "capso",
+  "name": "Cap.so",
+  "version": "latest",
+  "description": "Cap.so is a platform for web and desktop applications with MySQL and S3 storage. It provides a complete development environment with database and file storage capabilities.",
+  "links": {
+    "github": "https://github.com/CapSoftware/Cap",
+    "website": "https://cap.so/",
+    "docs": "https://cap.so/docs/"
+  },
+  "logo": "capso.png",
+  "tags": [
+    "web",
+    "s3",
+    "mysql",
+    "development",
+    "self-hosted"
+  ]
+}

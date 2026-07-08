@@ -8,7 +8,6 @@ services:
       - 8080
     volumes:
       - code-server-home:/home/coder
-      - code-server-config:/home/coder/.config
     environment:
       - PASSWORD=${PASSWORD}
       - TZ=${TZ}
@@ -16,4 +15,3 @@ services:
 
 volumes:
   code-server-home:
-  code-server-config:

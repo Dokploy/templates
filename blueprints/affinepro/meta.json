@@ -1,0 +1,18 @@
+{
+  "id": "affinepro",
+  "name": "Affine Pro",
+  "version": "stable-780dd83",
+  "description": "Affine Pro is a modern, self-hosted platform designed for collaborative content creation and project management. It offers an intuitive interface, seamless real-time collaboration, and powerful tools for organizing tasks, notes, and ideas.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/toeverything/Affine",
+    "website": "https://affine.pro/",
+    "docs": "https://affine.pro/docs"
+  },
+  "tags": [
+    "collaboration",
+    "self-hosted",
+    "productivity",
+    "project-management"
+  ]
+}

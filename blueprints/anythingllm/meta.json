@@ -1,0 +1,17 @@
+{
+  "id": "anythingllm",
+  "name": "AnythingLLM",
+  "version": "latest",
+  "description": "AnythingLLM is a private, self-hosted, and local document chatbot platform that allows you to chat with your documents using various LLM providers.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/Mintplex-Labs/anything-llm",
+    "website": "https://useanything.com",
+    "docs": "https://github.com/Mintplex-Labs/anything-llm/tree/master/docs"
+  },
+  "tags": [
+    "ai",
+    "llm",
+    "chatbot"
+  ]
+}

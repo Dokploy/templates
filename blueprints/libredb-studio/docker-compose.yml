@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  libredb-studio:
+    image: ghcr.io/libredb/libredb-studio:0.9.27
+    restart: unless-stopped
+    environment:
+      - ADMIN_EMAIL=admin@libredb.org
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - USER_EMAIL=user@libredb.org
+      - USER_PASSWORD=${USER_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - STORAGE_PROVIDER=sqlite
+      - STORAGE_SQLITE_PATH=/app/data/libredb-storage.db
+    volumes:
+      - libredb-data:/app/data
+volumes:
+  libredb-data:

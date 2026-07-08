@@ -1,0 +1,15 @@
+{
+  "id": "typesense",
+  "name": "Typesense",
+  "version": "29.0",
+  "description": "Typesense is a fast, open-source search engine for building modern search experiences.",
+  "logo": "typesense.png",
+  "links": {
+    "github": "https://github.com/typesense/typesense",
+    "website": "https://typesense.org/",
+    "docs": "https://typesense.org/docs"
+  },
+  "tags": [
+    "search"
+  ]
+}

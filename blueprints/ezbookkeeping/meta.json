@@ -1,0 +1,20 @@
+{
+  "id": "ezbookkeeping",
+  "name": "EZBookkeeping",
+  "version": "latest",
+  "description": "EZBookkeeping is a self-hosted bookkeeping application that helps you manage your personal and business finances. It provides features for tracking income, expenses, accounts, and generating financial reports.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/mayswind/ezbookkeeping",
+    "website": "https://github.com/mayswind/ezbookkeeping",
+    "docs": "https://github.com/mayswind/ezbookkeeping"
+  },
+  "tags": [
+    "bookkeeping",
+    "finance",
+    "accounting",
+    "self-hosted",
+    "personal-finance",
+    "business-finance"
+  ]
+}

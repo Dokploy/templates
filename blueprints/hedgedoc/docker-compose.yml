@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  hedgedoc:
+    image: quay.io/hedgedoc/hedgedoc:1.10.8
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      - CMD_DB_URL=${CMD_DB_URL}
+      - CMD_DOMAIN=${CMD_DOMAIN}
+      - CMD_PROTOCOL_USESSL=${CMD_PROTOCOL_USESSL}
+      - CMD_URL_ADDPORT=${CMD_URL_ADDPORT}
+    volumes:
+      - hedgedoc_uploads:/hedgedoc/public/uploads
+    expose:
+      - "3000"
+
+  database:
+    image: postgres:17.7-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=hedgedoc
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=hedgedoc
+    volumes:
+      - hedgedoc_database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hedgedoc -d hedgedoc"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  hedgedoc_uploads:
+  hedgedoc_database:

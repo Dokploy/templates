@@ -86,7 +86,7 @@ services:
       SETTING_RABBITMQ_HOST: rabbitmq
       SETTING_REDIS_HOST: redis
       CONFIG_application_server__http_only: "true"
-      TRUST_GATEWAY_IP: ${ZULIP_TRUST_GATEWAY_IP}
+      LOADBALANCER_IPS: ${ZULIP_LOADBALANCER_IPS}
     volumes:
       - zulipData:/data
     ulimits:

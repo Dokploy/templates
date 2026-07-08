@@ -1,27 +1,88 @@
 [variables]
 main_domain = "${domain}"
-# Your PostgreSQL connection string. PowerSync connects directly to replicate + sync.
-# Must have logical replication enabled (wal_level=logical).
-data_source_uri = "postgresql://user:password@host:5432/db?sslmode=require"
-# Auto-generated admin token for API access.
+# Password for the bundled PostgreSQL (used as replication source and bucket storage).
+postgres_password = "${password:32}"
+# Auto-generated token for the PowerSync API (used in Authorization header).
 admin_token = "${password:32}"
+# HS256 secret used to sign development JWTs for clients (base64url encoded).
+jwks_key = "${password:48}"
 
 [config]
 [[config.domains]]
 serviceName = "powersync"
 port = 8080
 host = "${main_domain}"
+# PowerSync has no route on "/"; the liveness probe returns 200.
+path = "/probes/liveness"
 
 [config.env]
-# PowerSync listens on port 8080 internally. Dokproxy/Traefik handles HTTPS.
-PS_PORT = "8080"
-# Source + bucket storage URI. PowerSync uses PostgreSQL for both.
-PS_DATA_SOURCE_URI = "${data_source_uri}"
-# Secret token for the admin API (used in Authorization header).
-PS_ADMIN_TOKEN = "${admin_token}"
-# NODE_OPTIONS --max-old-space-size=1000 limits memory to ~1GB
-NODE_OPTIONS = "--max-old-space-size=1000"
-# Base64-encoded PowerSync service config.
-# Contains replication, storage, auth, and sync rules — all via !env PS_* vars.
-# Decode with: echo '<base64>' | base64 -d
-POWERSYNC_CONFIG_B64 = "dGVsZW1ldHJ5OgogIGRpc2FibGVfdGVsZW1ldHJ5X3NoYXJpbmc6IHRydWUKcmVwbGljYXRpb246CiAgY29ubmVjdGlvbnM6CiAgICAtIHR5cGU6IHBvc3RncmVzcWwKICAgICAgdXJpOiAhZW52IFBTX0RBVEFfU09VUkNFX1VSSQogICAgICBzc2xtb2RlOiBkaXNhYmxlCnN0b3JhZ2U6CiAgdHlwZTogcG9zdGdyZXNxbAogIHVyaTogIWVudiBQU19EQVRBX1NPVVJDRV9VUkkKcG9ydDogIWVudiBQU19QT1JUCnN5bmNfY29uZmlnOgogIGNvbnRlbnQ6IHwKICAgIGNvbmZpZzoKICAgICAgZWRpdGlvbjogMwogICAgc3RyZWFtczoKICAgICAgZ2xvYmFsOgogICAgICAgIGF1dG9fc3Vic2NyaWJlOiB0cnVlCiAgICAgICAgcXVlcmllczoKICAgICAgICAgIC0gU0VMRUNUICogRlJPTSBpbmZvcm1hdGlvbl9zY2hlbWEudGFibGVzIFdIRVJFIHRhYmxlX3NjaGVtYSA9ICdwdWJsaWMnCmNsaWVudF9hdXRoOgogIGF1ZGllbmNlOiBbInBvd2Vyc3luYyJdCmFwaToKICB0b2tlbnM6CiAgICAtICFlbnYgUFNfQURNSU5fVE9LRU4Kc3lzdGVtOgogIGxvZ2dpbmc6CiAgICBsZXZlbDogaW5mbwogICAgZm9ybWF0OiB0ZXh0Cg=="
+POSTGRES_PASSWORD = "${postgres_password}"
+
+# PowerSync service configuration.
+# Docs: https://docs.powersync.com/self-hosting/installation/powersync-service-setup
+[[config.mounts]]
+filePath = "powersync.yaml"
+content = """
+telemetry:
+  disable_telemetry_sharing: true
+
+# Replication source: the bundled Postgres (wal_level=logical).
+# Point this at your own database to sync real data.
+replication:
+  connections:
+    - type: postgresql
+      uri: postgresql://powersync:${postgres_password}@postgres:5432/powersync
+      sslmode: disable
+
+# Bucket storage. Must be a different database than the replication source.
+storage:
+  type: postgresql
+  uri: postgresql://powersync:${postgres_password}@postgres:5432/powersync_storage
+  sslmode: disable
+
+port: 8080
+
+# Sync rules: syncs the demo "lists" table to all clients.
+# Edit these for your own schema: https://docs.powersync.com/usage/sync-rules
+sync_rules:
+  content: |
+    bucket_definitions:
+      global:
+        data:
+          - SELECT * FROM lists
+
+client_auth:
+  # HS256 key for signing development tokens.
+  # See https://docs.powersync.com/installation/authentication-setup/custom
+  jwks:
+    keys:
+      - kty: oct
+        alg: HS256
+        kid: powersync-dev
+        k: ${jwks_key}
+  audience: ["powersync"]
+
+api:
+  tokens:
+    - ${admin_token}
+"""
+
+# Runs once on the first Postgres startup (empty data volume).
+[[config.mounts]]
+filePath = "init-powersync.sql"
+content = """
+-- Separate database for PowerSync bucket storage.
+CREATE DATABASE powersync_storage OWNER powersync;
+
+-- Demo table synced by the default sync rules.
+CREATE TABLE lists (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+INSERT INTO lists (name) VALUES ('Welcome to PowerSync');
+
+-- Publication used by PowerSync logical replication.
+CREATE PUBLICATION powersync FOR ALL TABLES;
+"""

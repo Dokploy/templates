@@ -110,7 +110,7 @@ services:
       <<: *shopware-env
       COMPOSER_ALLOW_SUPERUSER: "1"
       COMPOSER_HOME: "/tmp/composer"
-      SHOPWARE_VERSION: "${SHOPWARE_VERSION:-6.7.8.2}"
+      SHOPWARE_VERSION: "${SHOPWARE_VERSION:-6.7.12.1}"
       SHOPWARE_DOCKER_VERSION: "${SHOPWARE_DOCKER_VERSION:-0.3.0}"
       ENABLE_DEMO_DATA: "${ENABLE_DEMO_DATA:-1}"
       DEMO_DATA_VERSION: "${DEMO_DATA_VERSION:-2.1.0}"
@@ -147,6 +147,10 @@ services:
         fi
 
         tmp_dir="$$(mktemp -d)"
+
+        # Composer >=2.9 refuses to install pinned versions that are affected by
+        # security advisories published later. Keep the pinned bootstrap deterministic.
+        composer config -g audit.block-insecure false 2>/dev/null || true
 
         composer create-project --no-interaction --prefer-dist "shopware/production:${SHOPWARE_VERSION}" "$$tmp_dir"
         cd "$$tmp_dir"

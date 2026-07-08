@@ -1,0 +1,15 @@
+{
+  "id": "wordpress",
+  "name": "Wordpress",
+  "version": "latest",
+  "description": "Wordpress is a free and open source content management system (CMS) for publishing and managing websites.",
+  "logo": "wordpress.png",
+  "links": {
+    "github": "https://github.com/WordPress/WordPress",
+    "website": "https://wordpress.org/",
+    "docs": "https://wordpress.org/documentation/"
+  },
+  "tags": [
+    "cms"
+  ]
+}

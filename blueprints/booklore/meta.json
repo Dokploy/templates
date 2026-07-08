@@ -1,0 +1,18 @@
+{
+  "id": "booklore",
+  "name": "Booklore",
+  "version": "latest",
+  "description": "Booklore is an application for managing and serving book-related data, backed by a MariaDB database.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/booklore-app/BookLore",
+    "website": "https://github.com/booklore-app/BookLore",
+    "docs": "https://github.com/booklore-app/BookLore/tree/develop/docs"
+  },
+  "tags": [
+    "books",
+    "library",
+    "database",
+    "mariadb"
+  ]
+}

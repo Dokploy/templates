@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  db:
+    image: mariadb:10.11
+    restart: always
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=limesurvey
+      - MYSQL_USER=limesurvey
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
+  limesurvey:
+    image: martialblog/limesurvey:latest
+    restart: always
+    volumes:
+      - limesurvey_upload:/var/www/html/upload
+    environment:
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_NAME=Admin
+      - ADMIN_USER=admin
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - DB_HOST=db
+      - DB_MYSQL_ENGINE=InnoDB
+      - DB_NAME=limesurvey
+      - DB_PASSWORD=${MYSQL_PASSWORD}
+      - DB_USERNAME=limesurvey
+      - DEBUG=0
+      - DEBUG_SQL=0
+      - PUBLIC_URL=${PUBLIC_URL}
+      - SHOW_SCRIPT_NAME=false
+      - URL_FORMAT=path
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+  limesurvey_upload:

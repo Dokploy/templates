@@ -1,0 +1,18 @@
+{
+  "id": "wallabag",
+  "name": "Wallabag",
+  "version": "2.6.14",
+  "description": "wallabag is a self hostable application for saving web pages: Save and classify articles",
+  "logo": "wallabag.png",
+  "links": {
+    "github": "https://github.com/wallabag/wallabag",
+    "website": "https://wallabag.org/",
+    "docs": "https://doc.wallabag.org/"
+  },
+  "tags": [
+    "bookmarks",
+    "articles",
+    "rss",
+    "content"
+  ]
+}

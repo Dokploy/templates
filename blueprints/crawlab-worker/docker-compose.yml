@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  crawlab-worker:
+    image: crawlabteam/crawlab:latest
+    restart: unless-stopped
+    environment:
+      - CRAWLAB_NODE_MASTER=N
+      - CRAWLAB_GRPC_ADDRESS=${MASTER_GRPC_ADDRESS}
+      - CRAWLAB_FS_FILER_URL=${MASTER_FILER_URL}
+    volumes:
+      - crawlab-worker-data:/root/.crawlab
+      - crawlab-worker-app:/data
+    deploy:
+      resources:
+        limits:
+          cpus: "${CPU_LIMIT:-0.8}" # 0.8 will limit to 80% of CPU if one core. If 2 cores, you need to put 0.8*2=1.6
+
+volumes:
+  crawlab-worker-data:
+  crawlab-worker-app:

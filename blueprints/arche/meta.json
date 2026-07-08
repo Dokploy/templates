@@ -1,0 +1,19 @@
+{
+  "id": "arche",
+  "name": "Arche",
+  "version": "latest",
+  "description": "Arche is a self-hosted AI workspace platform that spawns per-user OpenCode coding containers backed by a shared Knowledge Base. Requires the `arche-internal` external Docker network and `/opt/arche/{kb-content,kb-config,users}` directories on the host before deploy. Images are linux/amd64 by default; override `ARCHE_WEB_IMAGE` and `ARCHE_WORKSPACE_IMAGE` to the `-arm64` tag variants for ARM64 hosts.",
+  "logo": "arche.svg",
+  "links": {
+    "github": "https://github.com/peaberry-studio/arche",
+    "website": "https://github.com/peaberry-studio/arche",
+    "docs": "https://github.com/peaberry-studio/arche#readme"
+  },
+  "tags": [
+    "ai",
+    "coding",
+    "workspace",
+    "self-hosted",
+    "llm"
+  ]
+}

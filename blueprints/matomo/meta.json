@@ -3,7 +3,7 @@
   "name": "Matomo",
   "version": "5.1-apache",
   "description": "Leading open-source web analytics platform with global data ownership.",
-  "logo": "blueprints/matomo/matomo.png",
+  "logo": "matomo.png",
   "links": {
     "github": "https://github.com/matomo-org/matomo",
     "website": "https://matomo.org",

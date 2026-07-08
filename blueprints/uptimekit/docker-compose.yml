@@ -1,15 +1,13 @@
 services:
   dash:
     image: ghcr.io/uptimekit/dash:latest
-    ports:
-      - "${DASH_PORT:-3000}:3000"
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/uptimekit
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/uptimekit
       - CLICKHOUSE_URL=http://clickhouse:8123
       - CLICKHOUSE_USER=default
-      - CLICKHOUSE_PASSWORD=clickhouse
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
       - REDIS_URL=redis://redis:6379
     depends_on:
       db:
@@ -30,15 +28,13 @@ services:
 
   status-page:
     image: ghcr.io/uptimekit/status-page:latest
-    ports:
-      - "${STATUS_PAGE_PORT:-3001}:3001"
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/uptimekit
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/uptimekit
       - CLICKHOUSE_URL=http://clickhouse:8123
       - CLICKHOUSE_USER=default
-      - CLICKHOUSE_PASSWORD=clickhouse
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
       - REDIS_URL=redis://redis:6379
     depends_on:
       db:
@@ -55,10 +51,10 @@ services:
     image: postgres:18-alpine
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: uptimekit
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d uptimekit"]
       interval: 5s
@@ -80,7 +76,7 @@ services:
     environment:
       CLICKHOUSE_DB: uptimekit
       CLICKHOUSE_USER: default
-      CLICKHOUSE_PASSWORD: clickhouse
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
       CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
     user: "root"
     ulimits:

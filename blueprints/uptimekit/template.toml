@@ -2,6 +2,8 @@
 main_domain = "${domain}"
 second_domain = "${domain}"
 secret_base = "${base64:64}"
+db_password = "${password:32}"
+clickhouse_password = "${password:32}"
 
 [config]
 [[config.domains]]
@@ -18,7 +20,5 @@ host = "${second_domain}"
 BETTER_AUTH_SECRET = "${secret_base}"
 BETTER_AUTH_URL = "http://${main_domain}"
 NEXT_PUBLIC_URL = "http://${main_domain}"
-DASH_PORT=3000
-STATUS_PAGE_PORT=3001
-
-[[config.mounts]]
+POSTGRES_PASSWORD = "${db_password}"
+CLICKHOUSE_PASSWORD = "${clickhouse_password}"

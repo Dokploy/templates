@@ -1,6 +1,6 @@
 services:
   heyform:
-    image: heyform/community-edition:latest
+    image: heyform/community-edition:v0.1.0
     restart: always
     volumes:
       # Persist uploaded images
@@ -32,7 +32,7 @@ services:
       - mongo-data:/data/db
 
   keydb:
-    image: eqalpha/keydb:6.3.3
+    image: eqalpha/keydb:alpine
     restart: always
     command: keydb-server --appendonly yes --protected-mode no
     volumes:

@@ -1,7 +1,7 @@
 {
   "id": "heyform",
   "name": "HeyForm",
-  "version": "latest",
+  "version": "v0.1.0",
   "description": "Allows anyone to create engaging conversational forms for surveys, questionnaires, quizzes, and polls. No coding skills required.",
   "logo": "heyform.svg",
   "links": {

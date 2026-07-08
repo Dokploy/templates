@@ -25,12 +25,15 @@ services:
       test: ["CMD-SHELL", "timeout 5 bash -c '</dev/tcp/127.0.0.1/8080'"]
       interval: 30s
       timeout: 10s
-      retries: 5
-      start_period: 120s
+      retries: 10
+      start_period: 300s
 
   thingsboard-init:
     image: thingsboard/tb-node:4.3.1.1
     restart: on-failure
+    # The image runs as the non-root "thingsboard" user, which cannot write
+    # the install marker to the freshly created (root-owned) /data volume.
+    user: root
     depends_on:
       thingsboard-db:
         condition: service_healthy

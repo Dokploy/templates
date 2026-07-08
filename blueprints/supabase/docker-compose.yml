@@ -1,19 +1,44 @@
+<<<<<<< HEAD
 version: "3.8"
+=======
+# Usage
+#   Start:              docker compose up -d
+#   Stop:               docker compose down
+#   Reset everything:   ./reset.sh
+#
+# Dokploy: Kong is exposed on port 8000 for domain routing. Storage uses local file
+# backend by default; edit the storage service env in this file to switch to S3/MinIO.
+
+name: supabase
+>>>>>>> origin/canary
 
 services:
   studio:
+<<<<<<< HEAD
     image: supabase/studio:2026.06.03-sha-0bca601
+=======
+    image: supabase/studio:2026.04.27-sha-5f60601
+>>>>>>> origin/canary
     restart: unless-stopped
     healthcheck:
       test:
         [
           "CMD-SHELL",
+<<<<<<< HEAD
           "node -e \"fetch('http://localhost:3000/api/platform/profile').then((r) => { if (r.status !== 200) throw new Error(r.status) })\""
         ]
       timeout: 10s
       interval: 5s
       retries: 3
       start_period: 20s
+=======
+          "node -e \"fetch('http://localhost:3000/api/platform/profile').then((r) => {if (r.status !== 200) throw new Error(r.status)})\""
+        ]
+      timeout: 10s
+      interval: 5s
+      retries: 5
+      start_period: 30s
+>>>>>>> origin/canary
     depends_on:
       meta:
         condition: service_started
@@ -22,29 +47,61 @@ services:
       - ../files/volumes/functions:/app/edge-functions:ro,z
     environment:
       HOSTNAME: "0.0.0.0"
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/canary
       STUDIO_PG_META_URL: http://meta:8080
       POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+<<<<<<< HEAD
       POSTGRES_USER_READ_WRITE: postgres
+=======
+
+>>>>>>> origin/canary
       PG_META_CRYPTO_KEY: ${PG_META_CRYPTO_KEY}
       PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS}
       PGRST_DB_MAX_ROWS: ${PGRST_DB_MAX_ROWS:-1000}
       PGRST_DB_EXTRA_SEARCH_PATH: ${PGRST_DB_EXTRA_SEARCH_PATH:-public}
+<<<<<<< HEAD
       DEFAULT_ORGANIZATION_NAME: ${STUDIO_DEFAULT_ORGANIZATION}
       DEFAULT_PROJECT_NAME: ${STUDIO_DEFAULT_PROJECT}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+=======
+
+      DEFAULT_ORGANIZATION_NAME: ${STUDIO_DEFAULT_ORGANIZATION}
+      DEFAULT_PROJECT_NAME: ${STUDIO_DEFAULT_PROJECT}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+
+>>>>>>> origin/canary
       SUPABASE_URL: http://kong:8000
       SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
       AUTH_JWT_SECRET: ${JWT_SECRET}
+<<<<<<< HEAD
       SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY:-}
       SUPABASE_SECRET_KEY: ${SUPABASE_SECRET_KEY:-}
       ENABLED_FEATURES_LOGS_ALL: "false"
       SNIPPETS_MANAGEMENT_FOLDER: /app/snippets
       EDGE_FUNCTIONS_MANAGEMENT_FOLDER: /app/edge-functions
+=======
+
+      LOGFLARE_API_KEY: ${LOGFLARE_PUBLIC_ACCESS_TOKEN}
+      LOGFLARE_PUBLIC_ACCESS_TOKEN: ${LOGFLARE_PUBLIC_ACCESS_TOKEN}
+      LOGFLARE_PRIVATE_ACCESS_TOKEN: ${LOGFLARE_PRIVATE_ACCESS_TOKEN}
+
+      LOGFLARE_URL: http://analytics:4000
+      NEXT_PUBLIC_ENABLE_LOGS: "true"
+      NEXT_ANALYTICS_BACKEND_PROVIDER: postgres
+      SNIPPETS_MANAGEMENT_FOLDER: /app/snippets
+      EDGE_FUNCTIONS_MANAGEMENT_FOLDER: /app/edge-functions
+    volumes:
+      - ../files/volumes/snippets:/app/snippets:Z
+      - ../files/volumes/functions:/app/edge-functions:Z
+>>>>>>> origin/canary
 
   kong:
     image: kong/kong:3.9.1
@@ -54,11 +111,16 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+<<<<<<< HEAD
       start_period: 20s
+=======
+      start_period: 30s
+>>>>>>> origin/canary
     depends_on:
       studio:
         condition: service_healthy
     expose:
+<<<<<<< HEAD
       - "8000"
       - "8443"
     volumes:
@@ -66,6 +128,16 @@ services:
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /home/kong/kong.yml
+=======
+      - 8000
+      - 8443
+    volumes:
+      - ../files/volumes/api/kong.yml:/home/kong/temp.yml:ro,z
+      - ../files/volumes/api/kong-entrypoint.sh:/home/kong/kong-entrypoint.sh:ro,z
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /usr/local/kong/kong.yml
+>>>>>>> origin/canary
       KONG_DNS_ORDER: LAST,A,CNAME
       KONG_DNS_NOT_FOUND_TTL: 1
       KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth,request-termination,ip-restriction,post-function
@@ -80,10 +152,17 @@ services:
       SERVICE_ROLE_KEY_ASYMMETRIC: ${SERVICE_ROLE_KEY_ASYMMETRIC:-}
       DASHBOARD_USERNAME: ${DASHBOARD_USERNAME}
       DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
+<<<<<<< HEAD
     entrypoint: bash -c 'eval "echo \"$$(cat ~/temp.yml)\"" > ~/kong.yml && /docker-entrypoint.sh kong docker-start'
 
   auth:
     image: supabase/gotrue:v2.189.0
+=======
+    entrypoint: ["/bin/bash", "/home/kong/kong-entrypoint.sh"]
+
+  auth:
+    image: supabase/gotrue:v2.186.0
+>>>>>>> origin/canary
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9999/health"]
@@ -95,6 +174,10 @@ services:
       db:
         condition: service_healthy
     environment:
+<<<<<<< HEAD
+=======
+      GOTRUE_MAILER_EXTERNAL_HOSTS: kong,${SUPABASE_HOST}
+>>>>>>> origin/canary
       GOTRUE_API_HOST: 0.0.0.0
       GOTRUE_API_PORT: 9999
       API_EXTERNAL_URL: ${API_EXTERNAL_URL}
@@ -108,10 +191,19 @@ services:
       GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
       GOTRUE_JWT_EXP: ${JWT_EXPIRY}
       GOTRUE_JWT_SECRET: ${JWT_SECRET}
+<<<<<<< HEAD
       GOTRUE_JWT_ISSUER: ${API_EXTERNAL_URL}/auth/v1
       GOTRUE_EXTERNAL_EMAIL_ENABLED: ${ENABLE_EMAIL_SIGNUP}
       GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED: ${ENABLE_ANONYMOUS_USERS}
       GOTRUE_MAILER_AUTOCONFIRM: ${ENABLE_EMAIL_AUTOCONFIRM}
+=======
+      GOTRUE_JWT_KEYS: ${JWT_KEYS:-[]}
+
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: ${ENABLE_EMAIL_SIGNUP}
+      GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED: ${ENABLE_ANONYMOUS_USERS}
+      GOTRUE_MAILER_AUTOCONFIRM: ${ENABLE_EMAIL_AUTOCONFIRM}
+
+>>>>>>> origin/canary
       GOTRUE_SMTP_ADMIN_EMAIL: ${SMTP_ADMIN_EMAIL}
       GOTRUE_SMTP_HOST: ${SMTP_HOST}
       GOTRUE_SMTP_PORT: ${SMTP_PORT}
@@ -126,7 +218,11 @@ services:
       GOTRUE_SMS_AUTOCONFIRM: ${ENABLE_PHONE_AUTOCONFIRM}
 
   rest:
+<<<<<<< HEAD
     image: postgrest/postgrest:v14.12
+=======
+    image: postgrest/postgrest:v14.8
+>>>>>>> origin/canary
     restart: unless-stopped
     depends_on:
       db:
@@ -152,13 +248,25 @@ services:
     command: ["postgrest"]
 
   realtime:
+<<<<<<< HEAD
     image: supabase/realtime:v2.102.3
+=======
+    image: supabase/realtime:v2.76.5
+>>>>>>> origin/canary
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
     healthcheck:
+<<<<<<< HEAD
       test: ["CMD-SHELL", "curl -sSfL --head -o /dev/null -H \"Authorization: Bearer ${ANON_KEY}\" http://localhost:4000/api/tenants/realtime-dev/health"]
+=======
+      test:
+        [
+          "CMD-SHELL",
+          "curl -sSfL --head -o /dev/null -H \"Authorization: Bearer ${ANON_KEY}\" http://localhost:4000/api/tenants/realtime-dev/health"
+        ]
+>>>>>>> origin/canary
       timeout: 5s
       interval: 30s
       retries: 3
@@ -184,7 +292,11 @@ services:
       DISABLE_HEALTHCHECK_LOGGING: "true"
 
   storage:
+<<<<<<< HEAD
     image: supabase/storage-api:v1.60.4
+=======
+    image: supabase/storage-api:v1.48.26
+>>>>>>> origin/canary
     restart: unless-stopped
     depends_on:
       db:
@@ -194,7 +306,19 @@ services:
       imgproxy:
         condition: service_started
     healthcheck:
+<<<<<<< HEAD
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://storage:5000/status"]
+=======
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://storage:5000/status"
+        ]
+>>>>>>> origin/canary
       timeout: 5s
       interval: 5s
       retries: 3
@@ -209,8 +333,13 @@ services:
       DATABASE_URL: postgres://supabase_storage_admin:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
       STORAGE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
       REQUEST_ALLOW_X_FORWARDED_PATH: "true"
+<<<<<<< HEAD
       FILE_SIZE_LIMIT: ${STORAGE_FILE_SIZE_LIMIT:-52428800}
       STORAGE_BACKEND: ${STORAGE_BACKEND:-file}
+=======
+      FILE_SIZE_LIMIT: 52428800
+      STORAGE_BACKEND: file
+>>>>>>> origin/canary
       GLOBAL_S3_BUCKET: ${GLOBAL_S3_BUCKET}
       FILE_STORAGE_BACKEND_PATH: /var/lib/storage
       TENANT_ID: ${STORAGE_TENANT_ID}
@@ -239,7 +368,11 @@ services:
       IMGPROXY_MAX_SRC_RESOLUTION: 16.8
 
   meta:
+<<<<<<< HEAD
     image: supabase/postgres-meta:v0.96.6
+=======
+    image: supabase/postgres-meta:v0.96.3
+>>>>>>> origin/canary
     restart: unless-stopped
     depends_on:
       db:
@@ -254,8 +387,16 @@ services:
       CRYPTO_KEY: ${PG_META_CRYPTO_KEY}
 
   functions:
+<<<<<<< HEAD
     image: supabase/edge-runtime:v1.74.0
     restart: unless-stopped
+=======
+    image: supabase/edge-runtime:v1.71.2
+    restart: unless-stopped
+    volumes:
+      - ../files/volumes/functions:/home/deno/functions:Z
+      - deno-cache:/root/.cache/deno
+>>>>>>> origin/canary
     depends_on:
       kong:
         condition: service_healthy
@@ -280,14 +421,56 @@ services:
       VERIFY_JWT: "${FUNCTIONS_VERIFY_JWT}"
     command: ["start", "--main-service", "/home/deno/functions/main"]
 
+<<<<<<< HEAD
   db:
     image: supabase/postgres:17.6.1.136
+=======
+  analytics:
+    image: supabase/logflare:1.36.1
+    restart: unless-stopped
+    expose:
+      - 4000
+    # First boot: Logflare seeds _analytics in Postgres; allow extra time before marking unhealthy.
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -sSfL -o /dev/null http://localhost:4000/health"
+        ]
+      timeout: 10s
+      interval: 5s
+      retries: 15
+      start_period: 90s
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      LOGFLARE_NODE_HOST: 127.0.0.1
+      DB_USERNAME: supabase_admin
+      DB_DATABASE: _supabase
+      DB_HOSTNAME: ${POSTGRES_HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_SCHEMA: _analytics
+      LOGFLARE_PUBLIC_ACCESS_TOKEN: ${LOGFLARE_PUBLIC_ACCESS_TOKEN}
+      LOGFLARE_PRIVATE_ACCESS_TOKEN: ${LOGFLARE_PRIVATE_ACCESS_TOKEN}
+      LOGFLARE_SINGLE_TENANT: "true"
+      LOGFLARE_SUPABASE_MODE: "true"
+      LOGFLARE_MIN_CLUSTER_SIZE: 1
+      POSTGRES_BACKEND_URL: postgresql://supabase_admin:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/_supabase
+      POSTGRES_BACKEND_SCHEMA: _analytics
+      LOGFLARE_FEATURE_FLAG_OVERRIDE: multibackend=true
+
+  db:
+    image: supabase/postgres:15.8.1.085
+>>>>>>> origin/canary
     restart: unless-stopped
     volumes:
       - ../files/volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
       - ../files/volumes/db/webhooks.sql:/docker-entrypoint-initdb.d/init-scripts/98-webhooks.sql:Z
       - ../files/volumes/db/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:Z
       - ../files/volumes/db/jwt.sql:/docker-entrypoint-initdb.d/init-scripts/99-jwt.sql:Z
+<<<<<<< HEAD
       - ../files/volumes/db/_supabase.sql:/docker-entrypoint-initdb.d/migrations/97-_supabase.sql:Z
       - ../files/volumes/db/logs.sql:/docker-entrypoint-initdb.d/migrations/99-logs.sql:Z
       - ../files/volumes/db/pooler.sql:/docker-entrypoint-initdb.d/migrations/99-pooler.sql:Z
@@ -299,6 +482,30 @@ services:
       timeout: 5s
       retries: 10
       start_period: 20s
+=======
+      - ../files/volumes/db/data:/var/lib/postgresql/data:Z
+      - ../files/volumes/db/_supabase.sql:/docker-entrypoint-initdb.d/migrations/97-_supabase.sql:Z
+      - ../files/volumes/db/logs.sql:/docker-entrypoint-initdb.d/migrations/99-logs.sql:Z
+      - ../files/volumes/db/pooler.sql:/docker-entrypoint-initdb.d/migrations/99-pooler.sql:Z
+      - db-config:/etc/postgresql-custom
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "-U",
+          "postgres",
+          "-h",
+          "localhost"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 60s
+    depends_on:
+      vector:
+        condition: service_healthy
+>>>>>>> origin/canary
     environment:
       POSTGRES_HOST: /var/run/postgresql
       PGPORT: ${POSTGRES_PORT}
@@ -309,6 +516,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXP: ${JWT_EXPIRY}
+<<<<<<< HEAD
     command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf", "-c", "log_min_messages=fatal"]
 
   supavisor:
@@ -329,6 +537,73 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
+=======
+    command:
+      [
+        "postgres",
+        "-c",
+        "config_file=/etc/postgresql/postgresql.conf",
+        "-c",
+        "log_min_messages=fatal"
+      ]
+
+  vector:
+    image: timberio/vector:0.53.0-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/volumes/logs/vector.yml:/etc/vector/vector.yml:ro,z
+      - ${DOCKER_SOCKET_LOCATION}:/var/run/docker.sock:ro,z
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://vector:9001/health"
+        ]
+      timeout: 5s
+      interval: 5s
+      retries: 5
+      start_period: 10s
+    environment:
+      LOGFLARE_PUBLIC_ACCESS_TOKEN: ${LOGFLARE_PUBLIC_ACCESS_TOKEN}
+    command:
+      [
+        "--config",
+        "/etc/vector/vector.yml"
+      ]
+    security_opt:
+      - "label=disable"
+
+  supavisor:
+    image: supabase/supavisor:2.7.4
+    restart: unless-stopped
+    expose:
+      - "5432"
+      - "6543"
+    volumes:
+      - ../files/volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro,z
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-sSfL",
+          "--head",
+          "-o",
+          "/dev/null",
+          "http://127.0.0.1:4000/api/health"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    depends_on:
+      db:
+        condition: service_healthy
+>>>>>>> origin/canary
     environment:
       PORT: 4000
       POSTGRES_PORT: ${POSTGRES_PORT}
@@ -348,7 +623,16 @@ services:
       POOLER_MAX_CLIENT_CONN: ${POOLER_MAX_CLIENT_CONN}
       POOLER_POOL_MODE: transaction
       DB_POOL_SIZE: ${POOLER_DB_POOL_SIZE}
+<<<<<<< HEAD
     command: ["/bin/sh", "-c", "/app/bin/migrate && /app/bin/supavisor eval \"$$(cat /etc/pooler/pooler.exs)\" && /app/bin/server"]
+=======
+    command:
+      [
+        "/bin/sh",
+        "-c",
+        "/app/bin/migrate && /app/bin/supavisor eval \"$$(cat /etc/pooler/pooler.exs)\" && /app/bin/server"
+      ]
+>>>>>>> origin/canary
 
 volumes:
   db-config:

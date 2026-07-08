@@ -1,0 +1,15 @@
+{
+  "id": "uptime-kuma",
+  "name": "Uptime Kuma",
+  "version": "2.1.0",
+  "description": "Uptime Kuma is a free and open source monitoring tool that allows you to monitor your websites and applications.",
+  "logo": "uptime-kuma.png",
+  "links": {
+    "github": "https://github.com/louislam/uptime-kuma",
+    "website": "https://uptime.kuma.pet/",
+    "docs": "https://github.com/louislam/uptime-kuma/wiki"
+  },
+  "tags": [
+    "monitoring"
+  ]
+}

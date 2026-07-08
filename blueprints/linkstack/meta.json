@@ -1,0 +1,18 @@
+{
+  "id": "linkstack",
+  "name": "LinkStack",
+  "version": "latest",
+  "description": "LinkStack is an open-source link-in-bio platform for sharing multiple links using a customizable landing page.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/linkstackorg/linkstack",
+    "website": "https://linkstack.org/",
+    "docs": "https://docs.linkstack.org/"
+  },
+  "tags": [
+    "bio",
+    "personal",
+    "cms",
+    "php"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "neko",
+  "name": "Neko",
+  "version": "latest",
+  "description": "Neko is a self-hosted virtual browser that runs in Docker and allows you to share browser sessions with others.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/m1k1o/neko",
+    "website": "https://github.com/m1k1o/neko",
+    "docs": "https://github.com/m1k1o/neko"
+  },
+  "tags": [
+    "browser",
+    "virtual",
+    "sharing",
+    "remote"
+  ]
+}

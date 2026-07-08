@@ -1,0 +1,17 @@
+{
+  "id": "bugsink",
+  "name": "Bugsink",
+  "version": "latest",
+  "description": "Bugsink is a self-hosted Error Tracker. Built to self-host; Sentry-SDK compatible; Scalable and reliable",
+  "logo": "bugsink.png",
+  "links": {
+    "github": "https://github.com/bugsink/bugsink/",
+    "website": "https://www.bugsink.com/",
+    "docs": "https://www.bugsink.com/docs/"
+  },
+  "tags": [
+    "hosting",
+    "self-hosted",
+    "development"
+  ]
+}

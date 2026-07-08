@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: "3.8"
 
 services:
@@ -13,3 +14,16 @@ services:
 
 volumes:
   gotify-data:
+=======
+services:
+  gotify:
+    image: gotify/server:2.9.1
+    restart: unless-stopped
+    volumes:
+      - gotify_data:/app/data
+    ports:
+      - "80"
+
+volumes:
+  gotify_data:
+>>>>>>> origin/canary

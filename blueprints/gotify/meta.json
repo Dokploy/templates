@@ -1,0 +1,18 @@
+{
+  "id": "gotify",
+  "name": "Gotify",
+  "version": "latest",
+  "description": "Gotify is a simple self-hosted push notification server with a web UI and HTTP API for application alerts.",
+  "logo": "gotify.svg",
+  "links": {
+    "github": "https://github.com/gotify/server",
+    "website": "https://gotify.net/",
+    "docs": "https://gotify.net/docs/"
+  },
+  "tags": [
+    "notifications",
+    "alerting",
+    "api",
+    "self-hosted"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "jellyseerr",
+  "name": "Jellyseerr",
+  "version": "latest",
+  "description": "Jellyseerr is a self-hosted media request and discovery manager for Jellyfin, Plex, and Emby libraries.",
+  "logo": "jellyseerr.svg",
+  "links": {
+    "github": "https://github.com/Fallenbagel/jellyseerr",
+    "website": "https://docs.jellyseerr.dev/",
+    "docs": "https://docs.jellyseerr.dev/getting-started"
+  },
+  "tags": [
+    "media",
+    "requests",
+    "jellyfin",
+    "plex"
+  ]
+}

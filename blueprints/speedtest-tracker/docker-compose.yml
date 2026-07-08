@@ -1,9 +1,13 @@
+<<<<<<< HEAD
 version: "3.8"
 
+=======
+>>>>>>> origin/canary
 services:
   speedtest-tracker:
     image: lscr.io/linuxserver/speedtest-tracker:latest
     restart: unless-stopped
+<<<<<<< HEAD
     expose:
       - "80"
     environment:
@@ -20,3 +24,17 @@ services:
 
 volumes:
   speedtest-tracker-config:
+=======
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      APP_KEY: ${APP_KEY}
+      DB_CONNECTION: sqlite
+    volumes:
+      - speedtest_config:/config
+    ports:
+      - "80"
+
+volumes:
+  speedtest_config:
+>>>>>>> origin/canary

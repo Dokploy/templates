@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: "3.8"
 
 services:
@@ -17,3 +18,16 @@ services:
 
 volumes:
   privatebin-data:
+=======
+services:
+  privatebin:
+    image: privatebin/nginx-fpm-alpine:2.0.4
+    restart: unless-stopped
+    volumes:
+      - privatebin_data:/srv/data
+    ports:
+      - "8080"
+
+volumes:
+  privatebin_data:
+>>>>>>> origin/canary

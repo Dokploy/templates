@@ -1,5 +1,19 @@
+<<<<<<< HEAD
 [config]
 [[config.domains]]
 serviceName = "privatebin"
 port = 8080
 host = "${domain}"
+=======
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = {}
+mounts = []
+
+[[config.domains]]
+serviceName = "privatebin"
+port = 8080
+host = "${main_domain}"
+>>>>>>> origin/canary

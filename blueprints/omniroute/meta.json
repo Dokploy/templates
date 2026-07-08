@@ -1,0 +1,20 @@
+{
+  "id": "omniroute",
+  "name": "OmniRoute",
+  "version": "3.8.17",
+  "description": "The Free AI Gateway - Never stop coding. Connect every AI tool to 177 providers — 50+ free — through one endpoint.  Auto-fallback. RTK + Caveman compression saves 15–95% tokens. Never hit limits. ~1.9B+ documented free tokens/month — up to ~2.5B in your first month with signup credits.",
+  "logo": "omniroute.png",
+  "links": {
+    "github": "https://github.com/diegosouzapw/OmniRoute",
+    "website": "https://github.com/diegosouzapw/OmniRoute",
+    "docs": "https://github.com/diegosouzapw/OmniRoute/wiki"
+  },
+  "tags": [
+    "artificial-intelligence",
+    "gateway",
+    "generative-ai",
+    "llm",
+    "monitoring",
+    "routing"
+  ]
+}

@@ -1,5 +1,6 @@
 [variables]
 main_domain = "${domain}"
+<<<<<<< HEAD
 app_key = "base64:${base64:32}"
 timezone = "Etc/UTC"
 
@@ -14,8 +15,22 @@ env = [
   "DISPLAY_TIMEZONE=${timezone}",
   "SPEEDTEST_SCHEDULE=0 */6 * * *",
 ]
+=======
+app_key = "${base64:32}"
+
+[config]
+mounts = []
+>>>>>>> origin/canary
 
 [[config.domains]]
 serviceName = "speedtest-tracker"
 port = 80
 host = "${main_domain}"
+<<<<<<< HEAD
+=======
+
+[config.env]
+APP_KEY = "base64:${app_key}"
+PUID = "1000"
+PGID = "1000"
+>>>>>>> origin/canary

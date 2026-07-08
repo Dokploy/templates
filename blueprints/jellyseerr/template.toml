@@ -1,4 +1,5 @@
 [variables]
+<<<<<<< HEAD
 timezone = "Etc/UTC"
 
 [config]
@@ -9,3 +10,15 @@ host = "${domain}"
 
 [config.env]
 TZ = "${timezone}"
+=======
+main_domain = "${domain}"
+
+[config]
+env = {}
+mounts = []
+
+[[config.domains]]
+serviceName = "jellyseerr"
+port = 5055
+host = "${main_domain}"
+>>>>>>> origin/canary

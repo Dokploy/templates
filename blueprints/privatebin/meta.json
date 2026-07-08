@@ -1,0 +1,18 @@
+{
+  "id": "privatebin",
+  "name": "PrivateBin",
+  "version": "latest",
+  "description": "PrivateBin is a minimalist pastebin where pasted data is encrypted and decrypted in the browser.",
+  "logo": "privatebin.svg",
+  "links": {
+    "github": "https://github.com/PrivateBin/PrivateBin",
+    "website": "https://privatebin.info/",
+    "docs": "https://github.com/PrivateBin/docker-nginx-fpm-alpine"
+  },
+  "tags": [
+    "pastebin",
+    "privacy",
+    "encryption",
+    "sharing"
+  ]
+}

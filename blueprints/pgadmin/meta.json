@@ -1,0 +1,17 @@
+{
+  "id": "pgadmin",
+  "name": "pgAdmin",
+  "version": "8.3",
+  "description": "pgAdmin is the most popular and feature rich Open Source administration and development platform for PostgreSQL, the most advanced Open Source database in the world.",
+  "links": {
+    "github": "https://github.com/pgadmin-org/pgadmin4",
+    "website": "https://www.pgadmin.org/",
+    "docs": "https://www.pgadmin.org/docs/"
+  },
+  "logo": "pgadmin.webp",
+  "tags": [
+    "database",
+    "postgres",
+    "admin"
+  ]
+}

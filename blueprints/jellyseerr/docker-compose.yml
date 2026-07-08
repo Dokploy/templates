@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: "3.8"
 
 services:
@@ -14,3 +15,18 @@ services:
 
 volumes:
   jellyseerr-config:
+=======
+services:
+  jellyseerr:
+    image: fallenbagel/jellyseerr:2.7.3
+    restart: unless-stopped
+    volumes:
+      - jellyseerr_config:/app/config
+    environment:
+      LOG_LEVEL: info
+    ports:
+      - "5055"
+
+volumes:
+  jellyseerr_config:
+>>>>>>> origin/canary

@@ -1,0 +1,18 @@
+{
+  "id": "wanderer",
+  "name": "Wanderer",
+  "version": "1.0.0",
+  "description": "Wanderer is a self-hosted mapping and geolocation platform powered by Meilisearch, PocketBase, and a web frontend.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/flomp/wanderer",
+    "website": "https://wanderer.app",
+    "docs": "https://github.com/flomp/wanderer#readme"
+  },
+  "tags": [
+    "mapping",
+    "geolocation",
+    "search",
+    "self-hosted"
+  ]
+}

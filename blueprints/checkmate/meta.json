@@ -1,0 +1,17 @@
+{
+  "id": "checkmate",
+  "name": "Checkmate",
+  "version": "latest",
+  "description": "Checkmate is an open-source, self-hosted tool designed to track and monitor server hardware, uptime, response times, and incidents in real-time with beautiful visualizations.",
+  "logo": "checkmate.png",
+  "links": {
+    "github": "https://github.com/bluewave-labs/checkmate",
+    "website": "https://checkmate.so/",
+    "docs": "https://docs.checkmate.so"
+  },
+  "tags": [
+    "self-hosted",
+    "monitoring",
+    "uptime"
+  ]
+}

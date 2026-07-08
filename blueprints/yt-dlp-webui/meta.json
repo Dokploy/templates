@@ -1,0 +1,18 @@
+{
+  "id": "yt-dlp-webui",
+  "name": "yt-dlp-webui",
+  "version": "latest",
+  "description": "yt-dlp-webui is a web interface for yt-dlp, allowing you to download videos and audio from various platforms with a simple web UI.",
+  "logo": "logo.ico",
+  "links": {
+    "github": "https://github.com/marcopiovanello/yt-dlp-web-ui",
+    "website": "https://github.com/marcopiovanello/yt-dlp-web-ui",
+    "docs": "https://github.com/marcopiovanello/yt-dlp-web-ui"
+  },
+  "tags": [
+    "downloader",
+    "youtube",
+    "media",
+    "webui"
+  ]
+}

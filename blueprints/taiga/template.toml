@@ -1,5 +1,6 @@
 [variables]
 main_domain = "${domain}"
+<<<<<<< HEAD
 postgres_password = "${password:32}"
 secret_key = "${password:64}"
 rabbitmq_password = "${password:32}"
@@ -7,11 +8,47 @@ rabbitmq_erlang_cookie = "${password:48}"
 
 [config]
 mounts = []
+=======
+postgres_user = "taiga"
+postgres_password = "${password:32}"
+secret_key = "${password:64}"
+rabbitmq_user = "taiga"
+rabbitmq_password = "${password:32}"
+rabbitmq_erlang_cookie = "${password:32}"
+
+[config]
+env = [
+  "TAIGA_SCHEME=https",
+  "TAIGA_DOMAIN=${main_domain}",
+  "WEBSOCKETS_SCHEME=wss",
+  "SUBPATH=",
+  "SECRET_KEY=${secret_key}",
+  "POSTGRES_USER=${postgres_user}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "EMAIL_BACKEND=console",
+  "EMAIL_HOST=smtp.example.com",
+  "EMAIL_PORT=587",
+  "EMAIL_HOST_USER=user",
+  "EMAIL_HOST_PASSWORD=password",
+  "EMAIL_DEFAULT_FROM=changeme@example.com",
+  "EMAIL_USE_TLS=False",
+  "EMAIL_USE_SSL=False",
+  "RABBITMQ_USER=${rabbitmq_user}",
+  "RABBITMQ_PASS=${rabbitmq_password}",
+  "RABBITMQ_VHOST=taiga",
+  "RABBITMQ_ERLANG_COOKIE=${rabbitmq_erlang_cookie}",
+  "ATTACHMENTS_MAX_AGE=360",
+  "ENABLE_TELEMETRY=False",
+  "PUBLIC_REGISTER_ENABLED=False",
+  "PUBLIC_REGISTER_ENABLED_FRONT=false",
+]
+>>>>>>> origin/canary
 
 [[config.domains]]
 serviceName = "taiga-gateway"
 port = 80
 host = "${main_domain}"
+<<<<<<< HEAD
 
 [config.env]
 TAIGA_DOMAIN = "${main_domain}"
@@ -43,6 +80,16 @@ filePath = "/etc/nginx/conf.d/default.conf"
 content = """
 server {
     listen 80 default_server;
+=======
+path = "/"
+
+[[config.mounts]]
+filePath = "/volumes/nginx/taiga.conf"
+content = """
+server {
+    listen 80 default_server;
+
+>>>>>>> origin/canary
     client_max_body_size 100M;
     charset utf-8;
 
@@ -108,4 +155,8 @@ server {
         proxy_read_timeout 7d;
     }
 }
+<<<<<<< HEAD
 """
+=======
+"""
+>>>>>>> origin/canary

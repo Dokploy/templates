@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  agent-zero:
+    image: agent0ai/agent-zero:v1.9
+    restart: unless-stopped
+    expose:
+      - "80"
+    environment:
+      - AUTH_LOGIN=${AUTH_LOGIN}
+      - AUTH_PASSWORD=${AUTH_PASSWORD}
+    volumes:
+      - agent-zero-data:/a0/usr
+volumes:
+  agent-zero-data:

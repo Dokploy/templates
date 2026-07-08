@@ -73,16 +73,16 @@ To add a new template, follow these steps:
      """
      ```
 
-4. **Update `meta.json`**: Add an entry for your template in the root `meta.json`. Include:
+4. **Add `meta.json` in your template folder**: Create `blueprints/<id>/meta.json` with a single JSON object describing your template. Do NOT create or edit a root-level `meta.json` — the global registry is generated automatically at build time from every `blueprints/<id>/meta.json` (this is what makes template PRs conflict-free). Include:
 
-   - `id`: Folder name (e.g., "grafana").
+   - `id`: Folder name (e.g., "grafana") — must match the folder exactly.
    - `name`: Display name.
    - `version`: Image/tag version.
    - `description`: Brief overview.
    - `logo`: Filename of the logo (e.g., "grafana.svg").
-   - `links`: Object with `github`, `website`, `docs` (URLs).
+   - `links`: Object with `github`, `website`, `docs` (URLs; use `""` if not applicable).
    - `tags`: Array of categories (e.g., ["monitoring"]).
-   - Example:
+   - Example (`blueprints/grafana/meta.json`):
      ```json
      {
        "id": "grafana",
@@ -101,7 +101,7 @@ To add a new template, follow these steps:
 
 5. **Add a Logo**: Place an SVG or PNG logo (e.g., `grafana.svg`) in the template folder. Keep it simple and representative (ideally 512x512 or similar).
 
-6. **Run Validation**: Before pushing, run `node dedupe-and-sort-meta.js` (if available) or manually check for syntax errors in YAML/TOML/JSON.
+6. **Run Validation**: Before pushing, run `node build-scripts/generate-meta.js --check` to validate every template's metadata (same check CI runs), and manually check for syntax errors in YAML/TOML.
 
 7. **Commit and PR**: Push your branch and open a PR. Include:
    - A description of the template.
@@ -195,7 +195,7 @@ If issues arise, debug locally or in the preview. Fix and update your PR.
 ## Updating Existing Templates
 
 - Follow the same structure as adding new ones.
-- Bump `version` in `meta.json` and update `docker-compose.yml` image tags.
+- Bump `version` in the template's `blueprints/<id>/meta.json` and update `docker-compose.yml` image tags.
 - Test thoroughly, as changes may affect users.
 
 ## Reporting Bugs or Requesting Features

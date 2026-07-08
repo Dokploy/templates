@@ -1,0 +1,18 @@
+{
+  "id": "omni-tools",
+  "name": "Omni-Tools",
+  "version": "latest",
+  "description": "Omni-Tools is a collection of useful tools in a single self-hosted web application.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/iib0011/omni-tools",
+    "website": "https://github.com/iib0011/omni-tools",
+    "docs": "https://github.com/iib0011/omni-tools"
+  },
+  "tags": [
+    "tools",
+    "utilities",
+    "collection",
+    "self-hosted"
+  ]
+}

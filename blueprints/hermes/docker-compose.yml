@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  hermes:
+    image: nousresearch/hermes-agent:v2026.6.19
+    restart: unless-stopped
+    command: gateway run
+    ports:
+      - 9119
+      - 8642
+    environment:
+      - HERMES_DASHBOARD=${HERMES_DASHBOARD}
+      - HERMES_DASHBOARD_BASIC_AUTH_USERNAME=${HERMES_DASHBOARD_BASIC_AUTH_USERNAME}
+      - HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=${HERMES_DASHBOARD_BASIC_AUTH_PASSWORD}
+      - HERMES_DASHBOARD_BASIC_AUTH_SECRET=${HERMES_DASHBOARD_BASIC_AUTH_SECRET}
+      - API_SERVER_ENABLED=${API_SERVER_ENABLED}
+      - API_SERVER_HOST=${API_SERVER_HOST}
+      - API_SERVER_KEY=${API_SERVER_KEY}
+    volumes:
+      - hermes_data:/opt/data
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: "2.0"
+
+volumes:
+  hermes_data:

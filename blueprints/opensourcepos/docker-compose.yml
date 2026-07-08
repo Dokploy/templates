@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  opensourcepos:
+    image: jekkos/opensourcepos:master
+    restart: unless-stopped
+    depends_on:
+      opensourcepos-db:
+        condition: service_healthy
+    expose:
+      - "80"
+    environment:
+      CI_ENVIRONMENT: production
+      ALLOWED_HOSTNAMES: ${ALLOWED_HOSTNAMES}
+      FORCE_HTTPS: ${FORCE_HTTPS}
+      PHP_TIMEZONE: ${PHP_TIMEZONE}
+      MYSQL_USERNAME: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DB_NAME: ${MYSQL_DATABASE}
+      MYSQL_HOST_NAME: opensourcepos-db
+    volumes:
+      - opensourcepos-uploads:/app/public/uploads
+      - opensourcepos-logs:/app/writable/logs
+
+  opensourcepos-db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - opensourcepos-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "healthcheck.sh --connect --innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  opensourcepos-db:
+  opensourcepos-uploads:
+  opensourcepos-logs:

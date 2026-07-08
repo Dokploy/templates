@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+
+[config]
+env = [
+  "PREFECT_DOMAIN=${main_domain}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "prefect"
+port = 4200
+host = "${main_domain}"

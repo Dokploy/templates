@@ -3700,6 +3700,24 @@
     ]
   },
   {
+    "id": "jitsi",
+    "name": "Jitsi Meet",
+    "version": "1.0.0",
+    "description": "Jitsi Meet is an open-source video conferencing platform for secure, self-hosted meetings.",
+    "links": {
+      "github": "https://github.com/jitsi/docker-jitsi-meet",
+      "website": "https://jitsi.org/jitsi-meet/",
+      "docs": "https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker"
+    },
+    "logo": "jitsi.svg",
+    "tags": [
+      "video-conferencing",
+      "meetings",
+      "self-hosted",
+      "webrtc"
+    ]
+  },
+  {
     "id": "joomla",
     "name": "Joomla",
     "version": "6.1.0-apache",

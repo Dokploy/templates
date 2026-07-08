@@ -25,6 +25,8 @@ services:
       - SYMFONY__ENV__FROM_EMAIL=${SYMFONY__ENV__FROM_EMAIL}
       - SYMFONY__ENV__DOMAIN_NAME=${SYMFONY__ENV__DOMAIN_NAME}
       - SYMFONY__ENV__SERVER_NAME=${SYMFONY__ENV__SERVER_NAME}
+      - SYMFONY__ENV__SECRET=${SYMFONY__ENV__SECRET}
+      - SYMFONY__ENV__REDIS_HOST=wallabag-redis
     volumes:
       - wallabag-images:/var/www/wallabag/web/assets/images
 
@@ -32,10 +34,11 @@ services:
     image: mariadb:11.4
     restart: unless-stopped
     environment:
+      # Only the root password is set on purpose: the wallabag entrypoint
+      # creates the database and user and runs `wallabag:install` itself.
+      # Pre-creating the database (MARIADB_DATABASE) makes the entrypoint
+      # skip the install, leaving an empty schema and a persistent HTTP 500.
       - MARIADB_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MARIADB_DATABASE=wallabag
-      - MARIADB_USER=wallabag
-      - MARIADB_PASSWORD=${SYMFONY__ENV__DATABASE_PASSWORD}
     volumes:
       - wallabag-db-data:/var/lib/mysql
     healthcheck:

@@ -11,7 +11,7 @@ name: supabase
 services:
 
   studio:
-    image: supabase/studio:2026.04.27-sha-5f60601
+    image: supabase/studio:2026.06.03-sha-0bca601
     restart: unless-stopped
     healthcheck:
       test:
@@ -101,7 +101,7 @@ services:
     entrypoint: ["/bin/bash", "/home/kong/kong-entrypoint.sh"]
 
   auth:
-    image: supabase/gotrue:v2.186.0
+    image: supabase/gotrue:v2.189.0
     restart: unless-stopped
     healthcheck:
       test:
@@ -158,7 +158,7 @@ services:
       GOTRUE_SMS_AUTOCONFIRM: ${ENABLE_PHONE_AUTOCONFIRM}
 
   rest:
-    image: postgrest/postgrest:v14.8
+    image: postgrest/postgrest:v14.12
     restart: unless-stopped
     depends_on:
       db:
@@ -179,7 +179,7 @@ services:
       ]
 
   realtime:
-    image: supabase/realtime:v2.76.5
+    image: supabase/realtime:v2.102.3
     restart: unless-stopped
     depends_on:
       db:
@@ -215,7 +215,7 @@ services:
       DISABLE_HEALTHCHECK_LOGGING: "true"
 
   storage:
-    image: supabase/storage-api:v1.48.26
+    image: supabase/storage-api:v1.60.4
     restart: unless-stopped
     depends_on:
       db:
@@ -282,7 +282,7 @@ services:
       IMGPROXY_MAX_SRC_RESOLUTION: 16.8
 
   meta:
-    image: supabase/postgres-meta:v0.96.3
+    image: supabase/postgres-meta:v0.96.6
     restart: unless-stopped
     depends_on:
       db:
@@ -297,7 +297,7 @@ services:
       CRYPTO_KEY: ${PG_META_CRYPTO_KEY}
 
   functions:
-    image: supabase/edge-runtime:v1.71.2
+    image: supabase/edge-runtime:v1.74.0
     restart: unless-stopped
     volumes:
       - ../files/volumes/functions:/home/deno/functions:Z
@@ -359,7 +359,7 @@ services:
       LOGFLARE_FEATURE_FLAG_OVERRIDE: multibackend=true
 
   db:
-    image: supabase/postgres:15.8.1.085
+    image: supabase/postgres:17.6.1.136
     restart: unless-stopped
     volumes:
       - ../files/volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
@@ -438,7 +438,7 @@ services:
       - "label=disable"
 
   supavisor:
-    image: supabase/supavisor:2.7.4
+    image: supabase/supavisor:2.9.5
     restart: unless-stopped
     expose:
       - "5432"

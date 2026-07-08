@@ -1,16 +1,4 @@
 [variables]
-<<<<<<< HEAD
-admin_password = "${password:32}"
-
-[config]
-[[config.domains]]
-serviceName = "gotify"
-port = 80
-host = "${domain}"
-
-[config.env]
-GOTIFY_DEFAULTUSER_PASS = "${admin_password}"
-=======
 main_domain = "${domain}"
 
 [config]
@@ -21,4 +9,3 @@ mounts = []
 serviceName = "gotify"
 port = 80
 host = "${main_domain}"
->>>>>>> origin/canary

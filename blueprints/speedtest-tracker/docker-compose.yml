@@ -1,30 +1,7 @@
-<<<<<<< HEAD
-version: "3.8"
-
-=======
->>>>>>> origin/canary
 services:
   speedtest-tracker:
     image: lscr.io/linuxserver/speedtest-tracker:latest
     restart: unless-stopped
-<<<<<<< HEAD
-    expose:
-      - "80"
-    environment:
-      - APP_KEY
-      - APP_URL
-      - DB_CONNECTION
-      - PUID
-      - PGID
-      - TZ
-      - DISPLAY_TIMEZONE
-      - SPEEDTEST_SCHEDULE
-    volumes:
-      - speedtest-tracker-config:/config
-
-volumes:
-  speedtest-tracker-config:
-=======
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
@@ -37,4 +14,3 @@ volumes:
 
 volumes:
   speedtest_config:
->>>>>>> origin/canary

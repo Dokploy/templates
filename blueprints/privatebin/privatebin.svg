@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" rx="24" fill="#111827"/><path d="M36 28h35l15 15v49H36z" fill="#f9fafb"/><path d="M71 28v16h15" fill="#d1d5db"/><path d="M46 58h28M46 70h28M46 82h18" stroke="#111827" stroke-width="6" stroke-linecap="round"/></svg>
-=======
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <rect width="128" height="128" rx="28" fill="#101828"/>
   <circle cx="64" cy="64" r="34" fill="#38bdf8" opacity="0.92"/>
   <text x="64" y="74" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#ffffff">P</text>
 </svg>
->>>>>>> origin/canary

@@ -1,12 +1,6 @@
 [variables]
-main_domain = "${domain}"
 keydb_password = "${password:16}"
 
 [config]
-[[config.domains]]
-serviceName = "keydb"
-port = 6379
-host = "${main_domain}"
-
 [config.env]
 KEYDB_PASSWORD = "${keydb_password}"

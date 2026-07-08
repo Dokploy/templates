@@ -4,8 +4,10 @@ services:
     image: leantime/leantime:latest
     restart: unless-stopped
     ports:
-      - 80
+      - 8080
     environment:
+      - LEAN_APP_URL=${LEAN_APP_URL}
+      - LEAN_SESSION_PASSWORD=${LEAN_SESSION_PASSWORD}
       - LEAN_DB_HOST=db
       - LEAN_DB_USER=${LEAN_DB_USER}
       - LEAN_DB_PASSWORD=${LEAN_DB_PASSWORD}
@@ -24,7 +26,7 @@ services:
       - MYSQL_DATABASE=${LEAN_DB_DATABASE}
       - MYSQL_USER=${LEAN_DB_USER}
       - MYSQL_PASSWORD=${LEAN_DB_PASSWORD}
-    command: --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - db-data:/var/lib/mysql
 

@@ -9,6 +9,8 @@ services:
       - GEL_SERVER_SECURITY=${GEL_SERVER_SECURITY}
       - GEL_SERVER_PASSWORD=${GEL_SERVER_PASSWORD}
       - GEL_SERVER_TLS_CERT_MODE=generate_self_signed
+      - GEL_SERVER_HTTP_ENDPOINT_SECURITY=optional
+      - GEL_SERVER_ADMIN_UI=enabled
     volumes:
       - gel-data:/var/lib/gel/data
 

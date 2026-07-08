@@ -8,6 +8,7 @@ gel_security = "strict"
 serviceName = "gel"
 port = 5656
 host = "${main_domain}"
+path = "/ui"
 
 [config.env]
 GEL_SERVER_PASSWORD = "${gel_password}"

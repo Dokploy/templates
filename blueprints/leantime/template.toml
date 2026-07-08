@@ -4,14 +4,17 @@ db_password = "${password:16}"
 db_root_password = "${password:16}"
 db_user = "leantime"
 db_name = "leantime"
+session_password = "${password:32}"
 
 [config]
 [[config.domains]]
 serviceName = "leantime"
-port = 80
+port = 8080
 host = "${main_domain}"
 
 [config.env]
+LEAN_APP_URL = "http://${main_domain}"
+LEAN_SESSION_PASSWORD = "${session_password}"
 LEAN_DB_USER = "${db_user}"
 LEAN_DB_PASSWORD = "${db_password}"
 LEAN_DB_DATABASE = "${db_name}"

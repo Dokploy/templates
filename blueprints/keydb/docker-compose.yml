@@ -3,8 +3,6 @@ services:
   keydb:
     image: eqalpha/keydb:latest
     restart: unless-stopped
-    ports:
-      - 6379
     command: keydb-server /etc/keydb/keydb.conf --server-threads 2 --requirepass ${KEYDB_PASSWORD}
     volumes:
       - keydb-data:/data

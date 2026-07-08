@@ -1,0 +1,17 @@
+{
+  "id": "convertx",
+  "name": "ConvertX",
+  "version": "latest",
+  "description": "ConvertX is a service for converting media files, with optional user registration and file management features.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/c4illin/ConvertX",
+    "website": "https://github.com/c4illin/ConvertX",
+    "docs": "https://github.com/c4illin/ConvertX#environment-variables"
+  },
+  "tags": [
+    "media",
+    "converter",
+    "ffmpeg"
+  ]
+}

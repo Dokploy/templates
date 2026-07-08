@@ -1,0 +1,18 @@
+{
+  "id": "upsnap",
+  "name": "Upsnap",
+  "version": "5",
+  "description": "Upsnap is a simple network device monitor and dashboard built on PocketBase.",
+  "logo": "upsnap.svg",
+  "links": {
+    "github": "https://github.com/seriousm4x/upsnap",
+    "website": "https://github.com/seriousm4x/upsnap",
+    "docs": "https://github.com/seriousm4x/upsnap#readme"
+  },
+  "tags": [
+    "network",
+    "monitoring",
+    "dashboard",
+    "self-hosted"
+  ]
+}

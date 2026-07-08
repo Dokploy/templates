@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   mediafetch:
-    image: lukedunsmoto/mediafetch:latest
+    image: lukedunsmoto/mediafetch:1.3.5
     restart: unless-stopped
     expose:
       - "3002"
@@ -11,8 +11,11 @@ services:
       - PORT=3002
       - BASIC_AUTH_USER=${BASIC_AUTH_USER}
       - BASIC_AUTH_PASS=${BASIC_AUTH_PASS}
-      - PUBLIC_BASE_URL=https://${DOMAIN}
-      - OUTPUT_DIR=/data/downloads
+      - PUBLIC_BASE_URL=${PUBLIC_BASE_URL}
+      - OUTPUT_DIR=${OUTPUT_DIR}
+      - MAX_CONCURRENT_JOBS=${MAX_CONCURRENT_JOBS}
+      - JOB_TIMEOUT_MS=${JOB_TIMEOUT_MS}
+      - VERSION_CHECK_TTL_MS=${VERSION_CHECK_TTL_MS}
 
 volumes:
   mediafetch_data:

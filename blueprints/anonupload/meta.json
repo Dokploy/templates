@@ -1,0 +1,16 @@
+{
+  "id": "anonupload",
+  "name": "AnonUpload",
+  "version": "1",
+  "description": "AnonUpload is a secure, anonymous file sharing application that does not require a database. It is built with privacy as a priority, ensuring that the direct filename used is not displayed.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/supernova3339/anonupload",
+    "docs": "https://github.com/Supernova3339/anonupload/blob/main/env.md",
+    "website": "https://anonupload.com/"
+  },
+  "tags": [
+    "file-sharing",
+    "privacy"
+  ]
+}

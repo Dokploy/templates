@@ -74,30 +74,18 @@ x-app-env: &app-env
   WEBHOOK_ALLOWED_HOSTS: ${WEBHOOK_ALLOWED_HOSTS:-}
 
 services:
-<<<<<<< HEAD
   plane-web:
     image: makeplane/plane-frontend:${APP_RELEASE:-v1.3.1}
     restart: unless-stopped
-=======
-  web:
-    image: makeplane/plane-frontend:${APP_RELEASE:-v1.2.3}
-    restart: always
->>>>>>> origin/canary
     depends_on:
       plane-api:
         condition: service_started
       plane-worker:
         condition: service_started
 
-<<<<<<< HEAD
   plane-space:
     image: makeplane/plane-space:${APP_RELEASE:-v1.3.1}
     restart: unless-stopped
-=======
-  space:
-    image: makeplane/plane-space:${APP_RELEASE:-v1.2.3}
-    restart: always
->>>>>>> origin/canary
     depends_on:
       plane-api:
         condition: service_started
@@ -106,47 +94,29 @@ services:
       plane-web:
         condition: service_started
 
-<<<<<<< HEAD
   plane-admin:
     image: makeplane/plane-admin:${APP_RELEASE:-v1.3.1}
     restart: unless-stopped
-=======
-  admin:
-    image: makeplane/plane-admin:${APP_RELEASE:-v1.2.3}
-    restart: always
->>>>>>> origin/canary
     depends_on:
       plane-api:
         condition: service_started
       plane-web:
         condition: service_started
 
-<<<<<<< HEAD
   plane-live:
     image: makeplane/plane-live:${APP_RELEASE:-v1.3.1}
     restart: unless-stopped
     environment:
       <<: [*live-env, *redis-env]
-=======
-  live:
-    image: makeplane/plane-live:${APP_RELEASE:-v1.2.3}
-    restart: always
->>>>>>> origin/canary
     depends_on:
       plane-api:
         condition: service_started
       plane-web:
         condition: service_started
 
-<<<<<<< HEAD
   plane-api:
     image: makeplane/plane-backend:${APP_RELEASE:-v1.3.1}
     restart: unless-stopped
-=======
-  api:
-    image: makeplane/plane-backend:${APP_RELEASE:-v1.2.3}
-    restart: always
->>>>>>> origin/canary
     command: ./bin/docker-entrypoint-api.sh
     volumes:
       - logs_api:/code/plane/logs
@@ -162,15 +132,9 @@ services:
       plane-migrator:
         condition: service_completed_successfully
 
-<<<<<<< HEAD
   plane-worker:
     image: makeplane/plane-backend:${APP_RELEASE:-v1.3.1}
     restart: unless-stopped
-=======
-  worker:
-    image: makeplane/plane-backend:${APP_RELEASE:-v1.2.3}
-    restart: always
->>>>>>> origin/canary
     command: ./bin/docker-entrypoint-worker.sh
     volumes:
       - logs_worker:/code/plane/logs
@@ -186,15 +150,9 @@ services:
       plane-migrator:
         condition: service_completed_successfully
 
-<<<<<<< HEAD
   plane-beat-worker:
     image: makeplane/plane-backend:${APP_RELEASE:-v1.3.1}
     restart: unless-stopped
-=======
-  beat-worker:
-    image: makeplane/plane-backend:${APP_RELEASE:-v1.2.3}
-    restart: always
->>>>>>> origin/canary
     command: ./bin/docker-entrypoint-beat.sh
     volumes:
       - logs_beat-worker:/code/plane/logs
@@ -210,13 +168,8 @@ services:
       plane-migrator:
         condition: service_completed_successfully
 
-<<<<<<< HEAD
   plane-migrator:
     image: makeplane/plane-backend:${APP_RELEASE:-v1.3.1}
-=======
-  migrator:
-    image: makeplane/plane-backend:${APP_RELEASE:-v1.2.3}
->>>>>>> origin/canary
     restart: on-failure
     command: ./bin/docker-entrypoint-migrator.sh
     volumes:
@@ -230,13 +183,8 @@ services:
         condition: service_healthy
 
   plane-db:
-<<<<<<< HEAD
     image: postgres:17-alpine
     restart: unless-stopped
-=======
-    image: postgres:15.7-alpine
-    restart: always
->>>>>>> origin/canary
     command: postgres -c 'max_connections=1000'
     environment:
       <<: *db-env
@@ -251,7 +199,6 @@ services:
 
   plane-redis:
     image: valkey/valkey:7.2.11-alpine
-<<<<<<< HEAD
     restart: unless-stopped
     volumes:
       - redisdata:/data
@@ -267,15 +214,6 @@ services:
     restart: unless-stopped
     environment:
       <<: *mq-env
-=======
-    restart: always
-    volumes:
-      - redisdata:/data
-
-  plane-mq:
-    image: rabbitmq:3.13.6-management-alpine
-    restart: always
->>>>>>> origin/canary
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     healthcheck:
@@ -285,7 +223,6 @@ services:
       retries: 10
       start_period: 30s
 
-<<<<<<< HEAD
   plane-minio:
     image: minio/minio:RELEASE.2025-04-22T22-12-26Z
     restart: unless-stopped
@@ -322,30 +259,6 @@ services:
         condition: service_started
       plane-live:
         condition: service_started
-=======
-  plane-storage:
-    image: rustfs/rustfs:1.0.0-alpha.90
-    restart: always
-    volumes:
-      - uploads:/data
-    env_file:
-      - .env
-
-  proxy:
-    image: makeplane/plane-proxy:${APP_RELEASE:-v1.2.3}
-    restart: always
-    depends_on:
-      - web
-      - api
-      - space
-      - admin
-      - live
-    volumes:
-      - proxy_config:/config
-      - proxy_data:/data
-    env_file:
-      - .env
->>>>>>> origin/canary
 
 volumes:
   pgdata:
@@ -356,9 +269,5 @@ volumes:
   logs_worker:
   logs_beat-worker:
   logs_migrator:
-<<<<<<< HEAD
-=======
-  rabbitmq_data:
->>>>>>> origin/canary
   proxy_config:
   proxy_data:

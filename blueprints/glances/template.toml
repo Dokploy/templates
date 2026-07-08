@@ -2,7 +2,7 @@
 main_domain = "${domain}"
 
 [config]
-env = { GLANCES_PASSWORD = "" }
+env = {}
 mounts = []
 
 [[config.domains]]

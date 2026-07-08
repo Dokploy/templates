@@ -10,9 +10,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - glances-data:/glances/exports
     environment:
-      GLANCES_OPT: "-w --password"
-      GLANCES_USERNAME: "${GLANCES_USERNAME:-admin}"
-      GLANCES_PASSWORD: "${GLANCES_PASSWORD}"
+      GLANCES_OPT: "-w"
 
 volumes:
   glances-data:

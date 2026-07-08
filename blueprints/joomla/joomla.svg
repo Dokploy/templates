@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Joomla">
+  <rect width="128" height="128" rx="24" fill="#1a3867"/>
+  <path fill="#fff" d="M61 29a10 10 0 0 1 16-8l10 10-9 9-9-9a3 3 0 0 0-5 2v16H50V33a17 17 0 0 1 11-4Zm38 32a10 10 0 0 1 8 16L97 87l-9-9 9-9a3 3 0 0 0-2-5H79V50h16a17 17 0 0 1 4 11ZM67 99a10 10 0 0 1-16 8L41 97l9-9 9 9a3 3 0 0 0 5-2V79h14v16a17 17 0 0 1-11 4ZM29 67a10 10 0 0 1-8-16l10-10 9 9-9 9a3 3 0 0 0 2 5h16v14H33a17 17 0 0 1-4-11Z"/>
+  <rect x="51" y="51" width="26" height="26" rx="6" fill="#f9a03f"/>
+</svg>

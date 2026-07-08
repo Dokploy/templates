@@ -1,0 +1,18 @@
+{
+  "id": "bentopdf",
+  "name": "BentoPDF",
+  "version": "latest",
+  "description": "BentoPDF is a lightweight PDF conversion microservice that exposes a simple HTTP API for generating PDFs.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/bentopdf/bentopdf",
+    "website": "https://bentopdf.com/",
+    "docs": "https://github.com/bentopdf/bentopdf#readme"
+  },
+  "tags": [
+    "pdf",
+    "converter",
+    "api",
+    "utility"
+  ]
+}

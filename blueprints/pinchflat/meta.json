@@ -1,0 +1,17 @@
+{
+  "id": "pinchflat",
+  "name": "Pinchflat",
+  "version": "latest",
+  "description": "Pinchflat is a self-hosted YouTube downloader that allows you to download videos and playlists with a simple web interface.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/kieraneglin/pinchflat",
+    "website": "https://github.com/kieraneglin/pinchflat",
+    "docs": "https://github.com/kieraneglin/pinchflat"
+  },
+  "tags": [
+    "youtube",
+    "downloader",
+    "media"
+  ]
+}

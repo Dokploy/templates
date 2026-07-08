@@ -1,6 +1,5 @@
 [variables]
 app_domain = "${domain}"
-api_domain = "${domain}"
 jwt_secret = "${password:64}"
 postgres_password = "${password:32}"
 
@@ -11,12 +10,6 @@ port = 3000
 host = "${app_domain}"
 path = "/"
 
-[[config.domains]]
-serviceName = "backend"
-port = 8080
-host = "${api_domain}"
-path = "/"
-
 [config.env]
 POSTGRES_DB = "multica"
 POSTGRES_USER = "multica"
@@ -25,7 +18,6 @@ JWT_SECRET = "${jwt_secret}"
 FRONTEND_ORIGIN = "https://${app_domain}"
 ALLOWED_ORIGINS = "https://${app_domain}"
 MULTICA_APP_URL = "https://${app_domain}"
-NEXT_PUBLIC_WS_URL = "wss://${api_domain}/ws"
 RESEND_API_KEY = ""
 RESEND_FROM_EMAIL = "noreply@multica.ai"
 GOOGLE_CLIENT_ID = ""

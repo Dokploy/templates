@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  shiori:
+    image: ghcr.io/go-shiori/shiori:v1.8.0-2-g585ea34
+    restart: unless-stopped
+    expose:
+      - "8080"
+    environment:
+      - SHIORI_DIR=/srv/shiori
+    volumes:
+      - shiori-data:/srv/shiori
+
+volumes:
+  shiori-data:

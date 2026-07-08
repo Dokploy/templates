@@ -1,0 +1,6 @@
+[config]
+[[config.domains]]
+serviceName = "chroma"
+port = 8000
+host = "${domain}"
+path = "/api/v2/heartbeat"

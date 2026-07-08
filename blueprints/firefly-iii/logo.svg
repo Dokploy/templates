@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Firefly III">
+  <defs>
+    <linearGradient id="g" x1="20" y1="16" x2="108" y2="112" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffcf4a"/>
+      <stop offset="0.55" stop-color="#ff7a1a"/>
+      <stop offset="1" stop-color="#7936d8"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="#171923"/>
+  <circle cx="64" cy="66" r="38" fill="url(#g)" opacity="0.2"/>
+  <path d="M64 23c8 15 20 27 34 35-14 8-26 20-34 35-8-15-20-27-34-35 14-8 26-20 34-35Z" fill="url(#g)"/>
+  <circle cx="64" cy="58" r="13" fill="#fff4c7"/>
+  <path d="M46 93h36c-3 9-9 14-18 14s-15-5-18-14Z" fill="#ffcf4a"/>
+</svg>

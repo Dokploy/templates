@@ -1,0 +1,51 @@
+[variables]
+main_domain = "${domain}"
+site_name = "Joomla"
+admin_name = "Joomla Administrator"
+admin_username = "${username}"
+admin_password = "${password:24}"
+admin_email = "${email}"
+db_user = "joomla"
+db_password = "${password:32}"
+db_name = "joomla"
+
+[[config.domains]]
+serviceName = "joomla"
+port = 80
+host = "${main_domain}"
+path = "/"
+
+[[config.mounts]]
+filePath = "README.md"
+content = """# Joomla
+
+This template deploys Joomla CMS with MariaDB using the official Joomla Apache image.
+
+## Access
+
+- URL: `http://${main_domain}`
+- Administrator username: the configured `admin_username` value
+- Administrator password: the generated `admin_password` value
+- Administrator email: the configured `admin_email` value
+
+The template uses Joomla's auto-deployment environment variables so the site and administrator account are initialized on first start.
+
+## Storage
+
+The template creates persistent volumes for:
+
+- Joomla application files at `/var/www/html`
+- MariaDB data at `/var/lib/mysql`
+
+Back up both volumes together before upgrades or migrations.
+"""
+
+[config.env]
+JOOMLA_SITE_NAME = "${site_name}"
+JOOMLA_ADMIN_USER = "${admin_name}"
+JOOMLA_ADMIN_USERNAME = "${admin_username}"
+JOOMLA_ADMIN_PASSWORD = "${admin_password}"
+JOOMLA_ADMIN_EMAIL = "${admin_email}"
+JOOMLA_DB_USER = "${db_user}"
+JOOMLA_DB_PASSWORD = "${db_password}"
+JOOMLA_DB_NAME = "${db_name}"

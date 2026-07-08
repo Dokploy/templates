@@ -1,0 +1,90 @@
+version: "3.8"
+
+services:
+  prefect:
+    image: prefecthq/prefect:3.7.5-python3.12
+    restart: unless-stopped
+    depends_on:
+      prefect-postgres:
+        condition: service_healthy
+      prefect-redis:
+        condition: service_healthy
+    environment:
+      - PREFECT_API_DATABASE_CONNECTION_URL=postgresql+asyncpg://prefect:${POSTGRES_PASSWORD}@prefect-postgres:5432/prefect
+      - PREFECT_SERVER_API_HOST=0.0.0.0
+      - PREFECT_SERVER_UI_API_URL=https://${PREFECT_DOMAIN}/api
+      - PREFECT_MESSAGING_BROKER=prefect_redis.messaging
+      - PREFECT_MESSAGING_CACHE=prefect_redis.messaging
+      - PREFECT_REDIS_MESSAGING_HOST=prefect-redis
+      - PREFECT_REDIS_MESSAGING_PORT=6379
+      - PREFECT_REDIS_MESSAGING_DB=0
+    command: prefect server start --no-services
+    expose:
+      - 4200
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request as u; u.urlopen('http://localhost:4200/api/health', timeout=1)",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  prefect-services:
+    image: prefecthq/prefect:3.7.5-python3.12
+    restart: unless-stopped
+    depends_on:
+      prefect:
+        condition: service_healthy
+    environment:
+      - PREFECT_API_DATABASE_CONNECTION_URL=postgresql+asyncpg://prefect:${POSTGRES_PASSWORD}@prefect-postgres:5432/prefect
+      - PREFECT_MESSAGING_BROKER=prefect_redis.messaging
+      - PREFECT_MESSAGING_CACHE=prefect_redis.messaging
+      - PREFECT_REDIS_MESSAGING_HOST=prefect-redis
+      - PREFECT_REDIS_MESSAGING_PORT=6379
+      - PREFECT_REDIS_MESSAGING_DB=0
+    command: prefect server services start
+
+  prefect-worker:
+    image: prefecthq/prefect:3.7.5-python3.12
+    restart: unless-stopped
+    depends_on:
+      prefect:
+        condition: service_healthy
+    environment:
+      - PREFECT_API_URL=http://prefect:4200/api
+    command: prefect worker start --pool local-pool
+
+  prefect-postgres:
+    image: postgres:14-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=prefect
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=prefect
+    volumes:
+      - prefect-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U prefect -d prefect"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  prefect-redis:
+    image: redis:7.2-alpine
+    restart: unless-stopped
+    volumes:
+      - prefect-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  prefect-postgres-data:
+  prefect-redis-data:

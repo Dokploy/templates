@@ -10,7 +10,7 @@
     "docs": "https://www.verdaccio.org/docs/what-is-verdaccio"
   },
   "tags": [
-    "node.js",
+    "node-js",
     "package-repository",
     "npm"
   ]

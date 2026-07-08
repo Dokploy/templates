@@ -1,0 +1,16 @@
+{
+  "id": "botpress",
+  "name": "Botpress",
+  "version": "latest",
+  "description": "Botpress is a platform for building conversational AI agents. It provides a simple and effective solution for building conversational AI agents from anywhere.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/botpress/botpress",
+    "website": "https://botpress.com",
+    "docs": "https://botpress.com/docs"
+  },
+  "tags": [
+    "ai",
+    "self-hosted"
+  ]
+}

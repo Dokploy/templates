@@ -1,0 +1,18 @@
+{
+  "id": "pastefy",
+  "name": "Pastefy",
+  "version": "latest",
+  "description": "Pastefy is an open-source pastebin with support for syntax highlighting and OAuth2 authentication.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/interaapps/pastefy",
+    "website": "https://pastefy.app",
+    "docs": "https://github.com/interaapps/pastefy/wiki"
+  },
+  "tags": [
+    "pastebin",
+    "text-sharing",
+    "collaboration",
+    "oauth2"
+  ]
+}

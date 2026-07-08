@@ -1,0 +1,17 @@
+{
+  "id": "cyberchef",
+  "name": "CyberChef",
+  "version": "latest",
+  "description": "CyberChef is a web application for encryption, encoding, compression, and data analysis, developed by GCHQ.",
+  "logo": "cyberchef.png",
+  "links": {
+    "github": "https://github.com/gchq/CyberChef",
+    "website": "https://gchq.github.io/CyberChef/",
+    "docs": "https://github.com/gchq/CyberChef/wiki"
+  },
+  "tags": [
+    "security",
+    "encryption",
+    "data-analysis"
+  ]
+}

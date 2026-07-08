@@ -1,12 +1,24 @@
 [variables]
 main_domain = "${domain}"
+public_url = "https://${main_domain}"
 directus_secret = "${base64:64}"
-database_password = "${password}"
+db_password = "${password:32}"
+db_user = "directus"
+db_name = "directus"
+admin_email = "${email}"
+admin_password = "${password:24}"
+license_key = ""
 
 [config]
 env = [
-  "DATABASE_PASSWORD=${database_password}",
+  "PUBLIC_URL=${public_url}",
   "DIRECTUS_SECRET=${directus_secret}",
+  "DB_PASSWORD=${db_password}",
+  "DB_USER=${db_user}",
+  "DB_NAME=${db_name}",
+  "ADMIN_EMAIL=${admin_email}",
+  "ADMIN_PASSWORD=${admin_password}",
+  "LICENSE_KEY=${license_key}",
 ]
 mounts = []
 

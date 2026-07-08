@@ -6,8 +6,8 @@
   "logo": "rustrak.svg",
   "links": {
     "github": "https://github.com/AbianS/rustrak",
-    "website": "https://abians.github.io/rustrak/",
-    "docs": "https://abians.github.io/rustrak/"
+    "website": "https://rustrak.github.io/rustrak/",
+    "docs": "https://rustrak.github.io/rustrak/getting-started/overview"
   },
   "tags": [
     "monitoring",

@@ -1,0 +1,18 @@
+{
+  "id": "go2rtc",
+  "name": "go2rtc",
+  "version": "latest",
+  "description": "Ultimate camera streaming application with support for dozens formats and protocols.",
+  "logo": "go2rtc.png",
+  "links": {
+    "github": "https://github.com/AlexxIT/go2rtc",
+    "website": "https://go2rtc.org/",
+    "docs": "https://go2rtc.org/"
+  },
+  "tags": [
+    "streaming",
+    "webrtc",
+    "video",
+    "home assistant"
+  ]
+}

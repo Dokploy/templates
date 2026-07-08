@@ -1,0 +1,16 @@
+{
+  "id": "libredb-studio",
+  "name": "LibreDB Studio",
+  "version": "0.9.27",
+  "description": "The modern, AI-powered open-source SQL IDE. Query PostgreSQL, MySQL, Oracle, SQL Server, SQLite, MongoDB and Redis from your browser.",
+  "logo": "libredb-studio.svg",
+  "links": {
+    "github": "https://github.com/libredb/libredb-studio",
+    "website": "https://libredb.org/",
+    "docs": "https://libredb.org/"
+  },
+  "tags": [
+    "database",
+    "sql"
+  ]
+}

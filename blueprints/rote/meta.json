@@ -1,0 +1,18 @@
+{
+  "id": "rote",
+  "name": "Rote",
+  "version": "latest",
+  "description": "Rote is an open-source multi-platform personal note system featuring an open API, full data ownership, and effortless Docker deployment.",
+  "logo": "rote.png",
+  "links": {
+    "github": "https://github.com/Rabithua/Rote",
+    "website": "https://rote.ink",
+    "docs": "https://github.com/Rabithua/Rote/tree/main/doc/userguide"
+  },
+  "tags": [
+    "notes",
+    "productivity",
+    "postgres",
+    "bun"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "onedev",
+  "name": "OneDev",
+  "version": "11.6.6",
+  "description": "Git server with CI/CD, kanban, and packages. Seamless integration. Unparalleled experience.",
+  "logo": "onedev.png",
+  "links": {
+    "github": "https://github.com/theonedev/onedev/",
+    "website": "https://onedev.io/",
+    "docs": "https://docs.onedev.io/"
+  },
+  "tags": [
+    "self-hosted",
+    "development"
+  ]
+}

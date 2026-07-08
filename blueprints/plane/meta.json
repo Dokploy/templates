@@ -2,7 +2,7 @@
   "id": "plane",
   "name": "Plane",
   "version": "v1.3.1",
-  "description": "Easy, flexible, open source project management software",
+  "description": "Open source project management — alternative to Jira, Linear, Asana",
   "logo": "plane.png",
   "links": {
     "github": "https://github.com/makeplane/plane",
@@ -10,6 +10,7 @@
     "docs": "https://docs.plane.so/"
   },
   "tags": [
-    "kanban"
+    "kanban",
+    "project-management"
   ]
 }

@@ -6,7 +6,7 @@ version: "3.8"
 # web`, etc.) — /etc/hosts takes absolute priority over DNS, so the Caddy
 # inside plane-proxy (which has `reverse_proxy web:3000`/`api:8000`
 # hardcoded) resolves straight to our containers, ignoring any `web`/`api`
-# containers from other stacks on the shared dokploy-network.
+# containers from other stacks on the shared Dokploy network.
 
 x-db-env: &db-env
   PGHOST: ${PGHOST:-plane-db}
@@ -41,7 +41,7 @@ x-proxy-env: &proxy-env
   # else the `{$SITE_ADDRESS} { ... }` block is keyless and Caddy aborts).
   SITE_ADDRESS: ${SITE_ADDRESS:-:80}
   # trusted_proxies decides which peers may set X-Forwarded-For/X-Real-IP. Dokploy's
-  # Traefik upstream always lives on the private dokploy-network, so trust only private
+  # Traefik upstream always lives on Dokploy's private network, so trust only private
   # ranges (Caddy built-in) instead of 0.0.0.0/0 to prevent client-IP spoofing if the
   # proxy is ever exposed directly. Override with your real upstream CIDR if needed.
   TRUSTED_PROXIES: ${TRUSTED_PROXIES:-private_ranges}

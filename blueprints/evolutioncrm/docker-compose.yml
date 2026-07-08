@@ -92,6 +92,7 @@ services:
       - BACKEND_URL=${BACK_URL}
       - FRONTEND_URL=${FRONT_URL}
       - CORS_ORIGINS=${FRONT_URL},${BACK_URL}
+      - EVOLUTION_API_ONLY_SERVER=true
       - DISABLE_TELEMETRY=true
       - LOG_LEVEL=info
       - ENABLE_ACCOUNT_SIGNUP=true
@@ -248,5 +249,3 @@ volumes:
   redis-data:
   evo-processor-data:
   evo-crm-data:
-  evolution-go-logs:
-  evolution-go-data:

@@ -51,7 +51,7 @@ host = "${auth_domain}"
 
 [[config.domains]]
 serviceName = "evo-crm-frontend"
-port = 5173
+port = 80
 host = "${front_domain}"
 
 

@@ -1,0 +1,19 @@
+{
+  "id": "adventurelog",
+  "name": "AdventureLog",
+  "version": "latest",
+  "description": "AdventureLog is an open-source activity tracker with maps, journaling, and Strava integration.",
+  "logo": "adventurelog.svg",
+  "links": {
+    "github": "https://github.com/seanmorley15/adventurelog",
+    "website": "https://adventurelog.app/",
+    "docs": "https://adventurelog.app/docs/"
+  },
+  "tags": [
+    "activity",
+    "maps",
+    "django",
+    "react",
+    "postgres"
+  ]
+}

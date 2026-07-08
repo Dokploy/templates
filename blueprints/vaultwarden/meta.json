@@ -1,0 +1,15 @@
+{
+  "id": "vaultwarden",
+  "name": "Vaultwarden",
+  "version": "1.36.0",
+  "description": "Unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs",
+  "logo": "vaultwarden.svg",
+  "links": {
+    "github": "https://github.com/dani-garcia/vaultwarden",
+    "website": "",
+    "docs": "https://github.com/dani-garcia/vaultwarden/wiki"
+  },
+  "tags": [
+    "open-source"
+  ]
+}

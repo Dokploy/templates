@@ -1,0 +1,17 @@
+{
+  "id": "codex-docs",
+  "name": "CodeX Docs",
+  "version": "v2.2",
+  "description": "CodeX is a comprehensive platform that brings together passionate engineers, designers, and specialists to create high-quality open-source projects. It includes Editor.js, Hawk.so, CodeX Notes, and more.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/codex-team/codex.docs",
+    "website": "https://codex.so",
+    "docs": "https://docs.codex.so"
+  },
+  "tags": [
+    "documentation",
+    "development",
+    "collaboration"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "kestra",
+  "name": "Kestra",
+  "version": "latest",
+  "description": "Unified Orchestration Platform to Simplify Business-Critical Workflows and Govern them as Code and from the UI.",
+  "logo": "kestra.svg",
+  "links": {
+    "github": "https://github.com/kestra-io/kestra",
+    "website": "https://kestra.io",
+    "docs": "https://kestra.io/docs"
+  },
+  "tags": [
+    "automation"
+  ]
+}

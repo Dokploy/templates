@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  lubelogger:
+    image: ghcr.io/hargata/lubelogger:v1.6.5
+    restart: unless-stopped
+    environment:
+      - LC_ALL=${LUBELOGGER_LOCALE}
+      - LANG=${LUBELOGGER_LOCALE}
+      - LUBELOGGER_DOMAIN=${LUBELOGGER_DOMAIN}
+      - EnableAuth=${LUBELOGGER_ENABLE_AUTH}
+    volumes:
+      - lubelogger-data:/App/data
+      - lubelogger-keys:/root/.aspnet/DataProtection-Keys
+    expose:
+      - 8080
+
+volumes:
+  lubelogger-data: {}
+  lubelogger-keys: {}

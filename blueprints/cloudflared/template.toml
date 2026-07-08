@@ -1,6 +1,7 @@
 variables = {}
 
 [config]
+isolated = false
 domains = []
 mounts = []
 

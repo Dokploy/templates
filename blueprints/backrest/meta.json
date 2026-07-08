@@ -1,0 +1,15 @@
+{
+  "id": "backrest",
+  "name": "Backrest",
+  "version": "1.6.0",
+  "description": "Backrest is a web-based backup solution powered by restic, offering an intuitive WebUI for easy repository management, snapshot browsing, and file restoration. It runs in the background, automating snapshot scheduling and repository maintenance. Built with Go, Backrest is a lightweight standalone binary with restic as its only dependency. It provides a secure and user-friendly way to manage backups while still allowing direct access to the restic CLI for advanced operations.",
+  "links": {
+    "github": "https://github.com/garethgeorge/backrest",
+    "website": "https://garethgeorge.github.io/backrest",
+    "docs": "https://garethgeorge.github.io/backrest/introduction/getting-started"
+  },
+  "logo": "backrest.svg",
+  "tags": [
+    "backup"
+  ]
+}

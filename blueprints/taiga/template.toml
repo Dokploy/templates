@@ -1,0 +1,114 @@
+[variables]
+main_domain = "${domain}"
+postgres_user = "taiga"
+postgres_password = "${password:32}"
+secret_key = "${password:64}"
+rabbitmq_user = "taiga"
+rabbitmq_password = "${password:32}"
+rabbitmq_erlang_cookie = "${password:32}"
+
+[config]
+env = [
+  "TAIGA_SCHEME=https",
+  "TAIGA_DOMAIN=${main_domain}",
+  "WEBSOCKETS_SCHEME=wss",
+  "SUBPATH=",
+  "SECRET_KEY=${secret_key}",
+  "POSTGRES_USER=${postgres_user}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "EMAIL_BACKEND=console",
+  "EMAIL_HOST=smtp.example.com",
+  "EMAIL_PORT=587",
+  "EMAIL_HOST_USER=user",
+  "EMAIL_HOST_PASSWORD=password",
+  "EMAIL_DEFAULT_FROM=changeme@example.com",
+  "EMAIL_USE_TLS=False",
+  "EMAIL_USE_SSL=False",
+  "RABBITMQ_USER=${rabbitmq_user}",
+  "RABBITMQ_PASS=${rabbitmq_password}",
+  "RABBITMQ_VHOST=taiga",
+  "RABBITMQ_ERLANG_COOKIE=${rabbitmq_erlang_cookie}",
+  "ATTACHMENTS_MAX_AGE=360",
+  "ENABLE_TELEMETRY=False",
+  "PUBLIC_REGISTER_ENABLED=False",
+  "PUBLIC_REGISTER_ENABLED_FRONT=false",
+]
+
+[[config.domains]]
+serviceName = "taiga-gateway"
+port = 80
+host = "${main_domain}"
+path = "/"
+
+[[config.mounts]]
+filePath = "/volumes/nginx/taiga.conf"
+content = """
+server {
+    listen 80 default_server;
+
+    client_max_body_size 100M;
+    charset utf-8;
+
+    location / {
+        proxy_pass http://taiga-front/;
+        proxy_pass_header Server;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Scheme $scheme;
+    }
+
+    location /api/ {
+        proxy_pass http://taiga-back:8000/api/;
+        proxy_pass_header Server;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Scheme $scheme;
+    }
+
+    location /admin/ {
+        proxy_pass http://taiga-back:8000/admin/;
+        proxy_pass_header Server;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Scheme $scheme;
+    }
+
+    location /static/ {
+        alias /taiga/static/;
+    }
+
+    location /_protected/ {
+        internal;
+        alias /taiga/media/;
+        add_header Content-disposition "attachment";
+    }
+
+    location /media/exports/ {
+        alias /taiga/media/exports/;
+        add_header Content-disposition "attachment";
+    }
+
+    location /media/ {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Scheme $scheme;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://taiga-protected:8003/;
+        proxy_redirect off;
+    }
+
+    location /events {
+        proxy_pass http://taiga-events:8888/events;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_connect_timeout 7d;
+        proxy_send_timeout 7d;
+        proxy_read_timeout 7d;
+    }
+}
+"""

@@ -1,0 +1,17 @@
+{
+  "id": "pocketbase",
+  "name": "PocketBase",
+  "description": "Open Source backend in 1 file",
+  "version": "latest",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/pocketbase/pocketbase",
+    "website": "https://pocketbase.io/",
+    "docs": "https://pocketbase.io/docs/"
+  },
+  "tags": [
+    "backend",
+    "database",
+    "api"
+  ]
+}

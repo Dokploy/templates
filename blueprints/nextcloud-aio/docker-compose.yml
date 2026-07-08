@@ -13,8 +13,6 @@ services:
     depends_on:
       - nextcloud_db
       - nextcloud_redis
-<<<<<<< HEAD
-=======
 
   nextcloud_cron:
     image: nextcloud:stable
@@ -30,7 +28,6 @@ services:
     depends_on:
       - nextcloud_db
       - nextcloud_redis
->>>>>>> origin/canary
 
   nextcloud_db:
     image: mariadb:10.11

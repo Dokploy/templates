@@ -1,15 +1,4 @@
 [variables]
-<<<<<<< HEAD
-BASIC_AUTH_USER = "admin"
-BASIC_AUTH_PASS = "${password:12}"
-
-[config]
-[[config.domains]]
-name = "Domain"
-variable = "DOMAIN"
-serviceName = "mediafetch"
-port = 3002
-=======
 main_domain = "${domain}"
 PORT="3002"
 PUBLIC_BASE_URL="https://${main_domain}"
@@ -27,7 +16,6 @@ name = "Domain"
 serviceName = "mediafetch"
 port = "3002"
 host = "${main_domain}"
->>>>>>> origin/canary
 
 [[config.mounts]]
 name = "Downloads"

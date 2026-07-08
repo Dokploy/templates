@@ -1,6 +1,16 @@
 version: "3.8"
 
 services:
+  gateway:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - owncloud-infinite-scale
+    expose:
+      - "8080"
+    volumes:
+      - ../files/etc/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
+
   owncloud-infinite-scale:
     image: owncloud/ocis:8.0.3
     restart: unless-stopped

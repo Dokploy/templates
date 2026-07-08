@@ -1,0 +1,17 @@
+{
+  "id": "colanode",
+  "name": "Colanode Server",
+  "version": "v0.1.6",
+  "description": "Open-source and local-first Slack and Notion alternative that puts you in control of your data",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/colanode/colanode",
+    "website": "https://colanode.com",
+    "docs": "https://colanode.com/docs/"
+  },
+  "tags": [
+    "documentation",
+    "knowledge-base",
+    "collaboration"
+  ]
+}

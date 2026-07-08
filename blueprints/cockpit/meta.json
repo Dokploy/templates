@@ -1,0 +1,17 @@
+{
+  "id": "cockpit",
+  "name": "Cockpit",
+  "version": "core-2.11.0",
+  "description": "Cockpit is a headless content platform designed to streamline the creation, connection, and delivery of content for creators, marketers, and developers. It is built with an API-first approach, enabling limitless digital solutions.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/Cockpit-HQ",
+    "website": "https://getcockpit.com",
+    "docs": "https://getcockpit.com/documentation"
+  },
+  "tags": [
+    "cms",
+    "content-management",
+    "api"
+  ]
+}

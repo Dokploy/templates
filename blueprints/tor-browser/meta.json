@@ -1,0 +1,18 @@
+{
+  "id": "tor-browser",
+  "name": "Tor Browser",
+  "version": "latest",
+  "description": "A Dockerized Tor Browser accessible via web VNC (noVNC) and VNC client.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/DomiStyle/docker-tor-browser",
+    "website": "https://www.torproject.org/",
+    "docs": "https://hub.docker.com/r/domistyle/tor-browser"
+  },
+  "tags": [
+    "privacy",
+    "security",
+    "browser",
+    "tor"
+  ]
+}

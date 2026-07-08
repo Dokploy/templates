@@ -1,0 +1,15 @@
+{
+  "id": "jellyfin",
+  "name": "jellyfin",
+  "version": "v10.9.7",
+  "description": "Jellyfin is a Free Software Media System that puts you in control of managing and streaming your media. ",
+  "logo": "jellyfin.svg",
+  "links": {
+    "github": "https://github.com/jellyfin/jellyfin",
+    "website": "https://jellyfin.org/",
+    "docs": "https://jellyfin.org/docs/"
+  },
+  "tags": [
+    "media system"
+  ]
+}

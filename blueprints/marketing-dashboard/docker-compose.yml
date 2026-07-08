@@ -1,0 +1,47 @@
+services:
+  marketing-dashboard:
+    image: ghcr.io/abel-yelin/marketing-dashboard:latest
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      DIRECT_URL: ${DIRECT_URL}
+      MARKETING_APP_URL: ${MARKETING_APP_URL}
+      MARKETING_COLLECTOR_UPSTREAM_URL: ${MARKETING_COLLECTOR_UPSTREAM_URL}
+      MARKETING_SESSION_TIMEOUT_MINUTES: ${MARKETING_SESSION_TIMEOUT_MINUTES}
+      MARKETING_PROXY_TIMEOUT_MS: ${MARKETING_PROXY_TIMEOUT_MS}
+      MARKETING_INGEST_MAX_BODY_BYTES: ${MARKETING_INGEST_MAX_BODY_BYTES}
+      MARKETING_INGEST_IP_RATE_LIMIT: ${MARKETING_INGEST_IP_RATE_LIMIT}
+      MARKETING_INGEST_CLIENT_RATE_LIMIT: ${MARKETING_INGEST_CLIENT_RATE_LIMIT}
+      MARKETING_INGEST_RATE_LIMIT_WINDOW_MS: ${MARKETING_INGEST_RATE_LIMIT_WINDOW_MS}
+      MARKETING_ENABLE_PILOT_API: ${MARKETING_ENABLE_PILOT_API}
+      MARKETING_DASHBOARD_ADMIN_USER: ${MARKETING_DASHBOARD_ADMIN_USER}
+      MARKETING_DASHBOARD_ADMIN_PASSWORD: ${MARKETING_DASHBOARD_ADMIN_PASSWORD}
+    ports:
+      - 3000
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:3000/api/health > /dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - marketing-dashboard-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  marketing-dashboard-postgres:

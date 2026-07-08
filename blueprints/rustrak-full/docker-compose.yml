@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  rustrak-server:
+    image: abians7/rustrak-server:v0.2.1-postgres
+    restart: unless-stopped
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - RUST_LOG=info
+      - SSL_PROXY=true
+      - DATABASE_URL=postgres://rustrak:${POSTGRES_PASSWORD}@postgres:5432/rustrak
+      - SESSION_SECRET_KEY=${SESSION_SECRET_KEY}
+      - CREATE_SUPERUSER=${CREATE_SUPERUSER}
+    ports:
+      - 8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  rustrak-ui:
+    image: abians7/rustrak-ui:v0.1.6
+    restart: unless-stopped
+    environment:
+      - RUSTRAK_API_URL=${RUSTRAK_API_URL}
+    ports:
+      - 3000
+    depends_on:
+      - rustrak-server
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=rustrak
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=rustrak
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rustrak -d rustrak"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    expose:
+      - 5432
+
+volumes:
+  postgres_data:

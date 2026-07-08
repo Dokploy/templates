@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  seq:
+    image: datalust/seq:2025.2
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      SEQ_API_CANONICALURI: ${SEQ_API_CANONICALURI}
+      SEQ_FIRSTRUN_ADMINPASSWORD: ${SEQ_FIRSTRUN_ADMINPASSWORD}
+    expose:
+      - "80"
+    volumes:
+      - seq-data:/data
+
+volumes:
+  seq-data: {}

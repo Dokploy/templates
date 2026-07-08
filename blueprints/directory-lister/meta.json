@@ -1,0 +1,17 @@
+{
+  "id": "directory-lister",
+  "name": "Directory Lister",
+  "version": "latest",
+  "description": "Directory Lister is a simple PHP application that lists the contents of any web-accessible directory and allows navigation there within.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/DirectoryLister/DirectoryLister",
+    "website": "https://www.directorylister.com/",
+    "docs": "https://docs.directorylister.com/"
+  },
+  "tags": [
+    "file-manager",
+    "directory-listing",
+    "php"
+  ]
+}

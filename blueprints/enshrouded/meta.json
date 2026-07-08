@@ -1,0 +1,15 @@
+{
+  "id": "enshrouded",
+  "name": "Enshrouded",
+  "version": "1.0.0",
+  "description": "Enshrouded steam dedicated server.",
+  "logo": "enshrouded.png",
+  "links": {
+    "github": "https://github.com/mornedhels/enshrouded-server",
+    "website": "",
+    "docs": ""
+  },
+  "tags": [
+    "gaming"
+  ]
+}

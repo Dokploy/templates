@@ -1,0 +1,18 @@
+{
+  "id": "tianji",
+  "name": "Tianji",
+  "version": "latest",
+  "description": "Tianji is a lightweight web analytic service and uptime monitoring tool.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/msgbyte/tianji",
+    "website": "https://tianji.dev/",
+    "docs": "https://tianji.dev/docs/intro"
+  },
+  "tags": [
+    "analytics",
+    "monitoring",
+    "web",
+    "uptime"
+  ]
+}

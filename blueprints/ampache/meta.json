@@ -1,0 +1,17 @@
+{
+  "id": "ampache",
+  "name": "Ampache",
+  "version": "latest",
+  "description": "Ampache is a web-based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/ampache/ampache",
+    "website": "http://ampache.org/",
+    "docs": "https://github.com/ampache/ampache/wiki"
+  },
+  "tags": [
+    "media",
+    "music",
+    "streaming"
+  ]
+}

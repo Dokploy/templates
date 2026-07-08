@@ -1,0 +1,18 @@
+{
+  "id": "budibase",
+  "name": "Budibase",
+  "version": "3.23.47",
+  "description": "Budibase is an open-source low-code platform that saves engineers 100s of hours building forms, portals, and approval apps, securely.",
+  "logo": "budibase.svg",
+  "links": {
+    "github": "https://github.com/Budibase/budibase",
+    "website": "https://budibase.com/",
+    "docs": "https://docs.budibase.com/docs/"
+  },
+  "tags": [
+    "database",
+    "low-code",
+    "nocode",
+    "applications"
+  ]
+}

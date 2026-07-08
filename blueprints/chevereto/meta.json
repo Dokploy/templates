@@ -1,0 +1,19 @@
+{
+  "id": "chevereto",
+  "name": "Chevereto",
+  "version": "4",
+  "description": "Chevereto is a powerful, self-hosted image and video hosting platform designed for individuals, communities, and businesses. It allows users to upload, organize, and share media effortlessly.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/chevereto/chevereto",
+    "website": "https://chevereto.com/",
+    "docs": "https://v4-docs.chevereto.com/"
+  },
+  "tags": [
+    "Image Hosting",
+    "File Management",
+    "Open Source",
+    "Multi-User",
+    "Private Albums"
+  ]
+}

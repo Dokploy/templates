@@ -1,0 +1,19 @@
+{
+  "id": "rustrak",
+  "name": "Rustrak",
+  "version": "0.2.1",
+  "description": "Self-hosted error tracking compatible with Sentry SDKs. Server only, written in Rust with <100MB memory footprint and SQLite storage. No external database required.",
+  "logo": "rustrak.svg",
+  "links": {
+    "github": "https://github.com/AbianS/rustrak",
+    "website": "https://abians.github.io/rustrak/",
+    "docs": "https://abians.github.io/rustrak/"
+  },
+  "tags": [
+    "monitoring",
+    "error-tracking",
+    "sentry",
+    "rust",
+    "observability"
+  ]
+}

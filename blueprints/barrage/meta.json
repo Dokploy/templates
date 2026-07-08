@@ -1,0 +1,17 @@
+{
+  "id": "barrage",
+  "name": "Barrage",
+  "version": "0.3.0",
+  "description": "Barrage is a minimalistic Deluge WebUI app with full mobile support. It features a responsive mobile-first design, allowing you to manage your torrents with ease from any device.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/maulik9898/barrage",
+    "website": "https://github.com/maulik9898/barrage",
+    "docs": "https://github.com/maulik9898/barrage/blob/main/README.md"
+  },
+  "tags": [
+    "torrents",
+    "deluge",
+    "mobile"
+  ]
+}

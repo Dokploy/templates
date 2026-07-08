@@ -1,0 +1,16 @@
+{
+  "id": "logto",
+  "name": "Logto",
+  "version": "1.27.0",
+  "description": "Logto is an open-source Identity and Access Management (IAM) platform designed to streamline Customer Identity and Access Management (CIAM) and Workforce Identity Management.",
+  "logo": "logto.png",
+  "links": {
+    "github": "https://github.com/logto-io/logto",
+    "website": "https://logto.io/",
+    "docs": "https://docs.logto.io/introduction"
+  },
+  "tags": [
+    "identity",
+    "auth"
+  ]
+}

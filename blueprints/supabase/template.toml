@@ -2,24 +2,15 @@
 main_domain = "${domain}"
 postgres_password = "${password:32}"
 dashboard_password = "${password:32}"
-<<<<<<< HEAD
-=======
 logflare_public_access_token = "${password:32}"
 logflare_private_access_token = "${password:32}"
 pg_meta_crypto_key = "${password:32}"
 s3_protocol_access_key_id = "${password:24}"
 s3_protocol_access_key_secret = "${password:48}"
->>>>>>> origin/canary
 secret_key_base = "${password:64}"
 vault_enc_key = "${password:32}"
-pg_meta_crypto_key = "${password:32}"
-s3_protocol_access_key_id = "${password:24}"
-s3_protocol_access_key_secret = "${password:48}"
 jwt_secret = "${password:32}"
-<<<<<<< HEAD
-=======
 pooler_tenant_id = "${uuid}"
->>>>>>> origin/canary
 anon_key_payload = """{
   "role": "anon",
   "iss": "supabase",
@@ -41,11 +32,6 @@ host = "${main_domain}"
 [config]
 env = [
 '############',
-<<<<<<< HEAD
-'# Production Supabase configuration for Dokploy.',
-'# Configure SUPABASE_PUBLIC_URL/API_EXTERNAL_URL with https after assigning a Dokploy domain.',
-'# Configure SMTP_* before enabling production auth emails.',
-=======
 '# To get a proper working configuration you should at least take a look at:',
 '# - SUPABASE_PUBLIC_URL, API_EXTERNAL_URL should point to your supabase domain with correct http/https scheme',
 '# - SMTP_* are required for auth mail sending',
@@ -61,7 +47,6 @@ env = [
 '# In this version of the template they are generated randomly by dokploy helpers',
 '# so you do not need to change them manually',
 '# Go to https://supabase.com/docs/guides/self-hosting for more information',
->>>>>>> origin/canary
 '############',
 '',
 'SUPABASE_HOST=${main_domain}',
@@ -74,8 +59,6 @@ env = [
 'SECRET_KEY_BASE=${secret_key_base}',
 'VAULT_ENC_KEY=${vault_enc_key}',
 'PG_META_CRYPTO_KEY=${pg_meta_crypto_key}',
-<<<<<<< HEAD
-=======
 'LOGFLARE_PUBLIC_ACCESS_TOKEN=${logflare_public_access_token}',
 'LOGFLARE_PRIVATE_ACCESS_TOKEN=${logflare_private_access_token}',
 '',
@@ -83,23 +66,19 @@ env = [
 '############',
 '# Database - You can change these to any PostgreSQL database that has logical replication enabled.',
 '############',
->>>>>>> origin/canary
 '',
 'POSTGRES_HOST=db',
 'POSTGRES_DB=postgres',
 'POSTGRES_PORT=5432',
-<<<<<<< HEAD
-=======
 'POSTGRES_USER=postgres',
->>>>>>> origin/canary
 '',
+'',
+'############',
+'# Supavisor -- Database pooler',
+'############',
 'POOLER_PROXY_PORT_TRANSACTION=6543',
 'POOLER_DEFAULT_POOL_SIZE=20',
 'POOLER_MAX_CLIENT_CONN=100',
-<<<<<<< HEAD
-'POOLER_DB_POOL_SIZE=5',
-'POOLER_TENANT_ID=default',
-=======
 'POOLER_TENANT_ID=${pooler_tenant_id}',
 'POOLER_DB_POOL_SIZE=5',
 '',
@@ -108,15 +87,25 @@ env = [
 '# API Proxy - Configuration for the Kong Reverse proxy.',
 '# Following ports should not be changed for a dokploy config unless you know what you are doing.',
 '############',
->>>>>>> origin/canary
 '',
 'KONG_HTTP_PORT=8000',
 'KONG_HTTPS_PORT=8443',
+'',
+'',
+'############',
+'# API - Configuration for PostgREST.',
+'############',
 '',
 'PGRST_DB_SCHEMAS=public,storage,graphql_public',
 'PGRST_DB_MAX_ROWS=1000',
 'PGRST_DB_EXTRA_SEARCH_PATH=public',
 '',
+'',
+'############',
+'# Auth - Configuration for the GoTrue authentication server.',
+'############',
+'',
+'## General',
 'SITE_URL=http://localhost:3000',
 'ADDITIONAL_REDIRECT_URLS=https://${main_domain}/*,http://localhost:3000/*',
 'JWT_EXPIRY=3600',
@@ -124,11 +113,13 @@ env = [
 'API_EXTERNAL_URL=https://${main_domain}',
 'JWT_KEYS=[]',
 '',
-'MAILER_URLPATHS_CONFIRMATION=/auth/v1/verify',
-'MAILER_URLPATHS_INVITE=/auth/v1/verify',
-'MAILER_URLPATHS_RECOVERY=/auth/v1/verify',
-'MAILER_URLPATHS_EMAIL_CHANGE=/auth/v1/verify',
+'## Mailer Config',
+'MAILER_URLPATHS_CONFIRMATION="/auth/v1/verify"',
+'MAILER_URLPATHS_INVITE="/auth/v1/verify"',
+'MAILER_URLPATHS_RECOVERY="/auth/v1/verify"',
+'MAILER_URLPATHS_EMAIL_CHANGE="/auth/v1/verify"',
 '',
+'## Email auth',
 'ENABLE_EMAIL_SIGNUP=true',
 'ENABLE_EMAIL_AUTOCONFIRM=false',
 'SMTP_ADMIN_EMAIL=admin@example.com',
@@ -139,16 +130,17 @@ env = [
 'SMTP_SENDER_NAME=fake_sender',
 'ENABLE_ANONYMOUS_USERS=false',
 '',
+'## Phone auth',
 'ENABLE_PHONE_SIGNUP=true',
 'ENABLE_PHONE_AUTOCONFIRM=true',
 '',
+'',
+'############',
+'# Studio - Configuration for the Dashboard',
+'############',
+'',
 'STUDIO_DEFAULT_ORGANIZATION=Default Organization',
 'STUDIO_DEFAULT_PROJECT=Default Project',
-<<<<<<< HEAD
-'SUPABASE_PUBLIC_URL=http://${main_domain}',
-'SUPABASE_PUBLISHABLE_KEY=',
-'SUPABASE_SECRET_KEY=',
-=======
 '',
 'SUPABASE_PUBLIC_URL=https://${main_domain}',
 '',
@@ -165,22 +157,16 @@ env = [
 'IMGPROXY_AUTO_WEBP=true',
 '',
 '# Add your OpenAI API key to enable SQL Editor Assistant',
->>>>>>> origin/canary
 'OPENAI_API_KEY=',
 '',
+'',
+'############',
+'# Functions - Configuration for Functions',
+'############',
+'# NOTE: VERIFY_JWT applies to all functions. Per-function VERIFY_JWT is not supported yet.',
 'FUNCTIONS_VERIFY_JWT=false',
 '',
-'STORAGE_FILE_SIZE_LIMIT=52428800',
-'STORAGE_BACKEND=file',
-'STORAGE_TENANT_ID=stub',
-'GLOBAL_S3_BUCKET=stub',
-'REGION=local',
-'S3_PROTOCOL_ACCESS_KEY_ID=${s3_protocol_access_key_id}',
-'S3_PROTOCOL_ACCESS_KEY_SECRET=${s3_protocol_access_key_secret}',
 '',
-<<<<<<< HEAD
-'IMGPROXY_AUTO_WEBP=true']
-=======
 '############',
 '# Logs - Configuration for Logflare',
 '############',
@@ -191,7 +177,6 @@ env = [
 '# Google Cloud Project details',
 'GOOGLE_PROJECT_ID=GOOGLE_PROJECT_ID',
 'GOOGLE_PROJECT_NUMBER=GOOGLE_PROJECT_NUMBER']
->>>>>>> origin/canary
 
 [[config.mounts]]
 filePath = "/volumes/api/kong-entrypoint.sh"
@@ -441,11 +426,7 @@ services:
             - admin
             - anon
   - name: realtime-v1-rest
-<<<<<<< HEAD
-    _comment: 'Realtime: /realtime/v1/* -> ws://realtime:4000/socket/*'
-=======
     _comment: 'Realtime: /realtime/v1/api/* -> http://realtime:4000/api/*'
->>>>>>> origin/canary
     url: http://realtime:4000/api
     protocol: http
     routes:
@@ -514,8 +495,6 @@ services:
     plugins:
       - name: cors
 
-<<<<<<< HEAD
-=======
   ## OAuth 2.0 Authorization Server Metadata
   - name: well-known-oauth
     url: http://auth:9999/.well-known/oauth-authorization-server
@@ -526,7 +505,6 @@ services:
           - /.well-known/oauth-authorization-server
     plugins:
       - name: cors
->>>>>>> origin/canary
 
   ## Secure Database routes
   - name: meta
@@ -1030,8 +1008,6 @@ Deno.serve(async (req: Request) => {
 """
 
 [[config.mounts]]
-<<<<<<< HEAD
-=======
 filePath = "/volumes/logs/vector.yml"
 content = """api:
   enabled: true
@@ -1304,7 +1280,6 @@ sinks:
 """
 
 [[config.mounts]]
->>>>>>> origin/canary
 filePath = "/volumes/pooler/pooler.exs"
 content = """{:ok, _} = Application.ensure_all_started(:supavisor)
 

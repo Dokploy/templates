@@ -1,0 +1,17 @@
+{
+  "id": "chibisafe",
+  "name": "Chibisafe",
+  "version": "latest",
+  "description": "A beautiful and performant vault to save all your files in the cloud.",
+  "logo": "chibisafe.svg",
+  "links": {
+    "github": "https://github.com/chibisafe/chibisafe",
+    "website": "https://chibisafe.app",
+    "docs": "https://chibisafe.app/docs/intro"
+  },
+  "tags": [
+    "media system",
+    "storage",
+    "file-sharing"
+  ]
+}

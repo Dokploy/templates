@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+pg_password = "${password:32}"
+share_secret = "${password:64}"
+api_key_secret = "${password:64}"
+
+[config]
+env = [
+  "TELA_PUBLIC_BASE_URL=https://${main_domain}",
+  "TELA_PG_PASSWORD=${pg_password}",
+  "TELA_SHARE_SECRET=${share_secret}",
+  "TELA_API_KEY_SECRET=${api_key_secret}",
+]
+
+[[config.domains]]
+serviceName = "proxy"
+port = 80
+host = "${main_domain}"

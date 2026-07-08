@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    volumes:
+      - fiderPostgresData:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+  fider:
+    image: getfider/fider:0.21.1
+    restart: unless-stopped
+    depends_on:
+      - db
+      - mailhog
+    environment:
+      BASE_URL: ${BASE_URL}
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      EMAIL: ${EMAIL}
+      EMAIL_NOREPLY: ${EMAIL_NOREPLY}
+      EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST}
+      EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
+      EMAIL_SMTP_USERNAME: ${EMAIL_SMTP_USERNAME}
+      EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
+      EMAIL_SMTP_ENABLE_STARTTLS: ${EMAIL_SMTP_ENABLE_STARTTLS}
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    restart: unless-stopped
+
+volumes:
+  fiderPostgresData:

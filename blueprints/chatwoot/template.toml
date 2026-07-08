@@ -6,9 +6,9 @@ redis_password = "${password}"
 
 [config]
 env = [
-  "FRONTEND_URL=https://${main_domain}",
+  "FRONTEND_URL=http://${main_domain}",
   "SECRET_KEY_BASE=${secret_key_base}",
-  "FORCE_SSL=true",
+  "FORCE_SSL=false",
   "RAILS_ENV=production",
   "NODE_ENV=production",
   "INSTALLATION_ENV=docker",

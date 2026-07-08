@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "node ../build-scripts/generate-meta.js && vite",
+    "build": "node ../build-scripts/generate-meta.js && tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-meta": "node ../build-scripts/generate-meta.js"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.19.1",

@@ -1,0 +1,15 @@
+{
+  "id": "plausible",
+  "name": "Plausible",
+  "version": "v2.1.5",
+  "description": "Plausible is a open source, self-hosted web analytics platform that lets you track website traffic and user behavior.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/plausible/plausible",
+    "website": "https://plausible.io/",
+    "docs": "https://plausible.io/docs"
+  },
+  "tags": [
+    "analytics"
+  ]
+}

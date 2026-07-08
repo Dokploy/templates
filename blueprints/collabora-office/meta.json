@@ -1,0 +1,17 @@
+{
+  "id": "collabora-office",
+  "name": "Collabora Office",
+  "version": "latest",
+  "description": "Collabora Online is a powerful, flexible, and secure online office suite designed to break free from vendor lock-in and put you in full control of your documents.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/CollaboraOnline",
+    "website": "https://collaboraonline.com",
+    "docs": "https://sdk.collaboraonline.com/docs"
+  },
+  "tags": [
+    "office",
+    "documents",
+    "collaboration"
+  ]
+}

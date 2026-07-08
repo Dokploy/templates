@@ -1,0 +1,17 @@
+{
+  "id": "docmost",
+  "name": "Docmost",
+  "version": "0.4.1",
+  "description": "Docmost, is an open-source collaborative wiki and documentation software.",
+  "logo": "docmost.png",
+  "links": {
+    "github": "https://github.com/docmost/docmost",
+    "website": "https://docmost.com/",
+    "docs": "https://docmost.com/docs/"
+  },
+  "tags": [
+    "self-hosted",
+    "open-source",
+    "manager"
+  ]
+}

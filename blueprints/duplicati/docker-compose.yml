@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  duplicati:
+    image: 'lscr.io/linuxserver/duplicati:${APP_RELEASE:-2.3.0}'
+    restart: unless-stopped
+    environment:
+      - PUID=0
+      - PGID=0
+      - 'TZ=${TZ:-Europe/London}'
+      - 'SETTINGS_ENCRYPTION_KEY=${SETTINGS_ENCRYPTION_KEY}'
+      - 'DUPLICATI__WEBSERVICE_PASSWORD=${DUPLICATI__WEBSERVICE_PASSWORD}'
+      - 'DUPLICATI__WEBSERVICE_ALLOWED_HOSTNAMES=*'
+    volumes:
+      - 'duplicati-config:/config'
+      - '../files/backups:/backups'
+      - '../files/source:/source'
+      - '../files/restore:/restore'
+
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://127.0.0.1:8200'
+      interval: 2s
+      timeout: 10s
+      retries: 15
+
+volumes:
+  duplicati-config: {}

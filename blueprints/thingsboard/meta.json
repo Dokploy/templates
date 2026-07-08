@@ -1,0 +1,18 @@
+{
+  "id": "thingsboard",
+  "name": "ThingsBoard",
+  "version": "4.3.1.1",
+  "description": "ThingsBoard is an open-source IoT platform for device management, data collection, processing, visualization, and automation.",
+  "logo": "thingsboard.svg",
+  "links": {
+    "github": "https://github.com/thingsboard/thingsboard",
+    "website": "https://thingsboard.io/",
+    "docs": "https://thingsboard.io/docs/"
+  },
+  "tags": [
+    "iot",
+    "device-management",
+    "monitoring",
+    "visualization"
+  ]
+}

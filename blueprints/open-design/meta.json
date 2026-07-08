@@ -1,0 +1,16 @@
+{
+  "id": "open-design",
+  "name": "Open Design",
+  "version": "latest",
+  "description": "Open Design is a local-first, open-source design tool with native desktop apps, a large library of design systems, and an extensible plugin ecosystem that runs across many coding agents.",
+  "logo": "open-design.svg",
+  "links": {
+    "github": "https://github.com/nexu-io/open-design",
+    "website": "https://open-design.ai",
+    "docs": "https://open-design.ai"
+  },
+  "tags": [
+    "design",
+    "self-hosted"
+  ]
+}

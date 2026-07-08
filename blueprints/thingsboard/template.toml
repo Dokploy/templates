@@ -1,0 +1,43 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+load_demo = "false"
+java_opts = "-Xms512m -Xmx2048m"
+
+[[config.domains]]
+serviceName = "thingsboard"
+port = 8080
+host = "${main_domain}"
+path = "/"
+
+[[config.mounts]]
+filePath = "README.md"
+content = """# ThingsBoard
+
+This template deploys ThingsBoard Community Edition with PostgreSQL using the official `thingsboard/tb-node` Docker image.
+
+## First start
+
+The `thingsboard-init` service initializes the database once before the main service starts. By default it performs a clean install. Set `load_demo` to `true` before deploying if you want ThingsBoard's sample tenant, dashboards, and demo devices.
+
+## Login
+
+Open `https://${main_domain}` and sign in with the default system administrator account:
+
+- Email: `sysadmin@thingsboard.org`
+- Password: `sysadmin`
+
+Change the default password before exposing the instance to production users.
+
+## Device connectivity
+
+The web UI and HTTP device API are available through the configured domain. MQTT, CoAP, and additional transport ports are not publicly exposed by this template; expose them separately in Dokploy if your deployment requires direct device connections over those protocols.
+"""
+
+[config.env]
+POSTGRES_DB = "thingsboard"
+POSTGRES_USER = "postgres"
+POSTGRES_PASSWORD = "${postgres_password}"
+LOAD_DEMO = "${load_demo}"
+JAVA_OPTS = "${java_opts}"
+SECURITY_CORS_ALLOWED_ORIGINS = "http://${main_domain},https://${main_domain}"

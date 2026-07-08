@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  gatus:
+    image: ghcr.io/twin/gatus:v5.36.0
+    restart: unless-stopped
+    expose:
+      - 8080
+    volumes:
+      - gatus-data:/data
+      - ../files/config.yaml:/config/config.yaml:ro
+
+volumes:
+  gatus-data: {}

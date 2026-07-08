@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+cookie_secret = "${hash:64}"
+core_secret = "${hash:64}"
+assets_secret = "${hash:64}"
+owner_email = "${email}"
+
+[config]
+env = [
+  "CHATTO_HOST=${main_domain}",
+  "CHATTO_COOKIE_SECRET=${cookie_secret}",
+  "CHATTO_CORE_SECRET=${core_secret}",
+  "CHATTO_ASSETS_SECRET=${assets_secret}",
+  "CHATTO_OWNER_EMAIL=${owner_email}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "chatto"
+port = 4000
+host = "${main_domain}"

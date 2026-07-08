@@ -1,0 +1,82 @@
+version: "3.8"
+
+services:
+  thingsboard:
+    image: thingsboard/tb-node:4.3.1.1
+    restart: unless-stopped
+    depends_on:
+      thingsboard-db:
+        condition: service_healthy
+      thingsboard-init:
+        condition: service_completed_successfully
+    expose:
+      - "8080"
+    environment:
+      TB_SERVICE_ID: tb-ce-node
+      TB_QUEUE_TYPE: in-memory
+      JAVA_OPTS: ${JAVA_OPTS}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://thingsboard-db:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SECURITY_CORS_ALLOWED_ORIGINS: ${SECURITY_CORS_ALLOWED_ORIGINS}
+    volumes:
+      - thingsboard-logs:/var/log/thingsboard
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 5 bash -c '</dev/tcp/127.0.0.1/8080'"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 300s
+
+  thingsboard-init:
+    image: thingsboard/tb-node:4.3.1.1
+    restart: on-failure
+    # The image runs as the non-root "thingsboard" user, which cannot write
+    # the install marker to the freshly created (root-owned) /data volume.
+    user: root
+    depends_on:
+      thingsboard-db:
+        condition: service_healthy
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        if [ -f /data/.thingsboard-installed ]; then
+          echo "ThingsBoard database already initialized."
+          exit 0
+        fi
+        INSTALL_TB=true LOAD_DEMO=$${LOAD_DEMO:-false} start-tb-node.sh
+        touch /data/.thingsboard-installed
+    environment:
+      TB_SERVICE_ID: tb-ce-node
+      TB_QUEUE_TYPE: in-memory
+      JAVA_OPTS: ${JAVA_OPTS}
+      LOAD_DEMO: ${LOAD_DEMO}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://thingsboard-db:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - thingsboard-install:/data
+      - thingsboard-logs:/var/log/thingsboard
+
+  thingsboard-db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - thingsboard-db:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  thingsboard-db:
+  thingsboard-install:
+  thingsboard-logs:

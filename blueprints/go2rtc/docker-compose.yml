@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  go2rtc:
+    image: alexxit/go2rtc:1.9.14
+    restart: unless-stopped
+
+    # To use a local webcam, add the device to the service:
+    # devices:
+    #   - /dev/video0:/dev/video0  # Adjust path if your device is at /dev/video1, etc.
+
+    expose:
+      - 1984        # Web UI
+      - 8554        # RTSP
+      - 8555        # WebRTC
+
+    environment:
+      - TZ=${TZ}
+
+    volumes:
+      - go2rtc-config:/config
+
+volumes:
+  go2rtc-config: {}

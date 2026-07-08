@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="OpenSourcePOS">
+  <rect width="128" height="128" rx="24" fill="#177245"/>
+  <path fill="#fff" d="M30 34h68l-6 44H40L30 34Z"/>
+  <path fill="#d8f3dc" d="M42 45h44l-3 22H45l-3-22Z"/>
+  <path fill="#fff" d="M42 83h44a10 10 0 0 1 10 10v3H32v-3a10 10 0 0 1 10-10Z"/>
+  <path fill="#177245" d="M50 51h28v8H50zM49 88h30v5H49z"/>
+  <circle cx="48" cy="75" r="4" fill="#177245"/>
+  <circle cx="80" cy="75" r="4" fill="#177245"/>
+</svg>

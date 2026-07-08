@@ -3,19 +3,29 @@ main_domain = "${domain}"
 db_password = "${password}"
 db_user = "postiz"
 db_name = "postiz"
+temporal_password = "${password}"
+temporal_user = "temporal"
 jwt_secret = "${base64:32}"
 
 [config]
+env = [
+    "POSTIZ_HOST=${main_domain}",
+    "JWT_SECRET=${jwt_secret}",
+    "DB_USER=${db_user}",
+    "DB_PASSWORD=${db_password}",
+    "DB_NAME=${db_name}",
+    "TEMPORAL_USER=${temporal_user}",
+    "TEMPORAL_PASSWORD=${temporal_password}",
+    "FACEBOOK_APP_ID=",
+    "FACEBOOK_APP_SECRET=",
+    "LINKEDIN_CLIENT_ID=",
+    "LINKEDIN_CLIENT_SECRET=",
+    "X_API_KEY=",
+    "X_API_SECRET="
+]
 mounts = []
 
 [[config.domains]]
 serviceName = "postiz-app"
-port = 5_000
+port = 5000
 host = "${main_domain}"
-
-[config.env]
-POSTIZ_HOST = "${main_domain}"
-DB_PASSWORD = "${db_password}"
-DB_USER = "${db_user}"
-DB_NAME = "${db_name}"
-JWT_SECRET = "${jwt_secret}"

@@ -1,0 +1,17 @@
+{
+  "id": "dumbdrop",
+  "name": "DumbDrop",
+  "version": "latest",
+  "description": "DumbDrop is a simple, self-hosted file sharing service with no database or authentication required.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/dumbwareio/dumbdrop",
+    "website": "https://www.dumbware.io/software/DumbDrop/",
+    "docs": "https://github.com/dumbwareio/dumbdrop"
+  },
+  "tags": [
+    "file-sharing",
+    "self-hosted",
+    "simple"
+  ]
+}

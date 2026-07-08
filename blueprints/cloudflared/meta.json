@@ -1,0 +1,18 @@
+{
+  "id": "cloudflared",
+  "name": "Cloudflared",
+  "version": "latest",
+  "description": "A lightweight daemon that securely connects local services to the internet through Cloudflare Tunnel.",
+  "logo": "cloudflared.svg",
+  "links": {
+    "github": "https://github.com/cloudflare/cloudflared",
+    "website": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/",
+    "docs": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/"
+  },
+  "tags": [
+    "cloud",
+    "networking",
+    "security",
+    "tunnel"
+  ]
+}

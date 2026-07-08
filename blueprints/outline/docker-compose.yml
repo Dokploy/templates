@@ -12,18 +12,36 @@ services:
       NODE_ENV: production
       URL: ${URL}
       FORCE_HTTPS: 'false'
+      PROXY_HEADERS_TRUSTED: 'true'
       SECRET_KEY: ${SECRET_KEY}
       UTILS_SECRET: ${UTILS_SECRET}
       DATABASE_URL: postgres://outline:${POSTGRES_PASSWORD}@postgres:5432/outline
       PGSSLMODE: disable
       REDIS_URL: redis://redis:6379
+      FILE_STORAGE: local
+      FILE_STORAGE_LOCAL_ROOT_DIR: /var/lib/outline/data
       OIDC_CLIENT_ID: outline
       OIDC_CLIENT_SECRET: ${CLIENT_SECRET}
       OIDC_AUTH_URI: ${DEX_URL}/auth
       OIDC_TOKEN_URI: ${DEX_URL}/token
       OIDC_USERINFO_URI: ${DEX_URL}/userinfo
+      OIDC_USERNAME_CLAIM: preferred_username
+      OIDC_DISPLAY_NAME: OpenID Connect
+      OIDC_SCOPES: openid profile email
+    volumes:
+      - outline_data-test-outline-khufpx:/var/lib/outline/data
 
   dex:
+    image: nginx:1.27-alpine
+    restart: always
+    depends_on:
+      - dex-server
+    volumes:
+      - ../files/etc/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 5556
+
+  dex-server:
     image: ghcr.io/dexidp/dex:v2.37.0
     restart: always
     volumes:
@@ -32,8 +50,6 @@ services:
       - dex
       - serve
       - /etc/dex/config.yaml
-    ports:
-      - 5556
 
   postgres:
     image: postgres:15
@@ -53,5 +69,6 @@ services:
       - redis_data-test-outline-khufpx:/data
     
 volumes:
+  outline_data-test-outline-khufpx:
   postgres_data-test-outline-khufpx:
   redis_data-test-outline-khufpx:

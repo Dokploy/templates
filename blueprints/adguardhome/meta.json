@@ -1,0 +1,18 @@
+{
+  "id": "adguardhome",
+  "name": "AdGuard Home",
+  "version": "latest",
+  "description": "AdGuard Home is a comprehensive solution designed to enhance your online browsing experience by eliminating all kinds of ads, from annoying banners and pop-ups to intrusive video ads. It provides privacy protection, browsing security, and parental control features while maintaining website functionality.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/AdguardTeam/AdGuardHome",
+    "website": "https://adguard.com",
+    "docs": "https://github.com/AdguardTeam/AdGuardHome/wiki"
+  },
+  "tags": [
+    "privacy",
+    "security",
+    "dns",
+    "ad-blocking"
+  ]
+}

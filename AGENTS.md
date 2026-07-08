@@ -29,9 +29,9 @@ This document provides essential context for AI models interacting with this pro
     - `/src/hooks`: Custom React hooks (e.g., `useFuseSearch.ts` for fuzzy search).
     - `/src/store`: Zustand state management store.
     - `/src/lib`: Utility functions and helpers.
-  - `/build-scripts`: Advanced meta.json processing tools with CLI options and JSON schema validation.
+  - `/build-scripts`: Metadata tooling — `generate-meta.js` (aggregates and validates every `blueprints/<id>/meta.json` into the served `meta.json` artifact) and `explode-meta.js` (one-shot migration reference).
   - `/.github/workflows`: CI/CD workflows for validation, preview builds, and deployments.
-  - Root level: Core processing scripts (`dedupe-and-sort-meta.js`), metadata index (`meta.json`), build configuration (`Makefile`, `package.json`).
+  - Root level: There is NO root `meta.json` in the repo — each template's metadata lives in `blueprints/<id>/meta.json` and the global registry is generated at build time.
 - **Module Organization:** Node.js scripts for metadata processing, React components for frontend UI, Docker Compose files for service definitions, TOML files for Dokploy configuration. Frontend uses component-based architecture with hooks for business logic and Zustand for global state.
 
 ## 4. Coding Conventions & Style Guide
@@ -42,7 +42,7 @@ This document provides essential context for AI models interacting with this pro
   - React components: PascalCase (`TemplateGrid`, `SearchBar`)
   - Constants: SCREAMING_SNAKE_CASE (`MAX_BUFFER_SIZE`)
   - Template IDs: lowercase, kebab-case (`activepieces`, `ghost`) - **MUST** be unique across repository
-  - Files: snake_case for scripts (`dedupe-and-sort-meta.js`), PascalCase for React components (`TemplateGrid.tsx`), kebab-case for directories (`build-scripts`)
+  - Files: kebab-case for scripts (`generate-meta.js`), PascalCase for React components (`TemplateGrid.tsx`), kebab-case for directories (`build-scripts`)
   - Docker services: **MUST** match blueprint folder name exactly (e.g., `ghost` service in `blueprints/ghost/`)
 - **API Design:**
   - **Backend:** Procedural scripting approach with CLI interfaces. Template system uses declarative configuration over imperative code.
@@ -65,17 +65,15 @@ This document provides essential context for AI models interacting with this pro
 ## 5. Key Files & Entrypoints
 
 - **Main Entrypoints:**
-  - **Backend:** `dedupe-and-sort-meta.js` - Primary script for processing meta.json file.
+  - **Backend:** `build-scripts/generate-meta.js` - Aggregates and validates all `blueprints/<id>/meta.json` files into the served `meta.json` artifact (`app/public/meta.json`, gitignored).
   - **Frontend:** `app/src/main.tsx` - React application entry point.
 - **Configuration:**
-  - `package.json` - Root Node.js project configuration and npm scripts.
-  - `app/package.json` - Frontend dependencies and pnpm scripts.
-  - `meta.json` - Centralized template registry (200+ entries).
-  - `Makefile` - Build automation with targets for processing, validation, and cleanup.
+  - `app/package.json` - Frontend dependencies and pnpm scripts (`dev` and `build` run `generate-meta.js` first).
+  - `blueprints/<id>/meta.json` - Per-template metadata (one object per template; 400+ templates).
   - `app/vite.config.ts` - Vite build configuration with static copy plugin.
   - `app/tsconfig.json` - TypeScript compiler configuration.
 - **CI/CD Pipeline:**
-  - `.github/workflows/validate-meta.yml` - Validates meta.json structure, duplicates, and sort order.
+  - `.github/workflows/validate-meta.yml` - Validates every `blueprints/<id>/meta.json` (via `generate-meta.js --check`) and rejects a committed root `meta.json`.
   - `.github/workflows/build-preview.yml` - Builds preview deployments for PRs.
   - `.github/workflows/deploy-preview.yml` - Deploys previews to Cloudflare Pages.
 
@@ -92,47 +90,26 @@ This document provides essential context for AI models interacting with this pro
     cd app && pnpm install
     ```
 
-  - **Process meta.json** (CRITICAL: Run after ANY meta.json edits)
+  - **Validate template metadata** (CRITICAL: run after adding/editing any `blueprints/<id>/meta.json`)
     ```bash
-    npm run process-meta
-    # or
-    make process-meta
-    # or
-    node dedupe-and-sort-meta.js
+    node build-scripts/generate-meta.js --check
     ```
-  - **Validate without modifying**
+  - **Generate the served meta.json artifact** (done automatically by `pnpm dev` / `pnpm build` in `app/`)
     ```bash
-    npm run validate-meta
-    # or
-    make validate
-    ```
-  - **Quick check for duplicates/sort status**
-    ```bash
-    make check
-    ```
-  - **Clean backup files**
-    ```bash
-    make clean
+    node build-scripts/generate-meta.js   # writes app/public/meta.json
     ```
 - **Task Configuration:**
-  - **NPM Scripts:** Run `npm run` to list available scripts. Key scripts:
-    - `process-meta`: Remove duplicates and sort meta.json
-    - `process-meta-verbose`: Process with detailed output
-    - `validate-meta`: Validate structure without changes
-  - **Makefile Targets:** Run `make help` to list targets. Key targets:
-    - `process-meta`: Process meta.json
-    - `validate`: Validate without modifying
-    - `check`: Quick duplicate/sort check
-    - `build`: Full build process
-    - `clean`: Remove backup files
+  - **App scripts (`app/package.json`, pnpm):**
+    - `dev`: Generate meta artifact + start Vite dev server
+    - `build`: Generate meta artifact + typecheck + Vite build
+    - `generate-meta`: Generate the meta artifact only
 - **Testing:** No formal unit testing framework. Validation occurs through:
-  - Script-based validation of meta.json structure and schema
+  - Script-based validation of every `blueprints/<id>/meta.json` (`build-scripts/generate-meta.js --check`)
   - Manual testing via Dokploy preview deployments (import base64 from PR preview)
-  - JSON schema validation in `build-scripts/process-meta.js`
   - TypeScript compilation errors caught during build
   - ESLint for code quality in frontend
 - **CI/CD Process:**
-  - **On meta.json changes:** Validates structure, checks for duplicates, verifies sort order, compares processed vs original.
+  - **On blueprint changes:** Validates each template's metadata (required fields, id/folder match, logo file exists) and rejects a committed root `meta.json`.
   - **On PR creation:** Builds preview deployment, generates base64 import for testing in Dokploy.
   - **Preview testing:** Use PR description link → Search template → Copy base64 → Import in Dokploy instance.
 
@@ -140,10 +117,10 @@ This document provides essential context for AI models interacting with this pro
 
 - **Contribution Guidelines:**
   - Follow existing Dokploy template structure strictly. Each blueprint must be independent with no shared state.
-  - **CRITICAL:** Always run `node dedupe-and-sort-meta.js` or `npm run process-meta` after ANY meta.json edits.
+  - **CRITICAL:** Template metadata lives in `blueprints/<id>/meta.json` (one object per template). Never create or edit a root-level `meta.json` — it is generated at build time. Run `node build-scripts/generate-meta.js --check` after any metadata edits.
   - Test templates in Dokploy preview before submitting PRs (use base64 import from PR preview).
   - Add logo file (SVG preferred, ~128x128px) to blueprint folder.
-  - Ensure template `id` in meta.json exactly matches blueprint folder name (lowercase kebab-case).
+  - Ensure the `id` in `blueprints/<id>/meta.json` exactly matches the blueprint folder name (lowercase kebab-case).
 - **Docker Compose Conventions (CRITICAL):**
 
   - **Version:** MUST be `3.8`

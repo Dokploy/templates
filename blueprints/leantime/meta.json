@@ -1,0 +1,18 @@
+{
+  "id": "leantime",
+  "name": "Leantime",
+  "version": "latest",
+  "description": "Leantime is an open-source project management system for small teams and startups, built with PHP and MySQL.",
+  "logo": "leantime.png",
+  "links": {
+    "github": "https://github.com/Leantime/leantime",
+    "website": "https://leantime.io/",
+    "docs": "https://docs.leantime.io/"
+  },
+  "tags": [
+    "project-management",
+    "productivity",
+    "self-hosted",
+    "php"
+  ]
+}

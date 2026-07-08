@@ -1,0 +1,25 @@
+[variables]
+main_domain = "${domain}"
+app_key = "${base64:32}"
+db_password = "${password:24}"
+mysql_root_password = "${password:24}"
+
+[config]
+[[config.domains]]
+serviceName = "snipe-it"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+APP_KEY = "base64:${app_key}"
+APP_URL = "https://${main_domain}"
+APP_TIMEZONE = "UTC"
+APP_LOCALE = "en-US"
+APP_TRUSTED_PROXIES = "172.0.0.0/8"
+APP_FORCE_TLS = "true"
+SECURE_COOKIES = "true"
+DB_DATABASE = "snipeit"
+DB_USERNAME = "snipeit"
+DB_PASSWORD = "${db_password}"
+MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
+MAIL_FROM_ADDR = "snipe-it@${main_domain}"

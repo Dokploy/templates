@@ -1,0 +1,16 @@
+{
+  "id": "calibre",
+  "name": "Calibre",
+  "version": "7.26.0",
+  "description": "Calibre is a comprehensive e-book management tool designed to organize, convert, and read your e-book collection. It supports most of the major e-book formats and is compatible with various e-book reader devices.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/kovidgoyal/calibre",
+    "website": "https://calibre-ebook.com/",
+    "docs": "https://manual.calibre-ebook.com/"
+  },
+  "tags": [
+    "Documents",
+    "E-Commerce"
+  ]
+}

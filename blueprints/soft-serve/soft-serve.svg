@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Soft Serve">
+  <rect width="128" height="128" rx="24" fill="#ff6fb1"/>
+  <path fill="#331a2a" d="M36 47h56l-11 68H47L36 47Z"/>
+  <path fill="#ffd166" d="M42 47h44L77 108H51L42 47Z"/>
+  <path fill="#fff7f0" d="M34 48c0-12 10-22 22-22h16c12 0 22 10 22 22v2H34v-2Z"/>
+  <path fill="#74d3ae" d="M45 51h38l-4 12H49l-4-12Z"/>
+  <circle cx="50" cy="39" r="4" fill="#ff6fb1"/>
+  <circle cx="64" cy="34" r="4" fill="#4cc9f0"/>
+  <circle cx="78" cy="39" r="4" fill="#ffd166"/>
+</svg>

@@ -1,0 +1,102 @@
+version: "3.8"
+
+# Arche — AI workspace platform that spawns per-user OpenCode containers
+# via a Docker socket proxy.
+#
+# PRE-REQUISITES (run once on the VPS before deploying):
+#   mkdir -p /opt/arche/kb-content /opt/arche/kb-config /opt/arche/users
+#
+# Optional (only needed to seed the Knowledge Base):
+#   git init --bare --initial-branch=main /opt/arche/kb-content
+#   git init --bare --initial-branch=main /opt/arche/kb-config
+#
+# POST-DEPLOY (set in Dokploy → Environment, then redeploy):
+#   1. Deploy this template once. Dokploy auto-creates a network for the
+#      compose stack.
+#   2. SSH into the host and find the network name:
+#        docker network ls --format '{{.Name}}' | grep arche
+#      It looks like `<stack-name>_default` or similar.
+#   3. Add the env var OPENCODE_NETWORK=<that-network-name> and redeploy.
+#      Without it, spawned user workspaces will fail to start.
+#
+# IMAGE ARCHITECTURE:
+#   Default tags target linux/amd64. For ARM64 hosts (Apple Silicon,
+#   Ampere, Graviton), override both images to the `-arm64` variants in
+#   Dokploy → Environment:
+#     ARCHE_WEB_IMAGE=ghcr.io/peaberry-studio/arche/web:latest-arm64
+#     ARCHE_WORKSPACE_IMAGE=ghcr.io/peaberry-studio/arche/workspace:latest-arm64
+
+services:
+  web:
+    image: ${ARCHE_WEB_IMAGE:-ghcr.io/peaberry-studio/arche/web:latest}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      docker-socket-proxy:
+        condition: service_started
+    environment:
+      ARCHE_DOMAIN: ${ARCHE_DOMAIN}
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/arche?schema=public
+
+      ARCHE_SESSION_PEPPER: ${ARCHE_SESSION_PEPPER}
+      ARCHE_ENCRYPTION_KEY: ${ARCHE_ENCRYPTION_KEY}
+      ARCHE_INTERNAL_TOKEN: ${ARCHE_INTERNAL_TOKEN}
+      ARCHE_GATEWAY_TOKEN_SECRET: ${ARCHE_GATEWAY_TOKEN_SECRET}
+      ARCHE_CONNECTOR_OAUTH_STATE_SECRET: ${ARCHE_CONNECTOR_OAUTH_STATE_SECRET}
+
+      ARCHE_GATEWAY_TOKEN_TTL_SECONDS: "86400"
+      ARCHE_GATEWAY_BASE_URL: http://web:3000
+      ARCHE_PUBLIC_BASE_URL: https://${ARCHE_DOMAIN}
+      ARCHE_SESSION_TTL_DAYS: "7"
+      ARCHE_COOKIE_SECURE: "true"
+
+      ARCHE_SEED_ADMIN_EMAIL: ${ARCHE_SEED_ADMIN_EMAIL}
+      ARCHE_SEED_ADMIN_PASSWORD: ${ARCHE_SEED_ADMIN_PASSWORD}
+      ARCHE_SEED_ADMIN_SLUG: ${ARCHE_SEED_ADMIN_SLUG:-admin}
+
+      CONTAINER_PROXY_HOST: docker-socket-proxy
+      CONTAINER_PROXY_PORT: "2375"
+      OPENCODE_IMAGE: ${ARCHE_WORKSPACE_IMAGE:-ghcr.io/peaberry-studio/arche/workspace:latest}
+      OPENCODE_NETWORK: ${OPENCODE_NETWORK}
+
+      KB_CONTENT_HOST_PATH: /opt/arche/kb-content
+      KB_CONFIG_HOST_PATH: /opt/arche/kb-config
+      ARCHE_USERS_PATH: /opt/arche/users
+    expose:
+      - "3000"
+    volumes:
+      - /opt/arche/kb-content:/kb-content
+      - /opt/arche/kb-config:/kb-config
+      - /opt/arche/users:/opt/arche/users
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: arche
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  docker-socket-proxy:
+    image: ghcr.io/tecnativa/docker-socket-proxy:master
+    restart: unless-stopped
+    environment:
+      CONTAINERS: 1
+      NETWORKS: 1
+      IMAGES: 1
+      INFO: 1
+      POST: 1
+      VOLUMES: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+volumes:
+  postgres_data:

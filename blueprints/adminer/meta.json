@@ -1,0 +1,18 @@
+{
+  "id": "adminer",
+  "name": "Adminer",
+  "version": "4.8.1",
+  "description": "Adminer is a comprehensive database management tool that supports MySQL, MariaDB, PostgreSQL, SQLite, MS SQL, Oracle, Elasticsearch, MongoDB and others. It provides a clean interface for efficient database operations, with strong security features and extensive customization options.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/vrana/adminer",
+    "website": "https://www.adminer.org/",
+    "docs": "https://www.adminer.org/en/plugins/"
+  },
+  "tags": [
+    "databases",
+    "developer-tools",
+    "mysql",
+    "postgresql"
+  ]
+}

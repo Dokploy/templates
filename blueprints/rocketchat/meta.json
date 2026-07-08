@@ -1,0 +1,15 @@
+{
+  "id": "rocketchat",
+  "name": "Rocketchat",
+  "version": "6.9.2",
+  "description": "Rocket.Chat is a free and open-source web chat platform that allows you to build and manage your own chat applications.",
+  "logo": "rocketchat.png",
+  "links": {
+    "github": "https://github.com/RocketChat/Rocket.Chat",
+    "website": "https://rocket.chat/",
+    "docs": "https://rocket.chat/docs/"
+  },
+  "tags": [
+    "chat"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "soketi",
+  "name": "Soketi",
+  "version": "v1.6.1-16",
+  "description": "Soketi is your simple, fast, and resilient open-source WebSockets server.",
+  "logo": "soketi.png",
+  "links": {
+    "github": "https://github.com/soketi/soketi",
+    "website": "https://soketi.app/",
+    "docs": "https://docs.soketi.app/"
+  },
+  "tags": [
+    "chat"
+  ]
+}

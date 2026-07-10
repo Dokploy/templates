@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      - POSTGRES_USER=appboard
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=appboard
+    volumes:
+      - postgres-data:/var/lib/postgresql
+
+  backend:
+    image: ghcr.io/erykkruk/appboard-backend:latest
+    environment:
+      - NODE_ENV=production
+      - PORT=6680
+      - DB_URL=postgres://appboard:${POSTGRES_PASSWORD}@postgres:5432/appboard
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL}
+      - ALLOWED_ORIGINS=${BETTER_AUTH_URL}
+      # Blank on purpose: a 64-hex key is generated and persisted on first boot.
+      - ENCRYPTION_KEY=
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+    volumes:
+      - backend-data:/app/data
+    depends_on:
+      - postgres
+
+  web:
+    image: ghcr.io/erykkruk/appboard-web:latest
+    ports:
+      - "6600"
+    environment:
+      - NODE_ENV=production
+      - PORT=6600
+      - HOSTNAME=0.0.0.0
+      - BACKEND_URL=http://backend:6680
+    depends_on:
+      - backend
+
+volumes:
+  postgres-data:
+  backend-data:

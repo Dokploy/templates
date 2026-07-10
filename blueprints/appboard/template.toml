@@ -1,0 +1,19 @@
+[variables]
+POSTGRES_PASSWORD = "${password:24}"
+BETTER_AUTH_SECRET = "${password:32}"
+ADMIN_EMAIL = "admin@example.com"
+ADMIN_PASSWORD = "${password:16}"
+APP_URL = "https://${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "web"
+port = 6600
+host = "${domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${POSTGRES_PASSWORD}"
+BETTER_AUTH_SECRET = "${BETTER_AUTH_SECRET}"
+BETTER_AUTH_URL = "${APP_URL}"
+ADMIN_EMAIL = "${ADMIN_EMAIL}"
+ADMIN_PASSWORD = "${ADMIN_PASSWORD}"

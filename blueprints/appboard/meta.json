@@ -1,0 +1,19 @@
+{
+  "id": "appboard",
+  "name": "AppBoard",
+  "version": "latest",
+  "description": "Open-source, self-hostable ASO tool — manage App Store & Google Play listings, keyword rank tracking, screenshots and publishing from one panel.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/erykkruk/appboard_backend",
+    "website": "https://appboard.dev",
+    "docs": "https://appboard.dev/docs/self-hosting"
+  },
+  "tags": [
+    "aso",
+    "app-store",
+    "google-play",
+    "marketing",
+    "self-hosted"
+  ]
+}

@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  homebox:
+    image: ghcr.io/sysadminsmedia/homebox:latest
+    restart: unless-stopped
+    expose:
+      - "7745"
+    environment:
+      - TZ=${TZ}
+      - HBOX_AUTH_API_KEY_PEPPER=${HBOX_AUTH_API_KEY_PEPPER}
+    volumes:
+      - homebox-data:/data
+
+volumes:
+  homebox-data:

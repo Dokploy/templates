@@ -1,0 +1,18 @@
+{
+  "id": "zulip",
+  "name": "Zulip",
+  "version": "12.1-0",
+  "description": "Open-source threaded team chat designed to keep team communication organized and productive.",
+  "logo": "zulip.svg",
+  "links": {
+    "github": "https://github.com/zulip/docker-zulip",
+    "website": "https://zulip.com/",
+    "docs": "https://zulip.readthedocs.io/projects/docker/"
+  },
+  "tags": [
+    "chat",
+    "collaboration",
+    "team",
+    "self-hosted"
+  ]
+}

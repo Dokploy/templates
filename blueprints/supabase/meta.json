@@ -1,0 +1,18 @@
+{
+  "id": "supabase",
+  "name": "SupaBase",
+  "version": "2026.06.03 / dokploy >= 0.22.5",
+  "description": "The open source Firebase alternative. Supabase gives you a dedicated Postgres database to build your web, mobile, and AI applications. This require at least version 0.22.5 of dokploy.",
+  "links": {
+    "github": "https://github.com/supabase/supabase",
+    "website": "https://supabase.com/",
+    "docs": "https://supabase.com/docs/guides/self-hosting"
+  },
+  "logo": "supabase.svg",
+  "tags": [
+    "database",
+    "firebase",
+    "postgres"
+  ],
+  "dokploy_version": ">=0.22.5"
+}

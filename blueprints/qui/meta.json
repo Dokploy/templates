@@ -1,0 +1,19 @@
+{
+  "id": "qui",
+  "name": "qui",
+  "version": "latest",
+  "description": "A fast, modern web interface for qBittorrent. Manage multiple qBittorrent instances from a single, lightweight application built by autobrr.",
+  "logo": "qui.png",
+  "links": {
+    "github": "https://github.com/autobrr/qui",
+    "website": "https://getqui.com",
+    "docs": "https://getqui.com"
+  },
+  "tags": [
+    "torrent",
+    "qbittorrent",
+    "download",
+    "media",
+    "self-hosted"
+  ]
+}

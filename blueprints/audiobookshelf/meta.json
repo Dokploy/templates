@@ -1,0 +1,17 @@
+{
+  "id": "audiobookshelf",
+  "name": "Audiobookshelf",
+  "version": "2.19.4",
+  "description": "Audiobookshelf is a self-hosted server designed to manage and play your audiobooks and podcasts. It works best when you have an organized directory structure.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/advplyr/audiobookshelf",
+    "website": "https://www.audiobookshelf.org",
+    "docs": "https://www.audiobookshelf.org/docs"
+  },
+  "tags": [
+    "media",
+    "audiobooks",
+    "podcasts"
+  ]
+}

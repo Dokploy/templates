@@ -13,7 +13,9 @@ const Navigation = () => {
           "https://api.github.com/repos/dokploy/dokploy"
         );
         const data = await response.json();
-        setGithubStars(data.stargazers_count);
+        setGithubStars(
+          Number.isFinite(data.stargazers_count) ? data.stargazers_count : 0
+        );
       } catch (error) {
         console.error("Error fetching GitHub stars:", error);
       }

@@ -1,0 +1,18 @@
+{
+  "id": "networking-toolbox",
+  "name": "Networking Toolbox",
+  "version": "latest",
+  "description": "A collection of handy networking utilities by Lissy93, packaged as a self-hostable web app.",
+  "logo": "networking-toolbox.png",
+  "links": {
+    "github": "https://github.com/lissy93/networking",
+    "website": "https://github.com/lissy93/networking",
+    "docs": "https://github.com/lissy93/networking#readme"
+  },
+  "tags": [
+    "networking",
+    "tools",
+    "utilities",
+    "web"
+  ]
+}

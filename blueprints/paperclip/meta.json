@@ -1,0 +1,18 @@
+{
+  "id": "paperclip",
+  "name": "Paperclip",
+  "version": "latest",
+  "description": "Paperclip is an open-source control plane for managing teams of AI agents, goals, budgets, tickets, and recurring work.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/paperclipai/paperclip",
+    "website": "https://paperclip.ing/",
+    "docs": "https://docs.paperclip.ing/"
+  },
+  "tags": [
+    "ai",
+    "agents",
+    "automation",
+    "self-hosted"
+  ]
+}

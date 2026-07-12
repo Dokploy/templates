@@ -1,0 +1,332 @@
+version: "3.8"
+
+# Dokploy Blueprint notes:
+# - This stack is intentionally self-contained for one-click deployments.
+# - The first deployment is slower because bootstrap downloads Shopware into a persistent volume.
+# - Shopware source code and generated JWT keys live in named volumes so redeploys remain stable.
+# - Failed messenger jobs remain in the `failed` queue for manual retry via Shopware console commands.
+
+x-shopware-env: &shopware-env
+  APP_ENV: "${APP_ENV:-prod}"
+  APP_SECRET: "${APP_SECRET}"
+  INSTANCE_ID: "${INSTANCE_ID}"
+  APP_URL: "${APP_URL}"
+  ENABLE_DEMO_DATA: "${ENABLE_DEMO_DATA:-1}"
+  TRUSTED_PROXIES: "${TRUSTED_PROXIES:-private_ranges}"
+  SYMFONY_TRUSTED_PROXIES: "${SYMFONY_TRUSTED_PROXIES:-private_ranges}"
+  SYMFONY_TRUSTED_HEADERS: "${SYMFONY_TRUSTED_HEADERS:-x-forwarded-for,x-forwarded-host,x-forwarded-proto,x-forwarded-port,x-forwarded-prefix}"
+  DATABASE_HOST: "database"
+  DATABASE_PORT: "3306"
+  DATABASE_NAME: "${DATABASE_NAME:-shopware}"
+  DATABASE_USER: "${DATABASE_USER:-shopware}"
+  DATABASE_PASSWORD: "${DATABASE_PASSWORD}"
+  DATABASE_URL: "${DATABASE_URL}"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: "${REDIS_PASSWORD}"
+  MAILER_DSN: "${MAILER_DSN:-null://localhost}"
+  LOCK_DSN: "${LOCK_DSN}"
+  MESSENGER_TRANSPORT_DSN: "${MESSENGER_TRANSPORT_DSN:-doctrine://default?queue_name=async}"
+  MESSENGER_TRANSPORT_LOW_PRIORITY_DSN: "${MESSENGER_TRANSPORT_LOW_PRIORITY_DSN:-doctrine://default?queue_name=low_priority}"
+  MESSENGER_TRANSPORT_FAILURE_DSN: "${MESSENGER_TRANSPORT_FAILURE_DSN:-doctrine://default?queue_name=failed}"
+  COMPOSER_PLUGIN_LOADER: "${COMPOSER_PLUGIN_LOADER:-1}"
+  SHOPWARE_HTTP_CACHE_ENABLED: "${SHOPWARE_HTTP_CACHE_ENABLED:-1}"
+  SHOPWARE_HTTP_DEFAULT_TTL: "${SHOPWARE_HTTP_DEFAULT_TTL:-7200}"
+  INSTALL_LOCALE: "${INSTALL_LOCALE:-en-GB}"
+  INSTALL_CURRENCY: "${INSTALL_CURRENCY:-EUR}"
+  INSTALL_ADMIN_USERNAME: "${INSTALL_ADMIN_USERNAME:-admin}"
+  INSTALL_ADMIN_PASSWORD: "${INSTALL_ADMIN_PASSWORD}"
+  PHP_SESSION_HANDLER: "${PHP_SESSION_HANDLER:-redis}"
+  PHP_SESSION_SAVE_PATH: "${PHP_SESSION_SAVE_PATH}"
+  PHP_SESSION_COOKIE_LIFETIME: "${PHP_SESSION_COOKIE_LIFETIME:-0}"
+  PHP_SESSION_GC_MAXLIFETIME: "${PHP_SESSION_GC_MAXLIFETIME:-1440}"
+  PHP_MAX_UPLOAD_SIZE: "${PHP_MAX_UPLOAD_SIZE:-128M}"
+  PHP_MAX_EXECUTION_TIME: "${PHP_MAX_EXECUTION_TIME:-300}"
+  PHP_MEMORY_LIMIT: "${PHP_MEMORY_LIMIT:-512M}"
+  FPM_PM: "${FPM_PM:-dynamic}"
+  FPM_PM_MAX_CHILDREN: "${FPM_PM_MAX_CHILDREN:-20}"
+  FPM_PM_START_SERVERS: "${FPM_PM_START_SERVERS:-4}"
+  FPM_PM_MIN_SPARE_SERVERS: "${FPM_PM_MIN_SPARE_SERVERS:-2}"
+  FPM_PM_MAX_SPARE_SERVERS: "${FPM_PM_MAX_SPARE_SERVERS:-6}"
+  BLUE_GREEN_DEPLOYMENT: "${BLUE_GREEN_DEPLOYMENT:-0}"
+
+x-shopware-runtime-volumes: &shopware-runtime-volumes
+  - shopware-code:/var/www/html
+  - shopware-secrets:/run/shopware-secrets
+  - files:/var/www/html/files
+  - theme:/var/www/html/public/theme
+  - media:/var/www/html/public/media
+  - thumbnail:/var/www/html/public/thumbnail
+  - sitemap:/var/www/html/public/sitemap
+
+services:
+  database:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: "${DATABASE_NAME:-shopware}"
+      MYSQL_USER: "${DATABASE_USER:-shopware}"
+      MYSQL_PASSWORD: "${DATABASE_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    volumes:
+      - database-data:/var/lib/mysql
+
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --requirepass
+      - "${REDIS_PASSWORD}"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - redis-cli -a "$${REDIS_PASSWORD}" ping | grep -q PONG
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - redis-data:/data
+
+  bootstrap:
+    image: ${SHOPWARE_CLI_IMAGE:-shopware/shopware-cli:0.14.3-php-8.4}
+    restart: "no"
+    environment:
+      <<: *shopware-env
+      COMPOSER_ALLOW_SUPERUSER: "1"
+      COMPOSER_HOME: "/tmp/composer"
+      SHOPWARE_VERSION: "${SHOPWARE_VERSION:-6.7.12.1}"
+      SHOPWARE_DOCKER_VERSION: "${SHOPWARE_DOCKER_VERSION:-0.3.0}"
+      ENABLE_DEMO_DATA: "${ENABLE_DEMO_DATA:-1}"
+      DEMO_DATA_VERSION: "${DEMO_DATA_VERSION:-2.1.0}"
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        mkdir -p /run/shopware-secrets /var/www/html
+
+        if [ ! -s /run/shopware-secrets/jwt-private.pem ] || [ ! -s /run/shopware-secrets/jwt-public.pem ]; then
+          echo "Generating JWT keypair."
+          openssl genpkey -algorithm RSA -out /run/shopware-secrets/jwt-private.pem -pkeyopt rsa_keygen_bits:2048
+          openssl rsa -pubout -in /run/shopware-secrets/jwt-private.pem -out /run/shopware-secrets/jwt-public.pem
+          chmod 600 /run/shopware-secrets/jwt-private.pem
+          chmod 644 /run/shopware-secrets/jwt-public.pem
+        fi
+
+        export JWT_PRIVATE_KEY="$$(cat /run/shopware-secrets/jwt-private.pem)"
+        export JWT_PUBLIC_KEY="$$(cat /run/shopware-secrets/jwt-public.pem)"
+
+        if [ -f /var/www/html/composer.json ] && [ -f /var/www/html/bin/console ] && [ -f /var/www/html/vendor/autoload.php ]; then
+          echo "Shopware source already exists. Skipping bootstrap."
+          exit 0
+        fi
+
+        if find /var/www/html -mindepth 1 -maxdepth 1 -print -quit | grep -q .; then
+          echo "Incomplete Shopware source detected. Cleaning bootstrap volume."
+          find /var/www/html -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+        fi
+
+        tmp_dir="$$(mktemp -d)"
+
+        # Composer >=2.9 refuses to install pinned versions that are affected by
+        # security advisories published later. Keep the pinned bootstrap deterministic.
+        composer config -g audit.block-insecure false 2>/dev/null || true
+
+        composer create-project --no-interaction --prefer-dist "shopware/production:${SHOPWARE_VERSION}" "$$tmp_dir"
+        cd "$$tmp_dir"
+        composer require --no-interaction "shopware/docker:${SHOPWARE_DOCKER_VERSION}"
+
+        if [ "${ENABLE_DEMO_DATA}" = "1" ]; then
+          composer require --no-interaction --prefer-dist "swag/demo-data:${DEMO_DATA_VERSION}"
+        fi
+
+        shopware-cli project ci "$$tmp_dir"
+        cp -a "$$tmp_dir"/. /var/www/html/
+    volumes:
+      - shopware-code:/var/www/html
+      - shopware-secrets:/run/shopware-secrets
+
+  init-permissions:
+    image: alpine:3.21
+    restart: "no"
+    command:
+      - sh
+      - -ec
+      - |
+        mkdir -p \
+          /var/www/html/files \
+          /var/www/html/public/theme \
+          /var/www/html/public/media \
+          /var/www/html/public/thumbnail \
+          /var/www/html/public/sitemap \
+          /run/shopware-secrets
+        chown -R 82:82 /var/www/html /run/shopware-secrets
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
+    volumes: *shopware-runtime-volumes
+
+  init:
+    image: ${SHOPWARE_BASE_IMAGE:-shopware/docker-base:8.4.19-nginx}
+    restart: "no"
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        export JWT_PRIVATE_KEY="$(cat /run/shopware-secrets/jwt-private.pem)"
+        export JWT_PUBLIC_KEY="$(cat /run/shopware-secrets/jwt-public.pem)"
+
+        /setup
+
+        if [ "${ENABLE_DEMO_DATA:-1}" != "1" ]; then
+          exit 0
+        fi
+
+        cd /var/www/html
+
+        echo "Demo data enabled. Refreshing plugin list."
+        php bin/console -n plugin:refresh
+
+        if [ ! -d /var/www/html/custom/plugins/SwagPlatformDemoData ]; then
+          echo "SwagPlatformDemoData is not present in the volume."
+          echo "Continuing without demo data activation."
+          exit 0
+        fi
+
+        if ! plugin_state="$$(
+          php bin/console -n plugin:list --json | php -r '
+            $$plugins = json_decode(stream_get_contents(STDIN), true);
+            if (!is_array($$plugins)) {
+              fwrite(STDERR, "Unable to parse plugin list\n");
+              exit(2);
+            }
+
+            foreach ($$plugins as $$plugin) {
+              if (($$plugin["name"] ?? null) !== "SwagPlatformDemoData") {
+                continue;
+              }
+
+              $$installed = ($$plugin["installed"] ?? false) ? "1" : "0";
+              $$active = ($$plugin["active"] ?? false) ? "1" : "0";
+
+              echo $$installed . ":" . $$active;
+              exit(0);
+            }
+
+            fwrite(STDERR, "SwagPlatformDemoData not found in plugin list\n");
+            exit(1);
+          '
+        )"; then
+          echo "Unable to resolve SwagPlatformDemoData state."
+          echo "Continuing without demo data activation."
+          exit 0
+        fi
+
+        case "$${plugin_state}" in
+          "0:0")
+            echo "Installing and activating SwagPlatformDemoData."
+            php bin/console -n plugin:install --activate SwagPlatformDemoData
+            ;;
+          "1:0")
+            echo "Activating existing SwagPlatformDemoData plugin."
+            php bin/console -n plugin:activate SwagPlatformDemoData
+            ;;
+          "1:1")
+            echo "SwagPlatformDemoData is already active."
+            ;;
+          *)
+            echo "Unexpected SwagPlatformDemoData state: $${plugin_state}"
+            echo "Continuing without demo data activation."
+            exit 0
+            ;;
+        esac
+    environment: *shopware-env
+    depends_on:
+      init-permissions:
+        condition: service_completed_successfully
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes: *shopware-runtime-volumes
+
+  shopware:
+    image: ${SHOPWARE_BASE_IMAGE:-shopware/docker-base:8.4.19-nginx}
+    restart: unless-stopped
+    expose:
+      - "8000"
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        export JWT_PRIVATE_KEY="$(cat /run/shopware-secrets/jwt-private.pem)"
+        export JWT_PUBLIC_KEY="$(cat /run/shopware-secrets/jwt-public.pem)"
+        exec /usr/bin/supervisord -c /etc/supervisord.conf
+    environment: *shopware-env
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    volumes: *shopware-runtime-volumes
+
+  worker:
+    image: ${SHOPWARE_BASE_IMAGE:-shopware/docker-base:8.4.19-nginx}
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        export JWT_PRIVATE_KEY="$(cat /run/shopware-secrets/jwt-private.pem)"
+        export JWT_PUBLIC_KEY="$(cat /run/shopware-secrets/jwt-public.pem)"
+        exec php bin/console messenger:consume async low_priority --time-limit=300 --memory-limit=512M
+    environment: *shopware-env
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    volumes: *shopware-runtime-volumes
+
+  scheduler:
+    image: ${SHOPWARE_BASE_IMAGE:-shopware/docker-base:8.4.19-nginx}
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        export JWT_PRIVATE_KEY="$(cat /run/shopware-secrets/jwt-private.pem)"
+        export JWT_PUBLIC_KEY="$(cat /run/shopware-secrets/jwt-public.pem)"
+        exec php bin/console scheduled-task:run
+    environment: *shopware-env
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    volumes: *shopware-runtime-volumes
+
+volumes:
+  database-data:
+  redis-data:
+  shopware-code:
+  shopware-secrets:
+  files:
+  theme:
+  media:
+  thumbnail:
+  sitemap:

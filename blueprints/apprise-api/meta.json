@@ -1,0 +1,16 @@
+{
+  "id": "apprise-api",
+  "name": "Apprise API",
+  "version": "latest",
+  "description": "Apprise API provides a simple interface for sending notifications to almost all of the most popular notification services available to us today.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/caronc/apprise-api",
+    "website": "https://github.com/caronc/apprise-api",
+    "docs": "https://github.com/caronc/apprise-api/wiki"
+  },
+  "tags": [
+    "notifications",
+    "api"
+  ]
+}

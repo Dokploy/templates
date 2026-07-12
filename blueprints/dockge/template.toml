@@ -2,6 +2,8 @@
 main_domain = "${domain}"
 
 [config]
+env = {}
+mounts = []
 
 [[config.domains]]
 serviceName = "dockge"

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Marketing Dashboard">
+  <rect width="128" height="128" rx="24" fill="#111827"/>
+  <path d="M28 86h72" stroke="#f8fafc" stroke-width="8" stroke-linecap="round"/>
+  <path d="M36 76V54" stroke="#22c55e" stroke-width="10" stroke-linecap="round"/>
+  <path d="M58 76V34" stroke="#38bdf8" stroke-width="10" stroke-linecap="round"/>
+  <path d="M80 76V46" stroke="#f59e0b" stroke-width="10" stroke-linecap="round"/>
+  <path d="M34 39l20-10 24 9 18-16" fill="none" stroke="#f8fafc" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

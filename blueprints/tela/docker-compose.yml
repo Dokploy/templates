@@ -1,0 +1,65 @@
+services:
+  proxy:
+    image: ghcr.io/zcag/tela-proxy:0.7.0
+    restart: unless-stopped
+    environment:
+      - TELA_SITE_ADDRESS=:80
+      - TELA_UPSTREAM_BACKEND=backend:8080
+      - TELA_UPSTREAM_FRONTEND=frontend:80
+    depends_on:
+      - backend
+      - frontend
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+
+  backend:
+    image: ghcr.io/zcag/tela-backend:0.7.0
+    restart: unless-stopped
+    environment:
+      - TELA_PUBLIC_BASE_URL=${TELA_PUBLIC_BASE_URL}
+      - TELA_DATABASE_URL=postgres://tela:${TELA_PG_PASSWORD}@postgres:5432/tela?sslmode=disable
+      - TELA_SHARE_SECRET=${TELA_SHARE_SECRET}
+      - TELA_API_KEY_SECRET=${TELA_API_KEY_SECRET}
+      - TELA_DECK_URL=http://deck:3344
+      - TELA_GOTENBERG_URL=http://gotenberg:3000
+      - TELA_PDF_RENDER_BASE_URL=http://proxy
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    image: ghcr.io/zcag/tela-frontend:0.7.0
+    restart: unless-stopped
+
+  postgres:
+    image: pgvector/pgvector:pg17
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=tela
+      - POSTGRES_PASSWORD=${TELA_PG_PASSWORD}
+      - POSTGRES_DB=tela
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tela -d tela"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  deck:
+    image: ghcr.io/zcag/tela-deck:0.7.0
+    restart: unless-stopped
+    volumes:
+      - deckcache:/data
+
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  deckcache:
+  caddy-data:
+  caddy-config:

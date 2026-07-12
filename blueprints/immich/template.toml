@@ -5,17 +5,10 @@ db_user = "immich"
 
 [config]
 env = [
-  "IMMICH_HOST=${main_domain}",
   "SERVER_URL=https://${main_domain}",
-  "FRONT_BASE_URL=https://${main_domain}",
-  "DB_HOSTNAME=immich-database",
-  "DB_PORT=5432",
   "DB_USERNAME=${db_user}",
   "DB_PASSWORD=${db_password}",
   "DB_DATABASE_NAME=immich",
-  "REDIS_HOSTNAME=immich-redis",
-  "REDIS_PORT=6379",
-  "REDIS_DBINDEX=0",
   "TZ=UTC",
 ]
 mounts = []

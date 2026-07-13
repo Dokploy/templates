@@ -1,0 +1,161 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - sentroy-mongo:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  core:
+    image: ghcr.io/sentroy-co/sentroy-oss-core:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PORT=3000
+      - CDN_API_URL=http://cdn:4100
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  storage:
+    image: ghcr.io/sentroy-co/sentroy-oss-storage:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PORT=3002
+      - CDN_API_URL=http://cdn:4100
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  cdn:
+    image: ghcr.io/sentroy-co/sentroy-oss-cdn:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PORT=4100
+
+  auth2:
+    image: ghcr.io/sentroy-co/sentroy-oss-auth2:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PORT=3003
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  status:
+    image: ghcr.io/sentroy-co/sentroy-oss-status:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PORT=3004
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  studio:
+    image: ghcr.io/sentroy-co/sentroy-oss-studio:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PORT=3006
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  whatsapp:
+    image: ghcr.io/sentroy-co/sentroy-oss-whatsapp:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PORT=3007
+      - WHATSAPP_GATEWAY_URL=http://whatsapp-gateway:4200
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  whatsapp-gateway:
+    image: ghcr.io/sentroy-co/sentroy-oss-whatsapp-gateway:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PORT=4200
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  linear:
+    image: ghcr.io/sentroy-co/sentroy-oss-linear:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PORT=3009
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  downloader:
+    image: ghcr.io/sentroy-co/sentroy-oss-downloader:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PORT=3008
+      - DOWNLOADER_WORKER_URL=http://downloader-worker:4300
+
+  downloader-worker:
+    image: ghcr.io/sentroy-co/sentroy-oss-downloader-worker:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PORT=4300
+    volumes:
+      - sentroy-downloads:/downloads
+
+  backup:
+    image: ghcr.io/sentroy-co/sentroy-oss-backup:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PORT=3010
+      - BACKUP_WORKER_URL=http://backup-worker:4400
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  backup-worker:
+    image: ghcr.io/sentroy-co/sentroy-oss-backup-worker:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PORT=4400
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+volumes:
+  sentroy-mongo:
+    driver: local
+  sentroy-downloads:
+    driver: local

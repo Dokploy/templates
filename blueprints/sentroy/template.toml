@@ -1,0 +1,99 @@
+[variables]
+# Edit root_domain to your domain, then point wildcard DNS (*.<root> + <root>)
+# at this server. Every app is served at a fixed subdomain of it.
+root_domain = "sentroy.example.com"
+mongo_password = "${password:32}"
+auth_secret = "${base64:64}"
+internal_secret = "${password:48}"
+env_master = "${base64:64}"
+cdn_secret = "${password:32}"
+whatsapp_key = "${base64:32}"
+downloader_secret = "${password:32}"
+backup_secret = "${password:32}"
+admin_api_key = "${base64:48}"
+admin_password = "${password:24}"
+
+[config]
+
+[[config.domains]]
+serviceName = "core"
+port = 3000
+host = "${root_domain}"
+
+[[config.domains]]
+serviceName = "storage"
+port = 3002
+host = "storage.${root_domain}"
+
+[[config.domains]]
+serviceName = "cdn"
+port = 4100
+host = "cdn.${root_domain}"
+
+[[config.domains]]
+serviceName = "auth2"
+port = 3003
+host = "auth.${root_domain}"
+
+[[config.domains]]
+serviceName = "status"
+port = 3004
+host = "status.${root_domain}"
+
+[[config.domains]]
+serviceName = "studio"
+port = 3006
+host = "studio.${root_domain}"
+
+[[config.domains]]
+serviceName = "whatsapp"
+port = 3007
+host = "whatsapp.${root_domain}"
+
+[[config.domains]]
+serviceName = "linear"
+port = 3009
+host = "linear.${root_domain}"
+
+[[config.domains]]
+serviceName = "downloader"
+port = 3008
+host = "youtube.${root_domain}"
+
+[[config.domains]]
+serviceName = "backup"
+port = 3010
+host = "backup.${root_domain}"
+
+[config.env]
+# One knob — server code + the client-bundle sentinel are both resolved from
+# SENTROY_ROOT_DOMAIN at container start, so a single prebuilt image serves any
+# domain. Other app URLs are derived from it; no per-app URL needed.
+SENTROY_ROOT_DOMAIN = "${root_domain}"
+DOMAIN = "${root_domain}"
+NODE_ENV = "production"
+MONGO_INITDB_ROOT_USERNAME = "sentroy"
+MONGO_INITDB_ROOT_PASSWORD = "${mongo_password}"
+MONGODB_URI = "mongodb://sentroy:${mongo_password}@mongo:27017/sentroy?authSource=admin"
+MONGODB_DATABASE = "sentroy"
+BETTER_AUTH_SECRET = "${auth_secret}"
+BETTER_AUTH_URL = "https://${root_domain}"
+AUTH_COOKIE_DOMAIN = ".${root_domain}"
+AUTH_TRUSTED_ORIGINS = "https://${root_domain}"
+INTERNAL_API_SECRET = "${internal_secret}"
+SENTROY_ENV_MASTER_KEY = "${env_master}"
+CDN_API_SECRET = "${cdn_secret}"
+SENTROY_ADMIN_API_KEY = "${admin_api_key}"
+ADMIN_EMAIL = "admin@${root_domain}"
+ADMIN_PASSWORD = "${admin_password}"
+WHATSAPP_ENC_KEY = "${whatsapp_key}"
+DOWNLOADER_API_SECRET = "${downloader_secret}"
+BACKUP_API_SECRET = "${backup_secret}"
+TURNSTILE_DISABLED = "true"
+NEXT_PUBLIC_TURNSTILE_DISABLED = "true"
+# Object storage (S3-compatible) — REQUIRED for Storage + Backup. Fill these in.
+IDRIVE_ENDPOINT = ""
+IDRIVE_REGION = ""
+IDRIVE_BUCKET = ""
+IDRIVE_ACCESS_KEY = ""
+IDRIVE_SECRET_KEY = ""

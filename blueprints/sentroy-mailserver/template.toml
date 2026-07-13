@@ -1,0 +1,53 @@
+[variables]
+# Edit these to your mail domain, then set DNS: A mail.<domain> -> server IP,
+# MX <domain> -> mail.<domain>, SPF/DMARC TXT, and PTR/rDNS at your provider.
+mail_domain = "example.com"
+mail_hostname = "mail.example.com"
+server_ip = "203.0.113.10"
+postgres_password = "${password:32}"
+jwt_secret = "${base64:48}"
+smtp_pass = "${password:32}"
+imap_pass = "${password:32}"
+imap_master_pass = "${password:32}"
+admin_token = "${base64:48}"
+
+[config]
+
+[[config.domains]]
+serviceName = "api"
+port = 3000
+host = "api.${mail_domain}"
+
+[config.env]
+# Zero-touch admin token: ADMIN_API_KEY is provisioned into the DB idempotently
+# on first boot (no setup script). Read it from this template's variables.
+ADMIN_API_KEY = "${admin_token}"
+POSTGRES_DB = "maildb"
+POSTGRES_USER = "sentroy"
+POSTGRES_PASSWORD = "${postgres_password}"
+DATABASE_URL = "postgresql://sentroy:${postgres_password}@postgres:5432/maildb"
+REDIS_URL = "redis://redis:6379"
+API_PORT = "3000"
+NODE_ENV = "production"
+LOG_LEVEL = "info"
+JWT_SECRET = "${jwt_secret}"
+API_ALLOWED_ORIGINS = "*"
+API_BASE_URL = "https://api.${mail_domain}/api/v1"
+SERVER_IP = "${server_ip}"
+MAIL_HOSTNAME = "${mail_hostname}"
+MAIL_DOMAIN = "${mail_domain}"
+SMTP_HOST = "postfix"
+SMTP_PORT = "25"
+SMTP_USER = "api@${mail_hostname}"
+SMTP_PASS = "${smtp_pass}"
+IMAP_HOST = "dovecot"
+IMAP_PORT = "143"
+IMAP_USER = "inbox@${mail_hostname}"
+IMAP_PASS = "${imap_pass}"
+IMAP_MASTER_USER = "sentroy"
+IMAP_MASTER_PASS = "${imap_master_pass}"
+DKIM_KEYS_PATH = "/etc/rspamd/dkim"
+QUEUE_CONCURRENCY = "5"
+DOMAIN_VERIFY_INTERVAL = "300000"
+IMAP_POOL_SIZE = "5"
+DOVECOT_USERS_FILE = "/etc/dovecot/users-data/users"

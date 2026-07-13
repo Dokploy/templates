@@ -1,0 +1,17 @@
+{
+  "id": "sentroy",
+  "name": "Sentroy",
+  "version": "1.64.226",
+  "description": "Self-hostable workspace suite — mail, storage, auth/OIDC, status, WhatsApp, issue tracker, audio studio, downloader and MongoDB backup — on MongoDB.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/Sentroy-Co/sentroy",
+    "website": "https://sentroy.com",
+    "docs": "https://sentroy.com/docs"
+  },
+  "tags": [
+    "workspace",
+    "productivity",
+    "platform"
+  ]
+}

@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  openhabittracker:
+    image: jinjinov/openhabittracker:latest
+    ports:
+      - '8080'
+    environment:
+      AppSettings__UserName: ${OHT_USERNAME}
+      AppSettings__Email: ${OHT_EMAIL}
+      AppSettings__Password: ${OHT_PASSWORD}
+      AppSettings__JwtSecret: ${OHT_JWT_SECRET}
+    volumes:
+      - openhabittracker-data:/app/.OpenHabitTracker
+    restart: unless-stopped
+
+volumes:
+  openhabittracker-data:

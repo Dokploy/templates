@@ -1,0 +1,25 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+cookie_password = "${password:32}"
+
+[config]
+env = [
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "DATABASE_URL=postgresql://markup:${postgres_password}@db:5432/markup",
+  "NEXT_PUBLIC_SITE_URL=https://${main_domain}",
+  "# WorkOS AuthKit is optional: it powers user accounts and cloud sync.",
+  "# The app works without it (local, in-browser storage). To enable sign-in,",
+  "# create an app at https://dashboard.workos.com, set the redirect URI below",
+  "# in the WorkOS dashboard, and replace the placeholder credentials.",
+  "WORKOS_CLIENT_ID=client_id_change_me",
+  "WORKOS_API_KEY=sk_change_me",
+  "WORKOS_COOKIE_PASSWORD=${cookie_password}",
+  "NEXT_PUBLIC_WORKOS_REDIRECT_URI=https://${main_domain}/callback",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "markup"
+port = 3000
+host = "${main_domain}"

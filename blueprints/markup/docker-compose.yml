@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    volumes:
+      - markup-postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: markup
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: markup
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U markup -d markup"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  markup:
+    image: ghcr.io/pphilfre/markup:main
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      NEXT_PUBLIC_DB_PROVIDER: postgres
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+      # WorkOS AuthKit (optional): required only for user accounts and cloud sync.
+      # Placeholders keep the app running; replace them with real credentials
+      # from https://dashboard.workos.com to enable sign-in.
+      WORKOS_CLIENT_ID: ${WORKOS_CLIENT_ID}
+      WORKOS_API_KEY: ${WORKOS_API_KEY}
+      WORKOS_COOKIE_PASSWORD: ${WORKOS_COOKIE_PASSWORD}
+      NEXT_PUBLIC_WORKOS_REDIRECT_URI: ${NEXT_PUBLIC_WORKOS_REDIRECT_URI}
+      NODE_ENV: production
+
+volumes:
+  markup-postgres-data:

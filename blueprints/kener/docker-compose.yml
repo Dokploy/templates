@@ -1,39 +1,35 @@
-version: "3.8"
-
 services:
   kener:
     image: rajnandan1/kener:latest
     environment:
       - TZ=${TZ}
       - KENER_SECRET_KEY=${KENER_SECRET_KEY} # 🔐 API key / secret
+      - ORIGIN=${ORIGIN}
+      - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=${DATABASE_URL}
       - KENER_BASE_PATH=${KENER_BASE_PATH}
-      - ORIGIN=${ORIGIN}
       - RESEND_API_KEY=${RESEND_API_KEY} # 🔐 API key
       - RESEND_SENDER_EMAIL=${RESEND_SENDER_EMAIL}
     ports:
       - 3000
     volumes:
       - kener_db:/app/database
-      - ../files/uploads:/app/uploads
+    depends_on:
+      redis:
+        condition: service_healthy
     restart: unless-stopped
 
-  postgres:
-    image: postgres:alpine
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD} # 🔐 DB password
-      - POSTGRES_DB=${POSTGRES_DB}
-    restart: unless-stopped
-
-  mysql:
-    image: mariadb:11
-    environment:
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD} # 🔐 DB password
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_RANDOM_ROOT_PASSWORD=true
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - kener_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
 
 volumes:
   kener_db: {}
+  kener_redis: {}

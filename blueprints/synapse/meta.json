@@ -1,0 +1,16 @@
+{
+  "id": "synapse",
+  "name": "Synapse",
+  "version": "v1.156.0",
+  "description": "Synapse is the reference homeserver implementation for Matrix, an open standard for secure, decentralised, real-time communication.",
+  "logo": "synapse.svg",
+  "links": {
+    "github": "https://github.com/element-hq/synapse",
+    "website": "https://element-hq.github.io/synapse/latest/",
+    "docs": "https://element-hq.github.io/synapse/latest/setup/installation.html"
+  },
+  "tags": [
+    "matrix",
+    "communication"
+  ]
+}

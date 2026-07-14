@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   affinepro:
-    image: ghcr.io/toeverything/affine-graphql:stable-780dd83
+    image: ghcr.io/toeverything/affine:stable
     restart: unless-stopped
     ports:
       - 3010
@@ -12,6 +12,7 @@ services:
       - REDIS_SERVER_HOST=redis
       - REDIS_SERVER_PASSWORD=${REDIS_PASSWORD}
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/affinepro
+      - AFFINE_INDEXER_ENABLED=false
       - AFFINE_SERVER_HOST=${DOMAIN}
       - MAILER_HOST=${MAILER_HOST}
       - MAILER_PORT=${MAILER_PORT}
@@ -19,16 +20,21 @@ services:
       - MAILER_PASSWORD=${MAILER_PASSWORD}
       - MAILER_SENDER=${MAILER_SENDER}
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
 
   migration:
-    image: ghcr.io/toeverything/affine-graphql:stable-780dd83
-    command: node ./scripts/self-host-predeploy.js
+    image: ghcr.io/toeverything/affine:stable
+    command: ["sh", "-c", "node ./scripts/self-host-predeploy.js"]
     environment:
       - REDIS_SERVER_HOST=redis
       - REDIS_SERVER_PASSWORD=${REDIS_PASSWORD}
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/affinepro
+      - AFFINE_INDEXER_ENABLED=false
       - AFFINE_SERVER_HOST=${DOMAIN}
       - MAILER_HOST=${MAILER_HOST}
       - MAILER_PORT=${MAILER_PORT}
@@ -39,17 +45,25 @@ services:
       - affine-storage:/root/.affine/storage
       - affine-config:/root/.affine/config
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   db:
-    image: postgres:15-alpine
+    image: pgvector/pgvector:pg16
     restart: unless-stopped
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=affinepro
+      - POSTGRES_INITDB_ARGS=--data-checksums
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "affinepro"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
@@ -57,9 +71,14 @@ services:
     command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
       - redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a '${REDIS_PASSWORD}' ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   affine-storage: {}
   affine-config: {}
   postgres-data: {}
-  redis-data: {} 
+  redis-data: {}

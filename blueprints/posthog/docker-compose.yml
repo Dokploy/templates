@@ -1,0 +1,634 @@
+# PostHog self-hosted ("hobby" deployment, trimmed for a single VPS).
+# Based on https://github.com/PostHog/posthog/blob/master/docker-compose.hobby.yml
+# Omitted vs upstream hobby (heavy/optional): Temporal + Elasticsearch (data
+# warehouse / batch exports), browserless (image exports / heatmap screenshots),
+# personhog, cymbal + error-tracking/logs/traces ingestion, capture-ai and
+# capture-logs. Everything needed for product analytics, feature flags,
+# surveys, session replay and the CDP pipeline is included.
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "50m"
+    max-file: "3"
+
+x-django-env: &django-env
+  # Postgres
+  DATABASE_URL: postgres://posthog:posthog@db:5432/posthog
+  PGHOST: db
+  PGUSER: posthog
+  PGPASSWORD: posthog
+  PERSONS_DB_WRITER_URL: postgres://posthog:posthog@db:5432/posthog
+  PERSONS_DB_READER_URL: postgres://posthog:posthog@db:5432/posthog
+  # ClickHouse (users match docker/clickhouse/users.xml from the PostHog repo)
+  CLICKHOUSE_HOST: clickhouse
+  CLICKHOUSE_DATABASE: posthog
+  CLICKHOUSE_SECURE: "false"
+  CLICKHOUSE_VERIFY: "false"
+  CLICKHOUSE_API_USER: api
+  CLICKHOUSE_API_PASSWORD: apipass
+  CLICKHOUSE_APP_USER: app
+  CLICKHOUSE_APP_PASSWORD: apppass
+  CLICKHOUSE_LOGS_CLUSTER_HOST: clickhouse
+  CLICKHOUSE_LOGS_CLUSTER_SECURE: "false"
+  # Redis / Kafka
+  REDIS_URL: redis://redis7:6379/
+  KAFKA_HOSTS: kafka:9092
+  FLAGS_REDIS_ENABLED: "false"
+  # Object storage (MinIO)
+  OBJECT_STORAGE_ENABLED: "true"
+  OBJECT_STORAGE_ENDPOINT: http://objectstorage:19000
+  OBJECT_STORAGE_PUBLIC_ENDPOINT: ${POSTHOG_SITE_URL}
+  OBJECT_STORAGE_ACCESS_KEY_ID: object_storage_root_user
+  OBJECT_STORAGE_SECRET_ACCESS_KEY: object_storage_root_password
+  OBJECT_STORAGE_FORCE_PATH_STYLE: "true"
+  # Session replay storage
+  SESSION_RECORDING_V2_S3_ENDPOINT: http://objectstorage:19000
+  SESSION_RECORDING_V2_S3_ACCESS_KEY_ID: object_storage_root_user
+  SESSION_RECORDING_V2_S3_SECRET_ACCESS_KEY: object_storage_root_password
+  RECORDING_API_URL: http://recording-api:6738
+  # App
+  SITE_URL: ${POSTHOG_SITE_URL}
+  SECRET_KEY: ${POSTHOG_SECRET_KEY}
+  ENCRYPTION_SALT_KEYS: ${POSTHOG_ENCRYPTION_SALT_KEYS}
+  DEPLOYMENT: hobby
+  IS_BEHIND_PROXY: "true"
+  DISABLE_SECURE_SSL_REDIRECT: "true"
+  # "false" so login works over plain HTTP; set to "true" once the domain uses HTTPS
+  SECURE_COOKIES: ${POSTHOG_SECURE_COOKIES}
+  CDP_API_URL: http://plugins:6738
+  FEATURE_FLAGS_SERVICE_URL: http://feature-flags:3001
+  LIVESTREAM_HOST: ${POSTHOG_SITE_URL}/livestream
+  API_QUERIES_PER_TEAM: '{"1": 100}'
+  OTEL_SDK_DISABLED: "true"
+  OTEL_EXPORTER_OTLP_ENDPOINT: ""
+
+services:
+  # One-shot: fetches the ClickHouse configuration, Kafka table schemas and
+  # funnel UDFs from the PostHog repo (pinned to the same commit as the app
+  # image) plus the GeoLite2 GeoIP database. Idempotent across redeploys.
+  init-assets:
+    image: alpine:3.21
+    restart: on-failure
+    logging: *default-logging
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - |
+        set -e
+        apk add --no-cache git curl brotli >/dev/null
+        if [ ! -f /assets/.ok-${POSTHOG_VERSION} ]; then
+          echo "Fetching PostHog repo assets @ ${POSTHOG_VERSION}"
+          rm -rf /tmp/ph && mkdir -p /tmp/ph && cd /tmp/ph
+          git init -q .
+          git remote add origin https://github.com/PostHog/posthog.git
+          git sparse-checkout set --no-cone /docker/clickhouse/ /posthog/idl/ /posthog/user_scripts/
+          git -c protocol.version=2 fetch -q --depth 1 --filter=blob:none origin ${POSTHOG_VERSION}
+          git checkout -q FETCH_HEAD
+          rm -rf /assets/clickhouse /assets/idl /assets/user_scripts /assets/.ok-*
+          cp -r docker/clickhouse /assets/clickhouse
+          cp -r posthog/idl /assets/idl
+          cp -r posthog/user_scripts /assets/user_scripts
+          touch /assets/.ok-${POSTHOG_VERSION}
+          echo "Repo assets ready"
+        fi
+        if [ ! -s /share/GeoLite2-City.mmdb ]; then
+          echo "Downloading GeoLite2 database"
+          curl -sL --http1.1 https://mmdbcdn.posthog.net/ | brotli --decompress --output=/share/GeoLite2-City.mmdb
+          chmod 644 /share/GeoLite2-City.mmdb
+        fi
+        echo "init-assets done"
+    volumes:
+      - posthog-assets:/assets
+      - geoip-data:/share
+
+  db:
+    image: postgres:15.12-alpine
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      POSTGRES_USER: posthog
+      POSTGRES_DB: posthog
+      POSTGRES_PASSWORD: posthog
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U posthog"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 10s
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ../files/db-init:/docker-entrypoint-initdb.d:ro
+
+  redis7:
+    image: redis:7.2-alpine
+    restart: unless-stopped
+    logging: *default-logging
+    command: redis-server --maxmemory-policy allkeys-lru --maxmemory 200mb
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - redis-data:/data
+
+  # Required by ClickHouse for distributed DDL (docker/clickhouse/config.xml
+  # points at zookeeper:2181)
+  zookeeper:
+    image: zookeeper:3.7.0
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      ZOO_AUTOPURGE_PURGEINTERVAL: 1
+      ZOO_AUTOPURGE_SNAPRETAINCOUNT: 3
+    volumes:
+      - zookeeper-data:/data
+      - zookeeper-datalog:/datalog
+
+  # Kafka API provided by Redpanda (as upstream), tuned down for small servers
+  kafka:
+    image: docker.io/redpandadata/redpanda:v25.1.9
+    restart: unless-stopped
+    logging: *default-logging
+    command:
+      - redpanda
+      - start
+      - --kafka-addr internal://0.0.0.0:9092
+      - --advertise-kafka-addr internal://kafka:9092
+      - --rpc-addr kafka:33145
+      - --advertise-rpc-addr kafka:33145
+      - --mode dev-container
+      - --smp 1
+      - --memory 1G
+      - --reserve-memory 0M
+      - --overprovisioned
+      - --set redpanda.empty_seed_starts_cluster=false
+      - --seeds kafka:33145
+      - --set redpanda.auto_create_topics_enabled=true
+    volumes:
+      - redpanda-data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9644/v1/status/ready || exit 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 20s
+
+  # One-shot: pre-creates the Kafka topics that consumers check at startup
+  kafka-init:
+    image: docker.io/redpandadata/redpanda:v25.1.9
+    restart: on-failure
+    logging: *default-logging
+    entrypoint: /bin/sh
+    depends_on:
+      kafka:
+        condition: service_healthy
+    command:
+      - -c
+      - |
+        set -e
+        TOPICS="clickhouse_events_json \
+            clickhouse_ai_events_json \
+            clickhouse_heatmap_events \
+            clickhouse_ingestion_warnings \
+            events_plugin_ingestion \
+            events_plugin_ingestion_dlq \
+            events_plugin_ingestion_overflow \
+            events_plugin_ingestion_async \
+            events_plugin_ingestion_historical \
+            ingestion-clientwarnings-main-1 \
+            heatmaps_ingestion \
+            session_recording_snapshot_item_events \
+            session_recording_snapshot_item_overflow \
+            clickhouse_groups \
+            clickhouse_person \
+            clickhouse_person_distinct_id \
+            clickhouse_app_metrics2 \
+            log_entries \
+            clickhouse_tophog"
+        for topic in $$TOPICS; do
+          rpk topic create "$$topic" --brokers kafka:9092 -p 1 -r 1 2>/dev/null \
+            || rpk topic list --brokers kafka:9092 | grep -q "$$topic"
+        done
+        echo "Kafka topics ready"
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:26.6.1.1193
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      init-assets:
+        condition: service_completed_successfully
+      zookeeper:
+        condition: service_started
+      kafka:
+        condition: service_started
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        set -e
+        cp /assets/clickhouse/config.xml /etc/clickhouse-server/config.xml
+        cp /assets/clickhouse/config.d/default.xml /etc/clickhouse-server/config.d/default.xml
+        cp /assets/clickhouse/users.xml /etc/clickhouse-server/users.xml
+        cp /assets/clickhouse/user_defined_function.xml /etc/clickhouse-server/user_defined_function.xml
+        mkdir -p /var/lib/clickhouse/format_schemas /var/lib/clickhouse/user_scripts
+        cp -r /assets/idl/. /var/lib/clickhouse/format_schemas/
+        cp -r /assets/user_scripts/. /var/lib/clickhouse/user_scripts/
+        chmod -R 755 /var/lib/clickhouse/user_scripts
+        chown -R clickhouse:clickhouse /var/lib/clickhouse/format_schemas /var/lib/clickhouse/user_scripts || true
+        # Materialize system log tables (system.crash_log is required by the
+        # custom_metrics ClickHouse migration), mirroring upstream init-db.sh
+        (
+          i=0
+          while [ $$i -lt 90 ]; do
+            if clickhouse-client --query "SELECT 1" >/dev/null 2>&1; then
+              clickhouse-client --query "SYSTEM FLUSH LOGS" && echo "system logs flushed" && break
+            fi
+            sleep 2
+            i=$$((i+1))
+          done
+        ) &
+        exec /entrypoint.sh
+    environment:
+      CLICKHOUSE_SKIP_USER_SETUP: 1
+      KAFKA_HOSTS: kafka:9092
+    volumes:
+      - posthog-assets:/assets:ro
+      - clickhouse-data:/var/lib/clickhouse
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
+
+  # Django app: runs migrations, then serves the API + UI on :8000
+  web:
+    image: posthog/posthog:${POSTHOG_VERSION}
+    restart: unless-stopped
+    logging: *default-logging
+    command: ["sh", "-c", "./bin/migrate && exec ./bin/docker-server"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis7:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
+      objectstorage:
+        condition: service_started
+    environment:
+      <<: *django-env
+      NGINX_UNIT_APP_PROCESSES: 2
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:8000/_health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 15
+      start_period: 600s
+
+  # Celery worker + scheduler
+  worker:
+    image: posthog/posthog:${POSTHOG_VERSION}
+    restart: unless-stopped
+    logging: *default-logging
+    command: ./bin/docker-worker-celery --with-scheduler
+    depends_on:
+      db:
+        condition: service_healthy
+      redis7:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      web:
+        condition: service_started
+    environment:
+      <<: *django-env
+      POSTHOG_SKIP_MIGRATION_CHECKS: "1"
+      WEB_CONCURRENCY: 2
+
+  # Node plugin server: CDP (destinations, webhooks, transformations)
+  plugins:
+    image: posthog/posthog-node:${POSTHOG_NODE_VERSION}
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      db:
+        condition: service_healthy
+      redis7:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      clickhouse:
+        condition: service_started
+      kafka-init:
+        condition: service_completed_successfully
+      init-assets:
+        condition: service_completed_successfully
+    environment:
+      SITE_URL: ${POSTHOG_SITE_URL}
+      SECRET_KEY: ${POSTHOG_SECRET_KEY}
+      ENCRYPTION_SALT_KEYS: ${POSTHOG_ENCRYPTION_SALT_KEYS}
+      DATABASE_URL: postgres://posthog:posthog@db:5432/posthog
+      PERSONS_DATABASE_URL: postgres://posthog:posthog@db:5432/posthog
+      BEHAVIORAL_COHORTS_DATABASE_URL: postgres://posthog:posthog@db:5432/posthog
+      CYCLOTRON_DATABASE_URL: postgres://posthog:posthog@db:5432/posthog
+      KAFKA_HOSTS: kafka:9092
+      REDIS_URL: redis://redis7:6379/
+      CDP_REDIS_HOST: redis7
+      CDP_REDIS_PORT: 6379
+      LOGS_REDIS_HOST: redis7
+      TRACES_REDIS_HOST: redis7
+      COOKIELESS_REDIS_HOST: redis7
+      COOKIELESS_REDIS_PORT: 6379
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_DATABASE: posthog
+      CLICKHOUSE_SECURE: "false"
+      CLICKHOUSE_VERIFY: "false"
+      OBJECT_STORAGE_ENABLED: "true"
+      OBJECT_STORAGE_ENDPOINT: http://objectstorage:19000
+      OBJECT_STORAGE_PUBLIC_ENDPOINT: ${POSTHOG_SITE_URL}
+      OBJECT_STORAGE_ACCESS_KEY_ID: object_storage_root_user
+      OBJECT_STORAGE_SECRET_ACCESS_KEY: object_storage_root_password
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
+    volumes:
+      - geoip-data:/share:ro
+
+  # Node plugin server: event ingestion (Kafka -> person processing -> ClickHouse)
+  ingestion-general:
+    image: posthog/posthog-node:${POSTHOG_NODE_VERSION}
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      db:
+        condition: service_healthy
+      redis7:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      clickhouse:
+        condition: service_started
+      kafka-init:
+        condition: service_completed_successfully
+      init-assets:
+        condition: service_completed_successfully
+    environment:
+      PLUGIN_SERVER_MODE: ingestion-v2-combined
+      ENCRYPTION_SALT_KEYS: ${POSTHOG_ENCRYPTION_SALT_KEYS}
+      DATABASE_URL: postgres://posthog:posthog@db:5432/posthog
+      PERSONS_DATABASE_URL: postgres://posthog:posthog@db:5432/posthog
+      BEHAVIORAL_COHORTS_DATABASE_URL: postgres://posthog:posthog@db:5432/posthog
+      KAFKA_HOSTS: kafka:9092
+      REDIS_URL: redis://redis7:6379/
+      COOKIELESS_REDIS_HOST: redis7
+      COOKIELESS_REDIS_PORT: 6379
+      CDP_REDIS_HOST: redis7
+      LOGS_REDIS_HOST: redis7
+      TRACES_REDIS_HOST: redis7
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_DATABASE: posthog
+      CLICKHOUSE_SECURE: "false"
+      CLICKHOUSE_VERIFY: "false"
+    volumes:
+      - geoip-data:/share:ro
+
+  # Node plugin server: session replay blob ingestion (Kafka -> S3)
+  ingestion-sessionreplay:
+    image: posthog/posthog-node:${POSTHOG_NODE_VERSION}
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      db:
+        condition: service_healthy
+      redis7:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
+      objectstorage:
+        condition: service_started
+    environment:
+      PLUGIN_SERVER_MODE: recordings-blob-ingestion-v2
+      ENCRYPTION_SALT_KEYS: ${POSTHOG_ENCRYPTION_SALT_KEYS}
+      DATABASE_URL: postgres://posthog:posthog@db:5432/posthog
+      KAFKA_HOSTS: kafka:9092
+      REDIS_URL: redis://redis7:6379/
+      SESSION_RECORDING_V2_S3_ENDPOINT: http://objectstorage:19000
+      SESSION_RECORDING_V2_S3_ACCESS_KEY_ID: object_storage_root_user
+      SESSION_RECORDING_V2_S3_SECRET_ACCESS_KEY: object_storage_root_password
+      SESSION_RECORDING_V2_S3_TIMEOUT_MS: 120000
+
+  # Node plugin server: session replay playback API
+  recording-api:
+    image: posthog/posthog-node:${POSTHOG_NODE_VERSION}
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      db:
+        condition: service_healthy
+      redis7:
+        condition: service_healthy
+      clickhouse:
+        condition: service_started
+      objectstorage:
+        condition: service_started
+    environment:
+      PLUGIN_SERVER_MODE: recording-api
+      ENCRYPTION_SALT_KEYS: ${POSTHOG_ENCRYPTION_SALT_KEYS}
+      DATABASE_URL: postgres://posthog:posthog@db:5432/posthog
+      REDIS_URL: redis://redis7:6379/
+      SESSION_RECORDING_API_REDIS_HOST: redis7
+      SESSION_RECORDING_API_REDIS_PORT: 6379
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_DATABASE: posthog
+      CLICKHOUSE_SECURE: "false"
+      CLICKHOUSE_VERIFY: "false"
+      SESSION_RECORDING_V2_S3_ENDPOINT: http://objectstorage:19000
+      SESSION_RECORDING_V2_S3_ACCESS_KEY_ID: object_storage_root_user
+      SESSION_RECORDING_V2_S3_SECRET_ACCESS_KEY: object_storage_root_password
+
+  # Rust event capture endpoint (/e, /batch, /capture, /i/v0)
+  capture:
+    image: ghcr.io/posthog/posthog/capture:master
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      kafka:
+        condition: service_healthy
+      redis7:
+        condition: service_healthy
+    environment:
+      ADDRESS: 0.0.0.0:3000
+      KAFKA_TOPIC: events_plugin_ingestion
+      KAFKA_HOSTS: kafka:9092
+      REDIS_URL: redis://redis7:6379/
+      CAPTURE_MODE: events
+      RUST_LOG: info,rdkafka=warn
+      CAPTURE_V1_SINKS: msk
+      CAPTURE_V1_SINK_MSK_KAFKA_HOSTS: kafka:9092
+      CAPTURE_V1_SINK_MSK_KAFKA_TOPIC_MAIN: events_plugin_ingestion
+      CAPTURE_V1_SINK_MSK_KAFKA_TOPIC_HISTORICAL: events_plugin_ingestion_historical
+      CAPTURE_V1_SINK_MSK_KAFKA_TOPIC_OVERFLOW: events_plugin_ingestion_overflow
+      CAPTURE_V1_SINK_MSK_KAFKA_TOPIC_DLQ: events_plugin_ingestion_dlq
+      CAPTURE_V1_SINK_MSK_KAFKA_TOPIC_EXCEPTION: ingestion-errortracking-main
+      CAPTURE_V1_SINK_MSK_KAFKA_TOPIC_HEATMAP: heatmaps_ingestion
+      CAPTURE_V1_SINK_MSK_KAFKA_TOPIC_CLIENT_INGESTION_WARNING: ingestion-clientwarnings-main-1
+
+  # Rust capture endpoint for session recordings (/s)
+  replay-capture:
+    image: ghcr.io/posthog/posthog/capture:master
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      kafka:
+        condition: service_healthy
+      redis7:
+        condition: service_healthy
+    environment:
+      ADDRESS: 0.0.0.0:3000
+      KAFKA_TOPIC: session_recording_snapshot_item_events
+      KAFKA_HOSTS: kafka:9092
+      REDIS_URL: redis://redis7:6379/
+      CAPTURE_MODE: recordings
+
+  # Rust feature flag evaluation service (/flags)
+  feature-flags:
+    image: ghcr.io/posthog/posthog/feature-flags:master
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      db:
+        condition: service_healthy
+      redis7:
+        condition: service_healthy
+      init-assets:
+        condition: service_completed_successfully
+    environment:
+      WRITE_DATABASE_URL: postgres://posthog:posthog@db:5432/posthog
+      READ_DATABASE_URL: postgres://posthog:posthog@db:5432/posthog
+      PERSONS_WRITE_DATABASE_URL: postgres://posthog:posthog@db:5432/posthog
+      PERSONS_READ_DATABASE_URL: postgres://posthog:posthog@db:5432/posthog
+      MAXMIND_DB_PATH: /share/GeoLite2-City.mmdb
+      REDIS_URL: redis://redis7:6379/
+      ADDRESS: 0.0.0.0:3001
+      RUST_LOG: info
+      COOKIELESS_REDIS_HOST: redis7
+      COOKIELESS_REDIS_PORT: 6379
+    volumes:
+      - geoip-data:/share:ro
+
+  # Rust hypercache server (/array remote config + /surveys)
+  hypercache-server:
+    image: ghcr.io/posthog/posthog/hypercache-server:master
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      redis7:
+        condition: service_healthy
+    environment:
+      REDIS_URL: redis://redis7:6379/
+      ADDRESS: 0.0.0.0:3002
+      RUST_LOG: info
+
+  # Live events stream (/livestream)
+  livestream:
+    image: ghcr.io/posthog/posthog/livestream:master
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      LIVESTREAM_JWT_SECRET: ${POSTHOG_SECRET_KEY}
+    volumes:
+      - ../files/livestream/configs.yml:/configs/configs.yml:ro
+
+  objectstorage:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      MINIO_ROOT_USER: object_storage_root_user
+      MINIO_ROOT_PASSWORD: object_storage_root_password
+    entrypoint: sh
+    command: -c 'mkdir -p /data/posthog && minio server --address ":19000" --console-address ":19001" /data'
+    volumes:
+      - objectstorage-data:/data
+
+  # Caddy routes the single public domain to the right internal service,
+  # exactly like the upstream hobby deployment (TLS is terminated by Traefik)
+  proxy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      web:
+        condition: service_started
+    entrypoint: sh
+    command: -c 'printf "%s" "$$CADDYFILE" > /etc/caddy/Caddyfile && exec caddy run -c /etc/caddy/Caddyfile'
+    environment:
+      CADDYFILE: |
+        {
+            auto_https off
+        }
+        :80 {
+            @capture path /e /e/ /e/* /i/v0 /i/v0/ /i/v0/* /i/v1/analytics/events /i/v1/analytics/events/ /batch /batch/ /batch/* /capture /capture/ /capture/*
+            @replay-capture path /s /s/ /s/*
+            @flags path /flags /flags/ /flags/* /api/feature_flag/local_evaluation /api/feature_flag/local_evaluation/ /api/feature_flag/local_evaluation/*
+            @surveys path /surveys /surveys/ /api/surveys /api/surveys/
+            @remote-config path /array/*
+            @webhooks path /public/webhooks /public/webhooks/ /public/webhooks/* /public/m/ /public/m/*
+            @livestream path /livestream /livestream/ /livestream/*
+            @objectstorage path /posthog /posthog/ /posthog/*
+
+            handle @capture {
+                reverse_proxy capture:3000
+            }
+            handle @replay-capture {
+                reverse_proxy replay-capture:3000
+            }
+            handle @flags {
+                reverse_proxy feature-flags:3001
+            }
+            handle @surveys {
+                reverse_proxy hypercache-server:3002
+            }
+            handle @remote-config {
+                reverse_proxy hypercache-server:3002
+            }
+            handle @webhooks {
+                reverse_proxy plugins:6738
+            }
+            handle @livestream {
+                uri strip_prefix /livestream
+                reverse_proxy livestream:8080 {
+                    flush_interval -1
+                }
+            }
+            handle @objectstorage {
+                reverse_proxy objectstorage:19000
+            }
+            handle {
+                reverse_proxy web:8000
+            }
+        }
+
+volumes:
+  postgres-data:
+  redis-data:
+  zookeeper-data:
+  zookeeper-datalog:
+  redpanda-data:
+  clickhouse-data:
+  posthog-assets:
+  geoip-data:
+  objectstorage-data:

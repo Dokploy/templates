@@ -26,7 +26,7 @@ content = """
     <part_log remove="remove"/>
     <listen_host>0.0.0.0</listen_host>
     <interserver_listen_host>0.0.0.0</interserver_listen_host>
-    <interserver_http_host>opch</interserver_http_host>
+    <interserver_http_host>op-ch</interserver_http_host>
     <!-- Disable cgroup memory observer -->
     <cgroups_memory_usage_observer_wait_time>0</cgroups_memory_usage_observer_wait_time>
     <!-- Not used anymore, but kept for backwards compatibility -->

@@ -1,7 +1,7 @@
 {
   "id": "zitadel",
   "name": "Zitadel",
-  "version": "latest",
+  "version": "4.16.0",
   "description": "Open-source identity and access management platform with multi-tenancy, OpenID Connect, SAML, and OAuth 2.0 support.",
   "logo": "zitadel.png",
   "links": {

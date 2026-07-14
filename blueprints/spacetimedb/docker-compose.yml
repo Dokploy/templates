@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  spacetimedb:
+    image: clockworklabs/spacetime:v2.6.1
+    restart: unless-stopped
+    command: start
+    ports:
+      - 3000
+    volumes:
+      - spacetimedb-data:/home/spacetime
+
+volumes:
+  spacetimedb-data: {}

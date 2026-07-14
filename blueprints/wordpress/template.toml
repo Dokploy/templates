@@ -9,7 +9,8 @@ env = [
   "WORDPRESS_DEBUG=0",
   "DB_NAME=${db_name}",
   "DB_USER=${db_user}",
-  "DB_PASSWORD=${db_password}"
+  "DB_PASSWORD=${db_password}",
+  "WP_DOMAIN=${main_domain}"
 ]
 
 [[config.domains]]

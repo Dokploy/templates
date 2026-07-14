@@ -1,17 +1,15 @@
-version: "3.8"
 services:
   automatisch:
-    image: dockeriddonuts/automatisch:2.0
+    image: automatischio/automatisch:0.15.0
     restart: unless-stopped
-    ports:
-      - 3000
     environment:
       - HOST=${DOMAIN}
       - PROTOCOL=http
       - PORT=3000
+      - API_URL=http://${DOMAIN}
+      - WEB_APP_URL=http://${DOMAIN}
       - APP_ENV=production
       - REDIS_HOST=automatisch-redis
-      - REDIS_USERNAME=default
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - POSTGRES_HOST=automatisch-postgres
       - POSTGRES_DATABASE=automatisch
@@ -23,11 +21,13 @@ services:
     volumes:
       - storage:/automatisch/storage
     depends_on:
-      - automatisch-postgres
-      - automatisch-redis
+      automatisch-postgres:
+        condition: service_healthy
+      automatisch-redis:
+        condition: service_started
 
   automatisch-worker:
-    image: dockeriddonuts/automatisch:2.0
+    image: automatischio/automatisch:0.15.0
     restart: unless-stopped
     environment:
       - APP_ENV=production
@@ -44,8 +44,7 @@ services:
     volumes:
       - storage:/automatisch/storage
     depends_on:
-      - automatisch-postgres
-      - automatisch-redis
+      - automatisch
 
   automatisch-postgres:
     image: postgres:15-alpine
@@ -56,18 +55,20 @@ services:
       - POSTGRES_DB=automatisch
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d automatisch"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   automatisch-redis:
     image: redis:7-alpine
     restart: unless-stopped
     command: redis-server --requirepass ${REDIS_PASSWORD}
-    environment:
-      - REDIS_USERNAME=default
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
     volumes:
       - redis_data:/data
 
 volumes:
   storage: {}
   postgres_data: {}
-  redis_data: {} 
+  redis_data: {}

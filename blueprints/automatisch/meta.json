@@ -1,7 +1,7 @@
 {
   "id": "automatisch",
   "name": "Automatisch",
-  "version": "2.0",
+  "version": "0.15.0",
   "description": "Automatisch is a powerful, self-hosted workflow automation tool designed for connecting your apps and automating repetitive tasks. With Automatisch, you can create workflows to sync data, send notifications, and perform various actions seamlessly across different services.",
   "logo": "logo.png",
   "links": {

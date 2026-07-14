@@ -1,0 +1,22 @@
+services:
+  databasus:
+    image: databasus/databasus:latest
+    ports:
+      - "4005"
+    volumes:
+      # Persistent data storage
+      - databasus-data:/databasus-data
+    restart: unless-stopped
+    environment:
+      # Optional: Set timezone
+      - TZ=UTC
+    healthcheck:
+      test: [ "CMD", "databasus", "healthcheck" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  databasus-data:
+    driver: local

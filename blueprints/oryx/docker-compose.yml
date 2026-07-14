@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  oryx:
+    image: ossrs/oryx:5.15.20
+    restart: unless-stopped
+    ports:
+      # RTMP, WebRTC and SRT are not HTTP protocols, so Traefik cannot route
+      # them through the domain. They must be published directly on the host
+      # (same approach as the poste.io template with its mail ports). Use the
+      # server IP (not the domain) for these protocols.
+      - "1935:1935" # RTMP ingest/playback (TCP)
+      - "8000:8000/udp" # WebRTC media transport (UDP)
+      - "10080:10080/udp" # SRT ingest/playback (UDP)
+    volumes:
+      - oryx-data:/data
+
+volumes:
+  oryx-data: {}

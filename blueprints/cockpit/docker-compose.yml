@@ -11,8 +11,8 @@ services:
       - COCKPIT_DATABASE_SERVER=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017
       - COCKPIT_DATABASE_NAME=cockpit
     volumes:
-      - html:/var/www/html
-      - data:/var/www/html/storage/data
+      - config:/var/www/html/config
+      - storage:/var/www/html/storage
     depends_on:
       - mongo
 
@@ -25,6 +25,6 @@ services:
       - mongo-data:/data/db
 
 volumes:
-  html:
-  data:
+  config:
+  storage:
   mongo-data: 

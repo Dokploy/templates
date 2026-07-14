@@ -1,13 +1,13 @@
 # https://www.rybbit.io/docs/self-hosting-advanced
 
 # NOTE: there are two sample HTTP traefik domain entries created:
-# - rybbit_backend (port 3001, path /api), 
+# - rybbit_backend (port 3001, path /api),
 # - rybbit_client (port 3002, path /)
 #
 # You should treat these as placeholders - Rybbit only supports HTTPS.
 #
-# You should also update the `BASE_URL`, and `DOMAIN_NAME` environment
-# variable when updating the domain entries with your custom domain.
+# You should also update the `BASE_URL` environment variable when
+# updating the domain entries with your custom domain.
 
 services:
   rybbit_clickhouse:
@@ -50,8 +50,41 @@ services:
       retries: 3
     restart: unless-stopped
 
+  rybbit_redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    # Backs session tracking and the BullMQ queues. noeviction is required by
+    # BullMQ (evicting job keys corrupts queues); AOF (everysec) keeps queues
+    # durable across restarts.
+    command:
+      - redis-server
+      - --requirepass
+      - ${REDIS_PASSWORD}
+      - --appendonly
+      - "yes"
+      - --appendfsync
+      - everysec
+      - --maxmemory-policy
+      - noeviction
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "redis-cli",
+          "-a",
+          "${REDIS_PASSWORD}",
+          "--no-auth-warning",
+          "ping",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
   rybbit_backend:
-    image: ghcr.io/rybbit-io/rybbit-backend:v1.5.1
+    image: ghcr.io/rybbit-io/rybbit-backend:v2.7.0
     environment:
       - NODE_ENV=production
       - CLICKHOUSE_HOST=http://rybbit_clickhouse:8123
@@ -63,15 +96,20 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - REDIS_HOST=rybbit_redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - BASE_URL=${BASE_URL}
-      - DOMAIN_NAME=${DOMAIN_NAME}
       - DISABLE_SIGNUP=${DISABLE_SIGNUP}
+      - DISABLE_TELEMETRY=${DISABLE_TELEMETRY}
     depends_on:
       rybbit_clickhouse:
         condition: service_healthy
       rybbit_postgres:
         condition: service_started
+      rybbit_redis:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3001/api/health"]
       interval: 30s
@@ -81,11 +119,10 @@ services:
     restart: unless-stopped
 
   rybbit_client:
-    image: ghcr.io/rybbit-io/rybbit-client:v1.5.1
+    image: ghcr.io/rybbit-io/rybbit-client:v2.7.0
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_BACKEND_URL=${BASE_URL}
-      - DOMAIN_NAME=${DOMAIN_NAME}
       - NEXT_PUBLIC_DISABLE_SIGNUP=${DISABLE_SIGNUP}
     depends_on:
       - rybbit_backend
@@ -94,3 +131,4 @@ services:
 volumes:
   clickhouse_data:
   postgres_data:
+  redis_data:

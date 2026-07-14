@@ -1,8 +1,9 @@
 [variables]
 main_domain = "${domain}"
-better_auth_secret = "${password:32}"
+better_auth_secret = "${base64:32}"
 clickhouse_password = "${password:32}"
 postgres_password = "${password:32}"
+redis_password = "${password:32}"
 
 [[config.domains]]
 serviceName = "rybbit_backend"
@@ -17,15 +18,16 @@ host = "${main_domain}"
 
 [config.env]
 BASE_URL = "http://${main_domain}"
-DOMAIN_NAME= "${main_domain}"
 BETTER_AUTH_SECRET = "${better_auth_secret}"
 DISABLE_SIGNUP = "false"
+DISABLE_TELEMETRY = "false"
 CLICKHOUSE_DB = "analytics"
 CLICKHOUSE_USER = "default"
 CLICKHOUSE_PASSWORD = "${clickhouse_password}"
 POSTGRES_DB = "analytics"
 POSTGRES_USER = "frog"
 POSTGRES_PASSWORD = "${postgres_password}"
+REDIS_PASSWORD = "${redis_password}"
 
 [[config.mounts]]
 filePath = "./clickhouse_config/enable_json.xml"

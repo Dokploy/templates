@@ -1,0 +1,20 @@
+services:
+  silex:
+    image: silexlabs/silex:3.7.0
+    restart: unless-stopped
+    ports:
+      - 6805
+    environment:
+      - SILEX_URL=${SILEX_URL}
+      - SILEX_SESSION_SECRET=${SILEX_SESSION_SECRET}
+      - STORAGE_CONNECTORS=fs
+      - HOSTING_CONNECTORS=fs,download
+      - SILEX_FS_ROOT=/silex/silex/storage
+      - SILEX_FS_HOSTING_ROOT=/silex/silex/hosting
+    volumes:
+      - silex-storage:/silex/silex/storage
+      - silex-hosting:/silex/silex/hosting
+
+volumes:
+  silex-storage:
+  silex-hosting:

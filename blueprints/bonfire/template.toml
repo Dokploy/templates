@@ -1,0 +1,55 @@
+[variables]
+main_domain = "${domain}"
+secret_key_base = "${password:64}"
+signing_salt = "${password:32}"
+encryption_salt = "${password:32}"
+release_cookie = "${password:32}"
+postgres_password = "${password:32}"
+meili_master_key = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "bonfire"
+port = 4000
+host = "${main_domain}"
+
+[config.env]
+# Domain of your Bonfire instance (must match the domain above)
+"BONFIRE_HOSTNAME" = "${main_domain}"
+# Port used to build public URLs: keep 80 while the domain is plain HTTP,
+# and change to 443 once you enable HTTPS on the domain
+# (HTTPS is required for federation with other fediverse instances)
+"PUBLIC_PORT" = "80"
+# Display name of your instance
+"APP_NAME" = "Bonfire"
+# Max upload size in megabytes
+"UPLOAD_LIMIT" = "20"
+
+# Secrets (auto-generated)
+"SECRET_KEY_BASE" = "${secret_key_base}"
+"SIGNING_SALT" = "${signing_salt}"
+"ENCRYPTION_SALT" = "${encryption_salt}"
+"RELEASE_COOKIE" = "${release_cookie}"
+"POSTGRES_PASSWORD" = "${postgres_password}"
+"MEILI_MASTER_KEY" = "${meili_master_key}"
+
+# Optional: set to true only AFTER the first deployment finished its initial
+# database migrations (speeds up index creation during future upgrades)
+# "DB_MIGRATE_INDEXES_CONCURRENTLY" = "true"
+
+# --- Email ---
+# The first account to sign up becomes the instance admin and does not need
+# a confirmation email. Further signups are invite-only by default (the admin
+# can create invite links or open up signups in the instance settings), and
+# require a working mail backend to confirm their email address.
+# Supported backends include smtp, mailgun, brevo, postmark, ses and more:
+# https://docs.bonfirenetworks.org/deploy.html
+# "MAIL_BACKEND" = "smtp"
+# "MAIL_SERVER" = "smtp.example.com"
+# "MAIL_PORT" = "587"
+# "MAIL_USER" = "postmaster@example.com"
+# "MAIL_PASSWORD" = ""
+# "MAIL_DOMAIN" = "example.com"
+# "MAIL_FROM" = "bonfire@example.com"
+# For API-based backends (e.g. mailgun) set the API key instead:
+# "MAIL_KEY" = ""

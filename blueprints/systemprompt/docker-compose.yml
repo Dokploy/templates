@@ -1,6 +1,7 @@
 # Dokploy blueprint compose for the systemprompt gateway.
-# Mirror of the upstream Dokploy/templates blueprints/systemprompt/ payload.
-# Conventions (their AGENTS.md): version 3.8, no ports/container_name/networks,
+# Canonical copy: systempromptio/systemprompt-template deploy/dokploy/,
+# published to Dokploy/templates blueprints/systemprompt/.
+# Dokploy conventions: version 3.8, no ports/container_name/networks,
 # main service name MUST equal the blueprint folder name (systemprompt).
 version: "3.8"
 services:

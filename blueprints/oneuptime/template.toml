@@ -1,0 +1,109 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+redis_password = "${password:32}"
+clickhouse_password = "${password:32}"
+oneuptime_secret = "${password:64}"
+encryption_secret = "${password:64}"
+register_probe_key = "${password:32}"
+probe_key = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "ingress"
+port = 7849
+host = "${main_domain}"
+
+[config.env]
+# Public host OneUptime is served on. Must match the domain above.
+"HOST" = "${main_domain}"
+# Change to "https" once you serve the domain over SSL/TLS.
+"HTTP_PROTOCOL" = "http"
+"DATABASE_PASSWORD" = "${db_password}"
+"REDIS_PASSWORD" = "${redis_password}"
+"CLICKHOUSE_PASSWORD" = "${clickhouse_password}"
+"ONEUPTIME_SECRET" = "${oneuptime_secret}"
+"ENCRYPTION_SECRET" = "${encryption_secret}"
+# Shared key probes use to self-register with the server.
+"REGISTER_PROBE_KEY" = "${register_probe_key}"
+# Identity key of the bundled probe.
+"PROBE_KEY" = "${probe_key}"
+
+# Single-node ClickHouse cluster + embedded Keeper drop-in (from upstream:
+# OneUptime's analytics schema is always ReplicatedMergeTree + Distributed,
+# so a single node runs an embedded Keeper and a 1-node "oneuptime" cluster).
+[[config.mounts]]
+filePath = "/clickhouse/cluster.xml"
+content = """
+<?xml version="1.0"?>
+<clickhouse>
+    <!-- Embedded ClickHouse Keeper: coordinates ReplicatedMergeTree on this node. -->
+    <keeper_server>
+        <tcp_port>9181</tcp_port>
+        <server_id>1</server_id>
+        <log_storage_path>/var/lib/clickhouse/coordination/log</log_storage_path>
+        <snapshot_storage_path>/var/lib/clickhouse/coordination/snapshots</snapshot_storage_path>
+        <coordination_settings>
+            <operation_timeout_ms>10000</operation_timeout_ms>
+            <session_timeout_ms>30000</session_timeout_ms>
+            <raft_logs_level>warning</raft_logs_level>
+        </coordination_settings>
+        <raft_configuration>
+            <server>
+                <id>1</id>
+                <hostname>localhost</hostname>
+                <port>9234</port>
+            </server>
+        </raft_configuration>
+    </keeper_server>
+
+    <!-- Point this server at its own embedded Keeper for replication metadata. -->
+    <zookeeper>
+        <node>
+            <host>localhost</host>
+            <port>9181</port>
+        </node>
+    </zookeeper>
+
+    <!-- Replication macros. Single node => one shard, one replica. -->
+    <macros>
+        <shard>01</shard>
+        <replica>replica-1</replica>
+        <cluster>oneuptime</cluster>
+    </macros>
+
+    <!-- The cluster the app issues `ON CLUSTER 'oneuptime'` and
+         `Distributed('oneuptime', ...)` against. -->
+    <remote_servers>
+        <oneuptime>
+            <shard>
+                <internal_replication>true</internal_replication>
+                <replica>
+                    <host>localhost</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+        </oneuptime>
+    </remote_servers>
+</clickhouse>
+"""
+
+# Batches the background Distributed-insert sender so telemetry ingestion
+# keeps up with volume (from upstream Clickhouse/users.d).
+[[config.mounts]]
+filePath = "/clickhouse/distributed-insert-tuning.xml"
+content = """
+<?xml version="1.0"?>
+<clickhouse>
+    <profiles>
+        <default>
+            <!-- Coalesce many spooled files into one insert into the local table. -->
+            <distributed_background_insert_batch>1</distributed_background_insert_batch>
+            <!-- If a coalesced batch fails, retry its files individually. -->
+            <distributed_background_insert_split_batch_on_failure>1</distributed_background_insert_split_batch_on_failure>
+            <!-- Write to the local replica directly. -->
+            <prefer_localhost_replica>1</prefer_localhost_replica>
+        </default>
+    </profiles>
+</clickhouse>
+"""

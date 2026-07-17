@@ -1,0 +1,158 @@
+services:
+  oneuptime:
+    image: oneuptime/app:11.5.6
+    restart: unless-stopped
+    environment:
+      - PORT=3002
+      - NODE_ENV=production
+      - BILLING_ENABLED=false
+      - IS_ENTERPRISE_EDITION=false
+      - LOG_LEVEL=ERROR
+      - DISABLE_TELEMETRY=true
+      # Public host (domain) and protocol used to build links.
+      - HOST=${HOST}
+      - HTTP_PROTOCOL=${HTTP_PROTOCOL}
+      - ONEUPTIME_SECRET=${ONEUPTIME_SECRET}
+      - ENCRYPTION_SECRET=${ENCRYPTION_SECRET}
+      # Probes that present this key are allowed to self-register.
+      - REGISTER_PROBE_KEY=${REGISTER_PROBE_KEY}
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=oneuptimedb
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_USERNAME=default
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_DB=0
+      - CLICKHOUSE_HOST=clickhouse
+      - CLICKHOUSE_PORT=8123
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+      - CLICKHOUSE_DATABASE=oneuptime
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+
+  ingress:
+    image: oneuptime/nginx:11.5.6
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - BILLING_ENABLED=false
+      - LOG_LEVEL=ERROR
+      - DISABLE_TELEMETRY=true
+      - HOST=${HOST}
+      - NGINX_LISTEN_ADDRESS=
+      - NGINX_LISTEN_OPTIONS=
+      - PROVISION_SSL=
+      # Long domains (e.g. generated *.sslip.io hosts) overflow nginx's
+      # default server_names_hash_bucket_size of 64.
+      - SERVER_NAMES_HASH_BUCKET_SIZE=128
+      # Where nginx proxies the UI/API to.
+      - SERVER_APP_HOSTNAME=oneuptime
+      - APP_PORT=3002
+      # The marketing "home" app is not deployed (only used when billing is
+      # enabled), but nginx needs the vars to render its config.
+      - SERVER_HOME_HOSTNAME=home
+      - HOME_PORT=1444
+      # The ingress sidecar (custom-domain certificate writer) connects to
+      # Postgres and Redis.
+      - ONEUPTIME_SECRET=${ONEUPTIME_SECRET}
+      - ENCRYPTION_SECRET=${ENCRYPTION_SECRET}
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=oneuptimedb
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_USERNAME=default
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_DB=0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      oneuptime:
+        condition: service_started
+
+  probe:
+    image: oneuptime/probe:11.5.6
+    restart: unless-stopped
+    environment:
+      - PORT=3874
+      - NODE_ENV=production
+      - LOG_LEVEL=ERROR
+      - DISABLE_TELEMETRY=true
+      # The probe reaches OneUptime through the ingress ("ingress" is part of
+      # nginx's server_name, so all API routes resolve correctly).
+      - ONEUPTIME_URL=http://ingress:7849
+      - PROBE_NAME=Probe-1
+      - PROBE_DESCRIPTION=Default probe for monitors
+      - PROBE_MONITORING_WORKERS=3
+      - PROBE_MONITOR_FETCH_LIMIT=10
+      - PROBE_KEY=${PROBE_KEY}
+      - REGISTER_PROBE_KEY=${REGISTER_PROBE_KEY}
+    depends_on:
+      ingress:
+        condition: service_started
+
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=oneuptimedb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d oneuptimedb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  redis:
+    image: redis:7.0.12
+    restart: unless-stopped
+    command: redis-server --requirepass "${REDIS_PASSWORD}" --save "" --appendonly no
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:25.7
+    restart: unless-stopped
+    environment:
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+      - CLICKHOUSE_DB=oneuptime
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+      # Single-node cluster + embedded Keeper (OneUptime's analytics schema is
+      # always ReplicatedMergeTree + Distributed) and Distributed-insert
+      # batching, as shipped by upstream.
+      - ../files/clickhouse/cluster.xml:/etc/clickhouse-server/config.d/cluster.xml
+      - ../files/clickhouse/distributed-insert-tuning.xml:/etc/clickhouse-server/users.d/distributed-insert-tuning.xml
+    healthcheck:
+      test: ["CMD-SHELL", "clickhouse-client --password \"$$CLICKHOUSE_PASSWORD\" --query 'SELECT 1'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+volumes:
+  postgres-data:
+  clickhouse-data:

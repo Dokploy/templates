@@ -1,10 +1,11 @@
 [variables]
 main_domain = "${domain}"
+admin_username = "admin"
 admin_password = "${password:24}"
 
 [config]
 env = [
-  "USERNAME=admin",
+  "USERNAME=${admin_username}",
   "PASSWORD=${admin_password}"
 ]
 

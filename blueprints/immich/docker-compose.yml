@@ -1,39 +1,34 @@
 services:
   immich-server:
-    image: ghcr.io/immich-app/immich-server:v3.0.2
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
 
     volumes:
       - immich-library:/data
       - /etc/localtime:/etc/localtime:ro
     depends_on:
-      immich-redis:
+      redis:
         condition: service_healthy
-      immich-database:
+      database:
         condition: service_healthy
     environment:
       SERVER_URL: ${SERVER_URL}
-      DB_HOSTNAME: immich-database
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_DATABASE_NAME: ${DB_DATABASE_NAME}
-      REDIS_HOSTNAME: immich-redis
-      TZ: ${TZ}
     restart: unless-stopped
     healthcheck:
       disable: false
 
   immich-machine-learning:
-    image: ghcr.io/immich-app/immich-machine-learning:v3.0.2
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
 
     volumes:
       - immich-model-cache:/cache
-    environment:
-      REDIS_HOSTNAME: immich-redis
     restart: unless-stopped
     healthcheck:
       disable: false
 
-  immich-redis:
+  redis:
     image: docker.io/valkey/valkey:9@sha256:4963247afc4cd33c7d3b2d2816b9f7f8eeebab148d29056c2ca4d7cbc966f2d9
 
     volumes:
@@ -42,7 +37,7 @@ services:
       test: redis-cli ping || exit 1
     restart: unless-stopped
 
-  immich-database:
+  database:
     image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
 
     volumes:

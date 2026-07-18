@@ -4,16 +4,13 @@ db_password = "${password}"
 db_user = "immich"
 
 [config]
-env = [
-  "SERVER_URL=https://${main_domain}",
-  "DB_USERNAME=${db_user}",
-  "DB_PASSWORD=${db_password}",
-  "DB_DATABASE_NAME=immich",
-  "TZ=UTC",
-]
-mounts = []
-
 [[config.domains]]
 serviceName = "immich-server"
 port = 2_283
 host = "${main_domain}"
+
+[config.env]
+SERVER_URL = "https://${main_domain}"
+DB_USERNAME = "${db_user}"
+DB_PASSWORD = "${db_password}"
+DB_DATABASE_NAME = "immich"

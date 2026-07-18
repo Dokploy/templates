@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:24}"
+
+[config]
+[[config.domains]]
+serviceName = "podfetch"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+USERNAME = "admin"
+PASSWORD = "${admin_password}"

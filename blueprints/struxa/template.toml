@@ -29,6 +29,6 @@ env = [
 mounts = []
 
 [[config.domains]]
-serviceName = "web"
+serviceName = "struxa"
 port = 3001
 host = "${main_domain}"

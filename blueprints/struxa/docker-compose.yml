@@ -41,7 +41,7 @@ services:
       mysql:
         condition: service_healthy
 
-  web:
+  struxa:
     image: ghcr.io/struxadotcloud/dashboard:${IMAGE_TAG}
     restart: unless-stopped
     entrypoint:

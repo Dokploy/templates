@@ -1,3 +1,4 @@
+version: "3.8"
 services:
   mysql:
     image: mysql:8.4
@@ -17,7 +18,7 @@ services:
       start_period: 60s
 
   minio:
-    image: minio/minio:latest
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
     restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:

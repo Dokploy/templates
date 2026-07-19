@@ -1,7 +1,7 @@
 {
   "id": "struxa",
   "name": "Struxa",
-  "version": "v1.1.2",
+  "version": "latest",
   "description": "Struxa is a self-hosted, open-source server management panel — a modern, fully typed replacement for Pterodactyl.",
   "links": {
     "github": "https://github.com/struxadotcloud/struxa",

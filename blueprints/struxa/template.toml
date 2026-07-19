@@ -1,6 +1,6 @@
 [variables]
 main_domain = "${domain}"
-image_tag = "v1.1.2"
+image_tag = "latest"
 mysql_root_password = "${password:32}"
 mysql_password = "${password:32}"
 better_auth_secret = "${base64:32}"

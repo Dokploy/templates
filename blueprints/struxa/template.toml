@@ -4,7 +4,7 @@ image_tag = "latest"
 mysql_root_password = "${password:32}"
 mysql_password = "${password:32}"
 better_auth_secret = "${base64:32}"
-db_encryption_key = "${hash:32}"
+db_encryption_key = "${hash:64}"
 minio_access_key = "${username}"
 minio_secret_key = "${password:32}"
 

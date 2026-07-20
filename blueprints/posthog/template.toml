@@ -1,0 +1,73 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${password:64}"
+salt_keys = "${hash:32}"
+
+[config]
+[[config.domains]]
+serviceName = "proxy"
+port = 80
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+# PostHog stopped publishing tagged releases; images are pinned to a tested
+# master commit. POSTHOG_VERSION is both the posthog/posthog image tag and the
+# git ref used to fetch the matching ClickHouse configuration.
+POSTHOG_VERSION = "1e7b36ebe0da38a738fed250d175809a899ef422"
+POSTHOG_NODE_VERSION = "sha-82ea668"
+# Set to https://<your-domain> after enabling HTTPS on the domain
+POSTHOG_SITE_URL = "http://${main_domain}"
+# Set to "true" once the domain uses HTTPS (marks session/CSRF cookies Secure)
+POSTHOG_SECURE_COOKIES = "false"
+POSTHOG_SECRET_KEY = "${secret_key}"
+POSTHOG_ENCRYPTION_SALT_KEYS = "${salt_keys}"
+
+[[config.mounts]]
+filePath = "/db-init/create-extra-dbs.sh"
+content = """
+#!/bin/bash
+# Creates the auxiliary databases PostHog services can point at
+# (mirrors docker/postgres-init-scripts in the PostHog repo)
+set -e
+set -u
+
+for db in cyclotron posthog_persons behavioral_cohorts; do
+    DB_EXISTS=$(psql -U "$POSTGRES_USER" -tAc "SELECT 1 FROM pg_database WHERE datname='$db'")
+    if [ -z "$DB_EXISTS" ]; then
+        echo "Creating database '$db'..."
+        psql -U "$POSTGRES_USER" -c "CREATE DATABASE $db;"
+        psql -U "$POSTGRES_USER" -c "GRANT ALL PRIVILEGES ON DATABASE $db TO $POSTGRES_USER;"
+    fi
+done
+"""
+
+[[config.mounts]]
+filePath = "/livestream/configs.yml"
+content = """
+debug: false
+kafka:
+    brokers: 'kafka:9092'
+    topic: 'events_plugin_ingestion'
+    group_id: 'livestream'
+    security_protocol: 'PLAINTEXT'
+    session_recording_enabled: true
+    session_recording_security_protocol: 'PLAINTEXT'
+consumers:
+    event:
+        enabled: true
+        brokers: 'kafka:9092'
+        topic: 'events_plugin_ingestion'
+        security_protocol: 'PLAINTEXT'
+        group_id: 'livestream'
+    session_recording:
+        enabled: true
+        brokers: 'kafka:9092'
+        topic: 'session_recording_snapshot_item_events'
+        security_protocol: 'PLAINTEXT'
+        group_id: 'livestream-session-recordings'
+    notification:
+        enabled: false
+mmdb:
+    path: 'GeoLite2-City.mmdb'
+"""

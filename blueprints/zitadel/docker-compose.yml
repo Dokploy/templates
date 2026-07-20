@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   zitadel:
     restart: 'always'
-    image: 'ghcr.io/zitadel/zitadel:latest'
+    image: 'ghcr.io/zitadel/zitadel:v4.16.0'
     command: 'start-from-init --masterkey "${ZITADEL_MASTERKEY}" --tlsMode disabled'
     environment:
       # Database Configuration
@@ -17,15 +15,15 @@ services:
       ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD: "${POSTGRES_PASSWORD}"
       ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE: disable
 
-      # External Configuration for HTTP only - TLS mode disabled
-      ZITADEL_EXTERNALSECURE: false
-      ZITADEL_EXTERNALPORT: 8080
-      ZITADEL_EXTERNALDOMAIN: "${EXTERNAL_DOMAIN}"
+      # External access configuration. These MUST match the domain configured
+      # in the Domains tab and the scheme/port it is served on, otherwise
+      # Zitadel answers {"code":5,"message":"Not Found"}.
+      # HTTP  -> ZITADEL_EXTERNALPORT=80,  ZITADEL_EXTERNALSECURE=false
+      # HTTPS -> ZITADEL_EXTERNALPORT=443, ZITADEL_EXTERNALSECURE=true
+      ZITADEL_EXTERNALDOMAIN: "${ZITADEL_EXTERNALDOMAIN}"
+      ZITADEL_EXTERNALPORT: "${ZITADEL_EXTERNALPORT}"
+      ZITADEL_EXTERNALSECURE: "${ZITADEL_EXTERNALSECURE}"
       ZITADEL_TLS_ENABLED: false
-
-      # Disable Email Notifications
-      ZITADEL_NOTIFICATIONS_SMTP_HOST: ""
-      ZITADEL_NOTIFICATIONS_SMTP_PORT: ""
 
       # Custom Admin User Configuration
       ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME}"
@@ -33,17 +31,21 @@ services:
       ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS}"
       ZITADEL_FIRSTINSTANCE_ORG_HUMAN_FIRSTNAME: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_FIRSTNAME}"
       ZITADEL_FIRSTINSTANCE_ORG_HUMAN_LASTNAME: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_LASTNAME}"
-      
-      # Default Instance Features
+
+      # Use the login UI built into the API container (no extra login-v2 service needed)
       ZITADEL_DEFAULTINSTANCE_FEATURES_LOGINV2_REQUIRED: false
 
+    healthcheck:
+      test: ["CMD", "/app/zitadel", "ready"]
+      interval: '10s'
+      timeout: '30s'
+      retries: 12
+      start_period: '30s'
     depends_on:
       db:
         condition: 'service_healthy'
-    ports:
-      - '8080'
-    volumes:
-      - zitadel_data:/app/data
+    expose:
+      - 8080
 
   db:
     restart: 'always'
@@ -63,4 +65,3 @@ services:
 
 volumes:
   postgres_data:
-  zitadel_data:

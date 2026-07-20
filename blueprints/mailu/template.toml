@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${password:16}"
+admin_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "front"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+DOMAIN = "${main_domain}"
+SECRET_KEY = "${secret_key}"
+INITIAL_ADMIN_ACCOUNT = "admin"
+INITIAL_ADMIN_PW = "${admin_password}"
+SUBNET = "172.16.0.0/12"

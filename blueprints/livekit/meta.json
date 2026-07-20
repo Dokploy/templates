@@ -10,10 +10,10 @@
     "docs": "https://docs.livekit.io/"
   },
   "tags": [
-    "Video",
-    "Audio",
-    "Real-time",
-    "Streaming",
-    "Webrtc"
+    "video",
+    "audio",
+    "real-time",
+    "streaming",
+    "webrtc"
   ]
 }

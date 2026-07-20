@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:24}"
+jwt_secret = "${base64:48}"
+
+[config]
+[[config.domains]]
+serviceName = "openhabittracker"
+port = 8_080
+host = "${main_domain}"
+
+[config.env]
+OHT_USERNAME = "admin"
+OHT_EMAIL = "admin@example.com"
+OHT_PASSWORD = "${admin_password}"
+OHT_JWT_SECRET = "${jwt_secret}"

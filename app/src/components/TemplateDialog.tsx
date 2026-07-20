@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Label } from "./ui/label";
 import { Clipboard } from "lucide-react";
 import { Input } from "./ui/input";
+import Markdown from "./ui/markdown";
 
 interface Template {
   id: string;
@@ -32,6 +33,7 @@ interface Template {
 interface TemplateFiles {
   dockerCompose: string | null;
   config: string | null;
+  instructions: string | null;
 }
 
 interface TemplateDialogProps {
@@ -169,8 +171,23 @@ const TemplateDialog: React.FC<TemplateDialogProps> = ({
                     </div>
                   </div>
                 )}
-                <Tabs defaultValue="docker-compose" className="w-full">
+                <Tabs
+                  defaultValue={
+                    templateFiles?.instructions
+                      ? "instructions"
+                      : "docker-compose"
+                  }
+                  className="w-full"
+                >
                   <TabsList className="w-full justify-start">
+                    {templateFiles?.instructions && (
+                      <TabsTrigger
+                        value="instructions"
+                        className="data-[state=active]:font-bold"
+                      >
+                        Instructions
+                      </TabsTrigger>
+                    )}
                     <TabsTrigger
                       value="docker-compose"
                       className="data-[state=active]:font-bold"
@@ -184,6 +201,24 @@ const TemplateDialog: React.FC<TemplateDialogProps> = ({
                       Configuration
                     </TabsTrigger>
                   </TabsList>
+
+                  {templateFiles?.instructions && (
+                    <TabsContent value="instructions" className="mt-4">
+                      <div className="space-y-2">
+                        <Label className="flex flex-col items-start w-fit justify-start gap-1">
+                          <span className="leading-tight text-xl font-semibold">
+                            Setup Instructions
+                          </span>
+                          <span className="leading-tight text-sm text-gray-500">
+                            instructions.md
+                          </span>
+                        </Label>
+                        <div className="rounded-md border p-4">
+                          <Markdown content={templateFiles.instructions} />
+                        </div>
+                      </div>
+                    </TabsContent>
+                  )}
                   <TabsContent value="docker-compose" className="mt-4">
                     {templateFiles?.dockerCompose && (
                       <div className="space-y-2">

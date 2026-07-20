@@ -5,9 +5,9 @@
   "description": "BentoPDF is a lightweight PDF conversion microservice that exposes a simple HTTP API for generating PDFs.",
   "logo": "image.png",
   "links": {
-    "github": "https://github.com/bentopdf/bentopdf",
+    "github": "https://github.com/alam00000/bentopdf/",
     "website": "https://bentopdf.com/",
-    "docs": "https://github.com/bentopdf/bentopdf#readme"
+    "docs": "https://www.bentopdf.com/docs/"
   },
   "tags": [
     "pdf",

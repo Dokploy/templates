@@ -1,0 +1,18 @@
+{
+  "id": "markup",
+  "name": "Markup",
+  "version": "main",
+  "description": "Markup is a fast, keyboard-first markdown workspace with live preview, graph view, whiteboards, mind maps, and PostgreSQL-powered cloud sync.",
+  "logo": "markup.svg",
+  "links": {
+    "github": "https://github.com/pphilfre/markup",
+    "website": "https://home.markup.freddiephilpot.dev/",
+    "docs": "https://docs.markup.freddiephilpot.dev/"
+  },
+  "tags": [
+    "markdown",
+    "notes",
+    "editor",
+    "self-hosted"
+  ]
+}

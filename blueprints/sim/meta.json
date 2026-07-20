@@ -1,0 +1,17 @@
+{
+  "id": "sim",
+  "name": "Sim",
+  "version": "latest",
+  "description": "Open-source visual workflow builder for building and deploying AI agent workflows.",
+  "logo": "sim.svg",
+  "links": {
+    "github": "https://github.com/simstudioai/sim",
+    "website": "https://sim.ai",
+    "docs": "https://docs.sim.ai"
+  },
+  "tags": [
+    "ai",
+    "automation",
+    "workflow"
+  ]
+}

@@ -2,7 +2,7 @@
   "id": "librechat",
   "name": "LibreChat",
   "version": "latest",
-  "description": "LibreChat is the ultimate open-source app for all your AI conversations, fully customizable and compatible with any AI provider (Openai, Ollama, Google etc.) â€” all in one sleek interface.",
+  "description": "LibreChat is the ultimate open-source app for all your AI conversations, fully customizable and compatible with any AI provider (Openai, Ollama, Google etc.) \u00e2\u20ac\u201d all in one sleek interface.",
   "logo": "librechat.png",
   "links": {
     "github": "https://github.com/danny-avila/librechat",
@@ -13,8 +13,8 @@
     "ai",
     "chatbot",
     "llm",
-    "MIT-license",
-    "BYOK",
+    "mit-license",
+    "byok",
     "generative-ai"
   ]
 }

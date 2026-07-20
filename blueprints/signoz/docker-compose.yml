@@ -1,6 +1,4 @@
 x-common: &common
-  networks:
-    - signoz-net
   restart: unless-stopped
   logging:
     options:
@@ -89,11 +87,12 @@ services:
       - ZOO_PROMETHEUS_METRICS_PORT_NUMBER=9141
   clickhouse:
     !!merge <<: *clickhouse-defaults
-    container_name: signoz-clickhouse
+    hostname: clickhouse
     volumes:
       - ../files/clickhouse/config.xml:/etc/clickhouse-server/config.xml
       - ../files/clickhouse/user_scripts:/var/lib/clickhouse/user_scripts/
       - ../files/clickhouse/cluster.xml:/etc/clickhouse-server/config.d/cluster.xml
+      - ../files/clickhouse/docker_related_config.xml:/etc/clickhouse-server/config.d/docker_related_config.xml
       - clickhouse:/var/lib/clickhouse/
   signoz:
     !!merge <<: *db-depend
@@ -156,9 +155,6 @@ services:
       - --dsn=tcp://clickhouse:9000
       - --up=
     restart: on-failure
-networks:
-  signoz-net:
-    name: signoz-net
 volumes:
   clickhouse:
     name: signoz-clickhouse

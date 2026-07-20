@@ -1,7 +1,7 @@
 {
   "id": "nextcloud-aio",
   "name": "Nextcloud",
-  "version": "stable",
+  "version": "33.0.6",
   "description": "Nextcloud is a self-hosted file storage and sync platform with powerful collaboration capabilities. It integrates Files, Talk, Groupware, Office, Assistant and more into a single platform for remote work and data protection.",
   "logo": "nextcloud.png",
   "links": {

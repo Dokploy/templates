@@ -1,0 +1,27 @@
+services:
+  mailcatcher-ng:
+    # Only the "latest" tag is published, so the image is pinned by digest
+    # (v2.3.9 of the image, MailCatcher NG 1.6.8).
+    image: stpaquet/alpinemailcatcher:latest@sha256:499c0eabca5e82b23d030706ba9d5b8b27bba5a5f34a43154ee5e68b07cba52c
+    restart: unless-stopped
+    # Same as the image default CMD, plus --persistence so caught mail
+    # survives container restarts (stored in the named volume below).
+    command: sh -c "mailcatcher --foreground --smtp-port=1025 --http-port=1080 --ip=0.0.0.0 --messages-limit=$$MAIL_LIMIT --persistence --no-quit"
+    environment:
+      - MAIL_LIMIT=${MAIL_LIMIT}
+    expose:
+      # SMTP: reachable from other services in the same Dokploy network
+      # at mailcatcher-ng:1025 (intentionally not published on the host).
+      - 1025
+      # Web UI (routed through the domain below)
+      - 1080
+    volumes:
+      - mailcatcher-data:/home/mailcatcher/.mailcatcher
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://127.0.0.1:1080']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mailcatcher-data:

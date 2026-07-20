@@ -1,0 +1,17 @@
+{
+  "id": "bonfire",
+  "name": "Bonfire",
+  "version": "1.0.5",
+  "description": "Federated social networking toolkit for communities: customizable digital spaces with ActivityPub federation, flexible boundaries and moderation tools.",
+  "logo": "bonfire.svg",
+  "links": {
+    "github": "https://github.com/bonfire-networks/bonfire-app",
+    "website": "https://bonfirenetworks.org",
+    "docs": "https://docs.bonfirenetworks.org"
+  },
+  "tags": [
+    "social",
+    "fediverse",
+    "activitypub"
+  ]
+}

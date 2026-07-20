@@ -31,6 +31,13 @@ env = [
   "CACHE_REDIS_URI=redis://evolution-redis:6379",
   "CACHE_REDIS_PREFIX_KEY=evolution",
   "CACHE_REDIS_SAVE_INSTANCES=true",
+  "TYPEBOT_ENABLED=true",
+  "TYPEBOT_API_VERSION=latest",
+  "CHATWOOT_ENABLED=true",
+  "OPENAI_ENABLED=true",
+  "DIFY_ENABLED=true",
+  "N8N_ENABLED=true",
+  "EVOAI_ENABLED=true",
 ]
 mounts = []
 

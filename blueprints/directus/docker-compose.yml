@@ -1,15 +1,73 @@
 services:
+  directus:
+    image: directus/directus:12.1.1
+    ports:
+      - 8055
+    volumes:
+      - directus_uploads:/directus/uploads
+      - directus_extensions:/directus/extensions
+    depends_on:
+      database:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://127.0.0.1:8055/server/ping || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_interval: 5s
+      start_period: 30s
+    environment:
+      SECRET: ${DIRECTUS_SECRET}
+
+      DB_CLIENT: "pg"
+      DB_HOST: "database"
+      DB_PORT: "5432"
+      DB_DATABASE: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      CACHE_ENABLED: "true"
+      CACHE_AUTO_PURGE: "true"
+      CACHE_STORE: "redis"
+      REDIS: "redis://cache:6379"
+
+      WEBSOCKETS_ENABLED: "true"
+      PUBLIC_URL: ${PUBLIC_URL}
+      LICENSE_KEY: ${LICENSE_KEY}
+
+      # After first successful login, remove ADMIN_EMAIL and ADMIN_PASSWORD below.
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+
+      STORAGE_LOCATIONS: "local"
+      STORAGE_LOCAL_DRIVER: "local"
+      STORAGE_LOCAL_ROOT: "/directus/uploads"
+
+      # S3-compatible storage — uncomment and set S3_* env vars in template.toml.
+      # STORAGE_LOCATIONS: "s3"
+      # STORAGE_S3_DRIVER: "s3"
+      # STORAGE_S3_KEY: ${S3_ACCESS_KEY}
+      # STORAGE_S3_SECRET: ${S3_SECRET_KEY}
+      # STORAGE_S3_BUCKET: ${S3_BUCKET}
+      # STORAGE_S3_REGION: ${S3_REGION}
+      # STORAGE_S3_ENDPOINT: ${S3_ENDPOINT}
+      # STORAGE_S3_ROOT: ${S3_ROOT}
+      # STORAGE_S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE}
+      # STORAGE_S3_ACL: "private"
+
   database:
     image: postgis/postgis:13-master
     volumes:
       - directus_database:/var/lib/postgresql/data
 
     environment:
-      POSTGRES_USER: "directus"
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-      POSTGRES_DB: "directus"
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     healthcheck:
-      test: ["CMD", "pg_isready", "--host=localhost", "--username=directus"]
+      test: ["CMD-SHELL", "pg_isready --host=localhost --username=$$POSTGRES_USER"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -26,38 +84,6 @@ services:
       start_interval: 5s
       start_period: 30s
 
-
-  directus:
-    image: directus/directus:11.12.0
-    ports:
-      - 8055
-    volumes:
-      - directus_uploads:/directus/uploads
-      - directus_extensions:/directus/extensions
-    depends_on:
-      database:
-        condition: service_healthy
-      cache:
-        condition: service_healthy
-    environment:
-      SECRET: ${DIRECTUS_SECRET}
-
-      DB_CLIENT: "pg"
-      DB_HOST: "database"
-      DB_PORT: "5432"
-      DB_DATABASE: "directus"
-      DB_USER: "directus"
-      DB_PASSWORD: ${DATABASE_PASSWORD}
-
-      CACHE_ENABLED: "true"
-      CACHE_AUTO_PURGE: "true"
-      CACHE_STORE: "redis"
-      REDIS: "redis://cache:6379"
-
-      # After first successful login, remove the admin email/password env. variables below
-      # as these will now be stored in the database.
-      ADMIN_EMAIL: "admin@example.com"
-      ADMIN_PASSWORD: "d1r3ctu5"
 volumes:
   directus_uploads:
   directus_extensions:

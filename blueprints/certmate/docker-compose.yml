@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  certmate:
+    image: fabriziosalmi/certmate:2.21.3
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY} # 🔐 Flask session secret
+      - API_BEARER_TOKEN=${API_BEARER_TOKEN} # 🔐 API / web UI token
+      - BEHIND_PROXY=${BEHIND_PROXY}
+      - CLOUDFLARE_TOKEN=${CLOUDFLARE_TOKEN}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    ports:
+      - 8000
+    volumes:
+      - certmate_certificates:/app/certificates
+      - certmate_data:/app/data
+      - certmate_logs:/app/logs
+      - certmate_backups:/app/backups
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  certmate_certificates:
+  certmate_data:
+  certmate_logs:
+  certmate_backups:

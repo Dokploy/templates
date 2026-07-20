@@ -1,0 +1,17 @@
+{
+  "id": "dify",
+  "name": "Dify",
+  "version": "1.15.0",
+  "description": "Dify is an open-source LLM app development platform. Build AI workflows, RAG pipelines, agents and chatbots with a visual interface and publish them as APIs or web apps.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/langgenius/dify",
+    "website": "https://dify.ai/",
+    "docs": "https://docs.dify.ai/"
+  },
+  "tags": [
+    "ai",
+    "llm",
+    "rag"
+  ]
+}

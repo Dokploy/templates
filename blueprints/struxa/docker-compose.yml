@@ -1,0 +1,90 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - struxa-mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY}
+    volumes:
+      - struxa-minio:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    image: ghcr.io/struxadotcloud/migrate:${IMAGE_TAG}
+    restart: on-failure:5
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  struxa:
+    image: ghcr.io/struxadotcloud/dashboard:${IMAGE_TAG}
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        eval "$$(node -e '
+          const {generateKeyPairSync}=require("crypto");
+          const {publicKey,privateKey}=generateKeyPairSync("rsa",{modulusLength:2048,
+            publicKeyEncoding:{type:"spki",format:"pem"},
+            privateKeyEncoding:{type:"pkcs8",format:"pem"}});
+          console.log("export JWT_PRIVATE_KEY="+JSON.stringify(privateKey.replace(/\n/g,"\\n")));
+          console.log("export JWT_PUBLIC_KEY="+JSON.stringify(publicKey.replace(/\n/g,"\\n")));
+        ')"
+        exec node apps/web/server.js
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL}
+      - CORS_ORIGIN=${CORS_ORIGIN}
+      - APP_URL=${APP_URL}
+      - DATABASE_ENCRYPTION_KEY=${DATABASE_ENCRYPTION_KEY}
+      - MINIO_ENDPOINT=${MINIO_ENDPOINT}
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - MINIO_BUCKET=${MINIO_BUCKET}
+      - NODE_ENV=production
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      minio:
+        condition: service_healthy
+
+  watchkeeper:
+    image: ghcr.io/struxadotcloud/watchkeeper:${IMAGE_TAG}
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_ENCRYPTION_KEY=${DATABASE_ENCRYPTION_KEY}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  struxa-mysql:
+  struxa-minio:

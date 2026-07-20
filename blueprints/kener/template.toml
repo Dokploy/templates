@@ -11,9 +11,23 @@ host = "${main_domain}"
 [config.env]
 TZ = "Etc/UTC"
 KENER_SECRET_KEY = "${KENER_SECRET_KEY}" # 🔐 API key / secret
-ORIGIN = "https://${main_domain}"
+ORIGIN = "http://localhost:3000"
 REDIS_URL = "redis://redis:6379"
 DATABASE_URL = "sqlite://./database/kener.sqlite.db"
-KENER_BASE_PATH = ""
 RESEND_API_KEY = ""
-RESEND_SENDER_EMAIL = "Accounts <accounts@resend.dev>"
+RESEND_SENDER_EMAIL = ""
+
+[[config.mounts]]
+type = "volume"
+source = "data"
+target = "/app/database"
+
+[[config.mounts]]
+type = "volume"
+source = "redis_data"
+target = "/data"
+
+[[config.mounts]]
+type = "bind"
+source = "../files/uploads"
+target = "/app/uploads"

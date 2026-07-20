@@ -1,35 +1,37 @@
 services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    expose:
+      - 6379
+
   kener:
-    image: rajnandan1/kener:latest
+    image: rajnandan1/kener:4.1.1
     environment:
       - TZ=${TZ}
       - KENER_SECRET_KEY=${KENER_SECRET_KEY} # 🔐 API key / secret
       - ORIGIN=${ORIGIN}
       - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=${DATABASE_URL}
-      - KENER_BASE_PATH=${KENER_BASE_PATH}
       - RESEND_API_KEY=${RESEND_API_KEY} # 🔐 API key
       - RESEND_SENDER_EMAIL=${RESEND_SENDER_EMAIL}
-    ports:
+    expose:
       - 3000
     volumes:
-      - kener_db:/app/database
+      - data:/app/database
+      - ../files/uploads:/app/uploads
     depends_on:
       redis:
         condition: service_healthy
     restart: unless-stopped
 
-  redis:
-    image: redis:7-alpine
-    volumes:
-      - kener_redis:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-
 volumes:
-  kener_db: {}
-  kener_redis: {}
+  data:
+  redis_data:

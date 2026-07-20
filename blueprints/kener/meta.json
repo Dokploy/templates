@@ -1,7 +1,7 @@
 {
   "id": "kener",
   "name": "Kener",
-  "version": "latest",
+  "version": "4.1.1",
   "description": "Kener is an open-source status page system for monitoring and alerting. It provides a modern interface for tracking service uptime and sending notifications.",
   "logo": "image.png",
   "links": {

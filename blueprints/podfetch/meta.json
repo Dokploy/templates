@@ -1,0 +1,15 @@
+{
+  "id": "podfetch",
+  "name": "PodFetch",
+  "version": "v5.2.2",
+  "description": "PodFetch is a sleek, self-hosted podcast manager that automatically downloads new episodes, offers a web UI for listening and managing podcasts, and provides a GPodder-compatible sync API for mobile apps like AntennaPod.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/SamTV12345/PodFetch",
+    "website": "https://samtv12345.github.io/PodFetch/",
+    "docs": "https://samtv12345.github.io/PodFetch/"
+  },
+  "tags": [
+    "media"
+  ]
+}

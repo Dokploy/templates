@@ -28,6 +28,9 @@ services:
       - AUTORUN_LARAVEL_STORAGE_LINK=true
     volumes:
       - billmora-storage:/var/www/html/storage
+      - billmora-plugins:/var/www/html/plugin
+      - billmora-themes-resources:/var/www/html/resources/themes
+      - billmora-themes-public:/var/www/html/public/themes
     depends_on:
       billmora-db:
         condition: service_healthy
@@ -58,6 +61,9 @@ services:
       - AUTORUN_ENABLED=false
     volumes:
       - billmora-storage:/var/www/html/storage
+      - billmora-plugins:/var/www/html/plugin
+      - billmora-themes-resources:/var/www/html/resources/themes
+      - billmora-themes-public:/var/www/html/public/themes
     depends_on:
       billmora-db:
         condition: service_healthy
@@ -88,6 +94,9 @@ services:
       - AUTORUN_ENABLED=false
     volumes:
       - billmora-storage:/var/www/html/storage
+      - billmora-plugins:/var/www/html/plugin
+      - billmora-themes-resources:/var/www/html/resources/themes
+      - billmora-themes-public:/var/www/html/public/themes
     depends_on:
       billmora-db:
         condition: service_healthy
@@ -126,5 +135,8 @@ services:
 
 volumes:
   billmora-storage:
+  billmora-plugins:
+  billmora-themes-resources:
+  billmora-themes-public:
   billmora-db-data:
   billmora-redis-data:

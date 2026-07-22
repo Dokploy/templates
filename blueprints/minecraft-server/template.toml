@@ -1,0 +1,35 @@
+[variables]
+MINECRAFT_VERSION = "latest"
+SERVER_TYPE = "paper"
+RAM_SIZE = "2G"
+DIFFICULTY = "easy"
+MOTD = "A Minecraft Server powered by Dokploy"
+OPS = ""
+ALLOW_NETHER = "true"
+MAX_PLAYERS = "20"
+SEED = ""
+SPAWN_PROTECTION = "16"
+VIEW_DISTANCE = "10"
+ENABLE_RCON = "false"
+
+[config]
+[[config.domains]]
+serviceName = "minecraft"
+port = 25565
+host = "${domain}"
+type = "tcp"
+
+[[config.env]]
+EULA = "TRUE"
+VERSION = "${MINECRAFT_VERSION}"
+TYPE = "${SERVER_TYPE}"
+MEMORY = "${RAM_SIZE}"
+DIFFICULTY = "${DIFFICULTY}"
+MOTD = "${MOTD}"
+OPS = "${OPS}"
+ALLOW_NETHER = "${ALLOW_NETHER}"
+MAX_PLAYERS = "${MAX_PLAYERS}"
+SEED = "${SEED}"
+SPAWN_PROTECTION = "${SPAWN_PROTECTION}"
+VIEW_DISTANCE = "${VIEW_DISTANCE}"
+ENABLE_RCON = "${ENABLE_RCON}"

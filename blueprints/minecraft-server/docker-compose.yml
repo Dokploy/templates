@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  minecraft:
+    image: itzg/minecraft-server:latest
+    ports:
+      - "25565:25565"
+    environment:
+      - EULA=${EULA}
+      - VERSION=${VERSION}
+      - TYPE=${TYPE}
+      - MEMORY=${MEMORY}
+      - DIFFICULTY=${DIFFICULTY}
+      - MOTD=${MOTD}
+      - OPS=${OPS}
+      - ALLOW_NETHER=${ALLOW_NETHER}
+      - MAX_PLAYERS=${MAX_PLAYERS}
+      - SEED=${SEED}
+      - SPAWN_PROTECTION=${SPAWN_PROTECTION}
+      - VIEW_DISTANCE=${VIEW_DISTANCE}
+      - ENABLE_RCON=${ENABLE_RCON}
+      - RCON_PASSWORD=${RCON_PASSWORD}
+    volumes:
+      - minecraft-data:/data
+    restart: unless-stopped
+
+volumes:
+  minecraft-data:

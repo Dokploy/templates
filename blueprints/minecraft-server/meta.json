@@ -1,0 +1,19 @@
+{
+  "id": "minecraft-server",
+  "name": "Minecraft Server",
+  "version": "latest",
+  "description": "A fully configurable Minecraft Java Edition server. Supports Paper, Spigot, Vanilla, Forge, Fabric and more. Pre-configured with automatic backups and performance optimizations.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/itzg/docker-minecraft-server",
+    "website": "https://minecraft.net",
+    "docs": "https://docker-minecraft-server.readthedocs.io/"
+  },
+  "tags": [
+    "game-server",
+    "minecraft",
+    "gaming",
+    "multiplayer",
+    "paper"
+  ]
+}

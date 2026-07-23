@@ -1,7 +1,7 @@
 {
   "id": "creed",
   "name": "Creed",
-  "version": "latest",
+  "version": "e9b096d",
   "description": "One personal context file every AI agent reads before answering and proposes updates to as it learns about you. Requires an external Supabase project (see instructions).",
   "logo": "creed.svg",
   "links": {

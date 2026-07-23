@@ -1,0 +1,106 @@
+[variables]
+main_domain = "${domain}"
+creed_encryption_secret = "${base64:32}"
+
+[config]
+
+[[config.domains]]
+serviceName = "creed"
+port = 3000
+host = "${main_domain}"
+
+env = [
+  "NEXT_PUBLIC_SITE_URL=https://${main_domain}",
+  "NEXT_PUBLIC_SUPABASE_URL=",
+  "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=",
+  "SUPABASE_SECRET_KEY=",
+  "CREED_ENCRYPTION_SECRET=${creed_encryption_secret}",
+  "STRIPE_SECRET_KEY=",
+  "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=",
+  "STRIPE_WEBHOOK_SECRET=",
+  "OPENROUTER_PLATFORM_KEY=",
+  "ANALYSIS_MODEL=",
+  "TAB_MODEL=",
+  "PANEL_MODEL=",
+  "RESEND_API_KEY=",
+  "RESEND_FROM_EMAIL=Creed <hello@example.com>",
+  "GITHUB_OAUTH_CLIENT_ID=",
+  "GITHUB_OAUTH_CLIENT_SECRET=",
+  "NEXT_PUBLIC_CONTACT_EMAIL=",
+  "NEXT_PUBLIC_GITHUB_URL=https://github.com/connorhpbrn/creed",
+  "CREED_CSP_ENFORCE=",
+]
+
+[[config.mounts]]
+filePath = "README.md"
+content = """# Creed
+
+Creed (creed.md) is a personal context file: one Markdown file every AI agent
+reads before answering and proposes updates to as it learns about you. This
+template builds the app from source (https://github.com/connorhpbrn/creed)
+and runs it as a stateless Next.js container — Postgres, auth, and storage
+live in Supabase, which is **not** part of this template.
+
+## Before you deploy
+
+Creed needs a Supabase project. It is not enough to point it at a plain
+Postgres database: the app relies on Supabase Auth, Row Level Security, and
+realtime subscriptions, and its schema is applied through the Supabase CLI.
+
+1. Create a Supabase project — either a hosted one at supabase.com, or your
+   own self-hosted instance (Dokploy has a separate **Supabase** template you
+   can deploy for this).
+2. On a machine with Node 20+, clone the Creed repo and push its schema to
+   your project:
+   ```bash
+   git clone https://github.com/connorhpbrn/creed.git
+   cd creed && npm install
+   supabase link --project-ref <your-project-ref>
+   supabase db push
+   ```
+3. From Project Settings -> API in your Supabase dashboard, copy the
+   project URL, the publishable (anon) key, and the secret (service_role)
+   key.
+
+## Required environment variables
+
+Fill these in on the **Environment** tab before the first deploy, then
+redeploy:
+
+- `NEXT_PUBLIC_SUPABASE_URL`: your Supabase project URL.
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: the Supabase anon/publishable key.
+- `SUPABASE_SECRET_KEY`: the Supabase service_role/secret key. Server-only,
+  never exposed to the browser.
+- `CREED_ENCRYPTION_SECRET` is generated for you (used to encrypt provider
+  tokens at rest).
+- `NEXT_PUBLIC_SITE_URL` is set to this service's domain automatically.
+
+The app boots with only these set, but sign-in, AI features, and billing
+stay disabled until their own variables are configured.
+
+## Optional integrations
+
+- **Stripe** (paid plans): `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`,
+  `STRIPE_WEBHOOK_SECRET`. Create a webhook endpoint at
+  `https://<your-domain>/api/stripe/webhook` in the Stripe dashboard for the
+  signing secret.
+- **OpenRouter** (managed AI credits): `OPENROUTER_PLATFORM_KEY` from
+  https://openrouter.ai/keys. `ANALYSIS_MODEL`, `TAB_MODEL`, `PANEL_MODEL`
+  override the default model per AI feature and can be left blank.
+- **Resend** (Company invite emails): `RESEND_API_KEY` and
+  `RESEND_FROM_EMAIL` (must be on a domain verified in Resend).
+- **GitHub OAuth** (repo sync, not sign-in): create an OAuth App at
+  https://github.com/settings/developers with callback URL
+  `https://<your-domain>/auth/github/callback`, then set
+  `GITHUB_OAUTH_CLIENT_ID` and `GITHUB_OAUTH_CLIENT_SECRET`.
+- `CREED_CSP_ENFORCE=1` switches the Content-Security-Policy header from
+  report-only to enforcing. Leave it unset for at least one deploy cycle so
+  you can check the browser console for violations first.
+
+## Notes
+
+- This template builds the image from the Creed GitHub repository during
+  deployment; the first deploy can take a few minutes.
+- The app itself is stateless — all data lives in Supabase, so there are no
+  volumes to back up here.
+"""

@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+api_token = "${password:32}"
+
+[config]
+env = [
+  "OD_API_TOKEN=${api_token}",
+  "OD_ALLOWED_ORIGINS=https://${main_domain}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "open-design"
+port = 7456
+host = "${main_domain}"

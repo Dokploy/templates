@@ -2,7 +2,7 @@ version: "3.8"
 services:
   creed:
     build:
-      context: https://github.com/connorhpbrn/creed.git#e9b096d6d68fef6df336338bc9965a94ab62f75e
+      context: https://github.com/connorhpbrn/creed.git
       dockerfile_inline: |
         FROM node:20-alpine AS builder
         WORKDIR /app

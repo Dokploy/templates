@@ -1,0 +1,13 @@
+{
+  "name": "reef-faucet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HTTP faucet for Reef deployments",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@polkadot/api": "^16.4.8"
+  }
+}

@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  reef-faucet:
+    image: anukulpandey/reef-chain-node:latest
+    restart: unless-stopped
+    working_dir: /workspace
+
+    expose:
+      - "${PORT}"
+
+    environment:
+      SERVICE_NAME: reef-faucet
+      WS_ENDPOINT: ${WS_ENDPOINT}
+      EVM_RPC_URL: ${EVM_RPC_URL}
+      FAUCET_SEED: ${FAUCET_SEED}
+      PORT: ${PORT}
+      DEFAULT_AMOUNT: ${DEFAULT_AMOUNT}
+      MAX_AMOUNT: ${MAX_AMOUNT}
+
+    volumes:
+      - ./output:/output
+
+    entrypoint: /bin/sh
+    command: -c "
+      set -e &&
+
+      echo '📦 Installing dependencies...' &&
+      apt-get update &&
+      apt-get install -y wget curl ca-certificates gnupg &&
+      mkdir -p /etc/apt/keyrings &&
+      curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg &&
+      echo 'deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main' > /etc/apt/sources.list.d/nodesource.list &&
+      apt-get update &&
+      apt-get install -y nodejs &&
+
+      echo '📥 Downloading faucet sources...' &&
+      mkdir -p /workspace/faucet &&
+      wget -O /workspace/faucet/package.json \
+        https://raw.githubusercontent.com/anukulpandey/dokploy-templates/d8a82420dad013a3eb7e5d8afc0b9f2700a0045a/blueprints/reef-faucet/faucet/package.json &&
+      wget -O /workspace/faucet/server.js \
+        https://raw.githubusercontent.com/anukulpandey/dokploy-templates/d8a82420dad013a3eb7e5d8afc0b9f2700a0045a/blueprints/reef-faucet/faucet/server.js &&
+
+      echo '📦 Installing faucet npm dependencies...' &&
+      cd /workspace/faucet &&
+      npm install --omit=dev &&
+
+      echo '🚰 Starting Reef faucet on port $PORT' &&
+      exec npm start"

@@ -1,0 +1,18 @@
+{
+  "id": "reef-faucet",
+  "name": "Reef Chain - Faucet",
+  "version": "1",
+  "description": "HTTP faucet for sending native Reef funds to EVM addresses on a custom Reef Chain cluster",
+  "links": {
+    "github": "https://github.com/anukulpandey/dokploy-reef-chain-scripts",
+    "website": "https://hub.docker.com/repository/docker/anukulpandey/reef-chain-node",
+    "docs": "https://docs.reef.io/"
+  },
+  "logo": "reef.svg",
+  "tags": [
+    "reef-chain",
+    "faucet",
+    "self-hosted",
+    "evm"
+  ]
+}

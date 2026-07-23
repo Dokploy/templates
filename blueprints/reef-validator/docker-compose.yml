@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  reef-validator:
+    image: anukulpandey/reef-chain-node:latest
+    restart: unless-stopped
+    working_dir: /workspace
+
+    expose:
+      - "${P2P_PORT}"
+
+    environment:
+      SPEC_URL: ${SPEC_URL}
+      BOOTNODE_NODE_KEY: ${BOOTNODE_NODE_KEY}
+      BOOTNODE_IP: ${BOOTNODE_IP}
+      V1SEED: ${V1SEED}
+      V1ADDR: ${V1ADDR}
+      P2P_PORT: ${P2P_PORT}
+      VALIDATOR_NAME: ${VALIDATOR_NAME}
+
+    volumes:
+      - ./output:/output
+
+    entrypoint: /bin/sh
+    command: -c "
+      set -e &&
+
+      echo '📦 Installing dependencies...' &&
+      apt-get update &&
+      apt-get install -y wget ca-certificates &&
+
+      echo '📥 Downloading start-validator.sh...' &&
+      mkdir -p /workspace/validator/scripts &&
+      wget -O /workspace/validator/scripts/start-validator.sh \
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/52c3e30d06bba10936aea2db9740eafd76b3ac40/validator/scripts/start-validator.sh &&
+
+      echo '🔧 Making script executable...' &&
+      chmod +x /workspace/validator/scripts/start-validator.sh &&
+
+      echo '🚀 Starting validator $VALIDATOR_NAME' &&
+      exec /workspace/validator/scripts/start-validator.sh"

@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+  reef-rpc:
+    image: anukulpandey/reef-chain-node:latest
+    restart: unless-stopped
+    working_dir: /workspace
+
+    expose:
+      - "${P2P_PORT}"
+      - "${RPC_PORT}"
+
+    environment:
+      SPEC_URL: ${SPEC_URL}
+      BOOTNODE_NODE_KEY: ${BOOTNODE_NODE_KEY}
+      BOOTNODE_IP: ${BOOTNODE_IP}
+      P2P_PORT: ${P2P_PORT}
+      RPC_PORT: ${RPC_PORT}
+
+    volumes:
+      - ./output:/output
+
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - |
+        set -e
+
+        echo '📦 Installing dependencies...'
+        apt-get update
+        apt-get install -y wget ca-certificates
+
+        RPC_BASE_PATH=/tmp/rpc-node
+        NODE_KEY_FILE=/tmp/rpc_node_key.txt
+        CHAIN_FILE=/tmp/local-chain-spec-raw.json
+        PEER_ID_FILE=/tmp/bootnode_peer_id.txt
+
+        echo '📥 Downloading chain spec and bootnode peer ID...'
+        wget -q -O "$$CHAIN_FILE" "$$SPEC_URL"
+        wget -q -O "$$PEER_ID_FILE" "$$BOOTNODE_NODE_KEY"
+
+        BOOTNODE_PEER_ID=$$(tr -d '\r\n' < "$$PEER_ID_FILE")
+        if [ -z "$$BOOTNODE_PEER_ID" ]; then
+          echo 'Bootnode peer ID file is empty' >&2
+          exit 1
+        fi
+
+        BOOTNODE_MULTIADDR="/ip4/$$BOOTNODE_IP/tcp/30335/p2p/$$BOOTNODE_PEER_ID"
+
+        mkdir -p "$$RPC_BASE_PATH"
+        chmod 700 "$$RPC_BASE_PATH"
+
+        reef-node key generate-node-key --chain local > "$$NODE_KEY_FILE"
+        chmod 600 "$$NODE_KEY_FILE"
+
+        echo '🚀 Starting RPC node...'
+        exec reef-node \
+          --base-path "$$RPC_BASE_PATH" \
+          --chain "$$CHAIN_FILE" \
+          --port "$$P2P_PORT" \
+          --node-key-file "$$NODE_KEY_FILE" \
+          --bootnodes "$$BOOTNODE_MULTIADDR" \
+          --experimental-rpc-endpoint "listen-addr=0.0.0.0:$$RPC_PORT,cors=all,methods=unsafe,max-connections=10000" \
+          --pruning archive \
+          --name rpc-node \
+          --no-telemetry

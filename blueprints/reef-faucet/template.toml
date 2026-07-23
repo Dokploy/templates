@@ -1,0 +1,27 @@
+[variables]
+PORT = "8080"
+WS_ENDPOINT = "ws://ws.reef.host"
+EVM_RPC_URL = "http://eth.reef.host"
+FAUCET_SEED = ""
+DEFAULT_AMOUNT = "2000"
+MAX_AMOUNT = "2000"
+
+[[config.domains]]
+serviceName = "reef-faucet"
+port = 8080
+host = "${domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "reef-faucet"
+port = 8080
+host = "faucet.${domain}"
+path = "/"
+
+[config.env]
+PORT = "8080"
+WS_ENDPOINT = "ws://ws.reef.host"
+EVM_RPC_URL = "http://eth.reef.host"
+FAUCET_SEED = ""
+DEFAULT_AMOUNT = "2000"
+MAX_AMOUNT = "2000"

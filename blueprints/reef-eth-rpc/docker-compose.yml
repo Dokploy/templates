@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  reef-eth-rpc:
+    image: anukulpandey/reef-chain-eth-rpc:latest
+    restart: unless-stopped
+    working_dir: /workspace
+    volumes:
+      - ./output:/output
+    environment:
+      - PORT=${PORT}
+      - NODE_RPC_URL=${NODE_RPC_URL}
+    expose:
+      - "${PORT}"
+    entrypoint: /bin/sh
+    command: -c "eth-rpc --node-rpc-url $$NODE_RPC_URL --rpc-port $$PORT --rpc-external --rpc-cors all"

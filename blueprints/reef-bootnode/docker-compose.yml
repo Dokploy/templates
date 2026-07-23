@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  reef-bootnode:
+    image: anukulpandey/reef-chain-node:latest
+    restart: unless-stopped
+    working_dir: /workspace
+
+    volumes:
+      - ./output:/output
+
+    expose:
+      - "${PORT}"
+      - "${P2P_PORT}"
+
+    environment:
+      V1_ADDR: ${V1_ADDR}
+      V1_SEED: ${V1_SEED}
+
+      V2_ADDR: ${V2_ADDR}
+      V2_SEED: ${V2_SEED}
+
+      V3_ADDR: ${V3_ADDR}
+      V3_SEED: ${V3_SEED}
+
+      PORT: ${PORT}
+      P2P_PORT: ${P2P_PORT}
+
+    entrypoint: /bin/sh
+    command: -c "
+      set -e &&
+
+      echo '📦 Installing dependencies...' &&
+      apt-get update &&
+      apt-get install -y python3 wget ca-certificates &&
+
+      echo '📥 Downloading bootstrap scripts...' &&
+      mkdir -p /workspace/bootstrap/scripts &&
+      wget -O /workspace/bootstrap/scripts/run.sh \
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/52c3e30d06bba10936aea2db9740eafd76b3ac40/bootstrap/scripts/run.sh &&
+      wget -O /workspace/bootstrap/scripts/update-spec.py \
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/52c3e30d06bba10936aea2db9740eafd76b3ac40/bootstrap/scripts/update-spec.py &&
+      wget -O /workspace/bootstrap/scripts/update-spec.sh \
+        https://raw.githubusercontent.com/anukulpandey/dokploy-reef-chain-scripts/52c3e30d06bba10936aea2db9740eafd76b3ac40/bootstrap/scripts/update-spec.sh &&
+
+      echo '🔧 Making scripts executable...' &&
+      chmod +x /workspace/bootstrap/scripts/run.sh &&
+      chmod +x /workspace/bootstrap/scripts/update-spec.sh &&
+
+      echo '🚀 Running spec generator + bootnode:' &&
+      exec /workspace/bootstrap/scripts/run.sh"

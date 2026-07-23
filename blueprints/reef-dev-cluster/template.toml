@@ -1,0 +1,51 @@
+[variables]
+# Optional advanced overrides. Leave blank to auto-generate and persist validator identities.
+v1sec = ""
+v2sec = ""
+v3sec = ""
+
+# Optional dedicated faucet seed. Leave blank to reuse validator 1.
+faucetsec = ""
+DEFAULT_AMOUNT = "2000"
+MAX_AMOUNT = "2000"
+
+[[config.domains]]
+serviceName = "reef-dev-cluster"
+port = 8001
+host = "${domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "reef-dev-cluster"
+port = 8001
+host = "spec.${domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "reef-dev-cluster"
+port = 9945
+host = "ws.${domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "reef-dev-cluster-eth-rpc"
+port = 8545
+host = "eth.${domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "reef-dev-cluster"
+port = 8080
+host = "faucet.${domain}"
+path = "/"
+
+[config.env]
+# Optional advanced overrides. Leave blank to auto-generate and persist validator identities.
+v1sec = ""
+v2sec = ""
+v3sec = ""
+
+# Optional dedicated faucet seed. Leave blank to reuse validator 1.
+faucetsec = ""
+DEFAULT_AMOUNT = "2000"
+MAX_AMOUNT = "2000"

@@ -1,0 +1,25 @@
+[variables]
+V1ADDR = "5GH14oJ4A3VDLoC6nXutsTwS4dMwebDipNdSugD5zFnnWKp5"
+V1SEED = ""
+
+SPEC_URL = "http://spec.reef.host/local-chain-spec-raw.json"
+BOOTNODE_NODE_KEY="http://spec.reef.host/bootnode_node_key.txt"
+
+BOOTNODE_IP="72.60.35.83"
+
+VALIDATOR_NAME="Validator-1"
+
+P2P_PORT="30333"
+
+[config.env]
+V1ADDR = "5GH14oJ4A3VDLoC6nXutsTwS4dMwebDipNdSugD5zFnnWKp5"
+V1SEED = ""
+
+SPEC_URL = "http://spec.reef.host/local-chain-spec-raw.json"
+BOOTNODE_NODE_KEY="http://spec.reef.host/bootnode_node_key.txt"
+
+BOOTNODE_IP="72.60.35.83"
+
+VALIDATOR_NAME="Validator-1"
+
+P2P_PORT="30333"

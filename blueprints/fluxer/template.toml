@@ -19,7 +19,7 @@ FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64 = "${base64:32}"
 
 FLUXER_VAPID_PUBLIC_KEY = "${password:64}"
 FLUXER_VAPID_PRIVATE_KEY = "${password:32}"
-FLUXER_VAPID_EMAIL = "admin@${FLUXER_DOMAIN}"
+FLUXER_VAPID_EMAIL = "admin@example.com"
 
 LIVEKIT_API_KEY = "fluxer"
 LIVEKIT_API_SECRET = "${hash:64}"
@@ -30,7 +30,7 @@ FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS = "http://${FLUXER_DOMAIN}"
 
 FLUXER_EMAIL_ENABLED = "false"
 FLUXER_EMAIL_PROVIDER = "none"
-FLUXER_EMAIL_FROM_EMAIL = "noreply@${FLUXER_DOMAIN}"
+FLUXER_EMAIL_FROM_EMAIL = "noreply@example.com"
 FLUXER_EMAIL_FROM_NAME = "Fluxer"
 FLUXER_EMAIL_SMTP_HOST = ""
 FLUXER_EMAIL_SMTP_PORT = "587"
@@ -49,7 +49,7 @@ env = [
   "# To enable HTTPS (Required for WebRTC voice/video, Passkeys, and Push Notifications, and more!):",
   "# 1. Change FLUXER_PUBLIC_SCHEME from 'http' to 'https'",
   "# 2. Change FLUXER_PUBLIC_PORT from '80' to '443'",
-  "# 3. Update FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS to 'https://${FLUXER_DOMAIN}'",
+  "# 3. Update FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS to 'https://example.com'",
   "# 4. Enable HTTPS on your domain in the Dokploy Domains tab.",
   "",
   "FLUXER_DOMAIN=${FLUXER_DOMAIN}",

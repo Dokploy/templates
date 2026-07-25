@@ -49,6 +49,7 @@ env = [
   "LIVEKIT_API_KEY=${LIVEKIT_API_KEY}",
   "LIVEKIT_API_SECRET=${LIVEKIT_API_SECRET}"
 ]
+mounts = []
 
 [[config.domains]]
 serviceName = "caddy"

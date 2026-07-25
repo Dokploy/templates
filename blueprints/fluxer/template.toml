@@ -34,7 +34,8 @@ serviceName = "caddy"
 port = 80
 host = "${FLUXER_DOMAIN}"
 
-config.env = [
+[config.env]
+env = [
   "FLUXER_DOMAIN=${FLUXER_DOMAIN}",
   "FLUXER_PUBLIC_SCHEME=${FLUXER_PUBLIC_SCHEME}",
   "FLUXER_PUBLIC_PORT=${FLUXER_PUBLIC_PORT}",

@@ -64,30 +64,30 @@ jobs:
           for dir in blueprints/*/; do
             id="$(basename "$dir")"
 
-            if [ -f "$dir/docker-compose.yml" ]; then
-              if ! (cd build-scripts && pnpm exec tsx validate-docker-compose.ts \
-                     --file "../$dir/docker-compose.yml") > "$OUT" 2>&1; then
-                COMPOSE_FAILED="$COMPOSE_FAILED $id"
-                {
-                  echo "### \`$id\` — docker-compose.yml"
-                  echo '```'
-                  grep '❌' "$OUT" || cat "$OUT"
-                  echo '```'
-                } >> "$REPORT"
-              fi
+            # Run unconditionally: a blueprint with no docker-compose.yml or no
+            # template.toml is itself a finding, and the validators already
+            # report a missing file clearly. Skipping them would hide exactly
+            # the blueprints most likely to be broken.
+            if ! (cd build-scripts && pnpm exec tsx validate-docker-compose.ts \
+                   --file "../$dir/docker-compose.yml") > "$OUT" 2>&1; then
+              COMPOSE_FAILED="$COMPOSE_FAILED $id"
+              {
+                echo "### \`$id\` — docker-compose.yml"
+                echo '```'
+                grep '❌' "$OUT" || cat "$OUT"
+                echo '```'
+              } >> "$REPORT"
             fi
 
-            if [ -f "$dir/template.toml" ]; then
-              if ! (cd build-scripts && pnpm exec tsx validate-template.ts \
-                     --dir "../$dir") > "$OUT" 2>&1; then
-                TOML_FAILED="$TOML_FAILED $id"
-                {
-                  echo "### \`$id\` — template.toml"
-                  echo '```'
-                  grep '❌' "$OUT" || cat "$OUT"
-                  echo '```'
-                } >> "$REPORT"
-              fi
+            if ! (cd build-scripts && pnpm exec tsx validate-template.ts \
+                   --dir "../$dir") > "$OUT" 2>&1; then
+              TOML_FAILED="$TOML_FAILED $id"
+              {
+                echo "### \`$id\` — template.toml"
+                echo '```'
+                grep '❌' "$OUT" || cat "$OUT"
+                echo '```'
+              } >> "$REPORT"
             fi
           done
 
@@ -118,12 +118,13 @@ jobs:
           SUMMARY_BYTES=$(wc -c < "$SUMMARY" | tr -d ' ')
 
           if [ "$SUMMARY_BYTES" -gt "$SUMMARY_LIMIT" ]; then
-            head -c "$SUMMARY_LIMIT" "$SUMMARY" >> "$GITHUB_STEP_SUMMARY"
+            # Emit the header table only, never a byte-sliced prefix: cutting
+            # mid-``` leaves an unclosed code fence, which swallows the notice
+            # below it and makes the truncation invisible in the rendered summary.
             {
+              head -n 7 "$SUMMARY"
               echo ""
-              echo "---"
-              echo ""
-              echo "_Report truncated at $SUMMARY_LIMIT bytes (full size: $SUMMARY_BYTES)._"
+              echo "_Report omitted: $SUMMARY_BYTES bytes exceeds the $SUMMARY_LIMIT byte budget for a job summary._"
               echo "_Download the \`blueprint-audit\` artifact for the complete output._"
             } >> "$GITHUB_STEP_SUMMARY"
           else

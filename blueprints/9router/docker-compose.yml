@@ -24,7 +24,7 @@ services:
   # Optional token-reduction proxy that 9Router calls through HEADROOM_URL.
   # Shipped as a sidecar because the 9Router image does not bundle it.
   headroom:
-    image: ghcr.io/chopratejas/headroom:latest
+    image: ghcr.io/chopratejas/headroom:0.6.7
     restart: unless-stopped
 
 volumes:

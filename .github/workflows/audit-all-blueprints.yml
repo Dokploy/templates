@@ -1,0 +1,119 @@
+name: Audit All Blueprints
+
+# The per-PR validators only look at blueprints a PR touches, which is the right
+# call for CI cost but means a template is checked when it lands and then never
+# again. When a rule is added or tightened, every existing blueprint that breaks
+# it stays broken with nothing surfacing it (see #1047).
+#
+# This job runs the same validators over ALL blueprints on a schedule, so drift
+# is reported instead of accumulating. It never runs on pull_request, so it
+# cannot block a contributor for a pre-existing problem they did not introduce.
+
+on:
+  schedule:
+    # Mondays, 04:00 UTC
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      fail_on_findings:
+        description: "Exit non-zero when findings exist (default: report only)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.16.0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: cd build-scripts && pnpm install
+
+      - name: Validate per-template metadata
+        run: node build-scripts/generate-meta.js --check
+
+      - name: Audit every blueprint
+        id: audit
+        run: |
+          COMPOSE_FAILED=""
+          TOML_FAILED=""
+
+          for dir in blueprints/*/; do
+            id="$(basename "$dir")"
+
+            if [ -f "$dir/docker-compose.yml" ]; then
+              if ! (cd build-scripts && pnpm exec tsx validate-docker-compose.ts \
+                     --file "../$dir/docker-compose.yml") > /tmp/out.txt 2>&1; then
+                COMPOSE_FAILED="$COMPOSE_FAILED $id"
+                {
+                  echo "### \`$id\` — docker-compose.yml"
+                  echo '```'
+                  grep '❌' /tmp/out.txt || cat /tmp/out.txt
+                  echo '```'
+                } >> /tmp/report.md
+              fi
+            fi
+
+            if [ -f "$dir/template.toml" ]; then
+              if ! (cd build-scripts && pnpm exec tsx validate-template.ts \
+                     --dir "../$dir") > /tmp/out.txt 2>&1; then
+                TOML_FAILED="$TOML_FAILED $id"
+                {
+                  echo "### \`$id\` — template.toml"
+                  echo '```'
+                  grep '❌' /tmp/out.txt || cat /tmp/out.txt
+                  echo '```'
+                } >> /tmp/report.md
+              fi
+            fi
+          done
+
+          COMPOSE_COUNT=$(echo $COMPOSE_FAILED | wc -w | tr -d ' ')
+          TOML_COUNT=$(echo $TOML_FAILED | wc -w | tr -d ' ')
+          TOTAL=$(ls -d blueprints/*/ | wc -l | tr -d ' ')
+
+          {
+            echo "## Blueprint audit"
+            echo ""
+            echo "| check | failing | of |"
+            echo "| --- | --- | --- |"
+            echo "| \`validate-docker-compose.ts\` | $COMPOSE_COUNT | $TOTAL |"
+            echo "| \`validate-template.ts\` | $TOML_COUNT | $TOTAL |"
+            echo ""
+          } > /tmp/summary.md
+
+          if [ -f /tmp/report.md ]; then
+            cat /tmp/report.md >> /tmp/summary.md
+          else
+            echo "No findings." >> /tmp/summary.md
+          fi
+
+          cat /tmp/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+          echo "compose_failed=$COMPOSE_COUNT" >> "$GITHUB_OUTPUT"
+          echo "toml_failed=$TOML_COUNT" >> "$GITHUB_OUTPUT"
+
+          if [ "$COMPOSE_COUNT" != "0" ] || [ "$TOML_COUNT" != "0" ]; then
+            echo "::warning::$COMPOSE_COUNT compose and $TOML_COUNT template.toml findings across $TOTAL blueprints"
+          fi
+
+      - name: Fail if requested
+        if: inputs.fail_on_findings && (steps.audit.outputs.compose_failed != '0' || steps.audit.outputs.toml_failed != '0')
+        run: |
+          echo "❌ Findings present and fail_on_findings was requested."
+          exit 1

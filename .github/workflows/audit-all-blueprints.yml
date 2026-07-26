@@ -111,7 +111,28 @@ jobs:
             echo "No findings." >> "$SUMMARY"
           fi
 
-          cat "$SUMMARY" >> "$GITHUB_STEP_SUMMARY"
+          # The step summary caps at ~1MB and truncates silently past it, which
+          # would hide findings exactly as the backlog grows. Bound what we
+          # append and point at the artifact for the rest.
+          SUMMARY_LIMIT=$((512 * 1024))
+          SUMMARY_BYTES=$(wc -c < "$SUMMARY" | tr -d ' ')
+
+          if [ "$SUMMARY_BYTES" -gt "$SUMMARY_LIMIT" ]; then
+            head -c "$SUMMARY_LIMIT" "$SUMMARY" >> "$GITHUB_STEP_SUMMARY"
+            {
+              echo ""
+              echo "---"
+              echo ""
+              echo "_Report truncated at $SUMMARY_LIMIT bytes (full size: $SUMMARY_BYTES)._"
+              echo "_Download the \`blueprint-audit\` artifact for the complete output._"
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            cat "$SUMMARY" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          # Always published, so the full report survives regardless of size.
+          cp "$SUMMARY" "$WORK/blueprint-audit.md"
+          echo "report_path=$WORK/blueprint-audit.md" >> "$GITHUB_OUTPUT"
 
           echo "compose_failed=$COMPOSE_COUNT" >> "$GITHUB_OUTPUT"
           echo "toml_failed=$TOML_COUNT" >> "$GITHUB_OUTPUT"
@@ -119,6 +140,14 @@ jobs:
           if [ "$COMPOSE_COUNT" != "0" ] || [ "$TOML_COUNT" != "0" ]; then
             echo "::warning::$COMPOSE_COUNT compose and $TOML_COUNT template.toml findings across $TOTAL blueprints"
           fi
+
+      - name: Upload the full report
+        if: always() && steps.audit.outputs.report_path != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: blueprint-audit
+          path: ${{ steps.audit.outputs.report_path }}
+          retention-days: 30
 
       - name: Fail if requested
         # `inputs` is only populated for workflow_dispatch; on a schedule run it

@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  9router:
+    image: decolua/9router:0.5.40
+    restart: unless-stopped
+    environment:
+      DATA_DIR: /app/data
+      PORT: "20128"
+      HOSTNAME: "0.0.0.0"
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET}
+      INITIAL_PASSWORD: ${INITIAL_PASSWORD}
+      API_KEY_SECRET: ${API_KEY_SECRET}
+      MACHINE_ID_SALT: ${MACHINE_ID_SALT}
+      BASE_URL: https://${ROUTER_HOST}
+      HEADROOM_URL: http://headroom:8787
+      AUTH_COOKIE_SECURE: "true"
+    volumes:
+      - 9router-data:/app/data
+    depends_on:
+      - headroom
+
+  # Optional token-reduction proxy that 9Router calls through HEADROOM_URL.
+  # Shipped as a sidecar because the 9Router image does not bundle it.
+  headroom:
+    image: ghcr.io/chopratejas/headroom:latest
+    restart: unless-stopped
+
+volumes:
+  9router-data:

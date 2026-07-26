@@ -50,6 +50,14 @@ jobs:
       - name: Audit every blueprint
         id: audit
         run: |
+          # $RUNNER_TEMP is per-job; also cleared explicitly so a re-run or a
+          # partially-executed earlier step can never leak into the summary.
+          WORK="${RUNNER_TEMP:-/tmp}"
+          OUT="$WORK/validator-out.txt"
+          REPORT="$WORK/audit-report.md"
+          SUMMARY="$WORK/audit-summary.md"
+          rm -f "$OUT" "$REPORT" "$SUMMARY"
+
           COMPOSE_FAILED=""
           TOML_FAILED=""
 
@@ -58,27 +66,27 @@ jobs:
 
             if [ -f "$dir/docker-compose.yml" ]; then
               if ! (cd build-scripts && pnpm exec tsx validate-docker-compose.ts \
-                     --file "../$dir/docker-compose.yml") > /tmp/out.txt 2>&1; then
+                     --file "../$dir/docker-compose.yml") > "$OUT" 2>&1; then
                 COMPOSE_FAILED="$COMPOSE_FAILED $id"
                 {
                   echo "### \`$id\` — docker-compose.yml"
                   echo '```'
-                  grep '❌' /tmp/out.txt || cat /tmp/out.txt
+                  grep '❌' "$OUT" || cat "$OUT"
                   echo '```'
-                } >> /tmp/report.md
+                } >> "$REPORT"
               fi
             fi
 
             if [ -f "$dir/template.toml" ]; then
               if ! (cd build-scripts && pnpm exec tsx validate-template.ts \
-                     --dir "../$dir") > /tmp/out.txt 2>&1; then
+                     --dir "../$dir") > "$OUT" 2>&1; then
                 TOML_FAILED="$TOML_FAILED $id"
                 {
                   echo "### \`$id\` — template.toml"
                   echo '```'
-                  grep '❌' /tmp/out.txt || cat /tmp/out.txt
+                  grep '❌' "$OUT" || cat "$OUT"
                   echo '```'
-                } >> /tmp/report.md
+                } >> "$REPORT"
               fi
             fi
           done
@@ -95,15 +103,15 @@ jobs:
             echo "| \`validate-docker-compose.ts\` | $COMPOSE_COUNT | $TOTAL |"
             echo "| \`validate-template.ts\` | $TOML_COUNT | $TOTAL |"
             echo ""
-          } > /tmp/summary.md
+          } > "$SUMMARY"
 
-          if [ -f /tmp/report.md ]; then
-            cat /tmp/report.md >> /tmp/summary.md
+          if [ -f "$REPORT" ]; then
+            cat "$REPORT" >> "$SUMMARY"
           else
-            echo "No findings." >> /tmp/summary.md
+            echo "No findings." >> "$SUMMARY"
           fi
 
-          cat /tmp/summary.md >> "$GITHUB_STEP_SUMMARY"
+          cat "$SUMMARY" >> "$GITHUB_STEP_SUMMARY"
 
           echo "compose_failed=$COMPOSE_COUNT" >> "$GITHUB_OUTPUT"
           echo "toml_failed=$TOML_COUNT" >> "$GITHUB_OUTPUT"
@@ -113,7 +121,13 @@ jobs:
           fi
 
       - name: Fail if requested
-        if: inputs.fail_on_findings && (steps.audit.outputs.compose_failed != '0' || steps.audit.outputs.toml_failed != '0')
+        # `inputs` is only populated for workflow_dispatch; on a schedule run it
+        # is not available, so gate on the event first and read the value through
+        # github.event.inputs, which is an empty string when absent.
+        if: >-
+          github.event_name == 'workflow_dispatch' &&
+          github.event.inputs.fail_on_findings == 'true' &&
+          (steps.audit.outputs.compose_failed != '0' || steps.audit.outputs.toml_failed != '0')
         run: |
           echo "❌ Findings present and fail_on_findings was requested."
           exit 1

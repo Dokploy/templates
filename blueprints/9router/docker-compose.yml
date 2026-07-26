@@ -13,9 +13,9 @@ services:
       INITIAL_PASSWORD: ${INITIAL_PASSWORD}
       API_KEY_SECRET: ${API_KEY_SECRET}
       MACHINE_ID_SALT: ${MACHINE_ID_SALT}
-      BASE_URL: https://${ROUTER_HOST}
+      BASE_URL: http://${ROUTER_HOST}
       HEADROOM_URL: http://headroom:8787
-      AUTH_COOKIE_SECURE: "true"
+      AUTH_COOKIE_SECURE: "false"
     volumes:
       - 9router-data:/app/data
     depends_on:

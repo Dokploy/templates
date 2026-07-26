@@ -14,6 +14,7 @@ services:
       API_KEY_SECRET: ${API_KEY_SECRET}
       MACHINE_ID_SALT: ${MACHINE_ID_SALT}
       BASE_URL: http://${ROUTER_HOST}
+      NEXT_PUBLIC_BASE_URL: http://${ROUTER_HOST}
       HEADROOM_URL: http://headroom:8787
       AUTH_COOKIE_SECURE: "false"
     volumes:

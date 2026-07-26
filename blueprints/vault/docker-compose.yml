@@ -3,7 +3,6 @@ version: "3.8"
 services:
   vault:
     image: hashicorp/vault:latest
-    container_name: vault
     cap_add:
       - IPC_LOCK
     environment:

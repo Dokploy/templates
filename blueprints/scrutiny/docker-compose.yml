@@ -1,7 +1,6 @@
 services:
   scrutiny:
     restart: unless-stopped
-    container_name: scrutiny
     image: ghcr.io/analogj/scrutiny:master-omnibus
     cap_add:
       - SYS_RAWIO

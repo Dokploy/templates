@@ -18,7 +18,6 @@ services:
       
   stack-auth:
     image: stackauth/server:latest
-    container_name: stack-auth
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

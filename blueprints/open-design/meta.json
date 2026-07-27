@@ -1,7 +1,7 @@
 {
   "id": "open-design",
   "name": "Open Design",
-  "version": "latest",
+  "version": "0.16.1",
   "description": "Open Design is a local-first, open-source design tool with native desktop apps, a large library of design systems, and an extensible plugin ecosystem that runs across many coding agents.",
   "logo": "open-design.svg",
   "links": {

@@ -1,0 +1,21 @@
+{
+  "id": "novu",
+  "name": "Novu",
+  "version": "3.18.0",
+  "description": "Open-source notification infrastructure for multi-channel workflows — in-app Inbox, email, SMS, push, and chat — with a unified API and dashboard.",
+  "logo": "novu.png",
+  "links": {
+    "github": "https://github.com/novuhq/novu",
+    "website": "https://novu.co/",
+    "docs": "https://docs.novu.co/community/self-hosting-novu/deploy-with-docker"
+  },
+  "tags": [
+    "notifications",
+    "email",
+    "sms",
+    "push",
+    "inbox",
+    "self-hosted",
+    "api"
+  ]
+}

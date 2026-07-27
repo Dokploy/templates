@@ -1,7 +1,7 @@
 services:
   portabase:
     image: portabase/portabase:latest
-    restart: always
+    restart: unless-stopped
     environment:
       - PROJECT_URL=${PROJECT_URL}
       - PROJECT_SECRET=${PROJECT_SECRET}

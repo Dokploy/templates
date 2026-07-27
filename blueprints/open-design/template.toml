@@ -5,7 +5,7 @@ api_token = "${password:32}"
 [config]
 env = [
   "OD_API_TOKEN=${api_token}",
-  "OD_ALLOWED_ORIGINS=https://${main_domain}",
+  "OD_ALLOWED_ORIGINS=https://${main_domain},http://${main_domain}",
 ]
 mounts = []
 

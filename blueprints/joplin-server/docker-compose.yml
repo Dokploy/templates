@@ -23,8 +23,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PORT: 5432
       POSTGRES_HOST: joplin-db
-    ports:
+    expose:
       - "22300"
-
 volumes:
   joplin_db_data:

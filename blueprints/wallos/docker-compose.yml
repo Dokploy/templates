@@ -2,7 +2,7 @@ version: '3.8'
 services:
   wallos:
     image: bellamy/wallos:latest
-    ports:
+    expose:
       - '80'
     environment:
       TZ: 'Europe/Paris'

@@ -3,7 +3,7 @@ services:
   authorizer:
     image: lakhansamani/authorizer:1.4.4
     restart: unless-stopped
-    ports:
+    expose:
       - 8080
     environment:
       - DATABASE_TYPE=postgres

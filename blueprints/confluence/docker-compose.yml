@@ -3,7 +3,7 @@ version: "3"
 services:
   confluence:
     image: atlassian/confluence-server:8.6-ubuntu-jdk17
-    ports:
+    expose:
       - "8090"
     volumes:
       - confluence-data:/var/atlassian/application-data/confluence

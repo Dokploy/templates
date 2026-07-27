@@ -3,7 +3,7 @@ services:
   bookstack:
     image: lscr.io/linuxserver/bookstack:24.12.1
     restart: unless-stopped
-    ports:
+    expose:
       - 80
     environment:
       - PUID=1000

@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     command:
       - serve
-    ports:
+    expose:
       - "${HTTP_PORT}"
     volumes:
       - ntfy-data:/var/lib/ntfy

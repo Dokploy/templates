@@ -2,7 +2,7 @@ services:
   homeassistant:
     image: ghcr.io/home-assistant/home-assistant:stable
     restart: unless-stopped
-    ports:
+    expose:
       - 8123
     volumes:
       - ../files/configuration.yaml:/config/configuration.yaml

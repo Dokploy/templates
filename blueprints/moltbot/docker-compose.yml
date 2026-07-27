@@ -13,7 +13,7 @@ services:
     volumes:
       - moltbot-config:/home/node/.clawdbot
       - moltbot-workspace:/home/node/clawd
-    ports:
+    expose:
       - "18789"
       - "18790"
     init: true

@@ -43,7 +43,7 @@ services:
       - CERT_INFO_ORGANIZATIONAL_UNIT=${CERT_INFO_ORGANIZATIONAL_UNIT:-IT Department}
       - CERT_INFO_EMAIL=${CERT_INFO_EMAIL:-admin@example.com}
       - DOCUMENSO_HOST=${DOCUMENSO_HOST}
-    ports:
+    expose:
       - ${DOCUMENSO_PORT}
     entrypoint:
       - /bin/sh

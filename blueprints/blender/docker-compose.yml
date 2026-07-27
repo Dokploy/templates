@@ -19,7 +19,7 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
       - SUBFOLDER=/ #optional
-    ports:
+    expose:
       - 3000
       - 3001
     restart: unless-stopped

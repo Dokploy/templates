@@ -57,7 +57,7 @@ services:
             tmpDir:
               path: /tmp/kestra-wd/tmp
           url: http://localhost:8080/
-    ports:
+    expose:
       - "8080"
       - "8081"
     depends_on:

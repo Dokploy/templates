@@ -3,7 +3,7 @@ version: "3"
 services:
   ackee:
     image: electerious/ackee:3.4.2
-    ports:
+    expose:
       - "3000"
     environment:
       - ACKEE_USERNAME=${ACKEE_USERNAME}

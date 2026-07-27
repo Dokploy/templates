@@ -45,7 +45,7 @@ services:
       PYTHONUNBUFFERED: "1"
       NODE_ENV: "production"
     command: ["java", "-Djava.awt.headless=true", "-server", "-jar", "target/instant-standalone.jar"]
-    ports:
+    expose:
       - "8888"
       - "6005"
     logging:

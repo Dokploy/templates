@@ -3,7 +3,7 @@ services:
   ampache:
     image: ampache/ampache:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 80
     volumes:
       - config:/var/www/config

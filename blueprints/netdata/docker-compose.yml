@@ -22,9 +22,8 @@ services:
       - NETDATA_CLAIM_TOKEN=${NETDATA_CLAIM_TOKEN:-}
       - NETDATA_CLAIM_URL=${NETDATA_CLAIM_URL:-}
       - NETDATA_CLAIM_ROOMS=${NETDATA_CLAIM_ROOMS:-}
-    ports:
+    expose:
       - "19999"
-
 volumes:
   netdata-config:
   netdata-lib:

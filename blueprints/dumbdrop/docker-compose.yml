@@ -2,7 +2,7 @@ services:
   dumbdrop:
     image: dumbwareio/dumbdrop:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 3000
     volumes:
       - dumbdrop-uploads:/app/uploads

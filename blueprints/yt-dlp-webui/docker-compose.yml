@@ -2,7 +2,7 @@ version: "3.8"
 services:
   yt-dlp-webui:
     image: marcobaobao/yt-dlp-webui
-    ports:
+    expose:
       - 3033
     volumes:
       - downloads:/downloads

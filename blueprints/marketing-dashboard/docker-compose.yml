@@ -19,7 +19,7 @@ services:
       MARKETING_ENABLE_PILOT_API: ${MARKETING_ENABLE_PILOT_API}
       MARKETING_DASHBOARD_ADMIN_USER: ${MARKETING_DASHBOARD_ADMIN_USER}
       MARKETING_DASHBOARD_ADMIN_PASSWORD: ${MARKETING_DASHBOARD_ADMIN_PASSWORD}
-    ports:
+    expose:
       - 3000
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://localhost:3000/api/health > /dev/null || exit 1"]

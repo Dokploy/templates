@@ -3,7 +3,7 @@ services:
   nginx:
     image: nginx:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 80
       - 443
     volumes:

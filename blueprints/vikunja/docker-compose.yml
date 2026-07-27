@@ -11,7 +11,7 @@ services:
       VIKUNJA_DATABASE_USER: ${VIKUNJA_DATABASE_USER}
       VIKUNJA_DATABASE_DATABASE: ${VIKUNJA_DATABASE_DATABASE}
       VIKUNJA_SERVICE_JWTSECRET: ${VIKUNJA_SERVICE_JWTSECRET}
-    ports:
+    expose:
       - 3456
     volumes:
       - vikunja-files:/app/vikunja/files

@@ -9,8 +9,7 @@ services:
       DB_CONNECTION: sqlite
     volumes:
       - speedtest_config:/config
-    ports:
+    expose:
       - "80"
-
 volumes:
   speedtest_config:

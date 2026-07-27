@@ -12,7 +12,7 @@ services:
       - DATABASE_URL=postgres://rustrak:${POSTGRES_PASSWORD}@postgres:5432/rustrak
       - SESSION_SECRET_KEY=${SESSION_SECRET_KEY}
       - CREATE_SUPERUSER=${CREATE_SUPERUSER}
-    ports:
+    expose:
       - 8080
     depends_on:
       postgres:
@@ -23,7 +23,7 @@ services:
     restart: unless-stopped
     environment:
       - RUSTRAK_API_URL=${RUSTRAK_API_URL}
-    ports:
+    expose:
       - 3000
     depends_on:
       - rustrak-server

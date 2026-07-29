@@ -27,7 +27,7 @@ services:
       retries: 5
 
   senddock:
-    image: ghcr.io/arkhe-systems/senddock:0.6.5.1
+    image: ghcr.io/arkhe-systems/senddock:latest
     restart: unless-stopped
     depends_on:
       postgres:
@@ -40,8 +40,6 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - PUBLIC_URL=${PUBLIC_URL}
       - FRONTEND_URL=${PUBLIC_URL}
-      - DEPLOYMENT_MODE=self-hosted
-      - SENDDOCK_LICENSE_KEY=${SENDDOCK_LICENSE_KEY}
       - PORT=8080
     expose:
       - 8080

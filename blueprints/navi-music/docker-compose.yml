@@ -1,6 +1,8 @@
+version: "3.8"
+
 services:
-  navimusic:
-    image: anvian/navi-music:latest
+  navi-music:
+    image: anvian/navi-music:4.2.2
     restart: unless-stopped
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}

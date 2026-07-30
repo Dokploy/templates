@@ -1,9 +1,9 @@
 {
-  "id": "navimusic",
+  "id": "navi-music",
   "name": "NaviMusic",
-  "version": "latest",
+  "version": "4.2.2",
   "description": "A Discord music bot that plays YouTube and Spotify tracks and playlists in voice channels.",
-  "logo": "navimusic.svg",
+  "logo": "navi-music.png",
   "links": {
     "github": "https://github.com/andre-carbajal/NaviMusic",
     "website": "https://github.com/andre-carbajal/NaviMusic",

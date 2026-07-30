@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   chatto:
-    image: ghcr.io/chattocorp/chatto:latest
+    image: ghcr.io/chattocorp/chatto:0.4
     restart: unless-stopped
     expose:
       - "4000"

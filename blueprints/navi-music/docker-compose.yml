@@ -1,0 +1,11 @@
+services:
+  navimusic:
+    image: anvian/navi-music:latest
+    restart: unless-stopped
+    environment:
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
+      YOUTUBE_POTOKEN: ${YOUTUBE_POTOKEN}
+      YOUTUBE_VISITOR: ${YOUTUBE_VISITOR}
+      YOUTUBE_OAUTH2: ${YOUTUBE_OAUTH2}

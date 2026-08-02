@@ -5,7 +5,6 @@ env = [
   # Optional but recommended for Spotify links: https://developer.spotify.com/dashboard
   "SPOTIFY_CLIENT_ID=",
   "SPOTIFY_CLIENT_SECRET=",
-  "# Optional YouTube authentication. See NaviMusic's README for how to obtain these values.",
   "YOUTUBE_POTOKEN=",
   "YOUTUBE_VISITOR=",
   "YOUTUBE_OAUTH2=",

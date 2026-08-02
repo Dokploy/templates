@@ -6,6 +6,7 @@ services:
     restart: unless-stopped
     expose:
       - "23008"
+    ports:
       - "25565-25600"
     environment:
       NAVISERVER_HOST: ${NAVISERVER_HOST}

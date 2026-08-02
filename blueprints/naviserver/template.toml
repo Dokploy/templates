@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+naviserver_secret_key = "${password:64}"
+naviserver_cli_token = "${password:64}"
+
+[config]
+[[config.domains]]
+serviceName = "naviserver"
+port = 23008
+host = "${main_domain}"
+
+[config.env]
+NAVISERVER_HOST = "0.0.0.0"
+NAVISERVER_PORT = "23008"
+NAVISERVER_ALLOWED_ORIGINS = ""
+NAVISERVER_SECRET_KEY = "${naviserver_secret_key}"
+NAVISERVER_CLI_TOKEN = "${naviserver_cli_token}"
+CURSEFORGE_API_KEY = ""

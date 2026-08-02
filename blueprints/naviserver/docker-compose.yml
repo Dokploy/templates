@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  naviserver:
+    image: ghcr.io/andre-carbajal/naviserver:2.4.5
+    restart: unless-stopped
+    expose:
+      - "23008"
+      - "25565-25600"
+    environment:
+      NAVISERVER_HOST: "0.0.0.0"
+      NAVISERVER_PORT: "23008"
+      NAVISERVER_ALLOWED_ORIGINS: ${NAVISERVER_ALLOWED_ORIGINS}
+      NAVISERVER_SECRET_KEY: ${NAVISERVER_SECRET_KEY}
+      NAVISERVER_CLI_TOKEN: ${NAVISERVER_CLI_TOKEN}
+      CURSEFORGE_API_KEY: ${CURSEFORGE_API_KEY}
+    volumes:
+      - naviserver-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:23008/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  naviserver-data: {}

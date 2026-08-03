@@ -1,0 +1,46 @@
+services:
+  whatomate:
+    image: shridh0r/whatomate:0.1.1-beta-0.16.1
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - TZ=Etc/UTC
+    volumes:
+      - ../files/config.toml:/app/config.toml:ro
+      - whatomate-uploads:/app/uploads
+    command: ["server", "-migrate", "-config", "/app/config.toml"]
+
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=whatomate
+      - POSTGRES_PASSWORD=whatomate
+      - POSTGRES_DB=whatomate
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U whatomate -d whatomate"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    volumes:
+      - whatomate-postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - whatomate-redis-data:/data
+
+volumes:
+  whatomate-uploads:
+  whatomate-postgres-data:
+  whatomate-redis-data:

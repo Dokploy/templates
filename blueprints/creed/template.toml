@@ -3,12 +3,6 @@ main_domain = "${domain}"
 creed_encryption_secret = "${base64:32}"
 
 [config]
-
-[[config.domains]]
-serviceName = "creed"
-port = 3000
-host = "${main_domain}"
-
 env = [
   "NEXT_PUBLIC_SITE_URL=https://${main_domain}",
   "NEXT_PUBLIC_SUPABASE_URL=",
@@ -30,6 +24,11 @@ env = [
   "NEXT_PUBLIC_GITHUB_URL=https://github.com/connorhpbrn/creed",
   "CREED_CSP_ENFORCE=",
 ]
+
+[[config.domains]]
+serviceName = "creed"
+port = 3000
+host = "${main_domain}"
 
 [[config.mounts]]
 filePath = "README.md"

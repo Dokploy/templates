@@ -13,7 +13,7 @@ services:
       memlock:
         soft: -1
         hard: -1
-    ports:
+    expose:
       - "9200"
     volumes:
       - es_data:/usr/share/elasticsearch/data
@@ -23,7 +23,7 @@ services:
     container_name: kibana
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    ports:
+    expose:
       - "5601"
     depends_on:
       - elasticsearch

@@ -5,9 +5,8 @@ services:
     volumes:
       - filegator_repository:/var/www/filegator/repository
       - filegator_private:/var/www/filegator/private
-    ports:
+    expose:
       - "8080"
-
 volumes:
   filegator_repository:
   filegator_private:

@@ -3,7 +3,7 @@ services:
   argilla-web:
     image: argilla/argilla-server:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 6900
     environment:
       - ARGILLA_HOME_PATH=/var/lib/argilla

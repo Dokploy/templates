@@ -7,10 +7,8 @@ services:
     restart: unless-stopped
 
     # The port is exposed without mapping. Dokploy handles the routing via the domain.
-    ports:
+    expose:
       - "3000"
-
-    # Environment variables are sourced from the template.toml file.
     environment:
       - SANDBOX_RUNTIME_CONTAINER_IMAGE=${SANDBOX_RUNTIME_CONTAINER_IMAGE}
       - WORKSPACE_MOUNT_PATH=/opt/workspace_base

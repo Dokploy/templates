@@ -3,7 +3,7 @@ services:
   barrage:
     image: maulik9898/barrage:0.3.0
     restart: unless-stopped
-    ports:
+    expose:
       - 3000
     environment:
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}

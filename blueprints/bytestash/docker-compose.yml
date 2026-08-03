@@ -4,7 +4,7 @@ services:
   bytestash:
     image: ghcr.io/jordan-dalby/bytestash:1.5.6
     restart: unless-stopped
-    ports:
+    expose:
       - "5000"
     environment:
       - BASE_PATH=

@@ -19,7 +19,7 @@ services:
     links:
       - mongo
       - qux-be
-    ports:
+    expose:
       - 8082
     depends_on:
       - qux-be
@@ -56,7 +56,7 @@ services:
     environment:
       - QUX_SERVER=http://quant-ux-backend:8080/
       - QUX_SERVER_PORT=8086
-    ports:
+    expose:
       - 8086
     links:
       - qux-be

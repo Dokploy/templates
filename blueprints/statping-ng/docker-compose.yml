@@ -8,5 +8,5 @@ services:
       - DB_CONN=sqlite
     volumes:
       - ../files/statping-ng:/app
-    ports:
+    expose:
       - 8080

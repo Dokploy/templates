@@ -3,7 +3,7 @@ services:
   victoriametrics:
     image: victoriametrics/victoria-metrics:v1.108.1
     restart: unless-stopped
-    ports:
+    expose:
       - 8428
     command:
       - "--storageDataPath=/storage"

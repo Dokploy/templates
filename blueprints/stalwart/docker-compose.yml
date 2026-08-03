@@ -1,7 +1,7 @@
 services:
   stalwart-mail:
     image: stalwartlabs/stalwart:latest-alpine # for production choose specific version from https://hub.docker.com/r/stalwartlabs/stalwart/tags
-    ports:
+    expose:
       - "443"    # HTTPS
       - "8080"   # HTTP API
       - "25"     # SMTP

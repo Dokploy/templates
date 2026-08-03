@@ -3,7 +3,7 @@ services:
     image: plarkinc/plark:latest
     pull_policy: always
     restart: unless-stopped
-    ports:
+    expose:
       - "80"
     volumes:
       - plark-data:/var/data

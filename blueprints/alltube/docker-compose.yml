@@ -3,7 +3,7 @@ services:
   alltube:
     image: dnomd343/alltube:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 80
     environment:
       - TITLE=${TITLE}

@@ -3,7 +3,7 @@ services:
   bytebase:
     image: bytebase/bytebase:3.3.0
     restart: unless-stopped
-    ports:
+    expose:
       - 8080
     environment:
       - PG_URL=postgres://postgres:${DB_PASSWORD}@bytebase-db:5432/bytebase

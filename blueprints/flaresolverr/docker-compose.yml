@@ -2,6 +2,6 @@ version: "3.8"
 services:
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
-    ports:
+    expose:
       - 8191
     restart: unless-stopped

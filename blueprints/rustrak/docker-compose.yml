@@ -13,8 +13,7 @@ services:
       - CREATE_SUPERUSER=${CREATE_SUPERUSER}
     volumes:
       - rustrak_data:/data
-    ports:
+    expose:
       - 8080
-
 volumes:
   rustrak_data:

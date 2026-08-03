@@ -9,7 +9,7 @@ services:
     environment:
       - MEMOS_MODE=${MEMOS_MODE}
       - MEMOS_PORT=${MEMOS_PORT}
-    ports:
+    expose:
       - "5230"
 volumes:
   memos_data:

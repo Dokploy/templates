@@ -36,7 +36,7 @@ services:
     image: mediacms/mediacms:latest
     deploy:
       replicas: 1
-    ports:
+    expose:
       - 80
     volumes:
       - mediacms_data:/home/mediacms.io/mediacms/media

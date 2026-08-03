@@ -5,5 +5,5 @@ services:
     restart: unless-stopped
     volumes:
       - ../files/commafeed-data:/commafeed/data
-    ports:
+    expose:
       - 8082

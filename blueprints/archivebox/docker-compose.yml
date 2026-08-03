@@ -9,8 +9,7 @@ services:
       PUBLIC_SNAPSHOTS: ${PUBLIC_SNAPSHOTS}
     volumes:
       - archivebox_data:/data
-    ports:
+    expose:
       - "8000"
-
 volumes:
   archivebox_data:

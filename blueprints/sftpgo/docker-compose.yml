@@ -5,10 +5,9 @@ services:
     volumes:
       - sftpgo_data:/srv/sftpgo
       - sftpgo_home:/var/lib/sftpgo
-    ports:
+    expose:
       - "8080"
       - "2022"
-
 volumes:
   sftpgo_data:
   sftpgo_home:

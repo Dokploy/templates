@@ -6,8 +6,7 @@ services:
       - jellyseerr_config:/app/config
     environment:
       LOG_LEVEL: info
-    ports:
+    expose:
       - "5055"
-
 volumes:
   jellyseerr_config:

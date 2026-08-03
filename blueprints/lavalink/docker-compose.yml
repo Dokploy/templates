@@ -22,7 +22,7 @@ services:
     volumes:
       - "../files/application.yml:/opt/Lavalink/application.yml:rw"
       - "../files/plugins/:/opt/Lavalink/plugins/:rw"
-    ports:
+    expose:
       - ${SERVER_PORT}
 
     healthcheck:

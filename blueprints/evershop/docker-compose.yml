@@ -12,9 +12,8 @@ services:
       DB_NAME: ${DB_NAME}
     depends_on:
       - database
-    ports:
+    expose:
       - 3000
-  
   database:
     image: postgres:16
     restart: unless-stopped
@@ -24,8 +23,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_DB: ${DB_NAME}
-    ports:
+    expose:
       - ${DB_PORT}
-
 volumes:
   postgres-data:

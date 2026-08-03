@@ -3,7 +3,7 @@ services:
   dumbpad:
     image: dumbwareio/dumbpad:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 3000
     volumes:
       - dumbpad-data:/app/data

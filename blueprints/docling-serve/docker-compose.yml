@@ -2,7 +2,7 @@ services:
   docling-serve:
     image: quay.io/docling-project/docling-serve:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 5001
     environment:
       - DOCLING_SERVE_ENABLE_UI=1

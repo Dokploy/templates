@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     volumes:
       - hoarder-data:/data
-    ports:
+    expose:
       - 3000
     environment:
       - DISABLE_SIGNUPS

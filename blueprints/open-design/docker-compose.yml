@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  open-design:
+    image: ghcr.io/nexu-io/od:0.16.1
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=192
+      OD_BIND_HOST: 0.0.0.0
+      OD_PORT: 7456
+      OD_API_TOKEN: ${OD_API_TOKEN}
+      OD_ALLOWED_ORIGINS: ${OD_ALLOWED_ORIGINS}
+      # The daemon token-gates its API when bound to 0.0.0.0, and a browser
+      # cannot present that token, so the web UI needs API auth disabled to
+      # load. The instance is then reachable by anyone with the URL — front it
+      # with auth/HTTPS if it is internet-facing (see README.md).
+      OD_DISABLE_API_AUTH: "1"
+    volumes:
+      - open_design_data:/app/.od
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:7456/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  open_design_data: {}

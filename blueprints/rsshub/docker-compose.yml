@@ -5,7 +5,7 @@ services:
         # * (consumes more disk space and memory) leave everything unchanged
         image: diygod/rsshub
         restart: always
-        ports:
+        expose:
             - 1200
         environment:
             NODE_ENV: production

@@ -3,7 +3,7 @@ version: "3"
 services:
   openhabittracker:
     image: jinjinov/openhabittracker:latest
-    ports:
+    expose:
       - '8080'
     environment:
       AppSettings__UserName: ${OHT_USERNAME}

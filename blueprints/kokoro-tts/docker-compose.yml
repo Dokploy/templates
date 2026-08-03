@@ -4,7 +4,7 @@ services:
       context: https://github.com/remsky/Kokoro-FastAPI.git#master
       dockerfile: docker/cpu/Dockerfile
     restart: unless-stopped
-    ports:
+    expose:
       - 8880
     environment:
       - MODEL_PATH=/app/models

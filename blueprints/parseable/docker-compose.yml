@@ -13,7 +13,7 @@ services:
       - P_PASSWORD=${PARSEABLE_PASSWORD}
       - P_STAGING_DIR=/parseable/staging
       - P_FS_DIR=/parseable/data
-    ports:
+    expose:
       - 8000
       - 8001
       - 8002

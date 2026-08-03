@@ -3,7 +3,7 @@ services:
   apprise-api:
     image: linuxserver/apprise-api:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 8000
     environment:
       - PUID=1000

@@ -16,9 +16,8 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    ports:
+    expose:
       - 1111
-
   blinko-postgres:
     image: postgres:14
     restart: always

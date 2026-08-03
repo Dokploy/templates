@@ -3,7 +3,7 @@ version: "3"
 services:
   commento:
     image: registry.gitlab.com/commento/commento:v1.8.0
-    ports:
+    expose:
       - "8080"
     environment:
       - COMMENTO_ORIGIN=${COMMENTO_ORIGIN}

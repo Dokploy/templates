@@ -3,7 +3,7 @@ services:
   server:
     image: ghcr.io/bluewave-labs/checkmate-backend-mono:latest
     restart: always
-    ports:
+    expose:
       - 52345
     environment:
       - UPTIME_APP_API_BASE_URL=${UPTIME_APP_API_BASE_URL}

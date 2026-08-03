@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     volumes:
       - ../files/chirpstack:/etc/chirpstack
-    ports:
+    expose:
       - 8080
     environment:
       - MQTT_BROKER_HOST=mosquitto
@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
     volumes:
       - ../files/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
-    ports:
+    expose:
       - 1700/udp
     environment:
       - INTEGRATION__MQTT__EVENT_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/event/{{ .EventType }}
@@ -36,7 +36,7 @@ services:
     restart: unless-stopped
     volumes:
       - ../files/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
-    ports:
+    expose:
       - 3001
     depends_on:
       - mosquitto
@@ -45,7 +45,7 @@ services:
     image: chirpstack/chirpstack-rest-api:4
     restart: unless-stopped
     command: --server chirpstack:8080 --bind 0.0.0.0:8090 --insecure
-    ports:
+    expose:
       - 8090
     depends_on:
       - chirpstack
@@ -73,9 +73,8 @@ services:
     restart: unless-stopped
     volumes:
       - ../files/mosquitto/config/:/mosquitto/config/
-    ports:
+    expose:
       - 1883
-
 volumes:
   postgresqldata:
   redisdata:

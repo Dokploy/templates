@@ -2,7 +2,7 @@ version: "3.8"
 services:
   surrealdb:
     image: surrealdb/surrealdb:v2
-    ports:
+    expose:
       - 8000
     volumes:
       - ../files/surreal_data:/mydata
@@ -12,7 +12,7 @@ services:
 
   open_notebook:
     image: lfnovo/open_notebook:latest
-    ports:
+    expose:
       - 8502
     environment:
       - SURREAL_URL=ws://surrealdb:8000/rpc

@@ -11,6 +11,7 @@ hide_history = "false"
 language = "en"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "convertx" 
 port = 3000
@@ -26,8 +27,3 @@ WEBROOT = "${webroot}"
 FFMPEG_ARGS = "${ffmpeg_args}"
 HIDE_HISTORY = "${hide_history}"
 LANGUAGE = "${language}"
-
-[[config.mounts]]
-source = "../files/data"
-target = "/app/data"
-type = "bind"

@@ -2,6 +2,7 @@
 main_domain = "${domain}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "metube"
 port = 8081
@@ -39,5 +40,3 @@ DOWNLOAD_MODE = "limited"
 MAX_CONCURRENT_DOWNLOADS = "3" 
 LOGLEVEL = "INFO" 
 ENABLE_ACCESSLOG = "false" 
-
-[[config.mounts]]

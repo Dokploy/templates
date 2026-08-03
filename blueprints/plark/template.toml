@@ -2,11 +2,10 @@
 main_domain = "${domain}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "plark"
 port = 80
 host = "${main_domain}"
 
 [config.env]
-
-[[config.mounts]]

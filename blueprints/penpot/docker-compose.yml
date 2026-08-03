@@ -180,5 +180,4 @@ services:
     restart: always
     expose:
       - '1025'
-    expose:
-      - 1080
+      - '1080'

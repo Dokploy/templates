@@ -4,6 +4,7 @@ mysql_root_password = "${password:32}"
 mysql_password = "${password:16}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "azuracast"
 port = 80
@@ -27,5 +28,3 @@ NGINX_RADIO_PORTS = "8000,8010,8020,8030,8040,8050"
 PREFER_RELEASE_BUILDS = "true"
 COMPOSER_PLUGIN_MODE = "false"
 ADDITIONAL_MEDIA_SYNC_WORKER_COUNT = "0"
-
-[[config.mounts]]

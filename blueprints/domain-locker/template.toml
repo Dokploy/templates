@@ -3,6 +3,7 @@ main_domain = "${domain}"
 pg_password = "${password:32}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "app"
 port = 3000
@@ -26,8 +27,3 @@ DL_PG_NAME = "domain_locker"
 # DL_DOMAIN_INFO_API = ""
 # DL_DOMAIN_SUBS_API = ""
 # DL_DISABLE_WRITE_METHODS = "false"
-
-[[config.mounts]]
-# Example mount for PostgreSQL persistence (already defined in compose volumes)
-# filePath = "/var/lib/postgresql/data"
-# content = ""

@@ -15,7 +15,7 @@ services:
       - CHEVERETO_HTTPS=0
       - CHEVERETO_MAX_POST_SIZE=2G
       - CHEVERETO_MAX_UPLOAD_SIZE=2G
-    ports:
+    expose:
       - 80
     volumes:
       - storage:/var/www/html/images/

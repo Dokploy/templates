@@ -25,7 +25,7 @@ services:
     image: ghcr.io/formbricks/formbricks:v3.1.5
     depends_on:
       - postgres
-    ports:
+    expose:
       - 3000
     volumes:
       - ../files/uploads:/home/nextjs/apps/web/uploads/

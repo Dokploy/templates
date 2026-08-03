@@ -4,7 +4,7 @@ services:
     image: clockworklabs/spacetime:v2.6.1
     restart: unless-stopped
     command: start
-    ports:
+    expose:
       - 3000
     volumes:
       - spacetimedb-data:/home/spacetime

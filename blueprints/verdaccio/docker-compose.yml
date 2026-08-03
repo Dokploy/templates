@@ -5,7 +5,7 @@ services:
     image: verdaccio/verdaccio:6
     environment:
       - VERDACCIO_PORT=4873
-    ports:
+    expose:
       - 4873
     volumes:
       - verdaccio_storage:/verdaccio/storage

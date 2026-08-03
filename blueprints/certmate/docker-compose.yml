@@ -11,7 +11,7 @@ services:
       - CLOUDFLARE_TOKEN=${CLOUDFLARE_TOKEN}
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
       - LOG_LEVEL=${LOG_LEVEL}
-    ports:
+    expose:
       - 8000
     volumes:
       - certmate_certificates:/app/certificates

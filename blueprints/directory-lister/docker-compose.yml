@@ -2,8 +2,7 @@ services:
   directory-lister:
     image: directorylister/directorylister:latest
     restart: unless-stopped
-    ports:
-      # The internal port of the application.
+    expose:
       - 80
     volumes:
       # Mounts a persistent named volume to store directory data.

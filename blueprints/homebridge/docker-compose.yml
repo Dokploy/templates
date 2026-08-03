@@ -2,7 +2,7 @@ services:
   homebridge:
     image: homebridge/homebridge:latest
     restart: always
-    ports:
+    expose:
       - 8581
     volumes:
       - ./volumes/homebridge:/homebridge

@@ -3,7 +3,7 @@ services:
   botpress:
     image: botpress/server:12.31.9
     restart: unless-stopped
-    ports:
+    expose:
       - 81
     environment:
       - BP_HOST=0.0.0.0

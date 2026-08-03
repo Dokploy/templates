@@ -2,7 +2,7 @@ version: '3'
 services:
   tianji:
     image: moonrailgun/tianji
-    ports:
+    expose:
       - "12345"
     environment:
       DATABASE_URL: postgresql://tianji:tianji@postgres:5432/tianji

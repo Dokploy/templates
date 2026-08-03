@@ -28,9 +28,8 @@ services:
     volumes:
       - tandoor_staticfiles:/opt/recipes/staticfiles
       - tandoor_mediafiles:/opt/recipes/mediafiles
-    ports:
+    expose:
       - "8080"
-
 volumes:
   tandoor_db_data:
   tandoor_staticfiles:

@@ -183,7 +183,7 @@ services:
       - 3000:3000
 
     # Instead use this way:
-    ports:
+    expose:
       - 3000
 ```
 

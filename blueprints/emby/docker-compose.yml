@@ -12,7 +12,7 @@ services:
       - /emby/programdata:/config # Configuration directory
       - /emby/series:/mnt/share1 # Media directory
       - /emby/movies:/mnt/share2 # Media directory
-    ports:
+    expose:
       - 8096 # HTTP port
       - 8920 # HTTPS port
     devices:

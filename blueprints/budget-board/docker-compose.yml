@@ -22,7 +22,7 @@ services:
     environment:
       VITE_API_URL: http://budget-board-server
       PORT: 6253
-    ports:
+    expose:
       - 6253
     depends_on:
       - budget-board-server

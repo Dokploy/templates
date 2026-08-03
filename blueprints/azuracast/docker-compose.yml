@@ -2,7 +2,7 @@ services:
   azuracast:
     image: ghcr.io/azuracast/azuracast:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 80
     volumes:
       - azuracast-station-data:/var/azuracast/stations

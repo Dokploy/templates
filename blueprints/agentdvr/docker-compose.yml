@@ -11,11 +11,10 @@ services:
       - agentdvr-config:/AgentDVR/Media/XML/
       - agentdvr-media:/AgentDVR/Media/WebServerRoot/Media/
       - agentdvr-commands:/AgentDVR/Commands/
-    ports:
+    expose:
       - 8090
       - 3478/udp
       - 50000-50100/udp
-
 volumes:
   agentdvr-config: {}
   agentdvr-media: {}

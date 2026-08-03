@@ -4,8 +4,7 @@ services:
     restart: unless-stopped
     volumes:
       - privatebin_data:/srv/data
-    ports:
+    expose:
       - "8080"
-
 volumes:
   privatebin_data:

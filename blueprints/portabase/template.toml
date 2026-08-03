@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+project_secret = "${password:64}"
+
+[config]
+env = [
+  "PROJECT_URL=https://${main_domain}",
+  "PROJECT_SECRET=${project_secret}",
+  "POSTGRES_USER=portabase",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_DB=portabase",
+  "DATABASE_URL=postgresql://portabase:${postgres_password}@db:5432/portabase?schema=public",
+  "TZ=Europe/Paris",
+  "LOG_LEVEL=info",
+]
+
+[[config.domains]]
+serviceName = "portabase"
+port = 80
+host = "${main_domain}"

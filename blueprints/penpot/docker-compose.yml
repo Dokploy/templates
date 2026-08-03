@@ -35,10 +35,9 @@ services:
   penpot-frontend:
     image: "penpotapp/frontend:2.6.1"
     restart: always
-    ports:
+    expose:
       - 8080
       - 9001
-
     volumes:
       - penpot_assets:/opt/data/assets
 
@@ -181,27 +180,5 @@ services:
     restart: always
     expose:
       - '1025'
-    ports:
+    expose:
       - 1080
-
-
-  ## Example configuration of MiniIO (S3 compatible object storage service); If you don't
-  ## have preference, then just use filesystem, this is here just for the completeness.
-
-  # minio:
-  #   image: "minio/minio:latest"
-  #   command: minio server /mnt/data --console-address ":9001"
-  #   restart: always
-  #
-  #   volumes:
-  #     - "penpot_minio:/mnt/data"
-  #
-  #   environment:
-  #     - MINIO_ROOT_USER=minioadmin
-  #     - MINIO_ROOT_PASSWORD=minioadmin
-  #
-  #   ports:
-  #     - 9000:9000
-  #     - 9001:9001
-
-

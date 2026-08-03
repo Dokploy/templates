@@ -1,7 +1,7 @@
 services:
   directus:
     image: directus/directus:12.1.1
-    ports:
+    expose:
       - 8055
     volumes:
       - directus_uploads:/directus/uploads

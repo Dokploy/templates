@@ -2,7 +2,7 @@ version: "3.8"
 services:
   snapp:
     image: uraniadev/snapp:0.9-rc-020
-    ports:
+    expose:
       - 3000
     environment:
       - DATABASE_URL=${DATABASE_URL}

@@ -3,7 +3,7 @@ services:
   beszel:
     image: henrygd/beszel:0.10.2
     restart: unless-stopped
-    ports:
+    expose:
       - 8090
     volumes:
       - beszel_data:/beszel_data

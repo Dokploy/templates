@@ -4,8 +4,7 @@ services:
     restart: unless-stopped
     volumes:
       - gotify_data:/app/data
-    ports:
+    expose:
       - "80"
-
 volumes:
   gotify_data:

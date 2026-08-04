@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+session_secret = "${password:64}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "yuvomi"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+SESSION_SECRET = "${session_secret}"
+DOCUMENT_STORAGE_LOCAL_ENABLED = "false"

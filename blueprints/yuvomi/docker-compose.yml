@@ -1,0 +1,32 @@
+services:
+  yuvomi:
+    image: ghcr.io/ulsklyc/yuvomi:0.71.10
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DB_PATH: /data/yuvomi.db
+      BACKUP_DIR: /backups
+      DOCUMENT_STORAGE_LOCAL_ENABLED: ${DOCUMENT_STORAGE_LOCAL_ENABLED}
+      DOCUMENT_STORAGE_LOCAL_PATH: /documents
+      SESSION_SECURE: "true"
+      TRUST_PROXY: "1"
+      SESSION_SECRET: ${SESSION_SECRET}
+    volumes:
+      - yuvomi-data:/data
+      - yuvomi-backups:/backups
+      - yuvomi-modules:/app/modules
+      - yuvomi-documents:/documents
+    expose:
+      - 3000
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', r => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  yuvomi-data:
+  yuvomi-backups:
+  yuvomi-modules:
+  yuvomi-documents:

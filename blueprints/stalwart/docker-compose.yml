@@ -13,8 +13,10 @@ services:
       - "110"    # POP3
       - "995"    # POP3S
     volumes:
-      - stalwart_data:/opt/stalwart-mail
+      - stalwart_etc:/etc/stalwart
+      - stalwart_data:/var/lib/stalwart
     restart: unless-stopped
 
 volumes:
+  stalwart_etc:
   stalwart_data:

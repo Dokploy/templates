@@ -1,6 +1,6 @@
 services:
   forgejo:
-    image: codeberg.org/forgejo/forgejo:15
+    image: codeberg.org/forgejo/forgejo:16
     depends_on:
       - db
     environment:
@@ -14,10 +14,8 @@ services:
       - FORGEJO__server__DOMAIN=${FORGEJO_DOMAIN}
       - FORGEJO__server__SSH_DOMAIN=${FORGEJO_SSH_DOMAIN}
       - FORGEJO__server__ROOT_URL=https://${FORGEJO_DOMAIN}/
-      - FORGEJO__server__SSH_PORT=
-      - FORGEJO__server__SSH_LISTEN_PORT=22
     restart: always
-    ports:
+    expose:
       - 3000
       - 22
     volumes:

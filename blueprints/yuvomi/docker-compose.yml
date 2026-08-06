@@ -1,6 +1,6 @@
 services:
   yuvomi:
-    image: ghcr.io/ulsklyc/yuvomi:0.71.10
+    image: ghcr.io/ulsklyc/yuvomi:1.85.0
     restart: unless-stopped
     environment:
       NODE_ENV: production

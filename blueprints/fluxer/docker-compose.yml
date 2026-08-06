@@ -1,0 +1,459 @@
+x-fluxer-env: &fluxer-env
+  FLUXER_ENV: production
+  NODE_ENV: production
+  FLUXER_SELF_HOSTED: "true"
+  FLUXER_BASE_DOMAIN: ${FLUXER_DOMAIN}
+  FLUXER_PUBLIC_SCHEME: ${FLUXER_PUBLIC_SCHEME:-https}
+  FLUXER_PUBLIC_PORT: ${FLUXER_PUBLIC_PORT:-443}
+  FLUXER_TRUST_CLIENT_IP_HEADER: "true"
+  FLUXER_CLIENT_IP_HEADER_NAME: x-forwarded-for
+
+  FLUXER_DATABASE_BACKEND: postgres
+  FLUXER_POSTGRES_HOST: postgres
+  FLUXER_POSTGRES_PORT: "5432"
+  FLUXER_POSTGRES_DATABASE: fluxer
+  FLUXER_POSTGRES_USERNAME: fluxer
+  FLUXER_POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  FLUXER_POSTGRES_SSL: "false"
+
+  FLUXER_KV_URL: redis://valkey:6379/0
+  FLUXER_NATS_URL: nats://nats:4222
+  FLUXER_NATS_JETSTREAM_URL: nats://nats:4222
+  FLUXER_SVC_NATS_URL: nats://nats:4222
+  FLUXER_SVC_SHARD_COUNT: "1"
+
+  FLUXER_SEARCH_ENGINE: meilisearch
+  FLUXER_SEARCH_URL: http://meilisearch:7700
+  FLUXER_SEARCH_API_KEY: ${MEILI_MASTER_KEY}
+
+  FLUXER_S3_ENDPOINT: http://seaweedfs:8333
+  FLUXER_S3_PUBLIC_ENDPOINT: http://seaweedfs:8333
+  FLUXER_S3_REGION: us-east-1
+  FLUXER_S3_ACCESS_KEY_ID: ${FLUXER_S3_ACCESS_KEY}
+  FLUXER_S3_SECRET_ACCESS_KEY: ${FLUXER_S3_SECRET_KEY}
+  FLUXER_S3_FORCE_PATH_STYLE: "true"
+  FLUXER_S3_BUCKET_CDN: fluxer
+  FLUXER_S3_BUCKET_UPLOADS: fluxer-uploads
+  FLUXER_S3_BUCKET_DOWNLOADS: fluxer-downloads
+  FLUXER_S3_BUCKET_REPORTS: fluxer-reports
+  FLUXER_S3_BUCKET_HARVESTS: fluxer-harvests
+  AWS_ACCESS_KEY_ID: ${FLUXER_S3_ACCESS_KEY}
+  AWS_SECRET_ACCESS_KEY: ${FLUXER_S3_SECRET_KEY}
+  AWS_DEFAULT_REGION: us-east-1
+  AWS_EC2_METADATA_DISABLED: "true"
+
+  FLUXER_LIVEKIT_ENABLED: "true"
+  FLUXER_LIVEKIT_API_KEY: ${LIVEKIT_API_KEY}
+  FLUXER_LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET}
+  FLUXER_LIVEKIT_WEBHOOK_URL: http://api:8080/webhooks/livekit
+
+  FLUXER_EMAIL_ENABLED: ${FLUXER_EMAIL_ENABLED:-false}
+  FLUXER_EMAIL_PROVIDER: ${FLUXER_EMAIL_PROVIDER:-none}
+  FLUXER_EMAIL_FROM_EMAIL: ${FLUXER_EMAIL_FROM_EMAIL:-noreply@localhost}
+  FLUXER_EMAIL_FROM_NAME: ${FLUXER_EMAIL_FROM_NAME:-Fluxer}
+  FLUXER_EMAIL_SMTP_HOST: ${FLUXER_EMAIL_SMTP_HOST:-}
+  FLUXER_EMAIL_SMTP_PORT: ${FLUXER_EMAIL_SMTP_PORT:-587}
+  FLUXER_EMAIL_SMTP_USERNAME: ${FLUXER_EMAIL_SMTP_USERNAME:-}
+  FLUXER_EMAIL_SMTP_PASSWORD: ${FLUXER_EMAIL_SMTP_PASSWORD:-}
+  FLUXER_EMAIL_SMTP_SECURE: ${FLUXER_EMAIL_SMTP_SECURE:-true}
+
+  FLUXER_SMS_ENABLED: "false"
+  FLUXER_CAPTCHA_ENABLED: ${FLUXER_CAPTCHA_ENABLED:-false}
+  FLUXER_CAPTCHA_PROVIDER: ${FLUXER_CAPTCHA_PROVIDER:-none}
+  FLUXER_STRIPE_ENABLED: "false"
+  FLUXER_NCMEC_ENABLED: "false"
+  FLUXER_CLAMAV_ENABLED: "false"
+  FLUXER_DISCOVERY_ENABLED: ${FLUXER_DISCOVERY_ENABLED:-true}
+
+  FLUXER_SUDO_MODE_SECRET: ${FLUXER_SUDO_MODE_SECRET}
+  FLUXER_CONNECTION_INITIATION_SECRET: ${FLUXER_CONNECTION_INITIATION_SECRET}
+  FLUXER_VAPID_PUBLIC_KEY: ${FLUXER_VAPID_PUBLIC_KEY}
+  FLUXER_VAPID_PRIVATE_KEY: ${FLUXER_VAPID_PRIVATE_KEY}
+  FLUXER_VAPID_EMAIL: ${FLUXER_VAPID_EMAIL}
+  FLUXER_GATEWAY_RPC_AUTH_TOKEN: ${FLUXER_GATEWAY_RPC_AUTH_TOKEN}
+  FLUXER_MEDIA_PROXY_SECRET_KEY: ${FLUXER_MEDIA_PROXY_SECRET_KEY}
+  FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: ${FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64}
+  FLUXER_ADMIN_SECRET_KEY_BASE: ${FLUXER_ADMIN_SECRET_KEY_BASE}
+  FLUXER_ADMIN_OAUTH_CLIENT_SECRET: ${FLUXER_ADMIN_OAUTH_CLIENT_SECRET}
+
+  FLUXER_INTERNAL_API_ENDPOINT: http://api:8080
+  FLUXER_INTERNAL_GATEWAY_ENDPOINT: http://gateway:8080
+  FLUXER_INTERNAL_MEDIA_PROXY_ENDPOINT: http://media-proxy:8080
+  FLUXER_MARKETING_ENDPOINT: ${FLUXER_PUBLIC_SCHEME:-https}://${FLUXER_DOMAIN}
+  FLUXER_MEDIA_PROXY_ENDPOINT: http://media-proxy:8080
+  FLUXER_MEDIA_ENDPOINT: ${FLUXER_PUBLIC_SCHEME:-https}://${FLUXER_DOMAIN}/media
+  FLUXER_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: ${FLUXER_PUBLIC_SCHEME:-https}://${FLUXER_DOMAIN}/media
+
+  FLUXER_PASSKEY_RP_NAME: ${FLUXER_PASSKEY_RP_NAME:-Fluxer}
+  FLUXER_PASSKEY_RP_ID: ${FLUXER_PASSKEY_RP_ID:-${FLUXER_DOMAIN}}
+  FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: ${FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS:-https://${FLUXER_DOMAIN}}
+
+x-fluxer-service: &fluxer-service
+  restart: unless-stopped
+
+services:
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    ports:
+      - "80"
+    configs:
+      - source: caddyfile
+        target: /etc/caddy/Caddyfile
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [api, gateway, media-proxy, static-proxy, admin]
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fluxer
+      POSTGRES_USER: fluxer
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fluxer -d fluxer"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  valkey:
+    image: valkey/valkey:8.1-alpine
+    restart: unless-stopped
+    command: ["valkey-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  nats:
+    image: nats:2.14-alpine
+    restart: unless-stopped
+    command: ["-js", "-sd", "/data", "-m", "8222"]
+    volumes:
+      - nats-data:/data
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.12
+    restart: unless-stopped
+    environment:
+      MEILI_ENV: production
+      MEILI_NO_ANALYTICS: "true"
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+    volumes:
+      - meilisearch-data:/meili_data
+
+  seaweedfs:
+    image: chrislusf/seaweedfs:4.34
+    restart: unless-stopped
+    command: ["server", "-s3", "-dir=/data"]
+    volumes:
+      - seaweedfs-data:/data
+
+  gifs:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-gifs:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      <<: *fluxer-env
+      FLUXER_SVC_NAME: gifs
+      FLUXER_SVC_MODE: router
+      FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT: ${FLUXER_PUBLIC_SCHEME:-https}://${FLUXER_DOMAIN}/media
+    depends_on:
+      nats: {condition: service_started}
+
+  gifs-shard:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-gifs:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      <<: *fluxer-env
+      FLUXER_SVC_NAME: gifs
+      FLUXER_SVC_MODE: shard
+      FLUXER_SVC_SHARD_ID: "0"
+      FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT: ${FLUXER_PUBLIC_SCHEME:-https}://${FLUXER_DOMAIN}/media
+    depends_on:
+      nats: {condition: service_started}
+
+  seaweedfs-init:
+    image: chrislusf/seaweedfs:4.34
+    depends_on: [seaweedfs]
+    restart: "no"
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        echo "Waiting for SeaweedFS to initialise..."
+        sleep 12
+        echo "Creating S3 buckets..."
+        printf 's3.bucket.create -name fluxer\ns3.bucket.create -name fluxer-uploads\ns3.bucket.create -name fluxer-downloads\ns3.bucket.create -name fluxer-reports\ns3.bucket.create -name fluxer-harvests\nexit\n' | weed shell -master=seaweedfs:9333 2>&1 &
+        WEED_PID=$$!
+        sleep 15
+        kill $$WEED_PID 2>/devnull || true
+        echo "buckets ready"
+
+  livekit:
+    image: livekit/livekit-server:v1.12.0
+    restart: unless-stopped
+    command: ["--config", "/etc/livekit.yaml"]
+    environment:
+      LIVEKIT_KEYS: "${LIVEKIT_API_KEY}: ${LIVEKIT_API_SECRET}"
+    configs:
+      - source: livekit_config
+        target: /etc/livekit.yaml
+    ports:
+      - "7881"
+      - "7882/udp"
+
+  api:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-api:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      <<: *fluxer-env
+      FLUXER_API_PORT: "8080"
+      FLUXER_API_PRESIGNED_ATTACHMENT_UPLOADS_ENABLED: "true"
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:8080/_health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 90s
+    depends_on:
+      postgres: {condition: service_healthy}
+      valkey: {condition: service_healthy}
+      nats: {condition: service_started}
+      meilisearch: {condition: service_started}
+      seaweedfs-init: {condition: service_completed_successfully}
+      snowflakes: {condition: service_started}
+      snowflakes-shard: {condition: service_started}
+      messages: {condition: service_started}
+      messages-shard: {condition: service_started}
+      users: {condition: service_started}
+      users-shard: {condition: service_started}
+
+  worker:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-api:${FLUXER_IMAGE_TAG:-v1}
+    working_dir: /usr/src/app/fluxer_api
+    command: ["./node_modules/.bin/tsx", "src/WorkerEntrypoint.ts"]
+    environment:
+      <<: *fluxer-env
+      FLUXER_API_WORKER_MODE: all_lanes
+      FLUXER_API_WORKER_ENABLE_CRON_SCHEDULER: "true"
+      FLUXER_API_WORKER_ENABLE_VOICE_RECONCILIATION: "true"
+    depends_on:
+      postgres: {condition: service_healthy}
+      valkey: {condition: service_healthy}
+      nats: {condition: service_started}
+      seaweedfs-init: {condition: service_completed_successfully}
+      snowflakes-shard: {condition: service_started}
+      messages-shard: {condition: service_started}
+      users-shard: {condition: service_started}
+
+  gateway:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-gateway:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      <<: *fluxer-env
+      FLUXER_GATEWAY_PORT: "8080"
+      FLUXER_GATEWAY_MEDIA_PROXY_ENDPOINT: ${FLUXER_PUBLIC_SCHEME:-https}://${FLUXER_DOMAIN}/media
+      FLUXER_GATEWAY_STATIC_CDN_ENDPOINT: ${FLUXER_PUBLIC_SCHEME:-https}://${FLUXER_DOMAIN}
+      FLUXER_GATEWAY_LOGGER_LEVEL: info
+    depends_on:
+      nats: {condition: service_started}
+      valkey: {condition: service_healthy}
+
+  media-proxy:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-media-proxy:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      <<: *fluxer-env
+      FLUXER_MEDIA_PROXY_HOST: 0.0.0.0
+      FLUXER_MEDIA_PROXY_PORT: "8080"
+      FLUXER_MEDIA_PROXY_MODE: upload
+      FLUXER_MEDIA_PROXY_STORAGE_BACKEND: s3
+    depends_on:
+      seaweedfs-init: {condition: service_completed_successfully}
+      nats: {condition: service_started}
+
+  static-proxy:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-static:${FLUXER_IMAGE_TAG:-v1}
+
+  app-proxy:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-app-proxy-self-hosted:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      FLUXER_APP_PROXY_HOST: 0.0.0.0
+      FLUXER_APP_PROXY_PORT: "8080"
+      DISCOVERY_UPSTREAM_URL: http://caddy:8088/api/.well-known/fluxer
+      PUBLIC_BOOTSTRAP_API_ENDPOINT: /api
+      PUBLIC_BOOTSTRAP_API_PUBLIC_ENDPOINT: ${FLUXER_PUBLIC_SCHEME:-https}://${FLUXER_DOMAIN}/api
+    depends_on:
+      api: {condition: service_healthy}
+      caddy: {condition: service_started}
+
+  snowflakes:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-snowflakes:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      <<: *fluxer-env
+      FLUXER_SVC_MODE: router
+    depends_on:
+      nats: {condition: service_started}
+
+  snowflakes-shard:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-snowflakes:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      <<: *fluxer-env
+      FLUXER_SVC_MODE: shard
+      FLUXER_SVC_SHARD_ID: "0"
+    depends_on:
+      nats: {condition: service_started}
+
+  users:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-users:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      <<: *fluxer-env
+      FLUXER_SVC_MODE: router
+    depends_on:
+      nats: {condition: service_started}
+
+  users-shard:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-users:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      <<: *fluxer-env
+      FLUXER_SVC_MODE: shard
+      FLUXER_SVC_SHARD_ID: "0"
+    depends_on:
+      nats: {condition: service_started}
+
+  messages:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-messages:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      <<: *fluxer-env
+      FLUXER_SVC_MODE: router
+    depends_on:
+      nats: {condition: service_started}
+
+  messages-shard:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-messages:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      <<: *fluxer-env
+      FLUXER_SVC_MODE: shard
+      FLUXER_SVC_SHARD_ID: "0"
+    depends_on:
+      nats: {condition: service_started}
+      postgres: {condition: service_healthy}
+
+  unfurl:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-unfurl:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      <<: *fluxer-env
+      FLUXER_SVC_MODE: router
+    depends_on:
+      nats: {condition: service_started}
+
+  unfurl-shard:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-unfurl:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      <<: *fluxer-env
+      FLUXER_SVC_MODE: shard
+      FLUXER_SVC_SHARD_ID: "0"
+    depends_on:
+      nats: {condition: service_started}
+
+  admin:
+    <<: *fluxer-service
+    image: ${FLUXER_REGISTRY:-ghcr.io/fluxerapp}/fluxer-admin:${FLUXER_IMAGE_TAG:-v1}
+    environment:
+      <<: *fluxer-env
+      FLUXER_ADMIN_HOST: 0.0.0.0
+      FLUXER_ADMIN_PORT: "8080"
+      FLUXER_ADMIN_BASE_PATH: /admin
+      FLUXER_API_ENDPOINT: http://api:8080
+      FLUXER_ADMIN_ENDPOINT: ${FLUXER_PUBLIC_SCHEME:-https}://${FLUXER_DOMAIN}/admin
+      FLUXER_APP_ENDPOINT: ${FLUXER_PUBLIC_SCHEME:-https}://${FLUXER_DOMAIN}
+      FLUXER_MEDIA_ENDPOINT: ${FLUXER_PUBLIC_SCHEME:-https}://${FLUXER_DOMAIN}/media
+      FLUXER_STATIC_CDN_ENDPOINT: ${FLUXER_PUBLIC_SCHEME:-https}://${FLUXER_DOMAIN}
+      FLUXER_ADMIN_OAUTH_REDIRECT_URI: ${FLUXER_PUBLIC_SCHEME:-https}://${FLUXER_DOMAIN}/admin/oauth2_callback
+    depends_on:
+      api: {condition: service_healthy}
+
+volumes:
+  caddy-data:
+  caddy-config:
+  postgres-data:
+  nats-data:
+  meilisearch-data:
+  seaweedfs-data:
+
+configs:
+  caddyfile:
+    content: |
+      :80 {
+          encode zstd gzip
+          handle /.well-known/* {
+              reverse_proxy api:8080
+          }
+          handle_path /api/* {
+              reverse_proxy api:8080
+          }
+          handle /gateway {
+              rewrite * /
+              reverse_proxy gateway:8080
+          }
+          handle_path /gateway/* {
+              reverse_proxy gateway:8080
+          }
+          handle_path /media/* {
+              reverse_proxy media-proxy:8080
+          }
+          handle_path /livekit/* {
+              reverse_proxy livekit:7880
+          }
+          handle /admin {
+              rewrite * /
+              reverse_proxy admin:8080
+          }
+          handle_path /admin/* {
+              reverse_proxy admin:8080
+          }
+          @staticAssets path /fonts/* /web/* /emoji/* /libs/* /avatars/* /badges/* /desktop/* /embeds/*
+          handle @staticAssets {
+              reverse_proxy static-proxy:8080
+          }
+          handle {
+              reverse_proxy app-proxy:8080
+          }
+      }
+      :8088 {
+          handle_path /api/* {
+              reverse_proxy api:8080
+          }
+      }
+
+  livekit_config:
+    content: |
+      port: 7880
+      log_level: info
+      rtc:
+        tcp_port: 7881
+        udp_port: 7882
+        use_external_ip: true
+        stun_servers:
+          - stun.l.google.com:19302
+          - stun1.l.google.com:19302
+      webhook:
+        api_key: ${LIVEKIT_API_KEY}
+        urls:
+          - http://api:8080/webhooks/livekit

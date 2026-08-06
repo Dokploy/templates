@@ -1,0 +1,163 @@
+name: Audit All Blueprints
+
+# The per-PR validators only look at blueprints a PR touches, which is the right
+# call for CI cost but means a template is checked when it lands and then never
+# again. When a rule is added or tightened, every existing blueprint that breaks
+# it stays broken with nothing surfacing it (see #1047).
+#
+# This job runs the same validators over ALL blueprints on a schedule, so drift
+# is reported instead of accumulating. It never runs on pull_request, so it
+# cannot block a contributor for a pre-existing problem they did not introduce.
+
+on:
+  schedule:
+    # Mondays, 04:00 UTC
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      fail_on_findings:
+        description: "Exit non-zero when findings exist (default: report only)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.16.0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: cd build-scripts && pnpm install
+
+      - name: Validate per-template metadata
+        run: node build-scripts/generate-meta.js --check
+
+      - name: Audit every blueprint
+        id: audit
+        run: |
+          # $RUNNER_TEMP is per-job; also cleared explicitly so a re-run or a
+          # partially-executed earlier step can never leak into the summary.
+          WORK="${RUNNER_TEMP:-/tmp}"
+          OUT="$WORK/validator-out.txt"
+          REPORT="$WORK/audit-report.md"
+          SUMMARY="$WORK/audit-summary.md"
+          rm -f "$OUT" "$REPORT" "$SUMMARY"
+
+          COMPOSE_FAILED=""
+          TOML_FAILED=""
+
+          for dir in blueprints/*/; do
+            id="$(basename "$dir")"
+
+            # Run unconditionally: a blueprint with no docker-compose.yml or no
+            # template.toml is itself a finding, and the validators already
+            # report a missing file clearly. Skipping them would hide exactly
+            # the blueprints most likely to be broken.
+            if ! (cd build-scripts && pnpm exec tsx validate-docker-compose.ts \
+                   --file "../$dir/docker-compose.yml") > "$OUT" 2>&1; then
+              COMPOSE_FAILED="$COMPOSE_FAILED $id"
+              {
+                echo "### \`$id\` — docker-compose.yml"
+                echo '```'
+                grep '❌' "$OUT" || cat "$OUT"
+                echo '```'
+              } >> "$REPORT"
+            fi
+
+            if ! (cd build-scripts && pnpm exec tsx validate-template.ts \
+                   --dir "../$dir") > "$OUT" 2>&1; then
+              TOML_FAILED="$TOML_FAILED $id"
+              {
+                echo "### \`$id\` — template.toml"
+                echo '```'
+                grep '❌' "$OUT" || cat "$OUT"
+                echo '```'
+              } >> "$REPORT"
+            fi
+          done
+
+          COMPOSE_COUNT=$(echo $COMPOSE_FAILED | wc -w | tr -d ' ')
+          TOML_COUNT=$(echo $TOML_FAILED | wc -w | tr -d ' ')
+          TOTAL=$(ls -d blueprints/*/ | wc -l | tr -d ' ')
+
+          {
+            echo "## Blueprint audit"
+            echo ""
+            echo "| check | failing | of |"
+            echo "| --- | --- | --- |"
+            echo "| \`validate-docker-compose.ts\` | $COMPOSE_COUNT | $TOTAL |"
+            echo "| \`validate-template.ts\` | $TOML_COUNT | $TOTAL |"
+            echo ""
+          } > "$SUMMARY"
+
+          if [ -f "$REPORT" ]; then
+            cat "$REPORT" >> "$SUMMARY"
+          else
+            echo "No findings." >> "$SUMMARY"
+          fi
+
+          # The step summary caps at ~1MB and truncates silently past it, which
+          # would hide findings exactly as the backlog grows. Bound what we
+          # append and point at the artifact for the rest.
+          SUMMARY_LIMIT=$((512 * 1024))
+          SUMMARY_BYTES=$(wc -c < "$SUMMARY" | tr -d ' ')
+
+          if [ "$SUMMARY_BYTES" -gt "$SUMMARY_LIMIT" ]; then
+            # Emit the header table only, never a byte-sliced prefix: cutting
+            # mid-``` leaves an unclosed code fence, which swallows the notice
+            # below it and makes the truncation invisible in the rendered summary.
+            {
+              head -n 7 "$SUMMARY"
+              echo ""
+              echo "_Report omitted: $SUMMARY_BYTES bytes exceeds the $SUMMARY_LIMIT byte budget for a job summary._"
+              echo "_Download the \`blueprint-audit\` artifact for the complete output._"
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            cat "$SUMMARY" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          # Always published, so the full report survives regardless of size.
+          cp "$SUMMARY" "$WORK/blueprint-audit.md"
+          echo "report_path=$WORK/blueprint-audit.md" >> "$GITHUB_OUTPUT"
+
+          echo "compose_failed=$COMPOSE_COUNT" >> "$GITHUB_OUTPUT"
+          echo "toml_failed=$TOML_COUNT" >> "$GITHUB_OUTPUT"
+
+          if [ "$COMPOSE_COUNT" != "0" ] || [ "$TOML_COUNT" != "0" ]; then
+            echo "::warning::$COMPOSE_COUNT compose and $TOML_COUNT template.toml findings across $TOTAL blueprints"
+          fi
+
+      - name: Upload the full report
+        if: always() && steps.audit.outputs.report_path != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: blueprint-audit
+          path: ${{ steps.audit.outputs.report_path }}
+          retention-days: 30
+
+      - name: Fail if requested
+        # `inputs` is only populated for workflow_dispatch; on a schedule run it
+        # is not available, so gate on the event first and read the value through
+        # github.event.inputs, which is an empty string when absent.
+        if: >-
+          github.event_name == 'workflow_dispatch' &&
+          github.event.inputs.fail_on_findings == 'true' &&
+          (steps.audit.outputs.compose_failed != '0' || steps.audit.outputs.toml_failed != '0')
+        run: |
+          echo "❌ Findings present and fail_on_findings was requested."
+          exit 1

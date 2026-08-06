@@ -4,13 +4,8 @@ main_domain = "${domain}"
 jwt_secret = "${password:32}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "tianji"
 port = 12345
 host = "${main_domain}"
-
-[[config.mounts]]
-serviceName = "postgres"
-type = "volume"
-source = "tianji-db-data"
-target = "/var/lib/postgresql/data"

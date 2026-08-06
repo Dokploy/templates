@@ -3,6 +3,7 @@ main_domain = "${domain}"
 default_pin = "${password:4}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "dumbassets"
 port = 3000
@@ -19,9 +20,3 @@ DEMO_MODE = "false"
 APPRISE_URL = ""
 CURRENCY_CODE = "USD"
 CURRENCY_LOCALE = "en-US"
-
-[[config.mounts]]
-serviceName = "dumbassets"
-type = "volume"
-source = "dumbassets-data"
-target = "/app/data"

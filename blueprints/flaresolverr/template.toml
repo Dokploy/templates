@@ -2,6 +2,7 @@
 main_domain = "${domain}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "flaresolverr"
 port = 8191
@@ -12,5 +13,3 @@ LOG_LEVEL = "info"
 LOG_HTML = "false"
 CAPTCHA_SOLVER = "none"
 TZ = "Europe/London"
-
-[[config.mounts]]

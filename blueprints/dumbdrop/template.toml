@@ -2,6 +2,7 @@
 main_domain = "https://${domain}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "dumbdrop"
 port = 3000
@@ -20,5 +21,3 @@ APPRISE_URL = ""
 APPRISE_MESSAGE = "New file uploaded {filename} ({size}), Storage used {storage}"
 APPRISE_SIZE_UNIT = "Auto"
 ALLOWED_EXTENSIONS = ""
-
-[[config.mounts]]

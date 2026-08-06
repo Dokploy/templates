@@ -25,6 +25,7 @@ interface ValidationResult {
 type LogLevel = "info" | "success" | "warning" | "error" | "debug";
 
 class DockerComposeValidator {
+	private allowHostPorts = false;
 	private options: Required<DockerComposeValidatorOptions>;
 	private errors: string[] = [];
 	private warnings: string[] = [];
@@ -73,6 +74,9 @@ class DockerComposeValidator {
 			}
 
 			const content = fs.readFileSync(composePath, "utf8");
+			// Opt-out marker for templates whose protocols require host-published ports
+			// (mail/SMTP, game servers, streaming, VPN, remote-desktop relays...).
+			this.allowHostPorts = /^#\s*dokploy:\s*allow-host-ports\b/m.test(content);
 			const compose = yaml.parse(content) as ComposeSpecification;
 
 			if (!compose || typeof compose !== "object") {
@@ -172,13 +176,25 @@ class DockerComposeValidator {
 					if (typeof port === "string") {
 						// Check for port mapping format (e.g., "3000:3000" or "8080:80")
 						if (/^\d+:\d+/.test(port)) {
-							this.error(
-								`Service '${serviceName}': ports[${index}] uses port mapping format '${port}'. According to README, use only port number (e.g., '3000') instead of '3000:3000'. Dokploy handles port routing.`
-							);
+							if (this.allowHostPorts) {
+								this.warning(
+									`Service '${serviceName}': ports[${index}] publishes host port '${port}' (allowed by '# dokploy: allow-host-ports' marker)`
+								);
+							} else {
+								this.error(
+									`Service '${serviceName}': ports[${index}] uses port mapping format '${port}'. According to README, use only port number (e.g., '3000') instead of '3000:3000'. Dokploy handles port routing.`
+								);
+							}
 						}
 					} else if (typeof port === "object" && port !== null) {
 						// Check for published port mapping
 						if (port.published && port.target) {
+							if (this.allowHostPorts) {
+								this.warning(
+									`Service '${serviceName}': ports[${index}] publishes host port (allowed by '# dokploy: allow-host-ports' marker)`
+								);
+								return;
+							}
 							this.error(
 								`Service '${serviceName}': ports[${index}] uses port mapping (published: ${port.published}, target: ${port.target}). According to README, use only port number. Dokploy handles port routing.`
 							);

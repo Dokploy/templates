@@ -5,6 +5,7 @@ postgres_password = "${password:32}"
 image_tag = "latest"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "rote-frontend"
 port = 80
@@ -19,5 +20,3 @@ host = "${backend_domain}"
 POSTGRES_PASSWORD = "${postgres_password}"
 IMAGE_TAG = "${image_tag}"
 VITE_API_BASE = "http://${backend_domain}"
-
-[[config.mounts]]

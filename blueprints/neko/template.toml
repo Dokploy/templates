@@ -4,6 +4,7 @@ admin_password = "${password:16}"
 user_password = "${password:16}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "neko"
 port = 8080
@@ -18,5 +19,3 @@ NEKO_MEMBER_MULTIUSER_USER_PASSWORD = "${user_password}"
 NEKO_MEMBER_MULTIUSER_ADMIN_PASSWORD = "${admin_password}"
 NEKO_WEBRTC_EPR = "52000-52100"
 NEKO_WEBRTC_ICELITE = "1"
-
-[[config.mounts]]

@@ -3,6 +3,7 @@ main_domain = "${domain}"
 db_password = "${password:24}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "gitea"
 port = 3000
@@ -17,5 +18,3 @@ GITEA__database__NAME = "gitea"
 GITEA__database__USER = "gitea"
 GITEA__database__PASSWD = "${db_password}"
 GITEA_DB_PASSWORD = "${db_password}"
-
-[[config.mounts]]

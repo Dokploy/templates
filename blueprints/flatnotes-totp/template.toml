@@ -6,6 +6,7 @@ secret_key = "${password:32}"
 totp_key = "${password:32}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "flatnotes"
 port = 8080
@@ -22,7 +23,3 @@ FLATNOTES_SECRET_KEY = "${secret_key}"
 FLATNOTES_TOTP_KEY = "${totp_key}"
 FLATNOTES_SESSION_EXPIRY_DAYS = "30"
 FLATNOTES_PATH_PREFIX = ""
-
-[[config.mounts]]
-name = "flatnotes-data"
-mountPath = "/data"

@@ -2,6 +2,7 @@
 main_domain = "${domain}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "morphos-server"
 port = 8080
@@ -11,9 +12,3 @@ certResolver = "letsencrypt"
 
 [config.env]
 # No environment variables required based on provided information
-
-[[config.mounts]]
-source = "../files/morphos-upload"
-target = "/upload"
-type = "bind"
-readOnly = false

@@ -2,11 +2,10 @@
 main_domain = "${domain}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "openspeedtest"
 port = 3000
 host = "${main_domain}"
 
 [config.env]
-
-[[config.mounts]]

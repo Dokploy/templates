@@ -1,3 +1,4 @@
+# dokploy: allow-host-ports — DNS (53/tcp+udp), DHCP (67/68) and DNS-over-TLS/QUIC (853) are not HTTP protocols; clients must reach them directly on the host, Traefik cannot route them.
 version: "3.8"
 services:
   adguardhome:
@@ -10,7 +11,8 @@ services:
       - "68:68/tcp" # DHCP Client
       - "853:853/tcp" # DNS over TLS, DNS-over-QUIC
       - "853:853/udp" # DNS over TLS, DNS-over-QUIC
-      - "6060:6060/tcp" # HTTP (pprof)
+    expose:
+      - 6060 # HTTP (pprof) — debug endpoint, no need to publish it on the host
     volumes:
       - adguardhome-work:/opt/adguardhome/work
       - adguardhome-conf:/opt/adguardhome/conf

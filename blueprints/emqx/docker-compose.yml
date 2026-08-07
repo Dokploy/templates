@@ -21,10 +21,6 @@ services:
     volumes:
       - emqx_data:/opt/emqx/data
       - emqx_log:/opt/emqx/log
-    networks:
-      dokploy-network:
-        aliases:
-          - emqx-service
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "/opt/emqx/bin/emqx_ctl", "status"]
@@ -52,7 +48,3 @@ services:
 volumes:
   emqx_data:
   emqx_log:
-
-networks:
-  dokploy-network:
-    external: true

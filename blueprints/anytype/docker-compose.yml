@@ -1,3 +1,4 @@
+# dokploy: allow-host-ports — Anytype clients speak the any-sync protocol (TCP 33010, UDP/QUIC 33020) directly against the server; it is not HTTP, so Traefik cannot route it.
 # Example: Any-Sync-Bundle with embedded MongoDB and Redis (all-in-one image)
 #
 # Usage:

@@ -14,9 +14,6 @@ volumes:
   postgres-data:
   redis-data:
 
-networks:
-  webapp:
-
 services:
   webapp:
     image: ghcr.io/triggerdotdev/trigger.dev:${TRIGGER_IMAGE_TAG:-v3}
@@ -30,8 +27,6 @@ services:
     depends_on:
       - postgres
       - redis
-    networks:
-      - webapp
 
   postgres:
     image: postgres:${POSTGRES_IMAGE_TAG:-16}
@@ -40,8 +35,6 @@ services:
       - postgres-data:/var/lib/postgresql/data/
     env_file:
       - .env
-    networks:
-      - webapp
     expose:
       - 5432
     command:
@@ -53,8 +46,6 @@ services:
     restart: ${RESTART_POLICY:-unless-stopped}
     volumes:
       - redis-data:/data
-    networks:
-      - webapp
     expose:
       - 6379
   docker-provider:
@@ -63,8 +54,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     user: root
-    networks:
-      - webapp
     depends_on:
       - webapp
     expose:
@@ -81,8 +70,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     user: root
-    networks:
-      - webapp
     depends_on:
       - webapp
     expose:
@@ -98,8 +85,6 @@ services:
     restart: ${RESTART_POLICY:-unless-stopped}
     environment:
       DATABASE_URL: ${DATABASE_URL}?sslmode=disable
-    networks:
-      - webapp
     depends_on:
       - postgres
     expose:

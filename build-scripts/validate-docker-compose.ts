@@ -26,6 +26,7 @@ type LogLevel = "info" | "success" | "warning" | "error" | "debug";
 
 class DockerComposeValidator {
 	private allowHostPorts = false;
+	private allowContainerNames = false;
 	private options: Required<DockerComposeValidatorOptions>;
 	private errors: string[] = [];
 	private warnings: string[] = [];
@@ -77,6 +78,11 @@ class DockerComposeValidator {
 			// Opt-out marker for templates whose protocols require host-published ports
 			// (mail/SMTP, game servers, streaming, VPN, remote-desktop relays...).
 			this.allowHostPorts = /^#\s*dokploy:\s*allow-host-ports\b/m.test(content);
+			// Opt-out marker for templates that functionally depend on container_name
+			// (e.g. legacy Supabase: Kong routes Realtime via its container DNS name and
+			// Vector derives log routing from container names). Only use it when the
+			// names are deployment-unique (e.g. include a per-deploy hash/prefix).
+			this.allowContainerNames = /^#\s*dokploy:\s*allow-container-names\b/m.test(content);
 			const compose = yaml.parse(content) as ComposeSpecification;
 
 			if (!compose || typeof compose !== "object") {
@@ -107,9 +113,15 @@ class DockerComposeValidator {
 	private validateNoContainerName(services: Record<string, DefinitionsService>): void {
 		Object.entries(services).forEach(([serviceName, service]) => {
 			if (service.container_name) {
-				this.error(
-					`Service '${serviceName}': Found 'container_name' field. According to README, container_name should not be used. Dokploy manages container names automatically.`
-				);
+				if (this.allowContainerNames) {
+					this.warning(
+						`Service '${serviceName}': uses 'container_name' (allowed by '# dokploy: allow-container-names' marker)`
+					);
+				} else {
+					this.error(
+						`Service '${serviceName}': Found 'container_name' field. According to README, container_name should not be used. Dokploy manages container names automatically.`
+					);
+				}
 			}
 		});
 	}

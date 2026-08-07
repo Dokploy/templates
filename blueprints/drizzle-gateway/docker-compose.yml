@@ -8,12 +8,6 @@ services:
       MASTERPASS: ${MASTERPASS}
     volumes:
       - drizzle-gateway:/app
-    networks:
-      - dokploy-network
 
 volumes:
   drizzle-gateway:
-
-networks:
-  dokploy-network:
-    external: true

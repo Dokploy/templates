@@ -7,7 +7,9 @@ s3_protocol_access_key_id = "${password:24}"
 s3_protocol_access_key_secret = "${password:48}"
 secret_key_base = "${password:64}"
 vault_enc_key = "${password:32}"
-realtime_db_enc_key = "${hash:8}"
+# Realtime requires this to be exactly 16 characters (dokploy's hash helper
+# emits one hex character per unit of length).
+realtime_db_enc_key = "${hash:16}"
 jwt_secret = "${password:32}"
 pooler_tenant_id = "${uuid}"
 anon_key_payload = """{
@@ -27,8 +29,8 @@ service_role_key_payload = """{
 anon_key = "${jwt:jwt_secret:anon_key_payload}"
 service_role_key = "${jwt:jwt_secret:service_role_key_payload}"
 # Opaque API keys, shaped like Supabase's: sb_<role>_<22 chars>_<8 char suffix>.
-publishable_key = "sb_publishable_${hash:11}_${hash:4}"
-secret_key = "sb_secret_${hash:11}_${hash:4}"
+publishable_key = "sb_publishable_${hash:22}_${hash:8}"
+secret_key = "sb_secret_${hash:22}_${hash:8}"
 
 [[config.domains]]
 serviceName = "kong"

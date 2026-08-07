@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+jwt_secret = "${password:64}"
+initial_password = "${password:32}"
+api_key_secret = "${password:64}"
+machine_id_salt = "${password:32}"
+
+[config]
+env = [
+  "ROUTER_HOST=${main_domain}",
+  "JWT_SECRET=${jwt_secret}",
+  "INITIAL_PASSWORD=${initial_password}",
+  "API_KEY_SECRET=${api_key_secret}",
+  "MACHINE_ID_SALT=${machine_id_salt}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "9router"
+port = 20128
+host = "${main_domain}"

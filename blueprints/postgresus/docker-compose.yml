@@ -1,7 +1,9 @@
 services:
   postgresus:
-    image: rostislavdugin/postgresus:latest
-    ports:
+    # Postgresus was renamed upstream to Databasus (https://github.com/databasus/databasus).
+    # This image is frozen at its final release; use the "databasus" template for new deployments.
+    image: rostislavdugin/postgresus:v2.15.3
+    expose:
       - "4005"
     volumes:
       # Persistent data storage

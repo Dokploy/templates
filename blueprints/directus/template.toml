@@ -1,12 +1,41 @@
 [variables]
 main_domain = "${domain}"
+public_url = "https://${main_domain}"
 directus_secret = "${base64:64}"
-database_password = "${password}"
+db_password = "${password:32}"
+db_user = "directus"
+db_name = "directus"
+admin_email = "${email}"
+admin_password = "${password:24}"
+license_key = ""
+
+# Object storage (S3-compatible) — uncomment when switching from local to S3.
+# s3_access_key = ""
+# s3_secret_key = ""
+# s3_bucket = ""
+# s3_region = "us-east-1"
+# s3_endpoint = "https://s3.amazonaws.com"
+# s3_root = ""
+# s3_force_path_style = "false"
 
 [config]
 env = [
-  "DATABASE_PASSWORD=${database_password}",
+  "PUBLIC_URL=${public_url}",
   "DIRECTUS_SECRET=${directus_secret}",
+  "DB_PASSWORD=${db_password}",
+  "DB_USER=${db_user}",
+  "DB_NAME=${db_name}",
+  "ADMIN_EMAIL=${admin_email}",
+  "ADMIN_PASSWORD=${admin_password}",
+  "LICENSE_KEY=${license_key}",
+  # Uncomment when enabling S3 storage in docker-compose.yml:
+  # "S3_ACCESS_KEY=${s3_access_key}",
+  # "S3_SECRET_KEY=${s3_secret_key}",
+  # "S3_BUCKET=${s3_bucket}",
+  # "S3_REGION=${s3_region}",
+  # "S3_ENDPOINT=${s3_endpoint}",
+  # "S3_ROOT=${s3_root}",
+  # "S3_FORCE_PATH_STYLE=${s3_force_path_style}",
 ]
 mounts = []
 

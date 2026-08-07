@@ -1,0 +1,18 @@
+{
+  "id": "wakapi",
+  "name": "Wakapi",
+  "version": "latest",
+  "description": "Wakapi is a self-hosted WakaTime-compatible backend for tracking coding activity and developer statistics.",
+  "logo": "wakapi.svg",
+  "links": {
+    "github": "https://github.com/muety/wakapi",
+    "website": "https://wakapi.dev/",
+    "docs": "https://github.com/muety/wakapi#-installation"
+  },
+  "tags": [
+    "developer-tools",
+    "analytics",
+    "wakatime",
+    "self-hosted"
+  ]
+}

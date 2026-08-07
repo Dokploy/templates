@@ -1,0 +1,17 @@
+{
+  "id": "spacetimedb",
+  "name": "SpacetimeDB",
+  "version": "v2.6.1",
+  "description": "SpacetimeDB is a relational database with a built-in server runtime. Clients connect directly to the database and run server-side logic (modules) inside it, making it ideal for real-time multiplayer games, chat and collaborative applications without a separate backend.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/clockworklabs/SpacetimeDB",
+    "website": "https://spacetimedb.com/",
+    "docs": "https://spacetimedb.com/docs"
+  },
+  "tags": [
+    "database",
+    "realtime",
+    "backend"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "owncloud-infinite-scale",
+  "name": "ownCloud Infinite Scale",
+  "version": "8.0.3",
+  "description": "ownCloud Infinite Scale is a modern file sync and share platform with WebDAV and ownCloud client support.",
+  "logo": "owncloud-infinite-scale.svg",
+  "links": {
+    "github": "https://github.com/owncloud/ocis",
+    "website": "https://owncloud.com/infinite-scale/",
+    "docs": "https://doc.owncloud.com/ocis/latest/"
+  },
+  "tags": [
+    "storage",
+    "files",
+    "sync",
+    "webdav",
+    "collaboration"
+  ]
+}

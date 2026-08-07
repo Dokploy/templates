@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="wallabag">
+  <rect width="128" height="128" rx="24" fill="#222"/>
+  <path fill="#fff" d="M33 33h62v11H44v40h51v11H33z"/>
+  <path fill="#3ad29f" d="M55 55h40v11H55zm0 22h40v11H55z"/>
+</svg>

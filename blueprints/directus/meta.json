@@ -1,13 +1,13 @@
 {
   "id": "directus",
   "name": "Directus",
-  "version": "11.0.2",
+  "version": "12.1.1",
   "description": "Directus is an open source headless CMS that provides an API-first solution for building custom backends.",
   "logo": "directus.jpg",
   "links": {
     "github": "https://github.com/directus/directus",
     "website": "https://directus.io/",
-    "docs": "https://docs.directus.io/"
+    "docs": "https://directus.com/docs/"
   },
   "tags": [
     "cms"

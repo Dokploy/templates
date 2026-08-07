@@ -1,0 +1,21 @@
+{
+  "id": "erpnext-v16",
+  "name": "ERPNext",
+  "version": "version-16",
+  "description": "100% Open Source and highly customizable ERP software.",
+  "logo": "erpnext.svg",
+  "links": {
+    "github": "https://github.com/frappe/erpnext",
+    "docs": "https://docs.frappe.io/erpnext",
+    "website": "https://frappe.io/erpnext"
+  },
+  "tags": [
+    "frappe",
+    "erp",
+    "accounts",
+    "manufacturing",
+    "retail",
+    "sales",
+    "pos"
+  ]
+}

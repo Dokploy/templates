@@ -1,0 +1,32 @@
+services:
+  trek:
+    image: mauriceboe/trek:3.3.0
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      # Encryption key for secrets at rest. Persisted via the env below so it
+      # survives container recreation.
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - TZ=${TZ:-UTC}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      # Public base URL, used for links in notifications and required for OIDC
+      - APP_URL=${APP_URL}
+      # Comma-separated origins for CORS and email notification links
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+      # Initial admin credentials, only used on first boot when no users exist
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+    volumes:
+      - trek-data:/app/data
+      - trek-uploads:/app/uploads
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  trek-data:
+  trek-uploads:

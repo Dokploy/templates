@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+SECRET_KEY = "${password:32}"
+API_BEARER_TOKEN = "${password:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "certmate"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+SECRET_KEY = "${SECRET_KEY}" # 🔐 Flask session secret
+API_BEARER_TOKEN = "${API_BEARER_TOKEN}" # 🔐 API / web UI token
+BEHIND_PROXY = "true"
+CLOUDFLARE_TOKEN = ""
+LETSENCRYPT_EMAIL = ""
+LOG_LEVEL = "INFO"

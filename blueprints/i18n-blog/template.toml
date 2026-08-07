@@ -4,7 +4,7 @@ jwt_secret = "${password:32}" # secure default
 recovery_mode = "false"
 
 [config]
-
+mounts = []
 [[config.domains]]
 serviceName = "kuno"
 port = 80
@@ -18,7 +18,3 @@ GIN_MODE = "release"
 NODE_ENV = "production"
 JWT_SECRET = "${jwt_secret}"
 RECOVERY_MODE = "${recovery_mode}"
-
-[[config.mounts]]
-name = "kuno-data"
-mountPath = "/app/data"

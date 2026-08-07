@@ -4,8 +4,10 @@ services:
     restart: unless-stopped
     volumes:
       # - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
-      - ../homarr/appdata:/appdata
+      - homarr_appdata:/appdata
     environment:
       - SECRET_ENCRYPTION_KEY=${SECRET_ENCRYPTION_KEY}
-    ports:
+    expose:
       - 7575
+volumes:
+  homarr_appdata:

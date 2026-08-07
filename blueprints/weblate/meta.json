@@ -1,0 +1,18 @@
+{
+  "id": "weblate",
+  "name": "Weblate",
+  "version": "2026.7.1.1",
+  "description": "Weblate is a libre web-based continuous localization platform with tight version control integration, quality checks, and support for over 50 file formats including PO, XLIFF, JSON, and Android resources.",
+  "logo": "weblate.svg",
+  "links": {
+    "github": "https://github.com/WeblateOrg/weblate",
+    "website": "https://weblate.org/",
+    "docs": "https://docs.weblate.org/en/latest/admin/install/docker.html"
+  },
+  "tags": [
+    "localization",
+    "translation",
+    "i18n",
+    "self-hosted"
+  ]
+}

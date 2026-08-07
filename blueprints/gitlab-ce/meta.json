@@ -1,7 +1,7 @@
 {
   "id": "gitlab-ce",
   "name": "GitLab CE",
-  "version": "latest",
+  "version": "19.1.2",
   "description": "GitLab Community Edition is a free and open source platform for managing Git repositories, CI/CD pipelines, and project management.",
   "logo": "gitlab-ce.svg",
   "links": {

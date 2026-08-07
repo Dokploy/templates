@@ -54,7 +54,7 @@ services:
       # EMAIL_HOST_PASSWORD: smtp_account_password
       # EMAIL_PORT: 587 # optional
       # EMAIL_USE_TLS: 'true' # optional
-    ports:
+    expose:
       - 8000
     depends_on:
       postgres:
@@ -69,7 +69,7 @@ services:
       USE_POSTGRES_FOR_ANALYTICS: "true"
       DJANGO_ALLOWED_HOSTS: "*"
       PROMETHEUS_ENABLED: "true"
-    ports:
+    expose:
       - 8000
     depends_on:
       - flagsmith

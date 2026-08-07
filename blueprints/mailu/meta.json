@@ -1,0 +1,21 @@
+{
+  "id": "mailu",
+  "name": "Mailu",
+  "version": "2024.06",
+  "description": "Full-featured open-source mail server as a set of Docker containers: SMTP (Postfix), IMAP (Dovecot), Rspamd antispam, admin UI with DKIM management and Roundcube webmail.",
+  "logo": "mailu.svg",
+  "links": {
+    "github": "https://github.com/Mailu/Mailu",
+    "website": "https://mailu.io/",
+    "docs": "https://mailu.io/2024.06/",
+    "docker": "https://github.com/orgs/Mailu/packages"
+  },
+  "tags": [
+    "email",
+    "mail-server",
+    "smtp",
+    "imap",
+    "antispam",
+    "webmail"
+  ]
+}

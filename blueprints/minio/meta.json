@@ -1,13 +1,13 @@
 {
   "id": "minio",
   "name": "Minio",
-  "description": "Minio is an open source object storage server compatible with Amazon S3 cloud storage service.",
+  "description": "MinIO is an open source object storage server compatible with Amazon S3 cloud storage service. This template uses pgsty/minio, the actively maintained community fork, because MinIO Inc. stopped publishing Docker images in October 2025 and archived the upstream open source project in February 2026.",
   "logo": "minio.png",
-  "version": "latest",
+  "version": "RELEASE.2026-06-18T00-00-00Z",
   "links": {
-    "github": "https://github.com/minio/minio",
-    "website": "https://minio.io/",
-    "docs": "https://docs.minio.io/"
+    "github": "https://github.com/pgsty/minio",
+    "website": "https://silo.pigsty.io/",
+    "docs": "https://silo.pigsty.io/docs/"
   },
   "tags": [
     "storage"

@@ -1,0 +1,46 @@
+[variables]
+main_domain = "${domain}"
+encryption_key = "${password:64}"
+admin_email = "${email}"
+admin_password = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "trek"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+# Encryption key for secrets at rest (equivalent to `openssl rand -hex 32`)
+"ENCRYPTION_KEY" = "${encryption_key}"
+# Timezone for logs, reminders and scheduled tasks (e.g. Europe/Berlin)
+"TZ" = "UTC"
+# info = concise user actions; debug = verbose admin-level details
+"LOG_LEVEL" = "info"
+# Public base URL, used for links in notifications and required for OIDC.
+# Change to https:// once you enable SSL on the domain.
+"APP_URL" = "http://${main_domain}"
+# Comma-separated origins for CORS and email notification links
+"ALLOWED_ORIGINS" = "http://${main_domain}"
+# Initial admin credentials, only used on first boot when no users exist
+"ADMIN_EMAIL" = "${admin_email}"
+"ADMIN_PASSWORD" = "${admin_password}"
+
+# --- Optional: OIDC single sign-on (Google, Apple, Authentik, Keycloak, ...) ---
+# "OIDC_ISSUER" = "https://auth.example.com"
+# "OIDC_CLIENT_ID" = "trek"
+# "OIDC_CLIENT_SECRET" = "supersecret"
+# "OIDC_DISPLAY_NAME" = "SSO"
+# "OIDC_ONLY" = "false"
+# "OIDC_SCOPE" = "openid email profile"
+# "OIDC_ADMIN_CLAIM" = "groups"
+# "OIDC_ADMIN_VALUE" = "app-trek-admins"
+# "OIDC_DISCOVERY_URL" = ""
+
+# --- Optional: extras ---
+# Default language on the login page (de, en, es, fr, hu, nl, br, cs, pl, ru, zh, zh-TW, it, ar, ...)
+# "DEFAULT_LANGUAGE" = "en"
+# How long users stay logged in (1h | 12h | 7d | 30d | 90d). Default: 24h
+# "SESSION_DURATION" = "30d"
+# Unsplash Access Key for trip-cover / place-image search
+# "UNSPLASH_ACCESS_KEY" = ""

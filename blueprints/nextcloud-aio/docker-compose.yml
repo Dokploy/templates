@@ -1,6 +1,6 @@
 services:
   nextcloud:
-    image: nextcloud:stable
+    image: nextcloud:33.0.6
     restart: always
     volumes:
       - nextcloud_data:/var/www/html
@@ -15,7 +15,7 @@ services:
       - nextcloud_redis
 
   nextcloud_cron:
-    image: nextcloud:stable
+    image: nextcloud:33.0.6
     restart: always
     volumes:
       - nextcloud_data:/var/www/html

@@ -3,6 +3,7 @@ main_domain = "${domain}"
 timezone = "America/New_York"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "agentdvr"
 port = 8090
@@ -10,5 +11,3 @@ host = "${main_domain}"
 
 [config.env]
 TIMEZONE = "${timezone}"
-
-[[config.mounts]]

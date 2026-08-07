@@ -1,0 +1,113 @@
+version: "3.8"
+
+services:
+  database:
+    image: zulip/zulip-postgresql:14
+    restart: unless-stopped
+    secrets:
+      - zulip__postgres_password
+    environment:
+      POSTGRES_DB: zulip
+      POSTGRES_USER: zulip
+      POSTGRES_PASSWORD_FILE: /run/secrets/zulip__postgres_password
+    volumes:
+      - zulipPostgresData:/var/lib/postgresql/data
+
+  memcached:
+    image: memcached:alpine
+    restart: unless-stopped
+    command:
+      - sh
+      - -euc
+      - |
+        echo 'mech_list: plain' > "$$SASL_CONF_PATH"
+        echo "zulip@$$HOSTNAME:$$(cat $$MEMCACHED_PASSWORD_FILE)" > "$$MEMCACHED_SASL_PWDB"
+        echo "zulip@localhost:$$(cat $$MEMCACHED_PASSWORD_FILE)" >> "$$MEMCACHED_SASL_PWDB"
+        exec memcached -S
+    secrets:
+      - zulip__memcached_password
+    environment:
+      SASL_CONF_PATH: /home/memcache/memcached.conf
+      MEMCACHED_SASL_PWDB: /home/memcache/memcached-sasl-db
+      MEMCACHED_PASSWORD_FILE: /run/secrets/zulip__memcached_password
+
+  rabbitmq:
+    image: rabbitmq:4.2
+    restart: unless-stopped
+    command:
+      - sh
+      - -euc
+      - |
+        export RABBITMQ_DEFAULT_PASS="$$(cat $$RABBITMQ_PASSWORD_FILE)"
+        echo "default_user = $$RABBITMQ_DEFAULT_USER" >> /etc/rabbitmq/rabbitmq.conf
+        echo "default_pass = $$RABBITMQ_DEFAULT_PASS" >> /etc/rabbitmq/rabbitmq.conf
+        exec docker-entrypoint.sh rabbitmq-server
+    secrets:
+      - zulip__rabbitmq_password
+    environment:
+      RABBITMQ_DEFAULT_USER: zulip
+      RABBITMQ_PASSWORD_FILE: /run/secrets/zulip__rabbitmq_password
+    volumes:
+      - zulipRabbitmqData:/var/lib/rabbitmq
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    command:
+      - sh
+      - -euc
+      - /usr/local/bin/docker-entrypoint.sh --requirepass "$$(cat $$REDIS_PASSWORD_FILE)"
+    secrets:
+      - zulip__redis_password
+    environment:
+      REDIS_PASSWORD_FILE: /run/secrets/zulip__redis_password
+    volumes:
+      - zulipRedisData:/data
+
+  zulip:
+    image: ghcr.io/zulip/zulip-server:12.1-0
+    restart: unless-stopped
+    depends_on:
+      - database
+      - memcached
+      - rabbitmq
+      - redis
+    secrets:
+      - zulip__postgres_password
+      - zulip__memcached_password
+      - zulip__rabbitmq_password
+      - zulip__redis_password
+      - zulip__secret_key
+    environment:
+      SETTING_EXTERNAL_HOST: ${ZULIP_EXTERNAL_HOST}
+      SETTING_ZULIP_ADMINISTRATOR: ${ZULIP_ADMINISTRATOR}
+      SETTING_REMOTE_POSTGRES_HOST: database
+      SETTING_MEMCACHED_LOCATION: memcached:11211
+      SETTING_RABBITMQ_HOST: rabbitmq
+      SETTING_REDIS_HOST: redis
+      CONFIG_application_server__http_only: "true"
+      LOADBALANCER_IPS: ${ZULIP_LOADBALANCER_IPS}
+    volumes:
+      - zulipData:/data
+    ulimits:
+      nofile:
+        soft: 1000000
+        hard: 1048576
+
+volumes:
+  zulipData:
+  zulipPostgresData:
+  zulipRabbitmqData:
+  zulipRedisData:
+
+secrets:
+  zulip__postgres_password:
+    environment: ZULIP_POSTGRES_PASSWORD
+  zulip__memcached_password:
+    environment: ZULIP_MEMCACHED_PASSWORD
+  zulip__rabbitmq_password:
+    environment: ZULIP_RABBITMQ_PASSWORD
+  zulip__redis_password:
+    environment: ZULIP_REDIS_PASSWORD
+  zulip__secret_key:
+    environment: ZULIP_SECRET_KEY

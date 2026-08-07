@@ -32,7 +32,7 @@ services:
   usesend-storage-prod:
     image: minio/minio:latest
 
-    ports:
+    expose:
       - 9002
       - 9001
     volumes:
@@ -46,7 +46,7 @@ services:
   usesend:
     image: usesend/usesend:latest
     restart: always
-    ports:
+    expose:
       - ${PORT:-3000}
     environment:
       - PORT=${PORT:-3000}

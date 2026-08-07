@@ -1,0 +1,11 @@
+[variables]
+timezone = "Etc/UTC"
+
+[config]
+[[config.domains]]
+serviceName = "kavita"
+port = 5000
+host = "${domain}"
+
+[config.env]
+TZ = "${timezone}"

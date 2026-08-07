@@ -1,0 +1,33 @@
+[variables]
+main_domain = "${domain}"
+postgres_user = "${username}"
+postgres_password = "${password:24}"
+postgres_db = "n8n"
+redis_password = "${password:24}"
+n8n_encryption_key = "${base64:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "n8n"
+port = 5_678
+host = "${main_domain}"
+
+[config.env]
+N8N_HOST = "${main_domain}"
+GENERIC_TIMEZONE = "Europe/Berlin"
+
+# Number of queue workers. Change it and redeploy to scale.
+N8N_WORKER_REPLICAS = "2"
+
+# PostgreSQL
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "${postgres_db}"
+
+# Redis (Bull queue)
+REDIS_PASSWORD = "${redis_password}"
+
+# Encryption key shared by the main instance and the workers (IMPORTANT)
+N8N_ENCRYPTION_KEY = "${n8n_encryption_key}"

@@ -5,8 +5,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer-data:/data
-    ports:
+    expose:
       - 9000
-
 volumes:
   portainer-data: {}

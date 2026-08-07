@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "systemprompt"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}"
+EXTERNAL_URL = "https://${main_domain}"
+ANTHROPIC_API_KEY = ""
+OPENAI_API_KEY = ""
+GEMINI_API_KEY = ""

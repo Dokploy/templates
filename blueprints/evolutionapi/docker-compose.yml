@@ -1,6 +1,6 @@
 services:
   evolution-api:
-    image: evoapicloud/evolution-api:latest
+    image: evoapicloud/evolution-api:v2.3.7
     restart: always
     volumes:
       - evolution-instances:/evolution/instances
@@ -29,6 +29,13 @@ services:
       - CACHE_REDIS_URI=${CACHE_REDIS_URI}
       - CACHE_REDIS_PREFIX_KEY=${CACHE_REDIS_PREFIX_KEY}
       - CACHE_REDIS_SAVE_INSTANCES=${CACHE_REDIS_SAVE_INSTANCES}
+      - TYPEBOT_ENABLED=${TYPEBOT_ENABLED}
+      - TYPEBOT_API_VERSION=${TYPEBOT_API_VERSION}
+      - CHATWOOT_ENABLED=${CHATWOOT_ENABLED}
+      - OPENAI_ENABLED=${OPENAI_ENABLED}
+      - DIFY_ENABLED=${DIFY_ENABLED}
+      - N8N_ENABLED=${N8N_ENABLED}
+      - EVOAI_ENABLED=${EVOAI_ENABLED}
 
   evolution-postgres:
     image: postgres:16-alpine

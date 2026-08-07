@@ -1,7 +1,7 @@
 services:
   fmd-server:
-    image: registry.gitlab.com/fmd-foss/fmd-server:v0.11.0
-    ports:
+    image: registry.gitlab.com/fmd-foss/fmd-server:0.16.0
+    expose:
      - 8080
     environment:
       # View all configurations at:

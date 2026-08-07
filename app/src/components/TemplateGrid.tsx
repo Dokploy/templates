@@ -28,6 +28,7 @@ interface Template {
 interface TemplateFiles {
   dockerCompose: string | null;
   config: string | null;
+  instructions: string | null;
 }
 
 interface TemplateGridProps {
@@ -80,20 +81,34 @@ const TemplateGrid: React.FC<TemplateGridProps> = ({ view }) => {
   const fetchTemplateFiles = async (templateId: string) => {
     setModalLoading(true);
     try {
-      const [dockerComposeRes, configRes] = await Promise.all([
-        fetch(`/blueprints/${templateId}/docker-compose.yml`),
-        fetch(`/blueprints/${templateId}/template.toml`),
-      ]);
+      const [dockerComposeRes, configRes, instructionsRes] = await Promise.all(
+        [
+          fetch(`/blueprints/${templateId}/docker-compose.yml`),
+          fetch(`/blueprints/${templateId}/template.toml`),
+          fetch(`/blueprints/${templateId}/instructions.md`),
+        ]
+      );
 
       const dockerCompose = dockerComposeRes.ok
         ? await dockerComposeRes.text()
         : null;
       const config = configRes.ok ? await configRes.text() : null;
 
-      setTemplateFiles({ dockerCompose, config });
+      // Guard against SPA fallbacks that return index.html with a 200 status
+      // for templates that don't have an instructions.md file.
+      const instructionsIsMarkdown =
+        instructionsRes.ok &&
+        !(instructionsRes.headers.get("content-type") || "").includes(
+          "text/html"
+        );
+      const instructions = instructionsIsMarkdown
+        ? await instructionsRes.text()
+        : null;
+
+      setTemplateFiles({ dockerCompose, config, instructions });
     } catch (err) {
       console.error("Error fetching template files:", err);
-      setTemplateFiles({ dockerCompose: null, config: null });
+      setTemplateFiles({ dockerCompose: null, config: null, instructions: null });
     } finally {
       setModalLoading(false);
     }

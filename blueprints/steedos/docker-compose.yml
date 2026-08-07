@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  steedos:
+    image: steedos/steedos-community:3.0.14
+    restart: always
+    environment:
+      - ROOT_URL=http://${STEEDOS_HOST}
+    volumes:
+      - steedos-data:/steedos-storage
+
+volumes:
+  steedos-data:

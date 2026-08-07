@@ -7,6 +7,7 @@ allowed_origin = "http://${main_domain}"
 next_public_api_base_url = "/api"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "openinary"
 port = 3000
@@ -18,23 +19,3 @@ BETTER_AUTH_SECRET = "${better_auth_secret}"
 BETTER_AUTH_URL = "${better_auth_url}"
 ALLOWED_ORIGIN = "${allowed_origin}"
 NEXT_PUBLIC_API_BASE_URL = "${next_public_api_base_url}"
-
-[[config.mounts]]
-serviceName = "openinary"
-volumeName = "cache-data"
-mountPath = "/app/apps/api/cache"
-
-[[config.mounts]]
-serviceName = "openinary"
-volumeName = "public-files"
-mountPath = "/app/apps/api/public"
-
-[[config.mounts]]
-serviceName = "openinary"
-volumeName = "db-data"
-mountPath = "/app/data"
-
-[[config.mounts]]
-serviceName = "openinary"
-volumeName = "db-data"
-mountPath = "/app/web-standalone/data"

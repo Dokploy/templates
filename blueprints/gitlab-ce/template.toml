@@ -1,15 +1,11 @@
 [variables]
 main_domain = "${domain}"
-postgres_db = "gitlab"
-postgres_user = "gitlab"
-postgres_password = "${password:32}"
+gitlab_root_password = "${password:32}"
 
 [config]
 env = [
   "GITLAB_HOST=${main_domain}",
-  "POSTGRES_DB=${postgres_db}",
-  "POSTGRES_USER=${postgres_user}",
-  "POSTGRES_PASSWORD=${postgres_password}",
+  "GITLAB_ROOT_PASSWORD=${gitlab_root_password}",
 ]
 
 [[config.domains]]

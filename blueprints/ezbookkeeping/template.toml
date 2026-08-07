@@ -7,6 +7,7 @@ root_pass = "${password:32}"
 secret_key = "${password:64}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "ezbookkeeping"
 port = 8080
@@ -27,5 +28,3 @@ EBK_DATABASE_PASSWD = "${db_pass}"
 EBK_LOG_MODE = "file"
 # Security secret key used for application protection
 EBK_SECURITY_SECRET_KEY = "${secret_key}"
-
-[[config.mounts]] 

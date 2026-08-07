@@ -1,6 +1,6 @@
 [variables]
 main_domain = "${domain}"
-secret_key = "${password:64}"
+secret_key = "${hash:64}"
 
 [config]
 env = ["SECRET_ENCRYPTION_KEY=${secret_key}"]

@@ -1,0 +1,18 @@
+{
+  "id": "code-server",
+  "name": "code-server",
+  "version": "4.121.0",
+  "description": "code-server runs VS Code in the browser, enabling a self-hosted development environment from any machine.",
+  "logo": "code-server.png",
+  "links": {
+    "github": "https://github.com/coder/code-server",
+    "website": "https://coder.com/docs/code-server",
+    "docs": "https://coder.com/docs/code-server"
+  },
+  "tags": [
+    "ide",
+    "development",
+    "vscode",
+    "self-hosted"
+  ]
+}

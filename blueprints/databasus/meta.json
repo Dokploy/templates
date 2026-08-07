@@ -1,0 +1,17 @@
+{
+  "id": "databasus",
+  "name": "Databasus",
+  "version": "latest",
+  "description": "Free, open source and self-hosted tool to backup PostgreSQL, MySQL, MariaDB and MongoDB. Multiple storages (S3, Google Drive, FTP, etc.), notifications and Point-in-Time Recovery. Successor of Postgresus",
+  "logo": "databasus.svg",
+  "links": {
+    "github": "https://github.com/databasus/databasus",
+    "website": "https://databasus.com",
+    "docs": "https://databasus.com/installation"
+  },
+  "tags": [
+    "postgres",
+    "backup",
+    "s3"
+  ]
+}

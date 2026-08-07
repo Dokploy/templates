@@ -1,0 +1,168 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${base64:42}"
+postgres_password = "${password:32}"
+redis_password = "${password:32}"
+sandbox_api_key = "${password:32}"
+plugin_daemon_key = "${base64:42}"
+plugin_inner_api_key = "${base64:42}"
+
+[config]
+env = [
+  "DIFY_DOMAIN=${main_domain}",
+  "SECRET_KEY=${secret_key}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "REDIS_PASSWORD=${redis_password}",
+  "SANDBOX_API_KEY=${sandbox_api_key}",
+  "PLUGIN_DAEMON_KEY=${plugin_daemon_key}",
+  "PLUGIN_INNER_API_KEY=${plugin_inner_api_key}",
+]
+
+[[config.domains]]
+serviceName = "nginx"
+port = 80
+host = "${main_domain}"
+
+# Internal nginx gateway replicating the upstream Dify nginx routing
+# (TLS terminates at Traefik, which forwards everything to this nginx).
+[[config.mounts]]
+filePath = "dify-nginx.conf"
+content = '''
+map $http_x_forwarded_proto $dify_forwarded_proto {
+    default $http_x_forwarded_proto;
+    ""      $scheme;
+}
+
+server {
+    listen 80;
+    server_name _;
+
+    client_max_body_size 100M;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $dify_forwarded_proto;
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+    proxy_buffering off;
+    proxy_read_timeout 3600s;
+    proxy_send_timeout 3600s;
+
+    location /console/api { proxy_pass http://api:5001; }
+    location /api         { proxy_pass http://api:5001; }
+    location /v1          { proxy_pass http://api:5001; }
+    location /openapi     { proxy_pass http://api:5001; }
+    location /files       { proxy_pass http://api:5001; }
+    location /mcp         { proxy_pass http://api:5001; }
+    location /triggers    { proxy_pass http://api:5001; }
+    location /explore     { proxy_pass http://web:3000; }
+
+    location /e/ {
+        proxy_pass http://plugin_daemon:5002;
+        # nginx drops inherited proxy_set_header directives as soon as a
+        # location defines its own, so the shared ones are repeated here.
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $dify_forwarded_proto;
+        proxy_set_header Connection "";
+        proxy_set_header Dify-Hook-Url $dify_forwarded_proto://$host$request_uri;
+    }
+
+    location / { proxy_pass http://web:3000; }
+}
+'''
+
+# Squid SSRF proxy configuration, rendered from the upstream
+# docker/ssrf_proxy/squid.conf.template with its default values.
+[[config.mounts]]
+filePath = "dify-squid.conf"
+content = '''
+acl client_localnet src 0.0.0.1-0.255.255.255
+acl client_localnet src 10.0.0.0/8
+acl client_localnet src 100.64.0.0/10
+acl client_localnet src 169.254.0.0/16
+acl client_localnet src 172.16.0.0/12
+acl client_localnet src 192.168.0.0/16
+acl client_localnet src fc00::/7
+acl client_localnet src fe80::/10
+acl to_private_networks dst 0.0.0.0/8
+acl to_private_networks dst 10.0.0.0/8
+acl to_private_networks dst 100.64.0.0/10
+acl to_private_networks dst 127.0.0.0/8
+acl to_private_networks dst 169.254.0.0/16
+acl to_private_networks dst 172.16.0.0/12
+acl to_private_networks dst 192.168.0.0/16
+acl to_private_networks dst 224.0.0.0/4
+acl to_private_networks dst 240.0.0.0/4
+acl to_private_networks dst ::/128
+acl to_private_networks dst ::1/128
+acl to_private_networks dst ::ffff:0:0/96
+acl to_private_networks dst ::/96
+acl to_private_networks dst fc00::/7
+acl to_private_networks dst fe80::/10
+acl SSL_ports port 443
+acl Safe_ports port 80
+acl Safe_ports port 21
+acl Safe_ports port 443
+acl Safe_ports port 70
+acl Safe_ports port 210
+acl Safe_ports port 1025-65535
+acl Safe_ports port 280
+acl Safe_ports port 488
+acl Safe_ports port 591
+acl Safe_ports port 777
+acl CONNECT method CONNECT
+acl allowed_domains dstdomain .marketplace.dify.ai
+
+http_port 3128
+
+http_access deny !Safe_ports
+http_access deny CONNECT !SSL_ports
+http_access allow localhost manager
+http_access deny manager
+http_access deny to_private_networks
+http_access allow allowed_domains
+http_access allow client_localnet
+http_access allow localhost
+http_access deny all
+tcp_outgoing_address 0.0.0.0
+
+coredump_dir /var/spool/squid
+refresh_pattern ^ftp: 1440 20% 10080
+refresh_pattern ^gopher: 1440 0% 1440
+refresh_pattern -i (/cgi-bin/|\?) 0 0% 0
+refresh_pattern . 0 20% 4320
+
+client_request_buffer_max_size 100 MB
+max_filedescriptors 65536
+
+connect_timeout 30 seconds
+request_timeout 2 minutes
+read_timeout 2 minutes
+client_lifetime 5 minutes
+shutdown_lifetime 30 seconds
+
+server_persistent_connections on
+client_persistent_connections on
+persistent_request_timeout 30 seconds
+pconn_timeout 1 minute
+
+client_db on
+server_idle_pconn_timeout 2 minutes
+client_idle_pconn_timeout 2 minutes
+
+quick_abort_min 16 KB
+quick_abort_max 16 MB
+quick_abort_pct 95
+
+memory_cache_mode disk
+cache_mem 256 MB
+maximum_object_size_in_memory 512 KB
+
+dns_timeout 30 seconds
+dns_retransmit_interval 5 seconds
+
+logformat dify_log %ts.%03tu %6tr %>a %Ss/%03>Hs %<st %rm %ru %[un %Sh/%<a %mt
+access_log daemon:/var/log/squid/access.log dify_log
+logfile_rotate 10
+'''

@@ -1,7 +1,7 @@
 {
   "id": "infisical",
   "name": "Infisical",
-  "version": "0.135.0",
+  "version": "0.162.6",
   "description": "All-in-one platform to securely manage application configuration and secrets across your team and infrastructure.",
   "logo": "infisical.jpg",
   "links": {

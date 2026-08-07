@@ -3,7 +3,7 @@ services:
   anonupload:
     image: ghcr.io/supernova3339/anonfiles:1
     restart: unless-stopped
-    ports:
+    expose:
       - 80
     environment:
       - ADMIN_EMAIL=${ADMIN_EMAIL}

@@ -2,24 +2,10 @@
 main_domain = "${domain}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "borgitory"
 port = 8000
 host = "${main_domain}"
 
 [config.env]
-
-[[config.mounts]]
-name = "borgitory-data"
-mountPath = "/app/data"
-description = "Database and encryption key storage"
-
-[[config.mounts]]
-name = "borgitory-sources"
-mountPath = "/mnt/sources"
-description = "Sources to back up (read-only)"
-
-[[config.mounts]]
-name = "borgitory-repos"
-mountPath = "/mnt/repos"
-description = "Borg repositories (read-only)"

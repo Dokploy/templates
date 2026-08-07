@@ -1,0 +1,256 @@
+# Dify - open-source LLM app development platform
+# Adapted from the official docker/docker-compose.yaml (tag 1.15.0).
+# Minimal functional stack: api + worker + worker_beat + web + postgres
+# (pgvector, reused as the vector store) + redis + sandbox + ssrf_proxy
+# + plugin_daemon, fronted by a lightweight internal nginx gateway that
+# mirrors the upstream path routing (TLS terminates at Traefik).
+
+x-shared-api-env: &shared-api-env
+  LOG_LEVEL: INFO
+  DEPLOY_ENV: PRODUCTION
+  SECRET_KEY: ${SECRET_KEY}
+  MIGRATION_ENABLED: "true"
+  # Public URLs - a single domain, path-routed like the upstream nginx
+  CONSOLE_API_URL: https://${DIFY_DOMAIN}
+  CONSOLE_WEB_URL: https://${DIFY_DOMAIN}
+  SERVICE_API_URL: https://${DIFY_DOMAIN}
+  APP_API_URL: https://${DIFY_DOMAIN}
+  APP_WEB_URL: https://${DIFY_DOMAIN}
+  FILES_URL: https://${DIFY_DOMAIN}
+  INTERNAL_FILES_URL: http://api:5001
+  TRIGGER_URL: https://${DIFY_DOMAIN}
+  ENDPOINT_URL_TEMPLATE: https://${DIFY_DOMAIN}/e/{hook_id}
+  # The dedicated api_websocket collaboration service is not deployed
+  ENABLE_COLLABORATION_MODE: "false"
+  WEB_API_CORS_ALLOW_ORIGINS: "*"
+  CONSOLE_CORS_ALLOW_ORIGINS: "*"
+  # PostgreSQL
+  DB_USERNAME: postgres
+  DB_PASSWORD: ${POSTGRES_PASSWORD}
+  DB_HOST: db
+  DB_PORT: "5432"
+  DB_DATABASE: dify
+  # Redis / Celery
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: ${REDIS_PASSWORD}
+  REDIS_DB: "0"
+  CELERY_BROKER_URL: redis://:${REDIS_PASSWORD}@redis:6379/1
+  # File storage on a local volume
+  STORAGE_TYPE: opendal
+  OPENDAL_SCHEME: fs
+  OPENDAL_FS_ROOT: storage
+  # Vector store: pgvector, reusing the same PostgreSQL instance
+  VECTOR_STORE: pgvector
+  PGVECTOR_HOST: db
+  PGVECTOR_PORT: "5432"
+  PGVECTOR_USER: postgres
+  PGVECTOR_PASSWORD: ${POSTGRES_PASSWORD}
+  PGVECTOR_DATABASE: dify
+  PGVECTOR_MIN_CONNECTION: "1"
+  PGVECTOR_MAX_CONNECTION: "5"
+  # Code execution sandbox
+  CODE_EXECUTION_ENDPOINT: http://sandbox:8194
+  CODE_EXECUTION_API_KEY: ${SANDBOX_API_KEY}
+  # SSRF proxy (squid) for user-triggered outbound requests
+  SSRF_PROXY_HTTP_URL: http://ssrf_proxy:3128
+  SSRF_PROXY_HTTPS_URL: http://ssrf_proxy:3128
+  # Plugin daemon (model providers / tools are plugins since Dify 1.0)
+  PLUGIN_DAEMON_URL: http://plugin_daemon:5002
+  PLUGIN_DAEMON_KEY: ${PLUGIN_DAEMON_KEY}
+  INNER_API_KEY_FOR_PLUGIN: ${PLUGIN_INNER_API_KEY}
+  PLUGIN_MAX_PACKAGE_SIZE: "52428800"
+  PLUGIN_REMOTE_INSTALL_HOST: localhost
+  PLUGIN_REMOTE_INSTALL_PORT: "5003"
+  MARKETPLACE_ENABLED: "true"
+  MARKETPLACE_API_URL: https://marketplace.dify.ai
+
+services:
+  nginx:
+    image: nginx:1.27-alpine
+    restart: always
+    volumes:
+      - ../files/dify-nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      api:
+        condition: service_healthy
+      web:
+        condition: service_started
+      plugin_daemon:
+        condition: service_started
+
+  # The dify-api image runs as the non-root user 1001, so the shared
+  # storage volume has to be handed over to it once (same trick as the
+  # upstream init_permissions container).
+  init_permissions:
+    image: busybox:1.36
+    command:
+      - sh
+      - -c
+      - |
+        FLAG_FILE="/app/api/storage/.init_permissions"
+        if [ -f "$$FLAG_FILE" ]; then
+          echo "Permissions already initialized."
+          exit 0
+        fi
+        echo "Initializing permissions for /app/api/storage"
+        chown -R 1001:1001 /app/api/storage && touch "$$FLAG_FILE"
+    volumes:
+      - dify-app-storage:/app/api/storage
+    restart: "no"
+
+  api:
+    image: langgenius/dify-api:1.15.0
+    restart: always
+    environment:
+      <<: *shared-api-env
+      MODE: api
+    depends_on:
+      init_permissions:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - dify-app-storage:/app/api/storage
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 120s
+
+  worker:
+    image: langgenius/dify-api:1.15.0
+    restart: always
+    environment:
+      <<: *shared-api-env
+      MODE: worker
+    depends_on:
+      init_permissions:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - dify-app-storage:/app/api/storage
+
+  worker_beat:
+    image: langgenius/dify-api:1.15.0
+    restart: always
+    environment:
+      <<: *shared-api-env
+      MODE: beat
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  web:
+    image: langgenius/dify-web:1.15.0
+    restart: always
+    environment:
+      CONSOLE_API_URL: https://${DIFY_DOMAIN}
+      APP_API_URL: https://${DIFY_DOMAIN}
+      SERVER_CONSOLE_API_URL: http://api:5001
+      ENABLE_COLLABORATION_MODE: "false"
+      MARKETPLACE_API_URL: https://marketplace.dify.ai
+      MARKETPLACE_URL: https://marketplace.dify.ai
+      NEXT_TELEMETRY_DISABLED: "1"
+
+  db:
+    image: pgvector/pgvector:pg16
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: dify
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - dify-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dify"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  redis:
+    image: redis:6-alpine
+    restart: always
+    environment:
+      REDISCLI_AUTH: ${REDIS_PASSWORD}
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - dify-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  sandbox:
+    image: langgenius/dify-sandbox:0.2.15
+    restart: always
+    environment:
+      API_KEY: ${SANDBOX_API_KEY}
+      GIN_MODE: release
+      WORKER_TIMEOUT: "15"
+      ENABLE_NETWORK: "true"
+      HTTP_PROXY: http://ssrf_proxy:3128
+      HTTPS_PROXY: http://ssrf_proxy:3128
+      SANDBOX_PORT: "8194"
+    volumes:
+      - dify-sandbox-deps:/dependencies
+
+  ssrf_proxy:
+    image: ubuntu/squid:latest
+    restart: always
+    volumes:
+      - ../files/dify-squid.conf:/etc/squid/squid.conf:ro
+
+  plugin_daemon:
+    image: langgenius/dify-plugin-daemon:0.6.3-local
+    restart: always
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_DATABASE: dify_plugin
+      DB_SSL_MODE: disable
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      SERVER_PORT: "5002"
+      SERVER_KEY: ${PLUGIN_DAEMON_KEY}
+      MAX_PLUGIN_PACKAGE_SIZE: "52428800"
+      DIFY_INNER_API_URL: http://api:5001
+      DIFY_INNER_API_KEY: ${PLUGIN_INNER_API_KEY}
+      PLUGIN_REMOTE_INSTALLING_HOST: 0.0.0.0
+      PLUGIN_REMOTE_INSTALLING_PORT: "5003"
+      PLUGIN_WORKING_PATH: /app/storage/cwd
+      FORCE_VERIFYING_SIGNATURE: "true"
+      PYTHON_ENV_INIT_TIMEOUT: "120"
+      PLUGIN_MAX_EXECUTION_TIMEOUT: "600"
+      PLUGIN_STORAGE_TYPE: local
+      PLUGIN_STORAGE_LOCAL_ROOT: /app/storage
+      PLUGIN_INSTALLED_PATH: plugin
+      PLUGIN_PACKAGE_CACHE_PATH: plugin_packages
+      PLUGIN_MEDIA_CACHE_PATH: assets
+    volumes:
+      - dify-plugin-storage:/app/storage
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  dify-app-storage:
+  dify-db-data:
+  dify-redis-data:
+  dify-sandbox-deps:
+  dify-plugin-storage:

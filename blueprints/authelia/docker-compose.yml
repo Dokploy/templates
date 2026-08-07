@@ -16,9 +16,8 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
-    ports:
+    expose:
       - 9091
-
   redis:
     image: redis:7-alpine
     restart: unless-stopped

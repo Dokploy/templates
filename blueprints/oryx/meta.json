@@ -1,0 +1,22 @@
+{
+  "id": "oryx",
+  "name": "Oryx",
+  "version": "5.15.20",
+  "description": "Oryx (formerly SRS Stack) is an all-in-one, open-source video streaming server with a web console. It ingests RTMP, WebRTC (WHIP) and SRT streams and plays them back over HLS, HTTP-FLV and WebRTC (WHEP), with built-in recording, forwarding, transcoding and virtual live streaming.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/ossrs/oryx",
+    "website": "https://ossrs.io/",
+    "docs": "https://ossrs.io/lts/en-us/docs/v6/doc/getting-started-oryx",
+    "docker": "https://hub.docker.com/r/ossrs/oryx"
+  },
+  "tags": [
+    "streaming",
+    "video",
+    "rtmp",
+    "webrtc",
+    "srt",
+    "hls",
+    "media-server"
+  ]
+}

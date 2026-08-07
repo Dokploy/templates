@@ -1,0 +1,146 @@
+version: "3.8"
+
+# Shared Mailu configuration (equivalent to the upstream mailu.env file)
+x-mailu-env: &mailu-env
+  - SECRET_KEY=${SECRET_KEY}
+  - DOMAIN=${DOMAIN}
+  - HOSTNAMES=${DOMAIN}
+  - POSTMASTER=admin
+  # TLS for the mail protocols is obtained through Let's Encrypt (HTTP-01
+  # through Traefik on port 80). The web UI itself is served plain HTTP to
+  # Traefik, which terminates HTTPS.
+  - TLS_FLAVOR=mail-letsencrypt
+  # Mailu grants relay/XCLIENT trust to this network range. It must cover the
+  # Docker networks of this project (Docker allocates them from 172.16.0.0/12
+  # by default). Narrow it down if you know your exact subnet.
+  - SUBNET=${SUBNET}
+  - ADMIN=true
+  - WEBMAIL=roundcube
+  - API=false
+  - WEBDAV=none
+  - ANTIVIRUS=none
+  - SCAN_MACROS=false
+  # Ports enabled inside the front container. 4190 (sieve) stays internal for
+  # the webmail filters UI and is not published on the host.
+  - PORTS=25,80,443,465,587,993,4190
+  - MESSAGE_SIZE_LIMIT=50000000
+  - FULL_TEXT_SEARCH=en
+  - WEBROOT_REDIRECT=/webmail
+  - WEB_ADMIN=/admin
+  - WEB_WEBMAIL=/webmail
+  - SITENAME=Mailu
+  - WEBSITE=https://mailu.io
+  # Trust Traefik (dokploy-network) to forward the real client IP for rate limiting
+  - REAL_IP_FROM=${SUBNET}
+  - REAL_IP_HEADER=X-Forwarded-For
+  # Initial admin account: admin@${DOMAIN} (created only if it does not exist)
+  - INITIAL_ADMIN_ACCOUNT=${INITIAL_ADMIN_ACCOUNT}
+  - INITIAL_ADMIN_DOMAIN=${DOMAIN}
+  - INITIAL_ADMIN_PW=${INITIAL_ADMIN_PW}
+  - INITIAL_ADMIN_MODE=ifmissing
+
+# Public DNSSEC-validating resolvers. The admin container refuses to start
+# without DNSSEC validation, and Postfix needs it for outbound DANE. Service
+# discovery still uses Docker's embedded DNS; these are only upstreams.
+x-mailu-dns: &mailu-dns
+  - "1.1.1.1"
+  - "8.8.8.8"
+
+services:
+  front:
+    image: ghcr.io/mailu/nginx:2024.06
+    restart: unless-stopped
+    environment: *mailu-env
+    dns: *mailu-dns
+    # Mail protocol ports are published directly on the host (same approach as
+    # the poste.io template). They will fail to bind if another mail server
+    # already uses them on this machine.
+    ports:
+      - "25:25" # SMTP (server to server)
+      - "465:465" # SMTPS submission
+      - "587:587" # Submission (STARTTLS)
+      - "993:993" # IMAPS
+    volumes:
+      - mailu-certs:/certs
+    # The image's built-in healthcheck also requires the mail (Dovecot) proxy,
+    # which only starts once TLS certificates exist. Behind Traefik that
+    # deadlocks: unhealthy -> Traefik drops the route -> the ACME challenge can
+    # never be answered. Check only nginx instead (health endpoint returns 204).
+    healthcheck:
+      test: ["CMD-SHELL", "curl -m3 -skfLo /dev/null http://127.0.0.1:10204/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - admin
+
+  admin:
+    image: ghcr.io/mailu/admin:2024.06
+    restart: unless-stopped
+    environment: *mailu-env
+    dns: *mailu-dns
+    volumes:
+      - mailu-data:/data
+      - mailu-dkim:/dkim
+    depends_on:
+      - redis
+
+  imap:
+    image: ghcr.io/mailu/dovecot:2024.06
+    restart: unless-stopped
+    environment: *mailu-env
+    dns: *mailu-dns
+    volumes:
+      - mailu-mail:/mail
+    depends_on:
+      - front
+
+  smtp:
+    image: ghcr.io/mailu/postfix:2024.06
+    restart: unless-stopped
+    environment: *mailu-env
+    dns: *mailu-dns
+    volumes:
+      - mailu-mailqueue:/queue
+    depends_on:
+      - front
+
+  antispam:
+    image: ghcr.io/mailu/rspamd:2024.06
+    restart: unless-stopped
+    hostname: antispam
+    environment: *mailu-env
+    dns: *mailu-dns
+    volumes:
+      - mailu-filter:/var/lib/rspamd
+    depends_on:
+      - front
+      - redis
+
+  webmail:
+    image: ghcr.io/mailu/webmail:2024.06
+    restart: unless-stopped
+    environment: *mailu-env
+    dns: *mailu-dns
+    volumes:
+      - mailu-webmail:/data
+    depends_on:
+      - front
+      - imap
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    volumes:
+      - mailu-redis:/data
+
+volumes:
+  mailu-certs: {}
+  mailu-data: {}
+  mailu-dkim: {}
+  mailu-mail: {}
+  mailu-mailqueue: {}
+  mailu-filter: {}
+  mailu-webmail: {}
+  mailu-redis: {}

@@ -3,7 +3,7 @@ version: "3"
 services:
   collabora:
     image: collabora/code:latest
-    ports:
+    expose:
       - "9980"
     environment:
       - domain=${DOMAIN}

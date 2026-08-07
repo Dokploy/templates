@@ -30,7 +30,7 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    ports:
+    expose:
       - 80
     environment:
       - DOCKER_MAUTIC_ROLE=mautic_web
@@ -123,9 +123,8 @@ services:
       PMA_HOST: mysql
       PMA_PORT: 3306
       UPLOAD_LIMIT: 64M
-    ports:
+    expose:
       - 80
-
 volumes:
   mysql_data:
   mautic_data:

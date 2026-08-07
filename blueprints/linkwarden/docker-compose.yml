@@ -6,7 +6,7 @@ services:
       - DATABASE_URL=postgresql://linkwarden:${POSTGRES_PASSWORD}@postgres:5432/linkwarden
     restart: unless-stopped
     image: ghcr.io/linkwarden/linkwarden:v2.9.3
-    ports:
+    expose:
       - 3000
     volumes:
       - linkwarden-data:/data/data

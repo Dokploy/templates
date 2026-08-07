@@ -1,0 +1,20 @@
+{
+  "id": "oneuptime",
+  "name": "OneUptime",
+  "version": "11.5.6",
+  "description": "OneUptime is an open-source observability platform: uptime monitoring, status pages, incident management, on-call rotations, logs, traces and metrics in one place.",
+  "logo": "oneuptime.svg",
+  "links": {
+    "github": "https://github.com/OneUptime/oneuptime",
+    "website": "https://oneuptime.com/",
+    "docs": "https://oneuptime.com/docs"
+  },
+  "tags": [
+    "monitoring",
+    "observability",
+    "status-page",
+    "incident-management",
+    "on-call",
+    "alerting"
+  ]
+}

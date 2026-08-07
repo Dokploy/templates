@@ -1,3 +1,4 @@
+# dokploy: allow-host-ports — RustDesk relay/rendezvous protocol ports (21115-21119) must be host-published; Traefik cannot route raw TCP/UDP.
 services:
   hbbs:
     image: rustdesk/rustdesk-server:latest

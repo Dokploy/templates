@@ -4,7 +4,7 @@ db_password = "${password:32}"
 encryption_key = "${password:32}"
 
 [config]
-
+mounts = []
 [[config.domains]]
 serviceName = "hoppscotch"
 port = 80
@@ -37,5 +37,3 @@ VITE_APP_PRIVACY_POLICY_LINK = "https://docs.hoppscotch.io/support/privacy"
 
 # Subpath Access
 ENABLE_SUBPATH_BASED_ACCESS = "true"
-
-[[config.mounts]]

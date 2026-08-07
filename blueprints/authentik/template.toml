@@ -23,4 +23,4 @@ PG_DB = "${pg_db}"
 PG_PASS = "${password:32}" # Password for PostgreSQL authentication
 AUTHENTIK_SECRET_KEY = "${password:64}" # Secret key for Authentik authentication
 AUTHENTIK_IMAGE = "ghcr.io/goauthentik/server"
-AUTHENTIK_TAG = "2025.6.3"
+AUTHENTIK_TAG = "2026.2.2"

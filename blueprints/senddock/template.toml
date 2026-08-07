@@ -7,8 +7,7 @@ jwt_secret = "${password:64}"
 env = [
   "POSTGRES_PASSWORD=${postgres_password}",
   "JWT_SECRET=${jwt_secret}",
-  "PUBLIC_URL=https://${main_domain}",
-  "SENDDOCK_LICENSE_KEY="
+  "PUBLIC_URL=https://${main_domain}"
 ]
 
 [[config.domains]]

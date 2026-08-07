@@ -1,0 +1,25 @@
+# Access the Dagu Web UI at the assigned domain.
+# Sign in with the basic auth credentials from your .env file (default user: admin).
+# Place your DAG definitions (YAML) in the dags directory via the Web UI or the API.
+
+version: "3.8"
+
+services:
+  dagu:
+    image: ghcr.io/dagucloud/dagu:2.10.7
+    command: dagu start-all
+    restart: unless-stopped
+    expose:
+      - 8080
+    volumes:
+      - dagu-data:/var/lib/dagu
+    environment:
+      # Dagu binds to 127.0.0.1 by default; 0.0.0.0 is required to reach it
+      - DAGU_HOST=0.0.0.0
+      - DAGU_PORT=8080
+      - DAGU_AUTH_MODE=basic
+      - DAGU_AUTH_BASIC_USERNAME=${ADMIN_USERNAME}
+      - DAGU_AUTH_BASIC_PASSWORD=${ADMIN_PASSWORD}
+
+volumes:
+  dagu-data: {}

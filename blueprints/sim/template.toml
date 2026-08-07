@@ -1,0 +1,28 @@
+[variables]
+main_domain = "${domain}"
+better_auth_secret = "${password:32}"
+encryption_key = "${hash:64}"
+api_encryption_key = "${hash:64}"
+internal_api_secret = "${password:32}"
+postgres_password = "${password:32}"
+
+[config]
+
+[config.env]
+SIM_APP_URL = "http://${main_domain}"
+BETTER_AUTH_SECRET = "${better_auth_secret}"
+ENCRYPTION_KEY = "${encryption_key}"
+API_ENCRYPTION_KEY = "${api_encryption_key}"
+INTERNAL_API_SECRET = "${internal_api_secret}"
+POSTGRES_PASSWORD = "${postgres_password}"
+
+[[config.domains]]
+serviceName = "simstudio"
+port = 3000
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "realtime"
+port = 3002
+host = "${main_domain}"
+path = "/socket.io"

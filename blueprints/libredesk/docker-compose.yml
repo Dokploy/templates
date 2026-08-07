@@ -2,7 +2,7 @@ services:
   libredesk:
     image: libredesk/libredesk:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 9000
     environment:
       # If the password is set during first docker-compose up, the system user password will be set to this value.
@@ -20,8 +20,7 @@ services:
   db:
     image: postgres:17-alpine
     restart: unless-stopped
-    ports:
-      # Only bind on the local interface. To connect to Postgres externally, change this to 0.0.0.0
+    expose:
       - 5432
     environment:
       # Set these environment variables to configure the database, defaults to libredesk.
@@ -40,8 +39,7 @@ services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
-    ports:
-      # Only bind on the local interface.
+    expose:
       - 6379
     volumes:
       - redis-data:/data

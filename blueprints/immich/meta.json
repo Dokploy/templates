@@ -1,7 +1,7 @@
 {
   "id": "immich",
   "name": "Immich",
-  "version": "v1.121.0",
+  "version": "v3.0.2",
   "description": "High performance self-hosted photo and video backup solution directly from your mobile phone.",
   "logo": "immich.svg",
   "links": {

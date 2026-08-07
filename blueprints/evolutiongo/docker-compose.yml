@@ -1,0 +1,41 @@
+services:
+  evolution-go:
+    image: evoapicloud/evolution-go:latest
+    restart: always
+    environment:
+      - SERVER_PORT=${SERVER_PORT}
+      - CLIENT_NAME=${CLIENT_NAME}
+      - GLOBAL_API_KEY=${AUTHENTICATION_API_KEY}
+      - POSTGRES_AUTH_DB=${DATABASE_CONNECTION_URI}/evogo_auth?sslmode=disable
+      - POSTGRES_USERS_DB=${DATABASE_CONNECTION_URI}/evogo_users?sslmode=disable
+      - DATABASE_SAVE_MESSAGES=${DATABASE_SAVE_MESSAGES}
+      - WADEBUG=${WADEBUG}
+      - LOGTYPE=${LOGTYPE}
+    volumes:
+      - evolution-go-data:/app/dbdata
+      - evolution-go-logs:/app/logs
+    depends_on:
+      - evolution-postgres
+
+  evolution-gateway:
+    image: nginx:alpine
+    restart: always
+    volumes:
+      - ../files/gateway.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - evolution-go
+
+  evolution-postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - evolution-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  evolution-postgres-data:
+  evolution-go-data:
+  evolution-go-logs:

@@ -1,0 +1,18 @@
+{
+  "id": "chroma",
+  "name": "Chroma",
+  "version": "1.5.6",
+  "description": "Chroma is an open-source embedding database for AI applications, with persistent vector storage and a simple HTTP API.",
+  "logo": "chroma.svg",
+  "links": {
+    "github": "https://github.com/chroma-core/chroma",
+    "website": "https://www.trychroma.com/",
+    "docs": "https://docs.trychroma.com/"
+  },
+  "tags": [
+    "ai",
+    "vector-database",
+    "embeddings",
+    "database"
+  ]
+}

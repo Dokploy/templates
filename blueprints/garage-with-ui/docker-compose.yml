@@ -6,18 +6,17 @@ services:
       - garage-storage:/var/lib/garage
       - garage-storage:/var/lib/garage
     restart: unless-stopped
-    ports:
+    expose:
       - 3900
       - 3901
       - 3902
       - 3903
-
   garage-webui:
     image: khairul169/garage-webui:1.1.0
     restart: unless-stopped
     volumes:
       - ../files/garage.toml:/etc/garage.toml:ro
-    ports:
+    expose:
       - 3909
     environment:
       - AUTH_USER_PASS

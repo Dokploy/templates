@@ -1,0 +1,19 @@
+{
+  "id": "posthog",
+  "name": "PostHog",
+  "version": "master-2026-07-14",
+  "description": "PostHog is an open-source product analytics platform with feature flags, session replay, surveys, A/B testing and a customer data pipeline, all in one tool.",
+  "logo": "posthog.svg",
+  "links": {
+    "github": "https://github.com/PostHog/posthog",
+    "website": "https://posthog.com/",
+    "docs": "https://posthog.com/docs/self-host"
+  },
+  "tags": [
+    "analytics",
+    "product-analytics",
+    "feature-flags",
+    "session-replay",
+    "ab-testing"
+  ]
+}

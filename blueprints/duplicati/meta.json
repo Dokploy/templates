@@ -1,0 +1,17 @@
+{
+  "id": "duplicati",
+  "name": "Duplicati",
+  "version": "2.3.0",
+  "description": "Duplicati is a free, open-source backup solution that offers zero-trust, fully encrypted backups for your data",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/duplicati/duplicati",
+    "website": "https://duplicati.com/",
+    "docs": "https://docs.duplicati.com/"
+  },
+  "tags": [
+    "backup",
+    "self-hosted",
+    "simple"
+  ]
+}

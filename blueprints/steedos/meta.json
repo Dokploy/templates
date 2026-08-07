@@ -1,0 +1,16 @@
+{
+  "id": "steedos",
+  "name": "Steedos",
+  "version": "3.0.14",
+  "description": "Steedos is an open-source low-code platform and alternative to Salesforce, designed to help you build enterprise applications like CRM with clicks, not code.",
+  "logo": "steedos.png",
+  "links": {
+    "github": "https://github.com/steedos/steedos-platform",
+    "website": "https://www.steedos.com/",
+    "docs": "https://docs.steedos.com/"
+  },
+  "tags": [
+    "crm",
+    "low-code"
+  ]
+}

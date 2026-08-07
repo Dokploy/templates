@@ -1,0 +1,17 @@
+{
+  "id": "whatomate",
+  "name": "Whatomate",
+  "version": "0.1.1-beta-0.16.1",
+  "description": "Modern, open-source WhatsApp Business Platform with real-time chat, chatbot automation, bulk campaigns, template management, and voice calling via Meta's Cloud API.",
+  "logo": "whatomate.svg",
+  "links": {
+    "github": "https://github.com/shridarpatil/whatomate",
+    "website": "https://whatomate.io/",
+    "docs": "https://shridarpatil.github.io/whatomate/"
+  },
+  "tags": [
+    "communication",
+    "automation",
+    "crm"
+  ]
+}

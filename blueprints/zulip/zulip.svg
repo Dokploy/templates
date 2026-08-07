@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Zulip</title>
+  <desc id="desc">Zulip template logo</desc>
+  <rect width="256" height="256" rx="56" fill="#5f43d6"/>
+  <path d="M70 72h116c7 0 11 8 7 14L112 184h75c9 0 14 10 8 17l-8 10H72c-7 0-11-8-7-14l81-98H72c-9 0-14-10-8-17l6-10z" fill="#fff"/>
+</svg>

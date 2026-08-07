@@ -11,7 +11,7 @@ services:
       # Bundled Redis below, private to the project network.
       - REDIS_URL=redis://redis:6379
     # Expose the container port only; Dokploy maps the domain to it.
-    ports:
+    expose:
       - 3000
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/"]

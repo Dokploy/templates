@@ -5,6 +5,7 @@ postgres_password = "${password:32}"
 postgres_db = "root_db"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "nocodb"
 port = 8080
@@ -14,13 +15,3 @@ host = "${main_domain}"
 POSTGRES_USER = "${postgres_user}"
 POSTGRES_PASSWORD = "${postgres_password}"
 POSTGRES_DB = "${postgres_db}"
-
-[[config.mounts]]
-serviceName = "nocodb"
-volumeName = "nc_data"
-mountPath = "/usr/app/data"
-
-[[config.mounts]]
-serviceName = "root_db"
-volumeName = "db_data"
-mountPath = "/var/lib/postgresql/data"

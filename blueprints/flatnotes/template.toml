@@ -5,6 +5,7 @@ password = "${password:16}"
 secret_key = "${password:32}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "flatnotes"
 port = 8080
@@ -26,7 +27,3 @@ FLATNOTES_QUICK_ACCESS_TITLE = "RECENTLY MODIFIED"
 FLATNOTES_QUICK_ACCESS_TERM = "*"
 FLATNOTES_QUICK_ACCESS_SORT = "lastModified"
 FLATNOTES_QUICK_ACCESS_LIMIT = "4"
-
-[[config.mounts]]
-name = "flatnotes-data"
-mountPath = "/data"

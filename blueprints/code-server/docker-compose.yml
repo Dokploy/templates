@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  code-server:
+    image: codercom/code-server:4.121.0
+    restart: unless-stopped
+    expose:
+      - 8080
+    volumes:
+      - code-server-home:/home/coder
+    environment:
+      - PASSWORD=${PASSWORD}
+      - TZ=${TZ}
+    user: "1000:1000"
+
+volumes:
+  code-server-home:

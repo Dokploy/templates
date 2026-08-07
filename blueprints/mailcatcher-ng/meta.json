@@ -1,0 +1,17 @@
+{
+  "id": "mailcatcher-ng",
+  "name": "MailCatcher NG",
+  "version": "1.6.8",
+  "description": "MailCatcher NG runs a super simple SMTP server which catches any message sent to it to display in a web interface. Point your app's SMTP settings at mailcatcher-ng:1025 and inspect every captured email in the browser.",
+  "logo": "mailcatcher-ng.svg",
+  "links": {
+    "github": "https://github.com/spaquet/mailcatcher",
+    "website": "https://spaquet.github.io/mailcatcher/",
+    "docs": "https://spaquet.github.io/docker-alpine-mailcatcher/"
+  },
+  "tags": [
+    "email",
+    "smtp",
+    "development"
+  ]
+}

@@ -1,0 +1,8 @@
+version: "3.8"
+
+services:
+  languagetool:
+    image: collabora/languagetool:6.6
+    restart: unless-stopped
+    expose:
+      - "8010"

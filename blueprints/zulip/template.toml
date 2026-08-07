@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+admin_email = "${email}"
+
+[config]
+env = [
+  "ZULIP_EXTERNAL_HOST=${main_domain}",
+  "ZULIP_ADMINISTRATOR=${admin_email}",
+  "ZULIP_POSTGRES_PASSWORD=${password:32}",
+  "ZULIP_MEMCACHED_PASSWORD=${password:32}",
+  "ZULIP_RABBITMQ_PASSWORD=${password:32}",
+  "ZULIP_REDIS_PASSWORD=${password:32}",
+  "ZULIP_SECRET_KEY=${password:64}",
+  "ZULIP_LOADBALANCER_IPS=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "zulip"
+port = 80
+host = "${main_domain}"

@@ -3,7 +3,7 @@ services:
   grist:
     image: gristlabs/grist:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 8484
     volumes:
       - grist_data:/persist

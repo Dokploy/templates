@@ -1,7 +1,7 @@
 [variables]
 main_domain = "${domain}"
 admin_domain = "${domain}"
-postgres_password = "${password}"
+postgres_password = "${password:32}"
 
 [config]
 mounts = []
@@ -17,6 +17,6 @@ port = 3_002
 host = "${admin_domain}"
 
 [config.env]
-LOGTO_ENDPOINT = "http://${admin_domain}"
+LOGTO_ENDPOINT = "http://${main_domain}"
 LOGTO_ADMIN_ENDPOINT = "http://${admin_domain}"
 LOGTO_POSTGRES_PASSWORD = "${postgres_password}"

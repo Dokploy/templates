@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+  "MAIL_LIMIT=50",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "mailcatcher-ng"
+port = 1_080
+host = "${main_domain}"

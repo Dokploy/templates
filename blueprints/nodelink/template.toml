@@ -1,0 +1,45 @@
+[variables]
+main_domain = "${domain}"
+server_password = "${password:32}"
+logging_level = "info"
+file_logging_enabled = "false"
+local_source_enabled = "false"
+metrics_enabled = "false"
+
+[[config.domains]]
+serviceName = "nodelink"
+port = 2333
+host = "${main_domain}"
+path = "/"
+
+[[config.mounts]]
+filePath = "README.md"
+content = """# NodeLink
+
+This template deploys NodeLink, a Lavalink-compatible audio server for Discord music bots and real-time audio systems.
+
+## Connection
+
+Use the deployed domain as your NodeLink/Lavalink server URL:
+
+- Host: `https://${main_domain}`
+- Port: `443` when connecting through the Dokploy domain
+- Password: the generated `server_password` value
+
+NodeLink exposes the `/version`, `/v4/stats`, and Lavalink-compatible WebSocket/API endpoints through the same domain.
+
+## Local Music
+
+The template creates a persistent `nodelink-local-music` volume mounted at `/app/local-music`. Set `local_source_enabled` to `true` before deployment if you want NodeLink to resolve `file:///app/local-music/...` tracks.
+
+## Metrics
+
+Set `metrics_enabled` to `true` to expose Prometheus metrics at `/v4/metrics`. Keep this disabled unless your deployment is protected and monitored.
+"""
+
+[config.env]
+NODELINK_SERVER_PASSWORD = "${server_password}"
+NODELINK_LOGGING_LEVEL = "${logging_level}"
+NODELINK_LOGGING_FILE_ENABLED = "${file_logging_enabled}"
+NODELINK_SOURCES_LOCAL_ENABLED = "${local_source_enabled}"
+NODELINK_METRICS_ENABLED = "${metrics_enabled}"

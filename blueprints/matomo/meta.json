@@ -1,0 +1,18 @@
+{
+  "id": "matomo",
+  "name": "Matomo",
+  "version": "5.1-apache",
+  "description": "Leading open-source web analytics platform with global data ownership.",
+  "logo": "matomo.png",
+  "links": {
+    "github": "https://github.com/matomo-org/matomo",
+    "website": "https://matomo.org",
+    "docs": "https://matomo.org/docs"
+  },
+  "tags": [
+    "analytics",
+    "metrics",
+    "privacy",
+    "self-hosted"
+  ]
+}

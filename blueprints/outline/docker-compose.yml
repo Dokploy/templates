@@ -6,7 +6,7 @@ services:
       - postgres
       - redis
       - dex
-    ports:
+    expose:
       - 3000
     environment:
       NODE_ENV: production
@@ -38,9 +38,8 @@ services:
       - dex-server
     volumes:
       - ../files/etc/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-    ports:
+    expose:
       - 5556
-
   dex-server:
     image: ghcr.io/dexidp/dex:v2.37.0
     restart: always

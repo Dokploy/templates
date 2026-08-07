@@ -1,0 +1,6 @@
+[variables]
+keydb_password = "${password:16}"
+
+[config]
+[config.env]
+KEYDB_PASSWORD = "${keydb_password}"

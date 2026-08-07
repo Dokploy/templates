@@ -1,0 +1,18 @@
+{
+  "id": "certmate",
+  "name": "CertMate",
+  "version": "2.21.3",
+  "description": "CertMate is an SSL certificate management system with a web UI and REST API. It automates issuing and renewing Let's Encrypt certificates via DNS-01 challenges across 20+ DNS providers, with unified backups and multi-account support.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/fabriziosalmi/certmate",
+    "website": "https://www.certmate.org/",
+    "docs": "https://www.certmate.org/docs/"
+  },
+  "tags": [
+    "ssl",
+    "certificates",
+    "security",
+    "self-hosted"
+  ]
+}

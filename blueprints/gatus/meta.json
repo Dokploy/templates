@@ -1,0 +1,18 @@
+{
+  "id": "gatus",
+  "name": "Gatus",
+  "version": "v5.36.0",
+  "description": "Gatus is an automated service health dashboard for monitoring HTTP, DNS, TCP, ICMP, and other endpoints.",
+  "logo": "gatus.svg",
+  "links": {
+    "github": "https://github.com/TwiN/gatus",
+    "website": "https://gatus.io/",
+    "docs": "https://github.com/TwiN/gatus#configuration"
+  },
+  "tags": [
+    "monitoring",
+    "status-page",
+    "uptime",
+    "observability"
+  ]
+}

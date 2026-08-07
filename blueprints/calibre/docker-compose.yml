@@ -9,7 +9,7 @@ services:
       - TZ=Etc/UTC
       - PUID=1000
       - PGID=1000
-    ports:
+    expose:
       - 8080
     volumes:
       - books:/books

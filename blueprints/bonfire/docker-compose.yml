@@ -1,0 +1,84 @@
+version: "3.8"
+services:
+  bonfire:
+    image: bonfirenetworks/bonfire:1.0.5-social-amd64
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      search:
+        condition: service_started
+    environment:
+      # Instance
+      - HOSTNAME=${BONFIRE_HOSTNAME}
+      - PUBLIC_PORT=${PUBLIC_PORT:-80}
+      - SERVER_PORT=4000
+      - APP_NAME=${APP_NAME:-Bonfire}
+      - LANG=en_US.UTF-8
+      # Secrets
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - SIGNING_SALT=${SIGNING_SALT}
+      - ENCRYPTION_SALT=${ENCRYPTION_SALT}
+      - RELEASE_COOKIE=${RELEASE_COOKIE}
+      # Database (migrations run automatically on startup)
+      - POSTGRES_HOST=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=bonfire_db
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      # Must stay false for the initial migrations; can be set to true
+      # after the first deployment to speed up future upgrades
+      - DB_MIGRATE_INDEXES_CONCURRENTLY=${DB_MIGRATE_INDEXES_CONCURRENTLY:-false}
+      # Search (Meilisearch)
+      - SEARCH_ADAPTER=meili
+      - SEARCH_MEILI_INSTANCE=http://search:7700
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+      # Email (the first account to sign up becomes admin and needs no
+      # confirmation email; configure a mail backend for further signups)
+      - MAIL_BACKEND=${MAIL_BACKEND:-none}
+      - MAIL_SERVER=${MAIL_SERVER:-}
+      - MAIL_PORT=${MAIL_PORT:-}
+      - MAIL_USER=${MAIL_USER:-}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-}
+      - MAIL_DOMAIN=${MAIL_DOMAIN:-}
+      - MAIL_FROM=${MAIL_FROM:-}
+      - MAIL_KEY=${MAIL_KEY:-}
+      # Max upload size in megabytes
+      - UPLOAD_LIMIT=${UPLOAD_LIMIT:-20}
+    volumes:
+      - bonfire-uploads:/opt/app/data/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000"]
+      interval: 30s
+      timeout: 10s
+      retries: 15
+      start_period: 120s
+
+  db:
+    image: postgis/postgis:17-3.5-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=bonfire_db
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bonfire_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  search:
+    image: getmeili/meilisearch:v1.11
+    restart: unless-stopped
+    environment:
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+      - MEILI_ENV=production
+      - MEILI_NO_ANALYTICS=true
+    volumes:
+      - search-data:/meili_data
+
+volumes:
+  bonfire-uploads:
+  db-data:
+  search-data:

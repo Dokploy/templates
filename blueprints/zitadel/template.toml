@@ -7,6 +7,8 @@ admin_email = "${email}"
 admin_password = "AdminPassword123!"
 
 [config]
+mounts = []
+
 [[config.domains]]
 serviceName = "zitadel"
 port = 8080
@@ -16,7 +18,15 @@ path = "/"
 [config.env]
 POSTGRES_PASSWORD = "${postgres_password}"
 ZITADEL_MASTERKEY = "${zitadel_masterkey}"
-EXTERNAL_DOMAIN = "${main_domain}"
+
+# ZITADEL_EXTERNALDOMAIN must always match the domain configured in the
+# Domains tab. If you change the domain, update this variable too (and do it
+# BEFORE the first deploy — Zitadel binds its instance to this domain on
+# first start). For a domain served over HTTPS set ZITADEL_EXTERNALPORT=443
+# and ZITADEL_EXTERNALSECURE=true.
+ZITADEL_EXTERNALDOMAIN = "${main_domain}"
+ZITADEL_EXTERNALPORT = "80"
+ZITADEL_EXTERNALSECURE = "false"
 
 # Custom Admin User Configuration
 ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME = "${admin_username}"
@@ -24,5 +34,3 @@ ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD = "${admin_password}"
 ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS = "${admin_email}"
 ZITADEL_FIRSTINSTANCE_ORG_HUMAN_FIRSTNAME = "Admin"
 ZITADEL_FIRSTINSTANCE_ORG_HUMAN_LASTNAME = "User"
-
-[[config.mounts]]

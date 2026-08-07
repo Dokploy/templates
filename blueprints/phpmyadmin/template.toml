@@ -13,6 +13,8 @@ host = "${main_domain}"
 
 [config.env]
 MYSQL_ROOT_PASSWORD = "${root_password}"
-MYSQL_DATABASE = "mysql"
+MYSQL_DATABASE = "phpmyadmin"
 MYSQL_USER = "phpmyadmin"
 MYSQL_PASSWORD = "${user_password}"
+UPLOAD_LIMIT = "512M"
+MAX_EXECUTION_TIME = "600"

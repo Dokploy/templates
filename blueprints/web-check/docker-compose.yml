@@ -2,6 +2,6 @@ version: '3.9'
 services:
   web-check:
     image: lissy93/web-check
-    ports:
+    expose:
       - 3000
     restart: unless-stopped

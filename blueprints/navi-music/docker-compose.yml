@@ -1,0 +1,31 @@
+services:
+  navi-music:
+    # 4.1.0 is the newest release that can boot without a YouTube OAuth2 refresh
+    # token; 4.1.1+ throws at startup ("YouTube OAuth token is mandatory") unless
+    # a valid token obtained via an interactive device-code flow is provided, so
+    # newer tags can never boot with template defaults.
+    image: anvian/navi-music:4.1.0
+    restart: unless-stopped
+    # NaviMusic logs (rather than throws) when DISCORD_TOKEN is empty or invalid,
+    # then exits 0 because no JDA threads keep the JVM alive. Keep the container
+    # running in that case so first-time users see the instructions in the logs
+    # instead of a restart loop; real crashes (non-zero exits) still propagate to
+    # the restart policy.
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        java $$JAVA_OPTS -jar /app/NaviMusic.jar nogui --spring.profiles.active=prod;
+        code=$$?;
+        if [ "$$code" -eq 0 ]; then
+        echo "NaviMusic is idle. Set DISCORD_TOKEN (and optionally Spotify/YouTube credentials) in the Environment tab, then redeploy.";
+        tail -f /dev/null;
+        fi;
+        exit $$code
+    environment:
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
+      YOUTUBE_POTOKEN: ${YOUTUBE_POTOKEN}
+      YOUTUBE_VISITOR: ${YOUTUBE_VISITOR}
+      YOUTUBE_OAUTH2: ${YOUTUBE_OAUTH2}

@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  waxum:
+    image: fdciabdul/waxum:0.11.5
+    restart: unless-stopped
+    expose:
+      - 3451
+    environment:
+      - SUPERADMIN_TOKEN=${SUPERADMIN_TOKEN}
+      - WHATSAPP_STORAGE_PATH=/app/whatsapp_sessions
+    volumes:
+      - waxum_data:/app/whatsapp_sessions
+
+volumes:
+  waxum_data:

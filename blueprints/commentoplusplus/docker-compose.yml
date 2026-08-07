@@ -3,7 +3,7 @@ version: "3"
 services:
   commentoplusplus:
     image: caroga/commentoplusplus:v1.8.7
-    ports:
+    expose:
       - "8080"
     environment:
       - COMMENTO_ORIGIN=${COMMENTO_ORIGIN}

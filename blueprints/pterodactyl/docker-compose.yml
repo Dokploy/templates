@@ -38,12 +38,6 @@ services:
       MYSQL_ROOT_PASSWORD:
       DB_CONNECTION: "mysql"
 
-networks:
-  default:
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
-
 volumes:
   pterodb:
   pterovar:

@@ -2,6 +2,7 @@
 main_domain = "${domain}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "memos"
 port = 5230
@@ -11,4 +12,3 @@ host = "${main_domain}"
 [config.env]
 MEMOS_MODE = "prod"
 MEMOS_PORT = "5230"
-[[config.mounts]]

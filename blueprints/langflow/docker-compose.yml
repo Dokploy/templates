@@ -4,7 +4,7 @@ services:
     user: root
     restart: always
     pull_policy: always
-    ports:
+    expose:
       - 7860
     depends_on:
       - postgres-langflow

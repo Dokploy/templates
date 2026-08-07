@@ -1,3 +1,4 @@
+# dokploy: allow-host-ports — the UniFi controller serves its portal over HTTPS with a self-signed certificate on 8443 and this template defines no Traefik domain; users and UniFi devices reach the controller directly on the host.
 services:
   unifi-network-application:
     image: lscr.io/linuxserver/unifi-network-application:latest
@@ -18,14 +19,6 @@ services:
       - ../files/config:/config # Map host directory to container directory
     ports:
       - 8443:8443 # HTTPS portal
-      # - 3478:3478/udp # STUN service
-      # - 10001:10001/udp # UniFi AP discovery
-      # - 8080:8080 # HTTP portal
-      # - 1900:1900/udp #optional  # For DLNA
-      # - 8843:8843 #optional  # HTTPS guest portal
-      # - 8880:8880 #optional  # HTTP guest portal
-      # - 6789:6789 #optional  # Mobile speed test port
-      # - 5514:5514/udp #optional  # Remote syslog port
     restart: unless-stopped
     depends_on:
       - unifi-db
@@ -36,7 +29,7 @@ services:
     volumes:
       - ../files/db/data:/data/db
       - ../files/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
-    ports:
+    expose:
       - 27017
     restart: unless-stopped
 

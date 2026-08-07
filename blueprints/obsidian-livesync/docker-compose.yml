@@ -9,8 +9,7 @@ services:
     volumes:
       - couchdb-data:/opt/couchdb/data
       - ../files/local.ini:/opt/couchdb/etc/local.ini
-    ports:
+    expose:
       - 5984
-
 volumes:
   couchdb-data: {}

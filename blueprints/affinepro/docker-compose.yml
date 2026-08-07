@@ -3,7 +3,7 @@ services:
   affinepro:
     image: ghcr.io/toeverything/affine:stable
     restart: unless-stopped
-    ports:
+    expose:
       - 3010
     volumes:
       - affine-storage:/root/.affine/storage

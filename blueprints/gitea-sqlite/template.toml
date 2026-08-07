@@ -2,6 +2,7 @@
 main_domain = "${domain}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "gitea"
 port = 3000
@@ -19,5 +20,3 @@ USER_GID = "1000"
 # GITEA__mailer__SMTP_PORT = "465"
 # GITEA__mailer__USER = "apikey"
 # GITEA__mailer__PASSWD = "${password:32}"
-
-[[config.mounts]]

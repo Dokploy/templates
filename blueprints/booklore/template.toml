@@ -4,6 +4,7 @@ app_password = "${password:32}"
 db_root_password = "${password:32}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "booklore"
 port = 6060
@@ -20,5 +21,3 @@ MYSQL_USER = "booklore"
 MYSQL_PASSWORD = "${app_password}"
 # API Key
 MYSQL_ROOT_PASSWORD = "${db_root_password}"
-
-[[config.mounts]]

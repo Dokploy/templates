@@ -2,8 +2,8 @@ services:
   mailpit:
     image: axllent/mailpit:v1.22.3
     restart: unless-stopped
-    ports:
-      - '1025:1025'
+    expose:
+      - 1025 # SMTP — other services reach it over the internal Docker network (mailpit:1025)
     volumes:
       - 'mailpit-data:/data'
     environment:

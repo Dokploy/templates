@@ -2,6 +2,7 @@
 main_domain = "${domain}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "grimoire"
 port = 5173
@@ -12,5 +13,3 @@ PORT = "5173"
 PUBLIC_ORIGIN = "https://${main_domain}"
 PUBLIC_HTTPS_ONLY = "true"
 PUBLIC_SIGNUP_DISABLED = "false"
-
-[[config.mounts]]

@@ -1,5 +1,6 @@
+# dokploy: allow-host-ports — BitTorrent peer connections (6881 TCP/UDP) must reach the host directly; the peering protocol is not HTTP, so Traefik cannot route it.
 # docker-compose.yml
-# 
+#
 # IMPORTANT: First-time setup information
 # - Default username: admin
 # - Password: Check container logs for temporary password on first startup

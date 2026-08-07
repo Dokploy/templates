@@ -8,7 +8,7 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - DATABASE_URL=postgres://postgres:${DB_PASSWORD}@db:5432/chiefonboarding
       - ALLOWED_HOSTS=${DOMAIN}
-    ports:
+    expose:
       - 8000
     depends_on:
       - db

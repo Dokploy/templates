@@ -2,6 +2,7 @@
 main_domain = "${domain}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "statping-ng"
 port = 8080
@@ -10,7 +11,3 @@ host = "${main_domain}"
 [config.env]
 TZ = "UTC"
 DB_CONN = "sqlite"
-
-[[config.mounts]]
-source = "../files/statping-ng"
-target = "/app"

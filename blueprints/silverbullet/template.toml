@@ -3,6 +3,7 @@ main_domain = "${domain}"
 sb_user = "admin:${password:16}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "silverbullet"
 port = 3000
@@ -10,7 +11,3 @@ host = "${main_domain}"
 
 [config.env]
 SB_USER = "${sb_user}"
-
-[[config.mounts]]
-name = "silverbullet-space"
-mountPath = "/space"

@@ -5,7 +5,7 @@ admin_password = "${password:32}"
 jwt_secret = "${jwt:jwt_secret}"
 
 [config]
-
+mounts = []
 [[config.domains]]
 serviceName = "picsur"
 port = 8080
@@ -16,8 +16,3 @@ host = "${main_domain}"
 "PICSUR_ADMIN_PASSWORD" = "${admin_password}"
 "PICSUR_JWT_SECRET" = "${jwt_secret}"
 "POSTGRES_PASSWORD" = "${postgres_password}"
-
-[[config.mounts]]
-name = "picsur-data"
-serviceName = "picsur_postgres"
-mountPath = "/var/lib/postgresql/data"

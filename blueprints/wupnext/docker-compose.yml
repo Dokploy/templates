@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  wupnext:
+    image: docker.io/javierlnmn/wupnext:latest
+    restart: unless-stopped
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: "False"
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS}
+      EMAIL_BACKEND: anymail.backends.resend.EmailBackend
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      # First-run bootstrap (admin user; app has no signup)
+      DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME}
+      DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL}
+      DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD}
+    # Expose only to internal network; domain routing handled by Dokploy/Traefik
+    expose:
+      - "8000"
+    volumes:
+      - wupnext-db:/app/db
+
+  wupnext-worker:
+    image: docker.io/javierlnmn/wupnext:latest
+    restart: unless-stopped
+    command: python manage.py qcluster
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: "False"
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS}
+      EMAIL_BACKEND: anymail.backends.resend.EmailBackend
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+    volumes:
+      - wupnext-db:/app/db
+    depends_on:
+      - wupnext
+
+volumes:
+  wupnext-db:

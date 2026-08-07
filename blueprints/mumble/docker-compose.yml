@@ -2,7 +2,7 @@ services:
   mumble-server:
     image: mumblevoip/mumble-server:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 64738
       - 64738/udp
     volumes:

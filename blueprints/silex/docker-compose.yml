@@ -2,7 +2,7 @@ services:
   silex:
     image: silexlabs/silex:3.7.0
     restart: unless-stopped
-    ports:
+    expose:
       - 6805
     environment:
       - SILEX_URL=${SILEX_URL}

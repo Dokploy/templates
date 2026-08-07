@@ -24,6 +24,7 @@ port = 80
 host = "${main_domain}"
 
 [config]
+mounts = []
 env = [
   # App
   "APP_URL=${main_domain}",
@@ -51,4 +52,3 @@ env = [
 ]
 
 # No custom mounts needed; volumes are already defined in compose.
-[[config.mounts]]

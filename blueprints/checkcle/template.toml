@@ -2,13 +2,10 @@
 main_domain = "${domain}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "checkcle"
 port = 8090
 host = "${main_domain}"
 
 [config.env]
-
-[[config.mounts]]
-source = "checkcle-data"
-target = "/mnt/pb_data"

@@ -1,3 +1,4 @@
+# dokploy: allow-host-ports — WireGuard VPN traffic is raw UDP on 51820; Traefik cannot route it, so the port must be published on the host.
 volumes:
   etc_wireguard:
 
@@ -12,13 +13,13 @@ services:
       - INIT_DNS=1.1.1.1,8.8.8.8
       - PORT=51821
     image: ghcr.io/wg-easy/wg-easy:15
-    container_name: wg-easy
     volumes:
       - etc_wireguard:/etc/wireguard
       - /lib/modules:/lib/modules:ro
     ports:
       - "51820:51820/udp"
-      - "51821:51821/tcp"
+    expose:
+      - 51821 # web UI — routed through Traefik via the template domain
     restart: unless-stopped
     cap_add:
       - NET_ADMIN

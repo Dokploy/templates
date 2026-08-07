@@ -1,3 +1,4 @@
+# dokploy: allow-host-ports — Lodestone hosts game servers (Minecraft et al.) on 25565-25590 (raw TCP) and the dashboard talks to the core agent on 16662 directly by server address; neither is routable through Traefik.
 version: '3.8'
 
 services:

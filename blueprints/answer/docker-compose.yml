@@ -1,7 +1,7 @@
 services:
   answer:
     image: apache/answer:1.4.1
-    ports:
+    expose:
       - '80'
     restart: on-failure
     volumes:

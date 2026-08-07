@@ -6,6 +6,7 @@ incoming_port = "${INCOMING_PORT:-50000}"
 dht_port      = "${DHT_PORT:-6881}"
 
 [config]
+mounts = []
 # Dokploy will route this domain to the container's internal port 8080
 [[config.domains]]
 serviceName = "rutorrent"
@@ -17,18 +18,3 @@ PUID = "${puid}"
 PGID = "${pgid}"
 INCOMING_PORT = "${incoming_port}"
 DHT_PORT      = "${dht_port}"
-
-[[config.mounts]]
-type   = "volume"
-source = "rutorrent-data"
-target = "/data"
-
-[[config.mounts]]
-type   = "volume"
-source = "rutorrent-downloads"
-target = "/downloads"
-
-[[config.mounts]]
-type   = "volume"
-source = "rutorrent-passwd"
-target = "/passwd"

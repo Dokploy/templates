@@ -8,9 +8,8 @@ services:
       - dockge_stacks:/opt/stacks
     environment:
       DOCKGE_STACKS_DIR: /opt/stacks
-    ports:
+    expose:
       - "5001"
-
 volumes:
   dockge_data:
   dockge_stacks:

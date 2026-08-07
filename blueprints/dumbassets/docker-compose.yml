@@ -3,7 +3,7 @@ services:
   dumbassets:
     image: dumbwareio/dumbassets:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 3000
     volumes:
       - dumbassets-data:/app/data

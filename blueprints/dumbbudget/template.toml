@@ -4,6 +4,7 @@ main_domain = "${domain}"
 dumbbudget_pin = "${password:16}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "dumbbudget"
 port = 3000
@@ -21,4 +22,3 @@ ALLOWED_ORIGINS = "${main_domain}"
 # The named volume 'dumbbudget-data' is defined in the docker-compose.yml.
 # According to Dokploy's template examples, volumes declared in the compose
 # file are automatically managed and do not require a separate entry here.
-[[config.mounts]]

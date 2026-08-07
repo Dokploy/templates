@@ -1,3 +1,4 @@
+# dokploy: allow-host-ports — VoIP stack: SIP signaling (5060-5063 TCP/UDP), RTP media (10000-10100/udp) and the gRPC API endpoints (envoy 8449, rtpengine control 8080) are reached directly by phones/SDKs; these protocols cannot be routed by Traefik.
 services:
   dashboard:
     image: fonoster/dashboard:0.15.15

@@ -1,3 +1,4 @@
+# dokploy: allow-host-ports — mail protocols (SMTP 25, SMTPS 465, Submission 587, IMAPS 993) are not HTTP; mail servers and clients must reach them directly on the host.
 version: "3.8"
 
 # Shared Mailu configuration (equivalent to the upstream mailu.env file)

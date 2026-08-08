@@ -8,6 +8,7 @@ services:
     environment:
       - SUPERADMIN_TOKEN=${SUPERADMIN_TOKEN}
       - WHATSAPP_STORAGE_PATH=/app/whatsapp_sessions
+      - SQLITE_PATH=/app/whatsapp_sessions/waxum.db
     volumes:
       - waxum_data:/app/whatsapp_sessions
 

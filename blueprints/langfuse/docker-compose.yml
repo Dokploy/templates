@@ -122,6 +122,10 @@ services:
     depends_on: *langfuse-depends-on
     environment:
       <<: *langfuse-worker-env
+      # Bind Next.js to all interfaces: Docker sets HOSTNAME to the container id,
+      # which resolves to a single network's IP - with Dokploy's extra proxy
+      # network attached, Traefik would get connection refused (502) otherwise.
+      HOSTNAME: "0.0.0.0"
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       # Overrides the worker's internal endpoint above: the browser resolves
       # presigned media URLs itself, so this one must be publicly reachable.

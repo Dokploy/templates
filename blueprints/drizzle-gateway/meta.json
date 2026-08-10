@@ -6,8 +6,8 @@
   "logo": "drizzle-gateway.svg",
   "links": {
     "github": "https://github.com/drizzle-team/drizzle-gateway",
-    "website": "https://drizzle-team.github.io/",
-    "docs": "https://drizzle-team.github.io/docs"
+    "website": "https://gateway.drizzle.team/",
+    "docs": "https://gateway.drizzle.team/docs/railway"
   },
   "tags": [
     "database",

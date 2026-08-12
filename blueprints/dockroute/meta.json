@@ -1,0 +1,17 @@
+{
+  "id": "dockroute",
+  "name": "DockRoute",
+  "version": "0.2.0",
+  "description": "External-DNS for plain Docker hosts: watches container labels and reconciles DNS records and Cloudflare Tunnel routes, never touching records it cannot prove it manages.",
+  "logo": "dockroute.png",
+  "links": {
+    "github": "https://github.com/Dockroute/Dockroute",
+    "website": "https://www.dockroute.dev",
+    "docs": "https://www.dockroute.dev"
+  },
+  "tags": [
+    "dns",
+    "networking",
+    "automation"
+  ]
+}

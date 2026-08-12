@@ -1,0 +1,15 @@
+variables = {}
+
+[config]
+domains = []
+mounts = []
+
+[config.env]
+DOCKROUTE_PROVIDER = "log"
+DOCKROUTE_OWNER_ID = "default"
+DOCKROUTE_POLICY = "sync"
+DOCKROUTE_DEFAULT_TARGET = ""
+DOCKROUTE_DOMAIN_FILTER = ""
+CLOUDFLARE_API_TOKEN = ""
+CLOUDFLARE_ACCOUNT_ID = ""
+CLOUDFLARE_TUNNEL_ID = ""

@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  dockroute:
+    image: ghcr.io/dockroute/dockroute:0.2.0
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro

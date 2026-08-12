@@ -1,0 +1,13 @@
+{
+  "id": "didacta",
+  "name": "Didacta",
+  "version": "0.0.1-alpha.107",
+  "description": "Didacta is a fair-code, self-hosted learning platform (LMS) with multi-tenant isolation, a public course catalog, enrollment flows, gamification and a module marketplace.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/va360labs/didacta-io",
+    "website": "https://didacta.io",
+    "docs": "https://docs.didacta.io"
+  },
+  "tags": ["education", "lms", "elearning", "courses"]
+}

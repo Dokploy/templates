@@ -1,0 +1,13 @@
+{
+  "id": "louez",
+  "name": "Louez",
+  "version": "2.1.0",
+  "description": "Open-source equipment rental platform: a branded booking storefront with live availability, plus a back office for reservations, customers, PDF contracts and revenue statistics. Ships with its database and a private image store, and installs its own schema on first boot.",
+  "links": {
+    "github": "https://github.com/Synapsr/Louez",
+    "website": "https://louez.io",
+    "docs": "https://github.com/Synapsr/Louez#readme"
+  },
+  "logo": "louez.svg",
+  "tags": ["rental", "booking", "reservations", "inventory", "ecommerce", "business"]
+}

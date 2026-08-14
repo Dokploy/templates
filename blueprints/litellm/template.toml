@@ -29,6 +29,7 @@ novita_api_key = ""
 infinity_api_key = ""
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "litellm"
 port = 4000
@@ -63,5 +64,3 @@ ANTHROPIC_API_KEY = "${anthropic_api_key}"
 INFISICAL_TOKEN = "${infisical_token}"
 NOVITA_API_KEY = "${novita_api_key}"
 INFINITY_API_KEY = "${infinity_api_key}"
-
-[[config.mounts]]

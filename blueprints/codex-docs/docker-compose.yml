@@ -3,7 +3,7 @@ version: "3"
 services:
   codex:
     image: ghcr.io/codex-team/codex.docs:v2.2
-    ports:
+    expose:
       - "3000"
     environment:
       - APP_CONFIG_database_driver=mongodb

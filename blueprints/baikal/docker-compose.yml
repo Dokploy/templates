@@ -3,7 +3,7 @@ services:
   baikal:
     image: ckulka/baikal:nginx-php8.2
     restart: unless-stopped
-    ports:
+    expose:
       - 80
     environment:
       - TZ=UTC

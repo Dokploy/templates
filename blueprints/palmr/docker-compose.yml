@@ -4,7 +4,7 @@ services:
     environment:
       - ENABLE_S3=false
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
-    ports:
+    expose:
       - "5487"
       - "3333"
     volumes:

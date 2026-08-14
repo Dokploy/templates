@@ -10,7 +10,7 @@ DB_PASSWORD = "${password:20}"
 MARIADB_ROOT_PASSWORD = "${password:24}"
 
 [config]
-
+mounts = []
 [[config.domains]]
 serviceName = "app"
 port = 80
@@ -24,27 +24,3 @@ DB_DATABASE = "${DB_DATABASE}"
 DB_USERNAME = "${DB_USERNAME}"
 DB_PASSWORD = "${DB_PASSWORD}"
 MARIADB_ROOT_PASSWORD = "${MARIADB_ROOT_PASSWORD}"
-
-[[config.mounts]]
-name = "app_images"
-mountPath = "/var/www/html/public/img"
-
-[[config.mounts]]
-name = "app_logs"
-mountPath = "/var/www/html/app/logs"
-
-[[config.mounts]]
-name = "app_backup"
-mountPath = "/var/www/html/public/backup"
-
-[[config.mounts]]
-name = "app_themes"
-mountPath = "/var/www/html/public/themes"
-
-[[config.mounts]]
-name = "app_migrate"
-mountPath = "/var/www/html/app/migrations"
-
-[[config.mounts]]
-name = "db_data"
-mountPath = "/var/lib/mysql"

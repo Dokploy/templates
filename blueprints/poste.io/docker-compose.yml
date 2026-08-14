@@ -1,3 +1,4 @@
+# dokploy: allow-host-ports — mail protocols (SMTP 25/465/587, POP3 110/995, IMAP 143/993, Sieve 4190) are not HTTP; mail servers and clients must reach them directly on the host.
 version: "3.8"
 services:
   mailserver:

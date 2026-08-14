@@ -6,8 +6,6 @@
 services:
   chibisafe:
     image: chibisafe/chibisafe:latest
-    networks:
-      - chibinet
     environment:
       - BASE_API_URL=http://chibisafe_server:8000
     restart: unless-stopped
@@ -20,8 +18,6 @@ services:
 
   chibisafe_server:
     image: chibisafe/chibisafe-server:latest
-    networks:
-      - chibinet
     volumes:
       - database:/app/database:rw
       - uploads:/app/uploads:rw
@@ -43,8 +39,6 @@ services:
 
   caddy:
     image: caddy:2-alpine
-    networks:
-      - chibinet
     volumes:
       - ../files/Caddyfile:/etc/caddy/Caddyfile:ro
       - uploads:/app/uploads:ro
@@ -62,8 +56,3 @@ volumes:
   database:
   uploads:
   logs:
-
-networks:
-  chibinet:
-    driver: bridge
-    internal: true

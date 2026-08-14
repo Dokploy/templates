@@ -2,13 +2,14 @@
 main_domain = "${domain}"
 postgres_password = "${password:32}"
 dashboard_password = "${password:32}"
-logflare_public_access_token = "${password:32}"
-logflare_private_access_token = "${password:32}"
 pg_meta_crypto_key = "${password:32}"
 s3_protocol_access_key_id = "${password:24}"
 s3_protocol_access_key_secret = "${password:48}"
 secret_key_base = "${password:64}"
 vault_enc_key = "${password:32}"
+# Realtime requires this to be exactly 16 characters (dokploy's hash helper
+# emits one hex character per unit of length).
+realtime_db_enc_key = "${hash:16}"
 jwt_secret = "${password:32}"
 pooler_tenant_id = "${uuid}"
 anon_key_payload = """{
@@ -23,6 +24,13 @@ service_role_key_payload = """{
   "exp": ${timestamps:2030-01-01T00:00:00Z}
 }
 """
+# Defined here (not inline in env) so each JWT is generated once and can be
+# reused: Kong swaps the opaque API keys below for these exact tokens.
+anon_key = "${jwt:jwt_secret:anon_key_payload}"
+service_role_key = "${jwt:jwt_secret:service_role_key_payload}"
+# Opaque API keys, shaped like Supabase's: sb_<role>_<22 chars>_<8 char suffix>.
+publishable_key = "sb_publishable_${hash:22}_${hash:8}"
+secret_key = "sb_secret_${hash:22}_${hash:8}"
 
 [[config.domains]]
 serviceName = "kong"
@@ -51,16 +59,49 @@ env = [
 '',
 'SUPABASE_HOST=${main_domain}',
 'POSTGRES_PASSWORD=${postgres_password}',
+'',
+'# Symmetric HS256 key and the legacy API keys derived from it.',
 'JWT_SECRET=${jwt_secret}',
-'ANON_KEY=${jwt:jwt_secret:anon_key_payload}',
-'SERVICE_ROLE_KEY=${jwt:jwt_secret:service_role_key_payload}',
+'ANON_KEY=${anon_key}',
+'SERVICE_ROLE_KEY=${service_role_key}',
+'',
+'############',
+'# New API keys. These are opaque strings: clients never see a decodable JWT,',
+'# Kong swaps them for the *_ASYMMETRIC tokens below before proxying.',
+'#',
+'# Those tokens are HS256, signed with JWT_SECRET, so they verify against the',
+'# same key everything else already uses. Real ES256 keys would need an EC P-256',
+'# keypair, which the dokploy variable helpers cannot generate - see JWT_KEYS /',
+'# JWT_JWKS below if you want to switch to them.',
+'############',
+'SUPABASE_PUBLISHABLE_KEY=${publishable_key}',
+'SUPABASE_SECRET_KEY=${secret_key}',
+'ANON_KEY_ASYMMETRIC=${anon_key}',
+'SERVICE_ROLE_KEY_ASYMMETRIC=${service_role_key}',
+'',
+'############',
+'# Optional: move signing to an ES256 key pair. Leave both empty to stay on',
+'# HS256 (the default, and what the keys above are signed with).',
+'#',
+'# To switch, clone https://github.com/supabase/supabase, put this deployment',
+'# JWT_SECRET in docker/.env, run `sh utils/add-new-auth-keys.sh`, then replace',
+'# all six values above and below with the ones it prints. Set them together:',
+'# JWT_KEYS makes Auth sign with ES256, JWT_JWKS is how everything else',
+'# verifies those tokens, so filling in one without the other breaks auth.',
+'# https://supabase.com/docs/guides/self-hosting/self-hosted-auth-keys',
+'############',
+'# JSON array of signing JWKs (EC private + legacy symmetric), used by Auth.',
+'JWT_KEYS=[]',
+'# JWKS for token verification (EC public + legacy symmetric), used by',
+'# PostgREST, Realtime, Storage and Edge Functions.',
+'JWT_JWKS=',
+'',
 'DASHBOARD_USERNAME=supabase',
 'DASHBOARD_PASSWORD=${dashboard_password}',
 'SECRET_KEY_BASE=${secret_key_base}',
 'VAULT_ENC_KEY=${vault_enc_key}',
+'REALTIME_DB_ENC_KEY=${realtime_db_enc_key}',
 'PG_META_CRYPTO_KEY=${pg_meta_crypto_key}',
-'LOGFLARE_PUBLIC_ACCESS_TOKEN=${logflare_public_access_token}',
-'LOGFLARE_PRIVATE_ACCESS_TOKEN=${logflare_private_access_token}',
 '',
 '',
 '############',
@@ -111,7 +152,6 @@ env = [
 'JWT_EXPIRY=3600',
 'DISABLE_SIGNUP=false',
 'API_EXTERNAL_URL=https://${main_domain}',
-'JWT_KEYS=[]',
 '',
 '## Mailer Config',
 'MAILER_URLPATHS_CONFIRMATION="/auth/v1/verify"',
@@ -164,19 +204,7 @@ env = [
 '# Functions - Configuration for Functions',
 '############',
 '# NOTE: VERIFY_JWT applies to all functions. Per-function VERIFY_JWT is not supported yet.',
-'FUNCTIONS_VERIFY_JWT=false',
-'',
-'',
-'############',
-'# Logs - Configuration for Logflare',
-'############',
-'',
-'# Docker socket location - this value will differ depending on your OS',
-'DOCKER_SOCKET_LOCATION=/var/run/docker.sock',
-'',
-'# Google Cloud Project details',
-'GOOGLE_PROJECT_ID=GOOGLE_PROJECT_ID',
-'GOOGLE_PROJECT_NUMBER=GOOGLE_PROJECT_NUMBER']
+'FUNCTIONS_VERIFY_JWT=false']
 
 [[config.mounts]]
 filePath = "/volumes/api/kong-entrypoint.sh"
@@ -337,7 +365,34 @@ services:
             - admin
             - anon
 
-  ## Secure REST routes
+  ## OpenAPI root - admin only
+  - name: rest-v1-openapi
+    _comment: 'PostgREST OpenAPI root: /rest/v1/ -> http://rest:3000/ (admin only). See https://github.com/orgs/supabase/discussions/42949'
+    url: http://rest:3000/
+    routes:
+      - name: rest-v1-openapi-root
+        strip_path: true
+        expression: 'http.path == "/rest/v1/"'
+    plugins:
+      - name: cors
+      - name: key-auth
+        config:
+          hide_credentials: false
+      - name: request-transformer
+        config:
+          add:
+            headers:
+              - "Authorization: $LUA_AUTH_EXPR"
+          replace:
+            headers:
+              - "Authorization: $LUA_AUTH_EXPR"
+      - name: acl
+        config:
+          hide_groups_header: true
+          allow:
+            - admin
+
+  ## Secure PostgREST routes
   - name: rest-v1
     _comment: 'PostgREST: /rest/v1/* -> http://rest:3000/*'
     url: http://rest:3000/
@@ -379,7 +434,7 @@ services:
       - name: cors
       - name: key-auth
         config:
-          hide_credentials: true
+          hide_credentials: false
       - name: request-transformer
         config:
           add:
@@ -425,6 +480,39 @@ services:
           allow:
             - admin
             - anon
+
+  # Block access to /realtime/v1/api/openapi
+  - name: realtime-v1-rest-openapi
+    _comment: 'Realtime: /realtime/v1/api/openapi/* -> http://realtime:4000/api/openapi/* (blocked)'
+    url: http://realtime:4000/api/openapi
+    protocol: http
+    routes:
+      - name: realtime-v1-rest-openapi
+        strip_path: true
+        paths:
+          - /realtime/v1/api/openapi
+    plugins:
+      - name: request-termination
+        config:
+          status_code: 403
+          message: "Access is forbidden."
+
+  # Block access to /realtime/v1/api/tenants
+  - name: realtime-v1-rest-tenants
+    _comment: 'Realtime: /realtime/v1/api/tenants/* -> http://realtime:4000/api/tenants/* (blocked)'
+    url: http://realtime:4000/api/tenants
+    protocol: http
+    routes:
+      - name: realtime-v1-rest-tenants
+        strip_path: true
+        paths:
+          - /realtime/v1/api/tenants
+    plugins:
+      - name: request-termination
+        config:
+          status_code: 403
+          message: "Access is forbidden."
+
   - name: realtime-v1-rest
     _comment: 'Realtime: /realtime/v1/api/* -> http://realtime:4000/api/*'
     url: http://realtime:4000/api
@@ -872,22 +960,25 @@ serve(async () => {
 
 [[config.mounts]]
 filePath = "/volumes/functions/main/index.ts"
-content = """import * as jose from 'https://deno.land/x/jose@v4.14.4/index.ts'
+content = """import * as jose from 'jsr:@panva/jose@6'
 
 console.log('main function started')
 
 const JWT_SECRET = Deno.env.get('JWT_SECRET')
-const SUPABASE_URL = Deno.env.get('SUPABASE_URL')
+const SUPABASE_JWKS = parseJwks(Deno.env.get('SUPABASE_JWKS'))
 const VERIFY_JWT = Deno.env.get('VERIFY_JWT') === 'true'
 
-let SUPABASE_JWT_KEYS: ReturnType<typeof jose.createRemoteJWKSet> | null = null
-if (SUPABASE_URL) {
+// Only the bare array parsing is checked here, 'jose' does the key validation.
+export function parseJwks(raw: string | undefined): jose.JSONWebKeySet | null {
+  if (!raw) return null
   try {
-    SUPABASE_JWT_KEYS = jose.createRemoteJWKSet(
-      new URL('/auth/v1/.well-known/jwks.json', SUPABASE_URL)
-    )
-  } catch (e) {
-    console.error('Failed to fetch JWKS from SUPABASE_URL:', e)
+    const parsed = JSON.parse(raw)
+    if (parsed?.keys && Array.isArray(parsed.keys)) {
+      return parsed as jose.JSONWebKeySet
+    }
+    return null
+  } catch {
+    return null
   }
 }
 
@@ -920,12 +1011,13 @@ async function isValidLegacyJWT(jwt: string): Promise<boolean> {
 }
 
 async function isValidJWT(jwt: string): Promise<boolean> {
-  if (!SUPABASE_JWT_KEYS) {
+  if (!SUPABASE_JWKS) {
     console.error('JWKS not available for ES256/RS256 token verification')
     return false
   }
   try {
-    await jose.jwtVerify(jwt, SUPABASE_JWT_KEYS)
+    const localJwks = jose.createLocalJWKSet(SUPABASE_JWKS)
+    await jose.jwtVerify(jwt, localJwks)
   } catch (e) {
     console.error('Asymmetric JWT verification error', e)
     return false
@@ -1005,278 +1097,6 @@ Deno.serve(async (req: Request) => {
     })
   }
 })
-"""
-
-[[config.mounts]]
-filePath = "/volumes/logs/vector.yml"
-content = """api:
-  enabled: true
-  address: 0.0.0.0:9001
-
-sources:
-  docker_host:
-    type: docker_logs
-
-transforms:
-  project_logs:
-    type: remap
-    inputs:
-      - docker_host
-    source: |-
-      .project = "default"
-      .event_message = del(.message)
-      compose_service, label_err = get(.label, ["com.docker.compose.service"])
-      if label_err != null || compose_service == null {
-        abort
-      }
-      compose_service = to_string!(compose_service)
-      if compose_service == "vector" {
-        abort
-      }
-      .appname = "supabase-" + compose_service
-      del(.container_created_at)
-      del(.container_id)
-      del(.source_type)
-      del(.stream)
-      del(.label)
-      del(.image)
-      del(.host)
-      del(.stream)
-  router:
-    type: route
-    inputs:
-      - project_logs
-    route:
-      kong: '.appname == "supabase-kong" || .appname == "supabase-envoy"'
-      auth: '.appname == "supabase-auth"'
-      rest: '.appname == "supabase-rest"'
-      realtime: '.appname == "supabase-realtime"'
-      storage: '.appname == "supabase-storage"'
-      functions: '.appname == "supabase-functions"'
-      db: '.appname == "supabase-db"'
-  # Ignores non nginx errors since they are related with kong booting up
-  kong_logs:
-    type: remap
-    inputs:
-      - router.kong
-    source: |-
-      req, err = parse_nginx_log(.event_message, "combined")
-      if err == null {
-          .timestamp = req.timestamp
-          .metadata.request.headers.referer = req.referer
-          .metadata.request.headers.user_agent = req.agent
-          .metadata.request.headers.cf_connecting_ip = req.client
-          .metadata.response.status_code = req.status
-          url, split_err = split(req.request, " ")
-          if split_err == null {
-              .metadata.request.method = url[0]
-              .metadata.request.path = url[1]
-              .metadata.request.protocol = url[2]
-          }
-      }
-      if err != null {
-        abort
-      }
-  kong_err:
-    type: remap
-    inputs:
-      - router.kong
-    source: |-
-      .metadata.request.method = "GET"
-      .metadata.response.status_code = 200
-      parsed, err = parse_nginx_log(.event_message, "error")
-      if err == null {
-          .timestamp = parsed.timestamp
-          .severity = parsed.severity
-          .metadata.request.host = parsed.host
-          .metadata.request.headers.cf_connecting_ip = parsed.client
-          url, err = split(parsed.request, " ")
-          if err == null {
-              .metadata.request.method = url[0]
-              .metadata.request.path = url[1]
-              .metadata.request.protocol = url[2]
-          }
-      }
-      if err != null {
-        abort
-      }
-  # Gotrue logs are structured json strings which frontend parses directly. But we keep metadata for consistency.
-  auth_logs:
-    type: remap
-    inputs:
-      - router.auth
-    source: |-
-      parsed, err = parse_json(.event_message)
-      if err == null {
-          .metadata.timestamp = parsed.time
-          .metadata = merge!(.metadata, parsed)
-      }
-  # PostgREST logs are structured so we separate timestamp from message using regex
-  rest_logs:
-    type: remap
-    inputs:
-      - router.rest
-    source: |-
-      parsed, err = parse_regex(.event_message, r'^(?P<time>.*): (?P<msg>.*)$')
-      if err == null {
-          .event_message = parsed.msg
-          .timestamp = parse_timestamp!(value: parsed.time,format: "%d/%b/%Y:%H:%M:%S %z")
-          .metadata.host = .project
-      }
-  realtime_logs_filtered:
-    type: filter
-    inputs:
-      - router.realtime
-    condition: '!contains(string!(.event_message), "/health")'
-  realtime_logs:
-    type: remap
-    inputs:
-      - realtime_logs_filtered
-    source: |-
-      .metadata.project = del(.project)
-      .metadata.external_id = .metadata.project
-      parsed, err = parse_regex(.event_message, r'^(?P<time>\\d+:\\d+:\\d+\\.\\d+) \\[(?P<level>\\w+)\\] (?P<msg>.*)$')
-      if err == null {
-          .event_message = parsed.msg
-          .metadata.level = parsed.level
-      }
-  functions_logs:
-    type: remap
-    inputs:
-      - router.functions
-    source: |-
-      .metadata.project_ref = del(.project)
-  # Storage logs may contain json objects so we parse them for completeness
-  storage_logs:
-    type: remap
-    inputs:
-      - router.storage
-    source: |-
-      .metadata.project = del(.project)
-      .metadata.tenantId = .metadata.project
-      parsed, err = parse_json(.event_message)
-      if err == null {
-          .event_message = parsed.msg
-          .metadata.level = parsed.level
-          .metadata.timestamp = parsed.time
-          .metadata.context[0].host = parsed.hostname
-          .metadata.context[0].pid = parsed.pid
-      }
-  # Postgres logs some messages to stderr which we map to warning severity level
-  db_logs:
-    type: remap
-    inputs:
-      - router.db
-    source: |-
-      .metadata.host = "db-default"
-      .metadata.parsed.timestamp = .timestamp
-
-      parsed, err = parse_regex(.event_message, r'.*(?P<level>INFO|NOTICE|WARNING|ERROR|LOG|FATAL|PANIC?):.*', numeric_groups: true)
-
-      if err != null || parsed == null {
-        .metadata.parsed.error_severity = "info"
-      }
-      if parsed.level != null {
-       .metadata.parsed.error_severity = parsed.level
-      }
-      if .metadata.parsed.error_severity == "info" {
-          .metadata.parsed.error_severity = "log"
-      }
-      .metadata.parsed.error_severity = upcase!(.metadata.parsed.error_severity)
-
-sinks:
-  logflare_auth:
-    type: 'http'
-    inputs:
-      - auth_logs
-    encoding:
-      codec: 'json'
-    method: 'post'
-    request:
-      retry_max_duration_secs: 30
-      retry_initial_backoff_secs: 1
-      headers:
-        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
-    uri: 'http://analytics:4000/api/logs?source_name=gotrue.logs.prod'
-  logflare_realtime:
-    type: 'http'
-    inputs:
-      - realtime_logs
-    encoding:
-      codec: 'json'
-    method: 'post'
-    request:
-      retry_max_duration_secs: 30
-      retry_initial_backoff_secs: 1
-      headers:
-        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
-    uri: 'http://analytics:4000/api/logs?source_name=realtime.logs.prod'
-  logflare_rest:
-    type: 'http'
-    inputs:
-      - rest_logs
-    encoding:
-      codec: 'json'
-    method: 'post'
-    request:
-      retry_max_duration_secs: 30
-      retry_initial_backoff_secs: 1
-      headers:
-        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
-    uri: 'http://analytics:4000/api/logs?source_name=postgREST.logs.prod'
-  logflare_db:
-    type: 'http'
-    inputs:
-      - db_logs
-    encoding:
-      codec: 'json'
-    method: 'post'
-    request:
-      retry_max_duration_secs: 30
-      retry_initial_backoff_secs: 1
-      headers:
-        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
-    uri: 'http://analytics:4000/api/logs?source_name=postgres.logs'
-  logflare_functions:
-    type: 'http'
-    inputs:
-      - functions_logs
-    encoding:
-      codec: 'json'
-    method: 'post'
-    request:
-      retry_max_duration_secs: 30
-      retry_initial_backoff_secs: 1
-      headers:
-        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
-    uri: 'http://analytics:4000/api/logs?source_name=deno-relay-logs'
-  logflare_storage:
-    type: 'http'
-    inputs:
-      - storage_logs
-    encoding:
-      codec: 'json'
-    method: 'post'
-    request:
-      retry_max_duration_secs: 30
-      retry_initial_backoff_secs: 1
-      headers:
-        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
-    uri: 'http://analytics:4000/api/logs?source_name=storage.logs.prod.2'
-  logflare_kong:
-    type: 'http'
-    inputs:
-      - kong_logs
-      - kong_err
-    encoding:
-      codec: 'json'
-    method: 'post'
-    request:
-      retry_max_duration_secs: 30
-      retry_initial_backoff_secs: 1
-      headers:
-        x-api-key: ${LOGFLARE_PUBLIC_ACCESS_TOKEN?LOGFLARE_PUBLIC_ACCESS_TOKEN is required}
-    uri: 'http://analytics:4000/api/logs?source_name=cloudflare.logs.prod'
 """
 
 [[config.mounts]]

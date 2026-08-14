@@ -6,7 +6,7 @@ upload_user = "${username}"
 upload_password = "${password:16}"
 
 [config]
-
+mounts = []
 [[config.domains]]
 serviceName = "web"
 port = 3000
@@ -28,19 +28,3 @@ POCKETBASE_ENCRYPTION_KEY = "${pocketbase_key}"
 UPLOAD_USER = "${upload_user}"
 UPLOAD_PASSWORD = "${upload_password}"
 ORIGIN = "http://${main_domain}"
-
-
-[[config.mounts]]
-serviceName = "search"
-volumeName = "search-data"
-mountPath = "/meili_data/data.ms"
-
-[[config.mounts]]
-serviceName = "db"
-volumeName = "db-data"
-mountPath = "/pb_data"
-
-[[config.mounts]]
-serviceName = "web"
-volumeName = "uploads"
-mountPath = "/app/uploads"

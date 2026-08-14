@@ -1,3 +1,4 @@
+# dokploy: allow-host-ports — RTMP (1935/tcp), WebRTC (8000/udp) and SRT (10080/udp) are streaming protocols Traefik cannot route; they must be published on the host.
 version: "3.8"
 services:
   oryx:

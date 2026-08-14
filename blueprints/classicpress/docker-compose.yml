@@ -3,7 +3,7 @@ version: "3"
 services:
   classicpress:
     image: classicpress/classicpress:php8.3-apache
-    ports:
+    expose:
       - "80"
     environment:
       - WORDPRESS_DB_HOST=db

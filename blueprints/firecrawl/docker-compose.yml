@@ -56,7 +56,7 @@ services:
   api:
     <<: *common-service
     restart: unless-stopped
-    ports:
+    expose:
       - "3002"
     environment:
       <<: *common-env

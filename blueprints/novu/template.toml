@@ -1,0 +1,129 @@
+[variables]
+main_domain = "${domain}"
+api_domain = "${domain}"
+ws_domain = "${domain}"
+jwt_secret = "${password:64}"
+# STORE_ENCRYPTION_KEY must be exactly 32 characters
+store_encryption_key = "${password:32}"
+novu_secret_key = "${password:64}"
+mongo_password = "${password:32}"
+mongo_user = "root"
+
+[config]
+mounts = []
+
+env = [
+  "###########################################",
+  "# Secrets",
+  "# JWT_SECRET / NOVU_SECRET_KEY: auto-generated — keep as-is unless rotating",
+  "# STORE_ENCRYPTION_KEY: must be exactly 32 characters",
+  "###########################################",
+  "JWT_SECRET=${jwt_secret}",
+  "STORE_ENCRYPTION_KEY=${store_encryption_key}",
+  "NOVU_SECRET_KEY=${novu_secret_key}",
+  "SUBSCRIBER_WIDGET_JWT_EXPIRATION_TIME=15d",
+  "",
+  "###########################################",
+  "# General / Feature Flags",
+  "###########################################",
+  "NODE_ENV=production",
+  "IS_SELF_HOSTED=true",
+  "IS_V2_ENABLED=true",
+  "IS_API_IDEMPOTENCY_ENABLED=false",
+  "IS_API_RATE_LIMITING_ENABLED=false",
+  "IS_NEW_MESSAGES_API_RESPONSE_ENABLED=true",
+  "IS_EMAIL_INLINE_CSS_DISABLED=false",
+  "IS_USE_MERGED_DIGEST_ID_ENABLED=false",
+  "",
+  "###########################################",
+  "# Public Service URLs",
+  "# Assign 3 domains in Dokploy Domains tab:",
+  "#   FRONT_BASE_URL          -> novu service (port 4000) — Dashboard",
+  "#   API_ROOT_URL / VITE_*   -> api service  (port 3000) — REST API",
+  "#   VITE_WEBSOCKET_HOSTNAME -> ws service   (port 3002) — WebSocket",
+  "###########################################",
+  "FRONT_BASE_URL=https://${main_domain}",
+  "API_ROOT_URL=https://${api_domain}",
+  "VITE_API_HOSTNAME=https://${api_domain}",
+  "VITE_WEBSOCKET_HOSTNAME=https://${ws_domain}",
+  "",
+  "###########################################",
+  "# Ports (internal — do not change unless you know why)",
+  "###########################################",
+  "API_PORT=3000",
+  "WS_PORT=3002",
+  "WORKER_PORT=3004",
+  "",
+  "###########################################",
+  "# MongoDB",
+  "###########################################",
+  "MONGO_INITDB_ROOT_USERNAME=${mongo_user}",
+  "MONGO_INITDB_ROOT_PASSWORD=${mongo_password}",
+  "MONGO_URL=mongodb://${mongo_user}:${mongo_password}@mongodb:27017/novu-db?authSource=admin",
+  "MONGO_AUTO_CREATE_INDEXES=true",
+  "MONGO_MIN_POOL_SIZE=5",
+  "MONGO_MAX_POOL_SIZE=10",
+  "",
+  "###########################################",
+  "# Redis (queue + cache — shared for small deployments)",
+  "###########################################",
+  "REDIS_HOST=redis",
+  "REDIS_PORT=6379",
+  "REDIS_PASSWORD=",
+  "REDIS_CACHE_SERVICE_HOST=redis",
+  "REDIS_CACHE_SERVICE_PORT=6379",
+  "",
+  "###########################################",
+  "# S3 / Object Storage (optional)",
+  "# NOT local disk — Novu has no built-in filesystem storage.",
+  "# S3_LOCAL_STACK = your S3/MinIO endpoint URL (Novu's official env name).",
+  "#   Example MinIO:  S3_LOCAL_STACK=https://minio.yourdomain.com",
+  "#   Example LocalStack: S3_LOCAL_STACK=http://localhost:4566",
+  "# Leave empty + test keys for basic deploy (dashboard/API still work).",
+  "# When you need uploads, set real endpoint + bucket + AWS_* credentials.",
+  "###########################################",
+  "S3_LOCAL_STACK=",
+  "S3_BUCKET_NAME=novu-local",
+  "S3_REGION=us-east-1",
+  "AWS_ACCESS_KEY_ID=test",
+  "AWS_SECRET_ACCESS_KEY=test",
+  "",
+  "###########################################",
+  "# Context Paths (path-based reverse proxy only)",
+  "# Leave empty for normal subdomain routing in Dokploy",
+  "###########################################",
+  "API_CONTEXT_PATH=",
+  "WS_CONTEXT_PATH=",
+  "",
+  "###########################################",
+  "# Analytics / Observability (disabled by default)",
+  "###########################################",
+  "SENTRY_DSN=",
+  "NEW_RELIC_ENABLED=false",
+  "NEW_RELIC_APP_NAME=",
+  "NEW_RELIC_LICENSE_KEY=",
+  "",
+  "###########################################",
+  "# Worker Tuning",
+  "###########################################",
+  "BROADCAST_QUEUE_CHUNK_SIZE=100",
+  "MULTICAST_QUEUE_CHUNK_SIZE=100",
+]
+
+# Dashboard UI
+[[config.domains]]
+serviceName = "novu"
+port = 4_000
+host = "${main_domain}"
+
+# REST API
+[[config.domains]]
+serviceName = "api"
+port = 3_000
+host = "${api_domain}"
+
+# WebSocket service (Inbox / real-time)
+[[config.domains]]
+serviceName = "ws"
+port = 3_002
+host = "${ws_domain}"

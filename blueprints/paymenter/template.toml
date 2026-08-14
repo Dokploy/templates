@@ -5,6 +5,7 @@ mysql_password = "${password:16}"
 mysql_root_password = "${password:20}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "paymenter"
 port = 80
@@ -18,5 +19,3 @@ MYSQL_PASSWORD = "${mysql_password}"
 MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
 MYSQL_DATABASE = "paymenter"
 MYSQL_USER = "paymenter"
-
-[[config.mounts]]

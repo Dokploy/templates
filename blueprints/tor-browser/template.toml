@@ -6,6 +6,7 @@ keep_app_running = "1"
 timezone = "Europe/Vienna"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "tor"
 port = 5800
@@ -16,5 +17,3 @@ DISPLAY_WIDTH = "${display_width}"
 DISPLAY_HEIGHT = "${display_height}"
 KEEP_APP_RUNNING = "${keep_app_running}"
 TZ = "${timezone}"
-
-[[config.mounts]]

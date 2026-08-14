@@ -2,6 +2,7 @@
 app_domain = "${domain}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "directory-lister" # Must match the service name in docker-compose.yml
 port = 80
@@ -15,5 +16,3 @@ READMES_FIRST = "false"
 ZIP_DOWNLOADS = "true"
 TIMEZONE = "UTC"
 
-
-[[config.mounts]]

@@ -1,0 +1,26 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${password:50}"
+admin_username = "admin"
+admin_email = "${email}"
+admin_password = "${password:24}"
+from_email = "wupnext <onboarding@resend.dev>"
+resend_api_key = ""
+
+[config]
+env = [
+  "SECRET_KEY=${secret_key}",
+  "ALLOWED_HOSTS=${main_domain}",
+  "CSRF_TRUSTED_ORIGINS=https://${main_domain}",
+  "DEFAULT_FROM_EMAIL=${from_email}",
+  "RESEND_API_KEY=${resend_api_key}",
+  "DJANGO_SUPERUSER_USERNAME=${admin_username}",
+  "DJANGO_SUPERUSER_EMAIL=${admin_email}",
+  "DJANGO_SUPERUSER_PASSWORD=${admin_password}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "wupnext"
+port = 8000
+host = "${main_domain}"

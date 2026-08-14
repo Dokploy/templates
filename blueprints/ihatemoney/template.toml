@@ -6,6 +6,7 @@ MAIL_PASSWORD = "${password:32}"
 SECRET_KEY = "${password:64}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "ihatemoney"
 port = 8000
@@ -37,7 +38,3 @@ LEGAL_LINK = ""
 PORT = "8000"
 PUID = "0"
 PGID = "0"
-
-[[config.mounts]]
-volumeName = "sqlite-db"
-mountPath = "/database"

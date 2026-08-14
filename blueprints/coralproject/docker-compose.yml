@@ -3,7 +3,7 @@ version: "3"
 services:
   coral:
     image: coralproject/talk:9.7.0
-    ports:
+    expose:
       - "3000"
     environment:
       - MONGODB_URI=${MONGODB_URI}

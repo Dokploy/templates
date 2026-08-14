@@ -7,6 +7,7 @@ email_user = "noreply@example.com"
 email_pass = "${password:16}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "passbolt"
 port = 80
@@ -27,15 +28,3 @@ PASSBOLT_EMAIL_PORT = "587"
 PASSBOLT_EMAIL_USER = "${email_user}"
 PASSBOLT_EMAIL_PASS = "${email_pass}"
 PASSBOLT_EMAIL_TLS = "true"
-
-[[config.mounts]]
-volume = "gpg_volume"
-target = "/etc/passbolt/gpg"
-
-[[config.mounts]]
-volume = "jwt_volume"
-target = "/etc/passbolt/jwt"
-
-[[config.mounts]]
-volume = "passbolt_mariadb_data"
-target = "/var/lib/mysql"

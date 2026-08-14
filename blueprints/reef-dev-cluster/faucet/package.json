@@ -1,0 +1,13 @@
+{
+  "name": "reef-dev-cluster-faucet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HTTP faucet for a self-contained Reef dev cluster",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@polkadot/api": "^16.4.8"
+  }
+}

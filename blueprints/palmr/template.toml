@@ -2,6 +2,7 @@
 main_domain = "${domain}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "palmr"
 port = 5487
@@ -9,5 +10,3 @@ host = "${main_domain}"
 
 [config.env]
 ENCRYPTION_KEY = ""
-
-[[config.mounts]] 

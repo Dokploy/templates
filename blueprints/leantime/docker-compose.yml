@@ -3,7 +3,7 @@ services:
   leantime:
     image: leantime/leantime:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 8080
     environment:
       - LEAN_APP_URL=${LEAN_APP_URL}

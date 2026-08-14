@@ -51,7 +51,7 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
       - minio_data:/data
-    ports:
+    expose:
       - 9000
       - 9001
     healthcheck:
@@ -133,13 +133,10 @@ services:
       # Mount Traefik certificates for SSL
       - /etc/dokploy/traefik/dynamic/acme.json:/certs/acme.json:ro
 
-    ports:
-      # Main nginx port (handles all subdomain routing)
+    expose:
       - 80
-      # SMTP ports (for email relay)
       - 465
       - 587
-
     depends_on:
       postgres:
         condition: service_healthy

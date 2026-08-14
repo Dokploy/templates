@@ -3,7 +3,7 @@ version: "3"
 services:
   cloud9:
     image: lscr.io/linuxserver/cloud9:1.29.2
-    ports:
+    expose:
       - "8000"
     environment:
       - PUID=1000

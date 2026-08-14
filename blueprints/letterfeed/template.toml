@@ -4,7 +4,7 @@ secret_key = "${password:64}"
 auth_password = "${password:32}"
 
 [config]
-
+mounts = []
 [[config.domains]]
 serviceName = "frontend"
 port = 3000
@@ -28,7 +28,3 @@ LETTERFEED_AUTO_ADD_NEW_SENDERS = "false"
 LETTERFEED_SECRET_KEY = "${secret_key}"
 LETTERFEED_AUTH_USERNAME = "admin"
 LETTERFEED_AUTH_PASSWORD = "${auth_password}"
-
-[[config.mounts]]
-name = "letterfeed_data"
-mountPath = "/data"

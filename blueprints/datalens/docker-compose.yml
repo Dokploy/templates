@@ -23,7 +23,6 @@ services:
       - us
 
   data-api:
-    container_name: datalens-data-api
     image: ghcr.io/datalens-tech/datalens-data-api:0.2192.0
     restart: always
     environment:
@@ -43,7 +42,6 @@ services:
       - pg-compeng
 
   pg-us:
-    container_name: datalens-pg-us
     image: postgres:16-alpine
     restart: always
     environment:
@@ -75,8 +73,8 @@ services:
   datalens:
     image: ghcr.io/datalens-tech/datalens-ui:0.2601.0
     restart: always
-    ports:
-      - ${UI_PORT:-8080}:8080
+    expose:
+      - 8080 # web UI — routed through Traefik via the template domain
     depends_on:
       - us
       - control-api

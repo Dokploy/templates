@@ -6,6 +6,7 @@ mongo_admin_password = "${password}"
 mongo_habitica_password = "${password}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "client"
 port = 80
@@ -24,9 +25,3 @@ MONGO_ADMIN_PASSWORD = "${mongo_admin_password}"
 MONGO_HABITICA_USER = "habitica"
 MONGO_HABITICA_PASSWORD = "${mongo_habitica_password}"
 ADMIN_EMAIL = "no-reply@${main_domain}"
-
-[[config.mounts]]
-serviceName = "mongo"
-type = "volume"
-source = "habitica-mongo-data"
-target = "/data/db"

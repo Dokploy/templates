@@ -3,7 +3,7 @@ services:
   anythingllm:
     image: mintplexlabs/anythingllm:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 3001
     environment:
       - STORAGE_DIR=/app/server/storage

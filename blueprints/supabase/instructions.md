@@ -23,6 +23,52 @@ To connect an application (for example with `supabase-js`):
 - **anon key**: the value of `ANON_KEY` in the Environment tab
 - **service_role key**: the value of `SERVICE_ROLE_KEY` in the Environment tab (server-side only, never expose it to browsers)
 
+### New API keys (`sb_publishable_…` / `sb_secret_…`)
+
+Dokploy also generates the newer opaque API keys, so you can use either style:
+
+- **publishable key**: the value of `SUPABASE_PUBLISHABLE_KEY` (browser-safe, replaces the anon key)
+- **secret key**: the value of `SUPABASE_SECRET_KEY` (server-side only, replaces the service_role key)
+
+Kong exchanges these for the matching JWT before the request reaches Supabase,
+so clients never hold a decodable token. Both styles stay valid at the same time
+— existing apps on `ANON_KEY` / `SERVICE_ROLE_KEY` keep working.
+
+## Optional: sign tokens with an ES256 key pair
+
+Everything is signed with the symmetric `JWT_SECRET` (HS256) by default. Moving
+to an asymmetric key pair needs an EC P-256 key, which Dokploy's variable
+helpers cannot generate, so `JWT_KEYS` and `JWT_JWKS` ship empty. To switch:
+
+1. Clone the Supabase repo and go to its `docker/` directory:
+
+   ```bash
+   git clone --depth 1 https://github.com/supabase/supabase
+   cd supabase/docker
+   ```
+
+2. Put **this deployment's** `JWT_SECRET` (from the Environment tab) into a local `.env`:
+
+   ```bash
+   echo "JWT_SECRET=<your-JWT_SECRET>" > .env
+   ```
+
+3. Generate the keys:
+
+   ```bash
+   sh utils/add-new-auth-keys.sh
+   ```
+
+4. Replace all six values in the Environment tab with the ones it prints, then
+   redeploy: `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`,
+   `ANON_KEY_ASYMMETRIC`, `SERVICE_ROLE_KEY_ASYMMETRIC`, `JWT_KEYS`, `JWT_JWKS`.
+
+Set them **all together**. `JWT_KEYS` makes Auth sign tokens with ES256, while
+`JWT_JWKS` is what PostgREST, Realtime, Storage and Edge Functions use to verify
+them — filling in one without the other makes every authenticated request fail.
+
+See <https://supabase.com/docs/guides/self-hosting/self-hosted-auth-keys>.
+
 ## Recommended configuration
 
 Review these variables in the **Environment** tab before using Supabase in production:

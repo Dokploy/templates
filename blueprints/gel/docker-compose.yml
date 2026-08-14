@@ -3,7 +3,7 @@ services:
   gel:
     image: geldata/gel:6
     restart: unless-stopped
-    ports:
+    expose:
       - 5656
     environment:
       - GEL_SERVER_SECURITY=${GEL_SERVER_SECURITY}

@@ -4,6 +4,7 @@ admin_email = "${email}"
 admin_password = "${password:32}"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "pocketbase"
 port = 8090
@@ -12,7 +13,3 @@ host = "${main_domain}"
 [config.env]
 ADMIN_EMAIL = "${admin_email}"
 ADMIN_PASSWORD = "${admin_password}"
-
-[[config.mounts]]
-name = "pocketbase-data"
-mountPath = "/pocketbase"

@@ -3,7 +3,7 @@ services:
   flarum:
     image: crazymax/flarum:latest
     restart: unless-stopped
-    ports:
+    expose:
       - 8000
     environment:
       - FLARUM_BASE_URL=https://${FLARUM_DOMAIN}

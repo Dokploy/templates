@@ -3,6 +3,7 @@ main_domain = "${domain}"
 karakeep_version = "release"
 
 [config]
+mounts = []
 [[config.domains]]
 serviceName = "web"
 port = 3000
@@ -106,13 +107,3 @@ host = "${main_domain}"
 # "CRAWLER_HTTP_PROXY" = ""
 # "CRAWLER_HTTPS_PROXY" = ""
 # "CRAWLER_NO_PROXY" = ""
-
-[[config.mounts]]
-# Persistent data directory for Karakeep
-volumeName = "data"
-mountPath = "/data"
-
-[[config.mounts]]
-# Meilisearch data directory
-volumeName = "meilisearch"
-mountPath = "/meili_data"

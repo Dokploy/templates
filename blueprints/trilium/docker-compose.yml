@@ -1,7 +1,7 @@
 services:
   trilium:
     image: zadam/trilium:latest
-    ports:
+    expose:
       - 8080
     restart: always
     volumes:

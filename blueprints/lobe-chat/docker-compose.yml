@@ -4,7 +4,7 @@ services:
   lobe-chat:
     image: lobehub/lobe-chat:v1.26.1
     restart: always
-    ports:
+    expose:
       - 3210
     environment:
       OPENAI_API_KEY: sk-xxxx

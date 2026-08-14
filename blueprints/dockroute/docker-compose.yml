@@ -3,5 +3,14 @@ services:
   dockroute:
     image: ghcr.io/dockroute/dockroute:0.2.0
     restart: unless-stopped
+    environment:
+      - DOCKROUTE_PROVIDER=${DOCKROUTE_PROVIDER}
+      - DOCKROUTE_OWNER_ID=${DOCKROUTE_OWNER_ID}
+      - DOCKROUTE_POLICY=${DOCKROUTE_POLICY}
+      - DOCKROUTE_DEFAULT_TARGET=${DOCKROUTE_DEFAULT_TARGET}
+      - DOCKROUTE_DOMAIN_FILTER=${DOCKROUTE_DOMAIN_FILTER}
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+      - CLOUDFLARE_ACCOUNT_ID=${CLOUDFLARE_ACCOUNT_ID}
+      - CLOUDFLARE_TUNNEL_ID=${CLOUDFLARE_TUNNEL_ID}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro

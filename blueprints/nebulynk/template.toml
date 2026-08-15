@@ -16,10 +16,11 @@ auth_2fa_secret_key = "${password:64}"
 livekit_api_key = "${password:24}"
 livekit_api_secret = "${password:64}"
 
-frontend_url = "https://${frontend_domain}"
-backend_url = "https://${backend_domain}"
-livekit_public_url = "https://${livekit_domain}"
-garage_public_url = "https://${garage_domain}"
+# Generated sslip.io domains are HTTP-only until Dokploy TLS is configured.
+frontend_url = "http://${frontend_domain}"
+backend_url = "http://${backend_domain}"
+livekit_public_url = "http://${livekit_domain}"
+garage_public_url = "http://${garage_domain}"
 source_ref = "stable"
 
 [config]
@@ -50,6 +51,7 @@ host = "${garage_domain}"
 path = "/"
 
 [config.env]
+NODE_ENV = "development"
 NEBULYNK_SOURCE_REF = "${source_ref}"
 POSTGRES_DB = "nebulynk"
 POSTGRES_USER = "nebulynk"
@@ -69,3 +71,34 @@ PASSKEY_RP_ID = "${frontend_domain}"
 VITE_API_URL = "${backend_url}"
 LIVEKIT_PUBLIC_URL = "${livekit_public_url}"
 STORAGE_S3_PUBLIC_ENDPOINT = "${garage_public_url}"
+
+# Optional integrations. Leave instance-specific values empty until configured.
+KLIPY_API_KEY = ""
+VAPID_PUBLIC_KEY = ""
+VAPID_PRIVATE_KEY = ""
+VAPID_SUBJECT = ""
+
+SMTP_HOST = ""
+SMTP_PORT = "587"
+SMTP_SECURE = "false"
+SMTP_IGNORE_TLS = "false"
+SMTP_USER = ""
+SMTP_PASS = ""
+SMTP_FROM = ""
+SMTP_FROM_NAME = "Nebulynk"
+
+# Optional operational and security settings.
+AUTHENTICATION_RATE_LIMIT_IP_LIMIT = ""
+AUTH_BROWSER_ACCESS_TOKEN_TTL = "15m"
+AUTH_REFRESH_TOKEN_TTL = "1d"
+AUTH_REMEMBER_REFRESH_TOKEN_TTL = "30d"
+AUTH_REFRESH_COOKIE_NAME = "nebulynk_refresh_session"
+AUTH_CSRF_COOKIE_NAME = "nebulynk_csrf_token"
+AUTH_COOKIE_DOMAIN = ""
+RATE_LIMIT_DRIVER = "redis"
+AI_PROVIDER_BASE_URL_ALLOWLIST = ""
+LOG_LEVEL = "info"
+MAX_FILE_SIZE = "26214400"
+MEETING_TRANSCRIPT_WAIT_TIMEOUT_MS = "1200000"
+TRUST_PROXY = "true"
+NEBULYNK_BUILD_SHA = ""

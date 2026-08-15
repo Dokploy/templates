@@ -116,7 +116,7 @@ services:
       args:
         NODE_IMAGE: "${NEBULYNK_NODE_IMAGE:-node:22.23.1-alpine3.24}"
     environment:
-      NODE_ENV: production
+      NODE_ENV: "${NODE_ENV:-development}"
       JWT_SECRET: "${JWT_SECRET:?JWT_SECRET must be set}"
       AI_SECRET_KEY: "${AI_SECRET_KEY:?AI_SECRET_KEY must be set}"
       AUTH_2FA_SECRET_KEY: "${AUTH_2FA_SECRET_KEY:-}"

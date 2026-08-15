@@ -1,3 +1,5 @@
+# dokploy: allow-host-ports
+# LiveKit requires public TCP/UDP media ports 7881 and 7882 for WebRTC.
 # Nebulynk Dokploy template. Import the generated import.base64 file through
 # Compose -> Advanced -> Import. Dokploy owns routing and the isolated network.
 version: "3.8"

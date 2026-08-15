@@ -1,0 +1,186 @@
+# Nebulynk Dokploy template. Import the generated import.base64 file through
+# Compose -> Advanced -> Import. Dokploy owns routing and the isolated network.
+version: "3.8"
+services:
+  frontend:
+    build:
+      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-stable}"
+      dockerfile: frontend/Dockerfile
+      args:
+        NODE_IMAGE: "${NEBULYNK_NODE_IMAGE:-node:22.23.1-alpine3.24}"
+        NGINX_IMAGE: "${NEBULYNK_NGINX_IMAGE:-nginxinc/nginx-unprivileged:1.31-alpine3.23@sha256:6320020c7da8714feab524e02c08c5a1958675c4e68700e93a2fd8970b065786}"
+        # These URLs are baked into the browser bundle.
+        VITE_API_URL: "${VITE_API_URL:?VITE_API_URL must be set}"
+        VITE_LIVEKIT_URL: "${LIVEKIT_PUBLIC_URL:?LIVEKIT_PUBLIC_URL must be set}"
+        VITE_VAPID_PUBLIC_KEY: "${VAPID_PUBLIC_KEY:-}"
+        VITE_AUTH_CSRF_COOKIE_NAME: "${AUTH_CSRF_COOKIE_NAME:-nebulynk_csrf_token}"
+    depends_on:
+      - backend
+    expose:
+      - "8080"
+    restart: unless-stopped
+
+  postgres:
+    image: "${NEBULYNK_POSTGRES_IMAGE:-postgres:17-alpine3.24@sha256:742f40ea20b9ff2ff31db5458d127452988a2164df9e17441e191f3b72252193}"
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB:-nebulynk}"
+      POSTGRES_USER: "${POSTGRES_USER:-nebulynk}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}"
+    volumes:
+      - nebulynk_postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: "${NEBULYNK_REDIS_IMAGE:-redis:7.4.7-alpine3.21}"
+    volumes:
+      - nebulynk_redis_data:/data
+    restart: unless-stopped
+
+  # Prepare named Garage volumes for the unprivileged Garage process.
+  garage-volume-init:
+    image: alpine:3.21.5
+    user: "0:0"
+    command: ["sh", "-ec", "chown -R 65532:65532 /var/lib/garage/meta /var/lib/garage/data"]
+    volumes:
+      - nebulynk_garage_meta:/var/lib/garage/meta
+      - nebulynk_garage_data:/var/lib/garage/data
+    restart: "no"
+
+  garage:
+    build:
+      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-stable}"
+      dockerfile: garage.Dockerfile
+      args:
+        GARAGE_IMAGE: "${NEBULYNK_GARAGE_IMAGE:-dxflrs/garage:v2.3.0}"
+    depends_on:
+      garage-volume-init:
+        condition: service_completed_successfully
+    command: /garage server --single-node --default-bucket
+    environment:
+      GARAGE_RPC_SECRET: "${GARAGE_RPC_SECRET:?GARAGE_RPC_SECRET must be set}"
+      GARAGE_DEFAULT_ACCESS_KEY: "${STORAGE_S3_ACCESS_KEY:?STORAGE_S3_ACCESS_KEY must be set}"
+      GARAGE_DEFAULT_SECRET_KEY: "${STORAGE_S3_SECRET_KEY:?STORAGE_S3_SECRET_KEY must be set}"
+      GARAGE_DEFAULT_BUCKET: "${STORAGE_S3_BUCKET:-nebulynk-files}"
+    volumes:
+      - nebulynk_garage_meta:/var/lib/garage/meta
+      - nebulynk_garage_data:/var/lib/garage/data
+    expose:
+      - "3900"
+    restart: unless-stopped
+
+  livekit:
+    build:
+      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-stable}"
+      dockerfile: livekit.Dockerfile
+      args:
+        LIVEKIT_SERVER_IMAGE: "${NEBULYNK_LIVEKIT_SERVER_IMAGE:-livekit/livekit-server:v1.13.4}"
+    command: --config /livekit.yaml
+    depends_on:
+      - redis
+    environment:
+      LIVEKIT_KEYS: "${LIVEKIT_API_KEY:?LIVEKIT_API_KEY must be set}: ${LIVEKIT_API_SECRET:?LIVEKIT_API_SECRET must be set}"
+    expose:
+      - "7880"
+    ports:
+      - "7881:7881"
+      - "7882:7882/udp"
+    restart: unless-stopped
+
+  livekit-egress:
+    build:
+      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-stable}"
+      dockerfile: livekit-egress.Dockerfile
+      args:
+        LIVEKIT_EGRESS_IMAGE: "${NEBULYNK_LIVEKIT_EGRESS_IMAGE:-livekit/egress:v1.13.0}"
+    command: --config /livekit-egress.yaml
+    environment:
+      EGRESS_CONFIG_FILE: /livekit-egress.yaml
+      LIVEKIT_API_KEY: "${LIVEKIT_API_KEY:?LIVEKIT_API_KEY must be set}"
+      LIVEKIT_API_SECRET: "${LIVEKIT_API_SECRET:?LIVEKIT_API_SECRET must be set}"
+      LIVEKIT_WS_URL: ws://livekit:7880
+      AWS_ACCESS_KEY_ID: "${STORAGE_S3_ACCESS_KEY:?STORAGE_S3_ACCESS_KEY must be set}"
+      AWS_SECRET_ACCESS_KEY: "${STORAGE_S3_SECRET_KEY:?STORAGE_S3_SECRET_KEY must be set}"
+      AWS_DEFAULT_REGION: "${STORAGE_S3_REGION:-${MEETING_RECORDINGS_S3_REGION:-us-east-1}}"
+    depends_on:
+      - livekit
+      - redis
+      - garage
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-stable}"
+      dockerfile: backend/Dockerfile
+      args:
+        NODE_IMAGE: "${NEBULYNK_NODE_IMAGE:-node:22.23.1-alpine3.24}"
+    environment:
+      NODE_ENV: production
+      JWT_SECRET: "${JWT_SECRET:?JWT_SECRET must be set}"
+      AI_SECRET_KEY: "${AI_SECRET_KEY:?AI_SECRET_KEY must be set}"
+      AUTH_2FA_SECRET_KEY: "${AUTH_2FA_SECRET_KEY:-}"
+      BACKEND_PORT: "${BACKEND_PORT:-3030}"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+      MAX_FILE_SIZE: "${MAX_FILE_SIZE:-26214400}"
+      AUTHENTICATION_RATE_LIMIT_IP_LIMIT: "${AUTHENTICATION_RATE_LIMIT_IP_LIMIT:-}"
+      AUTH_BROWSER_ACCESS_TOKEN_TTL: "${AUTH_BROWSER_ACCESS_TOKEN_TTL:-15m}"
+      AUTH_REFRESH_TOKEN_TTL: "${AUTH_REFRESH_TOKEN_TTL:-1d}"
+      AUTH_REMEMBER_REFRESH_TOKEN_TTL: "${AUTH_REMEMBER_REFRESH_TOKEN_TTL:-30d}"
+      AUTH_REFRESH_COOKIE_NAME: "${AUTH_REFRESH_COOKIE_NAME:-nebulynk_refresh_session}"
+      AUTH_CSRF_COOKIE_NAME: "${AUTH_CSRF_COOKIE_NAME:-nebulynk_csrf_token}"
+      AUTH_COOKIE_DOMAIN: "${AUTH_COOKIE_DOMAIN:-}"
+      RATE_LIMIT_DRIVER: "${RATE_LIMIT_DRIVER:-redis}"
+      PASSKEY_RP_ID: "${PASSKEY_RP_ID:?PASSKEY_RP_ID must be set}"
+      AI_PROVIDER_BASE_URL_ALLOWLIST: "${AI_PROVIDER_BASE_URL_ALLOWLIST:-}"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: "${POSTGRES_DB:-nebulynk}"
+      POSTGRES_USER: "${POSTGRES_USER:-nebulynk}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}"
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      STORAGE_S3_ENDPOINT: http://garage:3900
+      STORAGE_S3_PUBLIC_ENDPOINT: "${STORAGE_S3_PUBLIC_ENDPOINT:?STORAGE_S3_PUBLIC_ENDPOINT must be set}"
+      STORAGE_S3_ACCESS_KEY: "${STORAGE_S3_ACCESS_KEY:?STORAGE_S3_ACCESS_KEY must be set}"
+      STORAGE_S3_SECRET_KEY: "${STORAGE_S3_SECRET_KEY:?STORAGE_S3_SECRET_KEY must be set}"
+      STORAGE_S3_BUCKET: "${STORAGE_S3_BUCKET:-nebulynk-files}"
+      STORAGE_S3_REGION: "${STORAGE_S3_REGION:-${MEETING_RECORDINGS_S3_REGION:-us-east-1}}"
+      MEETING_RECORDINGS_PREFIX: meeting-recordings
+      MEETING_RECORDINGS_BUCKET: "${STORAGE_S3_BUCKET:-nebulynk-files}"
+      MEETING_RECORDINGS_S3_ENDPOINT: http://garage:3900
+      MEETING_RECORDINGS_EGRESS_S3_ENDPOINT: http://garage:3900
+      MEETING_RECORDINGS_S3_REGION: "${MEETING_RECORDINGS_S3_REGION:-${STORAGE_S3_REGION:-us-east-1}}"
+      MEETING_TRANSCRIPT_WAIT_TIMEOUT_MS: "${MEETING_TRANSCRIPT_WAIT_TIMEOUT_MS:-1200000}"
+      LIVEKIT_HOST: http://livekit:7880
+      LIVEKIT_PUBLIC_URL: "${LIVEKIT_PUBLIC_URL:?LIVEKIT_PUBLIC_URL must be set}"
+      LIVEKIT_API_KEY: "${LIVEKIT_API_KEY:?LIVEKIT_API_KEY must be set}"
+      LIVEKIT_API_SECRET: "${LIVEKIT_API_SECRET:?LIVEKIT_API_SECRET must be set}"
+      KLIPY_API_KEY: "${KLIPY_API_KEY:-}"
+      VAPID_PUBLIC_KEY: "${VAPID_PUBLIC_KEY:-}"
+      VAPID_PRIVATE_KEY: "${VAPID_PRIVATE_KEY:-}"
+      VAPID_SUBJECT: "${VAPID_SUBJECT:-mailto:admin@example.com}"
+      SMTP_HOST: "${SMTP_HOST:-}"
+      SMTP_PORT: "${SMTP_PORT:-587}"
+      SMTP_SECURE: "${SMTP_SECURE:-false}"
+      SMTP_IGNORE_TLS: "${SMTP_IGNORE_TLS:-false}"
+      SMTP_USER: "${SMTP_USER:-}"
+      SMTP_PASS: "${SMTP_PASS:-}"
+      SMTP_FROM: "${SMTP_FROM:-noreply@nebulynk.local}"
+      SMTP_FROM_NAME: "${SMTP_FROM_NAME:-Nebulynk}"
+      FRONTEND_URL: "${FRONTEND_URL:?FRONTEND_URL must be set}"
+      TRUST_PROXY: "${TRUST_PROXY:-true}"
+      NEBULYNK_BUILD_SHA: "${NEBULYNK_BUILD_SHA:-}"
+    depends_on:
+      - postgres
+      - redis
+      - garage
+      - livekit
+      - livekit-egress
+    expose:
+      - "3030"
+    restart: unless-stopped
+
+volumes:
+  nebulynk_postgres_data:
+  nebulynk_redis_data:
+  nebulynk_garage_meta:
+  nebulynk_garage_data:

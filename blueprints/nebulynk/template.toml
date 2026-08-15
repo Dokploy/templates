@@ -1,0 +1,71 @@
+# Values in [variables] are resolved once when Dokploy imports the template.
+# The generated values are then stored in the Compose service environment.
+[variables]
+frontend_domain = "${domain}"
+backend_domain = "${domain}"
+livekit_domain = "${domain}"
+garage_domain = "${domain}"
+
+postgres_password = "${password:64}"
+garage_rpc_secret = "${hash:64}"
+storage_s3_access_key = "${password:24}"
+storage_s3_secret_key = "${password:64}"
+jwt_secret = "${password:64}"
+ai_secret_key = "${password:64}"
+auth_2fa_secret_key = "${password:64}"
+livekit_api_key = "${password:24}"
+livekit_api_secret = "${password:64}"
+
+frontend_url = "https://${frontend_domain}"
+backend_url = "https://${backend_domain}"
+livekit_public_url = "https://${livekit_domain}"
+garage_public_url = "https://${garage_domain}"
+source_ref = "stable"
+
+[config]
+isolated = true
+
+[[config.domains]]
+serviceName = "frontend"
+port = 8080
+host = "${frontend_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "backend"
+port = 3030
+host = "${backend_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "livekit"
+port = 7880
+host = "${livekit_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "garage"
+port = 3900
+host = "${garage_domain}"
+path = "/"
+
+[config.env]
+NEBULYNK_SOURCE_REF = "${source_ref}"
+POSTGRES_DB = "nebulynk"
+POSTGRES_USER = "nebulynk"
+POSTGRES_PASSWORD = "${postgres_password}"
+GARAGE_RPC_SECRET = "${garage_rpc_secret}"
+STORAGE_S3_ACCESS_KEY = "${storage_s3_access_key}"
+STORAGE_S3_SECRET_KEY = "${storage_s3_secret_key}"
+STORAGE_S3_BUCKET = "nebulynk-files"
+STORAGE_S3_REGION = "us-east-1"
+JWT_SECRET = "${jwt_secret}"
+AI_SECRET_KEY = "${ai_secret_key}"
+AUTH_2FA_SECRET_KEY = "${auth_2fa_secret_key}"
+LIVEKIT_API_KEY = "${livekit_api_key}"
+LIVEKIT_API_SECRET = "${livekit_api_secret}"
+FRONTEND_URL = "${frontend_url}"
+PASSKEY_RP_ID = "${frontend_domain}"
+VITE_API_URL = "${backend_url}"
+LIVEKIT_PUBLIC_URL = "${livekit_public_url}"
+STORAGE_S3_PUBLIC_ENDPOINT = "${garage_public_url}"

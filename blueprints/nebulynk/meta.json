@@ -1,7 +1,7 @@
 {
   "id": "nebulynk",
   "name": "Nebulynk",
-  "version": "0.4.0",
+  "version": "stable",
   "description": "Nebulynk is a self-hosted collaboration platform for teams with real-time messaging, file sharing, video meetings, and AI-powered transcription and summaries.",
   "logo": "nebulynk.png",
   "links": {

@@ -1,3 +1,6 @@
+# If you are on a machine with ARM architecture, please add a "-arm" suffix to the calcom image on line 16. 
+# For example, `calcom/cal.com:v6.2.0` will become `calcom/cal.com:v6.2.0-arm`
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -11,15 +14,19 @@ services:
       - DATABASE_URL=postgres://postgres:password@postgres:5432/db
 
   calcom:
-    image: calcom/cal.com:v2.7.6
+    image: calcom/cal.com:v6.2.0
     depends_on:
       - postgres
     environment:
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
       - CALENDSO_ENCRYPTION_KEY=${CALENDSO_ENCRYPTION_KEY}
       - DATABASE_URL=postgres://postgres:password@postgres:5432/db
+      - DATABASE_DIRECT_URL=postgres://postgres:password@postgres:5432/db
+      - DATABASE_HOST=postgres:5432
       - NEXT_PUBLIC_WEBAPP_URL=http://${CALCOM_HOST}
+      - ALLOWED_HOSTNAMES="${CALCOM_HOST}"
       - NEXTAUTH_URL=http://${CALCOM_HOST}/api/auth
+      - NEXT_PUBLIC_DISABLE_SIGNUP=${DISABLE_SIGNUP}
 
 volumes:
   calcom-data:

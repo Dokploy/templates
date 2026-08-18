@@ -1,0 +1,46 @@
+services:
+  my-links:
+    environment:
+      - APP_KEY
+      - APP_URL
+      - DB_PASSWORD
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=mylinks
+      - DB_DATABASE=mylinks
+      - HOST=0.0.0.0
+      - PORT=3333
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+    restart: unless-stopped
+    image: sonny93/my-links:5.3.0
+    expose:
+      - 3333
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:3333 || exit 1']
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
+
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    user: postgres
+    environment:
+      POSTGRES_USER: mylinks
+      POSTGRES_DB: mylinks
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:

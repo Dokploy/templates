@@ -1,11 +1,21 @@
 version: "3.8"
 
 services:
+  instatic-init:
+    image: ghcr.io/corebunch/instatic:0.0.16
+    user: "0:0"
+    entrypoint: ["chown", "-R", "bun:bun", "/app/storage"]
+    volumes:
+      - instatic-storage:/app/storage
+
   instatic:
     image: ghcr.io/corebunch/instatic:0.0.16
     restart: unless-stopped
     env_file:
       - .env
+    depends_on:
+      instatic-init:
+        condition: service_completed_successfully
     expose:
       - 3001
     volumes:

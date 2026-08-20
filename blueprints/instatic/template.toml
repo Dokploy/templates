@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+instatic_secret_key = "${base64:32}"
+
+[[config.domains]]
+serviceName = "instatic"
+port = 3001
+host = "${main_domain}"
+
+[config.env]
+PORT = "3001"
+DATABASE_URL = "sqlite:/app/storage/data/cms.db"
+UPLOADS_DIR = "/app/storage/uploads"
+STATIC_DIR = "/app/dist"
+INSTATIC_SECRET_KEY = "${instatic_secret_key}"
+PUBLIC_ORIGIN = "https://${main_domain}"

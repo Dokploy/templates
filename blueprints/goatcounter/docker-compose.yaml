@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: goatcounter
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: goatcounter
+    volumes:
+      - ../files/postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U goatcounter -d goatcounter"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  goatcounter:
+    image: arp242/goatcounter:latest
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    expose:
+      - "8080"
+    command: >
+      sh -c "
+      goatcounter db create site -createdb -db 'postgresql://goatcounter:${DB_PASSWORD}@postgres:5432/goatcounter?sslmode=disable' -email '${GOATCOUNTER_EMAIL}' -user.password '${GOATCOUNTER_PASSWORD}' -listen 'http://0.0.0.0:8080' || true;
+      goatcounter serve -db 'postgresql://goatcounter:${DB_PASSWORD}@postgres:5432/goatcounter?sslmode=disable' -listen 'http://0.0.0.0:8080' -tls http
+      "
+    environment:
+      - GOATCOUNTER_EMAIL=${GOATCOUNTER_EMAIL}
+      - GOATCOUNTER_PASSWORD=${GOATCOUNTER_PASSWORD}
+      - DB_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ../files/goatcounter_data:/home/goatcounter/goatcounter-data

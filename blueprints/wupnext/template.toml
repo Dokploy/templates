@@ -12,11 +12,16 @@ env = [
   "SECRET_KEY=${secret_key}",
   "ALLOWED_HOSTS=${main_domain}",
   "CSRF_TRUSTED_ORIGINS=https://${main_domain}",
+  "SITE_URL=https://${main_domain}",
+  "MCP_BASE_URL=https://${main_domain}",
   "DEFAULT_FROM_EMAIL=${from_email}",
   "RESEND_API_KEY=${resend_api_key}",
   "DJANGO_SUPERUSER_USERNAME=${admin_username}",
   "DJANGO_SUPERUSER_EMAIL=${admin_email}",
-  "DJANGO_SUPERUSER_PASSWORD=${admin_password}"
+  "DJANGO_SUPERUSER_PASSWORD=${admin_password}",
+  "Q_WORKERS=2",
+  "Q_TIMEOUT=60",
+  "Q_RETRY=120"
 ]
 mounts = []
 

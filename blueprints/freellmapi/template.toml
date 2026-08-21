@@ -1,6 +1,6 @@
 [variables]
 main_domain = "${domain}"
-encryption_key = "${password:64}"
+encryption_key = "${hash:64}"
 
 [config]
 [[config.domains]]

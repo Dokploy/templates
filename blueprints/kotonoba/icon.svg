@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="100%" height="100%">
+  <defs>
+    <!-- Primary Accent Gradient (Electric Indigo to Violet) -->
+    <linearGradient id="iconAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818CF8" />
+      <stop offset="100%" stop-color="#4F46E5" />
+    </linearGradient>
+
+    <!-- Cyan Highlight Gradient -->
+    <linearGradient id="iconCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+  </defs>
+
+  <!-- Pure Standalone Vector Symbol without Background Container -->
+  <g transform="translate(14, 10)">
+    <!-- Top Spark Dot (Kanji 言 Radical Spark) -->
+    <circle cx="80" cy="36" r="10" fill="url(#iconCyan)" />
+
+    <!-- Vertical Spine Pillar (CMS Core Column) -->
+    <rect x="68" y="58" width="24" height="144" rx="12" fill="url(#iconAccent)" />
+
+    <!-- Upper Speech Bar (Horizontal Japanese Radical Stroke) -->
+    <rect x="110" y="68" width="44" height="12" rx="6" fill="url(#iconCyan)" opacity="0.95" />
+
+    <!-- Geometric Dynamic Chevrons forming 'K' -->
+    <path
+      d="M 110 120 
+         C 110 112, 116 105, 124 101 
+         L 168 76 
+         C 178 70, 191 78, 191 89 
+         C 191 95, 187 101, 182 104 
+         L 142 126 
+         C 135 130, 135 136, 142 140 
+         L 183 162 
+         C 188 165, 191 171, 191 177 
+         C 191 188, 178 196, 168 190 
+         L 124 165 
+         C 116 161, 110 154, 110 146 
+         Z"
+      fill="url(#iconAccent)"
+    />
+
+    <!-- Central Dialogue Focal Point Node -->
+    <circle cx="130" cy="133" r="9" fill="url(#iconCyan)" />
+  </g>
+</svg>

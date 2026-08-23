@@ -1,0 +1,20 @@
+[variables]
+pgadmin_domain = "${domain}"
+postgres_user = "${username}"
+postgres_password = "${password:32}"
+postgres_db = "postgres"
+pgadmin_email = "${email}"
+pgadmin_password = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "pgadmin"
+port = 80
+host = "${pgadmin_domain}"
+
+[config.env]
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "${postgres_db}"
+PGADMIN_DEFAULT_EMAIL = "${pgadmin_email}"
+PGADMIN_DEFAULT_PASSWORD = "${pgadmin_password}"

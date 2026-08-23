@@ -1,5 +1,6 @@
 [variables]
 pgadmin_domain = "${domain}"
+postgres_domain = "${domain}"
 postgres_user = "${username}"
 postgres_password = "${password:32}"
 postgres_db = "postgres"
@@ -11,6 +12,11 @@ pgadmin_password = "${password:16}"
 serviceName = "pgadmin"
 port = 80
 host = "${pgadmin_domain}"
+
+[[config.domains]]
+serviceName = "postgres"
+port = 5432
+host = "${postgres_domain}"
 
 [config.env]
 POSTGRES_USER = "${postgres_user}"

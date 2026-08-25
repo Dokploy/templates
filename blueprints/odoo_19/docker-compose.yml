@@ -11,7 +11,27 @@ services:
       - odoo-web-data:/var/lib/odoo
       - ../files/config:/etc/odoo
       - ../files/addons:/mnt/extra-addons
-
+    command: >
+      bash -c "chown -R odoo:odoo /var/lib/odoo &&
+               /entrypoint.sh odoo"    
+    labels:
+        ;WebSocket router (8072)
+      - traefik.http.routers.odoo-pos-ws.rule=Host(`domain.com`) && PathPrefix(`/websocket`)
+      - traefik.http.routers.odoo-pos-ws.entrypoints=websecure
+      - traefik.http.routers.odoo-pos-ws.tls.certresolver=letsencrypt
+      - traefik.http.routers.odoo-pos-ws.service=odoo-pos-ws
+      - traefik.http.services.odoo-pos-ws.loadbalancer.server.port=8072
+      ;Longpolling router (8072)
+      - traefik.http.routers.odoo-pos-longpoll.rule=Host(`domain.com`) && PathPrefix(`/longpolling`)
+      - traefik.http.routers.odoo-pos-longpoll.entrypoints=websecure
+      - traefik.http.routers.odoo-pos-longpoll.tls.certresolver=letsencrypt
+      - traefik.http.routers.odoo-pos-longpoll.service=odoo-pos-longpoll
+      - traefik.http.services.odoo-pos-longpoll.loadbalancer.server.port=8072
+      ;WebSocket upgrade headers (middleware)
+      - traefik.http.middlewares.odoo-pos-wsheaders.headers.customrequestheaders.Upgrade=websocket
+      - traefik.http.middlewares.odoo-pos-wsheaders.headers.customrequestheaders.Connection=Upgrade
+      - traefik.http.routers.odoo-pos-ws.middlewares=odoo-pos-wsheaders
+      - traefik.http.routers.odoo-pos-longpoll.middlewares=odoo-pos-wsheaders
   db:
     image: postgres:17
     environment:
@@ -20,7 +40,7 @@ services:
       - POSTGRES_PASSWORD=odoo
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
-
+      
 volumes:
   odoo-web-data:
   odoo-db-data:

@@ -1,0 +1,13 @@
+{
+  "id": "postgres-pgadmin",
+  "name": "PostgreSQL + pgAdmin",
+  "version": "18-alpine",
+  "description": "PostgreSQL 18 Alpine with pgAdmin 4 web UI, persistent volumes and healthchecks for easy database administration.",
+  "logo": "postgres-pgadmin.svg",
+  "links": {
+    "github": "https://github.com/postgres/postgres",
+    "website": "https://www.postgresql.org/",
+    "docs": "https://www.pgadmin.org/docs/"
+  },
+  "tags": ["database", "postgres", "postgresql", "admin", "pgadmin"]
+}

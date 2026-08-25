@@ -6,8 +6,8 @@
   "logo": "docling-serve.png",
   "links": {
     "github": "https://github.com/docling-project/docling-serve",
-    "website": "https://docling-project.github.io/docling-serve/",
-    "docs": "https://docling-project.github.io/docling-serve/",
+    "website": "",
+    "docs": "https://github.com/docling-project/docling-serve/blob/main/docs/README.md",
     "dockerhub": "https://quay.io/repository/docling-project/docling-serve"
   },
   "tags": [

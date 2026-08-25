@@ -109,20 +109,22 @@ const Search = () => {
             </div>
           </div>
 
-          <Input
-            type="text"
-            placeholder="Search templates..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="w-full p-6"
-          />
-          {searchQuery.length > 0 ? (
-            <div className="cursor-pointer" onClick={handleClearSearch}>
-              <XIcon className="absolute end-3 translate-y-3.5 top-1/2 h-5 w-5 text-gray-400" />
-            </div>
-          ) : (
-            <SearchIcon className="absolute end-3 translate-y-2 top-1/2 lg:size-5 size-4 text-gray-400" />
-          )}
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Search templates..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="w-full"
+            />
+            {searchQuery.length > 0 ? (
+              <div className="cursor-pointer" onClick={handleClearSearch}>
+                <XIcon className="absolute end-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              </div>
+            ) : (
+              <SearchIcon className="absolute end-3 top-1/2 -translate-y-1/2 lg:size-5 size-4 text-gray-400" />
+            )}
+          </div>
         </div>
 
         <div className="flex flex-row gap-2 justify-between">
@@ -154,7 +156,7 @@ const Search = () => {
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className="w-50 p-0">
               <Command shouldFilter={false}>
                 <CommandInput
                   placeholder="Search tags...."

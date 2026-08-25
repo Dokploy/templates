@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  openseo:
+    image: ghcr.io/every-app/open-seo:latest
+    restart: unless-stopped
+    environment:
+      - CLOUDFLARE_INCLUDE_PROCESS_ENV=true
+      - PORT=3001
+      - AUTH_MODE=local_noauth
+      - DATAFORSEO_API_KEY=${DATAFORSEO_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENROUTER_MODEL=${OPENROUTER_MODEL}
+      - OPENSEO_TELEMETRY_DISABLED=${OPENSEO_TELEMETRY_DISABLED}
+    expose:
+      - 3001
+    volumes:
+      - openseo-data:/app/.wrangler
+volumes:
+  openseo-data: {}

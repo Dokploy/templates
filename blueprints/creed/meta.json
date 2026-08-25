@@ -5,9 +5,9 @@
   "description": "One personal context file every AI agent reads before answering and proposes updates to as it learns about you. Requires an external Supabase project (see instructions).",
   "logo": "creed.svg",
   "links": {
-    "github": "https://github.com/connorhpbrn/creed",
+    "github": "https://github.com/hpbrn/creed",
     "website": "https://creed.md",
-    "docs": "https://creed.md/docs"
+    "docs": "https://docs.creed.md/"
   },
   "tags": [
     "ai",

@@ -8,6 +8,12 @@ env = [
   "CALCOM_HOST=${main_domain}",
   "NEXTAUTH_SECRET=${nextauth_secret}",
   "CALENDSO_ENCRYPTION_KEY=${calcom_encryption_key}",
+  "DISABLE_SIGNUP=true",
+  "SMTP_SERVER=",
+  "SMTP_PORT=",
+  "SMTP_PASSWORD=",
+  "EMAIL_SERVER_USER=",
+  "EMAIL_FROM=",
 ]
 mounts = []
 

@@ -1,12 +1,11 @@
-version: "3.8"
-
 services:
   openseo:
-    image: ghcr.io/every-app/open-seo:latest
+    image: ghcr.io/every-app/open-seo:v0.1.6
     restart: unless-stopped
     environment:
       - CLOUDFLARE_INCLUDE_PROCESS_ENV=true
       - PORT=3001
+      - ALLOWED_HOST=${OPENSEO_HOST}
       - AUTH_MODE=local_noauth
       - DATAFORSEO_API_KEY=${DATAFORSEO_API_KEY}
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}

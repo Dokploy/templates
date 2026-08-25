@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   kotonoba:
-    image: ghcr.io/trixtylab/kotonoba:latest
+    image: ghcr.io/trixtylab/kotonoba:1.0.19
     restart: unless-stopped
     environment:
       NODE_ENV: production

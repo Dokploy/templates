@@ -1,7 +1,7 @@
 {
   "id": "kotonoba",
   "name": "Kotonoba",
-  "version": "latest",
+  "version": "1.0.19",
   "description": "A high-performance, self-hosted, multi-tenant blog CMS built with Next.js 16, SQLite, Tailwind CSS v4, and Docker.",
   "logo": "icon.svg",
   "links": {

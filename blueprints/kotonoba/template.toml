@@ -9,7 +9,7 @@ env = [
   "UPLOAD_DIR=/app/data/uploads",
   "JWT_SECRET=${jwt_secret}",
   "SITE_URL=https://${main_domain}",
-  "ADMIN_DOMAIN=https://${main_domain}"
+  "ADMIN_DOMAIN=${main_domain}"
 ]
 mounts = []
 

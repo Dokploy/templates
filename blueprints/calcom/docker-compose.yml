@@ -1,4 +1,4 @@
-# If you are on a machine with ARM architecture, please add a "-arm" suffix to the calcom image on line 16. 
+# If you are on a machine with ARM architecture, please add a "-arm" suffix to the calcom image on line 19.
 # For example, `calcom/cal.com:v6.2.0` will become `calcom/cal.com:v6.2.0-arm`
 
 # If serving the instance on https, change `NEXT_PUBLIC_WEBAPP_URL` (Line 28) and `NEXTAUTH_URL` (Line 30) to https

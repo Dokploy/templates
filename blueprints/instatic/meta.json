@@ -1,0 +1,13 @@
+{
+  "id": "instatic",
+  "name": "Instatic",
+  "version": "0.0.16",
+  "description": "Instatic is a self-hosted, open-source visual CMS combining a canvas editor, content engine, and static site publisher, producing clean semantic HTML with no framework runtime shipped to visitors.",
+  "logo": "instatic.svg",
+  "links": {
+    "github": "https://github.com/corebunch/instatic",
+    "website": "https://instatic.com",
+    "docs": "https://github.com/corebunch/instatic/tree/main/docs"
+  },
+  "tags": ["cms", "website-builder", "static-site"]
+}

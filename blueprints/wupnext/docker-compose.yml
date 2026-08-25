@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   wupnext:
-    image: docker.io/javierlnmn/wupnext:latest
+    image: docker.io/javierlnmn/wupnext:0.3.0
     restart: unless-stopped
     environment:
       SECRET_KEY: ${SECRET_KEY}

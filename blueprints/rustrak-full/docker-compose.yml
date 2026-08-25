@@ -23,6 +23,9 @@ services:
     restart: unless-stopped
     environment:
       - RUSTRAK_API_URL=${RUSTRAK_API_URL}
+      # Next.js standalone binds to $HOSTNAME (the container id) by default, which is
+      # unreachable from Traefik on the Dokploy network -> 502. Bind to all interfaces.
+      - HOSTNAME=0.0.0.0
     expose:
       - 3000
     depends_on:

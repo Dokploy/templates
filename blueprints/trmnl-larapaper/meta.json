@@ -1,7 +1,7 @@
 {
   "id": "trmnl-larapaper",
   "name": "TRMNL LaraPaper",
-  "version": "0.33.0",
+  "version": "0.40.0",
   "description": "LaraPaper is a self-hosted application (BYOS) to manage TRMNL e-ink devices.",
   "logo": "larapaper.svg",
   "links": {

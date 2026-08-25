@@ -1,0 +1,13 @@
+{
+  "id": "freellmapi",
+  "name": "FreeLLMAPI",
+  "version": "v0.8.4",
+  "description": "FreeLLMAPI aggregates free tiers from 29 LLM providers into a single OpenAI-compatible endpoint with smart routing, automatic failover, per-key rate tracking, and encrypted key storage.",
+  "logo": "freellmapi.svg",
+  "links": {
+    "github": "https://github.com/tashfeenahmed/freellmapi",
+    "website": "https://freellmapi.co",
+    "docs": "https://github.com/tashfeenahmed/freellmapi/blob/main/docs/install.md"
+  },
+  "tags": ["ai", "proxy", "llm", "openai-compatible", "developer-tools"]
+}

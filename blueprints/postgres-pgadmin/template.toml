@@ -1,6 +1,5 @@
 [variables]
 pgadmin_domain = "${domain}"
-postgres_domain = "${domain}"
 postgres_user = "${username}"
 postgres_password = "${password:32}"
 postgres_db = "postgres"
@@ -13,14 +12,33 @@ serviceName = "pgadmin"
 port = 80
 host = "${pgadmin_domain}"
 
-[[config.domains]]
-serviceName = "postgres"
-port = 5432
-host = "${postgres_domain}"
-
 [config.env]
 POSTGRES_USER = "${postgres_user}"
 POSTGRES_PASSWORD = "${postgres_password}"
 POSTGRES_DB = "${postgres_db}"
 PGADMIN_DEFAULT_EMAIL = "${pgadmin_email}"
 PGADMIN_DEFAULT_PASSWORD = "${pgadmin_password}"
+
+# Pre-register the bundled PostgreSQL server in pgAdmin (imported on first launch only).
+[[config.mounts]]
+filePath = "/servers.json"
+content = """{
+  "Servers": {
+    "1": {
+      "Name": "PostgreSQL",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "${postgres_db}",
+      "Username": "${postgres_user}",
+      "PassFile": "/var/lib/pgadmin/pgpass",
+      "SSLMode": "prefer"
+    }
+  }
+}
+"""
+
+[[config.mounts]]
+filePath = "/pgpass"
+content = """postgres:5432:*:${postgres_user}:${postgres_password}
+"""

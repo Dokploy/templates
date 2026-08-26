@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+jwt_secret = "${password:32}"
+
+[config]
+env = [
+  "NODE_ENV=production",
+  "DB_PATH=/app/data/kotonoba.db",
+  "UPLOAD_DIR=/app/data/uploads",
+  "JWT_SECRET=${jwt_secret}",
+  "SITE_URL=https://${main_domain}",
+  "ADMIN_DOMAIN=${main_domain}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "kotonoba"
+port = 3000
+host = "${main_domain}"
+

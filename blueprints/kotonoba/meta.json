@@ -1,0 +1,18 @@
+{
+  "id": "kotonoba",
+  "name": "Kotonoba",
+  "version": "1.0.19",
+  "description": "A high-performance, self-hosted, multi-tenant blog CMS built with Next.js 16, SQLite, Tailwind CSS v4, and Docker.",
+  "logo": "icon.svg",
+  "links": {
+    "github": "https://github.com/trixtylab/kotonoba",
+    "website": "https://github.com/trixtylab/kotonoba",
+    "docs": "https://github.com/TrixtyLab/kotonoba/tree/master/docs"
+  },
+  "tags": [
+    "blog",
+    "i18n",
+    "nextjs",
+    "web"
+  ]
+}

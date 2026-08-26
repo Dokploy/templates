@@ -1,7 +1,6 @@
 # dokploy: allow-host-ports
 # LiveKit requires public TCP/UDP media ports 7881 and 7882 for WebRTC.
-# Nebulynk Dokploy template. Import the generated import.base64 file through
-# Compose -> Advanced -> Import. Dokploy owns routing and the isolated network.
+# Dokploy owns routing and the isolated network.
 version: "3.8"
 services:
   frontend:
@@ -49,11 +48,8 @@ services:
     restart: "no"
 
   garage:
-    build:
-      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-stable}"
-      dockerfile: garage.Dockerfile
-      args:
-        GARAGE_IMAGE: "${NEBULYNK_GARAGE_IMAGE:-dxflrs/garage:v2.3.0}"
+    image: "${NEBULYNK_GARAGE_IMAGE:-dxflrs/garage:v2.3.0}"
+    user: "65532:65532"
     depends_on:
       garage-volume-init:
         condition: service_completed_successfully
@@ -64,6 +60,7 @@ services:
       GARAGE_DEFAULT_SECRET_KEY: "${STORAGE_S3_SECRET_KEY:?STORAGE_S3_SECRET_KEY must be set}"
       GARAGE_DEFAULT_BUCKET: "${STORAGE_S3_BUCKET:-nebulynk-files}"
     volumes:
+      - ../files/garage.toml:/etc/garage.toml:ro
       - nebulynk_garage_meta:/var/lib/garage/meta
       - nebulynk_garage_data:/var/lib/garage/data
     expose:
@@ -71,16 +68,15 @@ services:
     restart: unless-stopped
 
   livekit:
-    build:
-      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-stable}"
-      dockerfile: livekit.Dockerfile
-      args:
-        LIVEKIT_SERVER_IMAGE: "${NEBULYNK_LIVEKIT_SERVER_IMAGE:-livekit/livekit-server:v1.13.4}"
+    image: "${NEBULYNK_LIVEKIT_SERVER_IMAGE:-livekit/livekit-server:v1.13.4}"
+    user: "65532:65532"
     command: --config /livekit.yaml
     depends_on:
       - redis
     environment:
       LIVEKIT_KEYS: "${LIVEKIT_API_KEY:?LIVEKIT_API_KEY must be set}: ${LIVEKIT_API_SECRET:?LIVEKIT_API_SECRET must be set}"
+    volumes:
+      - ../files/livekit.yaml:/livekit.yaml:ro
     expose:
       - "7880"
     ports:
@@ -89,11 +85,8 @@ services:
     restart: unless-stopped
 
   livekit-egress:
-    build:
-      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-stable}"
-      dockerfile: livekit-egress.Dockerfile
-      args:
-        LIVEKIT_EGRESS_IMAGE: "${NEBULYNK_LIVEKIT_EGRESS_IMAGE:-livekit/egress:v1.13.0}"
+    image: "${NEBULYNK_LIVEKIT_EGRESS_IMAGE:-livekit/egress:v1.13.0}"
+    user: egress
     command: --config /livekit-egress.yaml
     environment:
       EGRESS_CONFIG_FILE: /livekit-egress.yaml
@@ -103,6 +96,8 @@ services:
       AWS_ACCESS_KEY_ID: "${STORAGE_S3_ACCESS_KEY:?STORAGE_S3_ACCESS_KEY must be set}"
       AWS_SECRET_ACCESS_KEY: "${STORAGE_S3_SECRET_KEY:?STORAGE_S3_SECRET_KEY must be set}"
       AWS_DEFAULT_REGION: "${STORAGE_S3_REGION:-${MEETING_RECORDINGS_S3_REGION:-us-east-1}}"
+    volumes:
+      - ../files/livekit-egress.yaml:/livekit-egress.yaml:ro
     depends_on:
       - livekit
       - redis

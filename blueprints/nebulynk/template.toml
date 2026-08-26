@@ -102,3 +102,51 @@ MAX_FILE_SIZE = "26214400"
 MEETING_TRANSCRIPT_WAIT_TIMEOUT_MS = "1800000"
 TRUST_PROXY = "true"
 NEBULYNK_BUILD_SHA = ""
+
+[[config.mounts]]
+filePath = "garage.toml"
+content = """
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "sqlite"
+
+replication_factor = 1
+rpc_bind_addr = "[::]:3901"
+rpc_public_addr = "garage:3901"
+
+[s3_api]
+s3_region = "us-east-1"
+api_bind_addr = "[::]:3900"
+root_domain = ".s3.garage.localhost"
+"""
+
+[[config.mounts]]
+filePath = "livekit.yaml"
+content = """
+port: 7880
+rtc:
+  udp_port: 7882
+  tcp_port: 7881
+  use_external_ip: true
+redis:
+  address: redis:6379
+keys:
+  # Keys are overridden through LIVEKIT_KEYS, but this section must exist.
+"""
+
+[[config.mounts]]
+filePath = "livekit-egress.yaml"
+content = """
+# LiveKit connection settings are provided through the environment so they
+# cannot drift from the deployment's active credentials.
+insecure: true
+log_level: debug
+health_port: 8080
+
+redis:
+  address: redis:6379
+
+s3:
+  bucket: nebulynk-files
+  endpoint: http://garage:3900
+"""

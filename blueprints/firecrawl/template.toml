@@ -7,10 +7,12 @@ rabbitmq_password = "${hash:32}"
 bull_auth_key = "${hash:32}"
 firecrawl_org_id = "${uuid}"
 firecrawl_team_id = "${uuid}"
-firecrawl_api_key_a = "${hash:4}"
-firecrawl_api_key_b = "${hash:2}"
-firecrawl_api_key_e = "${hash:6}"
-firecrawl_api_key = "fc-${firecrawl_api_key_a}${firecrawl_api_key_b}40008000${firecrawl_api_key_e}"
+# Dokploy's real hash helper returns exactly N hex characters. Force the UUID
+# version and variant nibbles so Firecrawl's strict API-key parser accepts it.
+firecrawl_api_key_a = "${hash:12}"
+firecrawl_api_key_b = "${hash:3}"
+firecrawl_api_key_c = "${hash:15}"
+firecrawl_api_key = "fc-${firecrawl_api_key_a}4${firecrawl_api_key_b}8${firecrawl_api_key_c}"
 self_hosted_webhook_hmac_secret = "${hash:32}"
 
 [config]

@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+falkordb_url = "https://${main_domain}"
+falkordb_password = "${hash:32}"
+auth_secret = "${base64:48}"
+encryption_key = "${hash:32}"
+
+[config]
+env = [
+  "FALKORDB_PASSWORD=${falkordb_password}",
+  "AUTH_URL=${falkordb_url}",
+  "AUTH_SECRET=${auth_secret}",
+  "ENCRYPTION_KEY=${encryption_key}",
+]
+
+[[config.domains]]
+serviceName = "falkordb"
+port = 3000
+host = "${main_domain}"

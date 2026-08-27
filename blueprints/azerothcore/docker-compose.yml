@@ -1,0 +1,110 @@
+# dokploy: allow-host-ports — WoW clients connect directly over raw TCP (3724 authentication, 8085 world); Traefik cannot route the game protocol.
+version: "3.8"
+
+services:
+  azerothcore-database:
+    image: mysql:8.4.11
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - azerothcore-database:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping --host=localhost --user=root --password=$${MYSQL_ROOT_PASSWORD}",
+        ]
+      interval: 5s
+      timeout: 10s
+      retries: 40
+      start_period: 20s
+
+  azerothcore-db-import:
+    image: acore/ac-wotlk-db-import:17.0.0-dev
+    restart: "no"
+    environment:
+      AC_DATA_DIR: /azerothcore/env/dist/data
+      AC_LOGS_DIR: /azerothcore/env/dist/logs
+      AC_LOGIN_DATABASE_INFO: azerothcore-database;3306;root;${MYSQL_ROOT_PASSWORD};acore_auth
+      AC_WORLD_DATABASE_INFO: azerothcore-database;3306;root;${MYSQL_ROOT_PASSWORD};acore_world
+      AC_CHARACTER_DATABASE_INFO: azerothcore-database;3306;root;${MYSQL_ROOT_PASSWORD};acore_characters
+    volumes:
+      - azerothcore-config:/azerothcore/env/dist/etc
+      - azerothcore-logs:/azerothcore/env/dist/logs
+    depends_on:
+      azerothcore-database:
+        condition: service_healthy
+
+  azerothcore-client-data:
+    image: acore/ac-wotlk-client-data:17.0.0-dev
+    restart: "no"
+    volumes:
+      - azerothcore-client-data:/azerothcore/env/dist/data
+
+  azerothcore-realm-config:
+    image: mysql:8.4.11
+    restart: "no"
+    environment:
+      MYSQL_PWD: ${MYSQL_ROOT_PASSWORD}
+      REALM_ADDRESS: ${REALM_ADDRESS}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        mysql --host=azerothcore-database --user=root
+        --execute="UPDATE acore_auth.realmlist
+        SET name = 'AzerothCore', address = '$${REALM_ADDRESS}',
+        localAddress = '127.0.0.1', localSubnetMask = '255.255.255.0', port = 8085
+        WHERE id = 1;"
+    depends_on:
+      azerothcore-database:
+        condition: service_healthy
+      azerothcore-db-import:
+        condition: service_completed_successfully
+
+  azerothcore-auth:
+    image: acore/ac-wotlk-authserver:17.0.0-dev
+    restart: unless-stopped
+    tty: true
+    environment:
+      AC_LOGS_DIR: /azerothcore/env/dist/logs
+      AC_TEMP_DIR: /azerothcore/env/dist/temp
+      AC_LOGIN_DATABASE_INFO: azerothcore-database;3306;root;${MYSQL_ROOT_PASSWORD};acore_auth
+    ports:
+      - "3724:3724/tcp"
+    volumes:
+      - azerothcore-config:/azerothcore/env/dist/etc
+      - azerothcore-logs:/azerothcore/env/dist/logs
+    depends_on:
+      azerothcore-realm-config:
+        condition: service_completed_successfully
+
+  azerothcore:
+    image: acore/ac-wotlk-worldserver:17.0.0-dev
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    stop_grace_period: 2m
+    environment:
+      AC_DATA_DIR: /azerothcore/env/dist/data
+      AC_LOGS_DIR: /azerothcore/env/dist/logs
+      AC_LOGIN_DATABASE_INFO: azerothcore-database;3306;root;${MYSQL_ROOT_PASSWORD};acore_auth
+      AC_WORLD_DATABASE_INFO: azerothcore-database;3306;root;${MYSQL_ROOT_PASSWORD};acore_world
+      AC_CHARACTER_DATABASE_INFO: azerothcore-database;3306;root;${MYSQL_ROOT_PASSWORD};acore_characters
+    ports:
+      - "8085:8085/tcp"
+    volumes:
+      - azerothcore-config:/azerothcore/env/dist/etc
+      - azerothcore-logs:/azerothcore/env/dist/logs
+      - azerothcore-client-data:/azerothcore/env/dist/data:ro
+    depends_on:
+      azerothcore-realm-config:
+        condition: service_completed_successfully
+      azerothcore-client-data:
+        condition: service_completed_successfully
+
+volumes:
+  azerothcore-database:
+  azerothcore-client-data:
+  azerothcore-config:
+  azerothcore-logs:

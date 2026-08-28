@@ -82,7 +82,7 @@ services:
         condition: service_completed_successfully
 
   azerothcore-portal-admin-bootstrap:
-    image: ghcr.io/ghazibendahmane/azeroth-core-web:0.2.0
+    image: ghcr.io/ghazibendahmane/azeroth-core-web:latest
     restart: "no"
     command: ["bootstrap-account"]
     environment:
@@ -97,7 +97,7 @@ services:
         condition: service_completed_successfully
 
   azerothcore-portal-soap-bootstrap:
-    image: ghcr.io/ghazibendahmane/azeroth-core-web:0.2.0
+    image: ghcr.io/ghazibendahmane/azeroth-core-web:latest
     restart: "no"
     command: ["bootstrap-account"]
     environment:
@@ -191,7 +191,7 @@ services:
         condition: service_completed_successfully
 
   azerothcore-portal:
-    image: ghcr.io/ghazibendahmane/azeroth-core-web:0.2.0
+    image: ghcr.io/ghazibendahmane/azeroth-core-web:latest
     restart: unless-stopped
     read_only: true
     security_opt:

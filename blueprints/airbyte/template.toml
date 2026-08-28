@@ -21,6 +21,7 @@ MANIFEST_SERVER_VERSION = "7.23.7"
 TEMPORAL_VERSION = "1.27.2"
 MINIO_VERSION = "RELEASE.2023-11-20T22-40-07Z"
 K3S_VERSION = "v1.36.3-k3s1"
+COREDNS_VERSION = "1.14.7"
 
 AIRBYTE_PORT = "8000"
 
@@ -37,15 +38,6 @@ AIRBYTE_ADMIN_CLIENT_SECRET = "${airbyte_admin_client_secret}"
 AIRBYTE_JWT_SIGNATURE_SECRET = "${airbyte_jwt_signature_secret}"
 
 AIRBYTE_COMPOSE_SUBNET = "172.30.0.0/24"
-AIRBYTE_DB_IP = "172.30.0.10"
-AIRBYTE_MINIO_IP = "172.30.0.11"
-AIRBYTE_TEMPORAL_IP = "172.30.0.12"
-AIRBYTE_SERVER_IP = "172.30.0.13"
-AIRBYTE_WORKLOAD_API_IP = "172.30.0.14"
-AIRBYTE_MANIFEST_SERVER_IP = "172.30.0.15"
-AIRBYTE_WORKER_IP = "172.30.0.16"
-AIRBYTE_CRON_IP = "172.30.0.17"
-AIRBYTE_WORKLOAD_LAUNCHER_IP = "172.30.0.18"
 AIRBYTE_K3S_IP = "172.30.0.20"
 
 [[config.mounts]]
@@ -169,6 +161,17 @@ SERVER_MICRONAUT_ENVIRONMENTS=control-plane
 """
 
 [[config.mounts]]
+filePath = "./config/docker-dns.Corefile"
+content = """
+.:53 {
+    bind {$AIRBYTE_K3S_IP}
+    errors
+    cache 30
+    forward . 127.0.0.11
+}
+"""
+
+[[config.mounts]]
 filePath = "./config/k3s-resources.yaml"
 content = """
 apiVersion: v1
@@ -215,27 +218,12 @@ metadata:
   name: airbyte-db-svc
   namespace: default
 spec:
+  type: ExternalName
+  externalName: db
   ports:
     - name: postgresql
       port: 5432
-      targetPort: 5432
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: airbyte-db-svc-compose
-  namespace: default
-  labels:
-    kubernetes.io/service-name: airbyte-db-svc
-addressType: IPv4
-ports:
-  - name: postgresql
-    protocol: TCP
-    port: 5432
-endpoints:
-  - addresses: ["__DB_IP__"]
-    conditions:
-      ready: true
+      protocol: TCP
 ---
 apiVersion: v1
 kind: Service
@@ -243,27 +231,12 @@ metadata:
   name: airbyte-minio-svc
   namespace: default
 spec:
+  type: ExternalName
+  externalName: minio
   ports:
     - name: api
       port: 9000
-      targetPort: 9000
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: airbyte-minio-svc-compose
-  namespace: default
-  labels:
-    kubernetes.io/service-name: airbyte-minio-svc
-addressType: IPv4
-ports:
-  - name: api
-    protocol: TCP
-    port: 9000
-endpoints:
-  - addresses: ["__MINIO_IP__"]
-    conditions:
-      ready: true
+      protocol: TCP
 ---
 apiVersion: v1
 kind: Service
@@ -271,27 +244,12 @@ metadata:
   name: airbyte-temporal
   namespace: default
 spec:
+  type: ExternalName
+  externalName: temporal
   ports:
     - name: grpc
       port: 7233
-      targetPort: 7233
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: airbyte-temporal-compose
-  namespace: default
-  labels:
-    kubernetes.io/service-name: airbyte-temporal
-addressType: IPv4
-ports:
-  - name: grpc
-    protocol: TCP
-    port: 7233
-endpoints:
-  - addresses: ["__TEMPORAL_IP__"]
-    conditions:
-      ready: true
+      protocol: TCP
 ---
 apiVersion: v1
 kind: Service
@@ -299,27 +257,12 @@ metadata:
   name: airbyte-airbyte-server-svc
   namespace: default
 spec:
+  type: ExternalName
+  externalName: server
   ports:
     - name: http
       port: 8001
-      targetPort: 8001
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: airbyte-airbyte-server-svc-compose
-  namespace: default
-  labels:
-    kubernetes.io/service-name: airbyte-airbyte-server-svc
-addressType: IPv4
-ports:
-  - name: http
-    protocol: TCP
-    port: 8001
-endpoints:
-  - addresses: ["__SERVER_IP__"]
-    conditions:
-      ready: true
+      protocol: TCP
 ---
 apiVersion: v1
 kind: Service
@@ -327,27 +270,12 @@ metadata:
   name: airbyte-workload-api-server-svc
   namespace: default
 spec:
+  type: ExternalName
+  externalName: workload-api-server
   ports:
     - name: http
       port: 8007
-      targetPort: 8007
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: airbyte-workload-api-server-svc-compose
-  namespace: default
-  labels:
-    kubernetes.io/service-name: airbyte-workload-api-server-svc
-addressType: IPv4
-ports:
-  - name: http
-    protocol: TCP
-    port: 8007
-endpoints:
-  - addresses: ["__WORKLOAD_API_IP__"]
-    conditions:
-      ready: true
+      protocol: TCP
 ---
 apiVersion: v1
 kind: Service
@@ -355,27 +283,166 @@ metadata:
   name: airbyte-airbyte-manifest-server-svc
   namespace: default
 spec:
+  type: ExternalName
+  externalName: manifest-server
   ports:
     - name: http
       port: 8080
-      targetPort: 8080
+      protocol: TCP
 ---
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
+apiVersion: v1
+kind: ServiceAccount
 metadata:
-  name: airbyte-airbyte-manifest-server-svc-compose
-  namespace: default
+  name: coredns
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: system:coredns
+rules:
+  - apiGroups: [""]
+    resources: [endpoints, services, pods, namespaces]
+    verbs: [list, watch]
+  - apiGroups: [discovery.k8s.io]
+    resources: [endpointslices]
+    verbs: [list, watch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: system:coredns
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:coredns
+subjects:
+  - kind: ServiceAccount
+    name: coredns
+    namespace: kube-system
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns
+  namespace: kube-system
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health
+        ready
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+            pods insecure
+            fallthrough
+        }
+        cache 30
+        loop
+        reload
+        loadbalance
+        forward . 127.0.0.1:1053
+    }
+    .:1053 {
+        bind 127.0.0.1
+        errors
+        rewrite stop name regex ^(.+?)(\\.[^.]+\\.svc\\.cluster\\.local|\\.svc\\.cluster\\.local|\\.cluster\\.local)\\.$ {1} answer auto
+        forward . __AIRBYTE_K3S_IP__
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coredns
+  namespace: kube-system
   labels:
-    kubernetes.io/service-name: airbyte-airbyte-manifest-server-svc
-addressType: IPv4
-ports:
-  - name: http
-    protocol: TCP
-    port: 8080
-endpoints:
-  - addresses: ["__MANIFEST_SERVER_IP__"]
-    conditions:
-      ready: true
+    k8s-app: kube-dns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: kube-dns
+  template:
+    metadata:
+      labels:
+        k8s-app: kube-dns
+    spec:
+      priorityClassName: system-cluster-critical
+      serviceAccountName: coredns
+      nodeSelector:
+        kubernetes.io/os: linux
+      tolerations:
+        - key: CriticalAddonsOnly
+          operator: Exists
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: coredns
+          image: rancher/mirrored-coredns-coredns:1.14.6
+          imagePullPolicy: IfNotPresent
+          args: [-conf, /etc/coredns/Corefile]
+          resources:
+            limits:
+              memory: 170Mi
+            requests:
+              cpu: 100m
+              memory: 70Mi
+          ports:
+            - name: dns
+              containerPort: 53
+              protocol: UDP
+            - name: dns-tcp
+              containerPort: 53
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /etc/coredns
+              readOnly: true
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add: [NET_BIND_SERVICE]
+              drop: [ALL]
+            readOnlyRootFilesystem: true
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8181
+            periodSeconds: 2
+      dnsPolicy: Default
+      volumes:
+        - name: config
+          configMap:
+            name: coredns
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-dns
+  namespace: kube-system
+  labels:
+    k8s-app: kube-dns
+    kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: CoreDNS
+spec:
+  selector:
+    k8s-app: kube-dns
+  clusterIP: 10.43.0.10
+  ports:
+    - name: dns
+      port: 53
+      protocol: UDP
+    - name: dns-tcp
+      port: 53
+      protocol: TCP
 """
 
 [[config.mounts]]
@@ -424,14 +491,12 @@ limit.blobSize.error:
 limit.blobSize.warn:
   - value: 10485760
     constraints: {}
-
 """
 
 [[config.mounts]]
 filePath = "./scripts/bootstrap-k3s.sh"
 content = """
 #!/bin/sh
-
 set -eu
 
 source_config=/kube/kubeconfig.yaml
@@ -441,7 +506,7 @@ until [ -s "$source_config" ]; do
   sleep 1
 done
 
-sed 's#server: https://127.0.0.1:6443#server: https://k3s:6443#' \
+sed 's|server: https://127.0.0.1:6443|server: https://k3s:6443|' \
   "$source_config" > "$client_config"
 chmod 0644 "$client_config"
 
@@ -453,15 +518,13 @@ until /bin/kubectl --kubeconfig "$client_config" get --raw=/readyz >/dev/null 2>
 done
 
 sed \
-  -e "s#__DB_IP__#${AIRBYTE_DB_IP}#g" \
-  -e "s#__MINIO_IP__#${AIRBYTE_MINIO_IP}#g" \
-  -e "s#__TEMPORAL_IP__#${AIRBYTE_TEMPORAL_IP}#g" \
-  -e "s#__SERVER_IP__#${AIRBYTE_SERVER_IP}#g" \
-  -e "s#__WORKLOAD_API_IP__#${AIRBYTE_WORKLOAD_API_IP}#g" \
-  -e "s#__MANIFEST_SERVER_IP__#${AIRBYTE_MANIFEST_SERVER_IP}#g" \
+  -e "s|__AIRBYTE_K3S_IP__|${AIRBYTE_K3S_IP}|g" \
   /config/k3s-resources.yaml > /tmp/k3s-resources.yaml
 
 /bin/kubectl --kubeconfig "$client_config" apply -f /tmp/k3s-resources.yaml
+
+/bin/kubectl --kubeconfig "$client_config" \
+  --namespace kube-system rollout status deployment/coredns --timeout=180s
 
 /bin/kubectl --kubeconfig "$client_config" create secret generic airbyte-auth-secrets \
   --namespace default \

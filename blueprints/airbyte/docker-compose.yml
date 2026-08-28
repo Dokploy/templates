@@ -4,8 +4,9 @@
 #
 # - https://github.com/nktnet1/airbyte-compose
 #
-# Please make sure to change the AIRBYTE_URL and AIRBYTE_API_HOST environment
-# variables to match that of your public domain.
+# NOTE: make sure to change the AIRBYTE_URL and AIRBYTE_API_HOST environment
+# variables to match that of your public domain. The URL must be publicly
+# accessible (for example, it cannot be auth-protected by Cloudflare).
 #
 # Once you've completed the setup via the web UI, you can log in using the
 # password defined in the AIRBYTE_ADMIN_PASSWORD environment variable.

@@ -1,11 +1,11 @@
 [variables]
 main_domain = "${domain}"
-database_password = "${password:30}"
-minio_root_password = "${password:30}"
-airbyte_admin_password = "${password:30}"
-airbyte_admin_client_id = "${password:30}"
-airbyte_admin_client_secret = "${password:30}"
-airbyte_jwt_signature_secret = "${password:30}"
+database_password = "${password:32}"
+minio_root_password = "${password:32}"
+airbyte_admin_password = "${password:32}"
+airbyte_admin_client_id = "${password:32}"
+airbyte_admin_client_secret = "${password:32}"
+airbyte_jwt_signature_secret = "${password:32}"
 
 [[config.domains]]
 serviceName = "server"

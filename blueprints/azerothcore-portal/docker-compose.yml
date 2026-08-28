@@ -1,0 +1,250 @@
+# dokploy: allow-host-ports — WoW clients require raw TCP ports 3724 and 8085; SOAP remains internal-only.
+version: "3.8"
+
+services:
+  azerothcore-portal-database:
+    image: mysql:8.4.11
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - azerothcore-portal-database:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping --host=localhost --user=root --password=$${MYSQL_ROOT_PASSWORD}",
+        ]
+      interval: 5s
+      timeout: 10s
+      retries: 40
+      start_period: 20s
+
+  azerothcore-portal-db-import:
+    image: acore/ac-wotlk-db-import:17.0.0-dev
+    restart: "no"
+    environment:
+      AC_DATA_DIR: /azerothcore/env/dist/data
+      AC_LOGS_DIR: /azerothcore/env/dist/logs
+      AC_LOGIN_DATABASE_INFO: azerothcore-portal-database;3306;root;${MYSQL_ROOT_PASSWORD};acore_auth
+      AC_WORLD_DATABASE_INFO: azerothcore-portal-database;3306;root;${MYSQL_ROOT_PASSWORD};acore_world
+      AC_CHARACTER_DATABASE_INFO: azerothcore-portal-database;3306;root;${MYSQL_ROOT_PASSWORD};acore_characters
+    volumes:
+      - azerothcore-portal-config:/azerothcore/env/dist/etc
+      - azerothcore-portal-logs:/azerothcore/env/dist/logs
+    depends_on:
+      azerothcore-portal-database:
+        condition: service_healthy
+
+  azerothcore-portal-client-data:
+    image: acore/ac-wotlk-client-data:17.0.0-dev
+    restart: "no"
+    volumes:
+      - azerothcore-portal-client-data:/azerothcore/env/dist/data
+
+  azerothcore-portal-db-init:
+    image: mysql:8.4.11
+    restart: "no"
+    environment:
+      MYSQL_PWD: ${MYSQL_ROOT_PASSWORD}
+      PORTAL_DB_PASSWORD: ${PORTAL_DB_PASSWORD}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        mysql --host=azerothcore-portal-database --user=root
+        --execute="CREATE USER IF NOT EXISTS 'portal'@'%' IDENTIFIED BY '$${PORTAL_DB_PASSWORD}';
+        ALTER USER 'portal'@'%' IDENTIFIED BY '$${PORTAL_DB_PASSWORD}';
+        GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,ALTER,INDEX ON acore_auth.* TO 'portal'@'%';
+        GRANT SELECT ON acore_characters.* TO 'portal'@'%';
+        GRANT SELECT ON acore_world.* TO 'portal'@'%';
+        FLUSH PRIVILEGES;"
+    depends_on:
+      azerothcore-portal-database:
+        condition: service_healthy
+      azerothcore-portal-db-import:
+        condition: service_completed_successfully
+
+  azerothcore-portal-soap-config:
+    image: acore/ac-wotlk-worldserver:17.0.0-dev
+    restart: "no"
+    command:
+      - /bin/bash
+      - -lc
+      - |
+        sed -i -E 's|^SOAP.Enabled =.*|SOAP.Enabled = 1|' /azerothcore/env/dist/etc/worldserver.conf
+        sed -i -E 's|^SOAP.IP =.*|SOAP.IP = "0.0.0.0"|' /azerothcore/env/dist/etc/worldserver.conf
+        sed -i -E 's|^SOAP.Port =.*|SOAP.Port = 7878|' /azerothcore/env/dist/etc/worldserver.conf
+    volumes:
+      - azerothcore-portal-config:/azerothcore/env/dist/etc
+      - azerothcore-portal-logs:/azerothcore/env/dist/logs
+    depends_on:
+      azerothcore-portal-db-import:
+        condition: service_completed_successfully
+
+  azerothcore-portal-admin-bootstrap:
+    image: ghcr.io/ghazibendahmane/azeroth-core-web:0.2.0
+    restart: "no"
+    command: ["bootstrap-account"]
+    environment:
+      AUTH_DSN: portal:${PORTAL_DB_PASSWORD}@tcp(azerothcore-portal-database:3306)/acore_auth
+      BOOTSTRAP_USERNAME: ${PORTAL_ADMIN_USERNAME}
+      BOOTSTRAP_PASSWORD: ${PORTAL_ADMIN_PASSWORD}
+      BOOTSTRAP_EMAIL: ${PORTAL_ADMIN_EMAIL}
+      BOOTSTRAP_GM_LEVEL: "3"
+      BOOTSTRAP_REALM_ID: "-1"
+    depends_on:
+      azerothcore-portal-db-init:
+        condition: service_completed_successfully
+
+  azerothcore-portal-soap-bootstrap:
+    image: ghcr.io/ghazibendahmane/azeroth-core-web:0.2.0
+    restart: "no"
+    command: ["bootstrap-account"]
+    environment:
+      AUTH_DSN: portal:${PORTAL_DB_PASSWORD}@tcp(azerothcore-portal-database:3306)/acore_auth
+      BOOTSTRAP_USERNAME: ${PORTAL_SOAP_USERNAME}
+      BOOTSTRAP_PASSWORD: ${PORTAL_SOAP_PASSWORD}
+      BOOTSTRAP_EMAIL: portal-soap@localhost.invalid
+      BOOTSTRAP_GM_LEVEL: "3"
+      BOOTSTRAP_REALM_ID: "-1"
+    depends_on:
+      azerothcore-portal-db-init:
+        condition: service_completed_successfully
+
+  azerothcore-portal-realm-config:
+    image: mysql:8.4.11
+    restart: "no"
+    environment:
+      MYSQL_PWD: ${MYSQL_ROOT_PASSWORD}
+      REALM_ADDRESS: ${REALM_ADDRESS}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        mysql --host=azerothcore-portal-database --user=root
+        --execute="UPDATE acore_auth.realmlist
+        SET name = 'AzerothCore', address = '$${REALM_ADDRESS}',
+        localAddress = '127.0.0.1', localSubnetMask = '255.255.255.0', port = 8085
+        WHERE id = 1;"
+    depends_on:
+      azerothcore-portal-database:
+        condition: service_healthy
+      azerothcore-portal-db-import:
+        condition: service_completed_successfully
+
+  azerothcore-portal-auth:
+    image: acore/ac-wotlk-authserver:17.0.0-dev
+    restart: unless-stopped
+    tty: true
+    environment:
+      AC_LOGS_DIR: /azerothcore/env/dist/logs
+      AC_TEMP_DIR: /azerothcore/env/dist/temp
+      AC_LOGIN_DATABASE_INFO: azerothcore-portal-database;3306;root;${MYSQL_ROOT_PASSWORD};acore_auth
+    ports:
+      - "3724:3724/tcp"
+    volumes:
+      - azerothcore-portal-config:/azerothcore/env/dist/etc
+      - azerothcore-portal-logs:/azerothcore/env/dist/logs
+    depends_on:
+      azerothcore-portal-realm-config:
+        condition: service_completed_successfully
+      azerothcore-portal-admin-bootstrap:
+        condition: service_completed_successfully
+      azerothcore-portal-soap-bootstrap:
+        condition: service_completed_successfully
+
+  azerothcore-portal-world:
+    image: acore/ac-wotlk-worldserver:17.0.0-dev
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    stop_grace_period: 2m
+    environment:
+      AC_DATA_DIR: /azerothcore/env/dist/data
+      AC_LOGS_DIR: /azerothcore/env/dist/logs
+      AC_LOGIN_DATABASE_INFO: azerothcore-portal-database;3306;root;${MYSQL_ROOT_PASSWORD};acore_auth
+      AC_WORLD_DATABASE_INFO: azerothcore-portal-database;3306;root;${MYSQL_ROOT_PASSWORD};acore_world
+      AC_CHARACTER_DATABASE_INFO: azerothcore-portal-database;3306;root;${MYSQL_ROOT_PASSWORD};acore_characters
+    ports:
+      - "8085:8085/tcp"
+    expose:
+      - "7878"
+    volumes:
+      - azerothcore-portal-config:/azerothcore/env/dist/etc
+      - azerothcore-portal-logs:/azerothcore/env/dist/logs
+      - azerothcore-portal-client-data:/azerothcore/env/dist/data:ro
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8085'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+    depends_on:
+      azerothcore-portal-realm-config:
+        condition: service_completed_successfully
+      azerothcore-portal-client-data:
+        condition: service_completed_successfully
+      azerothcore-portal-soap-config:
+        condition: service_completed_successfully
+      azerothcore-portal-admin-bootstrap:
+        condition: service_completed_successfully
+      azerothcore-portal-soap-bootstrap:
+        condition: service_completed_successfully
+
+  azerothcore-portal:
+    image: ghcr.io/ghazibendahmane/azeroth-core-web:0.2.0
+    restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    expose:
+      - "8080"
+    environment:
+      MOCK_MODE: "false"
+      AUTH_DSN: portal:${PORTAL_DB_PASSWORD}@tcp(azerothcore-portal-database:3306)/acore_auth
+      CHARACTERS_DSN: portal:${PORTAL_DB_PASSWORD}@tcp(azerothcore-portal-database:3306)/acore_characters
+      WORLD_DSN: portal:${PORTAL_DB_PASSWORD}@tcp(azerothcore-portal-database:3306)/acore_world
+      AUTH_DB: acore_auth
+      CHARACTERS_DB: acore_characters
+      WORLD_DB: acore_world
+      PUBLIC_URL: https://${PORTAL_DOMAIN}
+      COOKIE_SECURE: "true"
+      TRUST_PROXY: "true"
+      PORTAL_NAME: ${PORTAL_NAME}
+      REALM_NAME: ${PORTAL_NAME}
+      REALM_ADDRESS: ${REALM_ADDRESS}
+      REALM_ID: "1"
+      ENABLE_SETUP: "false"
+      ENABLE_REGISTRATION: "true"
+      ENABLE_ARMORY: "true"
+      ENABLE_RANKINGS: "true"
+      ENABLE_GUILDS: "true"
+      ENABLE_REALM_STATUS: "true"
+      ENABLE_SHOP: "true"
+      ENABLE_SUPPORT: "true"
+      ENABLE_ADMIN_PANEL: "true"
+      SOAP_URL: http://azerothcore-portal-world:7878/
+      SOAP_USER: ${PORTAL_SOAP_USERNAME}
+      SOAP_PASSWORD: ${PORTAL_SOAP_PASSWORD}
+      ADMIN_TOKEN: ""
+      STARTING_CREDITS: "0"
+      ACCOUNT_EXPANSION: "2"
+      GM_LEVEL: "3"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/readyz"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    depends_on:
+      azerothcore-portal-db-init:
+        condition: service_completed_successfully
+      azerothcore-portal-world:
+        condition: service_healthy
+
+volumes:
+  azerothcore-portal-database:
+  azerothcore-portal-client-data:
+  azerothcore-portal-config:
+  azerothcore-portal-logs:

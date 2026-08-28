@@ -16,6 +16,8 @@ The SOAP port is not published on the host. Only the portal and worldserver cont
 
 AzerothCore's published server images require an `amd64` host. Allow inbound TCP ports `3724` and `8085` through the Dokploy host firewall. These are game protocol ports and do not use the portal's HTTP domain.
 
+Before deploying, provide an SMTP submission endpoint in `PORTAL_SMTP_ADDR` using `host:port` format, plus a plain sender address in `PORTAL_SMTP_FROM`. Set `PORTAL_SMTP_USER` and `PORTAL_SMTP_PASSWORD` when the mail provider requires authentication. Registration email verification is enabled by default, and the portal intentionally refuses to start without a valid SMTP address and sender.
+
 The portal image is hosted on GitHub Container Registry. Until the package is public, configure Dokploy registry credentials for `ghcr.io` using a GitHub token with `read:packages`.
 
 ## First startup
@@ -39,6 +41,7 @@ Restart the client and sign in using an account created through the portal. If a
 ## Security and backups
 
 - Keep MySQL and SOAP private; do not publish ports `3306` or `7878`.
+- Use a dedicated SMTP credential and a sender domain with SPF, DKIM, and DMARC configured.
 - Store Dokploy environment values as secrets and rotate the generated administrator password after first login.
 - Back up the `azerothcore-portal-database`, `azerothcore-portal-config`, and `azerothcore-portal-client-data` volumes.
 - Review orders marked `review` before retrying them; SOAP commands cannot carry idempotency keys.

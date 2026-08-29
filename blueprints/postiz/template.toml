@@ -18,10 +18,18 @@ env = [
     "TEMPORAL_PASSWORD=${temporal_password}",
     "FACEBOOK_APP_ID=",
     "FACEBOOK_APP_SECRET=",
+    "INSTAGRAM_APP_ID=",
+    "INSTAGRAM_APP_SECRET=",
     "LINKEDIN_CLIENT_ID=",
     "LINKEDIN_CLIENT_SECRET=",
     "X_API_KEY=",
-    "X_API_SECRET="
+    "X_API_SECRET=",
+    "YOUTUBE_CLIENT_ID=",
+    "YOUTUBE_CLIENT_SECRET=",
+    "GOOGLE_CLIENT_ID=",
+    "GOOGLE_CLIENT_SECRET=",
+    "TIKTOK_CLIENT_ID=",
+    "TIKTOK_CLIENT_SECRET="
 ]
 mounts = []
 

@@ -8,16 +8,20 @@ services:
     environment:
       MAIN_URL: "https://${POSTIZ_HOST}"
       FRONTEND_URL: "https://${POSTIZ_HOST}"
+      # The frontend reads its own public URL from this variable.
+      NEXT_PUBLIC_FRONTEND_URL: "https://${POSTIZ_HOST}"
       NEXT_PUBLIC_BACKEND_URL: "https://${POSTIZ_HOST}/api"
       JWT_SECRET: ${JWT_SECRET}
       DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@postiz-postgres:5432/${DB_NAME}"
       REDIS_URL: "redis://postiz-redis:6379"
-      BACKEND_INTERNAL_URL: "http://localhost:3000"
+      # "localhost" resolves to ::1 first, but the backend only listens on IPv4.
+      BACKEND_INTERNAL_URL: "http://127.0.0.1:3000"
       TEMPORAL_ADDRESS: "temporal:7233"
       IS_GENERAL: "true"
-      DISABLE_REGISTRATION: "false"
+      DISABLE_REGISTRATION: ${DISABLE_REGISTRATION:-false}
       RUN_CRON: "true"
-      NOT_SECURED: "true"
+      # The template is served over HTTPS, so secure cookies must stay on.
+      NOT_SECURED: "false"
       STORAGE_PROVIDER: "local"
       UPLOAD_DIRECTORY: "/uploads"
       NEXT_PUBLIC_UPLOAD_DIRECTORY: "/uploads"
@@ -25,12 +29,22 @@ services:
       # === Social Media API Settings ===
       # These variables should be defined in the Dokploy Environment tab.
       # For more configuration options and details, please refer to the official documentation.
+      # Every provider Postiz reads must be listed here, otherwise setting it in
+      # the Environment tab has no effect: it never reaches the container.
       FACEBOOK_APP_ID: ${FACEBOOK_APP_ID}
       FACEBOOK_APP_SECRET: ${FACEBOOK_APP_SECRET}
+      INSTAGRAM_APP_ID: ${INSTAGRAM_APP_ID}
+      INSTAGRAM_APP_SECRET: ${INSTAGRAM_APP_SECRET}
       LINKEDIN_CLIENT_ID: ${LINKEDIN_CLIENT_ID}
       LINKEDIN_CLIENT_SECRET: ${LINKEDIN_CLIENT_SECRET}
       X_API_KEY: ${X_API_KEY}
       X_API_SECRET: ${X_API_SECRET}
+      YOUTUBE_CLIENT_ID: ${YOUTUBE_CLIENT_ID}
+      YOUTUBE_CLIENT_SECRET: ${YOUTUBE_CLIENT_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      TIKTOK_CLIENT_ID: ${TIKTOK_CLIENT_ID}
+      TIKTOK_CLIENT_SECRET: ${TIKTOK_CLIENT_SECRET}
 
     volumes:
       - postiz-config:/config/
@@ -41,7 +55,8 @@ services:
       postiz-redis:
         condition: service_healthy
       temporal:
-        condition: service_started
+        # Postiz crashes on boot if Temporal is not accepting connections yet.
+        condition: service_healthy
 
   postiz-postgres:
     image: postgres:17-alpine
@@ -74,6 +89,7 @@ services:
 
   temporal-elasticsearch:
     image: elasticsearch:7.17.27
+    restart: always
     environment:
       - cluster.routing.allocation.disk.threshold_enabled=true
       - cluster.routing.allocation.disk.watermark.low=512mb
@@ -87,6 +103,7 @@ services:
 
   temporal-postgresql:
     image: postgres:16
+    restart: always
     environment:
       POSTGRES_PASSWORD: ${TEMPORAL_PASSWORD}
       POSTGRES_USER: ${TEMPORAL_USER}
@@ -100,6 +117,7 @@ services:
 
   temporal:
     image: temporalio/auto-setup:1.28.1
+    restart: always
     depends_on:
       temporal-postgresql:
         condition: service_healthy
@@ -116,7 +134,8 @@ services:
       - ES_VERSION=v7
       - TEMPORAL_NAMESPACE=default
     healthcheck:
-      test: ["CMD", "tctl", "--address", "127.0.0.1:7233", "workflow", "list"]
+      # tctl needs an explicit namespace, and Temporal does not bind 127.0.0.1.
+      test: ["CMD-SHELL", "tctl --address $$(hostname -i):7233 --namespace default workflow list > /dev/null 2>&1"]
       interval: 15s
       timeout: 10s
       retries: 30

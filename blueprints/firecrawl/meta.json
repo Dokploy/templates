@@ -1,19 +1,21 @@
 {
   "id": "firecrawl",
   "name": "Firecrawl",
-  "version": "latest",
-  "description": "Firecrawl is an API service that takes a URL, crawls it, and converts it into clean markdown or structured data. It can crawl all accessible subpages and provide clean data for each.",
+  "version": "2.11.230",
+  "description": "Production-ready, authenticated Firecrawl with persistent queues, browser rendering, a generated API key, and interactive OpenAPI documentation.",
   "logo": "firecrawl.svg",
   "links": {
     "github": "https://github.com/firecrawl/firecrawl",
     "website": "https://firecrawl.dev",
-    "docs": "https://github.com/firecrawl/firecrawl"
+    "docs": "https://docs.firecrawl.dev/contributing/self-host"
   },
   "tags": [
     "api",
     "crawler",
     "scraping",
     "data-extraction",
-    "llm"
+    "llm",
+    "automation",
+    "self-hosted"
   ]
 }

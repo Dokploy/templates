@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="100%" height="100%" viewBox="0 0 2408 2402" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
-  <g transform="matrix(1,0,0,1,-0,-5340.948958)">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2408 2402" role="img" aria-label="Heyo Docs">
+  <rect x="24" y="24" width="2360" height="2354" rx="440" fill="#18181b" stroke="#3f3f46" stroke-width="48"/>
+  <g fill="#fff" transform="matrix(1,0,0,1,-0,-5340.948958)">
     <g id="Artboard2" transform="matrix(0.203877,0,0,0.203369,-563.967735,5340.948958)">
       <rect x="2766.22" y="0" width="11811.024" height="11811.024" style="fill:none;"/>
       <g transform="matrix(2.715433,0,0,3.98948,1472.893926,-703.424315)">

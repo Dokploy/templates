@@ -246,8 +246,8 @@ services:
     environment:
       <<: *airbyte-environment
       DD_SERVICE: airbyte-server
-    ports:
-      - 127.0.0.1:${AIRBYTE_PORT:-8000}:8001
+    expose:
+      - 8001
     healthcheck:
       test:
         - CMD

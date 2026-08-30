@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  quireink:
+    image: quireink/quireink:2.2.1
+    restart: unless-stopped
+    environment:
+      SITE_URL: https://${QUIREINK_HOST}
+    volumes:
+      - quireink-data:/var/lib/quire/data
+      - quireink-uploads:/var/lib/quire/uploads
+
+volumes:
+  quireink-data: {}
+  quireink-uploads: {}

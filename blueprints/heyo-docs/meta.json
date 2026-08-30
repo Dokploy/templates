@@ -1,0 +1,18 @@
+{
+  "id": "heyo-docs",
+  "name": "Heyo Docs",
+  "version": "0.1.3",
+  "description": "A themeable documentation toolkit for React Router, Next.js, and Astro with MDX content, search, OpenAPI references, and SEO built in.",
+  "logo": "heyo-docs.svg",
+  "links": {
+    "github": "https://github.com/heyo-sh/heyo-docs",
+    "website": "https://docs.heyo.sh",
+    "docs": "https://docs.heyo.sh"
+  },
+  "tags": [
+    "documentation",
+    "react-router",
+    "mdx",
+    "developer-tools"
+  ]
+}

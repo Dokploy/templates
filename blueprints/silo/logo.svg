@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="570" height="570" viewBox="230 213 570 570"
+     preserveAspectRatio="xMidYMid meet"
+     role="img" aria-labelledby="title desc"
+     shape-rendering="geometricPrecision">
+  <title id="title">SILO emblem</title>
+  <desc id="desc">A smooth circular SILO mark with a peaked roof, flowing left wall, columns, and a curved base.</desc>
+
+  <defs>
+    <linearGradient id="silo-color" x1="276" y1="720" x2="742" y2="286" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#064A83"/>
+      <stop offset="0.5" stop-color="#007FA8"/>
+      <stop offset="1" stop-color="#22C7C9"/>
+    </linearGradient>
+  </defs>
+
+  <g fill="url(#silo-color)">
+    <!-- Outer circular band, intentionally opened at the lower-right plinth. -->
+    <path d="
+      M 734 676
+      A 283.5 278.5 0 1 0 310 692
+      L 359 692
+      A 247 248.5 0 1 1 688 676
+      Z"/>
+
+    <!-- Flowing left wall; its upper tangent matches the inner ellipse. -->
+    <path d="
+      M 300.57 375
+      C 292 390 300 430 328 450
+      C 343 461 357 472 374 481
+      C 410 501 426 517 426 544
+      L 426 676
+      L 336 676
+      C 308 647 286 608 274 565
+      C 262 522 263 479 272 439
+      C 278 413 286 389 300.57 375
+      Z"/>
+
+    <!-- Right column with tangent-continuous upper shoulder. -->
+    <path d="
+      M 602 373
+      Q 602 368 607 370
+      C 619 374 634 381 634 389
+      L 634 647
+      Q 634 649 636 649
+      L 708 649
+      L 734 676
+      L 602 676
+      Z"/>
+
+    <!-- Lower circular cap. -->
+    <path d="
+      M 310 692
+      L 714 692
+      C 668 743 596 774 512 774
+      C 428 774 355 743 310 692
+      Z"/>
+
+    <!-- Main silo body, with a tangent-continuous right shoulder. -->
+    <path d="
+      M 389 389
+      C 389 374 447 351 512 351
+      C 540 351 565 354 580 359
+      Q 583 360 583 364
+      L 583 676
+      L 443 676
+      L 443 541
+      C 443 509 426 490 389 470
+      Z"/>
+
+    <!-- Peaked roof with softly tapered, burr-free tips. -->
+    <path d="
+      M 512 274
+      L 647 365
+      Q 649 370 647 376
+      C 609 350 563 337 512 337
+      C 460 337 414 350 377 376
+      Q 375 370 377 365
+      Z"/>
+  </g>
+</svg>

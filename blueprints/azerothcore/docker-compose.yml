@@ -13,7 +13,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "mysqladmin ping --host=localhost --user=root --password=$${MYSQL_ROOT_PASSWORD}",
+          "mysqladmin ping --host=127.0.0.1 --protocol=TCP --user=root --password=$${MYSQL_ROOT_PASSWORD}",
         ]
       interval: 5s
       timeout: 10s

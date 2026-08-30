@@ -13,7 +13,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "mysqladmin ping --host=localhost --user=root --password=$${MYSQL_ROOT_PASSWORD}",
+          "mysqladmin ping --host=127.0.0.1 --protocol=TCP --user=root --password=$${MYSQL_ROOT_PASSWORD}",
         ]
       interval: 5s
       timeout: 10s
@@ -109,6 +109,10 @@ services:
       BOOTSTRAP_REALM_ID: "-1"
     depends_on:
       azerothcore-portal-db-init:
+        condition: service_completed_successfully
+      # Serialized after the admin bootstrap: both jobs insert into acore_auth.account
+      # and running them concurrently triggers a MySQL deadlock (Error 1213).
+      azerothcore-portal-admin-bootstrap:
         condition: service_completed_successfully
 
   azerothcore-portal-realm-config:
@@ -217,7 +221,9 @@ services:
       REALM_ID: "1"
       ENABLE_SETUP: "false"
       ENABLE_REGISTRATION: "true"
-      REQUIRE_EMAIL_VERIFICATION: "true"
+      # Default "false" so the template starts out of the box; enable it once the
+      # PORTAL_SMTP_* variables point at a real SMTP submission endpoint.
+      REQUIRE_EMAIL_VERIFICATION: ${PORTAL_REQUIRE_EMAIL_VERIFICATION}
       SMTP_ADDR: ${PORTAL_SMTP_ADDR}
       SMTP_USER: ${PORTAL_SMTP_USER}
       SMTP_PASSWORD: ${PORTAL_SMTP_PASSWORD}

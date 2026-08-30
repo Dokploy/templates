@@ -2,13 +2,17 @@ version: "3.8"
 
 services:
   wupnext:
-    image: docker.io/javierlnmn/wupnext:latest
+    image: docker.io/javierlnmn/wupnext:0.3.0
     restart: unless-stopped
     environment:
       SECRET_KEY: ${SECRET_KEY}
       DEBUG: "False"
       ALLOWED_HOSTS: ${ALLOWED_HOSTS}
       CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS}
+      # Public base URL, used for links in emails
+      SITE_URL: ${SITE_URL}
+      # Public origin the MCP server advertises to clients during discovery
+      MCP_BASE_URL: ${MCP_BASE_URL}
       EMAIL_BACKEND: anymail.backends.resend.EmailBackend
       DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
       RESEND_API_KEY: ${RESEND_API_KEY}
@@ -31,9 +35,14 @@ services:
       DEBUG: "False"
       ALLOWED_HOSTS: ${ALLOWED_HOSTS}
       CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS}
+      SITE_URL: ${SITE_URL}
       EMAIL_BACKEND: anymail.backends.resend.EmailBackend
       DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
       RESEND_API_KEY: ${RESEND_API_KEY}
+      # Django Q2 cluster (ORM broker, no Redis)
+      Q_WORKERS: ${Q_WORKERS}
+      Q_TIMEOUT: ${Q_TIMEOUT}
+      Q_RETRY: ${Q_RETRY}
     volumes:
       - wupnext-db:/app/db
     depends_on:

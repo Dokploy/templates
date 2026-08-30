@@ -8,8 +8,6 @@ services:
     environment:
       MAIN_URL: "https://${POSTIZ_HOST}"
       FRONTEND_URL: "https://${POSTIZ_HOST}"
-      # The frontend reads its own public URL from this variable.
-      NEXT_PUBLIC_FRONTEND_URL: "https://${POSTIZ_HOST}"
       NEXT_PUBLIC_BACKEND_URL: "https://${POSTIZ_HOST}/api"
       JWT_SECRET: ${JWT_SECRET}
       DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@postiz-postgres:5432/${DB_NAME}"
@@ -20,8 +18,9 @@ services:
       IS_GENERAL: "true"
       DISABLE_REGISTRATION: ${DISABLE_REGISTRATION:-false}
       RUN_CRON: "true"
-      # The template is served over HTTPS, so secure cookies must stay on.
-      NOT_SECURED: "false"
+      # Postiz only checks whether NOT_SECURED is set (any value, even "false",
+      # enables insecure mode). The template is served over HTTPS, so keep it
+      # unset to get secure cookies.
       STORAGE_PROVIDER: "local"
       UPLOAD_DIRECTORY: "/uploads"
       NEXT_PUBLIC_UPLOAD_DIRECTORY: "/uploads"
@@ -39,10 +38,10 @@ services:
       LINKEDIN_CLIENT_SECRET: ${LINKEDIN_CLIENT_SECRET}
       X_API_KEY: ${X_API_KEY}
       X_API_SECRET: ${X_API_SECRET}
+      # YOUTUBE_CLIENT_ID/SECRET also power "Sign in with Google" (Postiz's
+      # Google auth provider reads YOUTUBE_CLIENT_ID).
       YOUTUBE_CLIENT_ID: ${YOUTUBE_CLIENT_ID}
       YOUTUBE_CLIENT_SECRET: ${YOUTUBE_CLIENT_SECRET}
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       TIKTOK_CLIENT_ID: ${TIKTOK_CLIENT_ID}
       TIKTOK_CLIENT_SECRET: ${TIKTOK_CLIENT_SECRET}
 

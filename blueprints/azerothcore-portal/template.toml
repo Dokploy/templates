@@ -1,0 +1,41 @@
+[variables]
+mysql_root_password = "${password:32}"
+portal_db_password = "${password:32}"
+portal_admin_username = "PORTALADMIN"
+portal_admin_password = "${password:24}"
+portal_admin_email = "${email}"
+portal_soap_username = "PORTALSOAP"
+portal_soap_password = "${password:24}"
+portal_name = "AzerothCore"
+realm_address = "${domain}"
+portal_domain = "${domain}"
+portal_require_email_verification = "false"
+portal_smtp_addr = ""
+portal_smtp_user = ""
+portal_smtp_password = ""
+portal_smtp_from = ""
+
+[config]
+mounts = []
+env = [
+  "MYSQL_ROOT_PASSWORD=${mysql_root_password}",
+  "PORTAL_DB_PASSWORD=${portal_db_password}",
+  "PORTAL_ADMIN_USERNAME=${portal_admin_username}",
+  "PORTAL_ADMIN_PASSWORD=${portal_admin_password}",
+  "PORTAL_ADMIN_EMAIL=${portal_admin_email}",
+  "PORTAL_SOAP_USERNAME=${portal_soap_username}",
+  "PORTAL_SOAP_PASSWORD=${portal_soap_password}",
+  "PORTAL_NAME=${portal_name}",
+  "REALM_ADDRESS=${realm_address}",
+  "PORTAL_DOMAIN=${portal_domain}",
+  "PORTAL_REQUIRE_EMAIL_VERIFICATION=${portal_require_email_verification}",
+  "PORTAL_SMTP_ADDR=${portal_smtp_addr}",
+  "PORTAL_SMTP_USER=${portal_smtp_user}",
+  "PORTAL_SMTP_PASSWORD=${portal_smtp_password}",
+  "PORTAL_SMTP_FROM=${portal_smtp_from}",
+]
+
+[[config.domains]]
+serviceName = "azerothcore-portal"
+port = 8080
+host = "${portal_domain}"

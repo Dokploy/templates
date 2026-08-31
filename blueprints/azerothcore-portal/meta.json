@@ -1,0 +1,17 @@
+{
+  "id": "azerothcore-portal",
+  "name": "AzerothCore + Portal",
+  "version": "0.2.0",
+  "description": "A complete Wrath of the Lich King server with account registration, armory, rankings, shop, support, and administration portal.",
+  "logo": "azerothcore.svg",
+  "links": {
+    "github": "https://github.com/GhaziBenDahmane/azeroth-core-web",
+    "website": "https://www.azerothcore.org/",
+    "docs": "https://www.azerothcore.org/wiki/install-with-docker"
+  },
+  "tags": [
+    "gaming",
+    "mmorpg",
+    "portal"
+  ]
+}

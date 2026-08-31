@@ -80,6 +80,17 @@ services:
     volumes:
       - minio-data:/storage
     restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >
+          /bin/mc alias set health http://127.0.0.1:9000
+          "$${MINIO_ROOT_USER}" "$${MINIO_ROOT_PASSWORD}" >/dev/null 2>&1
+          && /bin/mc ready health >/dev/null 2>&1
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
 
   minio-init:
     image: minio/minio:${MINIO_VERSION}
@@ -118,6 +129,16 @@ services:
       db:
         condition: service_healthy
     restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - /bin/bash
+        - -ec
+        - exec 3<>/dev/tcp/127.0.0.1/7233
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
 
   k3s:
     image: rancher/k3s:${K3S_VERSION}
@@ -157,6 +178,11 @@ services:
       k3s:
         condition: service_started
     restart: unless-stopped
+    healthcheck:
+      test: [CMD, /coredns, -version]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   k3s-bootstrap:
     image: rancher/k3s:${K3S_VERSION}
@@ -252,6 +278,16 @@ services:
         condition: service_completed_successfully
       minio-init:
         condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request; response = urllib.request.urlopen("http://127.0.0.1:8080/health", timeout=5); assert response.status == 200
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   workload-api-server:
     <<: *airbyte-service
@@ -266,6 +302,20 @@ services:
         condition: service_completed_successfully
       temporal:
         condition: service_started
+    healthcheck:
+      test:
+        - CMD
+        - /bin/bash
+        - -ec
+        - |
+          exec 3<>/dev/tcp/127.0.0.1/8085
+          printf 'GET /health/liveness HTTP/1.0\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3
+          read -r status <&3
+          [[ "$$status" == *" 200 "* ]]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   worker:
     <<: *airbyte-service
@@ -280,6 +330,20 @@ services:
         condition: service_started
       workload-api-server:
         condition: service_started
+    healthcheck:
+      test:
+        - CMD
+        - /bin/bash
+        - -ec
+        - |
+          exec 3<>/dev/tcp/127.0.0.1/9000
+          printf 'GET / HTTP/1.0\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3
+          read -r status <&3
+          [[ "$$status" == *" 200 "* ]]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   cron:
     <<: *airbyte-service
@@ -294,6 +358,20 @@ services:
         condition: service_started
       workload-api-server:
         condition: service_started
+    healthcheck:
+      test:
+        - CMD
+        - /bin/bash
+        - -ec
+        - |
+          exec 3<>/dev/tcp/127.0.0.1/8085
+          printf 'GET /health HTTP/1.0\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3
+          read -r status <&3
+          [[ "$$status" == *" 200 "* ]]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   workload-launcher:
     <<: *airbyte-service
@@ -321,6 +399,20 @@ services:
         condition: service_started
       temporal:
         condition: service_started
+    healthcheck:
+      test:
+        - CMD
+        - /bin/bash
+        - -ec
+        - |
+          exec 3<>/dev/tcp/127.0.0.1/8085
+          printf 'GET /health/readiness HTTP/1.0\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3
+          read -r status <&3
+          [[ "$$status" == *" 200 "* ]]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
 volumes:
   db-data:

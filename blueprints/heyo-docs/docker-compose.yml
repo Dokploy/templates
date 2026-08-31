@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  heyo-docs:
+    build:
+      context: https://github.com/heyo-sh/heyo-docs.git#0c67d0ec498f9fe3361b7c8fb78b2e822e01f4e9
+      dockerfile_inline: |
+        FROM oven/bun:1.3.1-alpine AS build
+
+        WORKDIR /app
+
+        ARG SITE_URL=http://localhost:3000
+
+        RUN bun create @heyo-sh/heyo-docs@0.2.3 docs \
+          --template astro \
+          --deployment later \
+          --theme shade \
+          --package-manager bun
+
+        WORKDIR /app/docs
+        RUN bun -e 'const file = "heyo-docs.config.ts"; const siteUrl = process.argv.at(-1); const source = await Bun.file(file).text(); const updated = source.replace(`// siteUrl: "https://docs.example.com",`, `siteUrl: "` + siteUrl + `",`); if (updated === source) throw new Error("Could not set the generated project site URL."); await Bun.write(file, updated);' "$SITE_URL" \
+          && grep -Fq "siteUrl: \"${SITE_URL}\"," heyo-docs.config.ts \
+          && bun run build
+
+        FROM oven/bun:1.3.1-alpine AS runner
+
+        WORKDIR /app
+
+        ENV NODE_ENV=production \
+            HOST=0.0.0.0 \
+            PORT=3000
+
+        COPY --from=build --chown=bun:bun /app/docs ./
+
+        USER bun
+
+        EXPOSE 3000
+
+        CMD ["bun", "run", "start"]
+      args:
+        SITE_URL: ${SITE_URL}
+    restart: unless-stopped
+    expose:
+      - 3000
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s

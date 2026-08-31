@@ -35,9 +35,6 @@ AIRBYTE_ADMIN_CLIENT_ID = "${airbyte_admin_client_id}"
 AIRBYTE_ADMIN_CLIENT_SECRET = "${airbyte_admin_client_secret}"
 AIRBYTE_JWT_SIGNATURE_SECRET = "${airbyte_jwt_signature_secret}"
 
-AIRBYTE_COMPOSE_SUBNET = "172.30.0.0/24"
-AIRBYTE_K3S_IP = "172.30.0.20"
-
 [[config.mounts]]
 filePath = "./config/airbyte.env"
 content = """
@@ -162,7 +159,7 @@ SERVER_MICRONAUT_ENVIRONMENTS=control-plane
 filePath = "./config/docker-dns.Corefile"
 content = """
 .:53 {
-    bind {$AIRBYTE_K3S_IP}
+    bind eth0
     errors
     cache 30
     forward . 127.0.0.11
@@ -344,7 +341,7 @@ data:
         bind 127.0.0.1
         errors
         rewrite stop name regex ^(.+?)(\\.[^.]+\\.svc\\.cluster\\.local|\\.svc\\.cluster\\.local|\\.cluster\\.local)\\.$ {1} answer auto
-        forward . __AIRBYTE_K3S_IP__
+        forward . {$AIRBYTE_K3S_IP}
     }
 ---
 apiVersion: apps/v1
@@ -381,6 +378,11 @@ spec:
           image: rancher/mirrored-coredns-coredns:1.14.7
           imagePullPolicy: IfNotPresent
           args: [-conf, /etc/coredns/Corefile]
+          env:
+            - name: AIRBYTE_K3S_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
           resources:
             limits:
               memory: 170Mi
@@ -515,11 +517,7 @@ until /bin/kubectl --kubeconfig "$client_config" get --raw=/readyz >/dev/null 2>
   sleep 2
 done
 
-sed \
-  -e "s|__AIRBYTE_K3S_IP__|${AIRBYTE_K3S_IP}|g" \
-  /config/k3s-resources.yaml > /tmp/k3s-resources.yaml
-
-/bin/kubectl --kubeconfig "$client_config" apply -f /tmp/k3s-resources.yaml
+/bin/kubectl --kubeconfig "$client_config" apply -f /config/k3s-resources.yaml
 
 /bin/kubectl --kubeconfig "$client_config" \
   --namespace kube-system rollout status deployment/coredns --timeout=180s

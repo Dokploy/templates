@@ -20,19 +20,19 @@ x-airbyte-environment: &airbyte-environment
   AIRBYTE_VERSION: ${AIRBYTE_VERSION:?Set AIRBYTE_VERSION in .env}
   AIRBYTE_URL: ${AIRBYTE_URL:?Set AIRBYTE_URL in .env}
   AIRBYTE_API_HOST: ${AIRBYTE_API_HOST:?Set AIRBYTE_API_HOST in .env}
-  AIRBYTE_SERVER_HOST: airbyte-airbyte-server-svc.default:8001
-  INTERNAL_API_HOST: http://airbyte-airbyte-server-svc.default:8001
-  MANIFEST_SERVER_API_HOST: http://airbyte-airbyte-manifest-server-svc.default:8080
-  CONTROL_PLANE_TOKEN_ENDPOINT: http://airbyte-airbyte-server-svc.default:8001/api/v1/dataplanes/token
-  WORKLOAD_API_HOST: http://airbyte-workload-api-server-svc.default:8007
-  TEMPORAL_HOST: airbyte-temporal:7233
-  MINIO_ENDPOINT: http://airbyte-minio-svc.default:9000
-  DATABASE_HOST: airbyte-db-svc.default.svc.cluster.local
+  AIRBYTE_SERVER_HOST: server:8001
+  INTERNAL_API_HOST: http://server:8001
+  MANIFEST_SERVER_API_HOST: http://manifest-server:8080
+  CONTROL_PLANE_TOKEN_ENDPOINT: http://server:8001/api/v1/dataplanes/token
+  WORKLOAD_API_HOST: http://workload-api-server:8007
+  TEMPORAL_HOST: temporal:7233
+  MINIO_ENDPOINT: http://minio:9000
+  DATABASE_HOST: db
   DATABASE_DB: ${DATABASE_DB:?Set DATABASE_DB in .env}
   DATABASE_USER: ${DATABASE_USER:?Set DATABASE_USER in .env}
   DATABASE_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in .env}
-  DATABASE_URL: jdbc:postgresql://airbyte-db-svc.default.svc.cluster.local:5432/${DATABASE_DB}
-  CONFIG_DATABASE_REPLICA_URL: jdbc:postgresql://airbyte-db-svc.default.svc.cluster.local:5432/${DATABASE_DB}
+  DATABASE_URL: jdbc:postgresql://db:5432/${DATABASE_DB}
+  CONFIG_DATABASE_REPLICA_URL: jdbc:postgresql://db:5432/${DATABASE_DB}
   CONFIG_DATABASE_REPLICA_USER: ${DATABASE_USER}
   CONFIG_DATABASE_REPLICA_PASSWORD: ${DATABASE_PASSWORD}
   AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER:?Set MINIO_ROOT_USER in .env}
@@ -69,11 +69,6 @@ services:
       start_period: 10s
     volumes:
       - db-data:/var/lib/postgresql/data
-    networks:
-      airbyte:
-        aliases:
-          - airbyte-db-svc.default
-          - airbyte-db-svc.default.svc.cluster.local
     restart: unless-stopped
 
   minio:
@@ -84,18 +79,13 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
       - minio-data:/storage
-    networks:
-      airbyte:
-        aliases:
-          - airbyte-minio-svc.default
-          - airbyte-minio-svc.default.svc.cluster.local
     restart: unless-stopped
 
   minio-init:
     image: minio/minio:${MINIO_VERSION}
     entrypoint: [/bin/sh, /scripts/init-minio.sh]
     environment:
-      MINIO_ENDPOINT: http://airbyte-minio-svc.default:9000
+      MINIO_ENDPOINT: http://minio:9000
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
@@ -103,8 +93,6 @@ services:
     depends_on:
       minio:
         condition: service_started
-    networks:
-      - airbyte
     restart: on-failure
 
   temporal:
@@ -113,7 +101,7 @@ services:
       AUTO_SETUP: "true"
       DB: postgres12
       DB_PORT: "5432"
-      POSTGRES_SEEDS: airbyte-db-svc.default.svc.cluster.local
+      POSTGRES_SEEDS: db
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PWD: ${DATABASE_PASSWORD}
       POSTGRES_TLS_ENABLED: "false"
@@ -129,10 +117,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    networks:
-      airbyte:
-        aliases:
-          - airbyte-temporal
     restart: unless-stopped
 
   k3s:
@@ -140,7 +124,6 @@ services:
     command:
       - server
       - --node-name=airbyte-k3s
-      - --node-ip=${AIRBYTE_K3S_IP}
       - --disable=traefik
       - --disable=servicelb
       - --disable=metrics-server
@@ -162,16 +145,11 @@ services:
       timeout: 5s
       retries: 60
       start_period: 20s
-    networks:
-      airbyte:
-        ipv4_address: ${AIRBYTE_K3S_IP}
     restart: unless-stopped
 
   docker-dns:
     image: rancher/mirrored-coredns-coredns:${COREDNS_VERSION}
     command: [-conf, /etc/coredns/Corefile]
-    environment:
-      AIRBYTE_K3S_IP: ${AIRBYTE_K3S_IP}
     volumes:
       - ../files/config/docker-dns.Corefile:/etc/coredns/Corefile:ro
     network_mode: service:k3s
@@ -184,7 +162,6 @@ services:
     image: rancher/k3s:${K3S_VERSION}
     entrypoint: [/bin/sh, /scripts/bootstrap-k3s.sh]
     environment:
-      AIRBYTE_K3S_IP: ${AIRBYTE_K3S_IP}
       AIRBYTE_ADMIN_PASSWORD: ${AIRBYTE_ADMIN_PASSWORD}
       AIRBYTE_ADMIN_CLIENT_ID: ${AIRBYTE_ADMIN_CLIENT_ID}
       AIRBYTE_ADMIN_CLIENT_SECRET: ${AIRBYTE_ADMIN_CLIENT_SECRET}
@@ -202,8 +179,6 @@ services:
         condition: service_healthy
       docker-dns:
         condition: service_started
-    networks:
-      - airbyte
     restart: on-failure
 
   dataplane-credentials:
@@ -216,8 +191,6 @@ services:
     depends_on:
       bootloader:
         condition: service_completed_successfully
-    networks:
-      - airbyte
     restart: on-failure
 
   bootloader:
@@ -236,8 +209,6 @@ services:
         condition: service_healthy
       k3s-bootstrap:
         condition: service_completed_successfully
-    networks:
-      - airbyte
     restart: on-failure
 
   server:
@@ -269,11 +240,6 @@ services:
         condition: service_completed_successfully
       temporal:
         condition: service_started
-    networks:
-      airbyte:
-        aliases:
-          - airbyte-airbyte-server-svc.default
-          - airbyte-airbyte-server-svc.default.svc.cluster.local
 
   manifest-server:
     <<: *airbyte-service
@@ -286,11 +252,6 @@ services:
         condition: service_completed_successfully
       minio-init:
         condition: service_completed_successfully
-    networks:
-      airbyte:
-        aliases:
-          - airbyte-airbyte-manifest-server-svc.default
-          - airbyte-airbyte-manifest-server-svc.default.svc.cluster.local
 
   workload-api-server:
     <<: *airbyte-service
@@ -305,11 +266,6 @@ services:
         condition: service_completed_successfully
       temporal:
         condition: service_started
-    networks:
-      airbyte:
-        aliases:
-          - airbyte-workload-api-server-svc.default
-          - airbyte-workload-api-server-svc.default.svc.cluster.local
 
   worker:
     <<: *airbyte-service
@@ -324,8 +280,6 @@ services:
         condition: service_started
       workload-api-server:
         condition: service_started
-    networks:
-      airbyte:
 
   cron:
     <<: *airbyte-service
@@ -340,8 +294,6 @@ services:
         condition: service_started
       workload-api-server:
         condition: service_started
-    networks:
-      airbyte:
 
   workload-launcher:
     <<: *airbyte-service
@@ -369,15 +321,6 @@ services:
         condition: service_started
       temporal:
         condition: service_started
-    networks:
-      airbyte:
-
-networks:
-  airbyte:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: ${AIRBYTE_COMPOSE_SUBNET}
 
 volumes:
   db-data:

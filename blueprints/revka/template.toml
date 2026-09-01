@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+api_key = "${password:64}"
+provider = "openrouter"
+
+[config]
+env = [
+  "API_KEY=${api_key}",
+  "PROVIDER=${provider}",
+  "REVKA_ALLOW_PUBLIC_BIND=true",
+  "REVKA_GATEWAY_PORT=42617"
+]
+
+[[config.domains]]
+serviceName = "revka"
+port = 42617
+host = "${main_domain}"

@@ -273,6 +273,7 @@ services:
     environment:
       <<: *airbyte-environment
       DD_SERVICE: airbyte-manifest-server
+      AIRBYTE_ENABLE_UNSAFE_CODE: ${AIRBYTE_ENABLE_UNSAFE_CODE:-false}
     depends_on:
       bootloader:
         condition: service_completed_successfully
@@ -384,6 +385,7 @@ services:
       MICRONAUT_ENVIRONMENTS: k8s,control-plane,edition-community
       JOB_KUBE_NAMESPACE: default
       DD_SERVICE: airbyte-workload-launcher
+      AIRBYTE_ENABLE_UNSAFE_CODE: ${AIRBYTE_ENABLE_UNSAFE_CODE:-false}
     volumes:
       - k3s-kubeconfig:/kube:ro
       - dataplane-credentials:/credentials:ro

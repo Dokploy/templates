@@ -35,6 +35,8 @@ AIRBYTE_ADMIN_CLIENT_ID = "${airbyte_admin_client_id}"
 AIRBYTE_ADMIN_CLIENT_SECRET = "${airbyte_admin_client_secret}"
 AIRBYTE_JWT_SIGNATURE_SECRET = "${airbyte_jwt_signature_secret}"
 
+AIRBYTE_ENABLE_UNSAFE_CODE = "false"
+
 [[config.mounts]]
 filePath = "./config/airbyte.env"
 content = """

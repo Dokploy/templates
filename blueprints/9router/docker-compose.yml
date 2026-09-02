@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   9router:
-    image: decolua/9router:0.5.40
+    image: decolua/9router:0.5.59
     restart: unless-stopped
     environment:
       DATA_DIR: /app/data
@@ -13,20 +13,34 @@ services:
       INITIAL_PASSWORD: ${INITIAL_PASSWORD}
       API_KEY_SECRET: ${API_KEY_SECRET}
       MACHINE_ID_SALT: ${MACHINE_ID_SALT}
-      BASE_URL: http://${ROUTER_HOST}
-      NEXT_PUBLIC_BASE_URL: http://${ROUTER_HOST}
+      BASE_URL: https://${ROUTER_HOST}
+      NEXT_PUBLIC_BASE_URL: https://${ROUTER_HOST}
       HEADROOM_URL: http://headroom:8787
-      AUTH_COOKIE_SECURE: "false"
+      AUTH_COOKIE_SECURE: "true"
+      REQUIRE_API_KEY: "true"
     volumes:
       - 9router-data:/app/data
     depends_on:
-      - headroom
+      headroom:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:20128/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
 
   # Optional token-reduction proxy that 9Router calls through HEADROOM_URL.
   # Shipped as a sidecar because the 9Router image does not bundle it.
   headroom:
     image: ghcr.io/chopratejas/headroom:0.6.7
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8787/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
 volumes:
   9router-data:

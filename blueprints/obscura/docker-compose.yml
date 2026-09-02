@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  obscura:
+    image: h4ckf0r0day/obscura:0.2.1
+    restart: unless-stopped
+    command: ["mcp", "--http", "--host", "0.0.0.0", "--port", "3000", "--stealth"]
+    environment:
+      OBSCURA_MCP_ALLOWED_ORIGINS: https://${OBSCURA_HOST}
+
+  caddy:
+    image: caddy:2.10.2-alpine
+    restart: unless-stopped
+    command:
+      - /bin/sh
+      - -c
+      - |
+        export BASIC_AUTH_HASH="$$(caddy hash-password --plaintext "$$BASIC_AUTH_PASSWORD")"
+        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    environment:
+      BASIC_AUTH_USERNAME: ${BASIC_AUTH_USERNAME}
+      BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD}
+    volumes:
+      - ../files/Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - obscura
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2019/config/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

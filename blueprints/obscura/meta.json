@@ -1,0 +1,18 @@
+{
+  "id": "obscura",
+  "name": "Obscura Browser",
+  "version": "0.2.1",
+  "description": "Headless browser for AI agents, exposed through an authenticated remote MCP endpoint with stealth mode enabled.",
+  "logo": "obscura.png",
+  "links": {
+    "github": "https://github.com/h4ckf0r0day/obscura",
+    "website": "https://github.com/h4ckf0r0day/obscura",
+    "docs": "https://github.com/h4ckf0r0day/obscura/blob/master/docs/Use-the-MCP-server.md"
+  },
+  "tags": [
+    "ai",
+    "browser",
+    "automation",
+    "mcp"
+  ]
+}

@@ -1,0 +1,28 @@
+[variables]
+main_domain = "${domain}"
+basic_auth_username = "agent"
+basic_auth_password = "${password:32}"
+
+[config]
+env = [
+  "OBSCURA_HOST=${main_domain}",
+  "BASIC_AUTH_USERNAME=${basic_auth_username}",
+  "BASIC_AUTH_PASSWORD=${basic_auth_password}",
+]
+
+[[config.domains]]
+serviceName = "caddy"
+port = 80
+host = "${main_domain}"
+
+[[config.mounts]]
+filePath = "Caddyfile"
+content = """
+:80 {
+    basic_auth {
+        {$BASIC_AUTH_USERNAME} {$BASIC_AUTH_HASH}
+    }
+
+    reverse_proxy obscura:3000
+}
+"""

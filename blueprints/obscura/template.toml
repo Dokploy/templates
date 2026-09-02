@@ -1,13 +1,11 @@
 [variables]
 main_domain = "${domain}"
-basic_auth_username = "agent"
-basic_auth_password = "${password:32}"
+api_token = "${password:48}"
 
 [config]
 env = [
   "OBSCURA_HOST=${main_domain}",
-  "BASIC_AUTH_USERNAME=${basic_auth_username}",
-  "BASIC_AUTH_PASSWORD=${basic_auth_password}",
+  "OBSCURA_API_TOKEN=${api_token}",
 ]
 
 [[config.domains]]
@@ -19,10 +17,38 @@ host = "${main_domain}"
 filePath = "Caddyfile"
 content = """
 :80 {
-    basic_auth {
-        {$BASIC_AUTH_USERNAME} {$BASIC_AUTH_HASH}
+    @mcp path /mcp /mcp/*
+    @cdpVersion path /json/version /json/version/
+
+    handle @mcp {
+        @authorized header Authorization "Bearer {$OBSCURA_API_TOKEN}"
+
+        handle @authorized {
+            reverse_proxy obscura-mcp:3000
+        }
+
+        respond "Unauthorized" 401
     }
 
-    reverse_proxy obscura:3000
+    handle @cdpVersion {
+        @authorized header Authorization "Bearer {$OBSCURA_API_TOKEN}"
+
+        handle @authorized {
+            header Content-Type application/json
+            respond `{"Browser":"Obscura","Protocol-Version":"1.3","webSocketDebuggerUrl":"wss://{$OBSCURA_HOST}/devtools/browser"}` 200
+        }
+
+        respond "Unauthorized" 401
+    }
+
+    handle {
+        @authorized header Authorization "Bearer {$OBSCURA_API_TOKEN}"
+
+        handle @authorized {
+            reverse_proxy obscura-cdp:9222
+        }
+
+        respond "Unauthorized" 401
+    }
 }
 """

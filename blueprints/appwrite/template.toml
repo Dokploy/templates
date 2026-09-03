@@ -15,7 +15,10 @@ env = [
   "_APP_POOL_ADAPTER=stack",
   "_APP_WORKER_PER_CORE=6",
   "_APP_OPTIONS_ABUSE=enabled",
-  "_APP_OPTIONS_FORCE_HTTPS=disabled",
+  # Requires HTTPS to be enabled on the main domain in Dokploy (Domains tab).
+  # Makes Appwrite generate https:// URLs (e.g. APPWRITE_FUNCTION_API_ENDPOINT for
+  # Functions) and reject plain-HTTP API calls; over plain HTTP the console cannot log in.
+  "_APP_OPTIONS_FORCE_HTTPS=enabled",
   "_APP_OPTIONS_ROUTER_FORCE_HTTPS=disabled",
   "_APP_OPTIONS_ROUTER_PROTECTION=disabled",
   "_APP_OPENSSL_KEY_V1=${openssl_key}",

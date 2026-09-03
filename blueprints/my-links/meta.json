@@ -1,0 +1,13 @@
+{
+  "id": "my-links",
+  "name": "MyLinks",
+  "version": "5.3.0",
+  "description": "Self-hostable bookmark manager to organize, search and share your favorite links.",
+  "logo": "my-links.svg",
+  "links": {
+    "github": "https://github.com/my-links/my-links",
+    "website": "https://www.mylinks.app",
+    "docs": "https://docs.mylinks.app"
+  },
+  "tags": ["bookmarks", "link-sharing"]
+}

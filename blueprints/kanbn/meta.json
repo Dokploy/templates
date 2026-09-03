@@ -1,0 +1,13 @@
+{
+  "id": "kanbn",
+  "name": "Kanbn",
+  "version": "0.6.0",
+  "description": "The open-source project management alternative to Trello.",
+  "logo": "logo.svg",
+  "links": {
+    "website": "https://kan.bn/",
+    "github": "https://github.com/kanbn/kan",
+    "docs": "https://docs.kan.bn/"
+  },
+  "tags": ["collaboration", "project-management", "kanban-board", "task-management"]
+}

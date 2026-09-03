@@ -1,0 +1,13 @@
+{
+  "id": "goatcounter",
+  "name": "GoatCounter",
+  "version": "2.7.0",
+  "description": "GoatCounter is an open source web analytics platform available as a free donation-supported hosted service or self-hosted app. It aims to offer easy to use and meaningful privacy-friendly web analytics as an alternative to Google Analytics or Matomo.",
+  "logo": "logo.svg",
+  "links": {
+    "website": "https://www.goatcounter.com/",
+    "github": "https://github.com/arp242/goatcounter",
+    "docs": "https://www.goatcounter.com/help/"
+  },
+  "tags": ["analytics", "privacy"]
+}

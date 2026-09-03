@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  lfsx:
+    image: ghcr.io/ferrlabs/lfsx:1.14.1
+    restart: unless-stopped
+    environment:
+      - LFSX_AUTH=github
+    volumes:
+      - lfsx-data:/var/lib/lfsx
+    expose:
+      - "8080"
+
+volumes:
+  lfsx-data: {}

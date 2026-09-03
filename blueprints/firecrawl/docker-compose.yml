@@ -1,129 +1,1405 @@
-name: firecrawl
- 
-x-common-service: &common-service
-  image: ghcr.io/firecrawl/firecrawl:latest
-  ulimits:
-    nofile:
-      soft: 65535
-      hard: 65535
-  extra_hosts:
-    - "host.docker.internal:host-gateway"
- 
-x-common-env: &common-env
-  REDIS_URL: ${REDIS_URL:-redis://redis:6379}
-  REDIS_RATE_LIMIT_URL: ${REDIS_RATE_LIMIT_URL:-redis://redis:6379}
-  PLAYWRIGHT_MICROSERVICE_URL: ${PLAYWRIGHT_MICROSERVICE_URL:-http://playwright-service:3000/scrape}
-  NUQ_DATABASE_URL: ${NUQ_DATABASE_URL:-postgres://postgres:postgres@nuq-postgres:5432/postgres}
-  USE_DB_AUTHENTICATION: ${USE_DB_AUTHENTICATION:-}
-  OPENAI_API_KEY: ${OPENAI_API_KEY:-}
-  OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
-  MODEL_NAME: ${MODEL_NAME:-}
-  MODEL_EMBEDDING_NAME: ${MODEL_EMBEDDING_NAME:-}
-  OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-}
-  SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
-  BULL_AUTH_KEY: ${BULL_AUTH_KEY:-}
-  TEST_API_KEY: ${TEST_API_KEY:-}
-  POSTHOG_API_KEY: ${POSTHOG_API_KEY:-}
-  POSTHOG_HOST: ${POSTHOG_HOST:-}
-  SUPABASE_ANON_TOKEN: ${SUPABASE_ANON_TOKEN:-}
-  SUPABASE_URL: ${SUPABASE_URL:-}
-  SUPABASE_SERVICE_TOKEN: ${SUPABASE_SERVICE_TOKEN:-}
-  SELF_HOSTED_WEBHOOK_URL: ${SELF_HOSTED_WEBHOOK_URL:-}
-  SERPER_API_KEY: ${SERPER_API_KEY:-}
-  SEARCHAPI_API_KEY: ${SEARCHAPI_API_KEY:-}
-  LOGGING_LEVEL: ${LOGGING_LEVEL:-INFO}
-  PROXY_SERVER: ${PROXY_SERVER:-}
-  PROXY_USERNAME: ${PROXY_USERNAME:-}
-  PROXY_PASSWORD: ${PROXY_PASSWORD:-}
-  NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,redis,nuq-postgres,playwright-service,host.docker.internal}
-  SEARXNG_ENDPOINT: ${SEARXNG_ENDPOINT:-}
-  SEARXNG_ENGINES: ${SEARXNG_ENGINES:-}
-  SEARXNG_CATEGORIES: ${SEARXNG_CATEGORIES:-}
- 
+version: "3.8"
+
+# The database schema and OpenAPI artifact are generated from Firecrawl
+# v2.11.230 and embedded as Compose configs so Dokploy can import the entire
+# authenticated stack as one template without external files.
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+    compress: "true"
+
 services:
-  playwright-service:
-    image: ghcr.io/firecrawl/playwright-service:latest
-    shm_size: "1g"
-    restart: unless-stopped
-    environment:
-      PORT: 3000
-      PROXY_SERVER: ${PROXY_SERVER:-}
-      PROXY_USERNAME: ${PROXY_USERNAME:-}
-      PROXY_PASSWORD: ${PROXY_PASSWORD:-}
-      BLOCK_MEDIA: ${BLOCK_MEDIA:-}
-      NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,redis,nuq-postgres,playwright-service,host.docker.internal}
- 
-  api:
-    <<: *common-service
-    restart: unless-stopped
-    expose:
-      - "3002"
-    environment:
-      <<: *common-env
-      HOST: "0.0.0.0"
-      PORT: 3002
-      WORKER_PORT: 3005
-      ENV: local
-    depends_on:
-      redis:
-        condition: service_started
-      playwright-service:
-        condition: service_started
-      nuq-postgres:
-        condition: service_healthy
-    command: node --import ./dist/src/otel.js dist/src/index.js
- 
-  worker:
-    <<: *common-service
-    restart: unless-stopped
-    environment:
-      <<: *common-env
-      HOST: "0.0.0.0"
-      PORT: 3005
-      ENV: local
-    depends_on:
-      redis:
-        condition: service_started
-      nuq-postgres:
-        condition: service_healthy
-    command: node --import ./dist/src/otel.js dist/src/services/queue-worker.js
- 
-  extract-worker:
-    <<: *common-service
-    restart: unless-stopped
-    environment:
-      <<: *common-env
-      HOST: "0.0.0.0"
-      PORT: 3004
-      ENV: local
-    depends_on:
-      redis:
-        condition: service_started
-      nuq-postgres:
-        condition: service_healthy
-    command: node --import ./dist/src/otel.js dist/src/services/extract-worker.js
- 
-  redis:
-    image: redis:alpine
-    command: redis-server --bind 0.0.0.0
- 
-  nuq-postgres:
-    build:
-      context: "https://github.com/firecrawl/firecrawl.git#main:apps/nuq-postgres"
-      dockerfile: Dockerfile
+  firecrawl-db:
+    image: postgres:17-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ${APP_POSTGRES_PASSWORD:?required}
+      POSTGRES_DB: firecrawl
+    configs:
+      - source: db-init-prerequisites
+        target: /docker-entrypoint-initdb.d/010-prerequisites.sql
+      - source: db-init-schema
+        target: /docker-entrypoint-initdb.d/020-current-schema.sql
+      - source: db-init-constraints
+        target: /docker-entrypoint-initdb.d/030-selfhost-constraints.sql
+      - source: db-init-rpcs
+        target: /docker-entrypoint-initdb.d/040-selfhost-rpcs.sql
+    volumes:
+      - firecrawl-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d firecrawl"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    logging: *default-logging
+
+  firecrawl-db-seed:
+    image: postgres:17-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
+    restart: "no"
+    depends_on:
+      firecrawl-db:
+        condition: service_healthy
+    environment:
+      PGHOST: firecrawl-db
+      PGPORT: "5432"
+      PGUSER: postgres
+      PGPASSWORD: ${APP_POSTGRES_PASSWORD:?required}
+      PGDATABASE: firecrawl
+      FIRECRAWL_ORG_ID: ${FIRECRAWL_ORG_ID:?required}
+      FIRECRAWL_TEAM_ID: ${FIRECRAWL_TEAM_ID:?required}
+      FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY:?required}
+    configs:
+      - source: db-seed
+        target: /seed.sql
+    command:
+      - /bin/sh
+      - -ec
+      - >-
+        psql
+        -v org_id="$${FIRECRAWL_ORG_ID}"
+        -v team_id="$${FIRECRAWL_TEAM_ID}"
+        -v api_key="$${FIRECRAWL_API_KEY}"
+        -f /seed.sql
+    logging: *default-logging
+
+  nuq-postgres:
+    image: ghcr.io/firecrawl/nuq-postgres@sha256:aed86f62858f29bd971abddcdeb301c12888098d2cf5d33c1ba42b053bc460f6
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${NUQ_POSTGRES_PASSWORD:?required}
       POSTGRES_DB: postgres
     volumes:
-      - nuq_pg_data:/var/lib/postgresql/data
+      - nuq-postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
-      start_period: 30s
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    logging: *default-logging
+
+  redis:
+    image: redis:7-alpine@sha256:ff02b58f971e7d7d156a1267e283fcbbeee91773b6aa36c49dac28ecfe28eadf
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?required}
+    command:
+      - /bin/sh
+      - -ec
+      - exec redis-server --bind 0.0.0.0 --appendonly yes --requirepass "$${REDIS_PASSWORD}"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$${REDIS_PASSWORD}\" --no-auth-warning ping | grep -q PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
+    logging: *default-logging
+
+  rabbitmq:
+    image: rabbitmq:3-management@sha256:e582c0bc7766f3342496d8485efb5a1df782b5ce3886ad017e2eaae442311f69
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:?required}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?required}
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "check_running"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+    logging: *default-logging
+
+  playwright-service:
+    image: ghcr.io/firecrawl/playwright-service@sha256:468009bae00911d40d7120d58489a1d529362c22c45585cb9076094fe61b0025
+    restart: unless-stopped
+    environment:
+      PORT: "3000"
+      MAX_CONCURRENT_PAGES: ${CRAWL_CONCURRENT_REQUESTS:-10}
+      ALLOW_LOCAL_WEBHOOKS: ${ALLOW_LOCAL_WEBHOOKS:-false}
+      BLOCK_MEDIA: ${BLOCK_MEDIA:-true}
+      PROXY_SERVER: ${PROXY_SERVER:-}
+      PROXY_USERNAME: ${PROXY_USERNAME:-}
+      PROXY_PASSWORD: ${PROXY_PASSWORD:-}
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp/.cache:noexec,nosuid,size=1g
+    logging: *default-logging
+
+  firecrawl:
+    image: ghcr.io/firecrawl/firecrawl:2.11.230@sha256:7c5bf28dd3397be9a5bfb103adeef9adefbad352d223011da1bab606a0044416
+    restart: unless-stopped
+    command: node dist/src/harness.js --start-docker
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    environment:
+      ENV: local
+      HOST: 0.0.0.0
+      PORT: "3002"
+      EXTRACT_WORKER_PORT: "3004"
+      WORKER_PORT: "3005"
+      USE_DB_AUTHENTICATION: "true"
+      DATABASE_URL: postgresql://postgres:${APP_POSTGRES_PASSWORD:?required}@firecrawl-db:5432/firecrawl
+      DATABASE_REPLICA_URL: postgresql://postgres:${APP_POSTGRES_PASSWORD:?required}@firecrawl-db:5432/firecrawl
+      REDIS_URL: redis://:${REDIS_PASSWORD:?required}@redis:6379
+      REDIS_RATE_LIMIT_URL: redis://:${REDIS_PASSWORD:?required}@redis:6379
+      PLAYWRIGHT_MICROSERVICE_URL: http://playwright-service:3000/scrape
+      NUQ_DATABASE_URL: postgresql://postgres:${NUQ_POSTGRES_PASSWORD:?required}@nuq-postgres:5432/postgres
+      NUQ_DATABASE_URL_LISTEN: postgresql://postgres:${NUQ_POSTGRES_PASSWORD:?required}@nuq-postgres:5432/postgres
+      NUQ_RABBITMQ_URL: amqp://${RABBITMQ_USER:?required}:${RABBITMQ_PASSWORD:?required}@rabbitmq:5672
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${NUQ_POSTGRES_PASSWORD:?required}
+      POSTGRES_DB: postgres
+      POSTGRES_HOST: nuq-postgres
+      POSTGRES_PORT: "5432"
+      NUM_WORKERS_PER_QUEUE: ${NUM_WORKERS_PER_QUEUE:-8}
+      CRAWL_CONCURRENT_REQUESTS: ${CRAWL_CONCURRENT_REQUESTS:-10}
+      MAX_CONCURRENT_JOBS: ${MAX_CONCURRENT_JOBS:-5}
+      BROWSER_POOL_SIZE: ${BROWSER_POOL_SIZE:-5}
+      HARNESS_STARTUP_TIMEOUT_MS: "120000"
+      LOGGING_LEVEL: ${LOGGING_LEVEL:-INFO}
+      DISABLE_ENGPICKER: ${DISABLE_ENGPICKER:-true}
+      BULL_AUTH_KEY: ${BULL_AUTH_KEY:?required}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-}
+      MODEL_NAME: ${MODEL_NAME:-}
+      MODEL_EMBEDDING_NAME: ${MODEL_EMBEDDING_NAME:-}
+      SEARCHAPI_API_KEY: ${SEARCHAPI_API_KEY:-}
+      LLAMAPARSE_API_KEY: ${LLAMAPARSE_API_KEY:-}
+      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
+      SEARXNG_ENDPOINT: ${SEARXNG_ENDPOINT:-}
+      SEARXNG_ENGINES: ${SEARXNG_ENGINES:-}
+      SEARXNG_CATEGORIES: ${SEARXNG_CATEGORIES:-}
+      SELF_HOSTED_WEBHOOK_URL: ${SELF_HOSTED_WEBHOOK_URL:-}
+      SELF_HOSTED_WEBHOOK_HMAC_SECRET: ${SELF_HOSTED_WEBHOOK_HMAC_SECRET:-}
+      PROXY_SERVER: ${PROXY_SERVER:-}
+      PROXY_USERNAME: ${PROXY_USERNAME:-}
+      PROXY_PASSWORD: ${PROXY_PASSWORD:-}
+      ALLOW_LOCAL_WEBHOOKS: ${ALLOW_LOCAL_WEBHOOKS:-false}
+    expose:
+      - "3002"
+    depends_on:
+      firecrawl-db-seed:
+        condition: service_completed_successfully
+      nuq-postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      playwright-service:
+        condition: service_started
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - >-
+          fetch('http://127.0.0.1:3002/v0/health/liveness').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
       interval: 10s
       timeout: 5s
-      retries: 10
- 
+      retries: 20
+      start_period: 60s
+    logging: *default-logging
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui:v5.32.14@sha256:3d93169968848d371a6a56ca1ab18b47a8906ba461b8eba0688866354f5431d5
+    restart: unless-stopped
+    environment:
+      SWAGGER_JSON_URL: /openapi.json
+      DEEP_LINKING: "true"
+      DISPLAY_OPERATION_ID: "false"
+      DISPLAY_REQUEST_DURATION: "true"
+      DOC_EXPANSION: none
+      PERSIST_AUTHORIZATION: "true"
+      TRY_IT_OUT_ENABLED: "true"
+    configs:
+      - source: firecrawl-openapi
+        target: /tmp/openapi.json.gz.b64
+    command:
+      - /bin/sh
+      - -ec
+      - >-
+        base64 -d /tmp/openapi.json.gz.b64 | gzip -dc > /usr/share/nginx/html/openapi.json;
+        exec /docker-entrypoint.sh nginx -g 'daemon off;'
+    expose:
+      - "8080"
+    logging: *default-logging
+
+  gateway:
+    image: nginx:1.29-alpine@sha256:5616878291a2eed594aee8db4dade5878cf7edcb475e59193904b198d9b830de
+    restart: unless-stopped
+    configs:
+      - source: firecrawl-gateway-nginx
+        target: /etc/nginx/conf.d/default.conf
+    expose:
+      - "8080"
+    depends_on:
+      firecrawl:
+        condition: service_healthy
+      swagger-ui:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/v0/health/liveness"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    logging: *default-logging
+
+configs:
+  db-init-prerequisites:
+    content: |
+      \set ON_ERROR_STOP on
+
+      CREATE SCHEMA IF NOT EXISTS extensions;
+      CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
+
+      CREATE TABLE IF NOT EXISTS public.organizations (
+        id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        name text NOT NULL,
+        created_at timestamptz NOT NULL DEFAULT now(),
+        updated_at timestamptz NOT NULL DEFAULT now()
+      );
+
+  db-init-schema:
+    # Generated from apps/api/src/db/schema/public.ts at v2.11.230.
+    content: |
+      CREATE TABLE "agent_sponsors" (
+        "id" bigint GENERATED BY DEFAULT AS IDENTITY (sequence name "agent_sponsors_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1),
+        "email" text NOT NULL,
+        "status" text DEFAULT 'pending' NOT NULL,
+        "verification_deadline" timestamp with time zone NOT NULL,
+        "agent_name" text NOT NULL,
+        "sandboxed_team_id" uuid,
+        "api_key_id" bigint,
+        "requesting_ip" text,
+        "tos_version" text,
+        "tos_hash" text,
+        "verification_token" text NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now(),
+        "verified_at" timestamp with time zone,
+        "updated_at" timestamp with time zone DEFAULT now()
+      );
+      --> statement-breakpoint
+      CREATE TABLE "agents" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "team_id" uuid NOT NULL,
+        "options" jsonb,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "time_taken" numeric NOT NULL,
+        "credits_cost" integer NOT NULL,
+        "cost_tracking" jsonb,
+        "is_successful" boolean NOT NULL,
+        "error" text
+      );
+      --> statement-breakpoint
+      CREATE TABLE "api_keys" (
+        "id" bigint GENERATED BY DEFAULT AS IDENTITY (sequence name "api_keys_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1),
+        "created_at" timestamp with time zone DEFAULT now(),
+        "key" uuid DEFAULT gen_random_uuid(),
+        "name" text,
+        "team_id" uuid,
+        "owner_id" uuid,
+        "agent_provisioned" boolean DEFAULT false,
+        "concurrency" integer,
+        CONSTRAINT "api_keys_id_team_id_key" UNIQUE("id","team_id")
+      );
+      --> statement-breakpoint
+      CREATE TABLE "batch_scrapes" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "team_id" uuid NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "num_docs" integer NOT NULL,
+        "credits_cost" integer NOT NULL,
+        "cancelled" boolean NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "blocklist" (
+        "id" bigint GENERATED BY DEFAULT AS IDENTITY (sequence name "blocklist_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1),
+        "data" jsonb NOT NULL,
+        "org_id" uuid
+      );
+      --> statement-breakpoint
+      CREATE TABLE "blocklist_hits" (
+        "id" uuid NOT NULL,
+        "domain" text NOT NULL,
+        "url" text,
+        "team_id" uuid,
+        "origin" text,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "browser_session_activities" (
+        "id" bigint GENERATED ALWAYS AS IDENTITY (sequence name "browser_session_activities_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1),
+        "team_id" text NOT NULL,
+        "session_id" text NOT NULL,
+        "language" text NOT NULL,
+        "timeout" integer NOT NULL,
+        "exit_code" integer,
+        "killed" boolean DEFAULT false NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "source" text DEFAULT 'browser'
+      );
+      --> statement-breakpoint
+      CREATE TABLE "browser_sessions" (
+        "id" uuid NOT NULL,
+        "team_id" text NOT NULL,
+        "request_id" uuid,
+        "should_bill" boolean DEFAULT true NOT NULL,
+        "browser_id" text NOT NULL,
+        "workspace_id" text NOT NULL,
+        "context_id" text NOT NULL,
+        "cdp_url" text NOT NULL,
+        "cdp_path" text NOT NULL,
+        "stream_web_view" boolean DEFAULT false NOT NULL,
+        "status" text DEFAULT 'active' NOT NULL,
+        "ttl_total" integer NOT NULL,
+        "ttl_without_activity" integer,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "deleted_at" timestamp with time zone,
+        "credits_used" integer,
+        "cdp_interactive_path" text,
+        "scrape_id" uuid
+      );
+      --> statement-breakpoint
+      CREATE TABLE "code_searches" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "target" text NOT NULL,
+        "team_id" uuid NOT NULL,
+        "options" jsonb,
+        "response" jsonb,
+        "num_results" integer NOT NULL,
+        "time_taken" numeric NOT NULL,
+        "credits_cost" integer NOT NULL,
+        "is_successful" boolean NOT NULL,
+        "error" text,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "crawls" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "url" text NOT NULL,
+        "team_id" uuid NOT NULL,
+        "options" jsonb,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "num_docs" integer NOT NULL,
+        "credits_cost" integer NOT NULL,
+        "cancelled" boolean NOT NULL,
+        "monitor_id" uuid,
+        "monitor_check_id" uuid
+      );
+      --> statement-breakpoint
+      CREATE TABLE "deep_researches" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "query" text NOT NULL,
+        "team_id" uuid NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "time_taken" numeric NOT NULL,
+        "credits_cost" integer NOT NULL,
+        "cost_tracking" jsonb,
+        "options" jsonb
+      );
+      --> statement-breakpoint
+      CREATE TABLE "deterministic_json_llm_cache" (
+        "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        "cache_key" text NOT NULL UNIQUE,
+        "response" text NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "last_used_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "deterministic_json_scripts" (
+        "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        "cache_key" text NOT NULL UNIQUE,
+        "code" text NOT NULL,
+        "url" text,
+        "model" text,
+        "cache_version" integer,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "last_used_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "eb-sync" (
+        "id" bigint GENERATED BY DEFAULT AS IDENTITY (sequence name "eb-sync_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1),
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "team_id" text
+      );
+      --> statement-breakpoint
+      CREATE TABLE "extracts" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "urls" text[] NOT NULL,
+        "options" jsonb,
+        "model_kind" text NOT NULL,
+        "team_id" uuid NOT NULL,
+        "is_successful" boolean NOT NULL,
+        "error" text,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "credits_cost" integer NOT NULL,
+        "cost_tracking" jsonb
+      );
+      --> statement-breakpoint
+      CREATE TABLE "idempotency_keys" (
+        "key" uuid DEFAULT gen_random_uuid() NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "ip_restriction_config" (
+        "id" uuid DEFAULT gen_random_uuid() NOT NULL,
+        "team_id" uuid NOT NULL UNIQUE,
+        "allowed_ips" jsonb DEFAULT '[]' NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "key_restriction_config" (
+        "id" uuid DEFAULT gen_random_uuid() NOT NULL,
+        "api_key_id" bigint NOT NULL UNIQUE,
+        "team_id" uuid NOT NULL,
+        "allowed_formats" jsonb DEFAULT '[]' NOT NULL,
+        "allowed_endpoints" jsonb DEFAULT '[]' NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+        CONSTRAINT "allowed_formats_is_string_array" CHECK (jsonb_typeof("allowed_formats") = 'array' AND NOT jsonb_path_exists("allowed_formats", '$$[*] ? (@.type() != "string")')),
+        CONSTRAINT "allowed_endpoints_is_string_array" CHECK (jsonb_typeof("allowed_endpoints") = 'array' AND NOT jsonb_path_exists("allowed_endpoints", '$$[*] ? (@.type() != "string")'))
+      );
+      --> statement-breakpoint
+      CREATE TABLE "keyless_credit_usage" (
+        "id" bigint GENERATED BY DEFAULT AS IDENTITY (sequence name "keyless_credit_usage_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1),
+        "team_id" uuid NOT NULL,
+        "ip" text NOT NULL,
+        "credits_used" integer NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "llm_texts" (
+        "id" uuid DEFAULT gen_random_uuid() NOT NULL,
+        "origin_url" text NOT NULL,
+        "llmstxt" text NOT NULL,
+        "llmstxt_full" text NOT NULL,
+        "max_urls" integer NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone
+      );
+      --> statement-breakpoint
+      CREATE TABLE "llmstxts" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "url" text NOT NULL,
+        "team_id" uuid NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "num_urls" integer NOT NULL,
+        "options" jsonb,
+        "cost_tracking" jsonb,
+        "credits_cost" integer NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "maps" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "url" text NOT NULL,
+        "options" jsonb,
+        "team_id" uuid NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "num_results" integer NOT NULL,
+        "credits_cost" integer NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "mcp_action_logs" (
+        "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        "team_id" uuid NOT NULL,
+        "user_id" uuid,
+        "api_key_id" bigint,
+        "oauth_client_id" text,
+        "auth_type" text NOT NULL,
+        "tool_name" text NOT NULL,
+        "status" text NOT NULL,
+        "request_id" uuid NOT NULL,
+        "client_name" text,
+        "client_version" text,
+        "error_class" text,
+        "resource" text NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "expires_at" timestamp with time zone NOT NULL,
+        CONSTRAINT "mcp_action_logs_team_request_unique" UNIQUE("team_id","request_id")
+      );
+      --> statement-breakpoint
+      CREATE TABLE "monitor_check_pages" (
+        "id" uuid NOT NULL,
+        "check_id" uuid NOT NULL,
+        "monitor_id" uuid NOT NULL,
+        "team_id" uuid NOT NULL,
+        "target_id" text NOT NULL,
+        "url" text NOT NULL,
+        "url_hash" bytea NOT NULL,
+        "status" text NOT NULL,
+        "previous_scrape_id" uuid,
+        "current_scrape_id" uuid,
+        "diff_gcs_key" text,
+        "diff_text_bytes" integer,
+        "diff_json_bytes" integer,
+        "status_code" integer,
+        "error" text,
+        "metadata" jsonb,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "judgment" jsonb
+      );
+      --> statement-breakpoint
+      CREATE TABLE "monitor_checks" (
+        "id" uuid NOT NULL,
+        "monitor_id" uuid NOT NULL,
+        "team_id" uuid NOT NULL,
+        "trigger" text NOT NULL,
+        "status" text DEFAULT 'queued' NOT NULL,
+        "scheduled_for" timestamp with time zone,
+        "started_at" timestamp with time zone,
+        "finished_at" timestamp with time zone,
+        "estimated_credits" integer,
+        "reserved_credits" integer,
+        "actual_credits" integer,
+        "autumn_lock_id" text,
+        "billing_status" text DEFAULT 'not_applicable' NOT NULL,
+        "total_pages" integer DEFAULT 0 NOT NULL,
+        "same_count" integer DEFAULT 0 NOT NULL,
+        "changed_count" integer DEFAULT 0 NOT NULL,
+        "new_count" integer DEFAULT 0 NOT NULL,
+        "removed_count" integer DEFAULT 0 NOT NULL,
+        "error_count" integer DEFAULT 0 NOT NULL,
+        "target_results" jsonb,
+        "webhook_payload" jsonb,
+        "email_payload" jsonb,
+        "notification_status" jsonb,
+        "error" text,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "monitor_email_recipients" (
+        "id" uuid DEFAULT gen_random_uuid() NOT NULL,
+        "monitor_id" uuid NOT NULL,
+        "team_id" uuid NOT NULL,
+        "email" text NOT NULL,
+        "status" text DEFAULT 'pending' NOT NULL,
+        "token" text NOT NULL,
+        "source" text DEFAULT 'opt_in' NOT NULL,
+        "confirmation_sent_at" timestamp with time zone,
+        "confirmed_at" timestamp with time zone,
+        "unsubscribed_at" timestamp with time zone,
+        "last_notified_at" timestamp with time zone,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "monitor_pages" (
+        "id" uuid DEFAULT gen_random_uuid() NOT NULL,
+        "monitor_id" uuid NOT NULL,
+        "team_id" uuid NOT NULL,
+        "target_id" text NOT NULL,
+        "url" text NOT NULL,
+        "url_hash" bytea NOT NULL,
+        "source" text NOT NULL,
+        "first_seen_check_id" uuid,
+        "last_seen_check_id" uuid,
+        "last_changed_check_id" uuid,
+        "last_scrape_id" uuid,
+        "last_status" text NOT NULL,
+        "is_removed" boolean DEFAULT false NOT NULL,
+        "removed_at" timestamp with time zone,
+        "metadata" jsonb,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "monitors" (
+        "id" uuid NOT NULL,
+        "team_id" uuid NOT NULL,
+        "name" text NOT NULL,
+        "status" text DEFAULT 'active' NOT NULL,
+        "schedule_cron" text NOT NULL,
+        "schedule_timezone" text DEFAULT 'UTC' NOT NULL,
+        "next_run_at" timestamp with time zone,
+        "last_run_at" timestamp with time zone,
+        "last_check_id" uuid,
+        "current_check_id" uuid,
+        "locked_at" timestamp with time zone,
+        "locked_until" timestamp with time zone,
+        "retention_days" integer DEFAULT 30 NOT NULL,
+        "estimated_credits_per_month" integer,
+        "targets" jsonb DEFAULT '[]' NOT NULL,
+        "webhook" jsonb,
+        "notification" jsonb,
+        "last_check_summary" jsonb,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "deleted_at" timestamp with time zone,
+        "goal" text,
+        "judge_enabled" boolean DEFAULT false NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "notification_preferences" (
+        "id" uuid DEFAULT gen_random_uuid() NOT NULL,
+        "user_id" uuid NOT NULL,
+        "last_referral_notification" timestamp with time zone,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "email_preferences" text[] DEFAULT '{rate_limit_warnings,system_alerts}'::text[],
+        "unsubscribed_all" boolean DEFAULT false
+      );
+      --> statement-breakpoint
+      CREATE TABLE "parses" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "url" text NOT NULL,
+        "is_successful" boolean NOT NULL,
+        "error" text,
+        "time_taken" numeric NOT NULL,
+        "team_id" uuid NOT NULL,
+        "options" jsonb,
+        "cost_tracking" jsonb,
+        "pdf_num_pages" integer,
+        "credits_cost" integer NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "partner_provisioned_accounts" (
+        "id" bigint GENERATED BY DEFAULT AS IDENTITY (sequence name "partner_provisioned_accounts_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1),
+        "integration_id" bigint NOT NULL,
+        "team_id" uuid NOT NULL,
+        "org_id" uuid NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "prices" (
+        "id" text NOT NULL,
+        "product_id" text,
+        "active" boolean DEFAULT true NOT NULL,
+        "description" text,
+        "unit_amount" bigint,
+        "currency" text DEFAULT 'usd',
+        "type" text DEFAULT 'recurring',
+        "interval" text,
+        "interval_count" integer DEFAULT 1,
+        "trial_period_days" integer DEFAULT 0,
+        "metadata" jsonb DEFAULT '{}',
+        "credits" integer DEFAULT 50,
+        "is_usage" boolean DEFAULT false,
+        "rate_limits" jsonb,
+        "concurrency" integer,
+        "plan_priority" jsonb,
+        "upfront" boolean DEFAULT false,
+        "slug" text DEFAULT gen_random_uuid() NOT NULL,
+        "should_be_graceful" boolean DEFAULT false,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "unit_amount_rollover_cap" smallint DEFAULT 0 NOT NULL,
+        "associated_auto_recharge_price_id" text,
+        "exp_pack_max_per_month" integer
+      );
+      --> statement-breakpoint
+      CREATE TABLE "products" (
+        "id" text NOT NULL,
+        "active" boolean DEFAULT true NOT NULL,
+        "name" text,
+        "description" text,
+        "image" text,
+        "metadata" jsonb DEFAULT '{}' NOT NULL,
+        "order" smallint,
+        "test_mode" boolean DEFAULT true,
+        "is_enterprise" boolean DEFAULT false,
+        "is_extract" boolean DEFAULT false,
+        "is_displayed" boolean DEFAULT false,
+        "is_stripe_test" boolean DEFAULT false,
+        "slug" text,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "type" text
+      );
+      --> statement-breakpoint
+      CREATE TABLE "requests" (
+        "id" uuid NOT NULL,
+        "kind" text NOT NULL,
+        "api_version" text NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "team_id" uuid NOT NULL,
+        "origin" text NOT NULL,
+        "integration" text,
+        "target_hint" text NOT NULL,
+        "dr_clean_by" timestamp with time zone,
+        "api_key_id" bigint,
+        "external_request_id" text
+      );
+      --> statement-breakpoint
+      CREATE TABLE "research_github_searches" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "target" text NOT NULL,
+        "team_id" uuid NOT NULL,
+        "options" jsonb,
+        "response" jsonb,
+        "num_results" integer NOT NULL,
+        "time_taken" numeric NOT NULL,
+        "credits_cost" integer NOT NULL,
+        "is_successful" boolean NOT NULL,
+        "error" text,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "research_paper_inspects" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "target" text NOT NULL,
+        "team_id" uuid NOT NULL,
+        "options" jsonb,
+        "response" jsonb,
+        "num_results" integer NOT NULL,
+        "time_taken" numeric NOT NULL,
+        "credits_cost" integer NOT NULL,
+        "is_successful" boolean NOT NULL,
+        "error" text,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "research_paper_reads" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "target" text NOT NULL,
+        "team_id" uuid NOT NULL,
+        "options" jsonb,
+        "response" jsonb,
+        "num_results" integer NOT NULL,
+        "time_taken" numeric NOT NULL,
+        "credits_cost" integer NOT NULL,
+        "is_successful" boolean NOT NULL,
+        "error" text,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "research_paper_searches" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "target" text NOT NULL,
+        "team_id" uuid NOT NULL,
+        "options" jsonb,
+        "response" jsonb,
+        "num_results" integer NOT NULL,
+        "time_taken" numeric NOT NULL,
+        "credits_cost" integer NOT NULL,
+        "is_successful" boolean NOT NULL,
+        "error" text,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "research_related_papers" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "target" text NOT NULL,
+        "team_id" uuid NOT NULL,
+        "options" jsonb,
+        "response" jsonb,
+        "num_results" integer NOT NULL,
+        "time_taken" numeric NOT NULL,
+        "credits_cost" integer NOT NULL,
+        "is_successful" boolean NOT NULL,
+        "error" text,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "scrapes" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "url" text NOT NULL,
+        "is_successful" boolean NOT NULL,
+        "error" text,
+        "time_taken" numeric NOT NULL,
+        "team_id" uuid NOT NULL,
+        "options" jsonb,
+        "cost_tracking" jsonb,
+        "pdf_num_pages" integer,
+        "credits_cost" integer NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "monitor_id" uuid,
+        "monitor_check_id" uuid,
+        "content_type" text
+      );
+      --> statement-breakpoint
+      CREATE TABLE "search_feedback" (
+        "id" uuid DEFAULT gen_random_uuid() NOT NULL,
+        "search_id" uuid,
+        "endpoint" text DEFAULT 'search' NOT NULL,
+        "job_id" uuid,
+        "request_id" uuid,
+        "api_version" text DEFAULT 'v2',
+        "team_id" uuid NOT NULL,
+        "api_key_id" bigint,
+        "overall_rating" text NOT NULL,
+        "issue_types" text[] DEFAULT '{}'::text[] NOT NULL,
+        "tags" text[] DEFAULT '{}'::text[] NOT NULL,
+        "comment" text,
+        "valuable_sources" jsonb DEFAULT '[]' NOT NULL,
+        "missing_content" jsonb DEFAULT '[]' NOT NULL,
+        "query_suggestions" text,
+        "metadata" jsonb DEFAULT '{}' NOT NULL,
+        "job_status" text,
+        "credits_billed" integer DEFAULT 0 NOT NULL,
+        "integration" text,
+        "origin" text,
+        "credits_refunded" integer DEFAULT 0 NOT NULL,
+        "refund_policy" jsonb,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "searches" (
+        "id" uuid NOT NULL,
+        "request_id" uuid NOT NULL,
+        "query" text NOT NULL,
+        "team_id" uuid NOT NULL,
+        "options" jsonb,
+        "time_taken" numeric NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "credits_cost" integer NOT NULL,
+        "is_successful" boolean NOT NULL,
+        "error" text,
+        "num_results" integer NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "siem_logging_config" (
+        "id" uuid DEFAULT gen_random_uuid() NOT NULL,
+        "org_id" uuid NOT NULL UNIQUE,
+        "enabled" boolean DEFAULT false NOT NULL,
+        "destination" jsonb DEFAULT '{}' NOT NULL,
+        "secret_ciphertext" text NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "slack_installations" (
+        "id" uuid DEFAULT gen_random_uuid() NOT NULL,
+        "team_id" uuid NOT NULL,
+        "slack_team_id" text NOT NULL,
+        "slack_team_name" text,
+        "slack_enterprise_id" text,
+        "bot_user_id" text,
+        "bot_token" text NOT NULL,
+        "scope" text,
+        "authed_user_id" text,
+        "app_id" text,
+        "incoming_webhook" jsonb,
+        "revoked_at" timestamp with time zone,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "subscriptions" (
+        "id" text NOT NULL,
+        "user_id" uuid NOT NULL,
+        "status" text,
+        "metadata" jsonb,
+        "price_id" text,
+        "quantity" integer,
+        "cancel_at_period_end" boolean,
+        "created" timestamp with time zone DEFAULT now() NOT NULL,
+        "current_period_start" timestamp with time zone DEFAULT now() NOT NULL,
+        "current_period_end" timestamp with time zone DEFAULT now() NOT NULL,
+        "ended_at" timestamp with time zone DEFAULT now(),
+        "cancel_at" timestamp with time zone DEFAULT now(),
+        "canceled_at" timestamp with time zone DEFAULT now(),
+        "trial_start" timestamp with time zone DEFAULT now(),
+        "trial_end" timestamp with time zone DEFAULT now(),
+        "team_id" uuid,
+        "is_usage" boolean DEFAULT false,
+        "is_extract" boolean DEFAULT false,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "expansion_associated_coupon" bigint,
+        "pending_price_id" text,
+        "pending_price_effective_at" timestamp with time zone,
+        "pending_schedule_id" text
+      );
+      --> statement-breakpoint
+      CREATE TABLE "teams" (
+        "id" uuid DEFAULT gen_random_uuid() NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now(),
+        "name" text,
+        "banned" boolean DEFAULT false,
+        "idmux_expires_at" timestamp with time zone,
+        "updated_at" timestamp with time zone DEFAULT now(),
+        "hmac_secret" text DEFAULT encode(extensions.gen_random_bytes(32), 'hex'::text) NOT NULL,
+        "referrer_integration" varchar,
+        "allocated_concurrent_browsers" integer,
+        "org_id" uuid NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "threat_protection_config" (
+        "id" uuid DEFAULT gen_random_uuid() NOT NULL,
+        "org_id" uuid NOT NULL UNIQUE,
+        "mode" varchar DEFAULT 'off' NOT NULL,
+        "config" jsonb DEFAULT '{}' NOT NULL,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT now() NOT NULL
+      );
+      --> statement-breakpoint
+      CREATE TABLE "user_notifications" (
+        "id" uuid DEFAULT gen_random_uuid() NOT NULL,
+        "team_id" uuid,
+        "notification_type" text NOT NULL,
+        "sent_date" date NOT NULL,
+        "email_id" text,
+        "timestamp" timestamp with time zone,
+        "read" boolean DEFAULT false,
+        "metadata" jsonb
+      );
+      --> statement-breakpoint
+      CREATE TABLE "user_teams" (
+        "user_id" uuid NOT NULL,
+        "team_id" uuid NOT NULL,
+        "role" text DEFAULT 'admin',
+        "created_at" timestamp with time zone DEFAULT now()
+      );
+      --> statement-breakpoint
+      CREATE TABLE "users" (
+        "id" uuid NOT NULL,
+        "full_name" text,
+        "avatar_url" text,
+        "billing_address" jsonb,
+        "payment_method" jsonb,
+        "email" text,
+        "team_id" uuid,
+        "created_on" timestamp with time zone DEFAULT now(),
+        "referrer_integration" varchar
+      );
+      --> statement-breakpoint
+      CREATE TABLE "webhook_logs" (
+        "id" uuid DEFAULT gen_random_uuid() NOT NULL,
+        "success" boolean NOT NULL,
+        "error" text,
+        "team_id" uuid NOT NULL,
+        "crawl_id" uuid NOT NULL,
+        "scrape_id" uuid,
+        "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+        "url" text NOT NULL,
+        "status_code" smallint,
+        "event" text NOT NULL,
+        "latency_ms" integer DEFAULT 0
+      );
+      --> statement-breakpoint
+      CREATE INDEX "mcp_action_logs_expires_idx" ON "mcp_action_logs" ("expires_at");--> statement-breakpoint
+      ALTER TABLE "key_restriction_config" ADD CONSTRAINT "key_restriction_config_9bDRALPGpEuO_fkey" FOREIGN KEY ("api_key_id","team_id") REFERENCES "api_keys"("id","team_id") ON DELETE CASCADE;
+  db-init-constraints:
+    content: |
+      \set ON_ERROR_STOP on
+
+      -- The public Drizzle schema mirrors Firecrawl's managed database shape, where
+      -- several constraints are applied out-of-band. Recreate those constraints for
+      -- a standalone PostgreSQL database.
+      DO $$firecrawl$$
+      DECLARE
+        table_record record;
+      BEGIN
+        FOR table_record IN
+          SELECT c.table_name
+          FROM information_schema.columns c
+          JOIN information_schema.tables t
+            ON t.table_schema = c.table_schema
+           AND t.table_name = c.table_name
+          WHERE c.table_schema = 'public'
+            AND c.column_name = 'id'
+            AND c.is_nullable = 'NO'
+            AND t.table_type = 'BASE TABLE'
+            AND NOT EXISTS (
+              SELECT 1
+              FROM pg_constraint pc
+              JOIN pg_class rel ON rel.oid = pc.conrelid
+              JOIN pg_namespace ns ON ns.oid = rel.relnamespace
+              WHERE ns.nspname = 'public'
+                AND rel.relname = c.table_name
+                AND pc.contype = 'p'
+            )
+        LOOP
+          EXECUTE format(
+            'ALTER TABLE public.%I ADD CONSTRAINT %I PRIMARY KEY (id)',
+            table_record.table_name,
+            table_record.table_name || '_pkey'
+          );
+        END LOOP;
+      END
+      $$firecrawl$$;
+
+      CREATE UNIQUE INDEX IF NOT EXISTS api_keys_key_unique
+        ON public.api_keys (key);
+      CREATE UNIQUE INDEX IF NOT EXISTS idempotency_keys_key_unique
+        ON public.idempotency_keys (key);
+      CREATE UNIQUE INDEX IF NOT EXISTS slack_installations_team_id_unique
+        ON public.slack_installations (team_id);
+      CREATE UNIQUE INDEX IF NOT EXISTS monitor_pages_identity_unique
+        ON public.monitor_pages (monitor_id, target_id, url_hash);
+      CREATE UNIQUE INDEX IF NOT EXISTS monitor_email_recipients_identity_unique
+        ON public.monitor_email_recipients (monitor_id, email);
+
+      CREATE INDEX IF NOT EXISTS api_keys_team_id_idx ON public.api_keys (team_id);
+      CREATE INDEX IF NOT EXISTS requests_team_id_idx ON public.requests (team_id);
+      CREATE INDEX IF NOT EXISTS requests_dr_clean_by_idx
+        ON public.requests (dr_clean_by)
+        WHERE dr_clean_by IS NOT NULL;
+      CREATE INDEX IF NOT EXISTS monitors_due_idx
+        ON public.monitors (next_run_at)
+        WHERE status = 'active' AND deleted_at IS NULL;
+
+  db-init-rpcs:
+    # Standalone implementations for database RPCs called by v2.11.230.
+    content: |
+      \set ON_ERROR_STOP on
+
+      -- Firecrawl's current API calls these PostgreSQL functions directly. They are
+      -- not included in the public self-host guide, so this file supplies standalone
+      -- equivalents. Billing is intentionally unlimited for this private self-host.
+
+      CREATE OR REPLACE FUNCTION public.selfhost_unlimited_rate_limit_flags()
+      RETURNS jsonb
+      LANGUAGE sql
+      IMMUTABLE
+      AS $$function$$
+        SELECT jsonb_build_object(
+          'rateLimitOverrides',
+          jsonb_build_object(
+            'crawl', 2147483647,
+            'crawlStatus', 2147483647,
+            'scrape', 2147483647,
+            'scrapeAgentPreview', 2147483647,
+            'preview', 2147483647,
+            'search', 2147483647,
+            'map', 2147483647,
+            'extract', 2147483647,
+            'extractStatus', 2147483647,
+            'extractAgentPreview', 2147483647,
+            'browser', 2147483647,
+            'browserExecute', 2147483647,
+            'browserReplay', 2147483647,
+            'account', 2147483647,
+            'supportAsk', 2147483647,
+            'supportDocsSearch', 2147483647,
+            'research', 2147483647,
+            'developerSearch', 2147483647,
+            'labs', 2147483647
+          )
+        )
+      $$function$$;
+
+      CREATE TABLE IF NOT EXISTS public.firecrawl_change_tracking_scrapes (
+        id bigint GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+        team_id uuid NOT NULL,
+        url text NOT NULL,
+        job_id text NOT NULL,
+        change_tracking_tag text,
+        date_added timestamptz NOT NULL DEFAULT now()
+      );
+
+      CREATE INDEX IF NOT EXISTS firecrawl_change_tracking_lookup_idx
+        ON public.firecrawl_change_tracking_scrapes
+          (team_id, url, change_tracking_tag, date_added DESC);
+
+      CREATE OR REPLACE FUNCTION public.auth_chunk_1(
+        input_key text,
+        input_credential_purpose text DEFAULT 'general'
+      )
+      RETURNS TABLE (
+        api_key text,
+        api_key_id bigint,
+        team_id uuid,
+        org_id uuid,
+        flags jsonb,
+        is_banned boolean
+      )
+      LANGUAGE sql
+      STABLE
+      SECURITY DEFINER
+      SET search_path = public, pg_temp
+      AS $$function$$
+        SELECT
+          k.key::text,
+          k.id,
+          t.id,
+          t.org_id,
+          public.selfhost_unlimited_rate_limit_flags(),
+          COALESCE(t.banned, false)
+        FROM public.api_keys k
+        JOIN public.teams t ON t.id = k.team_id
+        WHERE k.key::text = input_key
+        LIMIT 1
+      $$function$$;
+
+      CREATE OR REPLACE FUNCTION public.auth_chunk_1_from_team(input_team text)
+      RETURNS TABLE (
+        api_key text,
+        api_key_id bigint,
+        team_id uuid,
+        org_id uuid,
+        flags jsonb,
+        is_banned boolean
+      )
+      LANGUAGE sql
+      STABLE
+      SECURITY DEFINER
+      SET search_path = public, pg_temp
+      AS $$function$$
+        SELECT
+          k.key::text,
+          k.id,
+          t.id,
+          t.org_id,
+          public.selfhost_unlimited_rate_limit_flags(),
+          COALESCE(t.banned, false)
+        FROM public.teams t
+        LEFT JOIN LATERAL (
+          SELECT ak.id, ak.key
+          FROM public.api_keys ak
+          WHERE ak.team_id = t.id
+          ORDER BY ak.id
+          LIMIT 1
+        ) k ON true
+        WHERE t.id = input_team::uuid
+        LIMIT 1
+      $$function$$;
+
+      CREATE OR REPLACE FUNCTION public.bill_team_7(
+        _team_id uuid,
+        sub_id text,
+        credits numeric,
+        i_api_key_id bigint,
+        is_extract_param boolean
+      )
+      RETURNS TABLE (api_key text)
+      LANGUAGE sql
+      VOLATILE
+      SECURITY DEFINER
+      SET search_path = public, pg_temp
+      AS $$function$$
+        SELECT k.key::text
+        FROM public.api_keys k
+        WHERE k.team_id = _team_id
+          AND (i_api_key_id IS NULL OR k.id = i_api_key_id)
+        ORDER BY k.id
+        LIMIT 1
+      $$function$$;
+
+      CREATE OR REPLACE FUNCTION public.credits_billed_by_crawl_id_2(i_crawl_id uuid)
+      RETURNS TABLE (credits_billed bigint)
+      LANGUAGE sql
+      STABLE
+      SET search_path = public, pg_temp
+      AS $$function$$
+        SELECT COALESCE((
+          SELECT c.credits_cost::bigint
+          FROM public.crawls c
+          WHERE c.id = i_crawl_id
+          LIMIT 1
+        ), 0::bigint)
+      $$function$$;
+
+      CREATE OR REPLACE FUNCTION public.change_tracking_insert_scrape(
+        p_team_id uuid,
+        p_url text,
+        p_job_id text,
+        p_change_tracking_tag text,
+        p_date_added timestamptz
+      )
+      RETURNS bigint
+      LANGUAGE plpgsql
+      VOLATILE
+      SET search_path = public, pg_temp
+      AS $$function$$
+      DECLARE
+        inserted_id bigint;
+      BEGIN
+        INSERT INTO public.firecrawl_change_tracking_scrapes (
+          team_id, url, job_id, change_tracking_tag, date_added
+        ) VALUES (
+          p_team_id, p_url, p_job_id, p_change_tracking_tag, p_date_added
+        )
+        RETURNING id INTO inserted_id;
+        RETURN inserted_id;
+      END
+      $$function$$;
+
+      CREATE OR REPLACE FUNCTION public.diff_get_last_scrape_v7(
+        i_team_id uuid,
+        i_url text,
+        i_tag text
+      )
+      RETURNS TABLE (o_job_id text, o_date_added timestamptz)
+      LANGUAGE sql
+      STABLE
+      SET search_path = public, pg_temp
+      AS $$function$$
+        SELECT ct.job_id, ct.date_added
+        FROM public.firecrawl_change_tracking_scrapes ct
+        WHERE ct.team_id = i_team_id
+          AND ct.url = i_url
+          AND ct.change_tracking_tag IS NOT DISTINCT FROM i_tag
+        ORDER BY ct.date_added DESC
+        LIMIT 1
+      $$function$$;
+
+      CREATE OR REPLACE FUNCTION public.get_zdr_cleanup_batch_2(p_limit integer)
+      RETURNS TABLE (request_id uuid, ids uuid[])
+      LANGUAGE sql
+      STABLE
+      SET search_path = public, pg_temp
+      AS $$function$$
+        SELECT NULL::uuid, ARRAY[]::uuid[]
+        WHERE false
+      $$function$$;
+
+      CREATE OR REPLACE FUNCTION public.monitoring_claim_due_monitors(
+        p_worker_id text,
+        p_limit integer,
+        p_lease_seconds integer
+      )
+      RETURNS SETOF public.monitors
+      LANGUAGE plpgsql
+      VOLATILE
+      SET search_path = public, pg_temp
+      AS $$function$$
+      BEGIN
+        RETURN QUERY
+        WITH due AS (
+          SELECT m.id
+          FROM public.monitors m
+          WHERE m.status = 'active'
+            AND m.deleted_at IS NULL
+            AND m.next_run_at IS NOT NULL
+            AND m.next_run_at <= now()
+            AND (m.locked_until IS NULL OR m.locked_until < now())
+          ORDER BY m.next_run_at
+          FOR UPDATE SKIP LOCKED
+          LIMIT GREATEST(p_limit, 0)
+        )
+        UPDATE public.monitors m
+        SET locked_at = now(),
+            locked_until = now() + make_interval(secs => GREATEST(p_lease_seconds, 1)),
+            updated_at = now()
+        FROM due
+        WHERE m.id = due.id
+        RETURNING m.*;
+      END
+      $$function$$;
+
+      CREATE OR REPLACE FUNCTION public.get_agent_free_requests_left(i_team_id uuid)
+      RETURNS TABLE (free_requests_left integer)
+      LANGUAGE sql
+      STABLE
+      AS $$function$$
+        SELECT 2147483647
+      $$function$$;
+
+      CREATE OR REPLACE FUNCTION public.agent_consume_free_request_if_left(i_team_id uuid)
+      RETURNS TABLE (consumed boolean)
+      LANGUAGE sql
+      VOLATILE
+      AS $$function$$
+        SELECT true
+      $$function$$;
+
+  db-seed:
+    content: |
+      \set ON_ERROR_STOP on
+
+      INSERT INTO public.organizations (id, name)
+      VALUES (:'org_id'::uuid, 'Self-hosted')
+      ON CONFLICT (id) DO UPDATE SET updated_at = now();
+
+      INSERT INTO public.teams (id, name, org_id, banned)
+      VALUES (:'team_id'::uuid, 'Self-hosted', :'org_id'::uuid, false)
+      ON CONFLICT (id) DO UPDATE
+      SET org_id = EXCLUDED.org_id,
+          banned = false,
+          updated_at = now();
+
+      INSERT INTO public.api_keys (key, name, team_id)
+      VALUES (regexp_replace(:'api_key', '^fc-', '')::uuid, 'Dokploy production', :'team_id'::uuid)
+      ON CONFLICT (key) DO UPDATE
+      SET team_id = EXCLUDED.team_id,
+          name = EXCLUDED.name;
+
+      -- Workers require one global row even when the self-host blocklist is empty.
+      INSERT INTO public.blocklist (data, org_id)
+      SELECT '{"blocklist":[],"allowedKeywords":[]}'::jsonb, NULL
+      WHERE NOT EXISTS (
+        SELECT 1 FROM public.blocklist WHERE org_id IS NULL
+      );
+
+  firecrawl-openapi:
+    content: |
+      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
+
+  firecrawl-gateway-nginx:
+    content: |
+      server {
+        listen 8080;
+        server_name _;
+        client_max_body_size 50m;
+
+        location = /openapi.json {
+          proxy_pass http://swagger-ui:8080/openapi.json;
+          proxy_set_header Host $$host;
+          add_header Cache-Control "no-store" always;
+        }
+
+        location = /docs {
+          return 308 /docs/;
+        }
+
+        location /docs/ {
+          proxy_pass http://swagger-ui:8080/;
+          proxy_set_header Host $$host;
+          proxy_set_header X-Forwarded-Proto $$scheme;
+          proxy_set_header X-Forwarded-Prefix /docs;
+        }
+
+        location / {
+          proxy_pass http://firecrawl:3002;
+          proxy_http_version 1.1;
+          proxy_set_header Host $$host;
+          proxy_set_header X-Real-IP $$remote_addr;
+          proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $$scheme;
+          proxy_set_header Upgrade $$http_upgrade;
+          proxy_set_header Connection $$connection_upgrade;
+          proxy_read_timeout 3600s;
+          proxy_send_timeout 3600s;
+        }
+      }
+
+      map $$http_upgrade $$connection_upgrade {
+        default upgrade;
+        '' close;
+      }
+
+
+
 volumes:
-  nuq_pg_data:
+  firecrawl-db-data:
+  nuq-postgres-data:
+  redis-data:
+  rabbitmq-data:

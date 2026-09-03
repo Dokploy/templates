@@ -8,18 +8,21 @@
 
 ## Log in to Supabase Studio
 
-The main domain of the template points to the `kong` API gateway (port `8000`), which protects Supabase Studio with basic authentication:
+The main domain of the template points to the `api-gw` API gateway — Envoy, on port `8000` — which protects Supabase Studio with basic authentication:
 
 - **Username**: the value of `DASHBOARD_USERNAME` (default: `supabase`)
 - **Password**: the value of `DASHBOARD_PASSWORD`
 
-Both values are in the **Environment** tab of the service in Dokploy.
+Both values are in the **Environment** tab of the service in Dokploy. Envoy computes
+the basic-auth credential at startup, as a SHA1 hash of `DASHBOARD_PASSWORD` encoded in
+base64, so the password itself still comes from the Environment tab and nothing else
+needs to change when you edit it.
 
 ## API URL and keys
 
 To connect an application (for example with `supabase-js`):
 
-- **API URL**: `https://<your-domain>` (requests are routed through Kong)
+- **API URL**: `https://<your-domain>` (requests are routed through Envoy)
 - **anon key**: the value of `ANON_KEY` in the Environment tab
 - **service_role key**: the value of `SERVICE_ROLE_KEY` in the Environment tab (server-side only, never expose it to browsers)
 
@@ -30,9 +33,11 @@ Dokploy also generates the newer opaque API keys, so you can use either style:
 - **publishable key**: the value of `SUPABASE_PUBLISHABLE_KEY` (browser-safe, replaces the anon key)
 - **secret key**: the value of `SUPABASE_SECRET_KEY` (server-side only, replaces the service_role key)
 
-Kong exchanges these for the matching JWT before the request reaches Supabase,
-so clients never hold a decodable token. Both styles stay valid at the same time
-— existing apps on `ANON_KEY` / `SERVICE_ROLE_KEY` keep working.
+Envoy exchanges these for the matching JWT before the request reaches Supabase, so
+clients never hold a decodable token. Its `docker-entrypoint.sh` substitutes the six key
+values into `lds.yaml` when the container starts, and the listener does the translation
+on every request. Both styles stay valid at the same time — existing apps on `ANON_KEY` /
+`SERVICE_ROLE_KEY` keep working.
 
 ## Optional: sign tokens with an ES256 key pair
 

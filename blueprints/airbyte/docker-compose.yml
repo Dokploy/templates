@@ -1,0 +1,424 @@
+# The following template is not officially supported by the Airbyte team, as
+# docker compose deployment has been superseded by abctl. It was made based
+# on the community-maintained example below:
+#
+# - https://github.com/nktnet1/airbyte-compose
+#
+# NOTE: make sure to change the AIRBYTE_URL and AIRBYTE_API_HOST environment
+# variables to match that of your public domain. The URL must be publicly
+# accessible (for example, it cannot be auth-protected by Cloudflare).
+#
+# Once you've completed the setup via the web UI, you can log in using the
+# password defined in the AIRBYTE_ADMIN_PASSWORD environment variable.
+#
+# To connect internal databases, ensure that they are on the same network as
+# the k3s container. This is available in Dokploy's UI starting from v0.30.0.
+
+name: airbyte
+
+x-airbyte-environment: &airbyte-environment
+  AIRBYTE_VERSION: ${AIRBYTE_VERSION:?Set AIRBYTE_VERSION in .env}
+  AIRBYTE_URL: ${AIRBYTE_URL:?Set AIRBYTE_URL in .env}
+  AIRBYTE_API_HOST: ${AIRBYTE_API_HOST:?Set AIRBYTE_API_HOST in .env}
+  AIRBYTE_SERVER_HOST: server:8001
+  INTERNAL_API_HOST: http://server:8001
+  MANIFEST_SERVER_API_HOST: http://manifest-server:8080
+  CONTROL_PLANE_TOKEN_ENDPOINT: http://server:8001/api/v1/dataplanes/token
+  WORKLOAD_API_HOST: http://workload-api-server:8007
+  TEMPORAL_HOST: temporal:7233
+  MINIO_ENDPOINT: http://minio:9000
+  DATABASE_HOST: db
+  DATABASE_DB: ${DATABASE_DB:?Set DATABASE_DB in .env}
+  DATABASE_USER: ${DATABASE_USER:?Set DATABASE_USER in .env}
+  DATABASE_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in .env}
+  DATABASE_URL: jdbc:postgresql://db:5432/${DATABASE_DB}
+  CONFIG_DATABASE_REPLICA_URL: jdbc:postgresql://db:5432/${DATABASE_DB}
+  CONFIG_DATABASE_REPLICA_USER: ${DATABASE_USER}
+  CONFIG_DATABASE_REPLICA_PASSWORD: ${DATABASE_PASSWORD}
+  AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER:?Set MINIO_ROOT_USER in .env}
+  AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:?Set MINIO_ROOT_PASSWORD in .env}
+  AB_INSTANCE_ADMIN_PASSWORD: ${AIRBYTE_ADMIN_PASSWORD:?Set AIRBYTE_ADMIN_PASSWORD in .env}
+  AB_INSTANCE_ADMIN_CLIENT_ID: ${AIRBYTE_ADMIN_CLIENT_ID:?Set AIRBYTE_ADMIN_CLIENT_ID in .env}
+  AB_INSTANCE_ADMIN_CLIENT_SECRET: ${AIRBYTE_ADMIN_CLIENT_SECRET:?Set AIRBYTE_ADMIN_CLIENT_SECRET in .env}
+  AB_JWT_SIGNATURE_SECRET: ${AIRBYTE_JWT_SIGNATURE_SECRET:?Set AIRBYTE_JWT_SIGNATURE_SECRET in .env}
+  CONNECTOR_PROFILER_IMAGE: airbyte/async-profiler:${AIRBYTE_VERSION}
+  CONNECTOR_SIDECAR_IMAGE: airbyte/connector-sidecar:${AIRBYTE_VERSION}
+  CONTAINER_ORCHESTRATOR_IMAGE: airbyte/container-orchestrator:${AIRBYTE_VERSION}
+  WORKLOAD_INIT_IMAGE: airbyte/workload-init-container:${AIRBYTE_VERSION}
+  JAVA_OPTS: -XX:+ExitOnOutOfMemoryError -XX:MaxRAMPercentage=75.0 -XX:FlightRecorderOptions=stackdepth=256
+
+x-airbyte-service: &airbyte-service
+  env_file:
+    - ../files/config/airbyte.env
+  environment: *airbyte-environment
+  restart: unless-stopped
+
+services:
+  db:
+    image: airbyte/db:${AIRBYTE_VERSION}
+    environment:
+      POSTGRES_DB: ${DATABASE_DB}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:${MINIO_VERSION}
+    command: [server, /storage]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio-data:/storage
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >
+          /bin/mc alias set health http://127.0.0.1:9000
+          "$${MINIO_ROOT_USER}" "$${MINIO_ROOT_PASSWORD}" >/dev/null 2>&1
+          && /bin/mc ready health >/dev/null 2>&1
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  minio-init:
+    image: minio/minio:${MINIO_VERSION}
+    entrypoint: [/bin/sh, /scripts/init-minio.sh]
+    environment:
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - ../files/scripts/init-minio.sh:/scripts/init-minio.sh:ro
+    depends_on:
+      minio:
+        condition: service_started
+    restart: on-failure
+
+  temporal:
+    image: temporalio/auto-setup:${TEMPORAL_VERSION}
+    environment:
+      AUTO_SETUP: "true"
+      DB: postgres12
+      DB_PORT: "5432"
+      POSTGRES_SEEDS: db
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PWD: ${DATABASE_PASSWORD}
+      POSTGRES_TLS_ENABLED: "false"
+      POSTGRES_TLS_DISABLE_HOST_VERIFICATION: "false"
+      SQL_TLS_ENABLED: "false"
+      SQL_TLS_DISABLE_HOST_VERIFICATION: "false"
+      DYNAMIC_CONFIG_FILE_PATH: config/dynamicconfig/development.yaml
+      PROMETHEUS_ENDPOINT: 0.0.0.0:9090
+      BIND_ON_IP: 0.0.0.0
+      TEMPORAL_BROADCAST_ADDRESS: 0.0.0.0
+    volumes:
+      - ../files/config/temporal-dynamicconfig.yaml:/etc/temporal/config/dynamicconfig/development.yaml:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - /bin/bash
+        - -ec
+        - exec 3<>/dev/tcp/127.0.0.1/7233
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  k3s:
+    image: rancher/k3s:${K3S_VERSION}
+    command:
+      - server
+      - --node-name=airbyte-k3s
+      - --disable=traefik
+      - --disable=servicelb
+      - --disable=metrics-server
+      - --disable=coredns
+      - --tls-san=k3s
+    privileged: true
+    environment:
+      K3S_KUBECONFIG_OUTPUT: /output/kubeconfig.yaml
+      K3S_KUBECONFIG_MODE: "0644"
+    tmpfs:
+      - /run
+      - /var/run
+    volumes:
+      - k3s-data:/var/lib/rancher/k3s
+      - k3s-kubeconfig:/output
+    healthcheck:
+      test: [CMD, /bin/kubectl, get, --raw=/readyz]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+      start_period: 20s
+    restart: unless-stopped
+
+  docker-dns:
+    image: rancher/mirrored-coredns-coredns:${COREDNS_VERSION}
+    command: [-conf, /etc/coredns/Corefile]
+    volumes:
+      - ../files/config/docker-dns.Corefile:/etc/coredns/Corefile:ro
+    network_mode: service:k3s
+    depends_on:
+      k3s:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, /coredns, -version]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  k3s-bootstrap:
+    image: rancher/k3s:${K3S_VERSION}
+    entrypoint: [/bin/sh, /scripts/bootstrap-k3s.sh]
+    environment:
+      AIRBYTE_ADMIN_PASSWORD: ${AIRBYTE_ADMIN_PASSWORD}
+      AIRBYTE_ADMIN_CLIENT_ID: ${AIRBYTE_ADMIN_CLIENT_ID}
+      AIRBYTE_ADMIN_CLIENT_SECRET: ${AIRBYTE_ADMIN_CLIENT_SECRET}
+      AIRBYTE_JWT_SIGNATURE_SECRET: ${AIRBYTE_JWT_SIGNATURE_SECRET}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - k3s-kubeconfig:/kube
+      - ../files/config/k3s-resources.yaml:/config/k3s-resources.yaml:ro
+      - ../files/scripts/bootstrap-k3s.sh:/scripts/bootstrap-k3s.sh:ro
+    depends_on:
+      k3s:
+        condition: service_healthy
+      docker-dns:
+        condition: service_started
+    restart: on-failure
+
+  dataplane-credentials:
+    image: rancher/k3s:${K3S_VERSION}
+    entrypoint: [/bin/sh, /scripts/export-dataplane-credentials.sh]
+    volumes:
+      - k3s-kubeconfig:/kube:ro
+      - dataplane-credentials:/credentials
+      - ../files/scripts/export-dataplane-credentials.sh:/scripts/export-dataplane-credentials.sh:ro
+    depends_on:
+      bootloader:
+        condition: service_completed_successfully
+    restart: on-failure
+
+  bootloader:
+    <<: *airbyte-service
+    image: airbyte/bootloader:${AIRBYTE_VERSION}
+    environment:
+      <<: *airbyte-environment
+      KUBECONFIG: /kube/config.yaml
+      MICRONAUT_ENVIRONMENTS: k8s,control-plane,edition-community
+      JOB_KUBE_NAMESPACE: default
+      DD_SERVICE: airbyte-bootloader
+    volumes:
+      - k3s-kubeconfig:/kube:ro
+    depends_on:
+      db:
+        condition: service_healthy
+      k3s-bootstrap:
+        condition: service_completed_successfully
+    restart: on-failure
+
+  server:
+    <<: *airbyte-service
+    image: airbyte/server:${AIRBYTE_VERSION}
+    environment:
+      <<: *airbyte-environment
+      DD_SERVICE: airbyte-server
+    expose:
+      - 8001
+    healthcheck:
+      test:
+        - CMD
+        - /bin/bash
+        - -ec
+        - |
+          exec 3<>/dev/tcp/127.0.0.1/8001
+          printf 'GET /api/v1/health HTTP/1.0\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3
+          read -r status <&3
+          [[ "$$status" == *" 200 "* ]]
+      interval: 5s
+      timeout: 10s
+      retries: 60
+      start_period: 10s
+    depends_on:
+      bootloader:
+        condition: service_completed_successfully
+      minio-init:
+        condition: service_completed_successfully
+      temporal:
+        condition: service_started
+
+  manifest-server:
+    <<: *airbyte-service
+    image: airbyte/manifest-server:${MANIFEST_SERVER_VERSION}
+    environment:
+      <<: *airbyte-environment
+      DD_SERVICE: airbyte-manifest-server
+      AIRBYTE_ENABLE_UNSAFE_CODE: ${AIRBYTE_ENABLE_UNSAFE_CODE:-false}
+    depends_on:
+      bootloader:
+        condition: service_completed_successfully
+      minio-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request; response = urllib.request.urlopen("http://127.0.0.1:8080/health/", timeout=5); assert response.status == 200
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  workload-api-server:
+    <<: *airbyte-service
+    image: airbyte/workload-api-server:${AIRBYTE_VERSION}
+    environment:
+      <<: *airbyte-environment
+      DD_SERVICE: airbyte-workload-api
+    depends_on:
+      bootloader:
+        condition: service_completed_successfully
+      minio-init:
+        condition: service_completed_successfully
+      temporal:
+        condition: service_started
+    healthcheck:
+      test:
+        - CMD
+        - /bin/bash
+        - -ec
+        - |
+          exec 3<>/dev/tcp/127.0.0.1/8085
+          printf 'GET /health/liveness HTTP/1.0\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3
+          read -r status <&3
+          [[ "$$status" == *" 200 "* ]]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  worker:
+    <<: *airbyte-service
+    image: airbyte/worker:${AIRBYTE_VERSION}
+    environment:
+      <<: *airbyte-environment
+      DD_SERVICE: airbyte-worker
+    depends_on:
+      bootloader:
+        condition: service_completed_successfully
+      temporal:
+        condition: service_started
+      workload-api-server:
+        condition: service_started
+    healthcheck:
+      test:
+        - CMD
+        - /bin/bash
+        - -ec
+        - |
+          exec 3<>/dev/tcp/127.0.0.1/9000
+          printf 'GET / HTTP/1.0\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3
+          read -r status <&3
+          [[ "$$status" == *" 200 "* ]]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  cron:
+    <<: *airbyte-service
+    image: airbyte/cron:${AIRBYTE_VERSION}
+    environment:
+      <<: *airbyte-environment
+      DD_SERVICE: airbyte-cron
+    depends_on:
+      bootloader:
+        condition: service_completed_successfully
+      temporal:
+        condition: service_started
+      workload-api-server:
+        condition: service_started
+    healthcheck:
+      test:
+        - CMD
+        - /bin/bash
+        - -ec
+        - |
+          exec 3<>/dev/tcp/127.0.0.1/8085
+          printf 'GET /health HTTP/1.0\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3
+          read -r status <&3
+          [[ "$$status" == *" 200 "* ]]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  workload-launcher:
+    <<: *airbyte-service
+    image: airbyte/workload-launcher:${AIRBYTE_VERSION}
+    entrypoint: [/bin/sh, /scripts/start-workload-launcher.sh]
+    command: [/bin/bash, -c, 'airbyte-app/bin/$${APPLICATION}']
+    environment:
+      <<: *airbyte-environment
+      KUBECONFIG: /kube/config.yaml
+      MICRONAUT_ENVIRONMENTS: k8s,control-plane,edition-community
+      JOB_KUBE_NAMESPACE: default
+      DD_SERVICE: airbyte-workload-launcher
+      AIRBYTE_ENABLE_UNSAFE_CODE: ${AIRBYTE_ENABLE_UNSAFE_CODE:-false}
+    volumes:
+      - k3s-kubeconfig:/kube:ro
+      - dataplane-credentials:/credentials:ro
+      - ../files/scripts/start-workload-launcher.sh:/scripts/start-workload-launcher.sh:ro
+    depends_on:
+      dataplane-credentials:
+        condition: service_completed_successfully
+      k3s-bootstrap:
+        condition: service_completed_successfully
+      server:
+        condition: service_healthy
+      workload-api-server:
+        condition: service_started
+      temporal:
+        condition: service_started
+    healthcheck:
+      test:
+        - CMD
+        - /bin/bash
+        - -ec
+        - |
+          exec 3<>/dev/tcp/127.0.0.1/8085
+          printf 'GET /health/readiness HTTP/1.0\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3
+          read -r status <&3
+          [[ "$$status" == *" 200 "* ]]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  db-data:
+  minio-data:
+  k3s-data:
+  k3s-kubeconfig:
+  dataplane-credentials:

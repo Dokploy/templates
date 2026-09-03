@@ -1,0 +1,656 @@
+[variables]
+main_domain = "${domain}"
+database_password = "${password:32}"
+minio_root_password = "${password:32}"
+airbyte_admin_password = "${password:32}"
+airbyte_admin_client_id = "${password:32}"
+airbyte_admin_client_secret = "${password:32}"
+airbyte_jwt_signature_secret = "${password:32}"
+
+[[config.domains]]
+serviceName = "server"
+port = 8_001
+host = "${main_domain}"
+
+[config.env]
+AIRBYTE_URL = "http://${main_domain}"
+AIRBYTE_API_HOST = "http://${main_domain}/api/public"
+
+AIRBYTE_VERSION = "2.2.0"
+MANIFEST_SERVER_VERSION = "7.23.7"
+TEMPORAL_VERSION = "1.27.2"
+MINIO_VERSION = "RELEASE.2023-11-20T22-40-07Z"
+K3S_VERSION = "v1.36.3-k3s1"
+COREDNS_VERSION = "1.14.7"
+
+DATABASE_DB = "db-airbyte"
+DATABASE_USER = "airbyte"
+DATABASE_PASSWORD = "${database_password}"
+
+MINIO_ROOT_USER = "minio"
+MINIO_ROOT_PASSWORD = "${minio_root_password}"
+
+AIRBYTE_ADMIN_PASSWORD = "${airbyte_admin_password}"
+AIRBYTE_ADMIN_CLIENT_ID = "${airbyte_admin_client_id}"
+AIRBYTE_ADMIN_CLIENT_SECRET = "${airbyte_admin_client_secret}"
+AIRBYTE_JWT_SIGNATURE_SECRET = "${airbyte_jwt_signature_secret}"
+
+AIRBYTE_ENABLE_UNSAFE_CODE = "false"
+
+[[config.mounts]]
+filePath = "./config/airbyte.env"
+content = """
+AB_AUTH_SECRET_CREATION_ENABLED=true
+AB_KUBERNETES_SECRET_NAME=airbyte-auth-secrets
+AB_INSTANCE_ADMIN_PASSWORD_SECRET_KEY=instance-admin-password
+AB_INSTANCE_ADMIN_CLIENT_ID_SECRET_KEY=instance-admin-client-id
+AB_INSTANCE_ADMIN_CLIENT_SECRET_SECRET_KEY=instance-admin-client-secret
+AB_JWT_SIGNATURE_SECRET_KEY=jwt-signature-secret
+DATAPLANE_CLIENT_ID_SECRET_NAME=airbyte-auth-secrets
+DATAPLANE_CLIENT_ID_SECRET_KEY=dataplane-client-id
+DATAPLANE_CLIENT_SECRET_SECRET_NAME=airbyte-auth-secrets
+DATAPLANE_CLIENT_SECRET_SECRET_KEY=dataplane-client-secret
+IDENTITY_PROVIDER_TYPE=simple
+AB_AIRBYTE_AUTH_IDENTITY_PROVIDER_VERIFY_ISSUER=false
+AB_AIRBYTE_AUTH_IDENTITY_PROVIDER_VERIFY_AUDIENCE=false
+AB_COOKIE_SECURE=false
+AB_COOKIE_SAME_SITE=Lax
+
+AIRBYTE_EDITION=community
+AIRBYTE_CLUSTER_TYPE=hybrid
+CLUSTER_TYPE=hybrid
+API_AUTHORIZATION_ENABLED=true
+LOCAL=false
+DEPLOYMENT_ENV=docker-compose
+AIRBYTE_DUMMY_SECRET=dummy
+
+CONNECTOR_REGISTRY_SEED_PROVIDER=remote
+ENTERPRISE_SOURCE_STUBS_URL=https://connectors.airbyte.com/files/resources/connector_stubs/v1/connector_stubs.json
+UPDATE_DEFINITIONS_CRON_ENABLED=true
+RUN_DECLARATIVE_SOURCES_UPDATER=false
+CONNECTOR_ROLLOUT_EXPIRATION_SECONDS=604800
+CONNECTOR_ROLLOUT_WAIT_BETWEEN_ROLLOUTS_SECONDS=10800
+CONNECTOR_ROLLOUT_WAIT_BETWEEN_SYNC_RESULTS_QUERIES_SECONDS=3600
+
+DATABASE_PORT=5432
+RUN_DATABASE_MIGRATION_ON_STARTUP=true
+CONFIGS_DATABASE_MINIMUM_FLYWAY_MIGRATION_VERSION=0.35.15.001
+JOBS_DATABASE_MINIMUM_FLYWAY_MIGRATION_VERSION=0.29.15.001
+
+FEATURE_FLAG_CLIENT=configfile
+FEATURE_FLAG_PATH=/etc/launchdarkly/flags.yml
+JOB_KUBE_SERVICEACCOUNT=airbyte-admin
+JOB_KUBE_NAMESPACE=default
+JOB_KUBE_LOCAL_VOLUME_ENABLED=false
+JOB_ERROR_REPORTING_STRATEGY=logging
+
+LOG_LEVEL=info
+MICROMETER_METRICS_ENABLED=false
+MICROMETER_METRICS_STEP=PT1M
+MICROMETER_METRICS_STATSD_FLAVOR=datadog
+MICROMETER_METRICS_OTLP_ENABLED=false
+MICROMETER_METRICS_STATSD_ENABLED=false
+PUBLISH_METRICS=true
+STATSD_HOST=127.0.0.1
+STATSD_PORT=8125
+OTEL_SDK_DISABLED=true
+DD_ENABLED=false
+DD_INTEGRATIONS_ENABLED=false
+DD_PROFILING_ENABLED=false
+
+STIGG_ENABLED=false
+AUDIT_LOGGING_ENABLED=false
+STORAGE_TYPE=minio
+STORAGE_BUCKET_ACTIVITY_PAYLOAD=airbyte-bucket
+STORAGE_BUCKET_AUDIT_LOGGING=airbyte-bucket
+STORAGE_BUCKET_LOG=airbyte-bucket
+STORAGE_BUCKET_STATE=airbyte-bucket
+STORAGE_BUCKET_WORKLOAD_OUTPUT=airbyte-bucket
+S3_PATH_STYLE_ACCESS=true
+
+AUTO_SETUP=true
+DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
+PROMETHEUS_ENDPOINT=0.0.0.0:9090
+BIND_ON_IP=0.0.0.0
+TEMPORAL_BROADCAST_ADDRESS=0.0.0.0
+TEMPORAL_CLOUD_ENABLED=false
+TEMPORAL_SDK_RPC_TIMEOUT=120s
+TEMPORAL_SDK_RPC_LONG_POLL_TIMEOUT=140s
+TEMPORAL_SDK_RPC_QUERY_TIMEOUT=20s
+TEMPORAL_WORKER_PORTS=9000 9001 9002 9003 9004 9005 9006 9007 9008 9009 9010 9011 9012 9013 9014 9015 9016 9017 9018 9019 9020 9021 9022 9023 9024 9025 9026 9027 9028 9029 9030 9031 9032 9033 9034 9035 9036 9037 9038 9039 9040
+
+TRACKING_ENABLED=true
+TRACKING_STRATEGY=segment
+SEGMENT_WRITE_KEY=7UDdp5K55CyiGgsauOr2pNNujGvmhaeu
+
+API_URL=/api/v1
+CONFIG_ROOT=/configs
+MAX_CHECK_WORKERS=30
+MAX_NOTIFY_WORKERS=30
+MAX_SYNC_WORKERS=5
+SYNC_JOB_MAX_ATTEMPTS=3
+SYNC_JOB_MAX_TIMEOUT_DAYS=3
+SYNC_JOB_INIT_RETRY_TIMEOUT_MINUTES=5
+USE_CUSTOM_NODE_SELECTOR=false
+USE_STREAM_CAPABLE_STATE=true
+WORKSPACE_DOCKER_MOUNT=airbyte_workspace
+WORKSPACE_ROOT=/workspace
+WORKER_ENVIRONMENT=kubernetes
+
+WORKLOAD_API_SERVER_ENABLED=true
+WORKLOAD_LAUNCHER_ENABLED=true
+WORKLOAD_LAUNCHER_PARALLELISM=10
+CONTAINER_ORCHESTRATOR_ENABLED=true
+KUBERNETES_CLIENT_MAX_IDLE_CONNECTIONS=100
+PUB_SUB_ENABLED=false
+DATA_CHECK_TASK_QUEUES=CHECK_CONNECTION
+DATA_DISCOVER_TASK_QUEUES=DISCOVER_SCHEMA
+DATA_SYNC_TASK_QUEUES=SYNC
+CONNECTOR_SPECIFIC_RESOURCE_DEFAULTS_ENABLED=true
+FILE_TRANSFER_EPHEMERAL_STORAGE_LIMIT=5G
+FILE_TRANSFER_EPHEMERAL_STORAGE_REQUEST=5G
+
+MICRONAUT_ENVIRONMENTS=k8s,control-plane,edition-community
+LAUNCHER_MICRONAUT_ENVIRONMENTS=control-plane,oss
+WORKERS_MICRONAUT_ENVIRONMENTS=control-plane
+CRON_MICRONAUT_ENVIRONMENTS=control-plane
+SERVER_MICRONAUT_ENVIRONMENTS=control-plane
+"""
+
+[[config.mounts]]
+filePath = "./config/docker-dns.Corefile"
+content = """
+.:53 {
+    bind eth0
+    errors
+    cache 30
+    forward . 127.0.0.11
+}
+"""
+
+[[config.mounts]]
+filePath = "./config/k3s-resources.yaml"
+content = """
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: airbyte-admin
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: airbyte-admin-role
+  namespace: default
+rules:
+  - apiGroups: ["*"]
+    resources:
+      - configmaps
+      - endpoints
+      - jobs
+      - pods
+      - pods/log
+      - pods/exec
+      - pods/attach
+      - secrets
+    verbs: [get, list, watch, create, update, patch, delete]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: airbyte-admin-binding
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: airbyte-admin-role
+subjects:
+  - kind: ServiceAccount
+    name: airbyte-admin
+    namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: airbyte-db-svc
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: db
+  ports:
+    - name: postgresql
+      port: 5432
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: airbyte-minio-svc
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: minio
+  ports:
+    - name: api
+      port: 9000
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: airbyte-temporal
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: temporal
+  ports:
+    - name: grpc
+      port: 7233
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: airbyte-airbyte-server-svc
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: server
+  ports:
+    - name: http
+      port: 8001
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: airbyte-workload-api-server-svc
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: workload-api-server
+  ports:
+    - name: http
+      port: 8007
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: airbyte-airbyte-manifest-server-svc
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: manifest-server
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: coredns
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: system:coredns
+rules:
+  - apiGroups: [""]
+    resources: [endpoints, services, pods, namespaces]
+    verbs: [list, watch]
+  - apiGroups: [discovery.k8s.io]
+    resources: [endpointslices]
+    verbs: [list, watch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: system:coredns
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:coredns
+subjects:
+  - kind: ServiceAccount
+    name: coredns
+    namespace: kube-system
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns
+  namespace: kube-system
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health
+        ready
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+            pods insecure
+            fallthrough
+        }
+        cache 30
+        loop
+        reload
+        loadbalance
+        forward . 127.0.0.1:1053
+    }
+    .:1053 {
+        bind 127.0.0.1
+        errors
+        rewrite stop name regex ^(.+?)(\\.[^.]+\\.svc\\.cluster\\.local|\\.svc\\.cluster\\.local|\\.cluster\\.local)\\.$ {1} answer auto
+        forward . {$AIRBYTE_K3S_IP}
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coredns
+  namespace: kube-system
+  labels:
+    k8s-app: kube-dns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: kube-dns
+  template:
+    metadata:
+      labels:
+        k8s-app: kube-dns
+    spec:
+      priorityClassName: system-cluster-critical
+      serviceAccountName: coredns
+      nodeSelector:
+        kubernetes.io/os: linux
+      tolerations:
+        - key: CriticalAddonsOnly
+          operator: Exists
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: coredns
+          image: rancher/mirrored-coredns-coredns:1.14.7
+          imagePullPolicy: IfNotPresent
+          args: [-conf, /etc/coredns/Corefile]
+          env:
+            - name: AIRBYTE_K3S_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          resources:
+            limits:
+              memory: 170Mi
+            requests:
+              cpu: 100m
+              memory: 70Mi
+          ports:
+            - name: dns
+              containerPort: 53
+              protocol: UDP
+            - name: dns-tcp
+              containerPort: 53
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /etc/coredns
+              readOnly: true
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add: [NET_BIND_SERVICE]
+              drop: [ALL]
+            readOnlyRootFilesystem: true
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8181
+            periodSeconds: 2
+      dnsPolicy: Default
+      volumes:
+        - name: config
+          configMap:
+            name: coredns
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-dns
+  namespace: kube-system
+  labels:
+    k8s-app: kube-dns
+    kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: CoreDNS
+spec:
+  selector:
+    k8s-app: kube-dns
+  clusterIP: 10.43.0.10
+  ports:
+    - name: dns
+      port: 53
+      protocol: UDP
+    - name: dns-tcp
+      port: 53
+      protocol: TCP
+"""
+
+[[config.mounts]]
+filePath = "./config/temporal-dynamicconfig.yaml"
+content = """
+frontend.enableClientVersionCheck:
+  - value: true
+    constraints: {}
+history.persistenceMaxQPS:
+  - value: 3000
+    constraints: {}
+frontend.persistenceMaxQPS:
+  - value: 3000
+    constraints: {}
+frontend.historyMgrNumConns:
+  - value: 30
+    constraints: {}
+frontend.throttledLogRPS:
+  - value: 20
+    constraints: {}
+frontend.enableUpdateWorkflowExecution:
+  - value: true
+frontend.enableUpdateWorkflowExecutionAsyncAccepted:
+  - value: true
+history.historyMgrNumConns:
+  - value: 50
+    constraints: {}
+system.advancedVisibilityWritingMode:
+  - value: "off"
+    constraints: {}
+history.defaultActivityRetryPolicy:
+  - value:
+      InitialIntervalInSeconds: 1
+      MaximumIntervalCoefficient: 100.0
+      BackoffCoefficient: 2.0
+      MaximumAttempts: 0
+history.defaultWorkflowRetryPolicy:
+  - value:
+      InitialIntervalInSeconds: 1
+      MaximumIntervalCoefficient: 100.0
+      BackoffCoefficient: 2.0
+      MaximumAttempts: 0
+limit.blobSize.error:
+  - value: 15728640
+    constraints: {}
+limit.blobSize.warn:
+  - value: 10485760
+    constraints: {}
+"""
+
+[[config.mounts]]
+filePath = "./scripts/bootstrap-k3s.sh"
+content = """
+#!/bin/sh
+set -eu
+
+source_config=/kube/kubeconfig.yaml
+client_config=/kube/config.yaml
+
+until [ -s "$source_config" ]; do
+  sleep 1
+done
+
+sed 's|server: https://127.0.0.1:6443|server: https://k3s:6443|' \
+  "$source_config" > "$client_config"
+chmod 0644 "$client_config"
+
+/bin/kubectl --kubeconfig "$client_config" \
+  config set-context --current --namespace=default >/dev/null
+
+until /bin/kubectl --kubeconfig "$client_config" get --raw=/readyz >/dev/null 2>&1; do
+  sleep 2
+done
+
+/bin/kubectl --kubeconfig "$client_config" apply -f /config/k3s-resources.yaml
+
+/bin/kubectl --kubeconfig "$client_config" \
+  --namespace kube-system rollout status deployment/coredns --timeout=180s
+
+/bin/kubectl --kubeconfig "$client_config" create secret generic airbyte-auth-secrets \
+  --namespace default \
+  --from-literal=instance-admin-password="$AIRBYTE_ADMIN_PASSWORD" \
+  --from-literal=instance-admin-client-id="$AIRBYTE_ADMIN_CLIENT_ID" \
+  --from-literal=instance-admin-client-secret="$AIRBYTE_ADMIN_CLIENT_SECRET" \
+  --from-literal=jwt-signature-secret="$AIRBYTE_JWT_SIGNATURE_SECRET" \
+  --from-literal=dataplane-client-id= \
+  --from-literal=dataplane-client-secret= \
+  --dry-run=client -o yaml | \
+  /bin/kubectl --kubeconfig "$client_config" apply -f -
+
+/bin/kubectl --kubeconfig "$client_config" create secret generic airbyte-airbyte-secrets \
+  --namespace default \
+  --from-literal=AIRBYTE_DUMMY_SECRET=dummy \
+  --from-literal=AB_INSTANCE_ADMIN_PASSWORD="$AIRBYTE_ADMIN_PASSWORD" \
+  --from-literal=AB_INSTANCE_ADMIN_CLIENT_ID="$AIRBYTE_ADMIN_CLIENT_ID" \
+  --from-literal=AB_INSTANCE_ADMIN_CLIENT_SECRET="$AIRBYTE_ADMIN_CLIENT_SECRET" \
+  --from-literal=AB_JWT_SIGNATURE_SECRET="$AIRBYTE_JWT_SIGNATURE_SECRET" \
+  --from-literal=DATABASE_USER="$DATABASE_USER" \
+  --from-literal=DATABASE_PASSWORD="$DATABASE_PASSWORD" \
+  --from-literal=CONFIG_DATABASE_REPLICA_USER="$DATABASE_USER" \
+  --from-literal=CONFIG_DATABASE_REPLICA_PASSWORD="$DATABASE_PASSWORD" \
+  --from-literal=AWS_ACCESS_KEY_ID="$MINIO_ROOT_USER" \
+  --from-literal=AWS_SECRET_ACCESS_KEY="$MINIO_ROOT_PASSWORD" \
+  --from-literal=DATAPLANE_CLIENT_ID= \
+  --from-literal=DATAPLANE_CLIENT_SECRET= \
+  --dry-run=client -o yaml | \
+  /bin/kubectl --kubeconfig "$client_config" apply -f -
+
+"""
+
+[[config.mounts]]
+filePath = "./scripts/export-dataplane-credentials.sh"
+content = """
+#!/bin/sh
+
+set -eu
+
+kubeconfig=/kube/config.yaml
+namespace=default
+secret_name=airbyte-auth-secrets
+credentials_dir=/credentials
+client_id_file="$credentials_dir/dataplane-client-id"
+client_secret_file="$credentials_dir/dataplane-client-secret"
+client_id_tmp="$credentials_dir/.dataplane-client-id.$$"
+client_secret_tmp="$credentials_dir/.dataplane-client-secret.$$"
+
+umask 022
+mkdir -p "$credentials_dir"
+trap 'rm -f "$client_id_tmp" "$client_secret_tmp"' 0 1 2 15
+
+client_id_b64=$(
+  /bin/kubectl --kubeconfig "$kubeconfig" \
+    --namespace "$namespace" \
+    get secret "$secret_name" \
+    -o 'jsonpath={.data.dataplane-client-id}'
+)
+client_secret_b64=$(
+  /bin/kubectl --kubeconfig "$kubeconfig" \
+    --namespace "$namespace" \
+    get secret "$secret_name" \
+    -o 'jsonpath={.data.dataplane-client-secret}'
+)
+
+[ -n "$client_id_b64" ] || {
+  echo "The bootloader did not create a data-plane client ID." >&2
+  exit 1
+}
+[ -n "$client_secret_b64" ] || {
+  echo "The bootloader did not create a data-plane client secret." >&2
+  exit 1
+}
+
+printf '%s' "$client_id_b64" | base64 -d > "$client_id_tmp"
+printf '%s' "$client_secret_b64" | base64 -d > "$client_secret_tmp"
+
+client_id=$(cat "$client_id_tmp")
+if ! printf '%s' "$client_id" | grep -Eq \
+  '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'; then
+  echo "The bootloader returned an invalid data-plane client ID." >&2
+  exit 1
+fi
+
+mv -f "$client_id_tmp" "$client_id_file"
+mv -f "$client_secret_tmp" "$client_secret_file"
+trap - 0 1 2 15
+"""
+
+[[config.mounts]]
+filePath = "./scripts/init-minio.sh"
+content = """
+#!/bin/sh
+
+set -eu
+
+until /bin/mc alias set airbyte "$MINIO_ENDPOINT" "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD" >/dev/null 2>&1; do
+  sleep 2
+done
+
+for bucket in airbyte-bucket state-storage airbyte-dev-logs; do
+  /bin/mc mb --ignore-existing "airbyte/$bucket"
+done
+"""
+
+[[config.mounts]]
+filePath = "./scripts/start-workload-launcher.sh"
+content = """
+#!/bin/sh
+
+set -eu
+
+client_id_file=/credentials/dataplane-client-id
+client_secret_file=/credentials/dataplane-client-secret
+
+[ -s "$client_id_file" ] || {
+  echo "Missing generated data-plane client ID." >&2
+  exit 1
+}
+
+[ -s "$client_secret_file" ] || {
+  echo "Missing generated data-plane client secret." >&2
+  exit 1
+}
+
+DATAPLANE_CLIENT_ID=$(cat "$client_id_file")
+DATAPLANE_CLIENT_SECRET=$(cat "$client_secret_file")
+export DATAPLANE_CLIENT_ID DATAPLANE_CLIENT_SECRET
+
+exec /entrypoint.sh "$@"
+"""

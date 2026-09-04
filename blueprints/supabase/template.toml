@@ -126,7 +126,9 @@ env = [
 '',
 '############',
 '# API Proxy - Configuration for the Envoy reverse proxy.',
-'# Following ports should not be changed for a dokploy config unless you know what you are doing.',
+'# The gateway port is fixed at 8000 by the compose expose list and by the domain',
+'# block of this template, so editing API_GW_HTTP_PORT has no effect. It is kept',
+'# only for parity with the upstream Supabase .env.',
 '############',
 '',
 'API_GW_HTTP_PORT=8000',
@@ -150,7 +152,7 @@ env = [
 'ADDITIONAL_REDIRECT_URLS=https://${main_domain}/*,http://localhost:3000/*',
 'JWT_EXPIRY=3600',
 'DISABLE_SIGNUP=false',
-'API_EXTERNAL_URL=https://${main_domain}',
+'API_EXTERNAL_URL=https://${main_domain}/auth/v1',
 '',
 '## Mailer Config',
 'MAILER_URLPATHS_CONFIRMATION="/auth/v1/verify"',
@@ -1891,24 +1893,54 @@ COMMIT;
 
 [[config.mounts]]
 filePath = "/volumes/functions/hello/index.ts"
-content = """
-// Follow this setup guide to integrate the Deno language server with your editor:
+content = '''// Follow this setup guide to integrate the Deno language server with your editor:
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
 
-import { serve } from "https://deno.land/std@0.177.1/http/server.ts"
+// Setup type definitions for built-in Supabase Runtime APIs
+import "@supabase/functions-js/edge-runtime.d.ts"
+import { withSupabase } from "@supabase/server"
 
-serve(async () => {
-  return new Response(
-    `"Hello from Edge Functions!"`,
-    { headers: { "Content-Type": "application/json" } },
-  )
-})
+// Logs are visible from 'functions' container inspector
+console.log("Hello from Functions!");
+
+// This endpoint uses 'publishable' | 'secret' access, apiKey is required.
+// Use publishable for Client-facing, key-validated endpoints
+// Use secret for Server-to-server, internal calls
+export default {
+  fetch: withSupabase({ auth: ["publishable", "secret"] }, async (req, ctx) => {
+    // Called by another service with a secret key
+    // ctx.supabaseAdmin bypasses RLS — use for privileged operations
+    /*
+    if (ctx.authMode === "secret") {
+      const { user_id } = await req.json();
+      const { data } = await ctx.supabaseAdmin.auth.admin.getUserById(user_id);
+
+      return Response.json({
+        email: data?.user?.email,
+      });
+    }
+    */
+
+    return Response.json({ message: "Hello from Edge Functions!" });
+  }),
+};
 
 // To invoke:
 // curl 'http://localhost:<API_GW_HTTP_PORT>/functions/v1/hello' \
-//   --header 'Authorization: Bearer <anon/service_role API key>'
-"""
+//   --header 'apiKey: <sb_publishable/sb_secret key>'
+
+'''
+
+[[config.mounts]]
+filePath = "/volumes/functions/deno.jsonc"
+content = '''{
+  "imports": {
+    "@supabase/functions-js": "jsr:@supabase/functions-js@^2",
+    "@supabase/server": "npm:@supabase/server@^1"
+  }
+}
+'''
 
 [[config.mounts]]
 filePath = "/volumes/functions/main/index.ts"
@@ -2027,8 +2059,12 @@ Deno.serve(async (req: Request) => {
   const memoryLimitMb = 150
   const workerTimeoutMs = 1 * 60 * 1000
   const noModuleCache = false
-  const importMapPath = null
-  const envVarsObj = Deno.env.toObject()
+  // A common import map for all functions; a per-function scope would have to be
+  // resolved dynamically from service_name.
+  const importMapPath = `/home/deno/functions/deno.jsonc`
+  // SUPABASE_FUNCTION_SLUG is per-request, because only this worker knows which
+  // function the request resolved to.
+  const envVarsObj = { ...Deno.env.toObject(), SUPABASE_FUNCTION_SLUG: service_name }
   const envVars = Object.keys(envVarsObj).map((k) => [k, envVarsObj[k]])
 
   try {

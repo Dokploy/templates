@@ -39,6 +39,36 @@ values into `lds.yaml` when the container starts, and the listener does the tran
 on every request. Both styles stay valid at the same time — existing apps on `ANON_KEY` /
 `SERVICE_ROLE_KEY` keep working.
 
+## Upgrading an existing Supabase service (Kong → Envoy)
+
+⚠️ **Only if you already run this template on its Kong version.** A fresh install can skip this.
+
+The API gateway service is renamed `kong` → `api-gw`. Dokploy checks the domain's service
+name against the compose file, so a redeploy fails with
+`Domain ... is attached to service "kong" which does not exist in the compose` until you
+fix the domain first.
+
+1. Open **Domains**, edit the domain, change **Service Name** from `kong` to `api-gw`.
+   Leave the port at `8000`.
+2. Deploy. The stale `kong` container is removed automatically (`--remove-orphans`).
+
+No data is lost by the rename — the database lives in a separate volume.
+
+## Backing up the database
+
+The Postgres data directory is a **bind mount** (`files/volumes/db/data`), not a named
+Docker volume. Two consequences:
+
+- **Dokploy's Volume Backups cannot see it.** The panel will only offer the `db-config` and
+  `deno-cache` volumes, neither of which holds your data.
+- **Deleting the service deletes the database**, whether or not you tick *delete volumes* —
+  the data sits inside the application directory that Dokploy removes.
+- **Redeploy with fresh volumes does NOT reset the database.** It clears `db-config` and
+  `deno-cache` only. A true reset means deleting the service.
+
+Back up with `pg_dump` through the pooler, or copy
+`/etc/dokploy/compose/<appName>/files/volumes/db/data` off the host.
+
 ## Optional: sign tokens with an ES256 key pair
 
 Everything is signed with the symmetric `JWT_SECRET` (HS256) by default. Moving

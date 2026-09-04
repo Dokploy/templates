@@ -59,8 +59,8 @@ services:
       SNIPPETS_MANAGEMENT_FOLDER: /app/snippets
       EDGE_FUNCTIONS_MANAGEMENT_FOLDER: /app/edge-functions
     volumes:
-      - ../files/volumes/snippets:/app/snippets:Z
-      - ../files/volumes/functions:/app/edge-functions:Z
+      - ../files/volumes/snippets:/app/snippets:z
+      - ../files/volumes/functions:/app/edge-functions:ro,z
 
   api-gw:
     image: envoyproxy/envoy:v1.39.0
@@ -309,7 +309,7 @@ services:
     image: supabase/edge-runtime:v1.74.0
     restart: unless-stopped
     volumes:
-      - ../files/volumes/functions:/home/deno/functions:Z
+      - ../files/volumes/functions:/home/deno/functions:z
       - deno-cache:/root/.cache/deno
     depends_on:
       api-gw:

@@ -3,8 +3,9 @@
 #   Stop:               docker compose down
 #   Reset everything:   ./reset.sh
 #
-# Dokploy: Kong is exposed on port 8000 for domain routing. Storage uses local file
-# backend by default; edit the storage service env in this file to switch to S3/MinIO.
+# Dokploy: the Envoy API gateway (api-gw) is exposed on port 8000 for domain routing.
+# Storage uses the local file backend by default; edit the storage service env in
+# this file to switch to S3/MinIO.
 
 name: supabase
 
@@ -44,7 +45,7 @@ services:
       DEFAULT_PROJECT_NAME: ${STUDIO_DEFAULT_PROJECT}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
 
-      SUPABASE_URL: http://kong:8000
+      SUPABASE_URL: http://api-gw:8000
       SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
@@ -58,47 +59,39 @@ services:
       SNIPPETS_MANAGEMENT_FOLDER: /app/snippets
       EDGE_FUNCTIONS_MANAGEMENT_FOLDER: /app/edge-functions
     volumes:
-      - ../files/volumes/snippets:/app/snippets:Z
-      - ../files/volumes/functions:/app/edge-functions:Z
+      - ../files/volumes/snippets:/app/snippets:z
+      - ../files/volumes/functions:/app/edge-functions:ro,z
 
-  kong:
-    image: kong/kong:3.9.3
+  api-gw:
+    image: envoyproxy/envoy:v1.39.0
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "kong", "health"]
-      interval: 5s
+      # Using a TCP port check because this image does not include curl or wget.
+      test: ["CMD-SHELL", "timeout 1 bash -c '</dev/tcp/127.0.0.1/8000'"]
+      interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 30s
+      retries: 3
     depends_on:
       studio:
         condition: service_healthy
     expose:
       - 8000
-      - 8443
     volumes:
-      - ../files/volumes/api/kong.yml:/home/kong/temp.yml:ro,z
-      - ../files/volumes/api/kong-entrypoint.sh:/home/kong/kong-entrypoint.sh:ro,z
+      - ../files/volumes/api/envoy/envoy.yaml:/etc/envoy/envoy.yaml:ro,z
+      - ../files/volumes/api/envoy/cds.yaml:/etc/envoy/cds.yaml:ro,z
+      - ../files/volumes/api/envoy/lds.template.yaml:/etc/envoy/lds.template.yaml:ro,z
+      - ../files/volumes/api/envoy/docker-entrypoint.sh:/docker-entrypoint.sh:ro,z
     environment:
-      KONG_DATABASE: "off"
-      KONG_DECLARATIVE_CONFIG: /usr/local/kong/kong.yml
-      KONG_ROUTER_FLAVOR: expressions
-      KONG_DNS_ORDER: LAST,A,CNAME
-      KONG_DNS_NOT_FOUND_TTL: 1
-      KONG_DNS_VALID_TTL: 5
-      KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth,request-termination,ip-restriction,post-function
-      KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
-      KONG_NGINX_PROXY_PROXY_BUFFERS: 64 160k
-      KONG_PROXY_ACCESS_LOG: /dev/stdout combined
-      SUPABASE_ANON_KEY: ${ANON_KEY}
-      SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      ANON_KEY: ${ANON_KEY}
+      SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
       SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY:-}
       SUPABASE_SECRET_KEY: ${SUPABASE_SECRET_KEY:-}
       ANON_KEY_ASYMMETRIC: ${ANON_KEY_ASYMMETRIC:-}
       SERVICE_ROLE_KEY_ASYMMETRIC: ${SERVICE_ROLE_KEY_ASYMMETRIC:-}
+      SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
       DASHBOARD_USERNAME: ${DASHBOARD_USERNAME}
       DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
-    entrypoint: ["/bin/bash", "/home/kong/kong-entrypoint.sh"]
+    entrypoint: ["/bin/sh", "/docker-entrypoint.sh"]
 
   auth:
     image: supabase/gotrue:v2.189.0
@@ -120,7 +113,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      GOTRUE_MAILER_EXTERNAL_HOSTS: kong,${SUPABASE_HOST}
+      GOTRUE_MAILER_EXTERNAL_HOSTS: api-gw,${SUPABASE_HOST}
       GOTRUE_API_HOST: 0.0.0.0
       GOTRUE_API_PORT: 9999
       API_EXTERNAL_URL: ${API_EXTERNAL_URL}
@@ -316,17 +309,22 @@ services:
     image: supabase/edge-runtime:v1.74.0
     restart: unless-stopped
     volumes:
-      - ../files/volumes/functions:/home/deno/functions:Z
+      - ../files/volumes/functions:/home/deno/functions:z
       - deno-cache:/root/.cache/deno
     depends_on:
-      kong:
+      api-gw:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 1 bash -c '</dev/tcp/127.0.0.1/9000'"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
     environment:
       # Legacy symmetric HS256 key
       JWT_SECRET: ${JWT_SECRET}
       # JWKS for token verification (EC public + legacy symmetric)
       SUPABASE_JWKS: ${JWT_JWKS:-{"keys":[]}}
-      SUPABASE_URL: http://kong:8000
+      SUPABASE_URL: http://api-gw:8000
       SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}

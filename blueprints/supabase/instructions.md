@@ -39,6 +39,41 @@ values into `lds.yaml` when the container starts, and the listener does the tran
 on every request. Both styles stay valid at the same time — existing apps on `ANON_KEY` /
 `SERVICE_ROLE_KEY` keep working.
 
+## ⚠️ If your domain has no TLS certificate, change the scheme to `http`
+
+The template generates `SUPABASE_PUBLIC_URL`, `API_EXTERNAL_URL` and
+`ADDITIONAL_REDIRECT_URLS` with an **`https://`** scheme, because that is right for the
+usual case — a public domain with a Let's Encrypt certificate.
+
+**Dokploy creates the template's domain with no certificate.** Until you enable one, the
+domain answers on `http` only, and those three values point at a scheme that does not
+respond. The stack comes up healthy and the gateway answers, so nothing looks broken — but:
+
+- Studio's browser-side calls go to `SUPABASE_PUBLIC_URL` and fail.
+- Envoy compares the request `Origin` against `SUPABASE_PUBLIC_URL`, so **CORS refuses every
+  cross-origin call**, including `/pg/`.
+- GoTrue signs tokens with `API_EXTERNAL_URL` as the issuer and builds OAuth redirects and
+  email links from it, so all of them point at the dead scheme.
+
+Two ways out:
+
+1. **Enable a certificate** — Domains → your domain → Certificate → Let's Encrypt. This needs
+   the domain to be **reachable from the public internet**. It will not work for a private
+   address: an `sslip.io` name pointing at a Tailscale `100.x.y.z` or a LAN `192.168.x.y`
+   cannot be validated, because Let's Encrypt cannot connect to it.
+2. **Switch the three values to `http://`** in the Environment tab, then redeploy. This is the
+   right choice for a private or tailnet-only instance.
+
+```
+SUPABASE_PUBLIC_URL=http://<your-domain>
+API_EXTERNAL_URL=http://<your-domain>/auth/v1
+ADDITIONAL_REDIRECT_URLS=http://<your-domain>/*,http://localhost:3000/*
+```
+
+Keep `API_EXTERNAL_URL` ending in `/auth/v1`. Without that path GoTrue advertises
+`<domain>/callback` as its OAuth `redirect_uri`, and the gateway routes a bare `/callback` to
+Studio rather than to auth, so every social sign-in dead-ends on the dashboard login prompt.
+
 ## Upgrading an existing Supabase service (Kong → Envoy)
 
 ⚠️ **Only if you already run this template on its Kong version.** A fresh install can skip this.

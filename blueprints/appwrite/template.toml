@@ -3,9 +3,12 @@ main_domain = "${domain}"
 functions_domain = "functions.${main_domain}"
 sites_domain = "sites.${main_domain}"
 openssl_key = "${password:32}"
-db_root_pw = "${password:32}"
-db_user_pw = "${password:32}"
+notifications_tracking_secret = "${password:32}"
+db_pw = "${password:32}"
+usage_pw = "${password:32}"
 executor_secret = "${password:32}"
+jobs_secret = "${password:32}"
+geo_secret = "${password:32}"
 
 [config]
 env = [
@@ -15,13 +18,14 @@ env = [
   "_APP_POOL_ADAPTER=stack",
   "_APP_WORKER_PER_CORE=6",
   "_APP_OPTIONS_ABUSE=enabled",
-  # Requires HTTPS to be enabled on the main domain in Dokploy (Domains tab).
-  # Makes Appwrite generate https:// URLs (e.g. APPWRITE_FUNCTION_API_ENDPOINT for
-  # Functions) and reject plain-HTTP API calls; over plain HTTP the console cannot log in.
-  "_APP_OPTIONS_FORCE_HTTPS=enabled",
+  "_APP_OPTIONS_ABUSE_INCREASED_LIMIT_PROJECTS=",
+  "_APP_OPTIONS_FORCE_HTTPS=disabled",
   "_APP_OPTIONS_ROUTER_FORCE_HTTPS=disabled",
   "_APP_OPTIONS_ROUTER_PROTECTION=disabled",
+  "_APP_ROUTER_AUTO_CERTIFICATES=enabled",
+  "_APP_LOCKING_ENABLED=enabled",
   "_APP_OPENSSL_KEY_V1=${openssl_key}",
+  "_APP_NOTIFICATIONS_TRACKING_SECRET=${notifications_tracking_secret}",
   "_APP_DOMAIN=${main_domain}",
   "_APP_CONSOLE_DOMAIN=${main_domain}",
   "_APP_CONSOLE_TRUSTED_PROJECTS=",
@@ -41,6 +45,15 @@ env = [
   "_APP_CONSOLE_SCHEMA=appwriteio",
   "_APP_CONSOLE_SESSION_ALERTS=disabled",
   "_APP_CONSOLE_COUNTRIES_DENYLIST=",
+  "_APP_CONSOLE_GITHUB_APP_ID=",
+  "_APP_CONSOLE_GITHUB_SECRET=",
+  "_APP_CONSOLE_GITLAB_APP_ID=",
+  "_APP_CONSOLE_GITLAB_SECRET=",
+  "_APP_CONSOLE_GITLAB_ENDPOINT=",
+  "_APP_CONSOLE_BITBUCKET_APP_ID=",
+  "_APP_CONSOLE_BITBUCKET_SECRET=",
+  "_APP_CONSOLE_GOOGLE_APP_ID=",
+  "_APP_CONSOLE_GOOGLE_SECRET=",
   "_APP_SYSTEM_EMAIL_NAME=Appwrite",
   "_APP_SYSTEM_EMAIL_ADDRESS=noreply@appwrite.io",
   "_APP_SYSTEM_TEAM_EMAIL=team@appwrite.io",
@@ -49,33 +62,55 @@ env = [
   "_APP_EMAIL_CERTIFICATES=",
   "_APP_COMPRESSION_ENABLED=enabled",
   "_APP_COMPRESSION_MIN_SIZE_BYTES=1024",
-  "_APP_USAGE_STATS=enabled",
-  "_APP_USAGE_AGGREGATION_INTERVAL=30",
-  "_APP_STATS_RESOURCES_INTERVAL=30",
   "_APP_LOGGING_PROVIDER=",
   "_APP_LOGGING_CONFIG=",
   "_APP_LOGGING_CONFIG_REALTIME=",
+  "_APP_LOGGING_FORMAT=pretty",
   "_APP_EXPERIMENT_LOGGING_PROVIDER=",
   "_APP_EXPERIMENT_LOGGING_CONFIG=",
+  "_APP_GEO_ENDPOINT=http://appwrite-geo/v1",
+  "_APP_GEO_SECRET=${geo_secret}",
   "_APP_REDIS_HOST=redis",
   "_APP_REDIS_PORT=6379",
   "_APP_REDIS_USER=",
   "_APP_REDIS_PASS=",
-  "_APP_DB_ADAPTER=mongodb",
-  "_APP_DB_HOST=mongodb",
-  "_APP_DB_PORT=27017",
+  "_APP_DB_ADAPTER=postgresql",
+  "_APP_DB_HOST=postgresql",
+  "_APP_DB_PORT=5432",
   "_APP_DB_SCHEMA=appwrite",
   "_APP_DB_USER=user",
-  "_APP_DB_PASS=${db_user_pw}",
-  "_APP_DB_ROOT_PASS=${db_root_pw}",
+  "_APP_DB_PASS=${db_pw}",
   "_APP_DATABASE_SHARED_TABLES=",
   "_APP_DATABASE_SHARED_NAMESPACE=",
-  "_APP_DB_ADAPTER_VECTORSDB=",
-  "_APP_DB_HOST_VECTORSDB=",
-  "_APP_DB_PORT_VECTORSDB=",
+  "_APP_LIMIT_DATABASE_BATCH=100",
+  "_APP_DOCUMENTSDB=disabled",
+  "_APP_DB_ADAPTER_DOCUMENTSDB=mongodb",
+  "_APP_DB_HOST_DOCUMENTSDB=mongodb",
+  "_APP_DB_PORT_DOCUMENTSDB=27017",
+  "_APP_DB_SCHEMA_DOCUMENTSDB=",
+  "_APP_DB_USER_DOCUMENTSDB=",
+  "_APP_DB_PASS_DOCUMENTSDB=",
+  "_APP_CONNECTIONS_DATABASE_DOCUMENTSDB=",
+  "_APP_VECTORSDB=disabled",
+  "_APP_DB_ADAPTER_VECTORSDB=postgresql",
+  "_APP_DB_HOST_VECTORSDB=postgresql",
+  "_APP_DB_PORT_VECTORSDB=5432",
   "_APP_DB_SCHEMA_VECTORSDB=",
   "_APP_DB_USER_VECTORSDB=",
   "_APP_DB_PASS_VECTORSDB=",
+  "_APP_CONNECTIONS_DATABASE_VECTORSDB=",
+  "_APP_EMBEDDING=disabled",
+  "_APP_USAGE_STATS=enabled",
+  "_APP_USAGE_PASS=${usage_pw}",
+  "_APP_CONNECTIONS_DB_USAGE=http://appwrite:${usage_pw}@clickhouse:8123/appwrite",
+  "_APP_POOL_SIZE_USAGE=2",
+  "_APP_EXECUTIONS_DUAL_WRITE=enabled",
+  "_APP_CONNECTIONS_DB_EXECUTIONS=http://appwrite:${usage_pw}@clickhouse:8123/appwrite",
+  "_APP_POOL_SIZE_EXECUTIONS=2",
+  "_APP_MAINTENANCE_RETENTION_USAGE_TTL=180",
+  "_APP_STATS_USAGE_QUEUE_NAME=v1-stats-usage",
+  "_APP_STATS_RESOURCES_QUEUE_NAME=v1-stats-resources",
+  "_APP_STATS_RESOURCES_INTERVAL=3600",
   "_APP_SMTP_HOST=",
   "_APP_SMTP_PORT=",
   "_APP_SMTP_SECURE=",
@@ -112,21 +147,25 @@ env = [
   "_APP_STORAGE_WASABI_REGION=eu-central-1",
   "_APP_STORAGE_WASABI_BUCKET=",
   "_APP_COMPUTE_SIZE_LIMIT=30000000",
-  "_APP_COMPUTE_BUILD_TIMEOUT=900",
+  "_APP_COMPUTE_BUILD_TIMEOUT=2700",
   "_APP_COMPUTE_CPUS=0",
   "_APP_COMPUTE_MEMORY=0",
   "_APP_COMPUTE_INACTIVE_THRESHOLD=60",
   "_APP_COMPUTE_MAINTENANCE_INTERVAL=3600",
-  "_APP_COMPUTE_RUNTIMES_NETWORK=dokploy-network",
+  "_APP_OPEN_RUNTIMES_NFT=enabled",
   "_APP_FUNCTIONS_TIMEOUT=900",
   "_APP_FUNCTIONS_CREATION_ABUSE_LIMIT=5000",
+  "_APP_FUNCTIONS_SCHEDULE_SPREAD=0",
   "_APP_FUNCTIONS_RUNTIMES=node-22,python-3.12,php-8.3,ruby-3.3,dart-3.5,go-1.23,rust-1.83,bun-1.1,deno-1.46,java-21.0,dotnet-8.0",
   "_APP_SITES_TIMEOUT=900",
   "_APP_SITES_RUNTIMES=static-1,node-22",
   "_APP_EXECUTOR_SECRET=${executor_secret}",
   "_APP_EXECUTOR_HOST=http://openruntimes-executor/v1",
   "_APP_EXECUTOR_IMAGES=openruntimes/node:v5-22,openruntimes/python:v5-3.12,openruntimes/php:v5-8.3,openruntimes/static:v5-1",
-  "_APP_OPEN_RUNTIMES_NFT=enabled",
+  "_APP_EXECUTOR_CONNECTION_STORAGE=local://localhost",
+  "_APP_JOBS_HOST=http://orchestrator:8080",
+  "_APP_JOBS_SECRET=${jobs_secret}",
+  "_APP_JOBS_ENDPOINT=http://appwrite",
   "_APP_BROWSER_HOST=http://appwrite-browser:3000/v1",
   "_APP_WORKER_SCREENSHOTS_ROUTER=http://appwrite",
   "_APP_DOCKER_HUB_USERNAME=",
@@ -153,60 +192,50 @@ env = [
   "_APP_VCS_GITHUB_CLIENT_ID=",
   "_APP_VCS_GITHUB_CLIENT_SECRET=",
   "_APP_VCS_GITHUB_WEBHOOK_SECRET=",
+  "_APP_VCS_GITEA_ENDPOINT=",
+  "_APP_VCS_GITEA_BROWSER_ENDPOINT=",
+  "_APP_VCS_GITEA_CLIENT_ID=",
+  "_APP_VCS_GITEA_CLIENT_SECRET=",
+  "_APP_VCS_GITEA_WEBHOOK_SECRET=",
+  "_APP_VCS_GITLAB_ENDPOINT=",
+  "_APP_VCS_GITLAB_CLIENT_ID=",
+  "_APP_VCS_GITLAB_CLIENT_SECRET=",
+  "_APP_VCS_GITLAB_WEBHOOK_SECRET=",
+  "_APP_VCS_BITBUCKET_CLIENT_ID=",
+  "_APP_VCS_BITBUCKET_CLIENT_SECRET=",
+  "_APP_VCS_BITBUCKET_WEBHOOK_SECRET=",
+  "_APP_VCS_ORIGIN_CLIENT_ID=",
+  "_APP_VCS_ORIGIN_PRIVATE_KEY=",
+  "_APP_VCS_WEBHOOK_URL=",
   "_APP_MIGRATION_HOST=appwrite",
   "_APP_MIGRATIONS_FIREBASE_CLIENT_ID=",
   "_APP_MIGRATIONS_FIREBASE_CLIENT_SECRET=",
   "_APP_ASSISTANT_OPENAI_API_KEY=",
 ]
 
-[[config.mounts]]
-filePath = "mongo-init.js"
-content = """// mongo-init.js
-
-// Switch to the admin database
-const adminDb = db.getSiblingDB('admin');
-
-// Get username and password from environment variables
-const username = process.env.MONGO_INITDB_USERNAME;
-const password = process.env.MONGO_INITDB_PASSWORD;
-const database = process.env.MONGO_INITDB_DATABASE;
-
-// Create the user
-adminDb.createUser({
-  user: username,
-  pwd: password,
-  roles: [
-    { role: 'readWrite', db: database }
-  ]
-});
-"""
-
-[[config.mounts]]
-filePath = "mongo-entrypoint.sh"
-content = """#!/bin/bash
-set -e
-
-# Fix keyfile permissions if mounted from volume
-KEYFILE_PATH="/data/keyfile/mongo-keyfile"
-
-if [ ! -f "$KEYFILE_PATH" ]; then
-  echo "Generating random MongoDB keyfile..."
-  mkdir -p /data/keyfile
-  openssl rand -base64 756 > "$KEYFILE_PATH"
-fi
-
-chmod 400 "$KEYFILE_PATH"
-chown mongodb:mongodb "$KEYFILE_PATH" 2>/dev/null || chown 999:999 "$KEYFILE_PATH"
-
-# Use MongoDB's standard entrypoint with our command
-exec docker-entrypoint.sh mongod --replSet rs0 --bind_ip_all --auth --keyFile "$KEYFILE_PATH"
-"""
+[[config.domains]]
+serviceName = "appwrite-console"
+port = 3000
+host = "${main_domain}"
+path = "/"
 
 [[config.domains]]
 serviceName = "appwrite"
 port = 80
 host = "${main_domain}"
-path = "/"
+path = "/v1"
+
+[[config.domains]]
+serviceName = "appwrite"
+port = 80
+host = "${main_domain}"
+path = "/.well-known"
+
+[[config.domains]]
+serviceName = "appwrite-realtime"
+port = 80
+host = "${main_domain}"
+path = "/v1/realtime"
 
 [[config.domains]]
 serviceName = "appwrite"
@@ -219,15 +248,3 @@ serviceName = "appwrite"
 port = 80
 host = "${functions_domain}"
 path = "/"
-
-[[config.domains]]
-serviceName = "appwrite-console"
-port = 80
-host = "${main_domain}"
-path = "/console"
-
-[[config.domains]]
-serviceName = "appwrite-realtime"
-port = 80
-host = "${main_domain}"
-path = "/v1/realtime"

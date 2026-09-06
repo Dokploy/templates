@@ -1,0 +1,87 @@
+version: "3.8"
+
+services:
+  graylog:
+    image: graylog/graylog:7.1.9
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      opensearch:
+        condition: service_healthy
+    entrypoint:
+      - /usr/bin/tini
+      - --
+      - /bin/bash
+      - -ec
+      - |
+        export GRAYLOG_ROOT_PASSWORD_SHA2="$$(printf '%s' "$$GRAYLOG_ADMIN_PASSWORD" | sha256sum | cut -d ' ' -f 1)"
+        unset GRAYLOG_ADMIN_PASSWORD
+        exec /docker-entrypoint.sh
+    environment:
+      GRAYLOG_ADMIN_PASSWORD: ${GRAYLOG_ADMIN_PASSWORD:?Set the admin password}
+      GRAYLOG_PASSWORD_SECRET: ${GRAYLOG_PASSWORD_SECRET:?Set the password secret}
+      GRAYLOG_HTTP_BIND_ADDRESS: 0.0.0.0:9000
+      GRAYLOG_HTTP_EXTERNAL_URI: ${GRAYLOG_HTTP_EXTERNAL_URI:?Set the public URL including its trailing slash}
+      GRAYLOG_MONGODB_URI: mongodb://mongodb:27017/graylog
+      GRAYLOG_ELASTICSEARCH_HOSTS: http://opensearch:9200
+      GRAYLOG_NODE_ID_FILE: /usr/share/graylog/data/data/node-id
+      GRAYLOG_SERVER_JAVA_OPTS: -Xms512m -Xmx512m
+    expose:
+      - "9000"
+      - "12201/tcp"
+      - "12201/udp"
+    volumes:
+      - graylog-data:/usr/share/graylog/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9000/api/system/lbstatus"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 120s
+
+  mongodb:
+    image: mongo:8.0.29
+    restart: unless-stopped
+    command: ["mongod", "--wiredTigerCacheSizeGB", "0.25"]
+    volumes:
+      - mongodb-data:/data/db
+      - mongodb-config:/data/configdb
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "quit(db.adminCommand('ping').ok ? 0 : 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  opensearch:
+    image: opensearchproject/opensearch:2.19.5
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      action.auto_create_index: "false"
+      bootstrap.memory_lock: "true"
+      OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      DISABLE_SECURITY_PLUGIN: "true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9200/_cluster/health?wait_for_status=yellow&timeout=5s"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  graylog-data:
+  mongodb-data:
+  mongodb-config:
+  opensearch-data:

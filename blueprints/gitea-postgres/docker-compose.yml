@@ -15,6 +15,9 @@ services:
       - GITEA__server__DOMAIN=${GITEA_DOMAIN}
       - GITEA__server__SSH_DOMAIN=${GITEA_SSH_DOMAIN:-${GITEA_DOMAIN}}
       - GITEA__server__ROOT_URL=https://${GITEA_DOMAIN}/
+      - GITEA__server__LFS_START_SERVER=true
+      - GITEA__service__DISABLE_REGISTRATION=${DISABLE_REGISTRATION:-false}
+      - GITEA__service__REQUIRE_SIGNIN_VIEW=${REQUIRE_SIGNIN_VIEW:-false}
     volumes:
       - gitea-data:/data
     expose:

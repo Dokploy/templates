@@ -18,3 +18,9 @@ GITEA_SSH_DOMAIN = "${main_domain}"
 POSTGRES_USER = "${db_user}"
 POSTGRES_PASSWORD = "${db_password}"
 POSTGRES_DB = "gitea"
+
+# Security & Privacy Settings (default: false):
+# Set to "true" to disable public user registration (recommended after creating the first admin user)
+DISABLE_REGISTRATION = "false"
+# Set to "true" to require sign-in to view repositories and explore pages (makes the instance private)
+REQUIRE_SIGNIN_VIEW = "false"

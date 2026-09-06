@@ -1,0 +1,15 @@
+{
+  "id": "pretix",
+  "name": "Pretix",
+  "version": "latest",
+  "description": "Ticket shop application for conferences, festivals, concerts, tech events, shows, workshops, etc.",
+  "logo": "pretix.svg",
+  "links": {
+    "github": "https://github.com/pretix/pretix/",
+    "website": "https://pretix.eu/",
+    "docs": "https://docs.pretix.eu/"
+  },
+  "tags": [
+    "monitoring"
+  ]
+}

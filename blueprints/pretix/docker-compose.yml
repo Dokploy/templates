@@ -1,0 +1,9 @@
+version: "latest"
+services:
+  pretix:
+    image: pretix/standalone
+    restart: unless-stopped
+    volumes:
+      - pretix-storage:/var/lib/pretix
+volumes:
+  pretix-storage: {}

@@ -2,40 +2,54 @@ version: "3.8"
 
 services:
   gitea:
-    image: docker.gitea.com/gitea:1.24.4
+    image: docker.gitea.com/gitea:1.27.3
     restart: unless-stopped
     environment:
-      - USER_UID=1000
-      - USER_GID=1000
+      - USER_UID=${USER_UID:-1000}
+      - USER_GID=${USER_GID:-1000}
       - GITEA__database__DB_TYPE=postgres
       - GITEA__database__HOST=postgres:5432
-      - GITEA__database__NAME=gitea
-      - GITEA__database__USER=gitea
-      - GITEA__database__PASSWD=${GITEA_DB_PASSWORD:-gitea}
+      - GITEA__database__NAME=${POSTGRES_DB:-gitea}
+      - GITEA__database__USER=${POSTGRES_USER}
+      - GITEA__database__PASSWD=${POSTGRES_PASSWORD}
+      - GITEA__server__DOMAIN=${GITEA_DOMAIN}
+      - GITEA__server__SSH_DOMAIN=${GITEA_SSH_DOMAIN:-${GITEA_DOMAIN}}
+      - GITEA__server__ROOT_URL=https://${GITEA_DOMAIN}/
+      - GITEA__server__LFS_START_SERVER=true
+      - GITEA__service__DISABLE_REGISTRATION=${DISABLE_REGISTRATION:-false}
+      - GITEA__service__REQUIRE_SIGNIN_VIEW=${REQUIRE_SIGNIN_VIEW:-false}
     volumes:
       - gitea-data:/data
     expose:
       - "3000"
       - "22"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/"]
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/healthz"]
       interval: 15s
       timeout: 5s
       retries: 10
+      start_period: 20s
 
   postgres:
-    image: docker.io/library/postgres:14
+    image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=gitea
-      - POSTGRES_PASSWORD=${GITEA_DB_PASSWORD:-gitea}
-      - POSTGRES_DB=gitea
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB:-gitea}
     volumes:
       - pg-data:/var/lib/postgresql/data
     expose:
       - "5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB:-gitea}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 volumes:
   gitea-data: {}

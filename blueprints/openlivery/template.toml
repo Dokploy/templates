@@ -1,0 +1,34 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${hash:48}"
+secret_key = "${hash:64}"
+encryption_key = "${hash:64}"
+bridge_token = "${hash:64}"
+
+[config]
+env = [
+  "FRONTEND_URL=http://${main_domain}",
+  "COOKIE_SECURE=false",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "SECRET_KEY=${secret_key}",
+  "ENCRYPTION_KEY=${encryption_key}",
+  "WHATSAPP_BRIDGE_TOKEN=${bridge_token}",
+]
+
+[[config.domains]]
+serviceName = "openlivery"
+port = 80
+host = "${main_domain}"
+
+[[config.mounts]]
+filePath = "./Caddyfile"
+content = """
+:80 {
+  handle /api/* {
+    reverse_proxy api:8000
+  }
+  handle {
+    reverse_proxy web:3000
+  }
+}
+"""

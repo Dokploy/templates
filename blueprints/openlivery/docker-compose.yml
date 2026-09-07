@@ -1,0 +1,99 @@
+version: "3.8"
+
+services:
+  openlivery:
+    image: caddy:2.10.2-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/Caddyfile:/etc/caddy/Caddyfile:ro
+    expose:
+      - "80"
+    depends_on:
+      api:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+
+  db:
+    image: postgres:17.6-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: openlivery
+      POSTGRES_USER: openlivery
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openlivery -d openlivery"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    image: ghcr.io/sarrazola/openlivery-api:v0.4.0
+    platform: linux/amd64
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://openlivery:${POSTGRES_PASSWORD}@db:5432/openlivery
+      SECRET_KEY: ${SECRET_KEY}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      WHATSAPP_BRIDGE_TOKEN: ${WHATSAPP_BRIDGE_TOKEN}
+      FRONTEND_URL: ${FRONTEND_URL}
+      COOKIE_SECURE: ${COOKIE_SECURE}
+      COOKIE_SAMESITE: lax
+      BACKEND_URL: http://api:8000
+      WHATSAPP_BRIDGE_URL: http://whatsapp:3101
+      STORAGE_DIR: /app/backend/storage
+      ALLOW_MULTI_AGENCY: "false"
+    volumes:
+      - backend-storage:/app/backend/storage
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  web:
+    image: ghcr.io/sarrazola/openlivery-web:v0.4.0
+    platform: linux/amd64
+    restart: unless-stopped
+    environment:
+      BACKEND_INTERNAL_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/login').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  whatsapp:
+    image: ghcr.io/sarrazola/openlivery-whatsapp:v0.4.0
+    platform: linux/amd64
+    restart: unless-stopped
+    environment:
+      BACKEND_URL: http://api:8000
+      WHATSAPP_BRIDGE_HOST: 0.0.0.0
+      WHATSAPP_BRIDGE_PORT: 3101
+      WHATSAPP_BRIDGE_TOKEN: ${WHATSAPP_BRIDGE_TOKEN}
+      WHATSAPP_STORE_URL: postgres://openlivery:${POSTGRES_PASSWORD}@db:5432/openlivery?sslmode=disable&search_path=whatsmeow
+      WHATSAPP_LOG_LEVEL: silent
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/app/bridge", "-healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  postgres-data:
+  backend-storage:

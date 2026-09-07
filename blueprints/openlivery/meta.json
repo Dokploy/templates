@@ -7,7 +7,7 @@
   "links": {
     "github": "https://github.com/sarrazola/openlivery",
     "website": "https://www.openlivery.com",
-    "docs": "https://www.openlivery.com/docs/self-hosting"
+    "docs": "https://github.com/sarrazola/openlivery/blob/main/docs/en/self-hosting.md"
   },
   "tags": ["ai", "chat", "customer-support"]
 }

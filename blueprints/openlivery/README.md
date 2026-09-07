@@ -17,4 +17,4 @@ Keep ENCRYPTION_KEY and WHATSAPP_BRIDGE_TOKEN unchanged across restarts and upgr
 Client portals use the main domain by default
 Additional client domains require DNS and proxy configuration
 
-[Self-hosting guide](https://www.openlivery.com/docs/self-hosting)
+[Self-hosting guide](https://github.com/sarrazola/openlivery/blob/main/docs/en/self-hosting.md)

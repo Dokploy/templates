@@ -2,8 +2,25 @@
 main_domain = "${domain}"
 api_domain = "${domain}"
 
+elastic_password = "${password:32}"
+kibana_password = "${password:32}"
+
+kibana_security_encryption_key = "${password:64}"
+kibana_saved_objects_encryption_key = "${password:64}"
+kibana_reporting_encryption_key = "${password:64}"
+
 [config]
-env = []
+env = [
+  "ELASTIC_PASSWORD=${elastic_password}",
+  "KIBANA_PASSWORD=${kibana_password}",
+  "KIBANA_SECURITY_ENCRYPTION_KEY=${kibana_security_encryption_key}",
+  "KIBANA_SAVED_OBJECTS_ENCRYPTION_KEY=${kibana_saved_objects_encryption_key}",
+  "KIBANA_REPORTING_ENCRYPTION_KEY=${kibana_reporting_encryption_key}",
+  "KIBANA_PUBLIC_URL=https://${main_domain}",
+  "ELASTICSEARCH_PUBLIC_URL=https://${api_domain}",
+  "ES_MEM_LIMIT=1073741824",
+  "KB_MEM_LIMIT=1073741824"
+]
 mounts = []
 
 [[config.domains]]

@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
   yourls-app:
     image: yourls:1.9.2

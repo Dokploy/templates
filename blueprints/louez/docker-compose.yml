@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   louez:
     image: synapsr/louez:2.1.0

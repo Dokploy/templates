@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   agent-zero:
     image: agent0ai/agent-zero:v1.9

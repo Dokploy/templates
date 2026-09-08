@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   cup:
     image: ghcr.io/sergi0g/cup:latest

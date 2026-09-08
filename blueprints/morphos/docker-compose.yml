@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   morphos-server:
     image: ghcr.io/danvergara/morphos-server:latest

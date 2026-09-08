@@ -1,4 +1,3 @@
-version: '3.3'
 services:
   alist:
     image: xhofe/alist:v3.55.0

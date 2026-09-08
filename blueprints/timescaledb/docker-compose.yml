@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   timescaledb:
     image: timescale/timescaledb:2.26.4-pg17

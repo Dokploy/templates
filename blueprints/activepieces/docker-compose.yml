@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   activepieces:
     image: activepieces/activepieces:0.35.0

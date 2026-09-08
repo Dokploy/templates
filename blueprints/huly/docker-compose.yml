@@ -1,5 +1,4 @@
 name: ${DOCKER_NAME}
-version: "3"
 services:
   nginx:
 

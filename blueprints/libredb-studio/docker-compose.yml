@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   libredb-studio:
     image: ghcr.io/libredb/libredb-studio:0.9.59

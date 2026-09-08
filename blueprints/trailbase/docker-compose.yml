@@ -1,8 +1,6 @@
 # IMPORTANT: The initial admin credentials will be printed in the logs after the container starts
 # Access TrailBase Admin UI at: https://your-domain.com/_/admin (replace with your configured domain)
 
-version: "3.8"
-
 services:
   trailbase:
     image: trailbase/trailbase:latest

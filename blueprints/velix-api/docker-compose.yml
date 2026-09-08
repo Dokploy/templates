@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   velix-api:
     image: ghcr.io/paulolinder/velix-api:0.1.0

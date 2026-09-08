@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   ackee:
     image: electerious/ackee:3.4.2

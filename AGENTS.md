@@ -123,13 +123,11 @@ This document provides essential context for AI models interacting with this pro
   - Ensure the `id` in `blueprints/<id>/meta.json` exactly matches the blueprint folder name (lowercase kebab-case).
 - **Docker Compose Conventions (CRITICAL):**
 
-  - **Version:** MUST be `3.8`
   - **NEVER include:** `ports` (use `expose` only), `container_name`, `networks` (Dokploy handles isolation)
   - **ALWAYS include:** `restart: unless-stopped` or `restart: always`, persistent volumes
   - **Service naming:** MUST match blueprint folder name exactly
   - **Example:**
     ```yaml
-    version: "3.8"
     services:
       ghost:
         image: ghost:6-alpine

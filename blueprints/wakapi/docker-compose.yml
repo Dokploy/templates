@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   wakapi:
     image: ghcr.io/muety/wakapi:latest

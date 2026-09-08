@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   coral:
     image: coralproject/talk:9.7.0

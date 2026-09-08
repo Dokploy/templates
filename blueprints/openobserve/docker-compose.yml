@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   openobserve:
     image: public.ecr.aws/zinclabs/openobserve:v0.70.0

@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   gateway:
     image: nginx:1.27-alpine

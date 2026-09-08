@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   peppermint-postgres:
     image: postgres:latest

@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   prefect:
     image: prefecthq/prefect:3.7.5-python3.12

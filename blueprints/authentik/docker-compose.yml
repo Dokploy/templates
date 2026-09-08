@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   postgresql:
     image: docker.io/library/postgres:18-alpine

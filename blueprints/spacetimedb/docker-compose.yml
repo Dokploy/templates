@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   spacetimedb:
     image: clockworklabs/spacetime:v2.6.1

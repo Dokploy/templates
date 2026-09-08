@@ -1,6 +1,4 @@
 # From Conduit's official documentation: https://docs.conduit.rs/deploying/docker.html#docker-compose
-version: '3'
-
 services:
     homeserver:
         image: registry.gitlab.com/famedly/conduit/matrix-conduit:v0.9.0

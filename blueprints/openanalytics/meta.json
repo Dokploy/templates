@@ -1,0 +1,17 @@
+{
+  "id": "openanalytics",
+  "name": "Open Analytics",
+  "version": "latest",
+  "description": "Privacy-first web analytics: no cookies, no consent banner. Your traffic, drawn to scale.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/OpenLabs-so/openanalytics",
+    "website": "https://github.com/OpenLabs-so/openanalytics",
+    "docs": "https://github.com/OpenLabs-so/openanalytics/blob/main/SELF-HOSTING.md"
+  },
+  "tags": [
+    "analytics",
+    "privacy",
+    "self-hosted"
+  ]
+}

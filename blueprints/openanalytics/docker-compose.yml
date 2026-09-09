@@ -1,0 +1,78 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${OA_DB_USER}
+      POSTGRES_PASSWORD: ${OA_DB_PASSWORD}
+      POSTGRES_DB: openanalytics
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.3-alpine
+    restart: unless-stopped
+    volumes:
+      - ch_data:/var/lib/clickhouse
+    environment:
+      CLICKHOUSE_DB: openanalytics
+      CLICKHOUSE_USER: ${OA_CH_USER}
+      CLICKHOUSE_PASSWORD: ${OA_CH_PASSWORD}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+
+  redis:
+    image: valkey/valkey:7.2-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    command: valkey-server --appendonly yes
+
+  api:
+    image: ghcr.io/openlabs-so/openanalytics-api:latest
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${OA_DB_USER}:${OA_DB_PASSWORD}@db:5432/openanalytics
+      CLICKHOUSE_URL: clickhouse://${OA_CH_USER}:${OA_CH_PASSWORD}@clickhouse:9000/openanalytics
+      REDIS_URL: redis://redis:6379/0
+      DOMAIN: ${DOMAIN}
+      API_SECRET: ${API_SECRET}
+
+  collector:
+    image: ghcr.io/openlabs-so/openanalytics-collector:latest
+    restart: unless-stopped
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      DOMAIN: ${DOMAIN}
+
+  worker:
+    image: ghcr.io/openlabs-so/openanalytics-worker:latest
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${OA_DB_USER}:${OA_DB_PASSWORD}@db:5432/openanalytics
+      CLICKHOUSE_URL: clickhouse://${OA_CH_USER}:${OA_CH_PASSWORD}@clickhouse:9000/openanalytics
+      REDIS_URL: redis://redis:6379/0
+
+  query-gateway:
+    image: ghcr.io/openlabs-so/openanalytics-query-gateway:latest
+    restart: unless-stopped
+    environment:
+      CLICKHOUSE_URL: clickhouse://${OA_CH_USER}:${OA_CH_PASSWORD}@clickhouse:9000/openanalytics
+      REDIS_URL: redis://redis:6379/0
+
+  realtime:
+    image: ghcr.io/openlabs-so/openanalytics-realtime:latest
+    restart: unless-stopped
+    environment:
+      REDIS_URL: redis://redis:6379/0
+
+  web:
+    image: ghcr.io/openlabs-so/openanalytics-web:latest
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: https://api.${DOMAIN}
+      API_URL: http://api:3000
+
+volumes:
+  db_data:
+  ch_data:
+  redis_data:

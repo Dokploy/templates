@@ -1,0 +1,36 @@
+[variables]
+DOMAIN = "${domain}"
+API_SECRET = "${password:32}"
+OA_DB_USER = "openanalytics"
+OA_DB_PASSWORD = "${password:16}"
+OA_CH_USER = "openanalytics"
+OA_CH_PASSWORD = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "app.${DOMAIN}"
+
+[[config.domains]]
+serviceName = "api"
+port = 3000
+host = "api.${DOMAIN}"
+
+[[config.domains]]
+serviceName = "collector"
+port = 3000
+host = "c.${DOMAIN}"
+
+[[config.domains]]
+serviceName = "realtime"
+port = 3000
+host = "rt.${DOMAIN}"
+
+[config.env]
+DOMAIN = "${DOMAIN}"
+API_SECRET = "${API_SECRET}"
+OA_DB_USER = "${OA_DB_USER}"
+OA_DB_PASSWORD = "${OA_DB_PASSWORD}"
+OA_CH_USER = "${OA_CH_USER}"
+OA_CH_PASSWORD = "${OA_CH_PASSWORD}"

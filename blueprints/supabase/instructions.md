@@ -8,18 +8,21 @@
 
 ## Log in to Supabase Studio
 
-The main domain of the template points to the `kong` API gateway (port `8000`), which protects Supabase Studio with basic authentication:
+The main domain of the template points to the `api-gw` API gateway — Envoy, on port `8000` — which protects Supabase Studio with basic authentication:
 
 - **Username**: the value of `DASHBOARD_USERNAME` (default: `supabase`)
 - **Password**: the value of `DASHBOARD_PASSWORD`
 
-Both values are in the **Environment** tab of the service in Dokploy.
+Both values are in the **Environment** tab of the service in Dokploy. Envoy computes
+the basic-auth credential at startup, as a SHA1 hash of `DASHBOARD_PASSWORD` encoded in
+base64, so the password itself still comes from the Environment tab and nothing else
+needs to change when you edit it.
 
 ## API URL and keys
 
 To connect an application (for example with `supabase-js`):
 
-- **API URL**: `https://<your-domain>` (requests are routed through Kong)
+- **API URL**: `https://<your-domain>` (requests are routed through Envoy)
 - **anon key**: the value of `ANON_KEY` in the Environment tab
 - **service_role key**: the value of `SERVICE_ROLE_KEY` in the Environment tab (server-side only, never expose it to browsers)
 
@@ -30,9 +33,122 @@ Dokploy also generates the newer opaque API keys, so you can use either style:
 - **publishable key**: the value of `SUPABASE_PUBLISHABLE_KEY` (browser-safe, replaces the anon key)
 - **secret key**: the value of `SUPABASE_SECRET_KEY` (server-side only, replaces the service_role key)
 
-Kong exchanges these for the matching JWT before the request reaches Supabase,
-so clients never hold a decodable token. Both styles stay valid at the same time
-— existing apps on `ANON_KEY` / `SERVICE_ROLE_KEY` keep working.
+Envoy exchanges these for the matching JWT before the request reaches Supabase, so
+clients never hold a decodable token. Its `docker-entrypoint.sh` substitutes the six key
+values into `lds.yaml` when the container starts, and the listener does the translation
+on every request. Both styles stay valid at the same time — existing apps on `ANON_KEY` /
+`SERVICE_ROLE_KEY` keep working.
+
+### Running on the new keys only
+
+You can drop the legacy pair entirely: **clear `ANON_KEY` and `SERVICE_ROLE_KEY`**
+in the Environment tab and redeploy. Envoy is built for it — every legacy branch
+in `lds.template.yaml` is guarded (`if ANON_KEY ~= "" and ...`), and the
+entrypoint prints which mode it chose:
+
+```
+Envoy sb_ key translation enabled      ← sb_-only or dual
+Envoy running in legacy API key mode   ← sb_ keys not configured
+```
+
+Translation needs **all four** of `SUPABASE_PUBLISHABLE_KEY`,
+`SUPABASE_SECRET_KEY`, `ANON_KEY_ASYMMETRIC` and `SERVICE_ROLE_KEY_ASYMMETRIC`
+to be non-empty. Set the ES256 keys first (see below), then clear the legacy pair.
+
+⛔ **A raw `ANON_KEY_ASYMMETRIC` is not an API key.** It is the ES256 JWT Envoy
+substitutes *internally* after it has accepted an `sb_` key; sent as an `apikey`
+header it is rejected with 401. Clients present the opaque `sb_` strings only.
+
+**The services that never traverse Envoy still need a real JWT.** `storage` calls
+PostgREST directly at `http://rest:3000`, so it can never use an `sb_` key. This
+blueprint handles that for you — `storage`, `studio`, `functions` and the
+`realtime` healthcheck all resolve their key as
+`${ANON_KEY:-${ANON_KEY_ASYMMETRIC}}`, so clearing the legacy pair moves them onto
+the asymmetric tokens automatically.
+
+⚠️ In `sb_`-only mode `realtime` may still report **`unhealthy`** while working
+correctly: its tenant-health endpoint validates against the tenant row's own
+`jwt_secret`/`jwt_jwks`, not the container environment. Check the websocket and
+`postgres_changes` behaviour before treating it as broken — a healthcheck is not
+the service.
+
+## ⚠️ If your domain has no TLS certificate, change the scheme to `http`
+
+The template generates `SUPABASE_PUBLIC_URL`, `API_EXTERNAL_URL` and
+`ADDITIONAL_REDIRECT_URLS` with an **`https://`** scheme, because that is right for the
+usual case — a public domain with a Let's Encrypt certificate.
+
+**Dokploy creates the template's domain with no certificate.** Until you enable one, the
+domain answers on `http` only, and those three values point at a scheme that does not
+respond. The stack comes up healthy and the gateway answers, so nothing looks broken — but:
+
+- Studio's browser-side calls go to `SUPABASE_PUBLIC_URL` and fail.
+- Envoy compares the request `Origin` against `SUPABASE_PUBLIC_URL`, so **CORS refuses every
+  cross-origin call**, including `/pg/`.
+- GoTrue signs tokens with `API_EXTERNAL_URL` as the issuer and builds OAuth redirects and
+  email links from it, so all of them point at the dead scheme.
+
+Two ways out:
+
+1. **Enable a certificate** — Domains → your domain → Certificate → Let's Encrypt. This needs
+   the domain to be **reachable from the public internet**. It will not work for a private
+   address: an `sslip.io` name pointing at a Tailscale `100.x.y.z` or a LAN `192.168.x.y`
+   cannot be validated, because Let's Encrypt cannot connect to it.
+2. **Switch the three values to `http://`** in the Environment tab, then redeploy. This is the
+   right choice for a private or tailnet-only instance.
+
+```
+SUPABASE_PUBLIC_URL=http://<your-domain>
+API_EXTERNAL_URL=http://<your-domain>/auth/v1
+ADDITIONAL_REDIRECT_URLS=http://<your-domain>/*,http://localhost:3000/*
+```
+
+Keep `API_EXTERNAL_URL` ending in `/auth/v1`. Without that path GoTrue advertises
+`<domain>/callback` as its OAuth `redirect_uri`, and the gateway routes a bare `/callback` to
+Studio rather than to auth, so every social sign-in dead-ends on the dashboard login prompt.
+
+
+## ⚠️ Changing the domain later does NOT update the environment
+
+`main_domain` is interpolated **when the service is created**, into four
+variables: `SUPABASE_HOST`, `API_EXTERNAL_URL`, `SUPABASE_PUBLIC_URL` and
+`ADDITIONAL_REDIRECT_URLS`. Editing the **Domains** tab afterwards changes
+routing and nothing else — those four keep the name the service was created with.
+
+Fix them by hand in the Environment tab before the first deploy. It matters more
+than it looks: `API_EXTERNAL_URL` becomes `GOTRUE_JWT_ISSUER`, which is the `iss`
+claim of every access token and the value `SB_JWT_ISSUER` gives Edge Functions.
+Change it after tokens are in circulation and they all fail verification.
+
+## Upgrading an existing Supabase service (Kong → Envoy)
+
+⚠️ **Only if you already run this template on its Kong version.** A fresh install can skip this.
+
+The API gateway service is renamed `kong` → `api-gw`. Dokploy checks the domain's service
+name against the compose file, so a redeploy fails with
+`Domain ... is attached to service "kong" which does not exist in the compose` until you
+fix the domain first.
+
+1. Open **Domains**, edit the domain, change **Service Name** from `kong` to `api-gw`.
+   Leave the port at `8000`.
+2. Deploy. The stale `kong` container is removed automatically (`--remove-orphans`).
+
+No data is lost by the rename — the database lives in a separate volume.
+
+## Backing up the database
+
+The Postgres data directory is a **bind mount** (`files/volumes/db/data`), not a named
+Docker volume. Two consequences:
+
+- **Dokploy's Volume Backups cannot see it.** The panel will only offer the `db-config` and
+  `deno-cache` volumes, neither of which holds your data.
+- **Deleting the service deletes the database**, whether or not you tick *delete volumes* —
+  the data sits inside the application directory that Dokploy removes.
+- **Redeploy with fresh volumes does NOT reset the database.** It clears `db-config` and
+  `deno-cache` only. A true reset means deleting the service.
+
+Back up with `pg_dump` through the pooler, or copy
+`/etc/dokploy/compose/<appName>/files/volumes/db/data` off the host.
 
 ## Optional: sign tokens with an ES256 key pair
 
@@ -40,11 +156,13 @@ Everything is signed with the symmetric `JWT_SECRET` (HS256) by default. Moving
 to an asymmetric key pair needs an EC P-256 key, which Dokploy's variable
 helpers cannot generate, so `JWT_KEYS` and `JWT_JWKS` ship empty. To switch:
 
-1. Clone the Supabase repo and go to its `docker/` directory:
+1. Fetch Supabase's key generator. Only this one script is needed — cloning the
+   whole repository pulls a very large monorepo for a 7 KB file. It needs `node`
+   (>= 16), or Docker as a fallback:
 
    ```bash
-   git clone --depth 1 https://github.com/supabase/supabase
-   cd supabase/docker
+   mkdir supabase-keys && cd supabase-keys
+   curl -fsSLO https://raw.githubusercontent.com/supabase/supabase/master/docker/utils/add-new-auth-keys.sh
    ```
 
 2. Put **this deployment's** `JWT_SECRET` (from the Environment tab) into a local `.env`:
@@ -53,15 +171,29 @@ helpers cannot generate, so `JWT_KEYS` and `JWT_JWKS` ship empty. To switch:
    echo "JWT_SECRET=<your-JWT_SECRET>" > .env
    ```
 
-3. Generate the keys:
+3. Generate the keys. `--update-env` is required: without it the script prints
+   only four of the six values, and writes `ANON_KEY_ASYMMETRIC` and
+   `SERVICE_ROLE_KEY_ASYMMETRIC` to `.env` alone.
 
    ```bash
-   sh utils/add-new-auth-keys.sh
+   sh add-new-auth-keys.sh --update-env
    ```
 
-4. Replace all six values in the Environment tab with the ones it prints, then
-   redeploy: `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`,
-   `ANON_KEY_ASYMMETRIC`, `SERVICE_ROLE_KEY_ASYMMETRIC`, `JWT_KEYS`, `JWT_JWKS`.
+   It exits with status **1** after writing the keys, because it then looks for a
+   `docker-compose.yml` to patch and there is none in this directory. That is
+   expected here — this blueprint already wires `GOTRUE_JWT_KEYS`,
+   `API_JWT_JWKS`, `JWT_JWKS` and `SUPABASE_JWKS`. Check `.env` for the six
+   values rather than the exit code.
+
+4. Copy all six values from `.env` into the Environment tab, then redeploy:
+   `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `ANON_KEY_ASYMMETRIC`,
+   `SERVICE_ROLE_KEY_ASYMMETRIC`, `JWT_KEYS`, `JWT_JWKS`.
+
+⚠️ **Those six do not include `ANON_KEY` or `SERVICE_ROLE_KEY`.** The legacy
+HS256 pair is untouched and still valid, so the deployment stays in dual mode
+until you clear it deliberately — see *Running on the new keys only* above. If
+you clear it by accident, every service that needed a key gets an empty string
+and answers 401, which reads as a platform fault rather than a configuration one.
 
 Set them **all together**. `JWT_KEYS` makes Auth sign tokens with ES256, while
 `JWT_JWKS` is what PostgREST, Realtime, Storage and Edge Functions use to verify
@@ -76,6 +208,58 @@ Review these variables in the **Environment** tab before using Supabase in produ
 - `SUPABASE_PUBLIC_URL` and `API_EXTERNAL_URL`: must point to your Supabase domain with the correct `http`/`https` scheme (the template sets them from your domain automatically).
 - `SITE_URL` and `ADDITIONAL_REDIRECT_URLS`: must point to the application that uses Supabase for authentication.
 - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_ADMIN_EMAIL`, `SMTP_SENDER_NAME`: required for auth emails (sign-up confirmations, password resets). The template ships with placeholder values, so no real emails are sent until you configure a real SMTP provider.
+
+**Enable `pg_graphql` if you use the GraphQL endpoint.** `/graphql/v1` is routed by
+the gateway, but the extension is not installed on a fresh database, so the endpoint
+answers `pg_graphql extension is not enabled`. Supabase's hosted platform ships it
+enabled, so code that works there needs one statement here — run it once from
+Studio's SQL editor:
+
+```sql
+create extension if not exists pg_graphql with schema graphql;
+```
+
+## Object storage on S3 or Cloudflare R2
+
+The `file` backend keeps uploads on the server's disk. To put them in an
+S3-compatible bucket, uncomment the S3 block in the `storage` service, set
+`STORAGE_BACKEND: s3`, and fill these in the Environment tab:
+
+```
+GLOBAL_S3_BUCKET=<bucket name>                     # replaces the default "stub"
+GLOBAL_S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
+STORAGE_S3_REGION=auto                             # R2 uses "auto"
+AWS_ACCESS_KEY_ID=<access key id>
+AWS_SECRET_ACCESS_KEY=<secret>
+```
+
+Four things are easy to get wrong, and none of them is obvious from the official
+`docker-compose.yml`:
+
+- ⛔ **`S3_PROTOCOL_ACCESS_KEY_ID` / `_SECRET` are not the backend credentials.**
+  They gate Supabase Storage's *own* S3-compatible API. The backend reads
+  `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`.
+- ⛔ **Do not set `REGION=auto`.** `REGION` is read twice — as the reported server
+  region *and* as the S3 signing region. Set **`STORAGE_S3_REGION`** instead, so
+  only the signing region moves.
+- 🔑 **`STORAGE_S3_DISABLE_CHECKSUM: "true"`** is usually required. AWS SDK v3
+  adds a CRC32 to every `PutObject`; S3-compatible providers have rejected it.
+  It is in neither the official compose nor the SDK docs, and the symptom is
+  uploads failing for no visible reason.
+- ⛔ **`GLOBAL_S3_PROTOCOL` is dead.** The official compose lists it; it appears
+  nowhere in `supabase/storage`.
+
+✅ **imgproxy needs no S3 configuration.** Storage hands it a presigned HTTPS URL
+rather than an `s3://` path, so image transformation keeps working and the shared
+`volumes/storage` mount simply goes unused.
+
+### `STORAGE_TENANT_ID` is permanent
+
+It becomes the top-level prefix inside the bucket — objects live at
+`<tenant-id>/<bucket>/<path>`. The template ships `stub`, which works and means
+every object sits under `stub/` forever. **Change it before the first upload;
+changing it afterwards orphans every object** — the bytes stay and no path
+resolves to them.
 
 ## Warning: changing POSTGRES_PASSWORD after the first deploy
 

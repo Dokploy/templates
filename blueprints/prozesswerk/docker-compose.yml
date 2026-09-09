@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  prozesswerk:
+    image: ghcr.io/guidoesser/prozesswerk:1.0.0
+    restart: unless-stopped
+    expose:
+      - "8000"
+    environment:
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_BASE_URL=${LLM_BASE_URL}
+      - LLM_MODEL=${LLM_MODEL}

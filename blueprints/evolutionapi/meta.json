@@ -5,9 +5,9 @@
   "description": "Evolution API is a robust platform dedicated to empowering small businesses with limited resources, going beyond a simple messaging solution via WhatsApp.",
   "logo": "evolutionapi.png",
   "links": {
-    "github": "https://github.com/EvolutionAPI/evolution-api",
-    "docs": "https://doc.evolution-api.com/v2/en/get-started/introduction",
-    "website": "https://evolution-api.com/opensource-whatsapp-api/"
+    "github": "https://github.com/evolution-foundation/evolution-api",
+    "docs": "https://docs.evolutionfoundation.com.br/en",
+    "website": "https://evolutionfoundation.com.br/"
   },
   "tags": [
     "api",

@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+console_domain = "${domain}"
+password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "silo"
+port = 9000
+host = "${main_domain}"
+[[config.domains]]
+serviceName = "silo"
+port = 9001
+host = "${console_domain}"
+
+[config.env]
+MINIO_ROOT_USER = "silo_usr"
+MINIO_ROOT_PASSWORD = "${password}"

@@ -6,8 +6,8 @@
   "logo": "drawio.svg",
   "links": {
     "github": "https://github.com/jgraph/drawio",
-    "website": "https://draw.io/",
-    "docs": "https://www.drawio.com/doc/"
+    "website": "https://www.drawio.com/",
+    "docs": "https://www.drawio.com/docs/"
   },
   "tags": [
     "drawing",

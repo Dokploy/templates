@@ -1,0 +1,54 @@
+services:
+  database:
+    image: mariadb:10.11
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: panel
+      MYSQL_USER: pterodactyl
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+
+  cache:
+    image: redis:alpine
+    restart: unless-stopped
+
+  panel:
+    image: ghcr.io/blueprintframework/hydrodactyl:latest
+    restart: unless-stopped
+    depends_on:
+      - database
+      - cache
+    volumes:
+      - panel_var:/app/var/
+      - panel_nginx:/etc/nginx/http.d/
+      - panel_certs:/etc/letsencrypt/
+      - panel_logs:/app/storage/logs
+      - panel_storage:/app/storage/app/public
+    environment:
+      APP_URL: https://${DOMAIN}
+      APP_TIMEZONE: UTC
+      APP_ENV: production
+      APP_ENVIRONMENT_ONLY: "false"
+      APP_SERVICE_AUTHOR: ${ADMIN_EMAIL}
+      APP_SECRET: ${APP_SECRET}
+      DB_CONNECTION: mysql
+      DB_HOST: database
+      DB_PORT: "3306"
+      DB_DATABASE: panel
+      DB_USERNAME: pterodactyl
+      DB_PASSWORD: ${DB_PASSWORD}
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+      REDIS_HOST: cache
+
+volumes:
+  mariadb_data:
+  panel_var:
+  panel_nginx:
+  panel_certs:
+  panel_logs:
+  panel_storage:

@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  figranium:
+    image: ghcr.io/figranium/figranium:latest
+    restart: unless-stopped
+    environment:
+      - PORT=11345
+    volumes:
+      - figranium-data:/app/data
+      - figranium-captures:/app/public/captures
+      - figranium-captures:/app/src/public/captures
+
+volumes:
+  figranium-data: {}
+  figranium-captures: {}

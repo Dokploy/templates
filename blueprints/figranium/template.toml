@@ -1,0 +1,8 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "figranium"
+port = 11345
+host = "${main_domain}"

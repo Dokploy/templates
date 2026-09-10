@@ -1,0 +1,13 @@
+{
+  "id": "figranium",
+  "name": "Figranium",
+  "version": "latest",
+  "description": "Open-source visual browser automation with API execution for building and running browser tasks.",
+  "logo": "figranium.svg",
+  "links": {
+    "github": "https://github.com/figranium/figranium",
+    "website": "https://figranium.dev/",
+    "docs": "https://docs.figranium.dev/"
+  },
+  "tags": ["automation", "browser", "web"]
+}

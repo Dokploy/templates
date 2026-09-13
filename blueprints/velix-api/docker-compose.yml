@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   velix-api:
-    image: ghcr.io/paulolinder/velix-api:0.1.0
+    image: ghcr.io/paulolinder/velix-api:latest
     restart: always
     environment:
       - DATABASE_URL=postgres://postgres:${DB_PASSWORD}@postgres:5432/velix?sslmode=disable

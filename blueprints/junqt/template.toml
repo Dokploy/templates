@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+junqt_secret = "${password:64}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "junqt"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+JUNQT_SECRET = "${junqt_secret}"
+JUNQT_BASE_URL = "https://${main_domain}"
+JUNQT_TRUST_PROXY = "true"

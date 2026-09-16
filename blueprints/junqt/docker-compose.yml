@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  junqt:
+    image: ghcr.io/k2so-dev/junqt:0.2.2
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      JUNQT_SECRET: ${JUNQT_SECRET}
+      JUNQT_BASE_URL: ${JUNQT_BASE_URL}
+      JUNQT_TRUST_PROXY: ${JUNQT_TRUST_PROXY}
+    volumes:
+      - junqt-data:/data
+      - junqt-cache:/cache
+    tmpfs:
+      - /tmp
+    read_only: true
+
+volumes:
+  junqt-data: {}
+  junqt-cache: {}

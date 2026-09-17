@@ -1,6 +1,6 @@
 [variables]
 main_domain = "${domain}"
-junctio_secret = "${hash:32}"
+junctio_secret = "${hash:64}"
 
 [config]
 mounts = []

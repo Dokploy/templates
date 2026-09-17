@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  junctio:
+    image: ghcr.io/k2so-dev/junctio:0.2.1
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      JUNCTIO_SECRET: ${JUNCTIO_SECRET}
+      JUNCTIO_BASE_URL: ${JUNCTIO_BASE_URL}
+      JUNCTIO_TRUST_PROXY: ${JUNCTIO_TRUST_PROXY}
+    volumes:
+      - junctio-data:/data
+      - junctio-cache:/cache
+    tmpfs:
+      - /tmp
+    read_only: true
+
+volumes:
+  junctio-data: {}
+  junctio-cache: {}

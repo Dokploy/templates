@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+junctio_secret = "${password:64}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "junctio"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+JUNCTIO_SECRET = "${junctio_secret}"
+JUNCTIO_BASE_URL = "https://${main_domain}"
+JUNCTIO_TRUST_PROXY = "true"

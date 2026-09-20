@@ -2,7 +2,7 @@ services:
   zitadel:
     restart: 'always'
     image: 'ghcr.io/zitadel/zitadel:v4.16.0'
-    command: 'start-from-init --masterkey "${ZITADEL_MASTERKEY}" --tlsMode disabled'
+    command: 'start-from-init --masterkey "${ZITADEL_MASTERKEY}" --tlsMode ${ZITADEL_TLSMODE}'
     environment:
       # Database Configuration
       ZITADEL_DATABASE_POSTGRES_HOST: db

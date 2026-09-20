@@ -5,6 +5,7 @@ zitadel_masterkey = "${password:32}"
 admin_username = "${username}"
 admin_email = "${email}"
 admin_password = "AdminPassword123!"
+tls_mode = "${disabled}"
 
 [config]
 mounts = []
@@ -27,6 +28,7 @@ ZITADEL_MASTERKEY = "${zitadel_masterkey}"
 ZITADEL_EXTERNALDOMAIN = "${main_domain}"
 ZITADEL_EXTERNALPORT = "80"
 ZITADEL_EXTERNALSECURE = "false"
+ZITADEL_TLSMODE = "${tls_mode}"
 
 # Custom Admin User Configuration
 ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME = "${admin_username}"

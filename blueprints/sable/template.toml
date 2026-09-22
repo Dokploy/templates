@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "sable"
+port = 5380
+host = "${main_domain}"
+
+[config.env]
+TZ = "UTC"
+SABLE_WEB_UPDATES = "true"

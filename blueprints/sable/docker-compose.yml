@@ -1,0 +1,23 @@
+# dokploy: allow-host-ports — DNS clients must reach Sable directly over raw TCP/UDP on port 53; Traefik cannot route DNS traffic.
+version: "3.8"
+
+services:
+  sable:
+    image: ghcr.io/drudge/sable:latest
+    restart: unless-stopped
+    dns:
+      - 1.1.1.1
+      - 9.9.9.9
+    ports:
+      - "53:8053/tcp"
+      - "53:8053/udp"
+    expose:
+      - 5380
+    environment:
+      - TZ=${TZ}
+      - SABLE_WEB_UPDATES=${SABLE_WEB_UPDATES}
+    volumes:
+      - sable-data:/data
+
+volumes:
+  sable-data: {}

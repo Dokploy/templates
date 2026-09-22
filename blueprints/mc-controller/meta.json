@@ -1,0 +1,13 @@
+{
+  "id": "mc-controller",
+  "name": "MC Controller",
+  "version": "1.0.1",
+  "description": "A self-hosted Minecraft control panel for creating and managing multiple Vanilla, Fabric, Forge, NeoForge, Paper, Spigot, Bukkit, and CurseForge servers.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/Nargor/mc-controller",
+    "website": "",
+    "docs": "https://github.com/Nargor/mc-controller#readme"
+  },
+  "tags": ["gaming", "minecraft", "management"]
+}

@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   rustrak:
-    image: abians7/rustrak-server:v0.2.1
+    image: rustrak/rustrak-server:latest
     restart: unless-stopped
     environment:
       - HOST=0.0.0.0

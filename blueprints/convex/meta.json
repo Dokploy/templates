@@ -5,7 +5,7 @@
   "description": "Convex is an open-source reactive database designed to make life easy for web app developers.",
   "logo": "convex.svg",
   "links": {
-    "github": "https://github.com/get-convex/convex",
+    "github": "https://github.com/get-convex/convex-backend",
     "website": "https://www.convex.dev/",
     "docs": "https://www.convex.dev/docs"
   },

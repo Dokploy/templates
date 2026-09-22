@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  rustrak-server:
+    image: rustrak/rustrak-server:latest
+    restart: unless-stopped
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - RUST_LOG=info
+      - SSL_PROXY=true
+      - SESSION_SECRET_KEY=${SESSION_SECRET_KEY}
+      - CREATE_SUPERUSER=${CREATE_SUPERUSER}
+    volumes:
+      - rustrak_data:/data
+    expose:
+      - 8080
+
+  rustrak-ui:
+    image: rustrak/rustrak-ui:latest
+    restart: unless-stopped
+    environment:
+      - RUSTRAK_API_URL=${RUSTRAK_API_URL}
+      # Next.js standalone binds to $HOSTNAME (the container id) by default, which is
+      # unreachable from Traefik on the Dokploy network -> 502. Bind to all interfaces.
+      - HOSTNAME=0.0.0.0
+    expose:
+      - 3000
+    depends_on:
+      - rustrak-server
+
+volumes:
+  rustrak_data:

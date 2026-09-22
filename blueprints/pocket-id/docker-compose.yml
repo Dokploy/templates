@@ -1,15 +1,19 @@
+version: "3.8"
+
 services:
   pocket-id:
-    image: ghcr.io/pocket-id/pocket-id:v1
+    image: pocketid/pocket-id:v2.14.0
     restart: unless-stopped
     environment:
-      - APP_URL
-      - TRUST_PROXY
-      - ENCRYPTION_KEY
+      APP_URL: ${APP_URL}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      TRUST_PROXY: ${TRUST_PROXY}
     volumes:
       - pocket-id-data:/app/data
+    expose:
+      - "1411"
     healthcheck:
-      test: [ "CMD", "/app/pocket-id", "healthcheck" ]
+      test: ["CMD", "/app/pocket-id", "healthcheck"]
       interval: 1m30s
       timeout: 5s
       retries: 2

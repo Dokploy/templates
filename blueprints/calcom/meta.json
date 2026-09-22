@@ -1,7 +1,7 @@
 {
   "id": "calcom",
   "name": "Calcom",
-  "version": "v2.7.6",
+  "version": "v6.2.0",
   "description": "Calcom is a open source alternative to Calendly that allows to create scheduling and booking services.",
   "links": {
     "github": "https://github.com/calcom/cal.com",

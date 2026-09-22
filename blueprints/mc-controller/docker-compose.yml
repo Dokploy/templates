@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  mc-controller:
+    image: tomhorrorza/mc-controller:${IMAGE_TAG:-1.0.2}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NUXT_MC_RUNTIME: docker
+      NUXT_DATABASE_PATH: /data/mc-controller.db
+      NUXT_MC_DATA_PATH: /data/servers
+      NUXT_DOCKER_SOCKET: /var/run/docker.sock
+      NUXT_JWT_SECRET: ${JWT_SECRET:?Dokploy must generate JWT_SECRET}
+      NUXT_CURSEFORGE_API_KEY: ${CURSEFORGE_API_KEY:-}
+      NUXT_MC_BIND_IP: ${MC_BIND_IP:-0.0.0.0}
+      NUXT_PORT_RANGE_START: ${PORT_RANGE_START:-25565}
+      NUXT_PORT_RANGE_END: ${PORT_RANGE_END:-25600}
+    volumes:
+      - mc-controller-data:/data
+      # Required to create and manage Minecraft server containers.
+      - /var/run/docker.sock:/var/run/docker.sock
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/setup/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  mc-controller-data: {}

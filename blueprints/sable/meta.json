@@ -1,0 +1,18 @@
+{
+  "id": "sable",
+  "name": "Sable",
+  "version": "latest",
+  "description": "Sable is a modern, high-performance DNS platform with recursive and authoritative DNS, blocking, DNSSEC, observability, clustering, and a polished web console.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/drudge/sable",
+    "website": "https://www.sabledns.io",
+    "docs": "https://www.sabledns.io/docs"
+  },
+  "tags": [
+    "dns",
+    "security",
+    "privacy",
+    "ad-blocking"
+  ]
+}

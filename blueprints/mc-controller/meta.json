@@ -1,7 +1,7 @@
 {
   "id": "mc-controller",
   "name": "MC Controller",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A self-hosted Minecraft control panel for creating and managing multiple Vanilla, Fabric, Forge, NeoForge, Paper, Spigot, Bukkit, and CurseForge servers.",
   "logo": "logo.svg",
   "links": {

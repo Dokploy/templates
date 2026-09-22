@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   mc-controller:
-    image: tomhorrorza/mc-controller:${IMAGE_TAG:-1.0.1}
+    image: tomhorrorza/mc-controller:${IMAGE_TAG:-1.0.2}
     restart: unless-stopped
     environment:
       NODE_ENV: production

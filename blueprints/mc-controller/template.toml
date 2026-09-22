@@ -1,7 +1,7 @@
 [variables]
 main_domain = "${domain}"
 jwt_secret = "${hash:64}"
-image_tag = "1.0.1"
+image_tag = "1.0.2"
 curseforge_api_key = ""
 minecraft_bind_ip = "0.0.0.0"
 port_range_start = "25565"

@@ -1,0 +1,28 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+secret_key = "${password:64}"
+
+[config]
+env = [
+  "DB_NAME=healthchecks",
+  "DB_USER=healthchecks",
+  "DB_PASSWORD=${db_password}",
+  "SECRET_KEY=${secret_key}",
+  "SITE_ROOT=https://${main_domain}",
+  "SITE_NAME=Healthchecks",
+  "ALLOWED_HOSTS=${main_domain}",
+  "PING_ENDPOINT=https://${main_domain}/ping/",
+  "REGISTRATION_OPEN=False",
+  "DEFAULT_FROM_EMAIL=healthchecks@${main_domain}",
+  "EMAIL_HOST=",
+  "EMAIL_PORT=587",
+  "EMAIL_HOST_USER=",
+  "EMAIL_HOST_PASSWORD=",
+  "EMAIL_USE_TLS=True",
+]
+
+[[config.domains]]
+serviceName = "healthchecks"
+port = 8000
+host = "${main_domain}"

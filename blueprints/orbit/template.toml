@@ -1,0 +1,27 @@
+[variables]
+main_domain = "${domain}"
+storage_domain = "storage-${domain}"
+postgres_password = "${password:48}"
+minio_password = "${password:48}"
+auth_secret = "${password:64}"
+cron_secret = "${password:64}"
+
+[config]
+env = [
+  "ORBIT_APP_URL=https://${main_domain}",
+  "ORBIT_STORAGE_URL=https://${storage_domain}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "MINIO_PASSWORD=${minio_password}",
+  "BETTER_AUTH_SECRET=${auth_secret}",
+  "CRON_SECRET=${cron_secret}",
+]
+
+[[config.domains]]
+serviceName = "orbit"
+port = 3000
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "storage"
+port = 9000
+host = "${storage_domain}"

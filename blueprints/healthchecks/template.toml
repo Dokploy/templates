@@ -5,6 +5,7 @@ secret_key = "${password:64}"
 
 [config]
 env = [
+  "DEBUG=False",
   "DB_NAME=healthchecks",
   "DB_USER=healthchecks",
   "DB_PASSWORD=${db_password}",

@@ -10,6 +10,7 @@ services:
     expose:
       - 8000
     environment:
+      DEBUG: ${DEBUG}
       DB: postgres
       DB_HOST: db
       DB_PORT: "5432"

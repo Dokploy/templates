@@ -60,9 +60,11 @@ services:
       GARAGE_DEFAULT_SECRET_KEY: "${STORAGE_S3_SECRET_KEY:?STORAGE_S3_SECRET_KEY must be set}"
       GARAGE_DEFAULT_BUCKET: "${STORAGE_S3_BUCKET:-nebulynk-files}"
     volumes:
-      - ../files/garage.toml:/etc/garage.toml:ro
       - nebulynk_garage_meta:/var/lib/garage/meta
       - nebulynk_garage_data:/var/lib/garage/data
+    configs:
+      - source: garage_config
+        target: /etc/garage.toml
     expose:
       - "3900"
     restart: unless-stopped
@@ -75,8 +77,9 @@ services:
       - redis
     environment:
       LIVEKIT_KEYS: "${LIVEKIT_API_KEY:?LIVEKIT_API_KEY must be set}: ${LIVEKIT_API_SECRET:?LIVEKIT_API_SECRET must be set}"
-    volumes:
-      - ../files/livekit.yaml:/livekit.yaml:ro
+    configs:
+      - source: livekit_config
+        target: /livekit.yaml
     expose:
       - "7880"
     ports:
@@ -96,8 +99,9 @@ services:
       AWS_ACCESS_KEY_ID: "${STORAGE_S3_ACCESS_KEY:?STORAGE_S3_ACCESS_KEY must be set}"
       AWS_SECRET_ACCESS_KEY: "${STORAGE_S3_SECRET_KEY:?STORAGE_S3_SECRET_KEY must be set}"
       AWS_DEFAULT_REGION: "${STORAGE_S3_REGION:-${MEETING_RECORDINGS_S3_REGION:-us-east-1}}"
-    volumes:
-      - ../files/livekit-egress.yaml:/livekit-egress.yaml:ro
+    configs:
+      - source: livekit_egress_config
+        target: /livekit-egress.yaml
     depends_on:
       - livekit
       - redis
@@ -105,6 +109,13 @@ services:
     restart: unless-stopped
 
   backend:
+    stop_grace_period: 75s
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:'+(process.env.BACKEND_PORT||3030)+'/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 60s
     build:
       context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-stable}"
       dockerfile: backend/Dockerfile
@@ -176,8 +187,88 @@ services:
       - "3030"
     restart: unless-stopped
 
+  transcription-worker:
+    build:
+      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-stable}"
+      dockerfile: backend/Dockerfile
+      args:
+        NODE_IMAGE: "${NEBULYNK_NODE_IMAGE:-node:22.23.1-alpine3.24}"
+    command: ["node", "src/transcription-worker.js"]
+    stop_grace_period: 75s
+    mem_limit: ${TRANSCRIPTION_WORKER_MEMORY_LIMIT:-1536m}
+    cpus: ${TRANSCRIPTION_WORKER_CPUS:-1.0}
+    healthcheck:
+      test: ["CMD", "node", "src/transcription-worker-health.js"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    environment:
+      NODE_ENV: "${NODE_ENV:-development}"
+      JWT_SECRET: "${JWT_SECRET:?JWT_SECRET must be set}"
+      AI_SECRET_KEY: "${AI_SECRET_KEY:?AI_SECRET_KEY must be set}"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+      AI_PROVIDER_BASE_URL_ALLOWLIST: "${AI_PROVIDER_BASE_URL_ALLOWLIST:-}"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: "${POSTGRES_DB:-nebulynk}"
+      POSTGRES_USER: "${POSTGRES_USER:-nebulynk}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}"
+      STORAGE_S3_ENDPOINT: http://garage:3900
+      STORAGE_S3_ACCESS_KEY: "${STORAGE_S3_ACCESS_KEY:?STORAGE_S3_ACCESS_KEY must be set}"
+      STORAGE_S3_SECRET_KEY: "${STORAGE_S3_SECRET_KEY:?STORAGE_S3_SECRET_KEY must be set}"
+      STORAGE_S3_BUCKET: "${STORAGE_S3_BUCKET:-nebulynk-files}"
+      STORAGE_S3_REGION: "${STORAGE_S3_REGION:-${MEETING_RECORDINGS_S3_REGION:-us-east-1}}"
+      MEETING_RECORDINGS_BUCKET: "${STORAGE_S3_BUCKET:-nebulynk-files}"
+      MEETING_RECORDINGS_S3_ENDPOINT: http://garage:3900
+      MEETING_RECORDINGS_S3_REGION: "${MEETING_RECORDINGS_S3_REGION:-${STORAGE_S3_REGION:-us-east-1}}"
+      MEETING_TRANSCRIPT_WAIT_TIMEOUT_MS: "${MEETING_TRANSCRIPT_WAIT_TIMEOUT_MS:-1800000}"
+      TRANSCRIPTION_MAX_TEMP_BYTES: "${TRANSCRIPTION_MAX_TEMP_BYTES:-2147483648}"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   nebulynk_postgres_data:
   nebulynk_redis_data:
   nebulynk_garage_meta:
   nebulynk_garage_data:
+
+configs:
+  garage_config:
+    content: |
+      metadata_dir = "/var/lib/garage/meta"
+      data_dir = "/var/lib/garage/data"
+      db_engine = "sqlite"
+
+      replication_factor = 1
+      rpc_bind_addr = "[::]:3901"
+      rpc_public_addr = "garage:3901"
+
+      [s3_api]
+      s3_region = "us-east-1"
+      api_bind_addr = "[::]:3900"
+      root_domain = ".s3.garage.localhost"
+  livekit_config:
+    content: |
+      port: 7880
+      rtc:
+        udp_port: 7882
+        tcp_port: 7881
+        use_external_ip: true
+      redis:
+        address: redis:6379
+      keys:
+  livekit_egress_config:
+    content: |
+      insecure: true
+      log_level: debug
+      health_port: 8080
+
+      redis:
+        address: redis:6379
+
+      s3:
+        bucket: nebulynk-files
+        endpoint: http://garage:3900

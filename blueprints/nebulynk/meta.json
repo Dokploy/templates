@@ -1,0 +1,28 @@
+{
+  "id": "nebulynk",
+  "name": "Nebulynk",
+  "version": "stable",
+  "description": "Nebulynk is a self-hosted collaboration platform for teams with real-time messaging, file sharing, video meetings, and AI-powered transcription and summaries.",
+  "logo": "nebulynk.png",
+  "links": {
+    "github": "https://github.com/sapientorius/Nebulynk",
+    "docs": "https://github.com/sapientorius/Nebulynk",
+    "website": "https://nebulynk.net"
+  },
+  "tags": [
+    "communication",
+    "collaboration",
+    "chat",
+    "video-conferencing",
+    "self-hosted",
+    "messaging",
+    "file-sharing",
+    "ai-integration",
+    "team-collaboration",
+    "voice-chat",
+    "productivity",
+    "remote-work",
+    "transcription",
+    "meeting"
+  ]
+}

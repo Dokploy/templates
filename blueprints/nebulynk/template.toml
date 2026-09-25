@@ -1,0 +1,152 @@
+# Values in [variables] are resolved once when Dokploy imports the template.
+# The generated values are then stored in the Compose service environment.
+[variables]
+frontend_domain = "${domain}"
+backend_domain = "${domain}"
+livekit_domain = "${domain}"
+garage_domain = "${domain}"
+
+postgres_password = "${password:64}"
+garage_rpc_secret = "${hash:64}"
+storage_s3_access_key = "${password:24}"
+storage_s3_secret_key = "${password:64}"
+jwt_secret = "${password:64}"
+ai_secret_key = "${password:64}"
+auth_2fa_secret_key = "${password:64}"
+livekit_api_key = "${password:24}"
+livekit_api_secret = "${password:64}"
+
+# Generated sslip.io domains are HTTP-only until Dokploy TLS is configured.
+frontend_url = "http://${frontend_domain}"
+backend_url = "http://${backend_domain}"
+livekit_public_url = "http://${livekit_domain}"
+garage_public_url = "http://${garage_domain}"
+source_ref = "stable"
+
+[config]
+isolated = true
+
+[[config.domains]]
+serviceName = "frontend"
+port = 8080
+host = "${frontend_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "backend"
+port = 3030
+host = "${backend_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "livekit"
+port = 7880
+host = "${livekit_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "garage"
+port = 3900
+host = "${garage_domain}"
+path = "/"
+
+[config.env]
+NODE_ENV = "development"
+NEBULYNK_SOURCE_REF = "${source_ref}"
+POSTGRES_DB = "nebulynk"
+POSTGRES_USER = "nebulynk"
+POSTGRES_PASSWORD = "${postgres_password}"
+GARAGE_RPC_SECRET = "${garage_rpc_secret}"
+STORAGE_S3_ACCESS_KEY = "${storage_s3_access_key}"
+STORAGE_S3_SECRET_KEY = "${storage_s3_secret_key}"
+STORAGE_S3_BUCKET = "nebulynk-files"
+STORAGE_S3_REGION = "us-east-1"
+JWT_SECRET = "${jwt_secret}"
+AI_SECRET_KEY = "${ai_secret_key}"
+AUTH_2FA_SECRET_KEY = "${auth_2fa_secret_key}"
+LIVEKIT_API_KEY = "${livekit_api_key}"
+LIVEKIT_API_SECRET = "${livekit_api_secret}"
+FRONTEND_URL = "${frontend_url}"
+PASSKEY_RP_ID = "${frontend_domain}"
+VITE_API_URL = "${backend_url}"
+LIVEKIT_PUBLIC_URL = "${livekit_public_url}"
+STORAGE_S3_PUBLIC_ENDPOINT = "${garage_public_url}"
+
+# Optional integrations. Leave instance-specific values empty until configured.
+KLIPY_API_KEY = ""
+VAPID_PUBLIC_KEY = ""
+VAPID_PRIVATE_KEY = ""
+VAPID_SUBJECT = ""
+
+SMTP_HOST = ""
+SMTP_PORT = "587"
+SMTP_SECURE = "false"
+SMTP_IGNORE_TLS = "false"
+SMTP_USER = ""
+SMTP_PASS = ""
+SMTP_FROM = ""
+SMTP_FROM_NAME = "Nebulynk"
+
+# Optional operational and security settings.
+AUTHENTICATION_RATE_LIMIT_IP_LIMIT = ""
+AUTH_BROWSER_ACCESS_TOKEN_TTL = "15m"
+AUTH_REFRESH_TOKEN_TTL = "1d"
+AUTH_REMEMBER_REFRESH_TOKEN_TTL = "30d"
+AUTH_REFRESH_COOKIE_NAME = "nebulynk_refresh_session"
+AUTH_CSRF_COOKIE_NAME = "nebulynk_csrf_token"
+AUTH_COOKIE_DOMAIN = ""
+RATE_LIMIT_DRIVER = "redis"
+AI_PROVIDER_BASE_URL_ALLOWLIST = ""
+LOG_LEVEL = "info"
+MAX_FILE_SIZE = "26214400"
+MEETING_TRANSCRIPT_WAIT_TIMEOUT_MS = "1800000"
+TRUST_PROXY = "true"
+NEBULYNK_BUILD_SHA = ""
+
+[[config.mounts]]
+filePath = "garage.toml"
+content = """
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "sqlite"
+
+replication_factor = 1
+rpc_bind_addr = "[::]:3901"
+rpc_public_addr = "garage:3901"
+
+[s3_api]
+s3_region = "us-east-1"
+api_bind_addr = "[::]:3900"
+root_domain = ".s3.garage.localhost"
+"""
+
+[[config.mounts]]
+filePath = "livekit.yaml"
+content = """
+port: 7880
+rtc:
+  udp_port: 7882
+  tcp_port: 7881
+  use_external_ip: true
+redis:
+  address: redis:6379
+keys:
+  # Keys are overridden through LIVEKIT_KEYS, but this section must exist.
+"""
+
+[[config.mounts]]
+filePath = "livekit-egress.yaml"
+content = """
+# LiveKit connection settings are provided through the environment so they
+# cannot drift from the deployment's active credentials.
+insecure: true
+log_level: debug
+health_port: 8080
+
+redis:
+  address: redis:6379
+
+s3:
+  bucket: nebulynk-files
+  endpoint: http://garage:3900
+"""

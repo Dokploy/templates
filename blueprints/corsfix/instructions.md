@@ -5,8 +5,8 @@ The dashboard image requires an **x86-64 / amd64 server**.
 
 ## Before deploying
 
-1. Open the service's **Domains** tab. Enable **HTTPS** and select **Let's Encrypt** for **both** generated domains. Dokploy imports template domains without a certificate configuration; Corsfix's dashboard and playground use HTTPS.
-2. If using custom domains, point both DNS records to your server, update the domain entries, and set `APP_DOMAIN` and `PROXY_DOMAIN` in **Environment** to the matching hostnames, without `https://` or a trailing slash.
+1. Dokploy imports template domains without a certificate configuration, so `AUTH_URL` defaults to `http://` followed by the generated dashboard hostname. When enabling **HTTPS** and **Let's Encrypt** in the **Domains** tab, also change `AUTH_URL` in **Environment** to `https://` followed by that hostname and redeploy. This URL must match the public dashboard address, even though Dokploy terminates TLS at the edge. Enable HTTPS for **both** domains before using the playground, which uses HTTPS proxy URLs.
+2. If using custom domains, point both DNS records to your server, update the domain entries, and set `APP_DOMAIN` and `PROXY_DOMAIN` in **Environment** to the matching hostnames, without `https://` or a trailing slash. Update `AUTH_URL` to the full public dashboard URL, including its `http://` or `https://` scheme.
 3. Deploy, then open the dashboard domain (the `corsfix` service on port `3000`) and create your account with an email address and password. Self-hosted signup does not require an email server.
 4. Set `DISABLE_SIGNUP=true` in **Environment** and redeploy after creating the accounts you need.
 

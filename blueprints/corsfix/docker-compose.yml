@@ -14,7 +14,7 @@ services:
       KEK_VERSION_1: ${KEK_VERSION_1}
       AUTH_SECRET: ${AUTH_SECRET}
       AUTH_TRUST_HOST: "true"
-      AUTH_URL: https://${APP_DOMAIN}
+      AUTH_URL: ${AUTH_URL}
       PROXY_DOMAIN: ${PROXY_DOMAIN}
       DISABLE_SIGNUP: ${DISABLE_SIGNUP:-false}
     depends_on:

@@ -9,6 +9,7 @@ auth_secret = "${base64:32}"
 [config]
 env = [
   "APP_DOMAIN=${app_domain}",
+  "AUTH_URL=http://${app_domain}",
   "PROXY_DOMAIN=${proxy_domain}",
   "MONGODB_PASSWORD=${mongodb_password}",
   "REDIS_PASSWORD=${redis_password}",

@@ -1,0 +1,85 @@
+version: "3.8"
+
+services:
+  corsfix:
+    image: ghcr.io/corsfix/corsfix-app:8899bb15e71c7238285ccefc4c95a0cd47daeaf0
+    platform: linux/amd64
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      MONGODB_URI: mongodb://corsfix:${MONGODB_PASSWORD}@mongodb:27017/db?authSource=admin
+      REDIS_URI: redis://default:${REDIS_PASSWORD}@redis:6379
+      KEK_VERSION: KEK_VERSION_1
+      KEK_VERSION_1: ${KEK_VERSION_1}
+      AUTH_SECRET: ${AUTH_SECRET}
+      AUTH_TRUST_HOST: "true"
+      AUTH_URL: ${AUTH_URL}
+      PROXY_DOMAIN: ${PROXY_DOMAIN}
+      DISABLE_SIGNUP: ${DISABLE_SIGNUP:-false}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  corsfix-proxy:
+    image: ghcr.io/corsfix/corsfix-proxy:8899bb15e71c7238285ccefc4c95a0cd47daeaf0
+    restart: unless-stopped
+    expose:
+      - "80"
+    environment:
+      MONGODB_URI: mongodb://corsfix:${MONGODB_PASSWORD}@mongodb:27017/db?authSource=admin
+      REDIS_URI: redis://default:${REDIS_PASSWORD}@redis:6379
+      KEK_VERSION_1: ${KEK_VERSION_1}
+      APP_DOMAIN: ${APP_DOMAIN}
+      RPM: ${RPM:-180}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-}
+      ALLOWED_TARGETS: ${ALLOWED_TARGETS:-}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  mongodb:
+    image: mongo:8.0.17
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: corsfix
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+      MONGO_INITDB_DATABASE: db
+    volumes:
+      - mongodb-data:/data/db
+      - mongodb-config:/data/configdb
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          mongosh --quiet --username "$${MONGO_INITDB_ROOT_USERNAME}"
+          --password "$${MONGO_INITDB_ROOT_PASSWORD}" --authenticationDatabase admin
+          --eval 'quit(db.adminCommand({ ping: 1 }).ok ? 0 : 1)'
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  redis:
+    image: redis:7.4.11-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes"]
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "REDISCLI_AUTH=\"$${REDIS_PASSWORD}\" redis-cli ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  mongodb-data:
+  mongodb-config:
+  redis-data:

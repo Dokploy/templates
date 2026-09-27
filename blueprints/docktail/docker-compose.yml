@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  docktail:
+    image: ghcr.io/marvinvr/docktail:1.6.0
+    restart: unless-stopped
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    environment:
+      - TAILSCALE_OAUTH_CLIENT_ID=${TAILSCALE_OAUTH_CLIENT_ID}
+      - TAILSCALE_OAUTH_CLIENT_SECRET=${TAILSCALE_OAUTH_CLIENT_SECRET}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/tailscale:/var/run/tailscale

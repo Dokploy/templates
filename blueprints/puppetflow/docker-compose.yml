@@ -1,0 +1,132 @@
+version: "3.8"
+
+x-puppetflow-environment: &puppetflow-environment
+  APP_ENV: production
+  APP_URL: ${APP_URL}
+  APP_KEY: ${APP_KEY}
+  APP_QUEUES_COUNTER: "1"
+  DB_CONNECTION: sqlite
+  DB_DATABASE: /app/storage/database.sqlite
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  PINOKIO_HOST: pinokio
+  PINOKIO_PORT: "3000"
+  PINOKIO_TOKEN: ${PINOKIO_TOKEN}
+  RUNNER_API_INTERNAL_URL: http://puppetflow:8000/api/internal/runner
+  BROWSER_STREAM_INTERNAL_URL: http://stream-server:6080
+  BROWSER_STREAM_PUBLIC_URL: ${BROWSER_STREAM_PUBLIC_URL}
+  BROWSER_STREAM_ALLOWED_ORIGINS: ${APP_URL}
+  BROWSER_STREAM_SECRET: ${BROWSER_STREAM_SECRET}
+
+services:
+  puppetflow:
+    image: ghcr.io/puppetflow/puppetflow:v2026.9.31
+    restart: unless-stopped
+    expose:
+      - 8000
+    volumes:
+      - puppetflow-framework:/app/storage
+      - puppetflow-execution:/app/data/execution
+      - puppetflow-uploads:/app/data/storage
+    environment: *puppetflow-environment
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/up"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      pinokio:
+        condition: service_started
+      stream-server:
+        condition: service_started
+
+  migrate:
+    image: ghcr.io/puppetflow/puppetflow:v2026.9.31
+    command: ["php", "artisan", "migrate", "--force"]
+    restart: "no"
+    volumes:
+      - puppetflow-framework:/app/storage
+    environment: *puppetflow-environment
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
+
+  queue:
+    image: ghcr.io/puppetflow/puppetflow:v2026.9.31
+    command: ["php", "artisan", "queue:work", "--queue=1", "--tries=1", "--timeout=630", "--sleep=3", "--max-jobs=500", "--max-time=3600"]
+    restart: unless-stopped
+    volumes:
+      - puppetflow-framework:/app/storage
+      - puppetflow-execution:/app/data/execution
+      - puppetflow-uploads:/app/data/storage
+    environment: *puppetflow-environment
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      stream-server:
+        condition: service_started
+
+  scheduler:
+    image: ghcr.io/puppetflow/puppetflow:v2026.9.31
+    command: ["php", "artisan", "schedule:work"]
+    restart: unless-stopped
+    volumes:
+      - puppetflow-framework:/app/storage
+      - puppetflow-execution:/app/data/execution
+      - puppetflow-uploads:/app/data/storage
+    environment: *puppetflow-environment
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  stream-server:
+    image: ghcr.io/puppetflow/puppetflow-stream-server:v2026.9.31
+    restart: unless-stopped
+    stop_grace_period: 30s
+    expose:
+      - 6080
+    environment: *puppetflow-environment
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  init-volumes:
+    image: busybox:1.37.0
+    command: ["sh", "-c", "touch /framework/database.sqlite && chown -R 33:33 /framework /execution /uploads"]
+    restart: "no"
+    volumes:
+      - puppetflow-framework:/framework
+      - puppetflow-execution:/execution
+      - puppetflow-uploads:/uploads
+
+  pinokio:
+    image: ghcr.io/puppetflow/pinokio:v2026.9.5
+    restart: unless-stopped
+    shm_size: "1gb"
+    volumes:
+      - puppetflow-execution:/app/data/execution
+      - pinokio-downloads:/opt/browsers
+    environment:
+      TOKEN: ${PINOKIO_TOKEN}
+    depends_on:
+      init-volumes:
+        condition: service_completed_successfully
+
+  redis:
+    image: redis:8.2.1-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  puppetflow-framework:
+  puppetflow-uploads:
+  puppetflow-execution:
+  pinokio-downloads:

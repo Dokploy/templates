@@ -1,0 +1,20 @@
+{
+  "id": "reloop",
+  "name": "Reloop",
+  "version": "latest",
+  "description": "Open-source email platform for transactional mail, campaigns and inbound, with its own KumoMTA delivery and spam filtering.",
+  "logo": "reloop.svg",
+  "links": {
+    "github": "https://github.com/reloop-labs/reloop",
+    "website": "https://reloop.sh",
+    "docs": "https://reloop.sh/docs/self-host/dokploy"
+  },
+  "tags": [
+    "email",
+    "smtp",
+    "transactional",
+    "campaigns",
+    "newsletter",
+    "self-hosted"
+  ]
+}

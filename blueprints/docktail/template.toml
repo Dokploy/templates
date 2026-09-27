@@ -1,0 +1,6 @@
+[config]
+mounts = []
+
+[config.env]
+TAILSCALE_OAUTH_CLIENT_ID = ""
+TAILSCALE_OAUTH_CLIENT_SECRET = ""

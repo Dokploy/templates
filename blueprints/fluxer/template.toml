@@ -14,11 +14,12 @@ FLUXER_GATEWAY_RPC_AUTH_TOKEN = "${hash:64}"
 FLUXER_MEDIA_PROXY_SECRET_KEY = "${hash:64}"
 FLUXER_ADMIN_SECRET_KEY_BASE = "${hash:64}"
 FLUXER_ADMIN_OAUTH_CLIENT_SECRET = "${hash:64}"
+FLUXER_ERLANG_COOKIE = "${hash:64}"
 
 FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64 = "${base64:32}"
 
-FLUXER_VAPID_PUBLIC_KEY = "${password:64}"
-FLUXER_VAPID_PRIVATE_KEY = "${password:32}"
+FLUXER_VAPID_PUBLIC_KEY = ""
+FLUXER_VAPID_PRIVATE_KEY = ""
 FLUXER_VAPID_EMAIL = "admin@example.com"
 
 LIVEKIT_API_KEY = "fluxer"
@@ -45,6 +46,12 @@ FLUXER_KLIPY_API_KEY = ""
 
 [config]
 env = [
+  "# VAPID KEYS SETUP:",
+  "# Fluxer will use a valid built-in fallback key pair when these values are left empty.",
+  "# Replace the fallback keys after first deploy for production use:",
+  "# 1. Run in your terminal: 'npx web-push generate-vapid-keys'.",
+  "# 2. Paste the generated public and private keys into FLUXER_VAPID_PUBLIC_KEY and FLUXER_VAPID_PRIVATE_KEY.",
+  "",
   "# HTTPS SETUP INSTRUCTIONS:",
   "# By default, this template starts over HTTP for initial testing/setup.",
   "# To enable HTTPS (Required for most services to work!)",
@@ -71,6 +78,7 @@ env = [
   "FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64=${FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64}",
   "FLUXER_ADMIN_SECRET_KEY_BASE=${FLUXER_ADMIN_SECRET_KEY_BASE}",
   "FLUXER_ADMIN_OAUTH_CLIENT_SECRET=${FLUXER_ADMIN_OAUTH_CLIENT_SECRET}",
+  "FLUXER_ERLANG_COOKIE=${FLUXER_ERLANG_COOKIE}",
   "",
   "FLUXER_VAPID_PUBLIC_KEY=${FLUXER_VAPID_PUBLIC_KEY}",
   "FLUXER_VAPID_PRIVATE_KEY=${FLUXER_VAPID_PRIVATE_KEY}",

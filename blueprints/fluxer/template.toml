@@ -47,8 +47,10 @@ FLUXER_KLIPY_API_KEY = ""
 [config]
 env = [
   "# VAPID KEYS SETUP:",
+  "# Fluxer will use a valid built-in fallback key pair when these values are left empty.",
+  "# Replace the fallback keys after first deploy for production use:",
   "# 1. Run in your terminal: 'npx web-push generate-vapid-keys'.",
-  "# 2. Paste the generated public and private keys into the FLUXER_VAPID_PUBLIC_KEY and FLUXER_VAPID_PRIVATE_KEY variables.",
+  "# 2. Paste the generated public and private keys into FLUXER_VAPID_PUBLIC_KEY and FLUXER_VAPID_PRIVATE_KEY.",
   "",
   "# HTTPS SETUP INSTRUCTIONS:",
   "# By default, this template starts over HTTP for initial testing/setup.",

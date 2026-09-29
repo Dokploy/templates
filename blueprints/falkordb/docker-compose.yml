@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  falkordb:
+    image: falkordb/falkordb:v4.20.4-alpine
+    restart: unless-stopped
+    environment:
+      - REDIS_ARGS=--requirepass ${FALKORDB_PASSWORD} --appendonly yes
+      - FALKORDB_ARGS=MAX_QUEUED_QUERIES 25 TIMEOUT 1000 RESULTSET_SIZE 10000 IMPORT_FOLDER /app/.data/import
+      - FALKORDB_PASSWORD=${FALKORDB_PASSWORD}
+      - AUTH_URL=${AUTH_URL}
+      - AUTH_SECRET=${AUTH_SECRET}
+      - NEXTAUTH_URL=${AUTH_URL}
+      - NEXTAUTH_SECRET=${AUTH_SECRET}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - ALLOWED_ORIGINS=${AUTH_URL}
+      - TRUST_PROXY_HEADERS=true
+      - CSV_STORAGE=local
+      - CSV_LOCAL_TEMP_DIR=/app/.data/import
+      - CSV_LOCAL_LOAD_URI_MODE=file
+      - API_TOKEN_STORAGE_PATH=/app/.data/api_tokens.json
+    volumes:
+      - falkordb_data:/var/lib/falkordb/data
+      - falkordb_browser_data:/app/.data
+    expose:
+      - 3000
+      - 6379
+    healthcheck:
+      test: ["CMD-SHELL", "REDISCLI_AUTH=$$FALKORDB_PASSWORD redis-cli ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  falkordb_data:
+  falkordb_browser_data:

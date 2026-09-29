@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD=postgres
 
   plausible_events_db:
-    image: clickhouse/clickhouse-server:24.3.3.102-alpine
+    image: clickhouse/clickhouse-server:24.12-alpine
     restart: always
 
     volumes:
@@ -21,19 +21,30 @@ services:
       nofile:
         soft: 262144
         hard: 262144
+    environment:
+      # Required since ClickHouse 24.11+ images: skip the default-user setup so
+      # Plausible can connect as "default" without a password (matches the
+      # official CE v3 compose.yml).
+      - CLICKHOUSE_SKIP_USER_SETUP=1
 
   plausible:
-    image: ghcr.io/plausible/community-edition:v2.1.5
+    image: ghcr.io/plausible/community-edition:v3.2.1
     restart: always
     command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
     depends_on:
       - plausible_db
       - plausible_events_db
+    volumes:
+      - plausible-data:/var/lib/plausible
+    environment:
+      - TMPDIR=/var/lib/plausible/tmp
     env_file:
       - .env
 
 volumes:
   db-data:
+    driver: local
+  plausible-data:
     driver: local
   event-data:
     driver: local

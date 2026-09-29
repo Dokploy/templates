@@ -1,5 +1,6 @@
 [variables]
 main_domain = "${domain}"
+encryption_key = "${base64:32}"
 
 [config]
 mounts = []
@@ -10,6 +11,6 @@ port = 1411
 host = "${main_domain}"
 
 [config.env]
-ENCRYPTION_KEY = "CHANGEME: openssl rand -base64 32"
-APP_URL = "http://${main_domain}"
+APP_URL = "https://${main_domain}"
+ENCRYPTION_KEY = "${encryption_key}"
 TRUST_PROXY = "true"

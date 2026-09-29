@@ -5,7 +5,7 @@
   "description": "Drizzle Gateway is a self-hosted database gateway that allows you to connect to your databases from anywhere.",
   "logo": "drizzle-gateway.svg",
   "links": {
-    "github": "https://github.com/drizzle-team/drizzle-gateway",
+    "github": "",
     "website": "https://gateway.drizzle.team/",
     "docs": "https://gateway.drizzle.team/docs/railway"
   },

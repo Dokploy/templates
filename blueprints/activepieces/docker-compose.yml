@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   activepieces:
-    image: activepieces/activepieces:0.35.0
+    image: activepieces/activepieces:0.91.2
     restart: unless-stopped
 
     depends_on:

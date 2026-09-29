@@ -5,7 +5,6 @@ postgres_db = "timescaledb"
 timescaledb_telemetry = "off"
 
 [config]
-mounts = []
 
 [config.env]
 POSTGRES_USER = "${postgres_user}"

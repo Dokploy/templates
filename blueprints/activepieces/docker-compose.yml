@@ -32,7 +32,7 @@ services:
       AP_TEMPLATES_SOURCE_URL: https://cloud.activepieces.com/api/v1/flow-templates
 
   postgres:
-    image: postgres:14
+    image: postgres:17
     restart: unless-stopped
 
     environment:

@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${password:64}"
+
+[config]
+env = [
+  "DEXIO_PUBLIC_URL=https://${main_domain}",
+  "DEXIO_SECRET_KEY=${secret_key}",
+]
+
+[[config.domains]]
+serviceName = "dexio"
+port = 8080
+host = "${main_domain}"

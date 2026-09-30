@@ -1,0 +1,253 @@
+# Ethora Core as a Dokploy template. GENERATED FILE: edit the bundle's
+# deploy/compose/docker-compose.yml and run build-template.sh.
+#
+# Same services and start order as the bundle (config -> databases -> xmpp ->
+# api, jobs -> init -> frontend), without the bundled Caddy: Dokploy's Traefik
+# routes the four public hosts declared in template.toml. The scripts and
+# templates are the template's mounts, which Dokploy writes under ../files/.
+# Every variable comes from the .env Dokploy writes next to this file
+# (template.toml, [config] env). See README.md in this directory.
+
+x-logging: &logging
+  logging:
+    driver: json-file
+    options:
+      max-size: "20m"
+      max-file: "5"
+
+x-api: &api
+  image: ${ETHORA_API_IMAGE:-docker.io/dappros/ethora-api:2610}
+  entrypoint: ["tini", "--", "bash", "/ethora/scripts/api-entrypoint.sh"]
+  volumes:
+    - config:/ethora/config:ro
+    - ../files/scripts:/ethora/scripts:ro
+  <<: *logging
+
+services:
+  # ---------------------------------------------------------------- config --
+  config:
+    image: ${ETHORA_XMPP_IMAGE:-docker.io/dappros/ethora-xmpp:2610}
+    user: "0:0"
+    entrypoint: ["/bin/sh", "/ethora/scripts/render-config.sh"]
+    # Every value in .env reaches the renderer, so any variable of the
+    # installer's templates (POSTMARK_*, EMAIL_TLD_*, RATE_LIMIT_*, ...) can
+    # be set there. The hosts are derived here once, for caddy and xmpp too.
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      ROOT_DOMAIN: ${ROOT_DOMAIN:?ROOT_DOMAIN is not set; run ./configure.sh or fill in .env}
+      API_DOMAIN: ${API_DOMAIN:-api.${ROOT_DOMAIN}}
+      WEB_DOMAIN: ${WEB_DOMAIN:-app.${ROOT_DOMAIN}}
+      XMPP_DOMAIN: ${XMPP_DOMAIN:-xmpp.${ROOT_DOMAIN}}
+      FILES_DOMAIN: ${FILES_DOMAIN:-files.${ROOT_DOMAIN}}
+    volumes:
+      - config:/out/config
+      - mysql-initdb:/out/mysql-initdb
+      - ../files/scripts:/ethora/scripts:ro
+      - ../files/templates:/ethora/templates:ro
+    restart: "no"
+    <<: *logging
+
+  # ------------------------------------------------------------- databases --
+  mongo:
+    image: mongo:6.0.8
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    volumes:
+      - mongo:/data/db
+      - mongo-config:/data/configdb
+    restart: unless-stopped
+    healthcheck:
+      # A TCP connect, not mongosh: see docker-compose.enterprise.yml.
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/27017"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    <<: *logging
+
+  mongo-init:
+    image: mongo:6.0.8
+    entrypoint: ["bash", "/ethora/scripts/mongo-init.sh"]
+    volumes:
+      - ../files/scripts:/ethora/scripts:ro
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: "no"
+    <<: *logging
+
+  mysql:
+    image: mysql:8.1.0
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is not set}
+      # ejabberd connects as root from its own container (as on a host install).
+      MYSQL_ROOT_HOST: "%"
+    volumes:
+      - mysql:/var/lib/mysql
+      - mysql-initdb:/docker-entrypoint-initdb.d:ro
+    depends_on:
+      config:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    <<: *logging
+
+  redis:
+    image: redis:7.4-alpine
+    volumes:
+      - redis:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    <<: *logging
+
+  minio:
+    # Our unmodified copy of the MinIO release every install runs (AGPL-3.0);
+    # MinIO withdrew its public images. Set MINIO_IMAGE for a private mirror.
+    image: ${MINIO_IMAGE:-docker.io/dappros/minio:RELEASE.2025-09-07T16-13-09Z}
+    command: ["server", "/data"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?MINIO_ROOT_USER is not set}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?MINIO_ROOT_PASSWORD is not set}
+    volumes:
+      - minio:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9000/minio/health/live"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    <<: *logging
+
+  centrifugo:
+    image: centrifugo/centrifugo:v6
+    command: ["centrifugo", "-c", "/ethora/config/centrifugo/config.json"]
+    volumes:
+      - config:/ethora/config:ro
+    depends_on:
+      config:
+        condition: service_completed_successfully
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8000/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    <<: *logging
+
+  # ------------------------------------------------------------------ xmpp --
+  xmpp:
+    image: ${ETHORA_XMPP_IMAGE:-docker.io/dappros/ethora-xmpp:2610}
+    entrypoint: ["/bin/sh", "/ethora/scripts/xmpp-start.sh"]
+    environment:
+      XMPP_DOMAIN: ${XMPP_DOMAIN:-xmpp.${ROOT_DOMAIN}}
+      XMPP_ADMIN_PASSWORD: ${XMPP_ADMIN_PASSWORD:?XMPP_ADMIN_PASSWORD is not set}
+    volumes:
+      - config:/ethora/config:ro
+      - ../files/scripts:/ethora/scripts:ro
+    # Native XMPP clients (port 5222) are not exposed by default; web and SDK
+    # clients connect over wss://xmpp.<root>/ws through caddy. See README.md.
+    depends_on:
+      config:
+        condition: service_completed_successfully
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      # Healthy once ejabberd runs AND the admin account is ensured, which is
+      # what the API and init need.
+      test: ["CMD-SHELL", "test -f /tmp/ethora-admin-ready && /opt/ejabberd/bin/ejabberdctl status >/dev/null"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
+    <<: *logging
+
+  # ------------------------------------------------------------------- api --
+  api:
+    <<: *api
+    command: ["api"]
+    depends_on:
+      config:
+        condition: service_completed_successfully
+      mongo-init:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      xmpp:
+        condition: service_started
+    restart: unless-stopped
+    # Healthcheck: the image's own (GET /v1/ping).
+
+  jobs:
+    <<: *api
+    command: ["jobs"]
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+
+  init:
+    <<: *api
+    command: ["init"]
+    depends_on:
+      api:
+        condition: service_healthy
+      xmpp:
+        condition: service_healthy
+    restart: "no"
+    healthcheck:
+      disable: true
+
+  # End-to-end check through the public URLs (scripts/verify.js):
+  #   docker compose --profile verify run --rm verify
+  verify:
+    <<: *api
+    profiles: ["verify"]
+    command: ["verify"]
+    restart: "no"
+    healthcheck:
+      disable: true
+
+  # -------------------------------------------------------------- frontend --
+  frontend:
+    image: ${ETHORA_FRONTEND_IMAGE:-docker.io/dappros/ethora-frontend:2610}
+    entrypoint: ["/bin/sh", "/ethora/scripts/frontend-start.sh"]
+    command: ["serve"]
+    volumes:
+      - config:/ethora/config:ro
+      - ../files/scripts:/ethora/scripts:ro
+    depends_on:
+      config:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    <<: *logging
+
+volumes:
+  # Your data. Survive `docker compose down`; `down -v` deletes them.
+  mongo:
+  mysql:
+  minio:
+  redis:
+  # Regenerated on every start; safe to delete.
+  mongo-config:
+  config:
+  mysql-initdb:

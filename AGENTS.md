@@ -162,7 +162,10 @@ This document provides essential context for AI models interacting with this pro
 
   - **Required fields:** `id`, `name`, `version`, `description`, `links` (with `github`), `logo`, `tags` (array)
   - **Tags:** Lowercase strings (e.g., `["monitoring", "database"]`)
-  - **Version:** MUST match Docker image version in docker-compose.yml
+  - **Version:** MUST match Docker image version in docker-compose.yml. Image references can use either:
+    - **Version tags:** `ghost:6-alpine` → set `version` to `"6"` or the semantic version visible in the tag
+    - **SHA256 digests:** `softinator/feedbacks@sha256:f7d759e...` → set `version` to the release version that the digest points to (e.g., `"0.2.1"`)
+    - Digest pinning is recommended for production deployments to ensure immutability
   - **Logo:** Filename only (e.g., `"ghost.jpeg"`), file must exist in blueprint folder
 
 - **Frontend Development:**
@@ -183,8 +186,8 @@ This document provides essential context for AI models interacting with this pro
 
 - **Dependencies:**
 
-  - When adding new templates, ensure Docker images are pinned to specific versions
-  - Update meta.json with exact version matching Docker Compose image version
+  - When adding new templates, ensure Docker images are pinned to specific versions (using version tags or immutable SHA256 digests)
+  - Update meta.json with exact version matching Docker Compose image version (for digest-pinned images, use the release version the digest points to)
   - For frontend dependencies: Use `pnpm add <package>` in `app/` directory
   - For root dependencies: Use `npm install <package>` in root directory
 
@@ -196,4 +199,4 @@ This document provides essential context for AI models interacting with this pro
   3. Including `ports`, `container_name`, or `networks` in docker-compose.yml
   4. Using object syntax for env vars in template.toml (must be array of strings)
   5. Logo file missing or filename mismatch in meta.json
-  6. Version mismatch between meta.json and docker-compose.yml image tag
+  6. Version mismatch between meta.json and docker-compose.yml image reference (remember: for digest-pinned images, set version to the release version the digest points to, not the digest itself)

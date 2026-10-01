@@ -8,7 +8,10 @@ env = [
   "DEXIO_SECRET_KEY=${secret_key}",
 ]
 
+# Dexio's session cookie is HTTPS-only, so the domain asks for a certificate.
 [[config.domains]]
 serviceName = "dexio"
 port = 8080
 host = "${main_domain}"
+https = true
+certificateType = "letsencrypt"

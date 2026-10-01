@@ -103,7 +103,7 @@ services:
       - puppetflow-uploads:/uploads
 
   pinokio:
-    image: ghcr.io/puppetflow/pinokio:v2026.9.5
+    image: ghcr.io/puppetflow/pinokio:v2026.9.6
     restart: unless-stopped
     shm_size: "1gb"
     volumes:

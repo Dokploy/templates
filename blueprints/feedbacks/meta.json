@@ -1,0 +1,16 @@
+{
+  "id": "feedbacks",
+  "name": "Feedbacks",
+  "version": "0.2.1",
+  "description": "Self-hosted website feedback, browser evidence and MCP handoff for coding assistants. Private S3 storage is required.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/Softinator-TechLabs/feedbacks-oss",
+    "website": "https://feedbacks.softinator.ai",
+    "docs": "https://feedbacks.softinator.ai/docs/guide/self-host"
+  },
+  "tags": [
+    "collaboration",
+    "developer-tools"
+  ]
+}

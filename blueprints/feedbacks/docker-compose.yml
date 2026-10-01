@@ -1,0 +1,51 @@
+version: "3.8"
+services:
+  feedbacks:
+    image: ${FEEDBACKS_IMAGE:?Set a verified published namespace/image@sha256 digest}
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,mode=1777
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      APP_ORIGIN: ${APP_ORIGIN:?required}
+      DATABASE_URL: postgresql://feedbacks:${POSTGRES_PASSWORD:?required}@postgres:5432/feedbacks
+      DATABASE_POOL_MAX: ${DATABASE_POOL_MAX:-10}
+      TRUST_PROXY_HOPS: ${TRUST_PROXY_HOPS:-1}
+      ASSET_DRIVER: s3
+      ORGANIZATION_ID: ${ORGANIZATION_ID:?required}
+      S3_ENDPOINT: ${S3_ENDPOINT:?required}
+      S3_REGION: ${S3_REGION:?required}
+      S3_BUCKET: ${S3_BUCKET:?required}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:?required}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?required}
+      TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-}
+      TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:-}
+      GITHUB_APPS_JSON: ${GITHUB_APPS_JSON:-}
+      GITHUB_APP_ID: ${GITHUB_APP_ID:-}
+      GITHUB_APP_SLUG: ${GITHUB_APP_SLUG:-}
+      GITHUB_APP_PRIVATE_KEY_BASE64: ${GITHUB_APP_PRIVATE_KEY_BASE64:-}
+    expose: ["3000"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    stop_grace_period: 15s
+  postgres:
+    image: postgres:17-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: feedbacks
+      POSTGRES_DB: feedbacks
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?required}
+    volumes: ["feedbacks-postgres:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U feedbacks -d feedbacks"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+volumes:
+  feedbacks-postgres:

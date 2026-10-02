@@ -2,7 +2,7 @@
   "id": "libredb-studio",
   "name": "LibreDB Studio",
   "version": "0.17.0",
-  "description": "The open-source SQL IDE you host yourself. Query PostgreSQL, MySQL, Oracle, SQL Server, MongoDB, Redis, ClickHouse, Cassandra and more from your browser, eighteen engines in one interface.",
+  "description": "The open-source SQL IDE you host yourself. Query PostgreSQL, MySQL, Oracle, SQL Server, MongoDB, Redis, ClickHouse, Cassandra and more from your browser, eighteen drivers reaching forty-six engines.",
   "logo": "libredb-studio.svg",
   "links": {
     "github": "https://github.com/libredb/libredb-studio",

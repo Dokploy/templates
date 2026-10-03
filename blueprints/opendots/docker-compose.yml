@@ -1,0 +1,72 @@
+version: "3.8"
+
+services:
+  opendots:
+    build:
+      context: "https://github.com/CopilotKit/OpenDots.git#main"
+      dockerfile: Dockerfile
+      target: app
+    restart: unless-stopped
+    init: true
+    environment:
+      # Required: 24+ char access token for external access (generated per deploy)
+      OWNER_TOKEN: ${OWNER_TOKEN}
+      OWNER_ID: ${OWNER_ID}
+      # Exact browser origin behind the Dokploy domain/proxy
+      APP_ORIGIN: ${APP_ORIGIN}
+      # Conversation services
+      INTELLIGENCE_API_KEY: ${INTELLIGENCE_API_KEY}
+      INTELLIGENCE_API_URL: ${INTELLIGENCE_API_URL}
+      INTELLIGENCE_WS_URL: ${INTELLIGENCE_WS_URL}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL}
+      OPENAI_MODEL: ${OPENAI_MODEL}
+      # Public-web research: parallel (default), browser or disabled
+      WEB_SEARCH_PROVIDER: ${WEB_SEARCH_PROVIDER}
+      PARALLEL_API_KEY: ${PARALLEL_API_KEY}
+      # Isolated read-only public-page browser (used when WEB_SEARCH_PROVIDER=browser)
+      BROWSER_URL: http://opendots-browser:4311
+      BROWSER_SECRET: ${BROWSER_SECRET}
+      # Optional realtime speech (calls)
+      VOICE_API_KEY: ${VOICE_API_KEY}
+      VOICE_MODEL: ${VOICE_MODEL}
+      VOICE_NAME: ${VOICE_NAME}
+      # Optional managed Slack channel
+      SLACK_CHANNEL_NAME: ${SLACK_CHANNEL_NAME}
+      SLACK_TEAM_ID: ${SLACK_TEAM_ID}
+      SLACK_USER_IDS: ${SLACK_USER_IDS}
+      SLACK_DOT_ID: ${SLACK_DOT_ID}
+    # Exposed only to the internal network; domain routing is handled by Dokploy/Traefik
+    expose:
+      - "4310"
+    volumes:
+      - opendots-data:/data
+
+  # Isolated read-only browser for URL research (WEB_SEARCH_PROVIDER=browser).
+  # Shares BROWSER_SECRET with the app; no published port, reachable only internally.
+  opendots-browser:
+    build:
+      context: "https://github.com/CopilotKit/OpenDots.git#main"
+      dockerfile: Dockerfile
+      target: browser
+    restart: unless-stopped
+    init: true
+    environment:
+      BROWSER_SECRET: ${BROWSER_SECRET}
+    expose:
+      - "4311"
+    shm_size: 256mb
+    read_only: true
+    # Writable /tmp for the read-only rootfs, capped at 256 MB
+    volumes:
+      - type: tmpfs
+        target: /tmp
+        tmpfs:
+          size: 268435456
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  opendots-data:

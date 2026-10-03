@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   mailcatcher-ng:
     # Only the "latest" tag is published, so the image is pinned by digest

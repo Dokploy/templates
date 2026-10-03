@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   drizzle-gateway:
     image: ghcr.io/drizzle-team/gateway:latest

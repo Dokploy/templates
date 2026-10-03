@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   weblate:
     image: weblate/weblate:2026.7.1.1

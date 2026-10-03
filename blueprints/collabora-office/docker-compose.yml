@@ -1,7 +1,8 @@
-version: "3"
+version: "3.8"
 
 services:
-  collabora:
+  collabora-office:
+    restart: unless-stopped
     image: collabora/code:latest
     expose:
       - "9980"

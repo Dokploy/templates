@@ -6,8 +6,10 @@
 #
 # The bundle image already contains MongoDB and Redis. Only the bundle service is required
 
+version: "3.8"
+
 services:
-  any-sync-bundle:
+  anytype:
     image: ghcr.io/grishy/any-sync-bundle:latest
     restart: unless-stopped
     ports:

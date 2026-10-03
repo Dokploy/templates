@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   outline:
     image: outlinewiki/outline:0.82.0

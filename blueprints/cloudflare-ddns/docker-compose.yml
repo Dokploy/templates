@@ -1,5 +1,7 @@
 # For more details, see:
 # - https://github.com/favonia/cloudflare-ddns
+version: "3.8"
+
 services:
   cloudflare-ddns:
     image: favonia/cloudflare-ddns:1

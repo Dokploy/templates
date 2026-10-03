@@ -1,5 +1,7 @@
+version: "3.8"
+
 services:
-  java-app:
+  java:
     image: ghcr.io/pterodactyl/yolks:java_${JAVA_VERSION}
     restart: unless-stopped
     stdin_open: true

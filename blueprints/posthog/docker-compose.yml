@@ -6,6 +6,8 @@
 # capture-logs. Everything needed for product analytics, feature flags,
 # surveys, session replay and the CDP pipeline is included.
 
+version: "3.8"
+
 x-logging: &default-logging
   driver: json-file
   options:

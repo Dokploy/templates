@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   silex:
     image: silexlabs/silex:3.7.0

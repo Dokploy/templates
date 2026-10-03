@@ -17,8 +17,11 @@
 # update the PASSBOLT_APP_FULL_BASE_URL environment variable in the "Environment" tab.
 # =============================================================================
 
+version: "3.8"
+
 services:
   passbolt:
+    restart: unless-stopped
     image: passbolt/passbolt:latest-ce
     environment:
       APP_FULL_BASE_URL: ${PASSBOLT_APP_FULL_BASE_URL}
@@ -59,6 +62,7 @@ services:
       retries: 10
 
   mariadb:
+    restart: unless-stopped
     image: mariadb:11
     environment:
       MARIADB_ROOT_PASSWORD: ${PASSBOLT_DB_ROOT_PASSWORD}

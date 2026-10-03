@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   livekit:
     image: livekit/livekit-server:v1.9.0

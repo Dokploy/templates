@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   sftpgo:
     image: drakkan/sftpgo:v2.7.3

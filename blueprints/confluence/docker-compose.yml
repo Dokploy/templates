@@ -1,7 +1,8 @@
-version: "3"
+version: "3.8"
 
 services:
   confluence:
+    restart: unless-stopped
     image: atlassian/confluence-server:8.6-ubuntu-jdk17
     expose:
       - "8090"

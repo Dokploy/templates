@@ -1,3 +1,5 @@
+version: "3.8"
+
 x-custom-image: &custom_image
   image: ${IMAGE_NAME:-ghcr.io/frappe/lms}:${VERSION:-v2.52.0}
   pull_policy: ${PULL_POLICY:-always}
@@ -7,6 +9,7 @@ x-custom-image: &custom_image
 
 services:
   backend:
+    restart: unless-stopped
     <<: *custom_image
     entrypoint: ["bash", "-c"]
     command:
@@ -26,6 +29,7 @@ services:
       start_period: 600s
 
   frontend:
+    restart: unless-stopped
     <<: *custom_image
     command:
       - nginx-entrypoint.sh
@@ -50,6 +54,7 @@ services:
       retries: 30
 
   queue-default:
+    restart: unless-stopped
     <<: *custom_image
     command:
       - bench
@@ -68,6 +73,7 @@ services:
         condition: service_completed_successfully
 
   queue-long:
+    restart: unless-stopped
     <<: *custom_image
     command:
       - bench
@@ -86,6 +92,7 @@ services:
         condition: service_completed_successfully
 
   queue-short:
+    restart: unless-stopped
     <<: *custom_image
     command:
       - bench
@@ -104,6 +111,7 @@ services:
         condition: service_completed_successfully
 
   scheduler:
+    restart: unless-stopped
     <<: *custom_image
     healthcheck:
       test: ["CMD", "wait-for-it", "redis-queue:6379"]
@@ -120,6 +128,7 @@ services:
       - sites:/home/frappe/frappe-bench/sites
 
   websocket:
+    restart: unless-stopped
     <<: *custom_image
     healthcheck:
       test: ["CMD", "wait-for-it", "websocket:9000"]
@@ -136,6 +145,7 @@ services:
       - sites:/home/frappe/frappe-bench/sites
 
   configurator:
+    restart: "no"
     <<: *custom_image
     deploy:
       mode: replicated
@@ -175,6 +185,7 @@ services:
       - sites:/home/frappe/frappe-bench/sites
 
   create-site:
+    restart: "no"
     <<: *custom_image
     deploy:
       mode: replicated
@@ -222,6 +233,7 @@ services:
       ENABLE_SCHEDULER: "${ENABLE_SCHEDULER}"
 
   migration:
+    restart: "no"
     <<: *custom_image
     deploy:
       mode: replicated
@@ -241,6 +253,7 @@ services:
       - sites:/home/frappe/frappe-bench/sites
 
   db:
+    restart: unless-stopped
     image: mariadb:${DB_VERSION:-11.8.6}
     deploy:
       mode: replicated
@@ -263,6 +276,7 @@ services:
       - db-data:/var/lib/mysql
 
   redis-cache:
+    restart: unless-stopped
     deploy:
       restart_policy:
         condition: always
@@ -276,6 +290,7 @@ services:
       retries: 3
 
   redis-queue:
+    restart: unless-stopped
     deploy:
       restart_policy:
         condition: always
@@ -289,6 +304,7 @@ services:
       retries: 3
 
   redis-socketio:
+    restart: unless-stopped
     deploy:
       restart_policy:
         condition: always

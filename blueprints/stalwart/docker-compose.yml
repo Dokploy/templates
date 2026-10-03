@@ -1,5 +1,7 @@
+version: "3.8"
+
 services:
-  stalwart-mail:
+  stalwart:
     image: stalwartlabs/stalwart:latest-alpine # for production choose specific version from https://hub.docker.com/r/stalwartlabs/stalwart/tags
     expose:
       - "443"    # HTTPS

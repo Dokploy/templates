@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   browserless:
+    restart: unless-stopped
     image: ghcr.io/browserless/chromium:latest
     environment:
       TOKEN: ${BROWSERLESS_TOKEN}

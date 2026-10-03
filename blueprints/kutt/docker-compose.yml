@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   kutt:
+    restart: unless-stopped
     image: kutt/kutt:main
     volumes:
       - kutt_db_data:/var/lib/kutt

@@ -1,3 +1,5 @@
+version: "3.8"
+
 name: firecrawl
  
 x-common-service: &common-service
@@ -104,6 +106,7 @@ services:
     command: node --import ./dist/src/otel.js dist/src/services/extract-worker.js
  
   redis:
+    restart: unless-stopped
     image: redis:alpine
     command: redis-server --bind 0.0.0.0
  

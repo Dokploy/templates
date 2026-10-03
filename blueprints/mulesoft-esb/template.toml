@@ -9,7 +9,7 @@ http_port = "8081"
 
 [config]
 [[config.domains]]
-serviceName = "mule"
+serviceName = "mulesoft-esb"
 port = 8081
 host = "${main_domain}"
 path = "/"

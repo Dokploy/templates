@@ -5,7 +5,7 @@ COUCHDB_PASSWORD = "${password:32}"
 
 [config]
 [[config.domains]]
-serviceName = "couchdb"
+serviceName = "obsidian-livesync"
 port = 5984
 host = "${main_domain}"
 

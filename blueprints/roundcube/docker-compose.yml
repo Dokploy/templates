@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
-  roundcubemail:
+  roundcube:
+    restart: unless-stopped
     image: roundcube/roundcubemail:1.6.9-apache
     volumes:
       - ./www:/var/www/html

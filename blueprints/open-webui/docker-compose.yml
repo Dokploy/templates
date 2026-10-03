@@ -1,4 +1,6 @@
 # This is the main service for the Open WebUI interface.
+version: "3.8"
+
 services:
   open-webui:
     image: ghcr.io/open-webui/open-webui:main

@@ -6,7 +6,7 @@ jwt_secret = "${base64:32}"
 mounts = []
 
 [[config.domains]]
-serviceName = "app"
+serviceName = "tolgee"
 port = 8_080
 host = "${main_domain}"
 

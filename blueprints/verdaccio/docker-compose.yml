@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   verdaccio:
+    restart: unless-stopped
     image: verdaccio/verdaccio:6
     environment:
       - VERDACCIO_PORT=4873

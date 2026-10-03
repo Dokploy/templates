@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   qdrant:
+    restart: unless-stopped
     image: "qdrant/qdrant:latest"
     environment:
       - SERVICE_FQDN_QDRANT_6333

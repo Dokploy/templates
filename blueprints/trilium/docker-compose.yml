@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   trilium:
     image: zadam/trilium:latest

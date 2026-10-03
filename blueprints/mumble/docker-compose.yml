@@ -1,5 +1,7 @@
+version: "3.8"
+
 services:
-  mumble-server:
+  mumble:
     image: mumblevoip/mumble-server:latest
     restart: unless-stopped
     expose:

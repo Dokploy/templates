@@ -6,7 +6,7 @@ secret_key = "${password}"
 mounts = []
 
 [[config.domains]]
-serviceName = "server"
+serviceName = "spacedrive"
 port = 8_080
 host = "${main_domain}"
 

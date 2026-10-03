@@ -1,7 +1,8 @@
-version: "3"
+version: "3.8"
 
 services:
   commento:
+    restart: unless-stopped
     image: registry.gitlab.com/commento/commento:v1.8.0
     expose:
       - "8080"
@@ -12,6 +13,7 @@ services:
       - postgres
 
   postgres:
+    restart: unless-stopped
     image: postgres:11
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

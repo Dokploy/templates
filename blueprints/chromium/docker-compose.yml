@@ -1,7 +1,8 @@
-version: "3"
+version: "3.8"
 
 services:
   chromium:
+    restart: unless-stopped
     image: lscr.io/linuxserver/chromium:5f5dd27e-ls102
     expose:
       - "3000"

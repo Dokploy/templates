@@ -1,3 +1,5 @@
+version: "3.8"
+
 x-fluxer-env: &fluxer-env
   FLUXER_ENV: production
   NODE_ENV: production
@@ -95,7 +97,7 @@ services:
   caddy:
     image: caddy:2.10-alpine
     restart: unless-stopped
-    ports:
+    expose:
       - "80"
     configs:
       - source: caddyfile

@@ -17,6 +17,8 @@
 #
 # WARNING: Don't mix modes! Setting both LICENSE_KEY and NO_DEFAULT_CONFIG=1 causes errors
 #
+version: "3.8"
+
 services:
   fivem:
     image: spritsail/fivem:latest
@@ -33,6 +35,7 @@ services:
     ports:
       - 30120:30120
       - 30120:30120/udp
+    expose:
       - 40120
     labels:
       - "traefik.enable=true"

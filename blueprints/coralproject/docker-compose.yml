@@ -1,7 +1,8 @@
-version: "3"
+version: "3.8"
 
 services:
   coral:
+    restart: unless-stopped
     image: coralproject/talk:9.7.0
     expose:
       - "3000"
@@ -15,6 +16,7 @@ services:
       - redis
 
   mongo:
+    restart: unless-stopped
     image: mongo:4
     environment:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
@@ -23,6 +25,7 @@ services:
       - mongo-data:/data/db
 
   redis:
+    restart: unless-stopped
     image: redis:6
     command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:

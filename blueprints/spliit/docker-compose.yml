@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   spliit:
     image: ghcr.io/spliit-app/spliit:1.19.0

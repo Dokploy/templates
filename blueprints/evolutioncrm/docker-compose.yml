@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   evo-auth:
     image: evoapicloud/evo-auth-service-community:latest
@@ -105,6 +107,7 @@ services:
       - evo-crm-data:/app/storage
 
   evo-crm-sidekiq:
+    restart: unless-stopped
     image: evoapicloud/evo-ai-crm-community:latest
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
     healthcheck:
@@ -167,6 +170,7 @@ services:
       - AI_PROCESSOR_VERSION=v1
 
   evo-processor:
+    restart: unless-stopped
     image: evoapicloud/evo-ai-processor-community:latest
     depends_on:
       evo-crm:
@@ -198,6 +202,7 @@ services:
       - TOOLS_CACHE_TTL=3600
 
   evo-bot-runtime:
+    restart: unless-stopped
     image: evoapicloud/evo-bot-runtime:latest
     environment:
       - LISTEN_ADDR=0.0.0.0:8080
@@ -207,6 +212,7 @@ services:
       - AI_CALL_TIMEOUT_SECONDS=30
 
   evo-crm-frontend:
+    restart: unless-stopped
     image: evoapicloud/evo-ai-frontend-community:latest
     environment:
       - VITE_APP_ENV=production

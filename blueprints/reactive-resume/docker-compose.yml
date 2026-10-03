@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   postgres:
+    restart: unless-stopped
     image: postgres:16-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -16,6 +17,7 @@ services:
       retries: 5
 
   minio:
+    restart: unless-stopped
     image: minio/minio:latest
     command: server /data
     volumes:
@@ -25,6 +27,7 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
 
   chrome:
+    restart: unless-stopped
     image: ghcr.io/browserless/chromium:v2.18.0
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -36,6 +39,7 @@ services:
       PRE_REQUEST_HEALTH_CHECK: "true"
 
   app:
+    restart: unless-stopped
     image: amruthpillai/reactive-resume:latest
     depends_on:
       - postgres

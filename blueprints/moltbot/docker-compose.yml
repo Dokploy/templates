@@ -1,5 +1,7 @@
+version: "3.8"
+
 services:
-  moltbot-gateway:
+  moltbot:
     image: ghcr.io/moltbot/clawdbot:2026.1.24-1
     environment:
       HOME: /home/node

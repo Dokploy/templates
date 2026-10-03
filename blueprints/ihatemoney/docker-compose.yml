@@ -1,7 +1,8 @@
-version: "3.9"
+version: "3.8"
 
 services:
   ihatemoney:
+    restart: unless-stopped
     image: ihatemoney/ihatemoney:latest
     environment:
       - DEBUG=False

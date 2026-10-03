@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   openseo:
     image: ghcr.io/every-app/open-seo:v0.1.6

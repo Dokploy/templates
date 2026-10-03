@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   meilisearch:
+    restart: unless-stopped
     image: getmeili/meilisearch:v1.35.1
     volumes:
       - meili_data:/meili_data

@@ -4,7 +4,7 @@ main_domain = "${domain}"
 [config]
 mounts = []
 [[config.domains]]
-serviceName = "gitea"
+serviceName = "gitea-sqlite"
 port = 3000
 host = "${main_domain}"
 

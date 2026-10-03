@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   coder:
+    restart: unless-stopped
     image: ghcr.io/coder/coder:v2.15.3
 
     volumes:
@@ -15,6 +18,7 @@ services:
       - CODER_PG_CONNECTION_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}?sslmode=disable
 
   db:
+    restart: unless-stopped
     image: postgres:17
 
     environment:

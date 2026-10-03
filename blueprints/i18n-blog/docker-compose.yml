@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  kuno:
+  i18n-blog:
     image: ictrun/kuno:latest
     restart: unless-stopped
     environment:

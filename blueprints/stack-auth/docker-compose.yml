@@ -1,7 +1,8 @@
-version: '3.8'
+version: "3.8"
 
 services:
   stack-auth-db:
+    restart: unless-stopped
     image: postgres:17
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -17,6 +18,7 @@ services:
       start_period: 80s
       
   stack-auth:
+    restart: unless-stopped
     image: stackauth/server:latest
     environment:
       - POSTGRES_USER=${POSTGRES_USER}

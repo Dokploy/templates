@@ -1,12 +1,14 @@
+version: "3.8"
+
 services:
   nginx:
-    restart: on-failure
+    restart: unless-stopped
     image: nginx
     volumes:
       - ../files/nginx/nginx.conf:/etc/nginx/nginx.conf
 
   minio:
-    restart: on-failure
+    restart: unless-stopped
     image: minio/minio
     environment:
       - MINIO_BROWSER_REDIRECT_URL=${APPFLOWY_BASE_URL}/minio
@@ -17,7 +19,7 @@ services:
       - minio_data:/data
 
   postgres:
-    restart: on-failure
+    restart: unless-stopped
     image: pgvector/pgvector:pg16
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
@@ -34,11 +36,11 @@ services:
       - ./files/volumes/postgres/:/docker-entrypoint-initdb.d/
 
   redis:
-    restart: on-failure
+    restart: unless-stopped
     image: redis
 
   gotrue:
-    restart: on-failure
+    restart: unless-stopped
     image: appflowyinc/gotrue:${GOTRUE_VERSION:-latest}
     depends_on:
       postgres:
@@ -107,7 +109,7 @@ services:
       - GOTRUE_SAML_PRIVATE_KEY=${GOTRUE_SAML_PRIVATE_KEY}
 
   appflowy_cloud:
-    restart: on-failure
+    restart: unless-stopped
     image: appflowyinc/appflowy_cloud:${APPFLOWY_CLOUD_VERSION:-latest}
     depends_on:
       gotrue:
@@ -154,7 +156,7 @@ services:
       - AI_OPENAI_API_KEY=${AI_OPENAI_API_KEY}
 
   admin_frontend:
-    restart: on-failure
+    restart: unless-stopped
     image: appflowyinc/admin_frontend:${APPFLOWY_ADMIN_FRONTEND_VERSION:-latest}
     depends_on:
       gotrue:
@@ -169,7 +171,7 @@ services:
       - ADMIN_FRONTEND_PATH_PREFIX=${ADMIN_FRONTEND_PATH_PREFIX:-/console}
 
   ai:
-    restart: on-failure
+    restart: unless-stopped
     image: appflowyinc/appflowy_ai:${APPFLOWY_AI_VERSION:-latest}
     depends_on:
       postgres:
@@ -211,7 +213,7 @@ services:
       - APPFLOWY_GOTRUE_JWT_SECRET=${GOTRUE_JWT_SECRET}
 
   appflowy_worker:
-    restart: on-failure
+    restart: unless-stopped
     image: appflowyinc/appflowy_worker:${APPFLOWY_WORKER_VERSION:-latest}
     depends_on:
       postgres:
@@ -243,7 +245,7 @@ services:
       - APPFLOWY_MAILER_SMTP_TLS_KIND=${APPFLOWY_MAILER_SMTP_TLS_KIND:-wrapper}
 
   appflowy_web:
-    restart: on-failure
+    restart: unless-stopped
     image: appflowyinc/appflowy_web:${APPFLOWY_WEB_VERSION:-latest}
     depends_on:
       - appflowy_cloud

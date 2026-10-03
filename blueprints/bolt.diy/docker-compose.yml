@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   app:
+    restart: unless-stopped
     image: ghcr.io/stackblitz-labs/bolt.diy:latest
     environment:
       - NODE_ENV=production

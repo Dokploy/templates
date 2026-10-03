@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   invoiceshelf-postgres:
+    restart: unless-stopped
     image: postgres:15
 
     volumes:
@@ -17,6 +18,7 @@ services:
       retries: 5
 
   invoiceshelf-app:
+    restart: unless-stopped
     image: invoiceshelf/invoiceshelf:nightly
 
     volumes:

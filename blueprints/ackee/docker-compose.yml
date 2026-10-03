@@ -1,7 +1,8 @@
-version: "3"
+version: "3.8"
 
 services:
   ackee:
+    restart: unless-stopped
     image: electerious/ackee:3.4.2
     expose:
       - "3000"
@@ -11,6 +12,7 @@ services:
       - ACKEE_MONGODB=${ACKEE_MONGODB}
   
   mongo:
+    restart: unless-stopped
     image: mongo:4
     environment:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}

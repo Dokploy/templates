@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   blinko-website:
     image: blinkospace/blinko:1.6.3

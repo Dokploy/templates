@@ -24,6 +24,8 @@
 # WARNING: if you're exposing Penpot to the internet, you should remove the flags
 # 'disable-secure-session-cookies' and 'disable-email-verification'
 
+version: "3.8"
+
 volumes:
   penpot_postgres_v15:
   penpot_assets:

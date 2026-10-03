@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  morphos-server:
+  morphos:
     image: ghcr.io/danvergara/morphos-server:latest
     restart: unless-stopped
     expose:

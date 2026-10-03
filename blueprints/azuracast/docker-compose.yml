@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   azuracast:
     image: ghcr.io/azuracast/azuracast:latest

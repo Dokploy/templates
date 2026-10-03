@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   ollama-chat-tone:
+    restart: unless-stopped
     image: billnice250/chattone:latest
     expose:
       - 8080

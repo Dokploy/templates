@@ -16,6 +16,8 @@
 # dominio de template.toml apunta al 3000 y no hace falta nada más.
 # ============================================================================
 
+version: "3.8"
+
 services:
   didacta:
     image: ghcr.io/va360labs/didacta-community:0.0.1-alpha.107

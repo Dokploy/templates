@@ -1,8 +1,11 @@
+version: "3.8"
+
 volumes:
   storyden_data:
 
 services:
   storyden:
+    restart: unless-stopped
     image: ghcr.io/southclaws/storyden:latest
     expose:
       - 8000

@@ -8,6 +8,8 @@
 # - USERNAME: admin
 # - PASSWORD: public
 
+version: "3.8"
+
 services:
   emqx:
     image: emqx/emqx-enterprise:6.0.1

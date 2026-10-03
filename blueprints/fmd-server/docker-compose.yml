@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   fmd-server:
     image: registry.gitlab.com/fmd-foss/fmd-server:0.16.0

@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   baserow:
+    restart: unless-stopped
     image: baserow/baserow:1.25.2
     environment:
       BASEROW_PUBLIC_URL: "http://${BASEROW_HOST}"

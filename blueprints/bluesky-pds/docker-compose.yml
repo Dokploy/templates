@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
-  pds:
+  bluesky-pds:
+    restart: unless-stopped
     image: 'ghcr.io/bluesky-social/pds:0.4.182'
     volumes:
       - pds-data:/pds

@@ -19,6 +19,8 @@
 # container to those networks.
 #
 
+version: "3.8"
+
 services:
   superset:
     image: amancevice/superset:6.0.0

@@ -11,8 +11,11 @@
 #     If you have already deployed once, changes to some environment
 #     variables may not take effect. For example, initial passwords.
 
+version: "3.8"
+
 services:
   seafile-db:
+    restart: unless-stopped
     image: mariadb:10.11
     environment:
       - MYSQL_ROOT_PASSWORD=${INIT_SEAFILE_MYSQL_ROOT_PASSWORD:-}
@@ -35,6 +38,7 @@ services:
       retries: 10
 
   memcached:
+    restart: unless-stopped
     image: memcached:1.6.29
     entrypoint: memcached -m 256
     healthcheck:
@@ -48,6 +52,7 @@ services:
       retries: 10
 
   seafile:
+    restart: unless-stopped
     image: seafileltd/seafile-mc:12.0-latest
     volumes:
       - seafile-data:/shared

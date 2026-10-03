@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   whatomate:
     image: shridh0r/whatomate:0.1.1-beta-0.16.1

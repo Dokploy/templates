@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   db:
+    restart: unless-stopped
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -13,6 +14,7 @@ services:
 
 
   phpmyadmin:
+    restart: unless-stopped
     image: phpmyadmin/phpmyadmin:5.2.1
     environment:
       PMA_HOST: db

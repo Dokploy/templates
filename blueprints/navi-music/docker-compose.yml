@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   navi-music:
     # 4.1.0 is the newest release that can boot without a YouTube OAuth2 refresh

@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  ai_fiesta:
+  open-fiesta:
     image: ghcr.io/jaainil/open-fiesta-ghcr:latest
     restart: unless-stopped
     environment:

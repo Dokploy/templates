@@ -1,4 +1,6 @@
 # dokploy: allow-host-ports — the UniFi controller serves its portal over HTTPS with a self-signed certificate on 8443 and this template defines no Traefik domain; users and UniFi devices reach the controller directly on the host.
+version: "3.8"
+
 services:
   unifi-network-application:
     image: lscr.io/linuxserver/unifi-network-application:latest

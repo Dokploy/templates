@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   twenty-change-vol-ownership:
+    restart: unless-stopped
     image: ubuntu
     user: root
 

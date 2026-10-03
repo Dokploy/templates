@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   photoprism:
+    restart: unless-stopped
     image: photoprism/photoprism:latest
     stop_grace_period: 10s
     depends_on:

@@ -5,7 +5,7 @@ main_domain = "${domain}"
 mounts = []
 
 [[config.domains]]
-serviceName = "roundcubemail"
+serviceName = "roundcube"
 port = 80
 host = "${main_domain}"
 

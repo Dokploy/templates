@@ -1,4 +1,6 @@
 # dokploy: allow-host-ports — WireGuard VPN traffic is raw UDP on 51820; Traefik cannot route it, so the port must be published on the host.
+version: "3.8"
+
 volumes:
   etc_wireguard:
 

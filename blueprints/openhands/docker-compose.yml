@@ -1,4 +1,6 @@
 # The 'version' attribute is obsolete and has been removed.
+version: "3.8"
+
 services:
   openhands:
     # Corrected the Docker image to what appears to be the official registry path.

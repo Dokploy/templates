@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   evolution-api:
     image: evoapicloud/evolution-api:v2.3.7

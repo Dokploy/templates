@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   yuvomi:
     image: ghcr.io/ulsklyc/yuvomi:1.85.0

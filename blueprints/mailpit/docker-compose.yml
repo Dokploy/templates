@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   mailpit:
     image: axllent/mailpit:v1.22.3

@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   it-tools:
+    restart: unless-stopped
     image: corentinth/it-tools:latest
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:80"]

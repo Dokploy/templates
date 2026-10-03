@@ -1,7 +1,8 @@
-version: "3"
+version: "3.8"
 
 services:
   codex:
+    restart: unless-stopped
     image: ghcr.io/codex-team/codex.docs:v2.2
     expose:
       - "3000"
@@ -18,6 +19,7 @@ services:
       - mongo
 
   mongo:
+    restart: unless-stopped
     image: mongo:4
     environment:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}

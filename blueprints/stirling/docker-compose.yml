@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
-  stirling-pdf:
+  stirling:
+    restart: unless-stopped
     image: docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest
     expose:
       - 8080

@@ -1,12 +1,15 @@
 # See https://docs.flagsmith.com/deployment/docker for more information on running Flagsmith in Docker
 # This Docker Compose file will run the entire Flagsmith Platform
 
+version: "3.8"
+
 volumes:
   pgdata:
 
 
 services:
   postgres:
+    restart: unless-stopped
     image: postgres:15.5-alpine
     environment:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
@@ -21,6 +24,7 @@ services:
       start_period: 20s
 
   flagsmith:
+    restart: unless-stopped
     image: docker.flagsmith.com/flagsmith/flagsmith:2.177.1
     environment:
       # All environments variables are available here:
@@ -63,6 +67,7 @@ services:
   # The flagsmith_processor service is only needed if TASK_RUN_METHOD set to TASK_PROCESSOR
   # in the application environment
   flagsmith-task-processor:
+    restart: unless-stopped
     image: docker.flagsmith.com/flagsmith/flagsmith:2.177.1
     environment:
       DATABASE_URL: postgresql://postgres:${DATABASE_PASSWORD}@postgres:5432/flagsmith

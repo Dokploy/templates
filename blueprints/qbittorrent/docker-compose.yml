@@ -7,6 +7,8 @@
 # - Access via your configured domain (HTTPS) after deployment
 # - Change the default password immediately after first login
 #
+version: "3.8"
+
 services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
@@ -19,8 +21,9 @@ services:
     volumes:
       - qb_config:/config
       - qb_downloads:/downloads
-    ports:
+    expose:
       - 8080
+    ports:
       - 6881:6881
       - 6881:6881/udp
     labels:

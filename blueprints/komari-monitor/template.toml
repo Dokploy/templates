@@ -6,7 +6,7 @@ admin_password = "${password:16}"
 mounts = []
 
 [[config.domains]]
-serviceName = "komari"
+serviceName = "komari-monitor"
 port = 25_774
 host = "${main_domain}"
 

@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   ontime:
     image: getontime/ontime:v3.8.0

@@ -6,6 +6,8 @@
 # Dokploy: Kong is exposed on port 8000 for domain routing. Storage uses local file
 # backend by default; edit the storage service env in this file to switch to S3/MinIO.
 
+version: "3.8"
+
 name: supabase
 
 services:

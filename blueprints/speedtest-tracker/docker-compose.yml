@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   speedtest-tracker:
     image: lscr.io/linuxserver/speedtest-tracker:latest

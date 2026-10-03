@@ -1,4 +1,6 @@
 # the webserver can take a while to start up, so don't be alarmed if it takes a few minutes to get a response
+version: "3.8"
+
 services:
   vaultwarden:
     image: vaultwarden/server:1.36.0

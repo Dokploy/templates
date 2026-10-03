@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   booklore:
+    restart: unless-stopped
     image: ghcr.io/booklore-app/booklore:${BOOKLORE_IMAGE_TAG}
     environment:
       - DATABASE_URL=jdbc:mariadb://mariadb:3306/${MYSQL_DATABASE}

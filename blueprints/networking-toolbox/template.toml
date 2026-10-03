@@ -4,7 +4,7 @@ main_domain = "${domain}"
 [config]
 
 [[config.domains]]
-serviceName = "app"
+serviceName = "networking-toolbox"
 port = 3000
 host = "${main_domain}"
 

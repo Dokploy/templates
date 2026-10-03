@@ -1,5 +1,7 @@
+version: "3.8"
+
 services:
-  autobase-console:
+  autobase:
     image: autobase/console:2.7.2
     restart: unless-stopped
     expose:

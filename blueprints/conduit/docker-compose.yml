@@ -1,8 +1,8 @@
 # From Conduit's official documentation: https://docs.conduit.rs/deploying/docker.html#docker-compose
-version: '3'
+version: "3.8"
 
 services:
-    homeserver:
+    conduit:
         image: registry.gitlab.com/famedly/conduit/matrix-conduit:v0.9.0
         restart: unless-stopped
         volumes:

@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   postgresus:
     # Postgresus was renamed upstream to Databasus (https://github.com/databasus/databasus).

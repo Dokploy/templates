@@ -8,7 +8,7 @@ timezone = "Europe/Vienna"
 [config]
 mounts = []
 [[config.domains]]
-serviceName = "tor"
+serviceName = "tor-browser"
 port = 5800
 host = "${main_domain}"
 

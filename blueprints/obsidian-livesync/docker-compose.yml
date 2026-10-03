@@ -1,6 +1,7 @@
 version: "3.8"
 services:
-  couchdb:
+  obsidian-livesync:
+    restart: unless-stopped
     image: couchdb:latest
     user: "0:0"
     environment:

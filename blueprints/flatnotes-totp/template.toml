@@ -8,7 +8,7 @@ totp_key = "${password:32}"
 [config]
 mounts = []
 [[config.domains]]
-serviceName = "flatnotes"
+serviceName = "flatnotes-totp"
 port = 8080
 host = "${main_domain}"
 path = "/"

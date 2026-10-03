@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  app:
+  networking-toolbox:
     image: lissy93/networking-toolbox:latest
     expose:
       - "3000"

@@ -3,6 +3,8 @@
 # Default Credentials
 #   USERNAME: admin
 #   PASSWORD: admin
+version: "3.8"
+
 services:
   chibisafe:
     image: chibisafe/chibisafe:latest

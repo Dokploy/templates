@@ -1,3 +1,5 @@
+version: "3.8"
+
 volumes:
   postgres-data:
     driver: local
@@ -6,6 +8,7 @@ volumes:
 
 services:
   postgres:
+    restart: unless-stopped
     image: postgres
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -20,6 +23,7 @@ services:
       retries: 10
 
   kestra:
+    restart: unless-stopped
     image: kestra/kestra:latest
     pull_policy: always
     # Note that this setup with a root user is intended for development purpose.

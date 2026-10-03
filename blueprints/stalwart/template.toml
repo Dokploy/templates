@@ -3,6 +3,6 @@ main_domain = "${domain}"
 
 [config]
 [[config.domains]]
-serviceName = "stalwart-mail"
+serviceName = "stalwart"
 port = 8_080
 host = "${main_domain}"

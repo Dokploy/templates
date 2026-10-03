@@ -9,6 +9,8 @@
 # You should also update the `BASE_URL` environment variable when
 # updating the domain entries with your custom domain.
 
+version: "3.8"
+
 services:
   rybbit_clickhouse:
     image: clickhouse/clickhouse-server:25.5

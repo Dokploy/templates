@@ -1,3 +1,5 @@
+version: "3.8"
+
 x-webapp-env: &webapp-env
   LOGIN_ORIGIN: &trigger-url ${TRIGGER_PROTOCOL:-http}://${TRIGGER_DOMAIN:-localhost:3040}
   APP_ORIGIN: *trigger-url

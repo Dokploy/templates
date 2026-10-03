@@ -1,8 +1,11 @@
 # Self-host guide:
 # - https://strapi.io/blog/how-to-self-host-your-headless-cms-using-docker-compose
 
+version: "3.8"
+
 services:
   strapi:
+    restart: unless-stopped
     image: elestio/strapi-production:v5.33.0
     environment:
       # https://docs.strapi.io/cms/configurations/environment
@@ -37,6 +40,7 @@ services:
       retries: 5
 
   strapi_postgres:
+    restart: unless-stopped
     image: postgres:18
     environment:
       POSTGRES_DB: strapi

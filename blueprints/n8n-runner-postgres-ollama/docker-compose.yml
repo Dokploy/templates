@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   n8n:
     image: n8nio/n8n:latest
@@ -101,6 +103,7 @@ services:
       - ollama_storage:/home/node/.ollama
       
   init-ollama:
+    restart: "no"
     image: ollama/ollama:latest
     volumes:
       - ollama_storage:/home/node/.ollama

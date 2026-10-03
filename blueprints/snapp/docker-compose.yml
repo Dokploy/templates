@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   snapp:
+    restart: unless-stopped
     image: uraniadev/snapp:0.9-rc-020
     expose:
       - 3000

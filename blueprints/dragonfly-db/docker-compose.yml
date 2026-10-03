@@ -1,6 +1,7 @@
-version: '3.8'
+version: "3.8"
 services:
-  dragonflydb:
+  dragonfly-db:
+    restart: unless-stopped
     image: 'docker.dragonflydb.io/dragonflydb/dragonfly'
     ulimits:
       memlock: -1

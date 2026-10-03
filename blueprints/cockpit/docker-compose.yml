@@ -1,7 +1,8 @@
-version: "3"
+version: "3.8"
 
 services:
   cockpit:
+    restart: unless-stopped
     image: cockpithq/cockpit:core-2.11.0
     expose:
       - "80"
@@ -17,6 +18,7 @@ services:
       - mongo
 
   mongo:
+    restart: unless-stopped
     image: mongo:4
     environment:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}

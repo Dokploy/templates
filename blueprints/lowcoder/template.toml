@@ -6,7 +6,7 @@ api_secret = "${password:32}"
 
 [config]
 [[config.domains]]
-serviceName = "lowcoder-api-service"
+serviceName = "lowcoder"
 port = 3000
 host = "${main_domain}"
 

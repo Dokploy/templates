@@ -1,4 +1,4 @@
-version: "2.3"
+version: "3.8"
 services:
   emby:
     image: emby/embyserver
@@ -17,4 +17,4 @@ services:
       - 8920 # HTTPS port
     devices:
       - /dev/dri:/dev/dri # VAAPI/NVDEC/NVENC render nodes
-    restart: on-failure
+    restart: unless-stopped

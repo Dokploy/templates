@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   jenkins:
+    restart: unless-stopped
     image: jenkins/jenkins:latest
     volumes:
       - jenkins-home:/var/jenkins_home

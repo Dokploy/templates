@@ -30,7 +30,7 @@ env = [
 ]
 
 [[config.domains]]
-serviceName = "pds"
+serviceName = "bluesky-pds"
 port = 3000
 host = "${main_domain}"
 path = "/"

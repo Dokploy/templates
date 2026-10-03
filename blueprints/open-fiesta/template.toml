@@ -3,7 +3,7 @@ main_domain = "${domain}"
 
 [config]
 [[config.domains]]
-serviceName = "ai_fiesta"
+serviceName = "open-fiesta"
 port = 3000
 host = "${main_domain}"
 

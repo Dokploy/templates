@@ -10,6 +10,8 @@
 #
 # All domains will be automatically configured in Dokploy
 
+version: "3.8"
+
 services:
   # ============================================
   # Infrastructure Services

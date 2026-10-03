@@ -1,3 +1,5 @@
+version: "3.8"
+
 x-environment: &environment
   environment:
     WEBAPP_URL: ${WEBAPP_URL}

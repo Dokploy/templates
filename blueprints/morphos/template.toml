@@ -4,7 +4,7 @@ main_domain = "${domain}"
 [config]
 mounts = []
 [[config.domains]]
-serviceName = "morphos-server"
+serviceName = "morphos"
 port = 8080
 host = "${main_domain}"
 tls = true

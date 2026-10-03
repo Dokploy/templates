@@ -6,7 +6,7 @@ server_jarfile = "server.jar"
 
 [config]
 [[config.domains]]
-serviceName = "java-app"
+serviceName = "java"
 port = 25565
 host = "${domain}"
 

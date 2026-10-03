@@ -1,3 +1,5 @@
+version: "3.8"
+
 x-custom-image: &custom_image
   image: ${IMAGE_NAME:-docker.io/frappe/erpnext}:${VERSION:-version-15}
   pull_policy: ${PULL_POLICY:-always}
@@ -7,6 +9,7 @@ x-custom-image: &custom_image
 
 services:
   backend:
+    restart: unless-stopped
     <<: *custom_image
     volumes:
       - sites:/home/frappe/frappe-bench/sites
@@ -20,6 +23,7 @@ services:
       retries: 30
 
   frontend:
+    restart: unless-stopped
     <<: *custom_image
     command:
       - nginx-entrypoint.sh
@@ -51,6 +55,7 @@ services:
       retries: 30
 
   queue-default:
+    restart: unless-stopped
     <<: *custom_image
     command:
       - bench
@@ -73,6 +78,7 @@ services:
         required: true
 
   queue-long:
+    restart: unless-stopped
     <<: *custom_image
     command:
       - bench
@@ -95,6 +101,7 @@ services:
         required: true
 
   queue-short:
+    restart: unless-stopped
     <<: *custom_image
     command:
       - bench
@@ -117,6 +124,7 @@ services:
         required: true
 
   scheduler:
+    restart: unless-stopped
     <<: *custom_image
     healthcheck:
       test:
@@ -137,6 +145,7 @@ services:
       - sites:/home/frappe/frappe-bench/sites
 
   websocket:
+    restart: unless-stopped
     <<: *custom_image
     healthcheck:
       test:
@@ -157,6 +166,7 @@ services:
       - sites:/home/frappe/frappe-bench/sites
 
   configurator:
+    restart: "no"
     <<: *custom_image
     deploy:
       mode: replicated
@@ -185,6 +195,7 @@ services:
       - sites:/home/frappe/frappe-bench/sites
 
   create-site:
+    restart: "no"
     <<: *custom_image
     deploy:
       mode: replicated
@@ -223,6 +234,7 @@ services:
       INSTALL_APP_ARGS: ${INSTALL_APP_ARGS}
 
   migration:
+    restart: "no"
     <<: *custom_image
     deploy:
       mode: replicated
@@ -242,6 +254,7 @@ services:
       - sites:/home/frappe/frappe-bench/sites
 
   db:
+    restart: unless-stopped
     image: mariadb:10.6
     deploy:
       mode: replicated
@@ -264,6 +277,7 @@ services:
       - db-data:/var/lib/mysql
 
   redis-cache:
+    restart: unless-stopped
     deploy:
       restart_policy:
         condition: always
@@ -280,6 +294,7 @@ services:
       retries: 3
 
   redis-queue:
+    restart: unless-stopped
     deploy:
       restart_policy:
         condition: always
@@ -296,6 +311,7 @@ services:
       retries: 3
 
   redis-socketio:
+    restart: unless-stopped
     deploy:
       restart_policy:
         condition: always

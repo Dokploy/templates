@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   forgejo:
     image: codeberg.org/forgejo/forgejo:16

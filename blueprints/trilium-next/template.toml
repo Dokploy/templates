@@ -8,6 +8,6 @@ env = [
 mount = []
 
 [[config.domains]]
-serviceName = "trilium_next"
+serviceName = "trilium-next"
 port = 8080
 host = "${main_domain}"

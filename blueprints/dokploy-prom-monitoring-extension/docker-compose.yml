@@ -1,5 +1,7 @@
+version: "3.8"
+
 services:
-  dokploy-monitoring:
+  dokploy-prom-monitoring-extension:
     image: dokploy/monitoring:canary
     restart: unless-stopped
     env_file:

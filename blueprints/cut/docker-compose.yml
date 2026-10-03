@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   cut:
     image: ghcr.io/mendylanda/cut:latest

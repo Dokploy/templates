@@ -28,6 +28,7 @@ services:
         condition: service_completed_successfully
 
   migration:
+    restart: "no"
     image: ghcr.io/toeverything/affine:stable
     command: ["sh", "-c", "node ./scripts/self-host-predeploy.js"]
     environment:

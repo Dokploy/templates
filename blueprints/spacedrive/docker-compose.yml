@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
-  server:
+  spacedrive:
+    restart: unless-stopped
     image: ghcr.io/spacedriveapp/spacedrive/server:latest
     expose:
       - 8080

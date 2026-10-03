@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   heyform:
     image: heyform/community-edition:v0.1.0

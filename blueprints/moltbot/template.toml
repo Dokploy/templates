@@ -4,7 +4,7 @@ gateway_token = "${password:32}"
 
 [config]
 [[config.domains]]
-serviceName = "moltbot-gateway"
+serviceName = "moltbot"
 port = 18789
 host = "${domain}"
 

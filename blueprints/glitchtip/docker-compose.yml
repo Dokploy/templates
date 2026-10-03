@@ -42,6 +42,7 @@ services:
     volumes:
       - uploads:/code/uploads
   migrate:
+    restart: "no"
     image: glitchtip/glitchtip:6.1.0
     depends_on: *default-depends_on
     command: ./bin/run-migrate.sh

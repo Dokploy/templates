@@ -5,6 +5,8 @@
 # + plugin_daemon, fronted by a lightweight internal nginx gateway that
 # mirrors the upstream path routing (TLS terminates at Traefik).
 
+version: "3.8"
+
 x-shared-api-env: &shared-api-env
   LOG_LEVEL: INFO
   DEPLOY_ENV: PRODUCTION

@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   shlink:
+    restart: unless-stopped
     image: shlinkio/shlink:stable
     environment:
       - INITIAL_API_KEY=${INITIAL_API_KEY}
@@ -14,6 +17,7 @@ services:
       timeout: 10s
       retries: 3
   shlink-web:
+    restart: unless-stopped
     image: shlinkio/shlink-web-client
     environment:
       - SHLINK_SERVER_API_KEY=${INITIAL_API_KEY}

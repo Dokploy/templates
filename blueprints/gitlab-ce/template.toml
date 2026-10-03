@@ -9,6 +9,6 @@ env = [
 ]
 
 [[config.domains]]
-serviceName = "gitlab"
+serviceName = "gitlab-ce"
 port = 80
 host = "${main_domain}"

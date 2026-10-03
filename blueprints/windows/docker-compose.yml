@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   windows:
+    restart: unless-stopped
     image: dockurr/windows:4.00
     volumes:
       - win-storage:/storage

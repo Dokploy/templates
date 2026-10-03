@@ -4,6 +4,8 @@
 #     USERNAME: admin@admin.com
 #     PASSWORD: admin
 
+version: "3.8"
+
 services:
   mage-ai:
     image: mageai/mageai:0.9.78

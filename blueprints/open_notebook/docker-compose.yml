@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   surrealdb:
+    restart: unless-stopped
     image: surrealdb/surrealdb:v2
     expose:
       - 8000
@@ -11,6 +12,7 @@ services:
     user: root
 
   open_notebook:
+    restart: unless-stopped
     image: lfnovo/open_notebook:latest
     expose:
       - 8502

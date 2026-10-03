@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   migrations:
@@ -33,6 +33,7 @@ services:
         condition: service_healthy
 
   web:
+    restart: unless-stopped
     image: mediacms/mediacms:latest
     deploy:
       replicas: 1
@@ -58,6 +59,7 @@ services:
       - migrations
 
   celery_beat:
+    restart: unless-stopped
     image: mediacms/mediacms:latest
     volumes:
       - mediacms_data:/home/mediacms.io/mediacms/media
@@ -80,6 +82,7 @@ services:
       - redis
 
   celery_worker:
+    restart: unless-stopped
     image: mediacms/mediacms:latest
     deploy:
       replicas: 1

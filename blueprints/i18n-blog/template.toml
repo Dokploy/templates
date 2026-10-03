@@ -6,7 +6,7 @@ recovery_mode = "false"
 [config]
 mounts = []
 [[config.domains]]
-serviceName = "kuno"
+serviceName = "i18n-blog"
 port = 80
 host = "${main_domain}"
 

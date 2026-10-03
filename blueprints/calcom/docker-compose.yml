@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   postgres:
+    restart: unless-stopped
     image: postgres:16-alpine
 
     volumes:
@@ -11,6 +14,7 @@ services:
       - DATABASE_URL=postgres://postgres:password@postgres:5432/db
 
   calcom:
+    restart: unless-stopped
     image: calcom/cal.com:v2.7.6
     depends_on:
       - postgres

@@ -11,11 +11,11 @@ env = [
 mounts = []
 
 [[config.domains]]
-serviceName = "autobase-console"
+serviceName = "autobase"
 port = 80
 host = "${main_domain}"
 
 [[config.domains]]
-serviceName = "autobase-console"
+serviceName = "autobase"
 port = 8_080
 host = "${api_domain}"

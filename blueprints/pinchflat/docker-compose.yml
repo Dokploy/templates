@@ -1,6 +1,7 @@
-version: "3"
+version: "3.8"
 services:
   pinchflat:
+    restart: unless-stopped
     image: ghcr.io/kieraneglin/pinchflat:latest
     volumes:
       - ../files/config:/config

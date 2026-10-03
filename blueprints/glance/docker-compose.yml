@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   glance:
+    restart: unless-stopped
     image: glanceapp/glance
     volumes:
       - ../files/app/config/:/app/config

@@ -1,5 +1,7 @@
+version: "3.8"
+
 services:
-  whatsapp:
+  go-whatsapp-web-multidevice:
     image: aldinokemal2104/go-whatsapp-web-multidevice
     restart: always
     expose:

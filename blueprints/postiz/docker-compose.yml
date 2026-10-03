@@ -73,6 +73,7 @@ services:
       - postiz-redis-data:/data
 
   temporal-elasticsearch:
+    restart: unless-stopped
     image: elasticsearch:7.17.27
     environment:
       - cluster.routing.allocation.disk.threshold_enabled=true
@@ -86,6 +87,7 @@ services:
       - temporal-es-data:/usr/share/elasticsearch/data
 
   temporal-postgresql:
+    restart: unless-stopped
     image: postgres:16
     environment:
       POSTGRES_PASSWORD: ${TEMPORAL_PASSWORD}
@@ -99,6 +101,7 @@ services:
       retries: 5
 
   temporal:
+    restart: unless-stopped
     image: temporalio/auto-setup:1.28.1
     depends_on:
       temporal-postgresql:

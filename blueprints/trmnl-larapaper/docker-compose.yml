@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   trmnl-larapaper:
     image: ghcr.io/usetrmnl/larapaper:0.32.1

@@ -4,7 +4,7 @@ main_domain = "${domain}"
 [config]
 mounts = []
 [[config.domains]]
-serviceName = "cookiecloud"
+serviceName = "cookie-cloud"
 port = 8088
 host = "${main_domain}"
 

@@ -1,9 +1,11 @@
+version: "3.8"
+
 services:
   answer:
     image: apache/answer:1.4.1
     expose:
       - '80'
-    restart: on-failure
+    restart: unless-stopped
     volumes:
       - answer-data:/data
     depends_on:

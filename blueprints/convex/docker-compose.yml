@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   backend:
+    restart: unless-stopped
     image: ghcr.io/get-convex/convex-backend:5cdea511cd6527a95dd24152ea0d3c3bb2ab379f
     expose:
       - "3210"
@@ -24,6 +27,7 @@ services:
       start_period: 5s
 
   dashboard:
+    restart: unless-stopped
     image: ghcr.io/get-convex/convex-dashboard:5cdea511cd6527a95dd24152ea0d3c3bb2ab379f
     expose:
       - "6791"

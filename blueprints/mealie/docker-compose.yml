@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
   mealie:
+    restart: unless-stopped
     image: ghcr.io/mealie-recipes/mealie:latest
     deploy:
       resources:

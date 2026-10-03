@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   all-in-one:
     image: daveearley/hi.events-all-in-one:v1.9.0-beta

@@ -5,6 +5,8 @@
 # presigned S3 URLs that the browser fetches directly (e.g. media in
 # traces) - it cannot resolve the internal "minio" hostname.
 
+version: "3.8"
+
 services:
   postgres:
     image: docker.io/postgres:17

@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   dolibarr:
     image: dolibarr/dolibarr:21.0.0

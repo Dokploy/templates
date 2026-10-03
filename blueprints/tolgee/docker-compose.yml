@@ -1,8 +1,9 @@
-version: "3"
+version: "3.8"
 
 
 services:
-  app:
+  tolgee:
+    restart: unless-stopped
     image: tolgee/tolgee:latest
     volumes:
       - ./data:/data

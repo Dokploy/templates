@@ -1,3 +1,5 @@
+version: "3.8"
+
 name: usesend-prod
 
 services:
@@ -30,6 +32,7 @@ services:
     command: ["redis-server", "--maxmemory-policy", "noeviction"]
 
   usesend-storage-prod:
+    restart: unless-stopped
     image: minio/minio:latest
 
     expose:

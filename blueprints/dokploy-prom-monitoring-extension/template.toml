@@ -9,7 +9,7 @@ cpu_threshold = "80"
 memory_threshold = "85"
 
 [[config.domains]]
-serviceName = "dokploy-monitoring"
+serviceName = "dokploy-prom-monitoring-extension"
 port = 3001
 host = "${main_domain}"
 

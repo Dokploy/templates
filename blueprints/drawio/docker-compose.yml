@@ -1,12 +1,14 @@
-version: '3'
+version: "3.8"
 services:
   plantuml-server:
+    restart: unless-stopped
     image: plantuml/plantuml-server
     expose:
       - "8080"
     volumes:
       - fonts_volume:/usr/share/fonts/drawio
   image-export:
+    restart: unless-stopped
     image: jgraph/export-server
     expose:
       - "8000"
@@ -15,6 +17,7 @@ services:
     environment:
       - DRAWIO_BASE_URL=${DRAWIO_BASE_URL}
   drawio:
+    restart: unless-stopped
     image: jgraph/drawio:24.7.17
     expose:
       - "8080"

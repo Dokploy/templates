@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   openresty-manager:
    image: uusec/openresty-manager:latest

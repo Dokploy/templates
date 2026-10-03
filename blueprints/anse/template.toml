@@ -5,7 +5,7 @@ site_password = "${password:16}"
 
 [config]
 [[config.domains]]
-serviceName = "anse-demo"
+serviceName = "anse"
 port = 3000
 host = "${main_domain}"
 

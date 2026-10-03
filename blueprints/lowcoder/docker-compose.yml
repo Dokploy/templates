@@ -1,8 +1,8 @@
-version: "3"
+version: "3.8"
 
 services:
   ## Start Lowcoder (all-in-one)
-  lowcoder-api-service:
+  lowcoder:
     image: lowcoderorg/lowcoder-ce:2.6.4
     environment:
       REDIS_ENABLED: "true"

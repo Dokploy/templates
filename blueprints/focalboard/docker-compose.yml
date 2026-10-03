@@ -1,4 +1,4 @@
-version: '3'
+version: "3.8"
 
 services:
   focalboard:
@@ -13,6 +13,7 @@ services:
       - DB_CONFIG=postgres://${POSTGRES_USER}:${POSTGRES_password}@postgres:5432/${postgres_db}?sslmode=disable
 
   postgres:
+    restart: unless-stopped
     image: postgres:17
     environment:
       - POSTGRES_USER

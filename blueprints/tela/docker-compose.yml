@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   proxy:
     image: ghcr.io/zcag/tela-proxy:0.7.0

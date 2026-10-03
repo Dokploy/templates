@@ -1,7 +1,8 @@
-version: "3"
+version: "3.8"
 
 services:
-  cloudcmd:
+  cloudcommander:
+    restart: unless-stopped
     image: coderaiser/cloudcmd:18.5.1
     expose:
       - "80"

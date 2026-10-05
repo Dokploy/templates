@@ -13,7 +13,7 @@ services:
       - ENABLE_QUEUE_WORKER=true
       - TRUSTED_PROXIES=*
       - LOG_CHANNEL=stderr
-      - APP_DISPLAY_TIMEZONE=${TIMEZONE}
+      - APP_DISPLAY_TIMEZONE=${APP_DISPLAY_TIMEZONE}
     volumes:
       - databasement-data:/data
     healthcheck:

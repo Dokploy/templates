@@ -18,6 +18,8 @@ services:
       - xpack.security.http.ssl.enabled=false
       - bootstrap.memory_lock=true
       - node.store.allow_mmap=false
+      - xpack.ml.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
     mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
@@ -34,7 +36,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 60
-      start_period: 30s
+      start_period: 120s
 
   kibana:
     image: docker.elastic.co/kibana/kibana:9.5.3

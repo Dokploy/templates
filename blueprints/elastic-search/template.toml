@@ -18,7 +18,7 @@ env = [
   "KIBANA_REPORTING_ENCRYPTION_KEY=${kibana_reporting_encryption_key}",
   "KIBANA_PUBLIC_URL=https://${main_domain}",
   "ELASTICSEARCH_PUBLIC_URL=https://${api_domain}",
-  "ES_MEM_LIMIT=1073741824",
+  "ES_MEM_LIMIT=1610612736",
   "KB_MEM_LIMIT=1073741824"
 ]
 mounts = []

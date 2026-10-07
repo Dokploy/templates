@@ -16,15 +16,10 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=false
-      - bootstrap.memory_lock=true
       - node.store.allow_mmap=false
       - xpack.ml.enabled=false
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
     mem_limit: ${ES_MEM_LIMIT}
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
     expose:
       - "9200"
     volumes:

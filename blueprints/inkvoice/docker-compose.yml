@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   inkvoice:
-    image: ghcr.io/pigontech/inkvoice:0.1.0
+    image: ghcr.io/pigontech/inkvoice:0.3.0
     restart: unless-stopped
     environment:
       - ADMIN_USER=${ADMIN_USER}
@@ -17,6 +17,12 @@ services:
       - inkvoice-data:/app/data
     expose:
       - 3000
+    # Bun sizes its heap to the memory it can see. The cap keeps Inkvoice
+    # around 60 MB instead of ~120 MB uncapped.
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
 volumes:
   inkvoice-data:

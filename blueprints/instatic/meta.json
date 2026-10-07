@@ -1,7 +1,7 @@
 {
   "id": "instatic",
   "name": "Instatic",
-  "version": "0.0.16",
+  "version": "0.0.18",
   "description": "Instatic is a self-hosted, open-source visual CMS combining a canvas editor, content engine, and static site publisher, producing clean semantic HTML with no framework runtime shipped to visitors.",
   "logo": "instatic.svg",
   "links": {

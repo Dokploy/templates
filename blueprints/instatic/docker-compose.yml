@@ -2,14 +2,14 @@ version: "3.8"
 
 services:
   instatic-init:
-    image: ghcr.io/corebunch/instatic:0.0.16
+    image: ghcr.io/corebunch/instatic:0.0.18
     user: "0:0"
     entrypoint: ["chown", "-R", "bun:bun", "/app/storage"]
     volumes:
       - instatic-storage:/app/storage
 
   instatic:
-    image: ghcr.io/corebunch/instatic:0.0.16
+    image: ghcr.io/corebunch/instatic:0.0.18
     restart: unless-stopped
     env_file:
       - .env

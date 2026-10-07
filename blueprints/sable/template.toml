@@ -12,3 +12,6 @@ host = "${main_domain}"
 [config.env]
 TZ = "UTC"
 SABLE_WEB_UPDATES = "true"
+# Host port for DNS (TCP+UDP). Port 53 is usually already in use on the host
+# (systemd-resolved); free it first, then set this to 53 to serve standard DNS.
+SABLE_DNS_PORT = "1053"

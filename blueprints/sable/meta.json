@@ -1,7 +1,7 @@
 {
   "id": "sable",
   "name": "Sable",
-  "version": "latest",
+  "version": "1.6.1",
   "description": "Sable is a modern, high-performance DNS platform with recursive and authoritative DNS, blocking, DNSSEC, observability, clustering, and a polished web console.",
   "logo": "logo.svg",
   "links": {

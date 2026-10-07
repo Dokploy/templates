@@ -33,30 +33,45 @@ services:
       retries: 20
     restart: unless-stopped
   storage:
-    image: quay.io/minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e
+    # SeaweedFS S3 gateway (MinIO images are no longer publicly pullable).
+    image: chrislusf/seaweedfs:4.48
+    entrypoint:
+    - /bin/sh
+    - -c
     command:
-    - server
-    - /data
+    - |
+      set -e
+      printf '{"identities":[{"name":"orbit","credentials":[{"accessKey":"orbit","secretKey":"%s"}],"actions":["Admin","Read","Write","List","Tagging"]}]}' "$$MINIO_PASSWORD" > /tmp/s3.json
+      exec weed server -dir=/data -ip.bind=0.0.0.0 -s3 -s3.port=9000 -s3.config=/tmp/s3.json
     environment:
-      MINIO_ROOT_USER: orbit
-      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD:?required}
-      MINIO_API_CORS_ALLOW_ORIGIN: ${ORBIT_APP_URL:?required}
+      MINIO_PASSWORD: ${MINIO_PASSWORD:?required}
     volumes:
     - storage:/data
     healthcheck:
       test:
-      - CMD
-      - mc
-      - ready
-      - local
+      - CMD-SHELL
+      - wget -q -O /dev/null http://127.0.0.1:9000/healthz || exit 1
       interval: 5s
       timeout: 3s
-      retries: 20
+      retries: 30
     restart: unless-stopped
     expose:
     - '9000'
   bucket:
+    # Reuses the mc client from orbit-bucket to create the bucket and its CORS rule on SeaweedFS.
     image: ghcr.io/noveum/orbit-bucket:2026.09.24
+    entrypoint:
+    - /bin/sh
+    - -c
+    command:
+    - |
+      set -eu
+      until mc alias set orbit http://storage:9000 orbit "$$MINIO_PASSWORD" --api S3v4; do sleep 2; done
+      until mc mb --ignore-existing orbit/orbit-uploads; do sleep 2; done
+      printf '<CORSConfiguration><CORSRule><AllowedOrigin>%s</AllowedOrigin><AllowedMethod>GET</AllowedMethod><AllowedMethod>PUT</AllowedMethod><AllowedMethod>HEAD</AllowedMethod><AllowedHeader>*</AllowedHeader><ExposeHeader>ETag</ExposeHeader><MaxAgeSeconds>3600</MaxAgeSeconds></CORSRule></CORSConfiguration>' "$$ORBIT_APP_URL" > /tmp/cors.xml
+      until mc cors set orbit/orbit-uploads /tmp/cors.xml; do sleep 2; done
+      touch /tmp/initialized
+      exec tail -f /dev/null
     environment:
       MINIO_PASSWORD: ${MINIO_PASSWORD:?required}
       ORBIT_APP_URL: ${ORBIT_APP_URL:?required}

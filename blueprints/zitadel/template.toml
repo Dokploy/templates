@@ -5,7 +5,7 @@ zitadel_masterkey = "${password:32}"
 admin_username = "${username}"
 admin_email = "${email}"
 admin_password = "AdminPassword123!"
-tls_mode = "${disabled}"
+tls_mode = "disabled"
 
 [config]
 mounts = []

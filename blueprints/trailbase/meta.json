@@ -5,7 +5,7 @@
   "description": "TrailBase is a blazingly fast, open-source application server with type-safe APIs, built-in WebAssembly runtime, realtime, auth, and admin UI built on Rust, SQLite & Wasmtime.",
   "logo": "logo.svg",
   "links": {
-    "github": "https://github.com/trailbase/trailbase",
+    "github": "https://github.com/trailbaseio/trailbase",
     "website": "https://trailbase.io/",
     "docs": "https://trailbase.io/getting-started/install"
   },

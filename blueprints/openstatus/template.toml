@@ -1,0 +1,34 @@
+[variables]
+dashboard_domain = "${domain}"
+status_page_domain = "${domain}"
+auth_secret = "${base64:32}"
+cron_secret = "${password:32}"
+super_admin_token = "${password:32}"
+
+[config]
+
+# Dashboard (admin UI — log in here)
+[[config.domains]]
+serviceName = "dashboard"
+port = 3000
+host = "${dashboard_domain}"
+
+# Public status pages (served at /<page-slug>)
+[[config.domains]]
+serviceName = "status-page"
+port = 3000
+host = "${status_page_domain}"
+
+[config.env]
+DASHBOARD_HOST = "${dashboard_domain}"
+STATUS_PAGE_HOST = "${status_page_domain}"
+AUTH_SECRET = "${auth_secret}"
+CRON_SECRET = "${cron_secret}"
+SUPER_ADMIN_TOKEN = "${super_admin_token}"
+# Optional: Resend API key for outgoing e-mails. Without it, magic-link
+# login URLs are printed to the dashboard container logs instead.
+RESEND_API_KEY = ""
+# Optional: Tinybird analytics for the private-location ingest server
+# (see instructions — analytics are disabled/no-op by default)
+TINYBIRD_URL = ""
+TINYBIRD_TOKEN = ""

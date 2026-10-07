@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+app_key = "${base64:32}"
+db_password = "${password}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "my-links"
+port = 3_333
+host = "${main_domain}"
+
+[config.env]
+APP_KEY = "${app_key}"
+APP_URL = "http://${main_domain}"
+DB_PASSWORD = "${db_password}"

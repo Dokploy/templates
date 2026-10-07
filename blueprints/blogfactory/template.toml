@@ -1,0 +1,28 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:48}"
+minio_root_user = "blogfactory"
+minio_root_password = "${password:48}"
+jwt_secret = "${base64:48}"
+encryption_secret = "${base64:48}"
+cron_secret = "${base64:48}"
+admin_email = "${email}"
+
+[config]
+env = [
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "MINIO_ROOT_USER=${minio_root_user}",
+  "MINIO_ROOT_PASSWORD=${minio_root_password}",
+  "JWT_SECRET=${jwt_secret}",
+  "API_KEY_ENCRYPTION_SECRET=${encryption_secret}",
+  "CRON_SECRET=${cron_secret}",
+  "ADMIN_EMAILS=${admin_email}",
+  "BLOGFACTORY_ALLOW_SIGNUP=true",
+  "BLOGFACTORY_URL=https://${main_domain}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "web"
+port = 80
+host = "${main_domain}"

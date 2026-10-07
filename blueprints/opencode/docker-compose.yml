@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  opencode:
+    image: ghcr.io/anomalyco/opencode:1.18.32
+    restart: unless-stopped
+    entrypoint: []
+    # The official image is minimal (no git/node). Provision a toolchain on
+    # start-up so the agent can clone repos and run project commands.
+    # Set TOOLCHAIN_PACKAGES to "" to skip it, or to e.g. "git go" for another stack.
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        apk add --no-cache $${TOOLCHAIN_PACKAGES} >/dev/null 2>&1 || true
+        if [ -n "$${GIT_TOKEN}" ] && [ -n "$${GIT_REPO_URL}" ]; then
+          host=$$(printf '%s' "$${GIT_REPO_URL}" | sed -E 's#^https?://([^/]+)/.*#\1#')
+          git config --global credential.helper store
+          printf 'https://x-access-token:%s@%s\n' "$${GIT_TOKEN}" "$$host" > /root/.git-credentials
+        fi
+        if [ -n "$${GIT_REPO_URL}" ]; then
+          dir="/workspace/$$(basename "$${GIT_REPO_URL}" .git)"
+          [ -d "$$dir/.git" ] || git clone "$${GIT_REPO_URL}" "$$dir" || true
+        fi
+        exec opencode serve --hostname 0.0.0.0 --port 4096
+    working_dir: /workspace
+    expose:
+      - 4096
+    environment:
+      - OPENCODE_SERVER_USERNAME=${OPENCODE_SERVER_USERNAME}
+      - OPENCODE_SERVER_PASSWORD=${OPENCODE_SERVER_PASSWORD}
+      - TOOLCHAIN_PACKAGES=${TOOLCHAIN_PACKAGES}
+      - GIT_REPO_URL=${GIT_REPO_URL}
+      - GIT_TOKEN=${GIT_TOKEN}
+    volumes:
+      - opencode-data:/root/.local/share/opencode
+      - opencode-config:/root/.config/opencode
+      - opencode-workspace:/workspace
+
+volumes:
+  opencode-data:
+  opencode-config:
+  opencode-workspace:

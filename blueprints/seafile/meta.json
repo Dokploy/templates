@@ -1,13 +1,13 @@
 {
   "id": "seafile",
   "name": "Seafile",
-  "version": "12.0-latest",
-  "description": "Open source cloud storage system for file sync, share and document collaboration",
+  "version": "13.0-latest",
+  "description": "Open source cloud storage system for file sync, share and document collaboration with SeaDoc",
   "logo": "seafile.svg",
   "links": {
     "github": "https://github.com/haiwen/seafile",
     "website": "https://seafile.com",
-    "docs": "https://manual.seafile.com/12.0"
+    "docs": "https://manual.seafile.com/13.0"
   },
   "tags": [
     "file-manager",

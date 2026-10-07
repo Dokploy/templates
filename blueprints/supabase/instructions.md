@@ -39,6 +39,39 @@ values into `lds.yaml` when the container starts, and the listener does the tran
 on every request. Both styles stay valid at the same time — existing apps on `ANON_KEY` /
 `SERVICE_ROLE_KEY` keep working.
 
+### Running on the new keys only
+
+You can drop the legacy pair entirely: **clear `ANON_KEY` and `SERVICE_ROLE_KEY`**
+in the Environment tab and redeploy. Envoy is built for it — every legacy branch
+in `lds.template.yaml` is guarded (`if ANON_KEY ~= "" and ...`), and the
+entrypoint prints which mode it chose:
+
+```
+Envoy sb_ key translation enabled      ← sb_-only or dual
+Envoy running in legacy API key mode   ← sb_ keys not configured
+```
+
+Translation needs **all four** of `SUPABASE_PUBLISHABLE_KEY`,
+`SUPABASE_SECRET_KEY`, `ANON_KEY_ASYMMETRIC` and `SERVICE_ROLE_KEY_ASYMMETRIC`
+to be non-empty. Set the ES256 keys first (see below), then clear the legacy pair.
+
+⛔ **A raw `ANON_KEY_ASYMMETRIC` is not an API key.** It is the ES256 JWT Envoy
+substitutes *internally* after it has accepted an `sb_` key; sent as an `apikey`
+header it is rejected with 401. Clients present the opaque `sb_` strings only.
+
+**The services that never traverse Envoy still need a real JWT.** `storage` calls
+PostgREST directly at `http://rest:3000`, so it can never use an `sb_` key. This
+blueprint handles that for you — `storage`, `studio`, `functions` and the
+`realtime` healthcheck all resolve their key as
+`${ANON_KEY:-${ANON_KEY_ASYMMETRIC}}`, so clearing the legacy pair moves them onto
+the asymmetric tokens automatically.
+
+⚠️ In `sb_`-only mode `realtime` may still report **`unhealthy`** while working
+correctly: its tenant-health endpoint validates against the tenant row's own
+`jwt_secret`/`jwt_jwks`, not the container environment. Check the websocket and
+`postgres_changes` behaviour before treating it as broken — a healthcheck is not
+the service.
+
 ## ⚠️ If your domain has no TLS certificate, change the scheme to `http`
 
 The template generates `SUPABASE_PUBLIC_URL`, `API_EXTERNAL_URL` and
@@ -73,6 +106,19 @@ ADDITIONAL_REDIRECT_URLS=http://<your-domain>/*,http://localhost:3000/*
 Keep `API_EXTERNAL_URL` ending in `/auth/v1`. Without that path GoTrue advertises
 `<domain>/callback` as its OAuth `redirect_uri`, and the gateway routes a bare `/callback` to
 Studio rather than to auth, so every social sign-in dead-ends on the dashboard login prompt.
+
+
+## ⚠️ Changing the domain later does NOT update the environment
+
+`main_domain` is interpolated **when the service is created**, into four
+variables: `SUPABASE_HOST`, `API_EXTERNAL_URL`, `SUPABASE_PUBLIC_URL` and
+`ADDITIONAL_REDIRECT_URLS`. Editing the **Domains** tab afterwards changes
+routing and nothing else — those four keep the name the service was created with.
+
+Fix them by hand in the Environment tab before the first deploy. It matters more
+than it looks: `API_EXTERNAL_URL` becomes `GOTRUE_JWT_ISSUER`, which is the `iss`
+claim of every access token and the value `SB_JWT_ISSUER` gives Edge Functions.
+Change it after tokens are in circulation and they all fail verification.
 
 ## Upgrading an existing Supabase service (Kong → Envoy)
 
@@ -143,6 +189,12 @@ helpers cannot generate, so `JWT_KEYS` and `JWT_JWKS` ship empty. To switch:
    `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `ANON_KEY_ASYMMETRIC`,
    `SERVICE_ROLE_KEY_ASYMMETRIC`, `JWT_KEYS`, `JWT_JWKS`.
 
+⚠️ **Those six do not include `ANON_KEY` or `SERVICE_ROLE_KEY`.** The legacy
+HS256 pair is untouched and still valid, so the deployment stays in dual mode
+until you clear it deliberately — see *Running on the new keys only* above. If
+you clear it by accident, every service that needed a key gets an empty string
+and answers 401, which reads as a platform fault rather than a configuration one.
+
 Set them **all together**. `JWT_KEYS` makes Auth sign tokens with ES256, while
 `JWT_JWKS` is what PostgREST, Realtime, Storage and Edge Functions use to verify
 them — filling in one without the other makes every authenticated request fail.
@@ -166,6 +218,48 @@ Studio's SQL editor:
 ```sql
 create extension if not exists pg_graphql with schema graphql;
 ```
+
+## Object storage on S3 or Cloudflare R2
+
+The `file` backend keeps uploads on the server's disk. To put them in an
+S3-compatible bucket, uncomment the S3 block in the `storage` service, set
+`STORAGE_BACKEND: s3`, and fill these in the Environment tab:
+
+```
+GLOBAL_S3_BUCKET=<bucket name>                     # replaces the default "stub"
+GLOBAL_S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
+STORAGE_S3_REGION=auto                             # R2 uses "auto"
+AWS_ACCESS_KEY_ID=<access key id>
+AWS_SECRET_ACCESS_KEY=<secret>
+```
+
+Four things are easy to get wrong, and none of them is obvious from the official
+`docker-compose.yml`:
+
+- ⛔ **`S3_PROTOCOL_ACCESS_KEY_ID` / `_SECRET` are not the backend credentials.**
+  They gate Supabase Storage's *own* S3-compatible API. The backend reads
+  `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`.
+- ⛔ **Do not set `REGION=auto`.** `REGION` is read twice — as the reported server
+  region *and* as the S3 signing region. Set **`STORAGE_S3_REGION`** instead, so
+  only the signing region moves.
+- 🔑 **`STORAGE_S3_DISABLE_CHECKSUM: "true"`** is usually required. AWS SDK v3
+  adds a CRC32 to every `PutObject`; S3-compatible providers have rejected it.
+  It is in neither the official compose nor the SDK docs, and the symptom is
+  uploads failing for no visible reason.
+- ⛔ **`GLOBAL_S3_PROTOCOL` is dead.** The official compose lists it; it appears
+  nowhere in `supabase/storage`.
+
+✅ **imgproxy needs no S3 configuration.** Storage hands it a presigned HTTPS URL
+rather than an `s3://` path, so image transformation keeps working and the shared
+`volumes/storage` mount simply goes unused.
+
+### `STORAGE_TENANT_ID` is permanent
+
+It becomes the top-level prefix inside the bucket — objects live at
+`<tenant-id>/<bucket>/<path>`. The template ships `stub`, which works and means
+every object sits under `stub/` forever. **Change it before the first upload;
+changing it afterwards orphans every object** — the bytes stay and no path
+resolves to them.
 
 ## Warning: changing POSTGRES_PASSWORD after the first deploy
 

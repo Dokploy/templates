@@ -47,8 +47,8 @@ services:
 
       SUPABASE_URL: http://api-gw:8000
       SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
-      SUPABASE_ANON_KEY: ${ANON_KEY}
-      SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      SUPABASE_ANON_KEY: ${ANON_KEY:-${ANON_KEY_ASYMMETRIC}}
+      SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY:-${SERVICE_ROLE_KEY_ASYMMETRIC}}
       AUTH_JWT_SECRET: ${JWT_SECRET}
       SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY:-}
       SUPABASE_SECRET_KEY: ${SUPABASE_SECRET_KEY:-}
@@ -190,7 +190,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -sSfL --head -o /dev/null -H \"Authorization: Bearer ${ANON_KEY}\" http://localhost:4000/api/tenants/realtime-dev/health"
+          "curl -sSfL --head -o /dev/null -H \"Authorization: Bearer ${ANON_KEY:-${ANON_KEY_ASYMMETRIC}}\" http://localhost:4000/api/tenants/realtime-dev/health"
         ]
       timeout: 5s
       interval: 30s
@@ -246,8 +246,8 @@ services:
     volumes:
       - ../files/volumes/storage:/var/lib/storage:z
     environment:
-      ANON_KEY: ${ANON_KEY}
-      SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      ANON_KEY: ${ANON_KEY:-${ANON_KEY_ASYMMETRIC}}
+      SERVICE_KEY: ${SERVICE_ROLE_KEY:-${SERVICE_ROLE_KEY_ASYMMETRIC}}
       POSTGREST_URL: http://rest:3000
       # Legacy symmetric HS256 key
       AUTH_JWT_SECRET: ${JWT_SECRET}
@@ -258,7 +258,28 @@ services:
       REQUEST_ALLOW_X_FORWARDED_PATH: "true"
       FILE_SIZE_LIMIT: 52428800
       STORAGE_BACKEND: file
+      # S3 bucket when using the s3 backend, directory name when using 'file'.
       GLOBAL_S3_BUCKET: ${GLOBAL_S3_BUCKET}
+      # ── S3-compatible backend (Cloudflare R2, MinIO, AWS S3) ──────────────
+      # Set STORAGE_BACKEND to s3 and uncomment these. See instructions.md.
+      #GLOBAL_S3_ENDPOINT: ${GLOBAL_S3_ENDPOINT}
+      #GLOBAL_S3_FORCE_PATH_STYLE: "true"
+      # ⛔ NOT `REGION`. storage-api reads STORAGE_S3_REGION first and falls back
+      # to REGION, which this template ships as "stub" — a value the SDK will
+      # sign with and the provider will reject. R2 wants "auto".
+      #STORAGE_S3_REGION: ${STORAGE_S3_REGION}
+      # AWS SDK v3 adds a CRC32 to every PutObject; S3-compatible providers have
+      # rejected it. This reverts to the pre-2025 WHEN_REQUIRED behaviour.
+      #STORAGE_S3_DISABLE_CHECKSUM: "true"
+      #AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      #AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      # ⛔ GLOBAL_S3_PROTOCOL appears in the official compose and is read NOWHERE
+      # in supabase/storage. Setting it does nothing.
+      # ✅ imgproxy needs no S3 configuration on the s3 backend: storage hands it a
+      # presigned HTTPS URL (getSignedUrl, 600s), not an s3:// path. The shared
+      # volume below simply goes unused.
+      # ── end S3 block ──────────────────────────────────────────────────────
+      # Read only by the `file` backend; inert once STORAGE_BACKEND is s3.
       FILE_STORAGE_BACKEND_PATH: /var/lib/storage
       TENANT_ID: ${STORAGE_TENANT_ID}
       REGION: ${REGION}
@@ -332,8 +353,8 @@ services:
       # token. SB_JWT_ISSUER is the override that example already prefers.
       SB_JWT_ISSUER: ${API_EXTERNAL_URL}
       SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
-      SUPABASE_ANON_KEY: ${ANON_KEY}
-      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
+      SUPABASE_ANON_KEY: ${ANON_KEY:-${ANON_KEY_ASYMMETRIC}}
+      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY:-${SERVICE_ROLE_KEY_ASYMMETRIC}}
       SUPABASE_PUBLISHABLE_KEYS: "{\"default\":\"${SUPABASE_PUBLISHABLE_KEY:-}\"}"
       SUPABASE_SECRET_KEYS: "{\"default\":\"${SUPABASE_SECRET_KEY:-}\"}"
       SUPABASE_DB_URL: postgresql://postgres:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}

@@ -1677,8 +1677,8 @@ services:
     volumes:
       - appwrite-mongodb:/data/db
       - appwrite-mongodb-keyfile:/data/keyfile
-      - ./mongo-init.js:/mongo-init.js:ro
-      - ./mongo-entrypoint.sh:/mongo-entrypoint.sh:ro
+      - ../files/mongo-init.js:/mongo-init.js:ro
+      - ../files/mongo-entrypoint.sh:/mongo-entrypoint.sh:ro
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=${_APP_DB_ROOT_PASS}

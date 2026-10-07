@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  solidping:
+    image: ghcr.io/fclairamb/solidping:0.32.1
+    restart: unless-stopped
+    expose:
+      - 4000
+    volumes:
+      - solidping-data:/data
+
+volumes:
+  solidping-data: {}

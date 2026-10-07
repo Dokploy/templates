@@ -60,6 +60,10 @@ services:
     depends_on:
       postgresql:
         condition: service_healthy
+      # Create the worker after the server so both don't populate the fresh
+      # shared "data" volume from the image at the same time (race on /data/media).
+      server:
+        condition: service_started
 
 volumes:
   database:

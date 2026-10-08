@@ -1,32 +1,97 @@
-version: '3.8'
+# Once deployed, you can log in to Kibana using:
+#
+#   USERNAME: elastic
+#   PASSWORD: <ELASTIC_PASSWORD> (in environment variables)
+#
+# When using Cloudflare Tunnel or Proxy, you may need to temporarily add a
+# cache rule to "bypass cache" for your Kibana domain when updating. from an
+# old Kibana version.
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.5.3
+    restart: unless-stopped
     environment:
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - discovery.type=single-node
-      - xpack.security.enabled=false
-      - bootstrap.memory_lock=true
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=false
+      - node.store.allow_mmap=false
+      - xpack.ml.enabled=false
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
+    mem_limit: ${ES_MEM_LIMIT}
     expose:
       - "9200"
     volumes:
       - es_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl -s http://localhost:9200 | grep -q "missing authentication credentials"
+      interval: 10s
+      timeout: 10s
+      retries: 60
+      start_period: 120s
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.10.2
+    image: docker.elastic.co/kibana/kibana:9.5.3
+    restart: unless-stopped
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      - ELASTICSEARCH_PUBLICBASEURL=${ELASTICSEARCH_PUBLIC_URL}
+      - SERVER_PUBLICBASEURL=${KIBANA_PUBLIC_URL}
+      - XPACK_SECURITY_SECURECOOKIES=true
+      - XPACK_SECURITY_ENCRYPTIONKEY=${KIBANA_SECURITY_ENCRYPTION_KEY}
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${KIBANA_SAVED_OBJECTS_ENCRYPTION_KEY}
+      - XPACK_REPORTING_ENCRYPTIONKEY=${KIBANA_REPORTING_ENCRYPTION_KEY}
+    mem_limit: ${KB_MEM_LIMIT}
     expose:
       - "5601"
+    volumes:
+      - kibana_data:/usr/share/kibana/data
     depends_on:
-      - elasticsearch
+      setup:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl -s -I http://localhost:5601 | grep -q "HTTP/1.1 302 Found"
+      interval: 10s
+      timeout: 10s
+      retries: 60
+      start_period: 30s
+
+  setup:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.5.3
+    environment:
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - KIBANA_PASSWORD=${KIBANA_PASSWORD}
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    command:
+      - bash
+      - -c
+      - |
+        echo "Setting kibana_system password"
+
+        escaped_password="$$(printf '%s' "$$KIBANA_PASSWORD" | sed 's/\\/\\\\/g; s/"/\\"/g')"
+
+        until curl -fsS \
+          -X POST \
+          -u "elastic:$$ELASTIC_PASSWORD" \
+          -H "Content-Type: application/json" \
+          http://elasticsearch:9200/_security/user/kibana_system/_password \
+          --data-binary "{\"password\":\"$$escaped_password\"}" \
+          | grep -q "^{}"
+        do
+          sleep 5
+        done
+
+        echo "kibana_system password configured"
 
 volumes:
   es_data:
-    driver: local
- 
+  kibana_data:

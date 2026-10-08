@@ -1,7 +1,7 @@
 {
   "id": "opendots",
   "name": "OpenDots",
-  "version": "latest",
+  "version": "0.1.0-625452e",
   "description": "OpenDots is an open-source template from CopilotKit for always-on AI coworkers: specialist Dots with their own computer, a document workspace with Spaces and pages, chat, calls and Slack, built with CopilotKit and AG-UI.",
   "logo": "logo.svg",
   "links": {

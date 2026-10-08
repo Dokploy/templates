@@ -3,7 +3,7 @@ version: "3.8"
 services:
   opendots:
     build:
-      context: "https://github.com/CopilotKit/OpenDots.git#main"
+      context: "https://github.com/CopilotKit/OpenDots.git#625452e06cde74cb25b0ce319e2c1be0488f5a5f"
       dockerfile: Dockerfile
       target: app
     restart: unless-stopped
@@ -46,7 +46,7 @@ services:
   # Shares BROWSER_SECRET with the app; no published port, reachable only internally.
   opendots-browser:
     build:
-      context: "https://github.com/CopilotKit/OpenDots.git#main"
+      context: "https://github.com/CopilotKit/OpenDots.git#625452e06cde74cb25b0ce319e2c1be0488f5a5f"
       dockerfile: Dockerfile
       target: browser
     restart: unless-stopped

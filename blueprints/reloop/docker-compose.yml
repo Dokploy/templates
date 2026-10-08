@@ -62,7 +62,7 @@ services:
       - ../files/Caddyfile:/etc/caddy/Caddyfile:ro
 
   links:
-    image: reloopsh/fe-links:${RELOOP_VERSION:-latest}
+    image: reloopsh/fe-links@sha256:8a22fde21a656c25163e2b856a856053c5de91cbc4953cc23ed034c081eedfa5
     restart: unless-stopped
     environment:
       - HOSTNAME=0.0.0.0
@@ -71,7 +71,7 @@ services:
       - INTERNAL_MAIL_API_URL=http://mail:8015/api/mail
 
   dashboard:
-    image: reloopsh/fe-dashboard:${RELOOP_VERSION:-latest}
+    image: reloopsh/fe-dashboard@sha256:dd2369d2f0d7fe836664ae49b2b4492f90ee654dd8af7c819e7ca07e469b58dc
     restart: unless-stopped
     environment:
       HOSTNAME: 0.0.0.0
@@ -130,7 +130,7 @@ services:
       start_period: 10s
 
   migrate:
-    image: reloopsh/be-auth:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-auth@sha256:741ef934ec59aa173f8dcfa980c163c107e6e5693786777326eaf90e49cb47c5
     restart: "no"
     working_dir: /app/packages/db
     entrypoint: ["/app/node_modules/.bin/drizzle-kit"]
@@ -142,7 +142,7 @@ services:
         condition: service_healthy
 
   auth:
-    image: reloopsh/be-auth:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-auth@sha256:741ef934ec59aa173f8dcfa980c163c107e6e5693786777326eaf90e49cb47c5
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -154,7 +154,7 @@ services:
     depends_on: *backend-depends
 
   domain:
-    image: reloopsh/be-domain:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-domain@sha256:cb12e37221a697278822819fdf4fd0ada2bb2f13e2979be789c9c44ee09a3f56
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -162,7 +162,7 @@ services:
     depends_on: *backend-depends
 
   api-key:
-    image: reloopsh/be-api-key:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-api-key@sha256:535f9837d39acdd7e155a14752b1ab6e3cbef06331cf26634577ff82a0156572
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -170,7 +170,7 @@ services:
     depends_on: *backend-depends
 
   webhook:
-    image: reloopsh/be-webhook:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-webhook@sha256:644a6b79756f57c045c8572c42bee6dfb6b31663ee08d21f2565cead4dfc1ca9
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -178,7 +178,7 @@ services:
     depends_on: *backend-depends
 
   contacts:
-    image: reloopsh/be-contacts:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-contacts@sha256:43da0b373e2777fdc7af97d92fdb916320a27e2ffdea61df69bca477722b2dfa
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -186,7 +186,7 @@ services:
     depends_on: *backend-depends
 
   mail:
-    image: reloopsh/be-mail:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-mail@sha256:c4b2fe0de847a606f12fe0d50adadda9719135205cb227c6e12c6a6f0889aae8
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -194,7 +194,7 @@ services:
     depends_on: *backend-depends
 
   logs:
-    image: reloopsh/be-logs:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-logs@sha256:3c0be118c7df0ebd76e24ed65de014980f96a8c14c2783231a39b0c54c4065e0
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -202,7 +202,7 @@ services:
     depends_on: *backend-depends
 
   workflow:
-    image: reloopsh/be-workflow:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-workflow@sha256:d7d75e9145891b7167b42b4fb1ec441c53361e825e5fdf0d72962ef95d3d5b56
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -210,7 +210,7 @@ services:
     depends_on: *backend-depends
 
   upload:
-    image: reloopsh/be-upload:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-upload@sha256:22632cbbc686fa0c766a0ecd316b4bdeb3097fe5652d3b8e183133ff8055a299
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -218,7 +218,7 @@ services:
     depends_on: *backend-depends
 
   template:
-    image: reloopsh/be-template:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-template@sha256:9734939a04b211aa99c96d89446cb5b28ba5e065a2b8388a88ae634c50f5f77d
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -226,7 +226,7 @@ services:
     depends_on: *backend-depends
 
   campaigns:
-    image: reloopsh/be-campaigns:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-campaigns@sha256:446287b0dc88f77ca5ac12199bda637e1e2216a38a47e281be161dba4fea3624
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -234,7 +234,7 @@ services:
     depends_on: *backend-depends
 
   inbox:
-    image: reloopsh/be-inbox:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-inbox@sha256:4d6fe16298fbec859c86cc6ac55f2804223e9d1c9ff52afc92c01845b99a5f74
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -242,7 +242,7 @@ services:
     depends_on: *backend-depends
 
   email:
-    image: reloopsh/be-email:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-email@sha256:4caf97f84d7faf7bf45f69e12b8226d724b0e58c0205cd82d1ef7031f4ea8b2d
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -250,7 +250,7 @@ services:
     depends_on: *backend-depends
 
   spam:
-    image: reloopsh/be-spam:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-spam@sha256:4fcd262354ddb11ed67d8ce8f4b5f08b274f22a8da6987233fb1486d9150a540
     restart: unless-stopped
     environment:
       RSPAMD_REDIS_SERVERS: redis:6379
@@ -262,7 +262,7 @@ services:
         condition: service_healthy
 
   smtp:
-    image: reloopsh/be-smtp:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-smtp@sha256:689b49f762ee0d5f4c33bbfd073f7ebeb5cbae27194c36269883be7da415a86e
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -284,7 +284,7 @@ services:
         condition: service_started
 
   inbound:
-    image: reloopsh/be-inbound:${RELOOP_VERSION:-latest}
+    image: reloopsh/be-inbound@sha256:28c6ca80d51d3c83319ddc3c00b370668a1779af134a2c60e7daedd23e7691fc
     restart: unless-stopped
     environment:
       <<: *backend-env

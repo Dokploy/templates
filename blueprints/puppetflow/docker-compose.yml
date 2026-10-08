@@ -20,7 +20,7 @@ x-puppetflow-environment: &puppetflow-environment
 
 services:
   puppetflow:
-    image: ghcr.io/puppetflow/puppetflow:v2026.10.1
+    image: ghcr.io/puppetflow/puppetflow:v2026.10.20
     restart: unless-stopped
     expose:
       - 8000
@@ -44,7 +44,7 @@ services:
         condition: service_started
 
   migrate:
-    image: ghcr.io/puppetflow/puppetflow:v2026.10.1
+    image: ghcr.io/puppetflow/puppetflow:v2026.10.20
     command: ["php", "artisan", "migrate", "--force"]
     restart: "no"
     volumes:
@@ -55,7 +55,7 @@ services:
         condition: service_completed_successfully
 
   queue:
-    image: ghcr.io/puppetflow/puppetflow:v2026.10.1
+    image: ghcr.io/puppetflow/puppetflow:v2026.10.20
     command: ["php", "artisan", "queue:work", "--queue=1", "--tries=1", "--timeout=630", "--sleep=3", "--max-jobs=500", "--max-time=3600"]
     restart: unless-stopped
     volumes:
@@ -70,7 +70,7 @@ services:
         condition: service_started
 
   scheduler:
-    image: ghcr.io/puppetflow/puppetflow:v2026.10.1
+    image: ghcr.io/puppetflow/puppetflow:v2026.10.20
     command: ["php", "artisan", "schedule:work"]
     restart: unless-stopped
     volumes:
@@ -83,7 +83,7 @@ services:
         condition: service_completed_successfully
 
   stream-server:
-    image: ghcr.io/puppetflow/puppetflow-stream-server:v2026.10.1
+    image: ghcr.io/puppetflow/puppetflow-stream-server:v2026.10.20
     restart: unless-stopped
     stop_grace_period: 30s
     expose:

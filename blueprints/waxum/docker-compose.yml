@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   waxum:
-    image: fdciabdul/waxum:latest
+    image: fdciabdul/waxum:0.13.5
     restart: unless-stopped
     expose:
       - 3451

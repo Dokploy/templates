@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   mc-controller:
     image: tomhorrorza/mc-controller:${IMAGE_TAG:-1.0.2}

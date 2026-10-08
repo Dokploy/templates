@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   web:
     image: ghcr.io/seanmorley15/adventurelog-frontend:latest

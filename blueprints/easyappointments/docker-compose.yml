@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   easyappointments:
     image: alextselegidis/easyappointments:1.5.0

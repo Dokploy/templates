@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   code-server:
     image: codercom/code-server:4.121.0

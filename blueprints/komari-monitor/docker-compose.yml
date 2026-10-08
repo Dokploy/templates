@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   komari:
     image: ghcr.io/komari-monitor/komari:latest

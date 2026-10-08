@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   mule:
     image: yogeshmulecraft/mulece-esb:latest

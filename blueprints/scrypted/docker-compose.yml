@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   scrypted:
     image: ghcr.io/koush/scrypted:latest

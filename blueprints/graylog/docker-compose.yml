@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   graylog:
     image: graylog/graylog:7.1.9

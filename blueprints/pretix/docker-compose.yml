@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   pretix:
     image: pretix/standalone:2026.8.0

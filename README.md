@@ -35,7 +35,6 @@ Let's suppose you want to add the [Grafana](https://grafana.com/) template to th
 2. Add the `docker-compose.yml` file to the folder
 
 ```yaml
-version: "3.8"
 services:
   grafana:
     image: grafana/grafana-enterprise:9.5.20

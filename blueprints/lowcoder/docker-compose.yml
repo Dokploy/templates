@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   ## Start Lowcoder (all-in-one)
   lowcoder-api-service:

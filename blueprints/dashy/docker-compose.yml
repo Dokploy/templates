@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   dashy:
     image: lissy93/dashy:latest

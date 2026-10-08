@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   poke:
     image: codeberg.org/poketube/poke:amd64

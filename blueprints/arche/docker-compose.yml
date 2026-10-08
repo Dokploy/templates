@@ -1,5 +1,3 @@
-version: "3.8"
-
 # Arche — AI workspace platform that spawns per-user OpenCode containers
 # via a Docker socket proxy.
 #

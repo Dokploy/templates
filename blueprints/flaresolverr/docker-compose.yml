@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest

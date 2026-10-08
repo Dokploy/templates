@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   kavita:
     image: jvmilazz0/kavita:latest

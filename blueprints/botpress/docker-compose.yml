@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   botpress:
     image: botpress/server:12.31.9

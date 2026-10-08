@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   waxum:
     image: fdciabdul/waxum:0.11.5

@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   lfsx:
     image: ghcr.io/ferrlabs/lfsx:1.14.1

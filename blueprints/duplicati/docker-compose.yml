@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   duplicati:
     image: 'lscr.io/linuxserver/duplicati:${APP_RELEASE:-2.3.0}'

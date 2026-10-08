@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   falkordb:
     image: falkordb/falkordb:v4.20.4-alpine

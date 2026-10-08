@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   carbone:
     image: carbone/carbone-ee:full-4.25.5

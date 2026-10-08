@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   versitygw:
     image: versity/versitygw:v1.8.0

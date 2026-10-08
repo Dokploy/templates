@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   obscura-cdp:
     image: h4ckf0r0day/obscura:0.2.1

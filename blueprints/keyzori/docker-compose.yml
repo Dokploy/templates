@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   keyzori:
     image: ghcr.io/keyzori/keyzori:93b5d75ac8e5a4cd0740bfe1a46b5663674767fb

@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   pocket-id:
     image: pocketid/pocket-id:v2.14.0

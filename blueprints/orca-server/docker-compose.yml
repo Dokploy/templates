@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   orca-server:
     # Orca publishes no container image, so this builds one from the

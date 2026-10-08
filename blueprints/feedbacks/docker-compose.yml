@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   feedbacks:
     image: softinator/feedbacks@sha256:f7d759e671b48906a4aa5deff92b4644a73a6a4239f32b4cebba5cfcef8cc97b

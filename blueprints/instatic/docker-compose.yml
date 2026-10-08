@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   instatic-init:
     image: ghcr.io/corebunch/instatic:0.0.18

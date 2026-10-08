@@ -32,13 +32,11 @@ To add a new template, follow these steps:
 1. **Create a Folder in `blueprints/`**: Name it after the template (e.g., `grafana`). Use lowercase with hyphens for multi-word names.
 2. **Add `docker-compose.yml`**: Define the services, volumes, and other Compose configurations. Key guidelines:
 
-   - Use `version: "3.8"` or later.
    - Avoid exposing ports explicitly (e.g., no `ports: - "3000:3000"`; just `- 3000` if needed for internal reference).
    - Do not use `container_name`.
    - Avoid custom networks like `dokploy-network`; Dokploy handles isolation automatically.
    - Example for Grafana:
      ```yaml
-     version: "3.8"
      services:
        grafana:
          image: grafana/grafana-enterprise:9.5.20

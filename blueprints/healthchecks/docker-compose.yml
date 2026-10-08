@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   healthchecks:
     image: healthchecks/healthchecks:v4.4

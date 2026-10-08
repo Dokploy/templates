@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   gitingest:
     image: elestio/gitingest:${SOFTWARE_VERSION_TAG}

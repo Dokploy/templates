@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   openlivery:
     image: caddy:2.10.2-alpine

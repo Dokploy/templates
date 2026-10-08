@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
   ryot-app:
     image: ignisda/ryot:v7.10

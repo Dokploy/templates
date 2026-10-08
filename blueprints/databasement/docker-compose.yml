@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   databasement:
     image: davidcrty/databasement:1.8.4

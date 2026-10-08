@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   opencode:
     image: ghcr.io/anomalyco/opencode:1.18.32

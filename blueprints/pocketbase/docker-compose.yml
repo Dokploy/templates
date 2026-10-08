@@ -2,8 +2,6 @@
 # Access PocketBase Admin UI at: https://your-domain.com/_/ (replace with your configured domain)
 # Note: Admin UI may take up to 1 minute to load on first startup
 
-version: "3.8"
-
 services:
   pocketbase:
     image: adrianmusante/pocketbase:latest

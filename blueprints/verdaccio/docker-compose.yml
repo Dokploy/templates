@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   verdaccio:
     image: verdaccio/verdaccio:6

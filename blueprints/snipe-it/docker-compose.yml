@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   snipe-it:
     image: snipe/snipe-it:v8.5.0

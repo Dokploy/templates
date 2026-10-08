@@ -1,4 +1,3 @@
-version: "3"
 services:
   pinchflat:
     image: ghcr.io/kieraneglin/pinchflat:latest

@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   corsfix:
     image: ghcr.io/corsfix/corsfix-app:8899bb15e71c7238285ccefc4c95a0cd47daeaf0

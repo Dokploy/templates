@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   junctio:
     image: ghcr.io/k2so-dev/junctio:0.2.1

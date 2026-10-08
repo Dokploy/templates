@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   crawl4ai:
     image: unclecode/crawl4ai:latest

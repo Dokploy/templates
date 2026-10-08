@@ -1,0 +1,31 @@
+# Reviewed 0.2.1 image; private S3 fields are required before deploy.
+[variables]
+main_domain = "${domain}"
+postgres_password = "${hash:64}"
+organization_id = "${uuid}"
+image_ref = "softinator/feedbacks@sha256:f7d759e671b48906a4aa5deff92b4644a73a6a4239f32b4cebba5cfcef8cc97b"
+s3_endpoint = ""
+s3_region = ""
+s3_bucket = ""
+s3_access_key = ""
+s3_secret_key = ""
+
+[config]
+env = [
+  "APP_ORIGIN=https://${main_domain}",
+  "FEEDBACKS_IMAGE=${image_ref}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "ORGANIZATION_ID=${organization_id}",
+  "TRUST_PROXY_HOPS=1",
+  "S3_ENDPOINT=${s3_endpoint}",
+  "S3_REGION=${s3_region}",
+  "S3_BUCKET=${s3_bucket}",
+  "S3_ACCESS_KEY_ID=${s3_access_key}",
+  "S3_SECRET_ACCESS_KEY=${s3_secret_key}"
+]
+
+[[config.domains]]
+serviceName = "feedbacks"
+port = 3000
+host = "${main_domain}"
+path = "/"

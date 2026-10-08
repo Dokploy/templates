@@ -1,7 +1,7 @@
 {
   "id": "kaneo",
   "name": "Kaneo",
-  "version": "latest",
+  "version": "2.35.0",
   "description": "Kaneo - an open source project management platform focused on simplicity and efficiency. Self-host it, customize it, make it yours.",
   "logo": "kaneo.png",
   "links": {

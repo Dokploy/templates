@@ -15,7 +15,7 @@ services:
       retries: 5
 
   kaneo:
-    image: ghcr.io/usekaneo/kaneo:latest
+    image: ghcr.io/usekaneo/kaneo:2.35.0
     environment:
       KANEO_CLIENT_URL: ${KANEO_CLIENT_URL}
       AUTH_SECRET: ${AUTH_SECRET}

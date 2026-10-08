@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   feedbacks:
-    image: ${FEEDBACKS_IMAGE:?Set a verified published namespace/image@sha256 digest}
+    image: softinator/feedbacks@sha256:f7d759e671b48906a4aa5deff92b4644a73a6a4239f32b4cebba5cfcef8cc97b
     restart: unless-stopped
     init: true
     read_only: true
@@ -18,21 +18,28 @@ services:
       TRUST_PROXY_HOPS: ${TRUST_PROXY_HOPS:-1}
       ASSET_DRIVER: s3
       ORGANIZATION_ID: ${ORGANIZATION_ID:?required}
-      S3_ENDPOINT: ${S3_ENDPOINT:?required}
-      S3_REGION: ${S3_REGION:?required}
-      S3_BUCKET: ${S3_BUCKET:?required}
+      # Defaults to the bundled SeaweedFS S3; override all S3_* to use external storage.
+      S3_ENDPOINT: ${S3_ENDPOINT:-https://s3:8333}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      S3_BUCKET: ${S3_BUCKET:-feedbacks}
       S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:?required}
       S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?required}
+      # Feedbacks requires an HTTPS S3 endpoint in production; trust the bundled SeaweedFS self-signed cert.
+      NODE_EXTRA_CA_CERTS: /s3-config/public.crt
       TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-}
       TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:-}
       GITHUB_APPS_JSON: ${GITHUB_APPS_JSON:-}
       GITHUB_APP_ID: ${GITHUB_APP_ID:-}
       GITHUB_APP_SLUG: ${GITHUB_APP_SLUG:-}
       GITHUB_APP_PRIVATE_KEY_BASE64: ${GITHUB_APP_PRIVATE_KEY_BASE64:-}
+    volumes:
+      - feedbacks-s3-config:/s3-config:ro
     expose: ["3000"]
     depends_on:
       postgres:
         condition: service_healthy
+      s3-bucket:
+        condition: service_completed_successfully
     stop_grace_period: 15s
   postgres:
     image: postgres:17-bookworm
@@ -47,5 +54,63 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+  s3-init:
+    image: alpine:3.22
+    restart: "no"
+    environment:
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:?required}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?required}
+    volumes:
+      - feedbacks-s3-config:/config
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        if [ ! -s /config/public.crt ]; then
+          apk add --no-cache openssl >/dev/null
+          openssl req -x509 -newkey rsa:2048 -nodes -days 3650 \
+            -subj "/CN=s3" -addext "subjectAltName=DNS:s3" \
+            -addext "basicConstraints=critical,CA:TRUE" \
+            -keyout /config/private.key -out /config/public.crt
+        fi
+        printf '{"identities":[{"name":"feedbacks","credentials":[{"accessKey":"%s","secretKey":"%s"}],"actions":["Admin","Read","Write","List","Tagging"]}]}' \
+          "$$S3_ACCESS_KEY_ID" "$$S3_SECRET_ACCESS_KEY" > /config/s3.json
+        chmod 644 /config/*
+  s3:
+    image: chrislusf/seaweedfs:4.48
+    restart: unless-stopped
+    command: server -dir=/data -s3 -s3.port=8333 -s3.config=/config/s3.json -s3.cert.file=/config/public.crt -s3.key.file=/config/private.key
+    volumes:
+      - feedbacks-s3:/data
+      - feedbacks-s3-config:/config:ro
+    depends_on:
+      s3-init:
+        condition: service_completed_successfully
+  s3-bucket:
+    image: alpine:3.22
+    restart: "no"
+    depends_on:
+      - s3
+    environment:
+      S3_BUCKET: ${S3_BUCKET:-feedbacks}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:?required}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?required}
+    volumes:
+      - feedbacks-s3-config:/config:ro
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        apk add --no-cache curl >/dev/null
+        for i in $$(seq 1 60); do
+          code=$$(curl -s -o /dev/null -w '%{http_code}' --cacert /config/public.crt \
+            --aws-sigv4 "aws:amz:us-east-1:s3" --user "$$S3_ACCESS_KEY_ID:$$S3_SECRET_ACCESS_KEY" \
+            -X PUT "https://s3:8333/$$S3_BUCKET") || code=000
+          case "$$code" in 200|409) echo "bucket ready ($$code)"; exit 0;; esac
+          sleep 2
+        done
+        echo "could not create bucket (last HTTP $$code)"; exit 1
 volumes:
   feedbacks-postgres:
+  feedbacks-s3:
+  feedbacks-s3-config:

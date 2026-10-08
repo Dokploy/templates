@@ -1,7 +1,7 @@
 {
   "id": "9router",
   "name": "9Router",
-  "version": "0.5.40",
+  "version": "0.5.59",
   "description": "Self-hosted AI model router that rotates requests across 40+ providers with automatic fallback, exposing an OpenAI-compatible endpoint for coding agents.",
   "logo": "9router.png",
   "links": {

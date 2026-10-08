@@ -1,0 +1,230 @@
+services:
+  postgres:
+    image: postgres:18-alpine@sha256:9a8afca54e7861fd90fab5fdf4c42477a6b1cb7d293595148e674e0a3181de15
+    environment:
+      POSTGRES_USER: orbit
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?required}
+      POSTGRES_DB: orbit
+    volumes:
+    - postgres:/var/lib/postgresql
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - pg_isready -U orbit -d orbit
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+  redis:
+    image: redis:8-alpine@sha256:978f0e01593e65eed801f2402944efcd936d43b5027e4908a7897baf88ed6241
+    command:
+    - redis-server
+    - --appendonly
+    - 'yes'
+    volumes:
+    - redis:/data
+    healthcheck:
+      test:
+      - CMD
+      - redis-cli
+      - ping
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+  storage:
+    # SeaweedFS S3 gateway (MinIO images are no longer publicly pullable).
+    image: chrislusf/seaweedfs:4.48
+    entrypoint:
+    - /bin/sh
+    - -c
+    command:
+    - |
+      set -e
+      printf '{"identities":[{"name":"orbit","credentials":[{"accessKey":"orbit","secretKey":"%s"}],"actions":["Admin","Read","Write","List","Tagging"]}]}' "$$MINIO_PASSWORD" > /tmp/s3.json
+      exec weed server -dir=/data -ip.bind=0.0.0.0 -s3 -s3.port=9000 -s3.config=/tmp/s3.json
+    environment:
+      MINIO_PASSWORD: ${MINIO_PASSWORD:?required}
+    volumes:
+    - storage:/data
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - wget -q -O /dev/null http://127.0.0.1:9000/healthz || exit 1
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+    expose:
+    - '9000'
+  bucket:
+    # Reuses the mc client from orbit-bucket to create the bucket and its CORS rule on SeaweedFS.
+    image: ghcr.io/noveum/orbit-bucket:2026.09.24
+    entrypoint:
+    - /bin/sh
+    - -c
+    command:
+    - |
+      set -eu
+      until mc alias set orbit http://storage:9000 orbit "$$MINIO_PASSWORD" --api S3v4; do sleep 2; done
+      until mc mb --ignore-existing orbit/orbit-uploads; do sleep 2; done
+      printf '<CORSConfiguration><CORSRule><AllowedOrigin>%s</AllowedOrigin><AllowedMethod>GET</AllowedMethod><AllowedMethod>PUT</AllowedMethod><AllowedMethod>HEAD</AllowedMethod><AllowedHeader>*</AllowedHeader><ExposeHeader>ETag</ExposeHeader><MaxAgeSeconds>3600</MaxAgeSeconds></CORSRule></CORSConfiguration>' "$$ORBIT_APP_URL" > /tmp/cors.xml
+      until mc cors set orbit/orbit-uploads /tmp/cors.xml; do sleep 2; done
+      touch /tmp/initialized
+      exec tail -f /dev/null
+    environment:
+      MINIO_PASSWORD: ${MINIO_PASSWORD:?required}
+      ORBIT_APP_URL: ${ORBIT_APP_URL:?required}
+    depends_on:
+      storage:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - test -f /tmp/initialized
+      interval: 5s
+      timeout: 3s
+      retries: 30
+  web:
+    image: ghcr.io/noveum/orbit-runtime:2026.09.24
+    environment:
+      DATABASE_URL: postgres://orbit:${POSTGRES_PASSWORD:?required}@postgres:5432/orbit
+      DIRECT_URL: postgres://orbit:${POSTGRES_PASSWORD:?required}@postgres:5432/orbit
+      DATABASE_PREPARED_STATEMENTS: 'true'
+      REDIS_URL: redis://redis:6379
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?required}
+      BETTER_AUTH_URL: ${ORBIT_APP_URL:?required}
+      NEXT_PUBLIC_APP_URL: ${ORBIT_APP_URL:?required}
+      ORBIT_PASSWORD_AUTH: ${ORBIT_PASSWORD_AUTH:-true}
+      ALLOWED_EMAIL_DOMAINS: ${ALLOWED_EMAIL_DOMAINS:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      EMAIL_FROM: ${EMAIL_FROM:-Orbit <auth@orbit.local>}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      GITHUB_APP_SLUG: ${GITHUB_APP_SLUG:-}
+      GITHUB_APP_ID: ${GITHUB_APP_ID:-}
+      GITHUB_APP_PRIVATE_KEY: ${GITHUB_APP_PRIVATE_KEY:-}
+      GITHUB_APP_CLIENT_ID: ${GITHUB_APP_CLIENT_ID:-}
+      GITHUB_APP_CLIENT_SECRET: ${GITHUB_APP_CLIENT_SECRET:-}
+      GITHUB_WEBHOOK_SECRET: ${GITHUB_WEBHOOK_SECRET:-}
+      SLACK_ENABLED: ${SLACK_ENABLED:-false}
+      SLACK_CLIENT_ID: ${SLACK_CLIENT_ID:-}
+      SLACK_CLIENT_SECRET: ${SLACK_CLIENT_SECRET:-}
+      SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET:-}
+      SLACK_APP_ID: ${SLACK_APP_ID:-}
+      CRON_SECRET: ${CRON_SECRET:-}
+      ORBIT_SELF_HOSTED: 'true'
+      S3_ENDPOINT: ${ORBIT_STORAGE_URL:?required}
+      S3_REGION: us-east-1
+      S3_BUCKET: orbit-uploads
+      S3_ACCESS_KEY_ID: orbit
+      S3_SECRET_ACCESS_KEY: ${MINIO_PASSWORD:?required}
+      NEXT_TELEMETRY_DISABLED: '1'
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      bucket:
+        condition: service_healthy
+    restart: unless-stopped
+  realtime:
+    image: ghcr.io/noveum/orbit-runtime:2026.09.24
+    command:
+    - node
+    - apps/web/realtime.mjs
+    environment:
+      DATABASE_URL: postgres://orbit:${POSTGRES_PASSWORD:?required}@postgres:5432/orbit
+      DIRECT_URL: postgres://orbit:${POSTGRES_PASSWORD:?required}@postgres:5432/orbit
+      DATABASE_PREPARED_STATEMENTS: 'true'
+      REDIS_URL: redis://redis:6379
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?required}
+      BETTER_AUTH_URL: ${ORBIT_APP_URL:?required}
+      NEXT_PUBLIC_APP_URL: ${ORBIT_APP_URL:?required}
+      ORBIT_PASSWORD_AUTH: ${ORBIT_PASSWORD_AUTH:-true}
+      ALLOWED_EMAIL_DOMAINS: ${ALLOWED_EMAIL_DOMAINS:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      EMAIL_FROM: ${EMAIL_FROM:-Orbit <auth@orbit.local>}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      GITHUB_APP_SLUG: ${GITHUB_APP_SLUG:-}
+      GITHUB_APP_ID: ${GITHUB_APP_ID:-}
+      GITHUB_APP_PRIVATE_KEY: ${GITHUB_APP_PRIVATE_KEY:-}
+      GITHUB_APP_CLIENT_ID: ${GITHUB_APP_CLIENT_ID:-}
+      GITHUB_APP_CLIENT_SECRET: ${GITHUB_APP_CLIENT_SECRET:-}
+      GITHUB_WEBHOOK_SECRET: ${GITHUB_WEBHOOK_SECRET:-}
+      SLACK_ENABLED: ${SLACK_ENABLED:-false}
+      SLACK_CLIENT_ID: ${SLACK_CLIENT_ID:-}
+      SLACK_CLIENT_SECRET: ${SLACK_CLIENT_SECRET:-}
+      SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET:-}
+      SLACK_APP_ID: ${SLACK_APP_ID:-}
+      CRON_SECRET: ${CRON_SECRET:-}
+      ORBIT_SELF_HOSTED: 'true'
+      S3_ENDPOINT: ${ORBIT_STORAGE_URL:?required}
+      S3_REGION: us-east-1
+      S3_BUCKET: orbit-uploads
+      S3_ACCESS_KEY_ID: orbit
+      S3_SECRET_ACCESS_KEY: ${MINIO_PASSWORD:?required}
+      NEXT_TELEMETRY_DISABLED: '1'
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - fetch('http://127.0.0.1:3100/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      web:
+        condition: service_healthy
+      bucket:
+        condition: service_healthy
+    restart: unless-stopped
+  scheduler:
+    image: ghcr.io/noveum/orbit-runtime:2026.09.24
+    command:
+    - node
+    - apps/web/scheduler.mjs
+    environment:
+      CRON_SECRET: ${CRON_SECRET:?required}
+      ORBIT_INTERNAL_URL: http://web:3000
+    stop_grace_period: 310s
+    depends_on:
+      web:
+        condition: service_healthy
+    restart: unless-stopped
+  orbit:
+    image: ghcr.io/noveum/orbit-gateway:2026.09.24
+    environment:
+      ORBIT_TRUSTED_PROXIES: ${ORBIT_TRUSTED_PROXIES:-private_ranges}
+    depends_on:
+      web:
+        condition: service_healthy
+      realtime:
+        condition: service_healthy
+      scheduler:
+        condition: service_started
+    restart: unless-stopped
+    expose:
+    - '3000'
+volumes:
+  postgres: null
+  redis: null
+  storage: null
+version: '3.8'

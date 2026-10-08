@@ -19,7 +19,7 @@ AIRBYTE_API_HOST = "http://${main_domain}/api/public"
 AIRBYTE_VERSION = "2.2.0"
 MANIFEST_SERVER_VERSION = "7.23.7"
 TEMPORAL_VERSION = "1.27.2"
-MINIO_VERSION = "RELEASE.2023-11-20T22-40-07Z"
+SEAWEEDFS_VERSION = "4.48"
 K3S_VERSION = "v1.36.3-k3s1"
 COREDNS_VERSION = "1.14.7"
 
@@ -619,12 +619,12 @@ content = """
 
 set -eu
 
-until /bin/mc alias set airbyte "$MINIO_ENDPOINT" "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD" >/dev/null 2>&1; do
-  sleep 2
-done
-
 for bucket in airbyte-bucket state-storage airbyte-dev-logs; do
-  /bin/mc mb --ignore-existing "airbyte/$bucket"
+  until echo "s3.bucket.list" | weed shell -master="$SEAWEEDFS_MASTER" 2>/dev/null | grep -q "^[[:space:]]*$bucket[[:space:]]"; do
+    echo "s3.bucket.create -name $bucket" | weed shell -master="$SEAWEEDFS_MASTER" >/dev/null 2>&1 || true
+    sleep 2
+  done
+  echo "bucket $bucket ready"
 done
 """
 

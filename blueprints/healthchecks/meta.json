@@ -1,0 +1,13 @@
+{
+  "id": "healthchecks",
+  "name": "Healthchecks",
+  "version": "v4.4",
+  "description": "Healthchecks is an open-source cron job and background task monitoring service that alerts you when your scheduled jobs fail to check in. Registration is closed by default: create the first admin by running ./manage.py createsuperuser in the healthchecks container terminal.",
+  "logo": "healthchecks.svg",
+  "links": {
+    "github": "https://github.com/healthchecks/healthchecks",
+    "website": "https://healthchecks.io/",
+    "docs": "https://healthchecks.io/docs/self_hosted_docker/"
+  },
+  "tags": ["monitoring", "cron", "alerting"]
+}

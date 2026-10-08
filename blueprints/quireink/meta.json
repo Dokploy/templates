@@ -1,0 +1,13 @@
+{
+  "id": "quireink",
+  "name": "Quire Ink",
+  "version": "2.2.1",
+  "description": "A self-hosted blog in one container: a real editor over Markdown with tables, footnotes and mathematics, scheduled publishing, newsletters over your own SMTP, comments with a built-in spam gate, cookie-free analytics, full-text search and a book reading mode. Importers bring a WordPress, Ghost, Substack or Medium blog across with its redirects and images. There is no database service to run and nothing is fetched from a third party: two SQLite files and an uploads folder are the whole of it. After the first start, open the container logs for the one-time link that claims the blog and creates your account.",
+  "logo": "quireink.png",
+  "links": {
+    "github": "https://github.com/joiha-steven/quireink",
+    "website": "https://quireink.com",
+    "docs": "https://github.com/joiha-steven/quireink/blob/main/docs/self-host-docker.md"
+  },
+  "tags": ["cms", "self-hosted", "blog"]
+}

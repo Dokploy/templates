@@ -126,7 +126,8 @@ This document provides essential context for AI models interacting with this pro
   - **NEVER include:** `ports` (use `expose` only), `container_name`, `networks` (Dokploy handles isolation)
   - **ALWAYS include:** `restart: unless-stopped` or `restart: always`, persistent volumes
   - **Service naming:** MUST match blueprint folder name exactly
-  - **Example:**
+  - **Image source:** Prefer pinned Docker images from registries (`image: ghost:6-alpine`). When no official published images are available, use Docker Compose `build` with a Git context (e.g., `context: "https://github.com/..."#main`, see `blueprints/opendots` for an example building both `app` and `browser` targets from the upstream repository).
+  - **Example (with pinned image):**
     ```yaml
     services:
       ghost:
@@ -160,7 +161,7 @@ This document provides essential context for AI models interacting with this pro
 
   - **Required fields:** `id`, `name`, `version`, `description`, `links` (with `github`), `logo`, `tags` (array)
   - **Tags:** Lowercase strings (e.g., `["monitoring", "database"]`)
-  - **Version:** MUST match Docker image version in docker-compose.yml
+  - **Version:** MUST match Docker image version in docker-compose.yml when using `image:`. When building from source (using `build:` with a Git context), the version should reflect the template's own version or the upstream project's version (e.g., `"latest"` for tracking `main` branch).
   - **Logo:** Filename only (e.g., `"ghost.jpeg"`), file must exist in blueprint folder
 
 - **Frontend Development:**
@@ -181,8 +182,8 @@ This document provides essential context for AI models interacting with this pro
 
 - **Dependencies:**
 
-  - When adding new templates, ensure Docker images are pinned to specific versions
-  - Update meta.json with exact version matching Docker Compose image version
+  - When adding new templates, prefer pinned Docker images to specific versions when available
+  - Update meta.json with exact version matching Docker Compose image version (for `image:`), or the template/upstream version (for `build:` from source)
   - For frontend dependencies: Use `pnpm add <package>` in `app/` directory
   - For root dependencies: Use `npm install <package>` in root directory
 

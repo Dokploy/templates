@@ -1,0 +1,19 @@
+[variables]
+DOMAIN = "${domain}"
+ADMIN_EMAIL = "admin@${domain}"
+DB_PASSWORD = "${password:24}"
+DB_ROOT_PASSWORD = "${password:24}"
+APP_SECRET = "${base64:32}"
+
+[config]
+[[config.domains]]
+serviceName = "panel"
+port = 80
+host = "${DOMAIN}"
+
+[config.env]
+DOMAIN = "${DOMAIN}"
+ADMIN_EMAIL = "${ADMIN_EMAIL}"
+DB_PASSWORD = "${DB_PASSWORD}"
+DB_ROOT_PASSWORD = "${DB_ROOT_PASSWORD}"
+APP_SECRET = "${APP_SECRET}"

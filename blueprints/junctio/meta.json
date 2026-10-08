@@ -1,0 +1,19 @@
+{
+  "id": "junctio",
+  "name": "Junctio",
+  "version": "0.2.1",
+  "description": "Self-hosted MCP gateway that puts stdio, Docker and remote MCP servers behind one endpoint per client, with API key or OAuth downstream auth and upstream tokens refreshed before they expire.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/k2so-dev/junctio",
+    "website": "https://junctio.pages.dev",
+    "docs": "https://junctio.pages.dev/docs/"
+  },
+  "tags": [
+    "ai",
+    "mcp",
+    "gateway",
+    "oauth",
+    "developer-tools"
+  ]
+}

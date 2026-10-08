@@ -1,0 +1,13 @@
+{
+  "id": "corsfix",
+  "name": "Corsfix",
+  "version": "8899bb15e71c7238285ccefc4c95a0cd47daeaf0",
+  "description": "Corsfix is an open source CORS proxy platform for fetching APIs from browser applications, with origin and target allowlists, encrypted API secrets, response caching, and a management dashboard.",
+  "logo": "corsfix.svg",
+  "links": {
+    "github": "https://github.com/corsfix/corsfix",
+    "website": "https://corsfix.com",
+    "docs": "https://corsfix.com/docs/open-source/self-hosting"
+  },
+  "tags": ["proxy", "developer-tools", "networking"]
+}

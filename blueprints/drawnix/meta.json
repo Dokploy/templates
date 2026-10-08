@@ -5,9 +5,10 @@
   "description": "Drawnix is an application for generating and managing visual content, powered by pubuzhixing/drawnix Docker image.",
   "logo": "image.png",
   "links": {
-    "github": "https://github.com/pubuzhixing/drawnix",
-    "website": "https://hub.docker.com/r/pubuzhixing/drawnix",
-    "docs": "https://hub.docker.com/r/pubuzhixing/drawnix"
+    "github": "https://github.com/plait-board/drawnix/",
+    "website": "https://drawnix.com/",
+    "docs": "https://github.com/plait-board/drawnix/blob/develop/README_en.md#docker",
+    "dockerhub": "https://hub.docker.com/r/pubuzhixing/drawnix"
   },
   "tags": [
     "visualization",

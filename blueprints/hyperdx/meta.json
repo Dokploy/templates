@@ -1,0 +1,13 @@
+{
+  "id": "hyperdx",
+  "name": "HyperDX",
+  "version": "2.38.0",
+  "description": "HyperDX searches and visualizes logs, traces, metrics, and session replays. Includes ClickHouse, MongoDB, and the ClickStack OpenTelemetry collector.",
+  "logo": "hyperdx.svg",
+  "links": {
+    "github": "https://github.com/hyperdxio/hyperdx",
+    "website": "https://hyperdx.io/",
+    "docs": "https://clickhouse.com/docs/use-cases/observability/clickstack"
+  },
+  "tags": ["monitoring", "logging", "observability"]
+}

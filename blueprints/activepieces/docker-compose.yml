@@ -1,6 +1,6 @@
 services:
   activepieces:
-    image: activepieces/activepieces:0.35.0
+    image: activepieces/activepieces:0.91.2
     restart: unless-stopped
 
     depends_on:
@@ -30,7 +30,7 @@ services:
       AP_TEMPLATES_SOURCE_URL: https://cloud.activepieces.com/api/v1/flow-templates
 
   postgres:
-    image: postgres:14
+    image: postgres:17
     restart: unless-stopped
 
     environment:

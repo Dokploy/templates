@@ -2,7 +2,7 @@
   "id": "wupnext",
   "name": "WupNext",
   "version": "latest",
-  "description": "WupNext is a self-hosted to-do and task queue app: groups, subtasks, deadlines, a built-in pomodoro timer, and daily email reminders. Server-rendered Django with HTMX, backed by SQLite.",
+  "description": "WupNext is a self-hosted to-do and task queue app: groups, subtasks, deadlines, a built-in pomodoro timer, email reminders, and an MCP server so an AI client can work the board. Server-rendered Django with HTMX, backed by SQLite.",
   "logo": "logo.svg",
   "links": {
     "github": "https://github.com/javierlnmn/wupnext",
@@ -14,6 +14,7 @@
     "tasks",
     "productivity",
     "pomodoro",
+    "mcp",
     "django",
     "self-hosted"
   ]

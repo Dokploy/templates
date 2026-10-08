@@ -1,6 +1,6 @@
 services:
   libredb-studio:
-    image: ghcr.io/libredb/libredb-studio:0.9.59
+    image: ghcr.io/libredb/libredb-studio:0.18.0
     restart: unless-stopped
     environment:
       - ADMIN_EMAIL=admin@libredb.org
@@ -10,6 +10,20 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - STORAGE_PROVIDER=sqlite
       - STORAGE_SQLITE_PATH=/app/data/libredb-storage.db
+      # Dokploy's auto-generated domain is HTTP (sslip.io); keep false so login works
+      - AUTH_COOKIE_SECURE=false
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/api/db/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
     volumes:
       - libredb-data:/app/data
 volumes:

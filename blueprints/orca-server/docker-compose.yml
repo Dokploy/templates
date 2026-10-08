@@ -1,0 +1,54 @@
+services:
+  orca-server:
+    # Orca publishes no container image, so this builds one from the
+    # pinned upstream release AppImage, following the official headless
+    # Linux server guide (docs/reference/headless-linux-server.md).
+    build:
+      args:
+        ORCA_VERSION: v1.4.205
+      dockerfile_inline: |
+        FROM ubuntu:24.04
+        ARG ORCA_VERSION
+        ARG TARGETARCH
+        ENV DEBIAN_FRONTEND=noninteractive
+        RUN apt-get update && apt-get install -y --no-install-recommends \
+              bash ca-certificates curl file git jq openssh-client procps \
+              xvfb zlib1g-dev libgtk-3-0t64 libpango-1.0-0 libcairo2 \
+              libnss3 libgbm1 libdrm2 libasound2t64 libcups2t64 libxkbcommon0 \
+              libatk1.0-0t64 libatk-bridge2.0-0t64 libatspi2.0-0t64 \
+              libx11-xcb1 libxcb-dri3-0 libxcomposite1 libxdamage1 libxfixes3 \
+              libxrandr2 libxrender1 libxss1 libxtst6 \
+            && rm -rf /var/lib/apt/lists/*
+        RUN if [ "$$TARGETARCH" = arm64 ]; then asset=orca-linux-arm64.AppImage; else asset=orca-linux.AppImage; fi \
+            && curl -fL --retry 3 -o /tmp/orca.AppImage \
+              "https://github.com/stablyai/orca/releases/download/$$ORCA_VERSION/$$asset" \
+            && chmod +x /tmp/orca.AppImage \
+            && cd /opt && /tmp/orca.AppImage --appimage-extract >/dev/null \
+            && mv /opt/squashfs-root /opt/orca \
+            && chmod -R a+rX /opt/orca \
+            && rm /tmp/orca.AppImage
+        RUN useradd --create-home --shell /bin/bash orca
+        USER orca
+        WORKDIR /home/orca
+        ENV PATH=/home/orca/.local/bin:/opt/orca/resources/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+            LIBGL_ALWAYS_SOFTWARE=1
+        # Chromium cannot create its sandbox namespaces in an unprivileged
+        # container; the container is the isolation boundary instead.
+        ENTRYPOINT ["/opt/orca/AppRun", "--no-sandbox"]
+    restart: unless-stopped
+    init: true
+    shm_size: "1gb"
+    command: serve --port 6768 --pairing-address ${ORCA_PAIRING_ADDRESS} ${ORCA_SERVE_ARGS:-}
+    expose:
+      - 6768
+    volumes:
+      - orca-home:/home/orca
+    healthcheck:
+      test: ["CMD", "bash", "-c", ": > /dev/tcp/127.0.0.1/6768"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  orca-home: {}

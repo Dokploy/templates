@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#296FF0">
+  <title>Open Analytics</title>
+  <clipPath id="ring">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M256 4a252 252 0 1 0 0 504 252 252 0 1 0 0-504Zm0 109a141 141 0 1 1 0 282 141 141 0 1 1 0-282Z"/>
+  </clipPath>
+  <g clip-path="url(#ring)">
+    <rect x="0" y="4" width="512" height="20"/>
+    <rect x="0" y="36" width="512" height="20"/>
+    <rect x="0" y="68" width="512" height="20"/>
+    <rect x="0" y="100" width="512" height="20"/>
+    <rect x="0" y="132" width="512" height="20"/>
+    <rect x="0" y="164" width="512" height="20"/>
+    <rect x="0" y="196" width="512" height="20"/>
+    <rect x="0" y="228" width="512" height="20"/>
+    <rect x="0" y="260" width="512" height="20"/>
+    <rect x="0" y="292" width="512" height="20"/>
+    <rect x="0" y="324" width="512" height="188"/>
+  </g>
+</svg>

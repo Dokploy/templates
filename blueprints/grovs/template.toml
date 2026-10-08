@@ -1,0 +1,76 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+clickhouse_password = "${password:32}"
+secret_key_base = "${hash:64}"
+active_record_encryption_primary_key = "${hash:64}"
+active_record_encryption_deterministic_key = "${hash:64}"
+active_record_encryption_key_derivation_salt = "${hash:64}"
+admin_api_key = "${hash:64}"
+diagnostics_api_key = "${hash:64}"
+sent_quotas_webhook_key = "${hash:64}"
+oauth_client_uid = "${hash:48}"
+oauth_client_secret = "${hash:64}"
+bootstrap_admin_password = "${password:24}"
+
+[config]
+env = [
+  "SERVER_HOST=${main_domain}",
+  "DOMAIN_LIVE=${main_domain}",
+  "DOMAIN_TEST=test.${main_domain}",
+  "SERVER_HOST_PROTOCOL=http://",
+  "GROVS_CERT_RESOLVER=",
+  "BOOTSTRAP_ADMIN_EMAIL=admin@${main_domain}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "CLICKHOUSE_PASSWORD=${clickhouse_password}",
+  "SECRET_KEY_BASE=${secret_key_base}",
+  "ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=${active_record_encryption_primary_key}",
+  "ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=${active_record_encryption_deterministic_key}",
+  "ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=${active_record_encryption_key_derivation_salt}",
+  "ADMIN_API_KEY=${admin_api_key}",
+  "DIAGNOSTICS_API_KEY=${diagnostics_api_key}",
+  "SENT_QUOTAS_WEBHOOK_KEY=${sent_quotas_webhook_key}",
+  "OAUTH_CLIENT_UID=${oauth_client_uid}",
+  "OAUTH_CLIENT_SECRET=${oauth_client_secret}",
+  "BOOTSTRAP_ADMIN_PASSWORD=${bootstrap_admin_password}",
+]
+
+[[config.domains]]
+serviceName = "dashboard"
+port = 3000
+host = "dashboard.${main_domain}"
+
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "api.${main_domain}"
+
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "sdk.${main_domain}"
+
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "mcp.${main_domain}"
+
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "go.${main_domain}"
+
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "preview.${main_domain}"
+
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "links.${main_domain}"
+
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "links.test.${main_domain}"

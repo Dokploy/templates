@@ -1,6 +1,6 @@
 services:
   velix-api:
-    image: ghcr.io/paulolinder/velix-api:0.1.0
+    image: ghcr.io/paulolinder/velix-api:1.1.0
     restart: always
     environment:
       - DATABASE_URL=postgres://postgres:${DB_PASSWORD}@postgres:5432/velix?sslmode=disable

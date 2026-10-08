@@ -1,7 +1,7 @@
 {
   "id": "inkvoice",
   "name": "Inkvoice",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Open-source invoicing for freelancers and small teams: invoices, online payments (Stripe & PayPal), expenses, multi-currency and reports.",
   "logo": "inkvoice.svg",
   "links": {

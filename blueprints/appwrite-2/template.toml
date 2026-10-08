@@ -276,7 +276,7 @@ INIT_MARKER=/data/db/.appwrite-initialised
 if [ ! -e "$INIT_MARKER" ]; then
   INIT_PORT=27018
   echo "Initialising MongoDB data directory..."
-  find -L /data/db \! -user mongodb -exec chown mongodb '{}' +
+  find -L /data/db \\! -user mongodb -exec chown mongodb '{}' +
   export MONGO_INITDB_DATABASE="${MONGO_INITDB_DATABASE:-test}"
   gosu mongodb mongod --dbpath /data/db --bind_ip 127.0.0.1 --port "$INIT_PORT" &
   INIT_SERVER=$!

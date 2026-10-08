@@ -11,13 +11,16 @@ services:
 
         ARG SITE_URL=http://localhost:3000
 
-        RUN bun create @heyo-sh/heyo-docs@0.2.3 docs \
+        RUN bun create @heyo-sh/heyo-docs@3.1.0 docs \
           --template astro \
           --deployment later \
           --theme shade \
           --package-manager bun
 
         WORKDIR /app/docs
+        # The scaffolder declares "@heyo-sh/heyo-docs": "latest"; pin the runtime
+        # package so builds stay reproducible and match the scaffolded config.
+        RUN bun add @heyo-sh/heyo-docs@3.4.1
         RUN bun -e 'const file = "heyo-docs.config.ts"; const siteUrl = process.argv.at(-1); const source = await Bun.file(file).text(); const updated = source.replace(`// siteUrl: "https://docs.example.com",`, `siteUrl: "` + siteUrl + `",`); if (updated === source) throw new Error("Could not set the generated project site URL."); await Bun.write(file, updated);' "$SITE_URL" \
           && grep -Fq "siteUrl: \"${SITE_URL}\"," heyo-docs.config.ts \
           && bun run build

@@ -5,7 +5,7 @@ version: "3.8"
 services:
   frontend:
     build:
-      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-stable}"
+      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-v0.7.1}"
       dockerfile: frontend/Dockerfile
       args:
         NODE_IMAGE: "${NEBULYNK_NODE_IMAGE:-node:22.23.1-alpine3.24}"
@@ -117,7 +117,7 @@ services:
       retries: 3
       start_period: 60s
     build:
-      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-stable}"
+      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-v0.7.1}"
       dockerfile: backend/Dockerfile
       args:
         NODE_IMAGE: "${NEBULYNK_NODE_IMAGE:-node:22.23.1-alpine3.24}"
@@ -189,7 +189,7 @@ services:
 
   transcription-worker:
     build:
-      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-stable}"
+      context: "https://github.com/sapientorius/Nebulynk.git#${NEBULYNK_SOURCE_REF:-v0.7.1}"
       dockerfile: backend/Dockerfile
       args:
         NODE_IMAGE: "${NEBULYNK_NODE_IMAGE:-node:22.23.1-alpine3.24}"

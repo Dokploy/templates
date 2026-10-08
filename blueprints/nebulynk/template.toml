@@ -21,7 +21,7 @@ frontend_url = "http://${frontend_domain}"
 backend_url = "http://${backend_domain}"
 livekit_public_url = "http://${livekit_domain}"
 garage_public_url = "http://${garage_domain}"
-source_ref = "stable"
+source_ref = "v0.7.1"
 
 [config]
 isolated = true

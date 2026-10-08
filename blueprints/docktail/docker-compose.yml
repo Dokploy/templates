@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  docktail:
+    image: ghcr.io/marvinvr/docktail:1.6.0
+    restart: unless-stopped
+    depends_on:
+      - tailscale
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    environment:
+      - TAILSCALE_OAUTH_CLIENT_ID=${TAILSCALE_OAUTH_CLIENT_ID}
+      - TAILSCALE_OAUTH_CLIENT_SECRET=${TAILSCALE_OAUTH_CLIENT_SECRET}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - tailscale-socket:/var/run/tailscale
+
+  # Tailscale sidecar (upstream "Tailscale Sidecar" setup): runs its own
+  # tailscaled so the host does not need Tailscale installed. Userspace
+  # networking avoids /dev/net/tun and extra capabilities; host networking
+  # lets it reach container IPs on any Docker network.
+  tailscale:
+    image: tailscale/tailscale:v1.102.5
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - TS_AUTHKEY=${TAILSCALE_AUTH_KEY}
+      - TS_HOSTNAME=${TAILSCALE_HOSTNAME}
+      - TS_EXTRA_ARGS=--advertise-tags=${TAILSCALE_TAGS}
+      - TS_USERSPACE=true
+      - TS_AUTH_ONCE=true
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SOCKET=/var/run/tailscale/tailscaled.sock
+    volumes:
+      - tailscale-state:/var/lib/tailscale
+      - tailscale-socket:/var/run/tailscale
+
+volumes:
+  tailscale-state:
+  tailscale-socket:

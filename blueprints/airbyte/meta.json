@@ -1,0 +1,18 @@
+{
+  "id": "airbyte",
+  "name": "Airbyte",
+  "version": "2.2.0",
+  "description": "Open-source data movement for ELT pipelines and AI agents.",
+  "logo": "airbyte.svg",
+  "links": {
+    "github": "https://github.com/airbytehq/airbyte",
+    "website": "https://airbyte.com",
+    "docs": "https://docs.airbyte.com"
+  },
+  "tags": [
+    "analytics",
+    "data",
+    "elt",
+    "pipeline"
+  ]
+}

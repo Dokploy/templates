@@ -1,0 +1,13 @@
+{
+  "id": "opencloud",
+  "name": "OpenCloud",
+  "version": "7.2",
+  "description": "Open source cloud platform for secure file sync, sharing, and content collaboration",
+  "logo": "opencloud.svg",
+  "links": {
+    "github": "https://github.com/opencloud-eu/opencloud",
+    "website": "https://opencloud.eu",
+    "docs": "https://docs.opencloud.eu"
+  },
+  "tags": ["Storage", "Cloud", "Files", "Productivity"]
+}

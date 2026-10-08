@@ -1,0 +1,377 @@
+# Appwrite 2 exposes the API, the Console, Sites and Functions on separate hosts.
+# Defaults below keep a single main domain for API + Console while Sites and
+# Functions live on their own subdomains. To separate the Console from the API
+# (e.g. to protect it behind Cloudflare Access without exposing the public API),
+# change `console_domain` to a dedicated host such as "console.example.com".
+#   API        -> ${main_domain}/v1        (and /v1/realtime, /.well-known)
+#   Console    -> ${console_domain}/
+#   Sites      -> ${sites_domain}
+#   Functions  -> ${functions_domain}
+[variables]
+main_domain = "${domain}"
+console_domain = "console.${main_domain}"
+functions_domain = "functions.${main_domain}"
+sites_domain = "sites.${main_domain}"
+openssl_key = "${password:32}"
+notifications_tracking_secret = "${password:32}"
+db_root_pw = "${password:32}"
+db_user_pw = "${password:32}"
+executor_secret = "${password:32}"
+jobs_secret = "${password:32}"
+usage_pass = "${password:32}"
+geo_secret = "${password:32}"
+
+[config]
+env = [
+  "_APP_ENV=production",
+  "_APP_EDITION=self-hosted",
+  "_APP_LOCALE=en",
+  "_APP_OPENSSL_KEY_V1=${openssl_key}",
+  "_APP_NOTIFICATIONS_TRACKING_SECRET=${notifications_tracking_secret}",
+  "_APP_RULES_FORMAT=md5",
+  "_APP_SYSTEM_RESPONSE_FORMAT=",
+  "_APP_TRUSTED_HEADERS=x-forwarded-for",
+  "_APP_WORKER_PER_CORE=6",
+  "_APP_WORKERS_NUM=1",
+  "_APP_WORKER_MAX_COROUTINES=1",
+  "_APP_WORKER_SCREENSHOTS_ROUTER=http://appwrite",
+  "_APP_REALTIME_TAIL_RATE=50",
+  "_APP_COMPRESSION_ENABLED=enabled",
+  "_APP_COMPRESSION_MIN_SIZE_BYTES=1024",
+  "_APP_DOMAIN=${main_domain}",
+  "_APP_DOMAIN_FUNCTIONS=${functions_domain}",
+  "_APP_DOMAIN_SITES=${sites_domain}",
+  "_APP_DOMAIN_TARGET_A=127.0.0.1",
+  "_APP_DOMAIN_TARGET_AAAA=::1",
+  "_APP_DOMAIN_TARGET_CAA=",
+  "_APP_DOMAIN_TARGET_CNAME=localhost",
+  "_APP_CUSTOM_DOMAIN_DENY_LIST=example.com,test.com,app.example.com",
+  "_APP_DNS=8.8.8.8",
+  "_APP_OPTIONS_FORCE_HTTPS=disabled",
+  "_APP_OPTIONS_ROUTER_FORCE_HTTPS=disabled",
+  "_APP_OPTIONS_ROUTER_PROTECTION=disabled",
+  "_APP_ROUTER_AUTO_CERTIFICATES=disabled",
+  "_APP_OPTIONS_ABUSE=enabled",
+  "_APP_OPTIONS_ABUSE_INCREASED_LIMIT_PROJECTS=increased-limit-project",
+  "_APP_CONSOLE_DOMAIN=${console_domain}",
+  "_APP_CONSOLE_URL=https://${console_domain}",
+  "_APP_CONSOLE_HOSTNAMES=${console_domain}",
+  "_APP_CONSOLE_SCHEMA=appwriteio",
+  "_APP_CONSOLE_SESSION_ALERTS=disabled",
+  "_APP_CONSOLE_TRUSTED_PROJECTS=",
+  "_APP_CONSOLE_COUNTRIES_DENYLIST=",
+  "_APP_CONSOLE_WHITELIST_EMAILS=",
+  "_APP_CONSOLE_WHITELIST_IPS=",
+  "_APP_CONSOLE_WHITELIST_ROOT=enabled",
+  "_APP_CONSOLE_GITHUB_APP_ID=",
+  "_APP_CONSOLE_GITHUB_SECRET=",
+  "_APP_CONSOLE_GITLAB_APP_ID=",
+  "_APP_CONSOLE_GITLAB_SECRET=",
+  "_APP_CONSOLE_GITLAB_ENDPOINT=",
+  "_APP_CONSOLE_BITBUCKET_APP_ID=",
+  "_APP_CONSOLE_BITBUCKET_SECRET=",
+  "_APP_CONSOLE_GOOGLE_APP_ID=",
+  "_APP_CONSOLE_GOOGLE_SECRET=",
+  "_APP_DB_ADAPTER=postgresql",
+  "_APP_DB_HOST=postgresql",
+  "_APP_DB_PORT=5432",
+  "_APP_DB_SCHEMA=appwrite",
+  "_APP_DB_USER=user",
+  "_APP_DB_PASS=${db_user_pw}",
+  "_APP_DB_ROOT_PASS=${db_root_pw}",
+  "_APP_DATABASE_SHARED_NAMESPACE=",
+  "_APP_DATABASE_SHARED_TABLES=",
+  "_APP_DB_ADAPTER_DOCUMENTSDB=mongodb",
+  "_APP_DB_HOST_DOCUMENTSDB=mongodb",
+  "_APP_DB_PORT_DOCUMENTSDB=27017",
+  "_APP_DB_ADAPTER_VECTORSDB=postgresql",
+  "_APP_DB_HOST_VECTORSDB=postgresql",
+  "_APP_DB_PORT_VECTORSDB=5432",
+  "_APP_REDIS_HOST=redis",
+  "_APP_REDIS_PORT=6379",
+  "_APP_REDIS_USER=",
+  "_APP_REDIS_PASS=",
+  "_APP_EMBEDDING=disabled",
+  "_APP_EMBEDDING_ENDPOINT='http://appwrite-embedding:3000/embed'",
+  "_APP_EMBEDDING_MODELS=nomic-embed-text",
+  "_APP_EMBEDDING_TIMEOUT=30000",
+  "_APP_PWNED_PASSWORDS_DSN=none://localhost",
+  "_APP_MQTT_REPLAY_DEPTH=5",
+  "_APP_MQTT_MAX_PACKET_SIZE=64000",
+  "_APP_STORAGE_DEVICE=Local",
+  "_APP_STORAGE_LIMIT=30000000",
+  "_APP_STORAGE_PREVIEW_LIMIT=20000000",
+  "_APP_AUTOGRAVITY_HOST=http://appwrite-autogravity:8080",
+  "_APP_STORAGE_ANTIVIRUS=disabled",
+  "_APP_STORAGE_ANTIVIRUS_HOST=clamav",
+  "_APP_STORAGE_ANTIVIRUS_PORT=3310",
+  "_APP_STORAGE_S3_ACCESS_KEY=",
+  "_APP_STORAGE_S3_SECRET=",
+  "_APP_STORAGE_S3_REGION=us-east-1",
+  "_APP_STORAGE_S3_BUCKET=",
+  "_APP_STORAGE_S3_ENDPOINT=",
+  "_APP_STORAGE_DO_SPACES_ACCESS_KEY=",
+  "_APP_STORAGE_DO_SPACES_SECRET=",
+  "_APP_STORAGE_DO_SPACES_REGION=us-east-1",
+  "_APP_STORAGE_DO_SPACES_BUCKET=",
+  "_APP_STORAGE_BACKBLAZE_ACCESS_KEY=",
+  "_APP_STORAGE_BACKBLAZE_SECRET=",
+  "_APP_STORAGE_BACKBLAZE_REGION=us-west-004",
+  "_APP_STORAGE_BACKBLAZE_BUCKET=",
+  "_APP_STORAGE_LINODE_ACCESS_KEY=",
+  "_APP_STORAGE_LINODE_SECRET=",
+  "_APP_STORAGE_LINODE_REGION=eu-central-1",
+  "_APP_STORAGE_LINODE_BUCKET=",
+  "_APP_STORAGE_WASABI_ACCESS_KEY=",
+  "_APP_STORAGE_WASABI_SECRET=",
+  "_APP_STORAGE_WASABI_REGION=eu-central-1",
+  "_APP_STORAGE_WASABI_BUCKET=",
+  "_APP_SYSTEM_EMAIL_NAME=Appwrite",
+  "_APP_SYSTEM_EMAIL_ADDRESS=noreply@appwrite.io",
+  "_APP_SYSTEM_TEAM_EMAIL=team@appwrite.io",
+  "_APP_EMAIL_SECURITY=security@appwrite.io",
+  "_APP_EMAIL_CERTIFICATES=certificates@appwrite.io",
+  "_APP_SMTP_HOST=",
+  "_APP_SMTP_PORT=",
+  "_APP_SMTP_SECURE=",
+  "_APP_SMTP_USERNAME=",
+  "_APP_SMTP_PASSWORD=",
+  "_APP_SMS_PROVIDER=",
+  "_APP_SMS_FROM=",
+  "_APP_SMS_PROJECTS_DENY_LIST=",
+  "_APP_MESSAGE_EMAIL_TEST_DSN=",
+  "_APP_MESSAGE_PUSH_TEST_DSN=",
+  "_APP_MESSAGE_SMS_TEST_DSN=",
+  "_APP_COMPUTE_SIZE_LIMIT=30000000",
+  "_APP_COMPUTE_BUILD_SIZE_LIMIT=2000000000",
+  "_APP_COMPUTE_BUILD_TIMEOUT=900",
+  "_APP_COMPUTE_CPUS=0",
+  "_APP_COMPUTE_MEMORY=0",
+  "_APP_COMPUTE_INACTIVE_THRESHOLD=600",
+  "_APP_COMPUTE_MAINTENANCE_INTERVAL=600",
+  "_APP_COMPUTE_RUNTIMES_NETWORK=dokploy-network",
+  "_APP_OPEN_RUNTIMES_NFT=enabled",
+  "_APP_FUNCTIONS_RUNTIMES=node-22,node-24,node-26,python-3.12,python-3.14,php-8.4,ruby-4.0,dart-3.5,go-1.23,go-1.26,rust-1.83,bun-1.3,deno-2.6,java-22,dotnet-10,kotlin-2.3,swift-6.2",
+  "_APP_FUNCTIONS_TIMEOUT=900",
+  "_APP_FUNCTIONS_CREATION_ABUSE_LIMIT=5000",
+  "_APP_SITES_RUNTIMES=static-1,node-22,node-24,node-26,flutter-3.44",
+  "_APP_SITES_TIMEOUT=60",
+  "_APP_EXECUTOR_HOST=http://openruntimes-executor/v1",
+  "_APP_EXECUTOR_SECRET=${executor_secret}",
+  "_APP_EXECUTOR_IMAGES=openruntimes/node:v5-22,openruntimes/node:v5-24,openruntimes/node:v5-26,openruntimes/static:v5-1,openruntimes/python:v5-3.12,openruntimes/python:v5-3.14,openruntimes/php:v5-8.4,openruntimes/ruby:v5-4.0,openruntimes/dart:v5-3.5,openruntimes/go:v5-1.23,openruntimes/go:v5-1.26,openruntimes/rust:v5-1.83,openruntimes/bun:v5-1.3,openruntimes/deno:v5-2.6,openruntimes/java:v5-22,openruntimes/dotnet:v5-10,openruntimes/kotlin:v5-2.3,openruntimes/swift:v5-6.2,openruntimes/flutter:v5-3.44",
+  "_APP_EXECUTOR_CONNECTION_STORAGE=local://localhost",
+  "_APP_BUILDS_VOLUME=appwrite-builds",
+  "_APP_JOBS_HOST=http://orchestrator:8080",
+  "_APP_JOBS_SECRET=${jobs_secret}",
+  "_APP_JOBS_ENDPOINT=http://appwrite",
+  "_APP_BROWSER_HOST=http://appwrite-browser:3000/v1",
+  "_APP_DOCKER_HUB_USERNAME=",
+  "_APP_DOCKER_HUB_PASSWORD=",
+  "_APP_MAINTENANCE_INTERVAL=86400",
+  "_APP_MAINTENANCE_START_TIME=12:00",
+  "_APP_MAINTENANCE_RETENTION_ABUSE=86400",
+  "_APP_MAINTENANCE_RETENTION_AUDIT=1209600",
+  "_APP_MAINTENANCE_RETENTION_AUDIT_CONSOLE=15778800",
+  "_APP_MAINTENANCE_RETENTION_CACHE=2592000",
+  "_APP_MAINTENANCE_RETENTION_EXECUTION=1209600",
+  "_APP_MAINTENANCE_RETENTION_SCHEDULES=86400",
+  "_APP_USAGE_STATS=enabled",
+  "_APP_USAGE_PASS=${usage_pass}",
+  "_APP_CONNECTIONS_DB_USAGE=http://appwrite:${usage_pass}@clickhouse:8123/appwrite",
+  "_APP_POOL_SIZE_USAGE=2",
+  "_APP_CONNECTIONS_DB_EXECUTIONS=http://appwrite:${usage_pass}@clickhouse:8123/appwrite",
+  "_APP_POOL_SIZE_EXECUTIONS=2",
+  "_APP_MAINTENANCE_RETENTION_USAGE_TTL=180",
+  "_APP_STATS_USAGE_QUEUE_NAME=v1-stats-usage",
+  "_APP_STATS_RESOURCES_QUEUE_NAME=v1-stats-resources",
+  "_APP_STATS_RESOURCES_INTERVAL=3600",
+  "_APP_INTERVAL_CLEANUP_STALE_EXECUTIONS=300",
+  "_APP_INTERVAL_DOMAIN_VERIFICATION=120",
+  "_APP_GRAPHQL_INTROSPECTION=enabled",
+  "_APP_GRAPHQL_MAX_BATCH_SIZE=10",
+  "_APP_GRAPHQL_MAX_COMPLEXITY=250",
+  "_APP_GRAPHQL_MAX_DEPTH=4",
+  "_APP_ASSISTANT_OPENAI_API_KEY=",
+  "_APP_LOGGING_CONFIG=",
+  "_APP_LOGGING_FORMAT=pretty",
+  "_APP_MIGRATION_HOST=appwrite",
+  "_APP_MIGRATIONS_FIREBASE_CLIENT_ID=",
+  "_APP_MIGRATIONS_FIREBASE_CLIENT_SECRET=",
+  "_APP_PROJECT_REGIONS=default",
+  "_APP_GEO_SECRET=${geo_secret}",
+  "_APP_GEO_ENDPOINT=http://appwrite-geo/v1",
+  "_APP_VCS_GITHUB_APP_ID=",
+  "_APP_VCS_GITHUB_APP_NAME=",
+  "_APP_VCS_GITHUB_CLIENT_ID=",
+  "_APP_VCS_GITHUB_CLIENT_SECRET=",
+  "_APP_VCS_GITHUB_PRIVATE_KEY=disabled",
+  "_APP_VCS_GITHUB_WEBHOOK_SECRET=",
+  "_APP_VCS_GITEA_ENDPOINT=",
+  "_APP_VCS_GITEA_BROWSER_ENDPOINT=",
+  "_APP_VCS_GITEA_CLIENT_ID=",
+  "_APP_VCS_GITEA_CLIENT_SECRET=",
+  "_APP_VCS_GITEA_WEBHOOK_SECRET=",
+  "_APP_VCS_GITLAB_ENDPOINT=",
+  "_APP_VCS_GITLAB_CLIENT_ID=",
+  "_APP_VCS_GITLAB_CLIENT_SECRET=",
+  "_APP_VCS_GITLAB_WEBHOOK_SECRET=",
+  "_APP_VCS_BITBUCKET_CLIENT_ID=",
+  "_APP_VCS_BITBUCKET_CLIENT_SECRET=",
+  "_APP_VCS_BITBUCKET_WEBHOOK_SECRET=",
+  "_APP_VCS_ORIGIN_CLIENT_ID=",
+  "_APP_VCS_ORIGIN_PRIVATE_KEY=",
+  "_APP_VCS_WEBHOOK_URL=https://${main_domain}/v1",
+  "_APP_WEBHOOK_MAX_FAILED_ATTEMPTS=10",
+]
+
+[[config.mounts]]
+filePath = "mongo-init.js"
+content = """// mongo-init.js
+
+const adminDb = db.getSiblingDB('admin');
+
+const username = process.env.MONGO_INITDB_USERNAME;
+const password = process.env.MONGO_INITDB_PASSWORD;
+const database = process.env.MONGO_INITDB_DATABASE;
+
+// Idempotent: the official entrypoint races the real server on port 27017 when
+// initialising a fresh volume (appwrite/appwrite#13593), so this script may run
+// more than once. Skip if the user already exists.
+if (adminDb.getUser(username) === null) {
+  adminDb.createUser({
+    user: username,
+    pwd: password,
+    roles: [
+      { role: 'readWrite', db: database }
+    ]
+  });
+}
+"""
+
+[[config.mounts]]
+filePath = "mongo-entrypoint.sh"
+content = """#!/bin/bash
+set -e
+
+KEYFILE_PATH="/data/keyfile/mongo-keyfile"
+
+if [ ! -f "$KEYFILE_PATH" ]; then
+  echo "Generating random MongoDB keyfile..."
+  mkdir -p /data/keyfile
+  openssl rand -base64 756 > "$KEYFILE_PATH"
+fi
+
+chmod 400 "$KEYFILE_PATH"
+chown mongodb:mongodb "$KEYFILE_PATH" 2>/dev/null || chown 999:999 "$KEYFILE_PATH"
+
+# The standard entrypoint initialises an empty data directory with a second
+# mongod on 27017, stopped with `mongod --shutdown`. That returns once the
+# server clears <dbpath>/mongod.lock, several steps before it exits and
+# releases the port, and the real server binds a millisecond after it starts --
+# so a slow shutdown tail leaves it exiting 48, "Address already in use",
+# taking the container with it (appwrite/appwrite#13593). Initialise here
+# instead, on a port the real server never binds, and hand over a directory
+# the standard entrypoint has nothing left to do.
+INIT_MARKER=/data/db/.appwrite-initialised
+if [ ! -e "$INIT_MARKER" ]; then
+  INIT_PORT=27018
+  echo "Initialising MongoDB data directory..."
+  find -L /data/db \\! -user mongodb -exec chown mongodb '{}' +
+  export MONGO_INITDB_DATABASE="${MONGO_INITDB_DATABASE:-test}"
+  gosu mongodb mongod --dbpath /data/db --bind_ip 127.0.0.1 --port "$INIT_PORT" &
+  INIT_SERVER=$!
+  READY=
+  for _ in $(seq 1 30); do
+    if mongosh --host 127.0.0.1 --port "$INIT_PORT" --quiet --eval 'quit(0)' > /dev/null 2>&1; then
+      READY=1
+      break
+    fi
+    if ! kill -0 "$INIT_SERVER" 2>/dev/null; then
+      break
+    fi
+    sleep 1
+  done
+  if [ -z "$READY" ]; then
+    echo "MongoDB did not accept connections for initialisation" >&2
+    exit 1
+  fi
+  mongosh --host 127.0.0.1 --port "$INIT_PORT" --quiet admin --eval '
+    const username = process.env.MONGO_INITDB_ROOT_USERNAME;
+    if (db.getUser(username) === null) {
+      db.createUser({
+        user: username,
+        pwd: process.env.MONGO_INITDB_ROOT_PASSWORD,
+        roles: [{ role: "root", db: "admin" }]
+      });
+    }
+  '
+  mongosh --host 127.0.0.1 --port "$INIT_PORT" --quiet "$MONGO_INITDB_DATABASE" /mongo-init.js
+  touch "$INIT_MARKER"
+  kill -TERM "$INIT_SERVER"
+  wait "$INIT_SERVER"
+  echo "MongoDB data directory initialised."
+fi
+
+exec docker-entrypoint.sh mongod --replSet rs0 --bind_ip_all --auth --keyFile "$KEYFILE_PATH"
+"""
+
+# --- Main domain: API + Console (kept for backwards compatibility) ---
+[[config.domains]]
+serviceName = "appwrite-console"
+port = 3000
+host = "${main_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "appwrite"
+port = 80
+host = "${main_domain}"
+path = "/v1"
+
+[[config.domains]]
+serviceName = "appwrite"
+port = 80
+host = "${main_domain}"
+path = "/.well-known"
+
+[[config.domains]]
+serviceName = "appwrite-realtime"
+port = 80
+host = "${main_domain}"
+path = "/v1/realtime"
+
+# --- Dedicated Console domain ---
+# The Console SPA is served at the root of ${console_domain}. Requests to
+# /v1 and /v1/realtime on that same host are proxied to the API and Realtime
+# services so the Console reaches the API on its own origin. No wildcard is
+# used here; Sites and Functions keep their own wildcard hosts below.
+[[config.domains]]
+serviceName = "appwrite-console"
+port = 3000
+host = "${console_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "appwrite"
+port = 80
+host = "${console_domain}"
+path = "/v1"
+
+[[config.domains]]
+serviceName = "appwrite-realtime"
+port = 80
+host = "${console_domain}"
+path = "/v1/realtime"
+
+# --- Sites and Functions (wildcards handled by Traefik HostRegexp labels) ---
+[[config.domains]]
+serviceName = "appwrite"
+port = 80
+host = "${sites_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "appwrite"
+port = 80
+host = "${functions_domain}"
+path = "/"

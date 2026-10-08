@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   freellmapi:
     image: ghcr.io/tashfeenahmed/freellmapi:v0.8.4

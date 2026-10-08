@@ -1,5 +1,3 @@
-version: "3.8"
-
 # Dokploy Blueprint notes:
 # - This stack is intentionally self-contained for one-click deployments.
 # - The first deployment is slower because bootstrap downloads Shopware into a persistent volume.

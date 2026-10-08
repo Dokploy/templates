@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   anubis:
     image: ghcr.io/techarohq/anubis:latest

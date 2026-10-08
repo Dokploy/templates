@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   crawlab-master:
     image: crawlabteam/crawlab:latest

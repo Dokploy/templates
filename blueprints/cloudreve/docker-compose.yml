@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   cloudreve:
     image: cloudreve/cloudreve:4.10.1

@@ -1,0 +1,1359 @@
+# Ethora Core, Dokploy template (github.com/Dokploy/templates format).
+# GENERATED FILE: edit template.in.toml and run build-template.sh; the mounts
+# are the bundle's deploy/compose/scripts and deploy/compose/templates.
+#
+# No input is required: root_domain is a Dokploy-generated
+# <name>-<hash>-<ip>.sslip.io host, the four public hosts api., app., xmpp. and
+# files.<root_domain> are the domains below, and every secret is generated.
+# To use your own domain change ROOT_DOMAIN and the six domains together.
+# Before the first deploy set ADMIN_EMAIL (the admin login), enable HTTPS
+# with Let's Encrypt on the six domains (the web app only works over https)
+# and turn Isolated Deployment on (Advanced), so the service names stay
+# private to this stack. See README.md.
+
+[variables]
+root_domain = "${domain}"
+admin_password = "${password:20}"
+jwt_secret = "${password:64}"
+refresh_secret = "${password:64}"
+xmpp_secret = "${password:32}"
+xmpp_jwt_secret = "${password:64}"
+xmpp_admin_password = "${password:24}"
+internal_requests_secret = "${password:32}"
+mysql_root_password = "${password:32}"
+minio_root_user = "ethora${password:12}"
+minio_root_password = "${password:32}"
+centrifugo_api_key = "${password:64}"
+centrifugo_hmac_secret = "${password:64}"
+centrifugo_admin_password = "${password:24}"
+centrifugo_admin_secret = "${password:64}"
+
+[config]
+# The keys of the bundle's .env.example (deploy/compose/.env.example in
+# github.com/dappros/ethora-install), same order, without the per-host
+# overrides (API_DOMAIN, ...) and the bundled proxy's settings. ADMIN_EMAIL
+# is the admin login; ADMIN_PASSWORD its initial password. MYSQL_ROOT_PASSWORD
+# and MINIO_ROOT_* are written into the databases on the first start and must
+# not change after it.
+env = [
+  "ROOT_DOMAIN=${root_domain}",
+  "ADMIN_EMAIL=admin@${root_domain}",
+  "ADMIN_PASSWORD=${admin_password}",
+  "BASE_APP_DISPLAY_NAME=Ethora",
+  "ETHORA_LICENSE_KEY=",
+  "ETHORA_LICENSE_CALL_HOME=true",
+  "ETHORA_LICENSE_SERVER_URL=",
+  "JWT_SECRET=${jwt_secret}",
+  "REFRESH_SECRET=${refresh_secret}",
+  "XMPP_SECRET=${xmpp_secret}",
+  "XMPP_JWT_SECRET=${xmpp_jwt_secret}",
+  "XMPP_ADMIN_PASSWORD=${xmpp_admin_password}",
+  "INTERNAL_REQUESTS_SECRET=${internal_requests_secret}",
+  "MYSQL_ROOT_PASSWORD=${mysql_root_password}",
+  "MINIO_ROOT_USER=${minio_root_user}",
+  "MINIO_ROOT_PASSWORD=${minio_root_password}",
+  "CENTRIFUGO_API_KEY=${centrifugo_api_key}",
+  "CENTRIFUGO_HMAC_SECRET=${centrifugo_hmac_secret}",
+  "CENTRIFUGO_ADMIN_PASSWORD=${centrifugo_admin_password}",
+  "CENTRIFUGO_ADMIN_SECRET=${centrifugo_admin_secret}",
+  "ETHORA_API_IMAGE=docker.io/dappros/ethora-api:2610",
+  "ETHORA_FRONTEND_IMAGE=docker.io/dappros/ethora-frontend:2610",
+  "ETHORA_XMPP_IMAGE=docker.io/dappros/ethora-xmpp:2610",
+  "COMPOSE_PROFILES=",
+]
+
+# api.<root>: the HTTP API (Swagger at /api-docs/).
+[[config.domains]]
+serviceName = "api"
+port = 8080
+host = "api.${root_domain}"
+
+# app.<root>: web chat and admin panel ...
+[[config.domains]]
+serviceName = "frontend"
+port = 8080
+host = "app.${root_domain}"
+
+# ... and, on the same host, the real-time channel (longer path rule wins).
+[[config.domains]]
+serviceName = "centrifugo"
+port = 8000
+host = "app.${root_domain}"
+path = "/connection/websocket"
+
+# xmpp.<root>: only /ws and /bosh; ejabberd's /api and /admin stay internal.
+[[config.domains]]
+serviceName = "xmpp"
+port = 5280
+host = "xmpp.${root_domain}"
+path = "/ws"
+
+[[config.domains]]
+serviceName = "xmpp"
+port = 5280
+host = "xmpp.${root_domain}"
+path = "/bosh"
+
+# files.<root>: file storage (MinIO).
+[[config.domains]]
+serviceName = "minio"
+port = 9000
+host = "files.${root_domain}"
+
+# The bundle's scripts and templates, mounted from ../files/ by docker-compose.yml.
+[[config.mounts]]
+filePath = "/scripts/api-entrypoint.sh"
+content = '''
+#!/bin/bash
+# api-entrypoint.sh - entrypoint for every container of the ethora-api image
+# in the compose bundle (api, jobs, init).
+#
+# Loads the backend.env the config service rendered, parsed by the dotenv
+# package the API itself uses (so quoting and escaping behave exactly as on a
+# host install), without overriding anything already in the environment.
+# Then hands over to the image's own start.js:
+#
+#   api-entrypoint.sh api | jobs | bc-worker | script <path> [args...]
+#   api-entrypoint.sh init            first-boot steps (scripts/init.sh)
+#   api-entrypoint.sh verify          end-to-end check (scripts/verify.js)
+set -euo pipefail
+
+ENV_FILE="${ETHORA_BACKEND_ENV_FILE:-/ethora/config/api/backend.env}"
+[ -r "$ENV_FILE" ] || { echo "[api] $ENV_FILE is missing or unreadable; the config service did not run" >&2; exit 1; }
+
+exports="$(node -e '
+  const fs = require("fs")
+  const parsed = require("/app/node_modules/dotenv").parse(fs.readFileSync(process.argv[1]))
+  const q = v => "\x27" + String(v).replace(/\x27/g, "\x27\\\x27\x27") + "\x27"
+  for (const [k, v] of Object.entries(parsed)) {
+    if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(k)) continue
+    // dotenv.config() semantics: the process environment wins, and an empty
+    // value never masks one baked into the image (ETHORA_BUILD_* etc.).
+    if (process.env[k] !== undefined && (v === "" || process.env[k] !== "")) continue
+    process.stdout.write("export " + k + "=" + q(v) + "\n")
+  }
+' "$ENV_FILE")"
+eval "$exports"
+
+if [ "${1:-}" = "init" ]; then
+  shift
+  exec bash /ethora/scripts/init.sh "$@"
+fi
+if [ "${1:-}" = "verify" ]; then
+  shift
+  exec node /ethora/scripts/verify.js "$@"
+fi
+exec node /app/dist/start.js "$@"
+'''
+
+[[config.mounts]]
+filePath = "/scripts/init.sh"
+content = '''
+#!/bin/bash
+# init.sh - the `init` service of the compose bundle: the first-boot steps
+# the host installer runs in deploy/scripts/init-services.sh and
+# run-migrations.sh, through the API image's script mode.
+#
+# Runs on every `docker compose up` after the API is healthy, and every step
+# is idempotent, so a second run changes nothing:
+#   1. base app + platform admin        scripts/initEthoraApp.js (exits 0 when present)
+#   2. ejabberd accounts of the base    scripts/deploy/xmpp-app-lookup.js, then
+#      app owner and system account     register / change_password over ejabberd's HTTP API
+#   3. data migrations                  scripts/migrateSourceAgentId.js (re-runnable by design)
+#   4. translation server languages     src/utils/scripts/syncTranslateLanguages.js
+#
+# The environment is backend.env, loaded by api-entrypoint.sh. The ejabberd
+# admin account itself is created by the xmpp container (xmpp-start.sh).
+set -uo pipefail
+
+log()  { echo "[init] $*"; }
+warn() { echo "[init] WARN: $*" >&2; }
+die()  { echo "[init] ERROR: $*" >&2; exit 1; }
+
+script() { NODE_NO_WARNINGS=1 NODE_OPTIONS="--no-deprecation" node /app/dist/start.js script "$@"; }
+
+: "${MONGO_URI:?MONGO_URI missing from backend.env}"
+: "${XMPP_HOST:?XMPP_HOST missing from backend.env}"
+: "${XMPP_PASS:?XMPP_PASS missing from backend.env}"
+XMPP_API="${XMPP_PATH:-http://xmpp:5280/api}"
+API_URL="${API_INTERNAL_URL:-http://api:8080}"
+
+# initEthoraApp.js reads these names (init-services.sh exports the same).
+export PLATFORM_ACCOUNT_EMAIL="${PLATFORM_ACCOUNT_EMAIL:?}"
+export BASE_APP_OWNER_EMAIL="${BASE_APP_OWNER_EMAIL:-$PLATFORM_ACCOUNT_EMAIL}"
+export BASE_APP_OWNER_PASSWORD="${BASE_APP_OWNER_PASSWORD:-$PLATFORM_ACCOUNT_PASSWORD}"
+export JWT_SECRET="${SECRET_KEY:-}"
+
+# ----------------------------------------------------------- 1. base app --
+log "base app '${BASE_APP_DOMAIN_NAME:-}' and platform admin ${PLATFORM_ACCOUNT_EMAIL}"
+script scripts/initEthoraApp.js || die "initEthoraApp.js failed (exit $?)"
+
+# ------------------------------------------------------ 2. xmpp accounts --
+# ejabberd's HTTP API, authenticated as admin@<xmpp host> (the account the
+# xmpp container registers on start and the backend uses the same way).
+xmpp_api() { # xmpp_api <command> <json>
+  curl -sS --max-time 10 -u "admin@${XMPP_HOST}:${XMPP_PASS}" \
+    -H 'Content-Type: application/json' -X POST -d "$2" "$XMPP_API/$1"
+}
+json_str() { node -e 'process.stdout.write(JSON.stringify(process.argv[1]))' "$1"; }
+
+ensure_xmpp_account() { # ensure_xmpp_account <localpart or jid> <password> <label>
+  local user="${1%%@*}" pass="$2" label="$3" u p h out
+  [ -n "$user" ] && [ -n "$pass" ] || { warn "no XMPP credentials for the $label; skipped"; return 0; }
+  u="$(json_str "$user")"; p="$(json_str "$pass")"; h="$(json_str "$XMPP_HOST")"
+  out="$(xmpp_api check_account "{\"user\":$u,\"host\":$h}")"
+  if [ "$out" = "0" ]; then
+    out="$(xmpp_api change_password "{\"user\":$u,\"host\":$h,\"newpass\":$p}")"
+    [ "$out" = "0" ] && { log "xmpp account of the $label present (password ensured)"; return 0; }
+  else
+    out="$(xmpp_api register "{\"user\":$u,\"host\":$h,\"password\":$p}")"
+    case "$out" in *successfully*|*registered*) log "xmpp account of the $label created"; return 0 ;; esac
+  fi
+  warn "xmpp account of the $label: unexpected answer from ejabberd: $(printf '%s' "$out" | head -c 200)"
+  return 1
+}
+
+# The admin account can lag the xmpp healthcheck by a few seconds.
+for i in $(seq 1 60); do
+  [ "$(xmpp_api check_account "{\"user\":\"admin\",\"host\":$(json_str "$XMPP_HOST")}" 2>/dev/null)" = "0" ] && break
+  [ "$i" = 60 ] && die "ejabberd HTTP API at $XMPP_API does not accept admin@$XMPP_HOST (see: docker compose logs xmpp)"
+  sleep 2
+done
+
+lookup_err="$(mktemp)"
+lookup="$(script scripts/deploy/xmpp-app-lookup.js "$MONGO_URI" "${BASE_APP_DOMAIN_NAME:-}" "$PLATFORM_ACCOUNT_EMAIL" 2>"$lookup_err")" \
+  || die "xmpp-app-lookup.js failed: $(tail -n 5 "$lookup_err")"
+rm -f "$lookup_err"
+field() { printf '%s\n' "$lookup" | sed -n "s/^ETHORA_XMPP_$1_B64=//p" | head -n 1 | base64 -d 2>/dev/null; }
+rc=0
+ensure_xmpp_account "$(field OWNER_USERNAME)" "$(field OWNER_PASSWORD)" "base app owner" || rc=1
+ensure_xmpp_account "$(field SYSTEM_JID)" "$(field SYSTEM_PASSWORD)" "base app system account" || rc=1
+[ "$rc" = 0 ] || die "could not provision the base app's xmpp accounts"
+
+# ---------------------------------------------------------- 3. migrations --
+# run-migrations.sh's list. Each one is idempotent and re-runnable, so no
+# stamp files are kept.
+for m in scripts/migrateSourceAgentId.js; do
+  log "migration $m"
+  script "$m" 2>&1 | sed 's/^/[init]   /' || warn "migration $m failed (non-fatal)"
+done
+
+# ---------------------------------------------------- 4. translate languages --
+if out="$(script src/utils/scripts/syncTranslateLanguages.js "${TRANSLATE_LANGUAGES:-}" 2>&1)"; then
+  log "translate languages: $(printf '%s' "$out" | tail -n 1)"
+else
+  warn "translate language sync failed (non-fatal): $(printf '%s' "$out" | tr '\n' ' ' | head -c 240)"
+fi
+
+# ----------------------------------------------------------------- done --
+if curl -fsS --max-time 5 "$API_URL/v1/apps/get-config?domainName=${BASE_APP_DOMAIN_NAME:-}" >/dev/null 2>&1; then
+  log "base app config served by the API"
+else
+  warn "GET /v1/apps/get-config?domainName=${BASE_APP_DOMAIN_NAME:-} did not answer yet"
+fi
+log "done. Web app: ${DEFAULT_APP_URL:-https://app.<root>}  admin: ${PLATFORM_ACCOUNT_EMAIL}"
+'''
+
+[[config.mounts]]
+filePath = "/scripts/verify.js"
+content = '''
+// verify.js - end-to-end check of a running compose bundle, through the
+// public URLs (the same path a browser or SDK takes):
+//
+//   docker compose --profile verify run --rm verify
+//
+// 1. https://app., https://api./api-docs/, https://files. answer 200 with a
+//    certificate Node trusts (the system CA store; no --insecure).
+// 2. The platform admin logs in (PLATFORM_ACCOUNT_EMAIL / _PASSWORD from
+//    backend.env, or VERIFY_EMAIL / VERIFY_PASSWORD) and the licence state
+//    is read.
+// 3. A chat room is created, joined over wss://xmpp.<root>/ws with the
+//    login's XMPP JWT, and a message sent to it comes back from the room.
+// 4. A file is uploaded and read back through https://files.<root>, then
+//    deleted.
+//
+// Exits non-zero on the first failure. The room it creates is left in place
+// (named "verify <timestamp>").
+const { client, xml } = require('/app/node_modules/@xmpp/client')
+
+const env = process.env
+const hostOf = (url, fallback) => { try { return new URL(url).host } catch { return fallback } }
+const WEB = env.VERIFY_WEB_DOMAIN || hostOf(env.DEFAULT_APP_URL, '')
+const API = env.VERIFY_API_DOMAIN || hostOf((env.OAUTH_ISSUER || ''), '') || (env.ETHORA_LICENSED_HOSTS || '').split(',')[0]
+const FILES = env.VERIFY_FILES_DOMAIN || hostOf(env.MINIO_URL, '')
+const XMPP = env.XMPP_HOST
+const EMAIL = env.VERIFY_EMAIL || env.PLATFORM_ACCOUNT_EMAIL
+const PASSWORD = env.VERIFY_PASSWORD || env.PLATFORM_ACCOUNT_PASSWORD
+const SLUG = env.BASE_APP_DOMAIN_NAME
+
+let failures = 0
+const ok = (msg) => console.log(`  ok    ${msg}`)
+const fail = (msg) => { failures++; console.log(`  FAIL  ${msg}`) }
+const die = (msg) => { fail(msg); summary(); }
+function summary() {
+  console.log(failures ? `\n${failures} check(s) failed` : '\nall checks passed')
+  process.exit(failures ? 1 : 0)
+}
+
+async function http(url, opts = {}) {
+  const res = await fetch(url, { redirect: 'manual', ...opts })
+  const text = await res.text()
+  let json = null
+  try { json = JSON.parse(text) } catch { /* not JSON */ }
+  return { status: res.status, text, json, headers: res.headers }
+}
+
+async function expect200(label, url) {
+  try {
+    const r = await http(url)
+    if (r.status === 200) ok(`${label} ${url}`)
+    else fail(`${label} ${url} -> HTTP ${r.status}`)
+  } catch (e) {
+    fail(`${label} ${url} -> ${e.cause ? e.cause.code || e.cause.message : e.message}`)
+  }
+}
+
+async function xmppRoundTrip({ username, token, roomJid }) {
+  // Rooms accept a member under its registered nick, the XMPP localpart (as
+  // the web client joins).
+  const nick = username
+  const body = `verify message ${new Date().toISOString()}`
+  const xmpp = client({ service: `wss://${XMPP}/ws`, domain: XMPP, username, password: token, resource: `verify-${Date.now()}` })
+  xmpp.on('error', () => {})
+  const waitFor = (what, match) => new Promise((resolve, reject) => {
+    const t = setTimeout(() => { xmpp.removeListener('stanza', on); reject(new Error(`${what}: no answer within 20 s`)) }, 20000)
+    function on(st) {
+      const err = st.attrs.type === 'error' && st.attrs.from && st.attrs.from.startsWith(roomJid) && st.getChild('error')
+      if (err) { clearTimeout(t); xmpp.removeListener('stanza', on); reject(new Error(`${what}: ${err.toString().slice(0, 300)}`)); return }
+      if (match(st)) { clearTimeout(t); xmpp.removeListener('stanza', on); resolve(st) }
+    }
+    xmpp.on('stanza', on)
+  })
+  await xmpp.start()
+  ok(`xmpp login over wss://${XMPP}/ws as ${nick}`)
+  try {
+    // Join, and wait for our own presence back (MUC status 110).
+    const joined = waitFor(`join ${roomJid}`, (st) => st.is('presence') && st.attrs.from === `${roomJid}/${nick}`)
+    await xmpp.send(xml('presence', { to: `${roomJid}/${nick}` }, xml('x', { xmlns: 'http://jabber.org/protocol/muc' }, xml('history', { maxstanzas: '0' }))))
+    await joined
+    const echoed = waitFor('message', (st) => st.is('message') && st.attrs.type === 'groupchat' && st.getChildText('body') === body)
+    await xmpp.send(xml('message', { to: roomJid, type: 'groupchat', id: `verify-${Date.now()}` }, xml('body', {}, body)))
+    await echoed
+    ok(`joined ${roomJid}, sent a message and received it back`)
+  } finally {
+    await xmpp.stop().catch(() => {})
+  }
+}
+
+async function main() {
+  console.log(`Ethora Core compose bundle: verify (web=${WEB} api=${API} xmpp=${XMPP} files=${FILES})\n`)
+  if (!WEB || !API || !XMPP || !FILES || !EMAIL || !PASSWORD) die('could not derive the hosts or admin credentials from backend.env')
+
+  // 1. public endpoints and certificates
+  await expect200('web app', `https://${WEB}/`)
+  await expect200('API docs', `https://${API}/api-docs/`)
+  await expect200('API ping', `https://${API}/v1/ping`)
+  await expect200('file storage', `https://${FILES}/minio/health/live`)
+  if (failures) summary()
+
+  // 2. login + licence
+  const cfg = await http(`https://${API}/v1/apps/get-config?domainName=${encodeURIComponent(SLUG)}`)
+  const appToken = cfg.json && cfg.json.result && cfg.json.result.appToken
+  if (!appToken) die(`get-config for base app "${SLUG}" returned no appToken (HTTP ${cfg.status})`)
+  const login = await http(`https://${API}/v2/users/login-with-email`, {
+    method: 'POST',
+    headers: { Authorization: appToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: EMAIL, password: PASSWORD }),
+  })
+  if (login.status !== 200 || !login.json || !login.json.token) die(`admin login as ${EMAIL} -> HTTP ${login.status} ${login.text.slice(0, 200)}`)
+  // user.xmppPassword in a login response is the short-lived XMPP JWT
+  // (helpers/sanitizeUser.ts), the password the web client signs in with.
+  const { token, user } = login.json
+  ok(`admin login as ${EMAIL}`)
+  const auth = { Authorization: token }
+
+  const lic = await http(`https://${API}/v2/license`, { headers: auth })
+  const l = lic.json && lic.json.license
+  if (lic.status === 200 && l) {
+    const desc = [l.edition, l.tier, l.state, l.registered === false ? 'unregistered' : l.registered ? 'registered' : ''].filter(Boolean).join(', ')
+    ok(`licence: ${desc || JSON.stringify(l).slice(0, 160)}`)
+  } else fail(`GET /v2/license -> HTTP ${lic.status}`)
+
+  // 3. chat room + message over XMPP
+  const created = await http(`https://${API}/v2/chats`, {
+    method: 'POST',
+    headers: { ...auth, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title: `verify ${new Date().toISOString()}`, description: 'created by the compose bundle verify check', type: 'public' }),
+  })
+  const room = created.json && (created.json.result || created.json)
+  const localpart = room && (room.name || room.roomJid || room.jid || room.chatId)
+  if (!(created.status === 200 || created.status === 201) || !localpart) die(`create chat room -> HTTP ${created.status} ${created.text.slice(0, 200)}`)
+  const roomJid = String(localpart).includes('@') ? String(localpart) : `${localpart}@conference.${XMPP}`
+  ok(`chat room created: ${roomJid}`)
+  try {
+    await xmppRoundTrip({ username: user.xmppUsername, token: user.xmppPassword, roomJid })
+  } catch (e) {
+    fail(`xmpp: ${e.message}`)
+  }
+
+  // 4. file upload through files.<root>
+  const payload = `verify ${Date.now()}\n`
+  const form = new FormData()
+  form.append('files', new Blob([payload], { type: 'text/plain' }), 'verify.txt')
+  const up = await http(`https://${API}/v2/files`, { method: 'POST', headers: auth, body: form })
+  const file = up.json && ((up.json.results && up.json.results[0]) || (up.json.result && up.json.result[0]) || up.json.result)
+  const location = file && (file.location || file.url)
+  if (up.status !== 200 && up.status !== 201) fail(`file upload -> HTTP ${up.status} ${up.text.slice(0, 200)}`)
+  else if (!location) fail(`file upload returned no location: ${up.text.slice(0, 200)}`)
+  else {
+    const host = hostOf(location, '')
+    const got = await http(location).catch((e) => ({ status: 0, text: e.message }))
+    if (host !== FILES) fail(`uploaded file is served from ${host}, expected ${FILES}`)
+    else if (got.status === 200 && got.text === payload) ok(`file uploaded and read back from ${location}`)
+    else fail(`uploaded file at ${location} -> HTTP ${got.status}`)
+    if (file._id) await http(`https://${API}/v2/files/${file._id}`, { method: 'DELETE', headers: auth }).catch(() => {})
+  }
+
+  summary()
+}
+
+main().catch((e) => die(e.stack || e.message))
+'''
+
+[[config.mounts]]
+filePath = "/scripts/render-config.sh"
+content = '''
+#!/bin/sh
+# render-config.sh - the `config` service of the compose bundle.
+#
+# Renders every config file the stack reads from the operator's .env, using
+# the same templates the host installer renders (deploy/scripts/setup-env.sh,
+# deploy/scripts/setup-ejabberd-config.sh):
+#
+#   /out/config/api/backend.env            <- templates/backend.env.template
+#   /out/config/frontend/frontend.env      <- templates/frontend.env.template
+#   /out/config/centrifugo/config.json     <- templates/centrifugo-config.json.template
+#   /out/config/xmpp/ejabberd.yml, jwt.key <- /ethora-dist/ejabberd-prod.yml (from the xmpp image)
+#   /out/mysql-initdb/01-ejabberd.sql      <- /ethora-dist/mysql2.sql (from the xmpp image)
+#
+# It runs in the ethora-xmpp image (BusyBox sh, sed, awk), so the ejabberd
+# template and schema always come from the image that is about to run. It
+# runs on every `docker compose up` and rewrites everything, so .env is the
+# only state an operator keeps; the rendered files are disposable.
+#
+# Differences from the host installer, all because the services talk over the
+# compose network instead of the host's loopback:
+#   - backend.env: MONGO_URI, CHAT_DATABASE, REDIS_HOST, MINIO_HOST,
+#     MAM_MYSQL_HOST, CENTRIFUGO_API_URL and XMPP_PATH point at the compose
+#     service names (mongo, redis, minio, mysql, centrifugo, xmpp).
+#   - ejabberd.yml: the tracking / audit URLs point at http://api:8080
+#     instead of the public https://api.<root>, so ejabberd never hairpins
+#     through the proxy.
+#   - BUILD_* stay empty, so the version baked into each image is reported.
+set -eu
+
+TEMPLATES="${TEMPLATES_DIR:-/ethora/templates}"
+DIST="${XMPP_DIST_DIR:-/ethora-dist}"
+OUT="${CONFIG_OUT_DIR:-/out/config}"
+MYSQL_INITDB="${MYSQL_INITDB_DIR:-/out/mysql-initdb}"
+# Numeric owners of the consumers (the stock images' users). Rendering as
+# root, each file is handed to the one container user that reads it.
+API_UID="${API_UID:-1000}"          # ethora-api: node
+XMPP_UID="${XMPP_UID:-9000}"        # ethora-xmpp: ejabberd
+CENTRIFUGO_UID="${CENTRIFUGO_UID:-1000}"
+
+log() { echo "[config] $*"; }
+die() { echo "[config] ERROR: $*" >&2; exit 1; }
+
+# ------------------------------------------------------------ required --
+missing=""
+for v in ROOT_DOMAIN ADMIN_EMAIL ADMIN_PASSWORD JWT_SECRET REFRESH_SECRET \
+         XMPP_SECRET XMPP_JWT_SECRET XMPP_ADMIN_PASSWORD MYSQL_ROOT_PASSWORD \
+         MINIO_ROOT_USER MINIO_ROOT_PASSWORD INTERNAL_REQUESTS_SECRET \
+         CENTRIFUGO_API_KEY CENTRIFUGO_HMAC_SECRET CENTRIFUGO_ADMIN_PASSWORD \
+         CENTRIFUGO_ADMIN_SECRET; do
+  eval "val=\${$v:-}"
+  [ -n "$val" ] || missing="$missing $v"
+done
+[ -z "$missing" ] || die "missing in .env:$missing (run ./configure.sh, or copy .env.example to .env and fill it in)"
+
+# --------------------------------------------------- derived + defaults --
+# Same derivations as setup.sh / refresh-deploy-env.sh / setup-env.sh.
+export API_DOMAIN="${API_DOMAIN:-api.$ROOT_DOMAIN}"
+export WEB_DOMAIN="${WEB_DOMAIN:-app.$ROOT_DOMAIN}"
+export XMPP_DOMAIN="${XMPP_DOMAIN:-xmpp.$ROOT_DOMAIN}"
+export FILES_DOMAIN="${FILES_DOMAIN:-files.$ROOT_DOMAIN}"
+export HOSTED_APPS_ROOT_DOMAIN="${HOSTED_APPS_ROOT_DOMAIN:-$ROOT_DOMAIN}"
+# Base app slug: first label of the web host (app.chat.example.com -> app).
+export BASE_APP_DOMAIN_NAME="${BASE_APP_DOMAIN_NAME:-${WEB_DOMAIN%%.*}}"
+export DOMAIN_NAME="$BASE_APP_DOMAIN_NAME"
+export BASE_APP_DISPLAY_NAME="${BASE_APP_DISPLAY_NAME:-Ethora}"
+export BASE_APP_OWNER_EMAIL="${BASE_APP_OWNER_EMAIL:-$ADMIN_EMAIL}"
+export BASE_APP_OWNER_PASSWORD="${BASE_APP_OWNER_PASSWORD:-$ADMIN_PASSWORD}"
+export BASE_APP_START_BALANCE="${BASE_APP_START_BALANCE:-1000000}"
+
+export NODE_ENV="${NODE_ENV:-production}"
+export BACKEND_PORT=8080
+export MONGO_PORT=27017
+export MONGO_DB="${MONGO_DB:-ethora_prod}"
+export REDIS_PORT=6379
+export MYSQL_PORT=3306
+export CENTRIFUGO_PORT=8000
+export PUSH_PORT="${PUSH_PORT:-8098}"
+export AI_SERVICE_PORT="${AI_SERVICE_PORT:-8013}"
+export DOCS_PARSE_PORT="${DOCS_PARSE_PORT:-8201}"
+export MINIO_SECURE_BUCKET="${MINIO_SECURE_BUCKET:-secure-media}"
+
+def() { # def NAME value: export NAME=value unless NAME is already set
+  eval "[ -n \"\${$1+x}\" ]" || export "$1=$2"
+}
+# Ethora Core: the optional modules are not in this bundle (an overlay that
+# adds one sets its flag in .env).
+def BLOCKCHAIN_ENABLED false
+def AI_SERVICE_ENABLED false
+def DOCS_PARSE_ENABLED false
+def CRAWLER_ENABLED false
+def AI_FEATURE_ENABLED false
+def ENABLE_SWAGGER true
+def ENABLE_SWAGGER_INTERNAL false
+def EMAIL_TLD_VALIDATION off
+def RATE_LIMIT_DISABLED false
+def REFRESH_TOKEN_TTL_DAYS 7
+def REFRESH_REUSE_POLICY log_only
+def XMPP_JWT_TTL 10m
+def XMPP_JWT_WIDGET_TTL 100d
+def CENTRIFUGO_ENABLED true
+def CENTRIFUGO_TIMEOUT_MS 2000
+def POSTMARK_ENABLED false
+def POSTMARK_FROM_EMAIL noreply@ethoramail.com
+def POSTMARK_FROM_NAME "Ethora Platform"
+def POSTMARK_SUBJECT_PREFIX Ethora
+def FEEDBACK_RETENTION_DAYS 180
+def ANALYTICS_ENABLED false
+def REPORT_DAILY_SCHEDULE "30 8 * * *"
+def REPORT_WEEKLY_SCHEDULE "30 8 * * 1"
+def REPORT_MONTHLY_SCHEDULE "30 8 1 * *"
+def STRIPE_ENABLED false
+def IAP_ENABLED false
+def FIREBASE_ENABLED false
+def HUBSPOT_ENABLED false
+def HUBSPOT_REGION na1
+def IMMUTABLE_LOGS_ENABLED false
+def ETHORA_LICENSE_CALL_HOME true
+def VIDEO_CALLS_ENABLED false
+def E2EE_ENABLED false
+def DISABLE_FIREBASE false
+def DISABLE_GA true
+def DISABLE_CLARITY true
+
+# Whole-line placeholders in the env templates. The values are the
+# production (non-localhost) branch of setup-env.sh replace_template(), with
+# the compose service names where the installer uses 127.0.0.1.
+export ROOT_DOMAIN_PLACEHOLDER="ROOT_DOMAIN=$ROOT_DOMAIN"
+export DEFAULT_APP_URL_PLACEHOLDER="DEFAULT_APP_URL=https://$WEB_DOMAIN"
+export VERIFY_EMAIL_WEB_URL_PLACEHOLDER="VERIFY_EMAIL_WEB_URL=https://$WEB_DOMAIN/verifyEmail"
+export TEMP_PASSSORD_WEB_URL_PLACEHOLDER="TEMP_PASSSORD_WEB_URL=https://$WEB_DOMAIN/tempPassword"
+export XMPP_PATH_PLACEHOLDER="XMPP_PATH=http://xmpp:5280/api"
+export XMPP_SERVICE_PLACEHOLDER="XMPP_SERVICE=wss://$XMPP_DOMAIN/ws"
+export MINIO_URL_PLACEHOLDER="MINIO_URL=https://$FILES_DOMAIN"
+export MINIO_SECURE_URL_PLACEHOLDER="MINIO_SECURE_URL=${SECURE_FILES_DOMAIN:+https://$SECURE_FILES_DOMAIN}"
+export AUTH_COOKIE_DOMAIN_PLACEHOLDER="AUTH_COOKIE_DOMAIN=.$ROOT_DOMAIN"
+export VITE_API_PLACEHOLDER="VITE_API=https://$API_DOMAIN/v1"
+export VITE_API_V2_PLACEHOLDER="VITE_API_V2=https://$API_DOMAIN/v2"
+export VITE_APP_XMPP_SERVICE_PLACEHOLDER="VITE_APP_XMPP_SERVICE=wss://$XMPP_DOMAIN/ws"
+export VITE_APP_CENTRIFUGE_SERVICE_PLACEHOLDER="VITE_APP_CENTRIFUGE_SERVICE=wss://$WEB_DOMAIN/connection/websocket"
+
+# ------------------------------------------------------------- render --
+# render TEMPLATE OUT: literal substitution of {{NAME}} with $NAME (empty
+# when unset, like setup-env.sh's ${NAME:-}) and of whole-line NAME_PLACEHOLDER
+# with $NAME_PLACEHOLDER. Values are read from ENVIRON, never from the awk
+# program text, so secrets need no escaping. Template-language lines
+# ({{#if ...}}, {{/if}}) are dropped; their content stays, as in the installer.
+render() {
+  awk '
+    /^[[:space:]]*\{\{[#\/]/ { next }
+    /^[A-Z0-9_]+_PLACEHOLDER[[:space:]]*$/ {
+      key = $1
+      if (key in ENVIRON) { print ENVIRON[key] } else { print; unresolved[key] = 1 }
+      next
+    }
+    {
+      line = $0; out = ""
+      while (match(line, /\{\{[A-Z0-9_]+\}\}/)) {
+        name = substr(line, RSTART + 2, RLENGTH - 4)
+        out = out substr(line, 1, RSTART - 1) ((name in ENVIRON) ? ENVIRON[name] : "")
+        line = substr(line, RSTART + RLENGTH)
+      }
+      print out line
+    }
+    END { for (k in unresolved) printf("[config] WARN: unresolved placeholder %s\n", k) > "/dev/stderr" }
+  ' "$1" > "$2"
+}
+
+# set_env_line FILE KEY VALUE: replace the KEY= line (every occurrence).
+set_env_line() {
+  awk -v k="$2" -v v="$3" 'index($0, k "=") == 1 { print k "=" v; next } { print }' "$1" > "$1.tmp" && mv "$1.tmp" "$1"
+}
+
+stage="$(mktemp -d "${TMPDIR:-/tmp}/ethora-config.XXXXXX")"
+trap 'rm -rf "$stage"' EXIT
+mkdir -p "$stage/api" "$stage/frontend" "$stage/centrifugo" "$stage/xmpp"
+
+for t in backend.env.template frontend.env.template centrifugo-config.json.template; do
+  [ -f "$TEMPLATES/$t" ] || die "template not found: $TEMPLATES/$t (is ./templates mounted?)"
+done
+
+# backend.env
+render "$TEMPLATES/backend.env.template" "$stage/api/backend.env"
+set_env_line "$stage/api/backend.env" MONGO_URI "mongodb://mongo:27017/$MONGO_DB?directConnection=true"
+set_env_line "$stage/api/backend.env" CHAT_DATABASE "mongodb://mongo:27017/chat_archive?directConnection=true"
+set_env_line "$stage/api/backend.env" REDIS_HOST redis
+set_env_line "$stage/api/backend.env" MAM_MYSQL_HOST mysql
+set_env_line "$stage/api/backend.env" MINIO_HOST minio
+set_env_line "$stage/api/backend.env" CENTRIFUGO_API_URL "http://centrifugo:8000/api"
+{
+  echo "# Rendered by the compose bundle's config service from backend.env.template"
+  echo "# on every 'docker compose up'. Edit .env, not this file."
+  cat "$stage/api/backend.env"
+} > "$stage/api/backend.env.tmp" && mv "$stage/api/backend.env.tmp" "$stage/api/backend.env"
+
+# frontend.env
+render "$TEMPLATES/frontend.env.template" "$stage/frontend/frontend.env"
+
+# centrifugo config.json
+render "$TEMPLATES/centrifugo-config.json.template" "$stage/centrifugo/config.json"
+
+# ejabberd.yml + jwt.key: the production branch of setup-ejabberd-config.sh.
+[ -f "$DIST/ejabberd-prod.yml" ] || die "$DIST/ejabberd-prod.yml not found; the config service must run the ethora-xmpp image"
+cfg="$stage/xmpp/ejabberd.yml"
+cp "$DIST/ejabberd-prod.yml" "$cfg"
+export TRACK_MEMBER_URL="${TRACK_MEMBER_URL:-http://api:8080/v1/chats/track-member}"
+export TRACK_LAST_MESSAGE_URL="${TRACK_LAST_MESSAGE_URL:-http://api:8080/v1/chats/track-last-message}"
+export TRACK_MESSAGE_URL="${TRACK_MESSAGE_URL:-http://api:8080/v1/chats/archive-message}"
+export HISTORY_ACCESS_URL="${HISTORY_ACCESS_URL:-http://api:8080/v1/chats/history-access}"
+export MESSAGE_AUDIT_URL="${MESSAGE_AUDIT_URL:-http://api:8080/v1/chats/message-audit}"
+PUSH_COMMON_POST_URL="${PUSH_COMMON_POST_URL:-https://$API_DOMAIN/push/api/v2/push}"
+PUSH_VOIP_POST_URL="${PUSH_VOIP_POST_URL:-http://host.docker.internal:7778/api/v1/voippush}"
+push_token="${B2B_PUSH_SECRET:-$INTERNAL_REQUESTS_SECRET}"
+admin_jid="admin@$XMPP_DOMAIN"
+
+# Values go into sed replacement text below: escape \, | (the delimiter) and
+# & so an operator-chosen password with those characters renders literally.
+esc() { printf '%s' "$1" | sed -e 's/[\\|&]/\\&/g'; }
+E_XMPP_DOMAIN="$(esc "$XMPP_DOMAIN")"
+E_ADMIN_JID="$(esc "$admin_jid")"
+E_MYSQL_ROOT_PASSWORD="$(esc "$MYSQL_ROOT_PASSWORD")"
+E_XMPP_SECRET="$(esc "$XMPP_SECRET")"
+E_TRACK_MEMBER_URL="$(esc "$TRACK_MEMBER_URL")"
+E_TRACK_LAST_MESSAGE_URL="$(esc "$TRACK_LAST_MESSAGE_URL")"
+E_TRACK_MESSAGE_URL="$(esc "$TRACK_MESSAGE_URL")"
+E_HISTORY_ACCESS_URL="$(esc "$HISTORY_ACCESS_URL")"
+E_MESSAGE_AUDIT_URL="$(esc "$MESSAGE_AUDIT_URL")"
+E_PUSH_COMMON_POST_URL="$(esc "$PUSH_COMMON_POST_URL")"
+E_PUSH_VOIP_POST_URL="$(esc "$PUSH_VOIP_POST_URL")"
+E_PUSH_TOKEN="$(esc "$push_token")"
+E_TRANSLATE_URL="$(esc "${TRANSLATE_URL:-}")"
+
+# hosts
+sed -i "/^hosts:/,/^[a-z]/s|^  -.*|  - $E_XMPP_DOMAIN|" "$cfg"
+# acl admin / apicommands
+sed -i \
+  -e "/^  admin:/,/^  [a-z]/ s|^[ ]*- \"[^\"]*\"|      - \"$E_ADMIN_JID\"|g" \
+  -e "/^  apicommands:/,/^  [a-z]/ s|^[ ]*- \"[^\"]*\"|      - \"$E_ADMIN_JID\"|g" \
+  "$cfg"
+# sql password
+sed -i "s|^sql_password:.*|sql_password: \"$E_MYSQL_ROOT_PASSWORD\"|g" "$cfg"
+# tracking modules
+sed -i \
+  -e "/^  mod_track_member:/,/^  [a-z_]/ s|^[ ]*url:.*|    url: \"$E_TRACK_MEMBER_URL\"|g" \
+  -e "/^  mod_track_member:/,/^  [a-z_]/ s|^[ ]*secret:.*|    secret: \"$E_XMPP_SECRET\"|g" \
+  -e "/^  mod_track_last_message:/,/^  [a-z_]/ s|^[ ]*url:.*|    url: \"$E_TRACK_LAST_MESSAGE_URL\"|g" \
+  -e "/^  mod_track_last_message:/,/^  [a-z_]/ s|^[ ]*secret:.*|    secret: \"$E_XMPP_SECRET\"|g" \
+  "$cfg"
+if grep -q "^  mod_track_message:" "$cfg"; then
+  sed -i \
+    -e "/^  mod_track_message:/,/^  [a-z_]/ s|^[ ]*url:.*|    url: \"$E_TRACK_MESSAGE_URL\"|g" \
+    -e "/^  mod_track_message:/,/^  [a-z_]/ s|^[ ]*secret:.*|    secret: \"$E_XMPP_SECRET\"|g" \
+    "$cfg"
+fi
+if grep -q "^  mod_history_access:" "$cfg"; then
+  sed -i \
+    -e "/^  mod_history_access:/,/^  [a-z_]/ s|^[ ]*url:.*|    url: \"$E_HISTORY_ACCESS_URL\"|g" \
+    -e "/^  mod_history_access:/,/^  [a-z_]/ s|^[ ]*secret:.*|    secret: \"$E_XMPP_SECRET\"|g" \
+    "$cfg"
+fi
+# mod_edit / mod_delete ship as bare `{}` blocks: expand them into url/secret
+# lines first (awk, so BusyBox and GNU produce the same text), then render.
+for audit_mod in mod_edit mod_delete; do
+  if grep -qE "^  $audit_mod:[[:space:]]*\{\}[[:space:]]*$" "$cfg"; then
+    awk -v m="$audit_mod" '
+      $0 ~ "^  " m ":[[:space:]]*\\{\\}[[:space:]]*$" { print "  " m ":"; print "    url: \"\""; print "    secret: \"\""; next }
+      { print }' "$cfg" > "$cfg.tmp" && mv "$cfg.tmp" "$cfg"
+  fi
+  if grep -q "^  $audit_mod:" "$cfg"; then
+    sed -i \
+      -e "/^  $audit_mod:/,/^  [a-z_]/ s|^[ ]*url:.*|    url: \"$E_MESSAGE_AUDIT_URL\"|g" \
+      -e "/^  $audit_mod:/,/^  [a-z_]/ s|^[ ]*secret:.*|    secret: \"$E_XMPP_SECRET\"|g" \
+      "$cfg"
+  fi
+done
+# mod_offline_post
+sed -i \
+  -e "/^  mod_offline_post:/,/^  [a-z_]/ s|^[ ]*common_post_url:.*|    common_post_url: \"$E_PUSH_COMMON_POST_URL\"|g" \
+  -e "/^  mod_offline_post:/,/^  [a-z_]/ s|^[ ]*voip_post_url:.*|    voip_post_url: \"$E_PUSH_VOIP_POST_URL\"|g" \
+  -e "/^  mod_offline_post:/,/^  [a-z_]/ s|^[ ]*auth_token:.*|    auth_token: \"$E_PUSH_TOKEN\"|g" \
+  "$cfg"
+# certfiles
+sed -i "s|/cert/[^\" ]*\\.pem|/cert/$E_XMPP_DOMAIN.pem|g" "$cfg"
+# translate_url (only when set)
+if [ -n "${TRANSLATE_URL:-}" ]; then
+  sed -i "s|^\([[:space:]]*\)translate_url:.*|\1translate_url: \"$E_TRANSLATE_URL\"|" "$cfg"
+fi
+# JWT SASL auth
+k="$(printf '%s' "$XMPP_JWT_SECRET" | base64 | tr -d '\n' | tr '+/' '-_' | tr -d '=')"
+printf '{"kty":"oct","k":"%s"}' "$k" > "$stage/xmpp/jwt.key"
+sed -i "s|^auth_method:.*|auth_method: [sql, jwt, anonymous]|" "$cfg"
+if ! grep -qE "^jwt_key:" "$cfg"; then
+  awk '{ print } /^auth_method:/ { print "jwt_key: \"/home/ejabberd/conf/jwt.key\""; print "jwt_jid_field: \"jid\"" }' "$cfg" > "$cfg.tmp" && mv "$cfg.tmp" "$cfg"
+fi
+
+# ------------------------------------------------------------ install --
+# Hand each directory to the one container user that reads it; secrets stay
+# unreadable to the others. Then swap the whole tree in.
+chmod 700 "$stage/api" "$stage/frontend" "$stage/centrifugo" "$stage/xmpp"
+chmod 600 "$stage"/*/*
+# (Only root can hand files over; a non-root run, e.g. the bundle's tests,
+# keeps its own ownership.)
+own() { chown -R "$1" "$2" 2>/dev/null || [ "$(id -u)" != 0 ] || die "chown $1 $2 failed"; }
+own "$API_UID:$API_UID" "$stage/api"
+own 0:0 "$stage/frontend"
+own "$CENTRIFUGO_UID:$CENTRIFUGO_UID" "$stage/centrifugo"
+own "$XMPP_UID:$XMPP_UID" "$stage/xmpp"
+mkdir -p "$OUT"
+for d in api frontend centrifugo xmpp; do
+  rm -rf "$OUT/$d.new"
+  cp -a "$stage/$d" "$OUT/$d.new"
+  rm -rf "$OUT/$d"
+  mv "$OUT/$d.new" "$OUT/$d"
+done
+chmod 755 "$OUT"
+
+# MySQL runs this only when its data directory is empty (first start).
+mkdir -p "$MYSQL_INITDB"
+cp "$DIST/mysql2.sql" "$MYSQL_INITDB/01-ejabberd.sql"
+chmod 644 "$MYSQL_INITDB/01-ejabberd.sql"
+
+log "rendered for $ROOT_DOMAIN: api=$API_DOMAIN web=$WEB_DOMAIN xmpp=$XMPP_DOMAIN files=$FILES_DOMAIN (base app slug: $BASE_APP_DOMAIN_NAME)"
+'''
+
+[[config.mounts]]
+filePath = "/scripts/mongo-init.sh"
+content = '''
+#!/bin/bash
+# mongo-init.sh - the `mongo-init` service of the compose bundle.
+#
+# The API needs MongoDB as a replica set (rs0, one member). Same set-up as
+# deploy/docker/mongo_scripts/mongosetup.sh, but idempotent and without the
+# fixed 30 s sleep: wait for mongod, initiate only when the set has no
+# config yet, then wait until the member is PRIMARY.
+set -euo pipefail
+
+HOST="${MONGO_HOST:-mongo:27017}"
+mq() { mongosh --host "$HOST" --quiet --eval "$1"; }
+
+for i in $(seq 1 90); do
+  [ "$(mq 'db.adminCommand({ ping: 1 }).ok' 2>/dev/null || true)" = "1" ] && break
+  [ "$i" = 90 ] && { echo "[mongo-init] mongod at $HOST did not answer within 3 minutes" >&2; exit 1; }
+  sleep 2
+done
+
+state="$(mq 'try { rs.status().ok } catch (e) { e.codeName }' 2>/dev/null || true)"
+if [ "$state" = "1" ]; then
+  echo "[mongo-init] replica set rs0 already initiated"
+else
+  echo "[mongo-init] initiating replica set rs0 ($state)"
+  mq "rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: '$HOST' }] }).ok"
+fi
+
+for i in $(seq 1 60); do
+  [ "$(mq 'db.hello().isWritablePrimary' 2>/dev/null || true)" = "true" ] && { echo "[mongo-init] rs0 PRIMARY"; exit 0; }
+  sleep 2
+done
+echo "[mongo-init] rs0 did not elect a PRIMARY within 2 minutes" >&2
+exit 1
+'''
+
+[[config.mounts]]
+filePath = "/scripts/xmpp-start.sh"
+content = '''
+#!/bin/sh
+# xmpp-start.sh - entrypoint of the xmpp service in the compose bundle.
+#
+# 1. Installs the ejabberd.yml and jwt.key the config service rendered.
+# 2. Starts ejabberd through the image's own entrypoint.
+# 3. In the background, once ejabberd answers, makes sure admin@<xmpp host>
+#    exists with XMPP_ADMIN_PASSWORD (register, or change_password when it
+#    already exists). The host installer does this with `docker exec ...
+#    ejabberdctl`; here it runs in the container, where ejabberdctl can reach
+#    the node, and it re-runs on every start so a changed password follows.
+set -eu
+
+CONF_SRC="${ETHORA_XMPP_CONFIG_DIR:-/ethora/config/xmpp}"
+CONF_DIR=/opt/ejabberd/conf
+CTL=/opt/ejabberd/bin/ejabberdctl
+
+[ -r "$CONF_SRC/ejabberd.yml" ] || { echo "[xmpp] $CONF_SRC/ejabberd.yml missing; the config service did not run" >&2; exit 1; }
+# XMPP_DOMAIN normally arrives from compose (${XMPP_DOMAIN:-xmpp.${ROOT_DOMAIN}}).
+# A platform that resolves compose defaults itself (Coolify) hands an empty
+# override through as an empty value, so fall back to the host the config
+# service rendered into ejabberd.yml.
+if [ -z "${XMPP_DOMAIN:-}" ]; then
+  XMPP_DOMAIN="$(sed -n '/^hosts:/,/^[a-z]/{s/^  - //p;}' "$CONF_SRC/ejabberd.yml" | head -n 1)"
+  export XMPP_DOMAIN
+fi
+cp "$CONF_SRC/ejabberd.yml" "$CONF_DIR/ejabberd.yml"
+cp "$CONF_SRC/jwt.key" "$CONF_DIR/jwt.key"
+chmod 600 "$CONF_DIR/ejabberd.yml" "$CONF_DIR/jwt.key"
+
+ensure_admin() {
+  host="${XMPP_DOMAIN:?}"
+  pass="${XMPP_ADMIN_PASSWORD:?}"
+  i=0
+  until "$CTL" status >/dev/null 2>&1; do
+    i=$((i + 1))
+    [ "$i" -gt 150 ] && { echo "[xmpp] ejabberd did not start within 5 minutes; admin account not ensured" >&2; return 1; }
+    sleep 2
+  done
+  if "$CTL" check_account admin "$host" >/dev/null 2>&1; then
+    "$CTL" change_password admin "$host" "$pass" >/dev/null 2>&1 \
+      && echo "[xmpp] admin@$host present (password ensured)" \
+      || echo "[xmpp] WARN: could not set the password of admin@$host" >&2
+  else
+    "$CTL" register admin "$host" "$pass" >/dev/null 2>&1 \
+      && echo "[xmpp] admin@$host created" \
+      || echo "[xmpp] WARN: could not register admin@$host" >&2
+  fi
+  : > /tmp/ethora-admin-ready
+}
+rm -f /tmp/ethora-admin-ready
+ensure_admin &
+
+exec /entrypoint.sh "$@"
+'''
+
+[[config.mounts]]
+filePath = "/scripts/frontend-start.sh"
+content = '''
+#!/bin/sh
+# frontend-start.sh - entrypoint of the frontend service in the compose bundle.
+#
+# The ethora-frontend image renders /config.js and the CSP from the VITE_*
+# variables in its environment. Export the frontend.env the config service
+# rendered (plain KEY=value lines, taken literally, the same as the docker
+# --env-file that deploy/scripts/frontend-from-image.sh produces), then run
+# the image's own entrypoint.
+set -eu
+
+ENV_FILE="${ETHORA_FRONTEND_ENV_FILE:-/ethora/config/frontend/frontend.env}"
+[ -r "$ENV_FILE" ] || { echo "[frontend] $ENV_FILE missing; the config service did not run" >&2; exit 1; }
+
+while IFS= read -r line || [ -n "$line" ]; do
+  case "$line" in
+    *'{{'*) continue ;;
+    [A-Za-z_]*=*)
+      key="${line%%=*}"
+      case "$key" in *[!A-Za-z0-9_]*) continue ;; esac
+      export "$line"
+      ;;
+  esac
+done < "$ENV_FILE"
+
+exec /usr/local/bin/ethora-frontend "$@"
+'''
+
+[[config.mounts]]
+filePath = "/templates/backend.env.template"
+content = '''
+# NODE.JS CORE APP SETTINGS
+NODE_ENV={{NODE_ENV}}
+PORT={{BACKEND_PORT}}
+
+# Signs JWT Access Tokens for users
+SECRET_KEY='{{JWT_SECRET}}'
+
+# Signs JWT Refresh Tokens for users
+REFRESH_SECRET={{REFRESH_SECRET}}
+
+# WEB APP SETTINGS
+# ROOT_DOMAIN will be set based on localhost mode
+ROOT_DOMAIN_PLACEHOLDER
+HOSTED_APPS_ROOT_DOMAIN={{HOSTED_APPS_ROOT_DOMAIN}}
+
+# superadmin users for web app
+PLATFORM_ACCOUNT_EMAIL="{{ADMIN_EMAIL}}"
+PLATFORM_ACCOUNT_PASSWORD="{{ADMIN_PASSWORD}}"
+
+USER_TOKEN_EXPIRATION_SECONDS=1
+
+# Settings for initializing the main base App at the server
+BASE_APP_DISPLAY_NAME={{BASE_APP_DISPLAY_NAME}}
+BASE_APP_DOMAIN_NAME={{BASE_APP_DOMAIN_NAME}}
+BASE_APP_OWNER_EMAIL={{BASE_APP_OWNER_EMAIL}}
+BASE_APP_OWNER_PASSWORD={{BASE_APP_OWNER_PASSWORD}}
+BASE_APP_START_BALANCE={{BASE_APP_START_BALANCE}}
+
+# Ignore the below for now (intended for self-deploy like AWS)
+# URLs will be set based on localhost mode
+DEFAULT_APP_URL_PLACEHOLDER
+VERIFY_EMAIL_WEB_URL_PLACEHOLDER
+TEMP_PASSSORD_WEB_URL_PLACEHOLDER
+
+# API settings
+API_LOGGING=true
+# Auth rate-limit kill switch for load testing. When "true", all auth rate
+# limiters become no-ops. Default false (rate limiting ON) - keep false on prod.
+# Driven by deploy.yml features.rate_limit_disabled; flip to true only on a
+# QA/load box while running load tests, then back to false.
+RATE_LIMIT_DISABLED={{RATE_LIMIT_DISABLED}}
+# Per-IP auth limiter ceilings (requests/min). Empty = backend defaults
+# (login 20, signup 10, password 10, refresh 60). Set from deploy.yml `rate_limits`,
+# or auto-raised (login 120, signup 30) when the hosted MCP server is enabled.
+RATE_LIMIT_AUTH_LOGIN_MAX={{RATE_LIMIT_AUTH_LOGIN_MAX}}
+RATE_LIMIT_AUTH_SIGNUP_MAX={{RATE_LIMIT_AUTH_SIGNUP_MAX}}
+RATE_LIMIT_AUTH_PASSWORD_MAX={{RATE_LIMIT_AUTH_PASSWORD_MAX}}
+RATE_LIMIT_AUTH_REFRESH_MAX={{RATE_LIMIT_AUTH_REFRESH_MAX}}
+# Feedback submissions per client IP. The anonymous ceiling is per hour, not per
+# minute: an unauthenticated report is the one a first-time user sends once.
+RATE_LIMIT_FEEDBACK_MAX={{RATE_LIMIT_FEEDBACK_MAX}}
+RATE_LIMIT_FEEDBACK_ANON_MAX={{RATE_LIMIT_FEEDBACK_ANON_MAX}}
+
+# OAuth 2.1 authorization server for MCP connector listings (Claude.ai, ChatGPT).
+# Public API base URL used as the issuer, e.g. https://api.chat.example.com.
+# Rendered when services.mcp.enabled is true (override: services.mcp.oauth_issuer);
+# blank turns the /oauth/* and /.well-known/oauth-authorization-server routes off.
+OAUTH_ISSUER={{OAUTH_ISSUER}}
+# Refresh-token lifetime, in days. Default 7.
+REFRESH_TOKEN_TTL_DAYS={{REFRESH_TOKEN_TTL_DAYS}}
+# What to do when an already-rotated refresh token is presented again (outside the
+# 30s grace window). The event is always audited; this only controls the response.
+#   log_only      - default. Audit it, then hand the client the current token so it
+#                   keeps working. Detects nothing, breaks nobody. Required while any
+#                   client can still refresh from two places at once (e.g. browser tabs
+#                   that do not share a refresh lock) - otherwise real users get
+#                   logged out at random.
+#   reject        - refuse the stale token; other sessions are untouched.
+#   revoke_family - treat it as theft and revoke the whole rotation chain (the sessions
+#                   descending from that one login; other devices are unaffected).
+#                   Switch to this only once every client refreshes through a single lock.
+REFRESH_REUSE_POLICY={{REFRESH_REUSE_POLICY}}
+# Email TLD validation policy. Controls how strictly Joi validates the TLD
+# segment of email addresses on signup, login, and batch user creation.
+#   off   - default. Syntax-only check; accepts any TLD (recommended for
+#           self-hosted/enterprise installs that ingest real-world user
+#           lists with uncommon domains, e.g. .health, .bank, .son).
+#   icann - Joi 17 default. Rejects unknown / reserved TLDs like
+#           .example, .test, .invalid, .son.
+#   list  - Allow only the comma-separated TLDs in EMAIL_TLD_ALLOWLIST
+#           (case-insensitive; leading dot optional; supports multi-segment
+#           public suffixes such as co.uk).
+EMAIL_TLD_VALIDATION={{EMAIL_TLD_VALIDATION}}
+EMAIL_TLD_ALLOWLIST={{EMAIL_TLD_ALLOWLIST}}
+# Swagger UI (public)
+# - Enabled by default. Set ENABLE_SWAGGER=false to disable.
+ENABLE_SWAGGER={{ENABLE_SWAGGER}}
+# Swagger UI (internal/advanced)
+# - Must be explicitly enabled; should remain false for most installs.
+ENABLE_SWAGGER_INTERNAL={{ENABLE_SWAGGER_INTERNAL}}
+# OpenAPI/Swagger version (shown in /api-docs/swagger.json -> info.version)
+# We use a date-based version by default: yy.mm.dd (UTC).
+OPENAPI_INFO_VERSION={{ETHORA_BUILD_VERSION}}
+
+# Build / version identity (for /ping and /ping/version)
+ETHORA_BUILD_COMMIT={{ETHORA_BUILD_COMMIT}}
+ETHORA_BUILD_TIME={{ETHORA_BUILD_TIME}}
+ETHORA_BUILD_VERSION={{ETHORA_BUILD_VERSION}}
+
+# CHAT SERVER / XMPP SETTINGS
+# IMPORTANT:
+# - The deploy init script creates an ejabberd admin account with localpart `admin`.
+# - Using `admin@<domain>` here can cause confusion; most ejabberd tooling expects localpart only.
+XMPP_ADMIN=admin
+XMPP_PASS={{XMPP_ADMIN_PASSWORD}}
+XMPP_HOST={{XMPP_DOMAIN}}
+# Shared HMAC secret for the short-lived XMPP SASL JWT the client uses instead of
+# the raw xmppPassword. ejabberd validates it via jwt_key (rendered from this same
+# secret). Auto-generated + persisted by the deploy.
+XMPP_JWT_SECRET={{XMPP_JWT_SECRET}}
+# XMPP JWT lifetimes (jsonwebtoken duration syntax: 10m / 30m / 1h / 100d).
+# User tokens are re-issued with every auth refresh, so keep them short. The
+# widget visitor token stays long until the widget learns to re-provision a
+# session on SASL auth failure (a short TTL strands reconnecting visitors).
+XMPP_JWT_TTL={{XMPP_JWT_TTL}}
+XMPP_JWT_WIDGET_TTL={{XMPP_JWT_WIDGET_TTL}}
+# XMPP paths will be set based on localhost mode
+XMPP_PATH_PLACEHOLDER
+XMPP_SERVICE_PLACEHOLDER
+
+# DATABASES
+MONGO_URI=mongodb://localhost:{{MONGO_PORT}}/{{MONGO_DB}}?directConnection=true
+# Separate Mongo connection for the chat message archive (search / unread).
+# The `Message` model connects here; ejabberd's mod_track_message posts every
+# message to /v1/chats/archive-message which upserts into this DB. Same Mongo
+# instance, dedicated db name so archive volume doesn't mix with app data.
+CHAT_DATABASE=mongodb://localhost:{{MONGO_PORT}}/chat_archive?directConnection=true
+REDIS_HOST=localhost
+REDIS_PORT={{REDIS_PORT}}
+
+# Read-only access to ejabberd's mod_mam archive table in MySQL. The admin
+# "AI Widget conversation" viewer queries it to render the message history
+# of a widget MUC room. Without these set, the viewer surfaces
+# "Message history is not available on this deployment". The credentials
+# below match the same MySQL container ejabberd writes the archive to
+# (deploy-mysql-1, root user, database ejabberd_db).
+MAM_MYSQL_HOST=localhost
+MAM_MYSQL_PORT={{MYSQL_PORT}}
+MAM_MYSQL_USER=root
+MAM_MYSQL_PASSWORD={{MYSQL_ROOT_PASSWORD}}
+MAM_MYSQL_DATABASE=ejabberd_db
+
+# BLOCKHAIN AND GAMIFICATION SETTINGS
+BLOCKCHAIN_ENABLED={{BLOCKCHAIN_ENABLED}}
+GETH_WS_HOST='ws://localhost:8546'
+COINBASE_PRIVATE={{COINBASE_PRIVATE}}
+PRECREATED_WALLETS_AMOUNT=30
+NEW_APP_WALLET_START_BALANCE=5000
+INIT_COINS=1000000
+COINS_DAILY_BONUS=5
+NEW_USER_APP_DEF_TOKEN_GIFT=100
+PLATFORM_TOKEN_INIT_SUPPLY=1000000000000000
+PLATFORM_TOKEN_NAME=Dappros Platform Token
+PLATFORM_TOKEN_SYMBOL=DPT
+BC_STACK_SIZE=1
+CRYPTOPAIR_SECRET=U2FsdGVkX193tRrRJ1wa9huY2OLX0KxNixid6SqM0=
+
+# External b/c network settings
+EXTERNAL_BC_NETWORKNAME={{EXTERNAL_BC_NETWORKNAME}}
+EXTERNAL_BC_WS={{EXTERNAL_BC_WS}}
+ALCHEMY={{ALCHEMY}}
+USDC_CONTRACT_ADDRESS={{USDC_CONTRACT_ADDRESS}}
+NEW_APP_CREATE_COST=10
+COINS_AMOUNT_FOR_MONTH_SUBSCRIPTION=1000
+
+# PAYMENT / STRIPE SETTINGS
+STRIPE_ENABLED={{STRIPE_ENABLED}}
+STRIPE_SECRET={{STRIPE_SECRET}}
+STRIPE_PUBLIC={{STRIPE_PUBLIC}}
+STRIPE_PLAN={{STRIPE_PLAN}}
+
+# EMAIL SETTINGS (Postmark - optional)
+POSTMARK_ENABLED={{POSTMARK_ENABLED}}
+POSTMARK_TOKEN={{POSTMARK_TOKEN}}
+POSTMARK_FROM_EMAIL={{POSTMARK_FROM_EMAIL}}
+POSTMARK_FROM_NAME={{POSTMARK_FROM_NAME}}
+POSTMARK_SUBJECT_PREFIX={{POSTMARK_SUBJECT_PREFIX}}
+
+# FEEDBACK CHANNEL (POST /v2/feedback - optional destinations)
+# Both blank = submissions are stored and nothing is sent. Email delivery rides
+# on the Postmark settings above, so it silently no-ops when POSTMARK_ENABLED is
+# false. Retention is in days; 0 keeps submissions until they are deleted.
+FEEDBACK_EMAIL_TO={{FEEDBACK_EMAIL_TO}}
+FEEDBACK_SLACK_WEBHOOK_URL={{FEEDBACK_SLACK_WEBHOOK_URL}}
+FEEDBACK_RETENTION_DAYS={{FEEDBACK_RETENTION_DAYS}}
+
+# In-app purchase verification (optional)
+IAP_ENABLED={{IAP_ENABLED}}
+
+# Firebase Admin (optional)
+FIREBASE_ENABLED={{FIREBASE_ENABLED}}
+FIREBASE_PROJECT_NAME={{FIREBASE_PROJECT_NAME}}
+FIREBASE_SERVICE_ACCOUNT_PATH={{FIREBASE_SERVICE_ACCOUNT_PATH}}
+FIREBASE_WEB_API_KEY={{FIREBASE_WEB_API_KEY}}
+FIREBASE_WEB_AUTH_DOMAIN={{FIREBASE_WEB_AUTH_DOMAIN}}
+FIREBASE_WEB_PROJECT_ID={{FIREBASE_WEB_PROJECT_ID}}
+FIREBASE_WEB_STORAGE_BUCKET={{FIREBASE_WEB_STORAGE_BUCKET}}
+FIREBASE_WEB_MESSAGING_SENDER_ID={{FIREBASE_WEB_MESSAGING_SENDER_ID}}
+FIREBASE_WEB_APP_ID={{FIREBASE_WEB_APP_ID}}
+FIREBASE_WEB_MEASUREMENT_ID={{FIREBASE_WEB_MEASUREMENT_ID}}
+
+# Push notifications service (FCM)
+# Backend routes under /v1/push/* proxy to this service.
+PUSH_SERVER_URL=http://127.0.0.1:{{PUSH_PORT}}
+B2B_PUSH_SECRET={{B2B_PUSH_SECRET}}
+
+# CENTRIFUGO (real-time stats counters in admin dashboard)
+# Non-critical: backend uses a short timeout and fire-and-forget publishing so a
+# misconfigured/down Centrifugo never blocks login or API requests.
+# Each install runs its own Centrifugo container locally; backend reaches it via localhost.
+CENTRIFUGO_ENABLED={{CENTRIFUGO_ENABLED}}
+CENTRIFUGO_API_URL=http://127.0.0.1:{{CENTRIFUGO_PORT}}/api
+CENTRIFUGO_API_KEY={{CENTRIFUGO_API_KEY}}
+CENTRIFUGO_HMAC_SECRET={{CENTRIFUGO_HMAC_SECRET}}
+CENTRIFUGO_TIMEOUT_MS={{CENTRIFUGO_TIMEOUT_MS}}
+
+# Internal service-to-service auth secret (used by /internal/auth/verify)
+INTERNAL_REQUESTS_SECRET={{INTERNAL_REQUESTS_SECRET}}
+
+# FILES STORAGE
+MINIO_HOST=localhost
+MINIO_PORT=9000
+MINIO_ACCESS_KEY={{MINIO_ROOT_USER}}
+MINIO_SECRET_KEY={{MINIO_ROOT_PASSWORD}}
+MINIO_BUCKET=files
+# MinIO URL will be set based on localhost mode
+MINIO_URL_PLACEHOLDER
+# Secure chat attachments (gated by chat membership). The private bucket is
+# created automatically on startup; an empty MINIO_SECURE_URL disables the feature.
+MINIO_SECURE_BUCKET={{MINIO_SECURE_BUCKET}}
+MINIO_SECURE_URL_PLACEHOLDER
+# Parent domain for auth cookies so the fileToken cookie reaches the secure files
+# subdomain (e.g. .example.com). Empty on localhost.
+AUTH_COOKIE_DOMAIN_PLACEHOLDER
+
+SECRET_FOR_FILES_ENCRYPTION=e4998e88f0a7b612b52b9396b2492690daba6043168cfe2acdaa16bfb58f0e6f:438ab85fd5e2a218f783fb5c107c1331
+SECRET_FOR_DB_ENCRYPTION=d5427c9a0a7313a60a4ee228befd081f7a85874832f9e3c0add99e90a83fd5a9:73c95c61aad2b0fd938e1f708d1ac4bc
+
+# ANALYTICS AND REPORTING
+ANALYTICS_ENABLED={{ANALYTICS_ENABLED}}
+DAILY_REPORT_RECEIVERS={{DAILY_REPORT_RECEIVERS}}
+MONTHLY_REPORT_RECEIVERS={{MONTHLY_REPORT_RECEIVERS}}
+REPORT_DAILY_SCHEDULE={{REPORT_DAILY_SCHEDULE}}
+REPORT_WEEKLY_SCHEDULE={{REPORT_WEEKLY_SCHEDULE}}
+REPORT_MONTHLY_SCHEDULE={{REPORT_MONTHLY_SCHEDULE}}
+REPORT_TIMEZONE={{REPORT_TIMEZONE}}
+TRUST_AND_SAFETY_EMAILS={{ADMIN_EMAIL}}
+LEGAL_CONTACT_EMAIL={{LEGAL_CONTACT_EMAIL}}
+ALERT_RECIPIENTS={{ALERT_RECIPIENTS}}
+XMPP_SECRET={{XMPP_SECRET}}
+
+AI_SERVICE_ENABLED={{AI_SERVICE_ENABLED}}
+DOCS_PARSE_ENABLED={{DOCS_PARSE_ENABLED}}
+CRAWLER_ENABLED={{CRAWLER_ENABLED}}
+
+AI_SERVICE_URL=http://localhost:{{AI_SERVICE_PORT}}
+AI_SERVICE_SECRET={{AI_SERVICE_SECRET}}
+
+CRAWLER_URL={{CRAWLER_URL}}
+# Shared secret the crawler presents on its result callback to
+# /v1/sources/site-crawl/internal-for-crawler/:appId, which has no authMw.
+# Rendered from the same .deploy.env value as the crawler's own env.
+# If empty, that route rejects every request.
+CRAWLER_CALLBACK_SECRET={{CRAWLER_CALLBACK_SECRET}}
+
+DOCS_PARSE_URL=http://localhost:{{DOCS_PARSE_PORT}}
+DOCS_PARSE_SECRET={{DOCS_PARSE_SECRET}}
+
+CF_TURNSTILE_SECRET={{TURNSTILE_SECRET_KEY}}
+
+# Build/version info exposed via /v1/ping and /v1/ping/version. Derived from `git log -1`
+# on the deploy source repo at setup-env.sh time. yy.mm.dd is the latest commit date.
+ETHORA_BUILD_VERSION={{BUILD_VERSION}}
+ETHORA_BUILD_BRANCH={{BUILD_BRANCH}}
+ETHORA_BUILD_COMMIT={{BUILD_COMMIT}}
+ETHORA_BUILD_TIME={{BUILD_TIME}}
+
+# HUBSPOT (disabled by default for enterprise; explicitly enable in deploy.yml)
+HUBSPOT_ENABLED={{HUBSPOT_ENABLED}}
+HUBSPOT_PORTAL_ID={{HUBSPOT_PORTAL_ID}}
+HUBSPOT_FORM_ID_APP_CREATE={{HUBSPOT_FORM_ID_APP_CREATE}}
+HUBSPOT_FORM_ID_SIGNUP={{HUBSPOT_FORM_ID_SIGNUP}}
+HUBSPOT_FORM_ID_TUTORIAL={{HUBSPOT_FORM_ID_TUTORIAL}}
+
+# WEBRTC / LiveKit (video/audio calls). Populated from integrations.livekit
+# only when features.video_calls is enabled; empty keeps calls inert.
+WEBRTC_HOST={{WEBRTC_HOST}}
+WEBRTC_API_KEY={{WEBRTC_API_KEY}}
+WEBRTC_API_SECRET={{WEBRTC_API_SECRET}}
+
+# IMMUTABLE AUDIT LOGS (tamper-evident log export to S3).
+# Populated from integrations.immutable_logs only when features.immutable_logs
+# is enabled; all values are empty otherwise, which must keep the log writer and
+# the S3 uploader inert (nothing should reach out to AWS on a flag-off install).
+# The AWS_* names are prefixed on purpose - unprefixed AWS_ACCESS_KEY_ID /
+# AWS_SECRET_ACCESS_KEY / AWS_REGION are auto-detected by every AWS SDK in the
+# process and would silently repoint unrelated S3/MinIO clients.
+IMMUTABLE_LOGS_ENABLED={{IMMUTABLE_LOGS_ENABLED}}
+IMMUTABLE_LOGS_INTERVAL_HOURS={{IMMUTABLE_LOGS_INTERVAL_HOURS}}
+IMMUTABLE_LOGS_AWS_ACCESS_KEY_ID={{IMMUTABLE_LOGS_AWS_ACCESS_KEY_ID}}
+IMMUTABLE_LOGS_AWS_SECRET_ACCESS_KEY={{IMMUTABLE_LOGS_AWS_SECRET_ACCESS_KEY}}
+IMMUTABLE_LOGS_AWS_REGION={{IMMUTABLE_LOGS_AWS_REGION}}
+IMMUTABLE_LOGS_AWS_S3_BUCKET_NAME={{IMMUTABLE_LOGS_AWS_S3_BUCKET_NAME}}
+
+# TRANSLATION SERVER LANGUAGES (deploy.yml `translate.languages`).
+# What the separately-installed translation server can translate INTO, as
+# BCP-47 tags. This is the ONLY language list the API serves to clients: it
+# feeds both the interface picker (narrowed to locales the web bundle ships
+# dictionaries for) and the chat translation picker (used whole), and it is
+# what user language writes are validated against.
+#
+# The API does not read this env at request time - init-services.sh pushes it
+# into Mongo (installSettings) on every install / update, and get-config serves
+# it from there, because get-config is the unauthenticated bootstrap call and
+# other services need the value as data. It is rendered here so the sync step
+# has a single rendered source and so operators can see the configured value
+# next to the rest of the backend config. Empty -> `translateLanguages: []`.
+TRANSLATE_LANGUAGES={{TRANSLATE_LANGUAGES}}
+
+# LICENSE (deploy.yml `license:`). See docs/LICENSING.md.
+# ETHORA_LICENSE_KEY wins over a key uploaded through the admin panel. With
+# neither, the backend runs a grace window from first boot, then restricts
+# app/user creation. ETHORA_LICENSED_HOSTS is what the key's domain is checked
+# against; it is derived from deploy.yml `domains:` and should not be edited.
+ETHORA_LICENSE_KEY={{ETHORA_LICENSE_KEY}}
+ETHORA_LICENSE_CALL_HOME={{ETHORA_LICENSE_CALL_HOME}}
+ETHORA_LICENSE_SERVER_URL={{ETHORA_LICENSE_SERVER_URL}}
+ETHORA_LICENSE_GRACE_DAYS={{ETHORA_LICENSE_GRACE_DAYS}}
+ETHORA_LICENSED_HOSTS={{API_DOMAIN}},{{WEB_DOMAIN}},{{XMPP_DOMAIN}},{{FILES_DOMAIN}}
+
+# Prometheus request metrics on GET /metrics (counts + latency histogram per
+# route). Scraped by the monitoring stack over the host port; nginx keeps the
+# path off the public API host.
+ENABLE_METRICS=true
+'''
+
+[[config.mounts]]
+filePath = "/templates/frontend.env.template"
+content = '''
+# API URLs will be set based on localhost mode
+VITE_API_PLACEHOLDER
+VITE_API_V2_PLACEHOLDER
+VITE_ROOT_DOMAIN={{ROOT_DOMAIN}}
+VITE_WEB_DOMAIN={{WEB_DOMAIN}}
+VITE_HOSTED_APPS_ROOT_DOMAIN={{HOSTED_APPS_ROOT_DOMAIN}}
+VITE_DOMAIN_NAME={{DOMAIN_NAME}}
+# Brand name used as a fallback when no per-route / per-app title is set,
+# and as the brand-suffix on tenant-level admin titles. Defaults to the
+# base app's display_name from deploy.yml (e.g. "Ethora" for ethora.com,
+# the enterprise customer's brand name for white-labeled installs).
+VITE_PLATFORM_NAME={{BASE_APP_DISPLAY_NAME}}
+VITE_SITE_IS_PRODUCTION=true
+{{#if STRIPE_ENABLED}}
+VITE_STRIPE_PUBLICK_KEY={{STRIPE_PUBLIC}}
+{{/if}}
+VITE_APP_ALLOWED_DOMAINS={{WEB_DOMAIN}},localhost
+VITE_APP_UTM_KEYS=utm_source,utm_medium,utm_campaign,utm_term,utm_content
+# XMPP service will be set based on localhost mode
+VITE_APP_XMPP_SERVICE_PLACEHOLDER
+VITE_APP_CENTRIFUGE_SERVICE_PLACEHOLDER
+VITE_XMPP_SERVICE=conference.{{XMPP_DOMAIN}}
+VITE_XMPP_HOST={{XMPP_DOMAIN}}
+VITE_WIDGET_URL={{WIDGET_URL}}
+VITE_WIDGET_VERSIONED_URL={{WIDGET_VERSIONED_URL}}
+VITE_WIDGET_SCRIPT_VERSION={{WIDGET_SCRIPT_VERSION}}
+VITE_QR_URL={{WIDGET_QR_URL}}
+# AI feature umbrella surfaced to the admin UI. When "false", the Agents
+# top-level tab and the AI Widget tab under App Settings render in a
+# disabled state (visible but read-only / non-clickable) so operators on
+# non-AI deployments understand what's available without being able to
+# configure features their install doesn't ship.
+VITE_AI_FEATURE_ENABLED={{AI_FEATURE_ENABLED}}
+# Video/audio calls (LiveKit). Consumed by the chat-component videoCalls
+# config switch. No effect unless the deployed chat-component build includes
+# the calls feature. Driven by features.video_calls in deploy.yml.
+VITE_VIDEO_CALLS_ENABLED={{VIDEO_CALLS_ENABLED}}
+# End-to-end encryption (OMEMO 2). Consumed by the chat-component e2ee
+# config switch. Off means no keys are generated and stanzas are built
+# exactly as before; on, messages are encrypted in rooms the backend marks
+# `e2ee` and every other room stays plain. Driven by features.e2ee in
+# deploy.yml, and needs an ejabberd whose PEP access_model lets room
+# members read each other's OMEMO nodes.
+#
+# Install gate only: the frontend ANDs this with the per-app `e2eeEnabled`
+# it reads from GET /apps/get-config, so `true` here surfaces the setting to
+# app owners rather than enabling encryption for every app.
+VITE_E2EE_ENABLED={{E2EE_ENABLED}}
+# LiveKit server URL for video/audio calls (integrations.livekit.url).
+VITE_LIVEKIT_URL={{LIVEKIT_URL}}
+VITE_SITE_KEY={{TURNSTILE_SITE_KEY}}
+
+# Analytics and Services (set to 'true' to disable for local/enterprise setups)
+VITE_DISABLE_FIREBASE={{DISABLE_FIREBASE}}
+VITE_DISABLE_GA={{DISABLE_GA}}
+VITE_DISABLE_CLARITY={{DISABLE_CLARITY}}
+
+# Web push (FCM). Platform Firebase web-app config used by the chat push
+# notifications service worker. Sourced from integrations.firebase.web in
+# deploy.yml (the same project as base-app social login). Push is also
+# domain-gated by VITE_APP_ALLOWED_DOMAINS; leave the project blank in
+# deploy.yml to keep push disabled.
+VITE_FIREBASE_API_KEY={{FIREBASE_WEB_API_KEY}}
+VITE_FIREBASE_AUTH_DOMAIN={{FIREBASE_WEB_AUTH_DOMAIN}}
+VITE_FIREBASE_PROJECT_ID={{FIREBASE_WEB_PROJECT_ID}}
+VITE_FIREBASE_STORAGE_BUCKET={{FIREBASE_WEB_STORAGE_BUCKET}}
+VITE_FIREBASE_MESSAGING_SENDER_ID={{FIREBASE_WEB_MESSAGING_SENDER_ID}}
+VITE_FIREBASE_APP_ID={{FIREBASE_WEB_APP_ID}}
+VITE_FIREBASE_MEASUREMENT_ID={{FIREBASE_WEB_MEASUREMENT_ID}}
+# VAPID public key: Firebase Console > Project Settings > Cloud Messaging >
+# Web Push certificates (key pair). Required for the browser to obtain an
+# FCM token; without it push subscription fails.
+VITE_VAPID_PUBLIC_KEY={{FIREBASE_WEB_VAPID_PUBLIC_KEY}}
+
+# Tracking IDs (optional; leave empty for enterprise)
+VITE_GA_ID={{GA_ID}}
+VITE_GTM_ID={{GTM_ID}}
+VITE_CLARITY_ID={{CLARITY_ID}}
+VITE_POSTHOG_KEY={{POSTHOG_KEY}}
+VITE_POSTHOG_HOST={{POSTHOG_HOST}}
+
+# Build/version info (shown in the tiny footer on auth screens). Derived from `git log -1`
+# on the deploy source repo at setup-env.sh time. yy.mm.dd is the latest commit date.
+VITE_BUILD_VERSION={{BUILD_VERSION}}
+VITE_BUILD_BRANCH={{BUILD_BRANCH}}
+VITE_BUILD_COMMIT={{BUILD_COMMIT}}
+
+# HubSpot (optional; disabled by default for enterprise)
+VITE_HUBSPOT_ENABLED={{HUBSPOT_ENABLED}}
+VITE_HUBSPOT_PORTAL_ID={{HUBSPOT_PORTAL_ID}}
+VITE_HUBSPOT_FORM_ID_APP_CREATE={{HUBSPOT_FORM_ID_APP_CREATE}}
+VITE_HUBSPOT_FORM_ID_SIGNUP={{HUBSPOT_FORM_ID_SIGNUP}}
+VITE_HUBSPOT_FORM_ID_TUTORIAL={{HUBSPOT_FORM_ID_TUTORIAL}}
+VITE_HUBSPOT_REGION={{HUBSPOT_REGION}}
+
+# Hosted MCP server public endpoint (blank when services.mcp is disabled); drives the
+# "AI assistants" settings page (personal connector URLs and client snippets).
+VITE_MCP_PUBLIC_URL={{MCP_PUBLIC_URL}}
+'''
+
+[[config.mounts]]
+filePath = "/templates/centrifugo-config.json.template"
+content = '''
+{
+    "client": {
+        "token": {
+            "hmac_secret_key": "{{CENTRIFUGO_HMAC_SECRET}}"
+        },
+        "allowed_origins": [
+            "*"
+        ],
+        "subscribe_to_user_personal_channel": {
+            "enabled": true,
+            "single_connection": false
+        }
+    },
+    "http_api": {
+        "key": "{{CENTRIFUGO_API_KEY}}"
+    },
+    "health": {
+        "enabled": true
+    },
+    "admin": {
+        "password": "{{CENTRIFUGO_ADMIN_PASSWORD}}",
+        "secret": "{{CENTRIFUGO_ADMIN_SECRET}}",
+        "enabled": true
+    },
+    "channel": {
+        "without_namespace": {
+            "allow_subscribe_for_client": true
+        },
+
+        "namespaces": [
+            {
+                "name": "public",
+                "presence": true,
+                "allow_subscribe_for_client": true,
+                "join_leave": true,
+                "force_push_join_leave": true
+            }
+        ]
+    }
+}
+'''

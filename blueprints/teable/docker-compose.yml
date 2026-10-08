@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   teable:
     image: ghcr.io/teableio/teable:latest

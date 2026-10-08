@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   naviserver:
     image: ghcr.io/andre-carbajal/naviserver:2.4.5

@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   backend:
     image: ketbom/minepanel-backend:1.7.1

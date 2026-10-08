@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   meilisearch:
     image: getmeili/meilisearch:v1.35.1

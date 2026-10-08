@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   picsur:
     image: ghcr.io/caramelfur/picsur:latest

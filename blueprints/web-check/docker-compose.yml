@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   web-check:
     image: lissy93/web-check

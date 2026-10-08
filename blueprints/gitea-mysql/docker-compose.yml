@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   gitea:
     image: docker.gitea.com/gitea:1.24.4

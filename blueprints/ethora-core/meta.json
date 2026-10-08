@@ -1,0 +1,16 @@
+{
+  "id": "ethora-core",
+  "name": "Ethora Core",
+  "version": "2610",
+  "description": "Self-hosted chat and messaging server: API, web chat and admin panel, XMPP server (ejabberd) and file storage, with SDKs for web, iOS, Android and React Native.",
+  "logo": "ethora.svg",
+  "links": {
+    "github": "https://github.com/dappros/ethora-install",
+    "website": "https://ethora.com/",
+    "docs": "https://github.com/dappros/ethora-install/tree/main/deploy/compose"
+  },
+  "tags": [
+    "chat",
+    "self-hosted"
+  ]
+}

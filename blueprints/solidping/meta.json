@@ -1,0 +1,19 @@
+{
+  "id": "solidping",
+  "name": "SolidPing",
+  "version": "0.32.1",
+  "description": "Distributed, self-hostable uptime monitoring: 40 check types, multi-region workers, private agents, status pages, incidents and on-call escalation — in a single Go binary.",
+  "logo": "solidping.svg",
+  "links": {
+    "github": "https://github.com/fclairamb/solidping",
+    "website": "https://solidping.io/",
+    "docs": "https://solidping.io/docs"
+  },
+  "tags": [
+    "monitoring",
+    "uptime",
+    "status-page",
+    "observability",
+    "alerts"
+  ]
+}

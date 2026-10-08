@@ -1,5 +1,3 @@
-version: "3.8"
-
 x-chatwoot-base: &chatwoot-base
   image: chatwoot/chatwoot:v4.12.1
   restart: unless-stopped

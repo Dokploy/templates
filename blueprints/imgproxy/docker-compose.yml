@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   imgproxy:
     image: darthsim/imgproxy:v3.30.1

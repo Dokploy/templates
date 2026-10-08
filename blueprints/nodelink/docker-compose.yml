@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   nodelink:
     image: performanc/nodelink:3.8.0

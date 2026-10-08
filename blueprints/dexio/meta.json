@@ -1,0 +1,20 @@
+{
+  "id": "dexio",
+  "name": "Dexio",
+  "version": "1.0.0",
+  "description": "One wiki for all your agents. AI agents read and write linked markdown pages over MCP from any machine, and people see what they know in a web app: the link graph, every page and its history.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/dexio-wiki/dexio",
+    "website": "https://dexio.wiki",
+    "docs": "https://github.com/dexio-wiki/dexio/blob/main/deploy/README.md"
+  },
+  "tags": [
+    "wiki",
+    "knowledge-base",
+    "markdown",
+    "mcp",
+    "ai",
+    "agents"
+  ]
+}

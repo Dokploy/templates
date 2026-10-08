@@ -1,21 +1,17 @@
 [variables]
-backend_domain = "${domain}"
-frontend_domain = "${domain}"
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+auth_secret = "${hash:64}"
 
-
+[config]
 [[config.domains]]
-serviceName = "frontend"
+serviceName = "kaneo"
 port = 5_173
-host = "${frontend_domain}"
-
-[[config.domains]]
-serviceName = "backend"
-port = 1_337
-host = "${backend_domain}"
+host = "${main_domain}"
 
 [config.env]
-BACKEND_HOST = "${backend_domain}"
-KANEO_DB = "kaneo"
-KANEO_DB_USER = "${username}"
-KANEO_DB_PASSWORD = "${password}"
-KANEO_JWT_ACCESS = "${hash:64}"
+KANEO_CLIENT_URL = "http://${main_domain}"
+POSTGRES_DB = "kaneo"
+POSTGRES_USER = "kaneo"
+POSTGRES_PASSWORD = "${postgres_password}"
+AUTH_SECRET = "${auth_secret}"

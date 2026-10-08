@@ -1,6 +1,6 @@
 services:
   autobase-console:
-    image: autobase/console:2.10.0
+    image: autobase/console:2.11.0
     restart: unless-stopped
     expose:
       - "80"

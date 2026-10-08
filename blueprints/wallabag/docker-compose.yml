@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   wallabag:
     image: wallabag/wallabag:2.6.14

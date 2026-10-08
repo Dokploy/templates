@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   postiz-app:
     image: ghcr.io/gitroomhq/postiz-app:latest

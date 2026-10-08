@@ -1,0 +1,19 @@
+{
+  "id": "opencode",
+  "name": "OpenCode",
+  "version": "1.18.32",
+  "description": "OpenCode is an open source AI coding agent. This template runs its password-protected web UI; optionally set a repository URL to clone on start-up, then chat with, edit and run your code from the browser.",
+  "logo": "opencode.svg",
+  "links": {
+    "github": "https://github.com/anomalyco/opencode",
+    "website": "https://opencode.ai",
+    "docs": "https://opencode.ai/v2/docs"
+  },
+  "tags": [
+    "ai",
+    "coding",
+    "agent",
+    "development",
+    "self-hosted"
+  ]
+}

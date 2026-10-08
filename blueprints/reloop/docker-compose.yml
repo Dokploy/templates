@@ -1,0 +1,311 @@
+# dokploy: allow-host-ports
+x-backend-env: &backend-env
+  RELOOP_VERSION: ${RELOOP_VERSION:-latest}
+  NODE_ENV: production
+  BASE_URL: ${BASE_URL}
+  HOST_DOMAIN: ${HOST_DOMAIN}
+  TRACKING_DOMAIN: ${TRACKING_DOMAIN}
+  TRACKING_BASE_URL: ${TRACKING_BASE_URL}
+  INBOUND_HOSTNAME: inbound.${HOST_DOMAIN}
+  SMTP_HOSTNAME: ${SMTP_HOSTNAME}
+  AUTH_INTERNAL_BASE_URL: http://auth:8000
+  PG_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-reloop}
+  REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+  NATS_URL: nats://nats:4222
+  BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+  RELOOP_INTERNAL_SECRET: ${RELOOP_INTERNAL_SECRET}
+  TRACKING_SECRET: ${TRACKING_SECRET}
+  PREFERENCES_SECRET: ${PREFERENCES_SECRET}
+  WEBHOOK_ENCRYPTION_KEY: ${WEBHOOK_ENCRYPTION_KEY}
+  WORKBENCH_USER: ${WORKBENCH_USER}
+  WORKBENCH_PASS: ${WORKBENCH_PASS}
+  APP_NAME: ${APP_NAME:-Reloop}
+  DISABLE_SIGNUP: ${DISABLE_SIGNUP:-true}
+  DISABLE_ORG_CREATION: ${DISABLE_ORG_CREATION:-false}
+  DKIM_SELECTOR: ${DKIM_SELECTOR:-reloop}
+  DNS_RESOLVERS: ${DNS_RESOLVERS:-8.8.8.8,8.8.4.4}
+  RELOOP_API_KEY: ${RELOOP_API_KEY}
+  RELOOP_SENDER_DOMAIN: ${RELOOP_SENDER_DOMAIN}
+  SMTP_HOST: ${SMTP_HOST}
+  SMTP_PORT: ${SMTP_PORT:-587}
+  SMTP_USER: ${SMTP_USER}
+  SMTP_PASSWORD: ${SMTP_PASSWORD}
+  SMTP_SECURE: ${SMTP_SECURE:-false}
+  S3_ENDPOINT: ${S3_ENDPOINT}
+  S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+  S3_SECRET_KEY: ${S3_SECRET_KEY}
+  S3_BUCKET: ${S3_BUCKET:-reloop-uploads}
+  S3_REGION: ${S3_REGION:-us-east-1}
+  S3_FORCE_PATH_STYLE: "true"
+  KUMOMTA_HTTP_URL: http://smtp:8000
+  KUMOMTA_WEBHOOK_URL: http://domain:8011/api/domain
+  KUMOMTA_CHECK_RECIPIENT_URL: http://domain:8011/api/domain
+  KUMOMTA_RSPAMD_URL: http://spam:11333/checkv2
+  KUMOMTA_MIN_FREE_SPACE: ${KUMOMTA_MIN_FREE_SPACE:-5%}
+  KUMOMTA_MIN_FREE_INODES: ${KUMOMTA_MIN_FREE_INODES:-0}
+
+x-backend-depends: &backend-depends
+  postgres:
+    condition: service_healthy
+  redis:
+    condition: service_healthy
+  nats:
+    condition: service_healthy
+  migrate:
+    condition: service_completed_successfully
+
+services:
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    volumes:
+      - ../files/Caddyfile:/etc/caddy/Caddyfile:ro
+
+  links:
+    image: reloopsh/fe-links@sha256:8a22fde21a656c25163e2b856a856053c5de91cbc4953cc23ed034c081eedfa5
+    restart: unless-stopped
+    environment:
+      - HOSTNAME=0.0.0.0
+      - PORT=3005
+      - INTERNAL_API_URL=http://contacts:8014/api/contacts
+      - INTERNAL_MAIL_API_URL=http://mail:8015/api/mail
+
+  dashboard:
+    image: reloopsh/fe-dashboard@sha256:dd2369d2f0d7fe836664ae49b2b4492f90ee654dd8af7c819e7ca07e469b58dc
+    restart: unless-stopped
+    environment:
+      HOSTNAME: 0.0.0.0
+      PORT: 3000
+      SMTP_HOSTNAME: ${SMTP_HOSTNAME}
+
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-reloop}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command:
+      - redis-server
+      - --requirepass
+      - ${REDIS_PASSWORD}
+      - --appendonly
+      - "yes"
+      - --dir
+      - /data
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli --no-auth-warning -a \"$${REDIS_PASSWORD}\" ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  nats:
+    image: nats:2.10-alpine
+    restart: unless-stopped
+    command: ["-js", "-sd", "/data", "-m", "8222"]
+    volumes:
+      - nats-data:/data
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8222/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  migrate:
+    image: reloopsh/be-auth@sha256:741ef934ec59aa173f8dcfa980c163c107e6e5693786777326eaf90e49cb47c5
+    restart: "no"
+    working_dir: /app/packages/db
+    entrypoint: ["/app/node_modules/.bin/drizzle-kit"]
+    command: ["push", "--force"]
+    environment:
+      PG_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-reloop}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  auth:
+    image: reloopsh/be-auth@sha256:741ef934ec59aa173f8dcfa980c163c107e6e5693786777326eaf90e49cb47c5
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      PORT: 8000
+      SETUP_MODE: ${SETUP_MODE:-true}
+      ADMIN_SETUP_KEY: ${ADMIN_SETUP_KEY}
+    volumes:
+      - reloop-setup:/run/reloop
+    depends_on: *backend-depends
+
+  domain:
+    image: reloopsh/be-domain@sha256:cb12e37221a697278822819fdf4fd0ada2bb2f13e2979be789c9c44ee09a3f56
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      PORT: 8011
+    depends_on: *backend-depends
+
+  api-key:
+    image: reloopsh/be-api-key@sha256:535f9837d39acdd7e155a14752b1ab6e3cbef06331cf26634577ff82a0156572
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      PORT: 8012
+    depends_on: *backend-depends
+
+  webhook:
+    image: reloopsh/be-webhook@sha256:644a6b79756f57c045c8572c42bee6dfb6b31663ee08d21f2565cead4dfc1ca9
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      PORT: 8013
+    depends_on: *backend-depends
+
+  contacts:
+    image: reloopsh/be-contacts@sha256:43da0b373e2777fdc7af97d92fdb916320a27e2ffdea61df69bca477722b2dfa
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      PORT: 8014
+    depends_on: *backend-depends
+
+  mail:
+    image: reloopsh/be-mail@sha256:c4b2fe0de847a606f12fe0d50adadda9719135205cb227c6e12c6a6f0889aae8
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      PORT: 8015
+    depends_on: *backend-depends
+
+  logs:
+    image: reloopsh/be-logs@sha256:3c0be118c7df0ebd76e24ed65de014980f96a8c14c2783231a39b0c54c4065e0
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      PORT: 8016
+    depends_on: *backend-depends
+
+  workflow:
+    image: reloopsh/be-workflow@sha256:d7d75e9145891b7167b42b4fb1ec441c53361e825e5fdf0d72962ef95d3d5b56
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      PORT: 8017
+    depends_on: *backend-depends
+
+  upload:
+    image: reloopsh/be-upload@sha256:22632cbbc686fa0c766a0ecd316b4bdeb3097fe5652d3b8e183133ff8055a299
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      PORT: 8018
+    depends_on: *backend-depends
+
+  template:
+    image: reloopsh/be-template@sha256:9734939a04b211aa99c96d89446cb5b28ba5e065a2b8388a88ae634c50f5f77d
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      PORT: 8019
+    depends_on: *backend-depends
+
+  campaigns:
+    image: reloopsh/be-campaigns@sha256:446287b0dc88f77ca5ac12199bda637e1e2216a38a47e281be161dba4fea3624
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      PORT: 8027
+    depends_on: *backend-depends
+
+  inbox:
+    image: reloopsh/be-inbox@sha256:4d6fe16298fbec859c86cc6ac55f2804223e9d1c9ff52afc92c01845b99a5f74
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      PORT: 8028
+    depends_on: *backend-depends
+
+  email:
+    image: reloopsh/be-email@sha256:4caf97f84d7faf7bf45f69e12b8226d724b0e58c0205cd82d1ef7031f4ea8b2d
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      PORT: 8022
+    depends_on: *backend-depends
+
+  spam:
+    image: reloopsh/be-spam@sha256:4fcd262354ddb11ed67d8ce8f4b5f08b274f22a8da6987233fb1486d9150a540
+    restart: unless-stopped
+    environment:
+      RSPAMD_REDIS_SERVERS: redis:6379
+      RSPAMD_REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - rspamd-data:/var/lib/rspamd
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  smtp:
+    image: reloopsh/be-smtp@sha256:689b49f762ee0d5f4c33bbfd073f7ebeb5cbae27194c36269883be7da415a86e
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      HOSTNAME: ${SMTP_HOSTNAME}
+    ports:
+      - "465:465"
+      - "587:587"
+    volumes:
+      - smtp-data:/var/spool/kumomta/data
+      - smtp-meta:/var/spool/kumomta/meta
+    depends_on:
+      nats:
+        condition: service_healthy
+      domain:
+        condition: service_started
+      logs:
+        condition: service_started
+      contacts:
+        condition: service_started
+
+  inbound:
+    image: reloopsh/be-inbound@sha256:28c6ca80d51d3c83319ddc3c00b370668a1779af134a2c60e7daedd23e7691fc
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+    ports:
+      - "25:25"
+    volumes:
+      - inbound-data:/var/spool/kumomta/data
+      - inbound-meta:/var/spool/kumomta/meta
+    depends_on:
+      nats:
+        condition: service_healthy
+      spam:
+        condition: service_started
+
+volumes:
+  postgres-data:
+  redis-data:
+  nats-data:
+  reloop-setup:
+  rspamd-data:
+  smtp-data:
+  smtp-meta:
+  inbound-data:
+  inbound-meta:

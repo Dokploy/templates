@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   maxio:
     image: ghcr.io/coollabsio/maxio:0.2.1

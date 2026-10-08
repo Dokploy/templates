@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   backend:
     image: ghcr.io/leonmuscoden/letterfeed-backend:latest

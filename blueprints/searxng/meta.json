@@ -2,7 +2,7 @@
   "id": "searxng",
   "name": "SearXNG",
   "version": "latest",
-  "description": "SearXNG is a privacy-respecting, hackable metasearch engine that aggregates results from various search engines without tracking users.",
+  "description": "SearXNG is a privacy-respecting metasearch engine that combines results from many search engines. Self-host it on your own server with Dokploy, which deploys SearXNG as a Docker Compose service in a few clicks.",
   "logo": "searxng.png",
   "links": {
     "github": "https://github.com/searxng/searxng",
@@ -15,5 +15,8 @@
     "privacy",
     "self-hosted",
     "aggregator"
-  ]
+  ],
+  "seoTitle": "SearXNG Docker Compose Setup",
+  "seoDescription": "Privacy-respecting metasearch engine. Deploy SearXNG with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

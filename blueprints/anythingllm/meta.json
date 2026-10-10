@@ -2,7 +2,7 @@
   "id": "anythingllm",
   "name": "AnythingLLM",
   "version": "latest",
-  "description": "AnythingLLM is a private, self-hosted, and local document chatbot platform that allows you to chat with your documents using various LLM providers.",
+  "description": "AnythingLLM is a private AI chat app for working with your own documents. Self-host it on your own server with Dokploy, which deploys AnythingLLM as a Docker Compose service in a few clicks.",
   "logo": "logo.png",
   "links": {
     "github": "https://github.com/Mintplex-Labs/anything-llm",
@@ -13,5 +13,7 @@
     "ai",
     "llm",
     "chatbot"
-  ]
+  ],
+  "seoTitle": "Self-Host AnythingLLM in minutes",
+  "seoDescription": "Private AI chatbot for your documents. Self-host AnythingLLM on Dokploy in minutes – no manual setup needed."
 }

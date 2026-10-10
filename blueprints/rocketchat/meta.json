@@ -2,7 +2,7 @@
   "id": "rocketchat",
   "name": "Rocketchat",
   "version": "6.9.2",
-  "description": "Rocket.Chat is a free and open-source web chat platform that allows you to build and manage your own chat applications.",
+  "description": "Rocket.Chat is a team communication platform and an open-source alternative to Slack. Self-host it on your own server with Dokploy, which deploys Rocket.Chat as a Docker Compose service in a few clicks.",
   "logo": "rocketchat.png",
   "links": {
     "github": "https://github.com/RocketChat/Rocket.Chat",
@@ -11,5 +11,7 @@
   },
   "tags": [
     "chat"
-  ]
+  ],
+  "seoTitle": "Self-Host Rocket.Chat in minutes",
+  "seoDescription": "Team chat platform, an alternative to Slack. Self-host Rocket.Chat on Dokploy in minutes – no manual setup needed."
 }

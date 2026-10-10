@@ -2,7 +2,7 @@
   "id": "phpmyadmin",
   "name": "Phpmyadmin",
   "version": "5.2.1",
-  "description": "Phpmyadmin is a free and open-source web interface for MySQL and MariaDB that allows you to manage your databases.",
+  "description": "phpMyAdmin is an open-source web interface for managing MySQL and MariaDB databases. Self-host it on your own server with Dokploy, which deploys phpMyAdmin as a Docker Compose service in a few clicks.",
   "logo": "phpmyadmin.png",
   "links": {
     "github": "https://github.com/phpmyadmin/phpmyadmin",
@@ -11,5 +11,8 @@
   },
   "tags": [
     "database"
-  ]
+  ],
+  "seoTitle": "Phpmyadmin Docker Compose Setup",
+  "seoDescription": "Web interface for managing MySQL databases. Deploy Phpmyadmin with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

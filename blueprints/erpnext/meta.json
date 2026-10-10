@@ -2,7 +2,7 @@
   "id": "erpnext",
   "name": "ERPNext",
   "version": "version-15",
-  "description": "100% Open Source and highly customizable ERP software.",
+  "description": "ERPNext is an ERP system for managing accounting, inventory, sales, and more. Self-host it on your own server with Dokploy, which deploys ERPNext as a Docker Compose service in a few clicks.",
   "logo": "erpnext.svg",
   "links": {
     "github": "https://github.com/frappe/erpnext",
@@ -17,5 +17,7 @@
     "sales",
     "pos",
     "hrms"
-  ]
+  ],
+  "seoTitle": "Self-Host ERPNext in minutes",
+  "seoDescription": "Open source ERP for business management. Self-host ERPNext on Dokploy in minutes – no manual setup needed."
 }

@@ -2,7 +2,7 @@
   "id": "rustdesk",
   "name": "RustDesk",
   "version": "latest",
-  "description": "RustDesk is a full-featured open source remote control alternative for self-hosting and security with minimal configuration.",
+  "description": "RustDesk is a remote desktop tool and an open-source alternative to TeamViewer. Self-host it on your own server with Dokploy, which deploys RustDesk as a Docker Compose service in a few clicks.",
   "logo": "rustdesk.png",
   "links": {
     "github": "https://github.com/rustdesk/rustdesk-server",
@@ -13,5 +13,8 @@
     "remote-desktop",
     "self-hosted",
     "productivity"
-  ]
+  ],
+  "seoTitle": "RustDesk Docker Compose Setup",
+  "seoDescription": "Open source remote desktop, an alternative to TeamViewer. Deploy RustDesk with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

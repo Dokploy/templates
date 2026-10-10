@@ -2,7 +2,7 @@
   "id": "netdata",
   "name": "Netdata",
   "version": "latest",
-  "description": "Netdata is a real-time performance monitoring tool that provides comprehensive system metrics, application monitoring, and infrastructure health insights.",
+  "description": "Netdata is a real-time monitoring tool for system and application performance. Self-host it on your own server with Dokploy, which deploys Netdata as a Docker Compose service in a few clicks.",
   "logo": "netdata.svg",
   "links": {
     "github": "https://github.com/netdata/netdata",
@@ -15,5 +15,8 @@
     "analytics",
     "performance",
     "infrastructure"
-  ]
+  ],
+  "seoTitle": "Netdata Docker Compose Setup",
+  "seoDescription": "Real-time system performance monitoring. Deploy Netdata with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

@@ -2,7 +2,7 @@
   "id": "jellyfin",
   "name": "jellyfin",
   "version": "v10.9.7",
-  "description": "Jellyfin is a Free Software Media System that puts you in control of managing and streaming your media. ",
+  "description": "Jellyfin is a Free Software Media System that puts you in control of managing and streaming your media. Self-host it on your own server with Dokploy, which deploys Jellyfin as a Docker Compose service in a few clicks.",
   "logo": "jellyfin.svg",
   "links": {
     "github": "https://github.com/jellyfin/jellyfin",
@@ -11,5 +11,8 @@
   },
   "tags": [
     "media-system"
-  ]
+  ],
+  "seoTitle": "Jellyfin Docker Compose Setup",
+  "seoDescription": "Free media server for movies, TV, and music. Deploy Jellyfin with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

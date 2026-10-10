@@ -2,7 +2,7 @@
   "id": "ghost",
   "name": "Ghost",
   "version": "6.0.0",
-  "description": "Ghost is a free and open source, professional publishing platform built on a modern Node.js technology stack.",
+  "description": "Ghost is an open-source publishing platform for blogs, newsletters, and paid memberships. Self-host it on your own server with Dokploy, which deploys Ghost as a Docker Compose service in a few clicks.",
   "logo": "ghost.jpeg",
   "links": {
     "github": "https://github.com/TryGhost/Ghost",
@@ -11,5 +11,8 @@
   },
   "tags": [
     "cms"
-  ]
+  ],
+  "seoTitle": "Ghost Docker Compose Setup",
+  "seoDescription": "Publishing platform for blogs and newsletters. Deploy Ghost with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

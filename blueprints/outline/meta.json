@@ -2,7 +2,7 @@
   "id": "outline",
   "name": "Outline",
   "version": "0.82.0",
-  "description": "Outline is a self-hosted knowledge base and documentation platform that allows you to build and manage your own knowledge base applications.",
+  "description": "Outline is a self-hosted knowledge base for team documentation. Self-host it on your own server with Dokploy, which deploys Outline as a Docker Compose service in a few clicks.",
   "links": {
     "github": "https://github.com/outline/outline",
     "website": "https://getoutline.com/",
@@ -13,5 +13,7 @@
     "documentation",
     "knowledge-base",
     "self-hosted"
-  ]
+  ],
+  "seoTitle": "Self-Host Outline in minutes",
+  "seoDescription": "Knowledge base and team documentation tool. Self-host Outline on Dokploy in minutes – no manual setup needed."
 }

@@ -2,7 +2,7 @@
   "id": "vault",
   "name": "Vault",
   "version": "2.0.3",
-  "description": "Vault is a tool for securely accessing secrets. A secret is anything that you want to tightly control access to, such as API keys, passwords, certificates, and more. Vault provides a unified interface to any secret, while providing tight access control and recording a detailed audit log. To sign in: In the Vault UI, select 'Token' as the authentication method (not GitHub), then enter the root token from the VAULT_DEV_ROOT_TOKEN_ID environment variable (auto-generated).",
+  "description": "Vault is HashiCorp's tool for securely storing and managing secrets and encryption keys. Self-host it on your own server with Dokploy, which deploys Vault as a Docker Compose service in a few clicks.",
   "logo": "vault.svg",
   "links": {
     "github": "https://github.com/hashicorp/vault",
@@ -14,5 +14,7 @@
     "secrets",
     "devops",
     "infrastructure"
-  ]
+  ],
+  "seoTitle": "Vault Docker Compose Setup",
+  "seoDescription": "Tool for securely storing secrets and keys. Deploy Vault with Docker Compose on Dokploy – sign in using the auto-generated root token env var."
 }

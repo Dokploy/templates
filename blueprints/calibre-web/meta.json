@@ -2,7 +2,7 @@
   "id": "calibre-web",
   "name": "Calibre-Web",
   "version": "latest",
-  "description": "Calibre-Web is a web app providing a clean interface for browsing, reading, and managing your eBooks library using an existing Calibre database.",
+  "description": "Calibre-Web is a web interface for browsing, reading, and downloading ebooks from a Calibre library. Self-host it on your own server with Dokploy, which deploys Calibre-Web as a Docker Compose service in a few clicks.",
   "logo": "image.png",
   "links": {
     "github": "https://github.com/janeczku/calibre-web",
@@ -14,5 +14,7 @@
     "media",
     "library",
     "self-hosted"
-  ]
+  ],
+  "seoTitle": "Calibre-Web Docker Compose Setup",
+  "seoDescription": "Web interface for browsing your ebook library. Deploy Calibre-Web with Docker Compose on Dokploy – requires an existing Calibre database."
 }

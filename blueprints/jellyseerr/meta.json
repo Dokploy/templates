@@ -2,7 +2,7 @@
   "id": "jellyseerr",
   "name": "Jellyseerr",
   "version": "2.7.3",
-  "description": "Jellyseerr is a media request and discovery manager for Jellyfin, Plex, and Emby users.",
+  "description": "Jellyseerr is a media request manager for Jellyfin, Emby, and Plex. Self-host it on your own server with Dokploy, which deploys Jellyseerr as a Docker Compose service in a few clicks.",
   "logo": "jellyseerr.svg",
   "links": {
     "github": "https://github.com/Fallenbagel/jellyseerr",
@@ -13,5 +13,7 @@
     "media",
     "requests",
     "jellyfin"
-  ]
+  ],
+  "seoTitle": "Jellyseerr Docker Compose Setup",
+  "seoDescription": "Media request manager for Jellyfin and Plex. Deploy Jellyseerr with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
 }

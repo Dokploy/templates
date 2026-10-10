@@ -2,7 +2,7 @@
   "id": "nginx",
   "name": "Nginx",
   "version": "latest",
-  "description": "Nginx is an High performance web server",
+  "description": "Nginx is a high-performance web server and reverse proxy. Self-host it on your own server with Dokploy, which deploys Nginx as a Docker Compose service in a few clicks.",
   "logo": "nginx.png",
   "links": {
     "github": "https://github.com/nginx/nginx",
@@ -11,5 +11,7 @@
   },
   "tags": [
     "webserver"
-  ]
+  ],
+  "seoTitle": "Nginx Docker Compose Setup",
+  "seoDescription": "High-performance web server and reverse proxy. Deploy Nginx with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
 }

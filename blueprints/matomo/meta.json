@@ -2,7 +2,7 @@
   "id": "matomo",
   "name": "Matomo",
   "version": "5.1-apache",
-  "description": "Leading open-source web analytics platform with global data ownership.",
+  "description": "Matomo is an open-source web analytics platform that gives you full ownership of your data. Self-host it on your own server with Dokploy, which deploys Matomo as a Docker Compose service in a few clicks.",
   "logo": "matomo.png",
   "links": {
     "github": "https://github.com/matomo-org/matomo",
@@ -14,5 +14,7 @@
     "metrics",
     "privacy",
     "self-hosted"
-  ]
+  ],
+  "seoTitle": "Matomo Docker Compose Setup",
+  "seoDescription": "Web analytics platform with full data ownership. Deploy Matomo with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
 }

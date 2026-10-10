@@ -2,7 +2,7 @@
   "id": "adminer",
   "name": "Adminer",
   "version": "4.8.1",
-  "description": "Adminer is a comprehensive database management tool that supports MySQL, MariaDB, PostgreSQL, SQLite, MS SQL, Oracle, Elasticsearch, MongoDB and others. It provides a clean interface for efficient database operations, with strong security features and extensive customization options.",
+  "description": "Adminer is a lightweight, web-based database management tool. Self-host it on your own server with Dokploy, which deploys Adminer as a Docker Compose service in a few clicks.",
   "logo": "logo.svg",
   "links": {
     "github": "https://github.com/vrana/adminer",
@@ -14,5 +14,7 @@
     "developer-tools",
     "mysql",
     "postgresql"
-  ]
+  ],
+  "seoTitle": "Adminer Docker Compose Setup",
+  "seoDescription": "Lightweight database management tool. Deploy Adminer with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
 }

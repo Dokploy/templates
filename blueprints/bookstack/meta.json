@@ -2,7 +2,7 @@
   "id": "bookstack",
   "name": "BookStack",
   "version": "24.12.1",
-  "description": "BookStack is a self-hosted platform for creating beautiful, feature-rich documentation sites.",
+  "description": "BookStack is a wiki platform for organizing documentation. Self-host it on your own server with Dokploy, which deploys BookStack as a Docker Compose service in a few clicks.",
   "logo": "logo.svg",
   "links": {
     "github": "https://github.com/BookStackApp/BookStack",
@@ -12,5 +12,7 @@
   "tags": [
     "documentation",
     "self-hosted"
-  ]
+  ],
+  "seoTitle": "BookStack Docker Compose Setup",
+  "seoDescription": "Platform for building documentation wikis. Deploy BookStack with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
 }

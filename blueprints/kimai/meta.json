@@ -2,7 +2,7 @@
   "id": "kimai",
   "name": "Kimai",
   "version": "2.31.0",
-  "description": "Kimai is a web-based multi-user time-tracking application. Works great for everyone: freelancers, companies, organizations - everyone can track their times, generate reports, create invoices and do so much more.",
+  "description": "Kimai is a time-tracking app for freelancers and teams. Self-host it on your own server with Dokploy, which deploys Kimai as a Docker Compose service in a few clicks.",
   "logo": "kimai.svg",
   "links": {
     "github": "https://github.com/kimai/kimai",
@@ -13,5 +13,7 @@
     "invoice",
     "business",
     "finance"
-  ]
+  ],
+  "seoTitle": "Kimai Docker Compose Setup",
+  "seoDescription": "Time-tracking app for freelancers and teams. Deploy Kimai with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
 }

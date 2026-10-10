@@ -2,7 +2,7 @@
   "id": "dozzle",
   "name": "Dozzle",
   "version": "latest",
-  "description": "Dozzle is a lightweight, real-time log viewer for Docker containers.",
+  "description": "Dozzle is a real-time log viewer for Docker containers. Self-host it on your own server with Dokploy, which deploys Dozzle as a Docker Compose service in a few clicks.",
   "logo": "image.png",
   "links": {
     "github": "https://github.com/amir20/dozzle",
@@ -13,5 +13,7 @@
     "monitoring",
     "logs",
     "docker"
-  ]
+  ],
+  "seoTitle": "Dozzle Docker Compose Setup",
+  "seoDescription": "Real-time log viewer for Docker containers. Deploy Dozzle with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
 }

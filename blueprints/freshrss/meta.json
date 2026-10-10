@@ -2,7 +2,7 @@
   "id": "freshrss",
   "name": "FreshRSS",
   "version": "latest",
-  "description": "A free, self-hostable RSS and Atom feed aggregator. Lightweight, easy to work with, powerful, and customizable with themes and extensions.",
+  "description": "FreshRSS is a lightweight RSS and Atom feed aggregator. Self-host it on your own server with Dokploy, which deploys FreshRSS as a Docker Compose service in a few clicks.",
   "logo": "freshrss.svg",
   "links": {
     "github": "https://github.com/FreshRSS/FreshRSS",
@@ -16,5 +16,7 @@
     "self-hosted",
     "aggregator",
     "reader"
-  ]
+  ],
+  "seoTitle": "FreshRSS Docker Compose Setup",
+  "seoDescription": "Lightweight RSS and Atom feed reader. Deploy FreshRSS with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
 }

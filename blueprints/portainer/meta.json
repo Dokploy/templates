@@ -2,7 +2,7 @@
   "id": "portainer",
   "name": "Portainer",
   "version": "latest",
-  "description": "Portainer is a container management tool for deploying, troubleshooting, and securing applications across cloud, data centers, and IoT.",
+  "description": "Portainer is a container management tool for deploying, troubleshooting, and securing applications across cloud, data centers, and IoT. Self-host it on your own server with Dokploy, which deploys Portainer as a Docker Compose service in a few clicks.",
   "logo": "portainer.png",
   "links": {
     "github": "https://github.com/portainer/portainer",
@@ -12,5 +12,7 @@
   "tags": [
     "cloud",
     "monitoring"
-  ]
+  ],
+  "seoTitle": "Portainer Docker Compose Setup",
+  "seoDescription": "Web UI for managing Docker containers. Deploy Portainer with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
 }

@@ -2,7 +2,7 @@
   "id": "homeassistant",
   "name": "Home Assistant",
   "version": "stable",
-  "description": "Open source home automation that puts local control and privacy first.",
+  "description": "Home Assistant is a home automation platform that makes sure you can control your smart devices locally. Self-host it on your own server with Dokploy, which deploys Home Assistant as a Docker Compose service in a few clicks.",
   "logo": "homeassistant.svg",
   "links": {
     "github": "https://github.com/home-assistant/core",
@@ -15,5 +15,7 @@
     "internet-of-things",
     "self-hosted",
     "server"
-  ]
+  ],
+  "seoTitle": "Home Assistant Docker Compose Setup",
+  "seoDescription": "Home automation platform with local control. Deploy Home Assistant with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
 }

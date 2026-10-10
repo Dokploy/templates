@@ -2,7 +2,7 @@
   "id": "discourse",
   "name": "Discourse",
   "version": "2026.1.4",
-  "description": "Discourse is a modern forum software for your community. Use it as a mailing list, discussion forum, or long-form chat room.",
+  "description": "Discourse is forum software for running online communities. Self-host it on your own server with Dokploy, which deploys Discourse as a Docker Compose service in a few clicks.",
   "logo": "discourse.svg",
   "links": {
     "github": "https://github.com/discourse/discourse",
@@ -13,5 +13,7 @@
     "forum",
     "community",
     "discussion"
-  ]
+  ],
+  "seoTitle": "Self-Host Discourse in minutes",
+  "seoDescription": "Modern forum software for online communities. Self-host Discourse on Dokploy in minutes – no manual setup needed."
 }

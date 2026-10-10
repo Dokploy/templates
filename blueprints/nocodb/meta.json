@@ -2,7 +2,7 @@
   "id": "nocodb",
   "name": "NocoDB",
   "version": "latest",
-  "description": "NocoDB is an opensource Airtable alternative that turns any MySQL, PostgreSQL, SQL Server, SQLite & MariaDB into a smart spreadsheet.",
+  "description": "NocoDB is an open-source alternative to Airtable that turns your database into a smart spreadsheet. Self-host it on your own server with Dokploy, which deploys NocoDB as a Docker Compose service in a few clicks.",
   "links": {
     "github": "https://github.com/nocodb/nocodb",
     "website": "https://nocodb.com/",
@@ -14,5 +14,7 @@
     "spreadsheet",
     "low-code",
     "nocode"
-  ]
+  ],
+  "seoTitle": "NocoDB Docker Compose Setup",
+  "seoDescription": "Turns databases into spreadsheets, an Airtable alternative. Deploy NocoDB with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
 }

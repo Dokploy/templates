@@ -2,7 +2,7 @@
   "id": "vikunja",
   "name": "Vikunja",
   "version": "0.23.0",
-  "description": "Vikunja is a self-hosted, open-source to-do list application to organize tasks, projects, and notes.",
+  "description": "Vikunja is an open-source to-do list and task management app. Self-host it on your own server with Dokploy, which deploys Vikunja as a Docker Compose service in a few clicks.",
   "logo": "image.png",
   "links": {
     "github": "https://github.com/go-vikunja/vikunja",
@@ -14,5 +14,7 @@
     "tasks",
     "self-hosted",
     "project-management"
-  ]
+  ],
+  "seoTitle": "Self-Host Vikunja in minutes",
+  "seoDescription": "To-do list and task management app. Self-host Vikunja on Dokploy in minutes – no manual setup needed."
 }

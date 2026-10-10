@@ -2,7 +2,7 @@
   "id": "kavita",
   "name": "Kavita",
   "version": "latest",
-  "description": "Kavita is a self-hosted digital library server for reading manga, comics, and ebooks from any device.",
+  "description": "Kavita is a digital library server for comics, manga, and ebooks. Self-host it on your own server with Dokploy, which deploys Kavita as a Docker Compose service in a few clicks.",
   "logo": "kavita.svg",
   "links": {
     "github": "https://github.com/Kareadita/Kavita",
@@ -14,5 +14,7 @@
     "ebooks",
     "comics",
     "library"
-  ]
+  ],
+  "seoTitle": "Kavita Docker Compose Setup",
+  "seoDescription": "Digital library server for comics and ebooks. Deploy Kavita with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
 }

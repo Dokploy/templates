@@ -2,7 +2,7 @@
   "id": "passbolt",
   "name": "Passbolt",
   "version": "latest-ce",
-  "description": "Passbolt is an open source credential platform for modern teams. A versatile, battle-tested solution to manage and collaborate on passwords, accesses, and secrets. All in one.",
+  "description": "Passbolt is an open-source password manager built for teams. Self-host it on your own server with Dokploy, which deploys Passbolt as a Docker Compose service in a few clicks.",
   "logo": "passbolt.svg",
   "links": {
     "github": "https://github.com/passbolt/passbolt_api",
@@ -14,5 +14,7 @@
     "security",
     "team-collaboration",
     "encryption"
-  ]
+  ],
+  "seoTitle": "Passbolt Docker Compose Setup",
+  "seoDescription": "Password manager built for teams. Deploy Passbolt with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
 }

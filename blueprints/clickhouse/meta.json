@@ -2,7 +2,7 @@
   "id": "clickhouse",
   "name": "ClickHouse",
   "version": "latest",
-  "description": "ClickHouse is an open-source column-oriented DBMS (columnar database management system) for online analytical processing (OLAP) that allows users to generate analytical reports using SQL queries in real-time. ClickHouse works 100-1000x faster than traditional database management systems, and processes hundreds of millions to over a billion rows and tens of gigabytes of data per server per second.",
+  "description": "ClickHouse is a fast, open-source columnar database built for real-time analytics. Self-host it on your own server with Dokploy, which deploys ClickHouse as a Docker Compose service in a few clicks.",
   "logo": "clickhouse_logo.png",
   "links": {
     "github": "https://github.com/ClickHouse/ClickHouse",
@@ -15,5 +15,7 @@
     "database",
     "olap",
     "analytics"
-  ]
+  ],
+  "seoTitle": "ClickHouse Docker Compose Setup",
+  "seoDescription": "Fast columnar database for analytics. Deploy ClickHouse with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
 }

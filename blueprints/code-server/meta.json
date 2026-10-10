@@ -16,5 +16,6 @@
     "self-hosted"
   ],
   "seoTitle": "code-server Docker Compose Setup",
-  "seoDescription": "Run VS Code in your browser. Deploy code-server with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
+  "seoDescription": "Run VS Code in your browser. Deploy code-server with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "configText": "The exact code-server Docker Compose and template configuration this template deploys."
 }

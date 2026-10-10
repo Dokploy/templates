@@ -14,5 +14,6 @@
     "monitoring"
   ],
   "seoTitle": "Portainer Docker Compose Setup",
-  "seoDescription": "Web UI for managing Docker containers. Deploy Portainer with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
+  "seoDescription": "Web UI for managing Docker containers. Deploy Portainer with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "configText": "The exact Portainer Docker Compose and template configuration this template deploys."
 }

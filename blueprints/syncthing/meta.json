@@ -15,5 +15,6 @@
     "backup"
   ],
   "seoTitle": "Syncthing Docker Compose Setup",
-  "seoDescription": "Continuous file sync between devices. Deploy Syncthing with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
+  "seoDescription": "Continuous file sync between devices. Deploy Syncthing with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "configText": "The exact Syncthing Docker Compose and template configuration this template deploys."
 }

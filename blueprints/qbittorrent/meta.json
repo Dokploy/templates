@@ -15,5 +15,6 @@
     "file-sharing"
   ],
   "seoTitle": "qBittorrent Docker Compose Setup",
-  "seoDescription": "Open source BitTorrent client. Deploy qBittorrent with Docker Compose on Dokploy – check the container logs for your temporary admin password on first login."
+  "seoDescription": "Open source BitTorrent client. Deploy qBittorrent with Docker Compose on Dokploy – check the container logs for your temporary admin password on first login.",
+  "configText": "The exact qBittorrent Docker Compose and template configuration this template deploys."
 }

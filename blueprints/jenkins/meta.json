@@ -17,5 +17,6 @@
     "open-source"
   ],
   "seoTitle": "Jenkins Docker Compose Setup",
-  "seoDescription": "Automation server for CI/CD pipelines. Deploy Jenkins with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
+  "seoDescription": "Automation server for CI/CD pipelines. Deploy Jenkins with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "configText": "The exact Jenkins Docker Compose and template configuration this template deploys."
 }

@@ -16,5 +16,6 @@
     "self-hosted"
   ],
   "seoTitle": "Calibre-Web Docker Compose Setup",
-  "seoDescription": "Web interface for browsing your ebook library. Deploy Calibre-Web with Docker Compose on Dokploy – requires an existing Calibre database."
+  "seoDescription": "Web interface for browsing your ebook library. Deploy Calibre-Web with Docker Compose on Dokploy – requires an existing Calibre database.",
+  "configText": "The exact Calibre-Web Docker Compose and template configuration this template deploys."
 }

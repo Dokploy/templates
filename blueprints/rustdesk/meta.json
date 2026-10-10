@@ -15,5 +15,6 @@
     "productivity"
   ],
   "seoTitle": "RustDesk Docker Compose Setup",
-  "seoDescription": "Open source remote desktop, an alternative to TeamViewer. Deploy RustDesk with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
+  "seoDescription": "Open source remote desktop, an alternative to TeamViewer. Deploy RustDesk with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "configText": "The exact RustDesk Docker Compose and template configuration this template deploys."
 }

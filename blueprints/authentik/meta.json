@@ -19,5 +19,6 @@
     "self-hosted"
   ],
   "seoTitle": "Authentik Docker Compose Setup",
-  "seoDescription": "Identity provider for SSO and authentication. Deploy Authentik with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
+  "seoDescription": "Identity provider for SSO and authentication. Deploy Authentik with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "configText": "The exact Authentik Docker Compose and template configuration this template deploys."
 }

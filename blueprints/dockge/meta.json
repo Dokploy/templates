@@ -15,5 +15,6 @@
     "management"
   ],
   "seoTitle": "Dockge Docker Compose Setup",
-  "seoDescription": "Web UI for managing Docker Compose stacks. Deploy Dockge with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
+  "seoDescription": "Web UI for managing Docker Compose stacks. Deploy Dockge with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "configText": "The exact Dockge Docker Compose and template configuration this template deploys."
 }

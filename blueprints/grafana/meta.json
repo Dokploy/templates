@@ -13,5 +13,6 @@
     "monitoring"
   ],
   "seoTitle": "Grafana Docker Compose Setup",
-  "seoDescription": "Dashboards for monitoring and data visualization. Deploy Grafana with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
+  "seoDescription": "Dashboards for monitoring and data visualization. Deploy Grafana with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "configText": "The exact Grafana Docker Compose and template configuration this template deploys."
 }

@@ -13,5 +13,6 @@
     "media-system"
   ],
   "seoTitle": "Jellyfin Docker Compose Setup",
-  "seoDescription": "Free media server for movies, TV, and music. Deploy Jellyfin with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
+  "seoDescription": "Free media server for movies, TV, and music. Deploy Jellyfin with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "configText": "The exact Jellyfin Docker Compose and template configuration this template deploys."
 }

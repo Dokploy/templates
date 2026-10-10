@@ -13,5 +13,6 @@
     "webserver"
   ],
   "seoTitle": "Nginx Docker Compose Setup",
-  "seoDescription": "High-performance web server and reverse proxy. Deploy Nginx with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
+  "seoDescription": "High-performance web server and reverse proxy. Deploy Nginx with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "configText": "The exact Nginx Docker Compose and template configuration this template deploys."
 }

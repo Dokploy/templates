@@ -16,5 +16,6 @@
     "encryption"
   ],
   "seoTitle": "Passbolt Docker Compose Setup",
-  "seoDescription": "Password manager built for teams. Deploy Passbolt with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
+  "seoDescription": "Password manager built for teams. Deploy Passbolt with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "configText": "The exact Passbolt Docker Compose and template configuration this template deploys."
 }

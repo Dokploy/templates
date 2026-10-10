@@ -17,5 +17,6 @@
     "server"
   ],
   "seoTitle": "Homebridge Docker Compose Setup",
-  "seoDescription": "Brings HomeKit support to smart home devices. Deploy Homebridge with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
+  "seoDescription": "Brings HomeKit support to smart home devices. Deploy Homebridge with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "configText": "The exact Homebridge Docker Compose and template configuration this template deploys."
 }

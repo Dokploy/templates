@@ -15,5 +15,6 @@
     "survey"
   ],
   "seoTitle": "LimeSurvey Docker Compose Setup",
-  "seoDescription": "Platform for building online surveys. Deploy LimeSurvey with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
+  "seoDescription": "Platform for building online surveys. Deploy LimeSurvey with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "configText": "The exact LimeSurvey Docker Compose and template configuration this template deploys."
 }

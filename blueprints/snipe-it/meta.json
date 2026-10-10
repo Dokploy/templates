@@ -16,5 +16,6 @@
     "self-hosted"
   ],
   "seoTitle": "Snipe-IT Docker Compose Setup",
-  "seoDescription": "IT asset management and tracking system. Deploy Snipe-IT with Docker Compose on Dokploy in minutes – free, open source, self-hosted."
+  "seoDescription": "IT asset management and tracking system. Deploy Snipe-IT with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "configText": "The exact Snipe-IT Docker Compose and template configuration this template deploys."
 }

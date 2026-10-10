@@ -16,5 +16,6 @@
     "infrastructure"
   ],
   "seoTitle": "Vault Docker Compose Setup",
-  "seoDescription": "Tool for securely storing secrets and keys. Deploy Vault with Docker Compose on Dokploy – sign in using the auto-generated root token env var."
+  "seoDescription": "Tool for securely storing secrets and keys. Deploy Vault with Docker Compose on Dokploy – sign in using the auto-generated root token env var.",
+  "configText": "The exact Vault Docker Compose and template configuration this template deploys."
 }

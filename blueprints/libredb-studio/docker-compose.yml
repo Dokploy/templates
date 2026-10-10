@@ -1,8 +1,18 @@
 services:
   libredb-studio:
-    image: ghcr.io/libredb/libredb-studio:0.18.0
+    image: ghcr.io/libredb/libredb-studio:0.18.2
     restart: unless-stopped
     environment:
+      # Since 0.18.0 ADMIN_PASSWORD and USER_PASSWORD seed the account table only
+      # while it is empty; editing them afterwards is logged and ignored. The app
+      # tells the operator to set ADMIN_PASSWORD_RESET=true for one start, so it is
+      # passed through here: this environment list is an allowlist, and without the
+      # line the variable never reaches the container and the advice cannot be
+      # followed from Dokploy's Environment panel. Empty is falsy, so it is inert
+      # until someone sets it, and it must be removed again afterwards because every
+      # start applies it while it is set. There is no USER equivalent; that account
+      # is changed from Studio's own Accounts screen.
+      - ADMIN_PASSWORD_RESET=${ADMIN_PASSWORD_RESET:-}
       - ADMIN_EMAIL=admin@libredb.org
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - USER_EMAIL=user@libredb.org

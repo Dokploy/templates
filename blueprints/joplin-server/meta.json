@@ -16,5 +16,5 @@
   ],
   "seoTitle": "Joplin Server Docker Compose Setup",
   "seoDescription": "Sync backend for the Joplin note-taking app. Deploy Joplin Server with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
-  "configText": "The exact Joplin Server Docker Compose and template configuration this template deploys."
+  "newConfig": true
 }

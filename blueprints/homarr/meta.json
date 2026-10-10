@@ -15,5 +15,5 @@
   ],
   "seoTitle": "Homarr Docker Compose Setup",
   "seoDescription": "Dashboard for organizing self-hosted apps. Deploy Homarr with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
-  "configText": "The exact Homarr Docker Compose and template configuration this template deploys."
+  "newConfig": true
 }

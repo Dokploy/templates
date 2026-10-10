@@ -18,5 +18,5 @@
   ],
   "seoTitle": "Keycloak Docker Compose Setup",
   "seoDescription": "Identity and access management with SSO. Deploy Keycloak with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
-  "configText": "The exact Keycloak Docker Compose and template configuration this template deploys."
+  "newConfig": true
 }

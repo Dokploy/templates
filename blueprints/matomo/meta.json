@@ -17,5 +17,5 @@
   ],
   "seoTitle": "Matomo Docker Compose Setup",
   "seoDescription": "Web analytics platform with full data ownership. Deploy Matomo with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
-  "configText": "The exact Matomo Docker Compose and template configuration this template deploys."
+  "newConfig": true
 }

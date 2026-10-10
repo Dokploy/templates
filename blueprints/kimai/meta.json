@@ -16,5 +16,5 @@
   ],
   "seoTitle": "Kimai Docker Compose Setup",
   "seoDescription": "Time-tracking app for freelancers and teams. Deploy Kimai with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
-  "configText": "The exact Kimai Docker Compose and template configuration this template deploys."
+  "newConfig": true
 }

@@ -14,5 +14,5 @@
   ],
   "seoTitle": "Open WebUI Docker Compose Setup",
   "seoDescription": "Self-hosted ChatGPT-style AI chat interface. Deploy Open WebUI with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
-  "configText": "The exact Open WebUI Docker Compose and template configuration this template deploys."
+  "newConfig": true
 }

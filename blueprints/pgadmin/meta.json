@@ -16,5 +16,5 @@
   ],
   "seoTitle": "pgAdmin Docker Compose Setup",
   "seoDescription": "Admin tool for PostgreSQL databases. Deploy pgAdmin with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
-  "configText": "The exact pgAdmin Docker Compose and template configuration this template deploys."
+  "newConfig": true
 }

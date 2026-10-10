@@ -17,5 +17,5 @@
   ],
   "seoTitle": "Immich Docker Compose Setup",
   "seoDescription": "Photo and video backup solution – a self-hosted alternative to Google Photos. Deploy with Docker Compose on Dokploy in minutes.",
-  "configText": "The exact Immich Docker Compose and template configuration this template deploys."
+  "newConfig": true
 }

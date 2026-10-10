@@ -17,5 +17,5 @@
   ],
   "seoTitle": "AdGuard Home Docker Compose Setup",
   "seoDescription": "Network-wide ad and tracker blocker. Deploy AdGuard Home with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
-  "configText": "The exact AdGuard Home Docker Compose and template configuration this template deploys."
+  "newConfig": true
 }

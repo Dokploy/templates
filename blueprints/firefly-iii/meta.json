@@ -16,5 +16,5 @@
   ],
   "seoTitle": "Firefly III Docker Compose Setup",
   "seoDescription": "Personal finance manager for budgets and expenses. Deploy Firefly III with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
-  "configText": "The exact Firefly III Docker Compose and template configuration this template deploys."
+  "newConfig": true
 }

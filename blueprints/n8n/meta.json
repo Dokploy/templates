@@ -14,5 +14,5 @@
   ],
   "seoTitle": "n8n: Self-Hosted & Docker Compose",
   "seoDescription": "Workflow automation and integration tool. Self-host n8n via Docker Compose on Dokploy in minutes – no manual setup needed.",
-  "configText": "The exact n8n Docker Compose and template configuration this template deploys."
+  "newConfig": true
 }

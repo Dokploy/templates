@@ -17,5 +17,5 @@
   "dokploy_version": ">=0.22.5",
   "seoTitle": "Supabase: Self-Hosted & Docker Compose",
   "seoDescription": "Open source Firebase alternative with Postgres. Self-host Supabase via Docker Compose on Dokploy in minutes – no manual setup needed.",
-  "configText": "The exact Supabase Docker Compose and template configuration this template deploys."
+  "newConfig": true
 }

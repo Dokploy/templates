@@ -6,7 +6,7 @@ x-logging: &x-logging
       max-size: "10m"
 services:
   appwrite:
-    image: appwrite/appwrite:2.3.0
+    image: appwrite/appwrite:2.4.0
     <<: *x-logging
     restart: unless-stopped
     labels:
@@ -251,7 +251,7 @@ services:
       - VITE_GROWTH_ENDPOINT=https://growth.appwrite.io/v1
 
   appwrite-realtime:
-    image: appwrite/appwrite:2.3.0
+    image: appwrite/appwrite:2.4.0
     entrypoint: realtime
     <<: *x-logging
     restart: unless-stopped
@@ -303,7 +303,7 @@ services:
       - _APP_LOGGING_FORMAT
 
   appwrite-mqtt:
-    image: appwrite/appwrite:2.3.0
+    image: appwrite/appwrite:2.4.0
     entrypoint: mqtt
     <<: *x-logging
     restart: unless-stopped
@@ -353,7 +353,7 @@ services:
       - _APP_MQTT_MAX_PACKET_SIZE
 
   appwrite-worker:
-    image: appwrite/appwrite:2.3.0
+    image: appwrite/appwrite:2.4.0
     entrypoint: worker
     <<: *x-logging
     restart: unless-stopped
@@ -514,7 +514,7 @@ services:
       - _APP_MAINTENANCE_RETENTION_AUDIT_CONSOLE
 
   appwrite-task-scheduler:
-    image: appwrite/appwrite:2.3.0
+    image: appwrite/appwrite:2.4.0
     entrypoint: schedule
     <<: *x-logging
     restart: unless-stopped
@@ -562,7 +562,7 @@ services:
       - _APP_LOGGING_FORMAT
 
   appwrite-task-maintenance:
-    image: appwrite/appwrite:2.3.0
+    image: appwrite/appwrite:2.4.0
     entrypoint: maintenance
     <<: *x-logging
     restart: unless-stopped
@@ -606,7 +606,7 @@ services:
       - _APP_LOGGING_FORMAT
 
   appwrite-task-interval:
-    image: appwrite/appwrite:2.3.0
+    image: appwrite/appwrite:2.4.0
     entrypoint: interval
     <<: *x-logging
     restart: unless-stopped

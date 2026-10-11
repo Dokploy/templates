@@ -1,7 +1,7 @@
 {
   "id": "wise-mcp",
   "name": "Wise MCP (unofficial)",
-  "version": "1.1.0",
+  "version": "latest",
   "description": "Self-hosted MCP connector that lets Claude and ChatGPT read your Wise balances, card payments and transfers, and prepare transfers you approve twice.",
   "logo": "wise-mcp.svg",
   "links": {

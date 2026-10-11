@@ -1,0 +1,40 @@
+services:
+  openwa:
+    image: ghcr.io/rmyndharis/openwa:0.24.0
+    restart: unless-stopped
+    # Hardened runtime matching the upstream production defaults: Chromium (used by the
+    # whatsapp-web.js engine) launches with --no-sandbox, so the container is the confinement
+    # boundary. The caps that remain are only what the entrypoint needs to fix named-volume
+    # ownership and drop to the non-root `openwa` user via gosu.
+    security_opt:
+      - "no-new-privileges:true"
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - KILL
+      - SETGID
+      - SETUID
+    read_only: true
+    tmpfs:
+      - /tmp
+    pids_limit: 2048
+    environment:
+      - NODE_ENV=production
+      - PORT=2785
+      # Writable HOME/XDG dirs on tmpfs so Chromium does not write to the read-only rootfs.
+      - HOME=/tmp
+      - XDG_CONFIG_HOME=/tmp/.config
+      - XDG_CACHE_HOME=/tmp/.cache
+      - ENGINE_TYPE=${ENGINE_TYPE}
+      - AUTO_START_SESSIONS=${AUTO_START_SESSIONS}
+      - TZ=${TZ}
+    expose:
+      - "2785"
+    volumes:
+      - openwa-data:/app/data
+
+volumes:
+  openwa-data:

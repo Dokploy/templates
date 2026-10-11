@@ -14,29 +14,7 @@ jobs_secret = "${password:32}"
 geo_secret = "${password:32}"
 console_domain = "console.${main_domain}"
 
-[[config.mounts]]
-filePath = "mongo-init.js"
-content = """// mongo-init.js
-
-const adminDb = db.getSiblingDB('admin');
-
-const username = process.env.MONGO_INITDB_USERNAME;
-const password = process.env.MONGO_INITDB_PASSWORD;
-const database = process.env.MONGO_INITDB_DATABASE;
-
-// Idempotent: the official entrypoint races the real server on port 27017 when
-// initialising a fresh volume (appwrite/appwrite#13593), so this script may run
-// more than once. Skip if the user already exists.
-if (adminDb.getUser(username) === null) {
-  adminDb.createUser({
-    user: username,
-    pwd: password,
-    roles: [
-      { role: 'readWrite', db: database }
-    ]
-  });
-}
-"""
+[config]
 # Build jobs and runtimes join <appName>_default, which isolated deployments never create
 # (every service sits on the external <appName> network instead).
 isolated = false
@@ -56,7 +34,8 @@ env = [
   "_APP_NOTIFICATIONS_TRACKING_SECRET=${notifications_tracking_secret}",
   "_APP_DOMAIN=${main_domain}",
   "_APP_CONSOLE_DOMAIN=${console_domain}",
-  "_APP_CONSOLE_URL=",
+  "_APP_CONSOLE_URL=https://${console_domain}",
+  "_APP_CONSOLE_HOSTNAMES=${console_domain}",
   "_APP_CONSOLE_TRUSTED_PROJECTS=",
   "_APP_CUSTOM_DOMAIN_DENY_LIST=example.com,test.com,app.example.com",
   "_APP_DOMAIN_FUNCTIONS=${functions_domain}",
@@ -238,10 +217,100 @@ env = [
   "_APP_MIGRATION_HOST=appwrite",
   "_APP_MIGRATIONS_FIREBASE_CLIENT_ID=",
   "_APP_MIGRATIONS_FIREBASE_CLIENT_SECRET=",
-  "_APP_ASSISTANT_OPENAI_API_KEY=",
   "_APP_DB_ROOT_PASS=${db_root_pw}",
   "_APP_DB_USER_PASS=${db_user_pw}",
 ]
+
+[[config.mounts]]
+filePath = "mongo-init.js"
+content = """// mongo-init.js
+
+const adminDb = db.getSiblingDB('admin');
+
+const username = process.env.MONGO_INITDB_USERNAME;
+const password = process.env.MONGO_INITDB_PASSWORD;
+const database = process.env.MONGO_INITDB_DATABASE;
+
+// Idempotent: the official entrypoint races the real server on port 27017 when
+// initialising a fresh volume (appwrite/appwrite#13593), so this script may run
+// more than once. Skip if the user already exists.
+if (adminDb.getUser(username) === null) {
+  adminDb.createUser({
+    user: username,
+    pwd: password,
+    roles: [
+      { role: 'readWrite', db: database }
+    ]
+  });
+}
+"""
+
+[[config.mounts]]
+filePath = "mongo-entrypoint.sh"
+content = """#!/bin/bash
+set -e
+
+KEYFILE_PATH="/data/keyfile/mongo-keyfile"
+
+if [ ! -f "$KEYFILE_PATH" ]; then
+  echo "Generating random MongoDB keyfile..."
+  mkdir -p /data/keyfile
+  openssl rand -base64 756 > "$KEYFILE_PATH"
+fi
+
+chmod 400 "$KEYFILE_PATH"
+chown mongodb:mongodb "$KEYFILE_PATH" 2>/dev/null || chown 999:999 "$KEYFILE_PATH"
+
+# The standard entrypoint initialises an empty data directory with a second
+# mongod on 27017, stopped with `mongod --shutdown`. That returns once the
+# server clears <dbpath>/mongod.lock, several steps before it exits and
+# releases the port, and the real server binds a millisecond after it starts --
+# so a slow shutdown tail leaves it exiting 48, "Address already in use",
+# taking the container with it (appwrite/appwrite#13593). Initialise here
+# instead, on a port the real server never binds, and hand over a directory
+# the standard entrypoint has nothing left to do.
+INIT_MARKER=/data/db/.appwrite-initialised
+if [ ! -e "$INIT_MARKER" ]; then
+  INIT_PORT=27018
+  echo "Initialising MongoDB data directory..."
+  find -L /data/db \\! -user mongodb -exec chown mongodb '{}' +
+  export MONGO_INITDB_DATABASE="${MONGO_INITDB_DATABASE:-test}"
+  gosu mongodb mongod --dbpath /data/db --bind_ip 127.0.0.1 --port "$INIT_PORT" &
+  INIT_SERVER=$!
+  READY=
+  for _ in $(seq 1 30); do
+    if mongosh --host 127.0.0.1 --port "$INIT_PORT" --quiet --eval 'quit(0)' > /dev/null 2>&1; then
+      READY=1
+      break
+    fi
+    if ! kill -0 "$INIT_SERVER" 2>/dev/null; then
+      break
+    fi
+    sleep 1
+  done
+  if [ -z "$READY" ]; then
+    echo "MongoDB did not accept connections for initialisation" >&2
+    exit 1
+  fi
+  mongosh --host 127.0.0.1 --port "$INIT_PORT" --quiet admin --eval '
+    const username = process.env.MONGO_INITDB_ROOT_USERNAME;
+    if (db.getUser(username) === null) {
+      db.createUser({
+        user: username,
+        pwd: process.env.MONGO_INITDB_ROOT_PASSWORD,
+        roles: [{ role: "root", db: "admin" }]
+      });
+    }
+  '
+  mongosh --host 127.0.0.1 --port "$INIT_PORT" --quiet "$MONGO_INITDB_DATABASE" /mongo-init.js
+  touch "$INIT_MARKER"
+  kill -TERM "$INIT_SERVER"
+  wait "$INIT_SERVER"
+  echo "MongoDB data directory initialised."
+fi
+
+exec docker-entrypoint.sh mongod --replSet rs0 --bind_ip_all --auth --keyFile "$KEYFILE_PATH"
+"""
 
 [[config.domains]]
 serviceName = "appwrite-console"
@@ -267,6 +336,28 @@ port = 80
 host = "${main_domain}"
 path = "/v1/realtime"
 
+# --- Dedicated Console domain ---
+# The Console SPA is served at the root of ${console_domain}, with /v1 and
+# /v1/realtime proxied to the API and Realtime so the Console reaches the API
+# on its own origin.
+[[config.domains]]
+serviceName = "appwrite-console"
+port = 3000
+host = "${console_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "appwrite"
+port = 80
+host = "${console_domain}"
+path = "/v1"
+
+[[config.domains]]
+serviceName = "appwrite-realtime"
+port = 80
+host = "${console_domain}"
+path = "/v1/realtime"
+
 [[config.domains]]
 serviceName = "appwrite"
 port = 80
@@ -283,10 +374,4 @@ path = "/"
 serviceName = "appwrite-mqtt"
 port = 8083
 host = "${mqtt_domain}"
-path = "/"
-
-[[config.domains]]
-serviceName = "mariadb"
-port = 3306
-host = "${main_domain}"
 path = "/"

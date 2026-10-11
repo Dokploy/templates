@@ -26,10 +26,6 @@ services:
       - traefik.http.routers.appwrite-functions-wildcard-secure.tls=true
       - traefik.http.routers.appwrite-functions-wildcard-secure.service=appwrite-wildcard
       - traefik.http.services.appwrite-wildcard.loadbalancer.server.port=80
-      - 'traefik.http.routers.appwrite-console.rule=HostRegexp(`^.+\.${_APP_CONSOLE_DOMAIN}$$`)'
-      - traefik.http.routers.appwrite-console.entrypoints=web
-      - traefik.http.routers.appwrite-console.tls=true
-      - traefik.http.routers.appwrite-console.service=appwrite-console
     healthcheck:
       test:
         - CMD-SHELL
@@ -237,12 +233,11 @@ services:
       - _APP_MIGRATION_HOST
       - _APP_MIGRATIONS_FIREBASE_CLIENT_ID
       - _APP_MIGRATIONS_FIREBASE_CLIENT_SECRET
-      - _APP_ASSISTANT_OPENAI_API_KEY
       - _APP_CONSOLE_COUNTRIES_DENYLIST
       - _APP_PWNED_PASSWORDS_DSN
 
   appwrite-console:
-    image: appwrite/new:1.1.159-self-hosted
+    image: appwrite/new:1.2.55-self-hosted
     <<: *x-logging
     restart: unless-stopped
     environment:
@@ -856,13 +851,6 @@ services:
       timeout: 10s
       retries: 10
       start_period: 60s
-  # Appwrite Assistant (optional): set _APP_ASSISTANT_OPENAI_API_KEY and uncomment.
-  # appwrite-assistant:
-  #   image: appwrite/assistant:0.8.4
-  #   <<: *x-logging
-  #   restart: unless-stopped
-  #   environment:
-  #     - _APP_ASSISTANT_OPENAI_API_KEY
 
   # Embeddings API (optional, resource heavy): set _APP_EMBEDDING=enabled and uncomment.
   # appwrite-embedding:
@@ -892,6 +880,7 @@ volumes:
   appwrite-sites:
   # Pinned name so the orchestrator can attach it to build workers by a stable name (see _APP_BUILDS_VOLUME).
   appwrite-builds:
+    name: ${COMPOSE_PROJECT_NAME:-appwrite}_appwrite-builds
   appwrite-config:
   appwrite-mariadb:
   appwrite-mongodb:

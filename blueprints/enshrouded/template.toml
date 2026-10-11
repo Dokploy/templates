@@ -1,0 +1,11 @@
+[variables]
+SERVER_NAME = "Enshrouded Dokploy"
+SERVER_PASSWORD = "${password:15}"
+
+[config]
+domains = []
+mounts = []
+env = [
+    "SERVER_NAME=${SERVER_NAME}",
+    "SERVER_PASSWORD=${SERVER_PASSWORD}"
+]

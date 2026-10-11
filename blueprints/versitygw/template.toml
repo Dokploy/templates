@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+ROOT_ACCESS_KEY = "${hash:16}"
+ROOT_SECRET_KEY = "${password:32}"
+
+[config]
+env = [
+  "ROOT_ACCESS_KEY=${ROOT_ACCESS_KEY}",
+  "ROOT_SECRET_KEY=${ROOT_SECRET_KEY}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "versitygw"
+port = 8080
+host = "${main_domain}"

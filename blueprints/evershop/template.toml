@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+db_user = "postgres"
+db_password = "postgres"
+db_name = "evershop"
+db_port = "5432"
+
+[config]
+
+[[config.domains]]
+serviceName = "evershop-app"
+port = 3_000
+host = "${main_domain}"
+
+[config.env]
+DB_USER = "${db_user}"
+DB_PASSWORD = "${db_password}"
+DB_NAME = "${db_name}"
+DB_PORT = "${db_port}"

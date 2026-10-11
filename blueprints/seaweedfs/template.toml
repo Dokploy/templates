@@ -1,0 +1,27 @@
+[variables]
+main_domain = "${domain}"
+filer_domain = "filer.${domain}"
+master_domain = "master.${domain}"
+s3_domain = "s3.${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "filer"
+port = 8888
+host = "${filer_domain}"
+
+[[config.domains]]
+serviceName = "master"
+port = 9333
+host = "${master_domain}"
+
+[[config.domains]]
+serviceName = "s3"
+port = 8333
+host = "${s3_domain}"
+
+[config.env]
+S3_ACCESS_KEY = "admin"
+S3_SECRET_KEY = "${password:16}"

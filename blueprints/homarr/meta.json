@@ -1,0 +1,16 @@
+{
+  "id": "homarr",
+  "name": "Homarr",
+  "version": "latest",
+  "description": "A sleek, modern dashboard that puts all your apps and services in one place with Docker integration.",
+  "logo": "homarr.png",
+  "links": {
+    "github": "https://github.com/homarr-labs/homarr",
+    "docs": "https://homarr.dev/docs/getting-started/installation/docker",
+    "website": "https://homarr.dev/"
+  },
+  "tags": [
+    "dashboard",
+    "monitoring"
+  ]
+}

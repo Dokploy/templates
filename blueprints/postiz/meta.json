@@ -1,0 +1,17 @@
+{
+  "id": "postiz",
+  "name": "Postiz",
+  "version": "latest",
+  "description": "Postiz is a modern, open-source platform for managing and publishing content across multiple channels.",
+  "logo": "postiz.png",
+  "links": {
+    "github": "https://github.com/gitroomhq/postiz",
+    "website": "https://postiz.com",
+    "docs": "https://docs.postiz.com"
+  },
+  "tags": [
+    "cms",
+    "content-management",
+    "publishing"
+  ]
+}

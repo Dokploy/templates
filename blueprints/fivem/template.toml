@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+license_key = "${password:32}"
+rcon_password = "${password:16}"
+
+[config]
+env = [
+    "LICENSE_KEY=${license_key}",
+    "RCON_PASSWORD=${rcon_password}",
+    "NO_DEFAULT_CONFIG=${NO_DEFAULT_CONFIG:-}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "fivem"
+port = 40120
+host = "${main_domain}"

@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+media_path = "/path/to/your/media"
+
+[config]
+[[config.domains]]
+serviceName = "ampache"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+MEDIA_PATH = "${media_path}" 

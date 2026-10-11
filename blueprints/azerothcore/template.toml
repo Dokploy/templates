@@ -1,0 +1,11 @@
+[variables]
+mysql_root_password = "${password:32}"
+realm_address = "${domain}"
+
+[config]
+domains = []
+mounts = []
+env = [
+  "MYSQL_ROOT_PASSWORD=${mysql_root_password}",
+  "REALM_ADDRESS=${realm_address}",
+]

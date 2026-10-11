@@ -1,0 +1,29 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "app"
+port = 9_000
+host = "${main_domain}"
+
+[[config.mounts]]
+filePath = "config.toml"
+content = """
+[app]
+address = "0.0.0.0:9000"
+
+[db]
+host = "db"
+port = 5432
+user = "listmonk"
+password = "listmonk"
+database = "listmonk"
+
+ssl_mode = "disable"
+max_open = 25
+max_idle = 25
+max_lifetime = "300s"
+
+params = ""
+"""

@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+postgres_user = "bugsinkuser"
+postgres_password = "${password:32}"
+postgres_db = "bugsink"
+secret_key = "${password:64}"
+superuser = "admin:admin"
+behind_https_proxy = "false"
+
+[config]
+
+[[config.domains]]
+serviceName = "web"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "${postgres_db}"
+SECRET_KEY = "${secret_key}"
+CREATE_SUPERUSER = "${superuser}"
+BEHIND_HTTPS_PROXY = "${behind_https_proxy}"
+BASE_URL = "https://${main_domain}"

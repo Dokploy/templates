@@ -1,0 +1,24 @@
+services:
+  upsnap:
+    image: ghcr.io/seriousm4x/upsnap:5
+    restart: unless-stopped
+    expose:
+      - 8090
+    volumes:
+      - upsnap-data:/app/pb_data
+    environment:
+      - TZ=${TZ}
+      - UPSNAP_INTERVAL=${UPSNAP_INTERVAL}
+      - UPSNAP_SCAN_RANGE=${UPSNAP_SCAN_RANGE}
+      - UPSNAP_SCAN_TIMEOUT=${UPSNAP_SCAN_TIMEOUT}
+      - UPSNAP_PING_PRIVILEGED=${UPSNAP_PING_PRIVILEGED}
+      - UPSNAP_WEBSITE_TITLE=${UPSNAP_WEBSITE_TITLE}
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:8090/api/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  upsnap-data:
+    driver: local

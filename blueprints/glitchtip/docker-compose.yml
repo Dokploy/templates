@@ -1,0 +1,50 @@
+x-environment: &default-environment
+  DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+  VALKEY_URL: redis://valkey:6379
+  SECRET_KEY: ${SECRET_KEY}
+  PORT: ${GLITCHTIP_PORT}
+  EMAIL_URL: consolemail://
+  GLITCHTIP_DOMAIN: ${GLITCHTIP_DOMAIN}
+  DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
+
+x-depends_on: &default-depends_on
+  - postgres
+  - valkey
+
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    restart: unless-stopped
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+  valkey:
+    image: valkey/valkey:9
+    restart: unless-stopped
+  web:
+    image: glitchtip/glitchtip:6.1.0
+    depends_on: *default-depends_on
+    expose:
+      - ${GLITCHTIP_PORT}
+    environment: *default-environment
+    restart: unless-stopped
+    volumes:
+      - uploads:/code/uploads
+  worker:
+    image: glitchtip/glitchtip:6.1.0
+    command: ./bin/run-worker.sh
+    depends_on: *default-depends_on
+    environment: *default-environment
+    restart: unless-stopped
+    volumes:
+      - uploads:/code/uploads
+  migrate:
+    image: glitchtip/glitchtip:6.1.0
+    depends_on: *default-depends_on
+    command: ./bin/run-migrate.sh
+    environment: *default-environment
+
+volumes:
+  pg-data:
+  uploads:

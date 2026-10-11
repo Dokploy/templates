@@ -1,0 +1,41 @@
+{
+  "id": "portabase",
+  "name": "Portabase",
+  "version": "latest",
+  "description": "A free, open-source and self-hosted tool from a non-profit organization that helps you automate backups and restore your databases on demand.",
+  "logo": "portabase.svg",
+  "links": {
+    "github": "https://github.com/portabase/portabase",
+    "website": "https://portabase.io",
+    "docs": "https://portabase.io/docs"
+  },
+  "tags": [
+    "postgres",
+    "mysql",
+    "mariadb",
+    "mongodb",
+    "sqlite",
+    "firebird",
+    "valkey",
+    "redis",
+    "mssql",
+    "docker-volumes",
+    "backup",
+    "s3",
+    "gcs",
+    "azure",
+    "google-drive",
+    "discord",
+    "telegram",
+    "slack",
+    "email",
+    "apprise",
+    "ntfy",
+    "gotify",
+    "pushover",
+    "teams",
+    "webhook",
+    "self-hosted",
+    "open-source"
+  ]
+}

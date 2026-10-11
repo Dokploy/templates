@@ -1,0 +1,9 @@
+[variables]
+main_domain = "${domain}"
+timezone = "America/Sao_Paulo"
+
+[config]
+[[config.domains]]
+serviceName = "syncthing"
+port = 8384
+host = "${main_domain}"

@@ -1,0 +1,29 @@
+[variables]
+main_domain = "${domain}"
+site_name = "frappe.lending"
+db_root_password = "${password:32}"
+admin_password = "${password:32}"
+
+[config]
+env = [
+  "SITE_NAME=${site_name}",
+  "ADMIN_PASSWORD=${admin_password}",
+  "DB_ROOT_PASSWORD=${db_root_password}",
+  "MIGRATE=1",
+  "ENABLE_DB=1",
+  "DB_HOST=db",
+  "CREATE_SITE=1",
+  "CONFIGURE=1",
+  "REGENERATE_APPS_TXT=1",
+  "INSTALL_APP_ARGS=--install-app erpnext --install-app lending",
+  "IMAGE_NAME=frappe/erpnext",
+  "VERSION=latest",
+  "FRAPPE_SITE_NAME_HEADER=",
+  "MAIN_DOMAIN=${main_domain}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "frontend"
+port = 8_080
+host = "${main_domain}"

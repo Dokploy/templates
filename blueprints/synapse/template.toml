@@ -1,0 +1,93 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+registration_shared_secret = "${password:32}"
+macaroon_secret_key = "${password:32}"
+form_secret = "${password:32}"
+
+[config]
+env = [
+    "POSTGRES_PASSWORD=${postgres_password}",
+]
+
+[[config.domains]]
+serviceName = "synapse"
+port = 8008
+host = "${main_domain}"
+
+[[config.mounts]]
+filePath = "homeserver.yaml"
+content = """
+# Synapse homeserver configuration
+# https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html
+
+server_name: "${main_domain}"
+public_baseurl: "https://${main_domain}/"
+pid_file: /data/homeserver.pid
+signing_key_path: "/data/signing.key"
+log_config: "/config/log.config"
+media_store_path: /data/media_store
+report_stats: false
+
+# Serve /.well-known/matrix/server so other homeservers can federate with
+# this server over port 443 (the dedicated federation port 8448 is not exposed).
+serve_server_wellknown: true
+
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    bind_addresses: ['0.0.0.0']
+    resources:
+      - names: [client, federation]
+        compress: false
+
+database:
+  name: psycopg2
+  args:
+    user: synapse
+    password: "${postgres_password}"
+    database: synapse
+    host: postgres
+    port: 5432
+    cp_min: 5
+    cp_max: 10
+
+# Public registration is disabled. Create users with the
+# register_new_matrix_user tool (see the template instructions).
+enable_registration: false
+registration_shared_secret: "${registration_shared_secret}"
+
+macaroon_secret_key: "${macaroon_secret_key}"
+form_secret: "${form_secret}"
+
+trusted_key_servers:
+  - server_name: "matrix.org"
+suppress_key_server_warning: true
+"""
+
+[[config.mounts]]
+filePath = "log.config"
+content = """
+version: 1
+
+formatters:
+  precise:
+    format: '%(asctime)s - %(name)s - %(lineno)d - %(levelname)s - %(request)s - %(message)s'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: precise
+
+loggers:
+  synapse.storage.SQL:
+    level: INFO
+
+root:
+  level: INFO
+  handlers: [console]
+
+disable_existing_loggers: false
+"""

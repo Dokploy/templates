@@ -1,0 +1,19 @@
+{
+  "id": "powersync",
+  "name": "PowerSync",
+  "version": "1.21.0",
+  "description": "PowerSync is a sync engine for local-first apps. Syncs PostgreSQL data to mobile devices and browsers with real-time replication.",
+  "logo": "powersync.png",
+  "links": {
+    "github": "https://github.com/powersync-ja/powersync-service",
+    "website": "https://www.powersync.com/",
+    "docs": "https://docs.powersync.com/"
+  },
+  "tags": [
+    "sync",
+    "database",
+    "local-first",
+    "postgresql",
+    "realtime"
+  ]
+}

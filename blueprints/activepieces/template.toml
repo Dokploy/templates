@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+api_key = "${password:32}"
+encryption_key = "${password:32}"
+jwt_secret = "${password:32}"
+postgres_password = "${password:32}"
+
+[config]
+env = [
+  "AP_HOST=${main_domain}",
+  "AP_API_KEY=${api_key}",
+  "AP_ENCRYPTION_KEY=${encryption_key}",
+  "AP_JWT_SECRET=${jwt_secret}",
+  "AP_POSTGRES_PASSWORD=${postgres_password}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "activepieces"
+port = 80
+host = "${main_domain}"

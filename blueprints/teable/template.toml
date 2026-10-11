@@ -1,0 +1,25 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password}"
+public_db_port = "${randomPort}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "teable"
+port = 3_000
+host = "${main_domain}"
+
+[config.env]
+TEABLE_HOST = "${main_domain}"
+TEABLE_DB_PORT = "${public_db_port}"
+TIMEZONE = "UTC"
+POSTGRES_HOST = "teable-db"
+POSTGRES_PORT = "5432"
+POSTGRES_DB = "teable"
+POSTGRES_USER = "teable"
+POSTGRES_PASSWORD = "${db_password}"
+PUBLIC_ORIGIN = "https://${main_domain}"
+PRISMA_DATABASE_URL = "postgresql://teable:${db_password}@teable-db:5432/teable"
+PUBLIC_DATABASE_PROXY = "${TEABLE_HOST}:${TEABLE_DB_PORT}"

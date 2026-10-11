@@ -1,0 +1,9 @@
+services:
+  trilium:
+    image: zadam/trilium:latest
+    expose:
+      - 8080
+    restart: always
+    volumes:
+      - /root/trilium-backups:/home/node/trilium-data/backup
+  

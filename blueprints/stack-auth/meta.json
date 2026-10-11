@@ -1,0 +1,17 @@
+{
+  "id": "stack-auth",
+  "name": "Stack Auth",
+  "version": "latest",
+  "description": "Open-source Auth0/Clerk alternative. Stack Auth is a free and open source authentication tool that allows you to authenticate your users.",
+  "logo": "stack-auth.png",
+  "links": {
+    "github": "https://github.com/stack-auth/stack-auth",
+    "website": "https://stack-auth.com/",
+    "docs": "https://docs.stack-auth.com/next/overview"
+  },
+  "tags": [
+    "authentication",
+    "auth",
+    "authorization"
+  ]
+}

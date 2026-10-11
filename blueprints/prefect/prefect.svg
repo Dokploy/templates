@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Prefect</title>
+  <desc id="desc">Prefect template icon</desc>
+  <rect width="256" height="256" rx="56" fill="#070f2b"/>
+  <path d="M64 61h74c32 0 56 22 56 52s-24 53-56 53H98v45H64V61Zm34 31v43h36c15 0 25-9 25-22s-10-21-25-21H98Z" fill="#3d73ff"/>
+  <path d="M101 135h37c15 0 25-9 25-22 0-6-2-11-6-15 17 6 28 21 28 40 0 26-21 46-51 46h-33v-49Z" fill="#16d6ff" opacity="0.88"/>
+</svg>

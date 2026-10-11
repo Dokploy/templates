@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password}"
+admin_access_token = "${base64:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "ryot-app"
+port = 8_000
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}"
+ADMIN_ACCESS_TOKEN = "${admin_access_token}"

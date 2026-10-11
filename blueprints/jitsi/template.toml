@@ -1,0 +1,43 @@
+[variables]
+main_domain = "${domain}"
+jitsi_image_version = "unstable"
+jicofo_auth_password = "${password:32}"
+jvb_auth_password = "${password:32}"
+jicofo_component_secret = "${password:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "web"
+port = 8_000
+host = "${main_domain}"
+
+[config.env]
+PUBLIC_URL = "https://${main_domain}"
+TZ = "UTC"
+JITSI_IMAGE_VERSION = "${jitsi_image_version}"
+XMPP_DOMAIN = "meet.jitsi"
+XMPP_AUTH_DOMAIN = "auth.meet.jitsi"
+XMPP_BOSH_URL_BASE = "http://prosody:5280"
+XMPP_MUC_DOMAIN = "muc.meet.jitsi"
+XMPP_INTERNAL_MUC_DOMAIN = "internal-muc.meet.jitsi"
+XMPP_GUEST_DOMAIN = "guest.meet.jitsi"
+XMPP_RECORDER_DOMAIN = "recorder.meet.jitsi"
+ENABLE_AUTH = "0"
+ENABLE_GUESTS = "1"
+ENABLE_LETSENCRYPT = "0"
+ENABLE_HTTP_REDIRECT = "0"
+ENABLE_XMPP_WEBSOCKET = "1"
+ENABLE_COLIBRI_WEBSOCKET = "1"
+DISABLE_HTTPS = "1"
+JICOFO_AUTH_USER = "focus"
+JVB_AUTH_USER = "jvb"
+JICOFO_AUTH_PASSWORD = "${jicofo_auth_password}"
+JVB_AUTH_PASSWORD = "${jvb_auth_password}"
+JICOFO_COMPONENT_SECRET = "${jicofo_component_secret}"
+JVB_BREWERY_MUC = "jvbbrewery"
+JVB_PORT = "10000"
+JVB_ADVERTISE_IPS = ""
+JWT_APP_ID = ""
+JWT_APP_SECRET = ""

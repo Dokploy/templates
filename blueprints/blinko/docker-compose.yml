@@ -1,0 +1,38 @@
+services:
+  blinko-website:
+    image: blinkospace/blinko:1.6.3
+    environment:
+      NODE_ENV: production
+      # API Key for NextAuth
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      DATABASE_URL: ${DATABASE_URL}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
+    depends_on:
+      blinko-postgres:
+        condition: service_healthy
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    expose:
+      - 1111
+  blinko-postgres:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      TZ: Asia/Shanghai
+    volumes:
+      - blinko-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "postgres"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  blinko-db: {}

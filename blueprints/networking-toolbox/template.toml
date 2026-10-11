@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+
+[[config.domains]]
+serviceName = "app"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+NODE_ENV = "production"
+PORT = "3000"
+HOST = "0.0.0.0"

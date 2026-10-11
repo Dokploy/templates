@@ -1,0 +1,37 @@
+[variables]
+main_domain = "${domain}"
+COUCHDB_USER = "${username}"
+COUCHDB_PASSWORD = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "couchdb"
+port = 5984
+host = "${main_domain}"
+
+[config.env]
+COUCHDB_USER = "${COUCHDB_USER}"
+# Defines the password for the CouchDB admin user. Treat this like an API key.
+COUCHDB_PASSWORD = "${COUCHDB_PASSWORD}"
+
+[[config.mounts]]
+filePath = "local.ini"
+content = """
+[couchdb]
+single_node = true
+max_document_size = 50000000
+
+[httpd]
+WWW-Authenticate = Basic realm="couchdb"
+enable_cors = true
+
+[chttpd]
+bind_address = 0.0.0.0
+enable_cors = true
+require_valid_user = true
+max_http_request_size = 4294967296
+
+[cors]
+credentials = true
+origins = app://obsidian.md,capacitor://localhost,http://localhost,
+"""

@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+pulse_auth_user = "${username}"
+pulse_auth_pass = "${password:32}"
+
+[config]
+env = ["PULSE_AUTH_USER=${pulse_auth_user}", "PULSE_AUTH_PASS=${pulse_auth_pass}"]
+mounts = []
+
+[[config.domains]]
+serviceName = "pulse"
+port = 7_655
+host = "${main_domain}"

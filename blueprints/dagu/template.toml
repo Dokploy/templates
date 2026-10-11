@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "dagu"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "${admin_password}"

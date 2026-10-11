@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+movies_path = "/path/to/movies"
+tv_path = "/path/to/tv"
+
+[config]
+[[config.domains]]
+serviceName = "bazarr"
+port = 6767
+host = "${main_domain}"
+
+[config.env]
+MOVIES_PATH = "${movies_path}"
+TV_PATH = "${tv_path}" 

@@ -1,0 +1,77 @@
+x-chatwoot-base: &chatwoot-base
+  image: chatwoot/chatwoot:v4.12.1
+  restart: unless-stopped
+  volumes:
+    - chatwoot-storage:/app/storage
+  environment:
+    - FRONTEND_URL=${FRONTEND_URL}
+    - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+    - FORCE_SSL=${FORCE_SSL}
+    - DEFAULT_LOCALE=${DEFAULT_LOCALE}
+    - ACTIVE_STORAGE_SERVICE=${ACTIVE_STORAGE_SERVICE}
+    - ENABLE_ACCOUNT_SIGNUP=${ENABLE_ACCOUNT_SIGNUP}
+    - RAILS_ENV=${RAILS_ENV}
+    - NODE_ENV=${NODE_ENV}
+    - INSTALLATION_ENV=${INSTALLATION_ENV}
+    - RAILS_LOG_TO_STDOUT=${RAILS_LOG_TO_STDOUT}
+    - LOG_LEVEL=${LOG_LEVEL}
+    - POSTGRES_HOST=${POSTGRES_HOST}
+    - POSTGRES_PORT=${POSTGRES_PORT}
+    - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+    - POSTGRES_USERNAME=${POSTGRES_USERNAME}
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    - REDIS_URL=${REDIS_URL}
+    - REDIS_PASSWORD=${REDIS_PASSWORD}
+
+services:
+  chatwoot:
+    <<: *chatwoot-base
+    depends_on:
+      - postgres
+      - redis
+    entrypoint: docker/entrypoints/rails.sh
+    command:
+      - sh
+      - -c
+      - bundle exec rails db:chatwoot_prepare && bundle exec rails s -p 3000 -b 0.0.0.0
+    expose:
+      - "3000"
+
+  chatwoot-worker:
+    <<: *chatwoot-base
+    depends_on:
+      - postgres
+      - redis
+    command:
+      - bundle
+      - exec
+      - sidekiq
+      - -C
+      - config/sidekiq.yml
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    volumes:
+      - chatwoot-postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    command:
+      - sh
+      - -c
+      - redis-server --requirepass "$$REDIS_PASSWORD"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - chatwoot-redis-data:/data
+
+volumes:
+  chatwoot-storage:
+  chatwoot-postgres-data:
+  chatwoot-redis-data:

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">MC Controller</title>
+  <desc id="desc">A green Minecraft-inspired server block</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#18251d"/><stop offset="1" stop-color="#09110c"/></linearGradient>
+    <linearGradient id="top" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#78e08f"/><stop offset="1" stop-color="#36a85d"/></linearGradient>
+    <linearGradient id="front" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#42be68"/><stop offset="1" stop-color="#1f7d42"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="104" fill="url(#bg)"/>
+  <path d="m256 78 154 78v164L256 398 102 320V156z" fill="#144326" stroke="#8bf0a6" stroke-width="12" stroke-linejoin="round"/>
+  <path d="m256 78 154 78-154 82-154-82z" fill="url(#top)"/>
+  <path d="m102 156 154 82v160L102 320z" fill="url(#front)"/>
+  <path d="m410 156-154 82v160l154-78z" fill="#176b36"/>
+  <g fill="#eaffef"><rect x="170" y="208" width="78" height="18" rx="9"/><rect x="170" y="253" width="78" height="18" rx="9"/><rect x="170" y="298" width="78" height="18" rx="9"/></g>
+  <circle cx="300" cy="217" r="12" fill="#d7ffe0"/><circle cx="300" cy="262" r="12" fill="#d7ffe0"/><circle cx="300" cy="307" r="12" fill="#ffd15a"/>
+</svg>

@@ -1,0 +1,19 @@
+{
+  "id": "openhabittracker",
+  "name": "OpenHabitTracker",
+  "version": "latest",
+  "description": "Take notes, plan tasks and track habits - free, ad-free, open source, with all data on your own server. Native apps for Windows, Linux, Android, iOS and macOS sync to it.",
+  "logo": "openhabittracker.png",
+  "links": {
+    "github": "https://github.com/Jinjinov/OpenHabitTracker",
+    "website": "https://openhabittracker.net",
+    "docs": ""
+  },
+  "tags": [
+    "productivity",
+    "notes",
+    "tasks",
+    "habits",
+    "self-hosted"
+  ]
+}

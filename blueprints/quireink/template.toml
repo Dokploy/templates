@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = ["QUIREINK_HOST=${main_domain}"]
+mounts = []
+
+[[config.domains]]
+serviceName = "quireink"
+port = 3000
+host = "${main_domain}"

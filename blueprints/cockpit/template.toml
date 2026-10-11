@@ -1,0 +1,15 @@
+[variables]
+SALT = "${password:32}"
+MONGO_PASSWORD = "${password:16}"
+
+
+[config]
+[[config.domains]]
+serviceName = "cockpit"
+port = 80
+host = "${domain}"
+
+[config.env]
+SALT = "${SALT}"
+MONGO_PASSWORD = "${MONGO_PASSWORD}" 
+MONGO_USERNAME = "mongo"

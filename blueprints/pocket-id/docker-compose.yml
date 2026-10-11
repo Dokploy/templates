@@ -1,0 +1,21 @@
+services:
+  pocket-id:
+    image: pocketid/pocket-id:v2.14.0
+    restart: unless-stopped
+    environment:
+      APP_URL: ${APP_URL}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      TRUST_PROXY: ${TRUST_PROXY}
+    volumes:
+      - pocket-id-data:/app/data
+    expose:
+      - "1411"
+    healthcheck:
+      test: ["CMD", "/app/pocket-id", "healthcheck"]
+      interval: 1m30s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+
+volumes:
+  pocket-id-data:

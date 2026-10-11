@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+SECRET = "${password:64}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "yamtrack"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+SECRET = "${SECRET}"
+TZ = "Europe/Berlin"
+REDIS_URL = "redis://redis:6379"

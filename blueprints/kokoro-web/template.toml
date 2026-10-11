@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+api_key = "${password:32}"   # Secure random API key for Kokoro Web
+no_track = "false"           # Set to "true" to opt out of analytics
+
+[config]
+[[config.domains]]
+serviceName = "kokoro-web"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+KW_SECRET_API_KEY = "${api_key}"
+KW_PUBLIC_NO_TRACK = "${no_track}"

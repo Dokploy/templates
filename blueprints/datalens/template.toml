@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = ["HC=1"]
+mounts = []
+
+[[config.domains]]
+serviceName = "datalens"
+port = 8_080
+host = "${main_domain}"

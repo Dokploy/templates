@@ -1,0 +1,12 @@
+[variables]
+superuser_password = "${password:32}"
+welcome_text = "Welcome to Mumble Server! Low-latency voice chat."
+max_users = "50"
+
+[config]
+
+[config.env]
+SUPERUSER_PASSWORD = "${superuser_password}"
+WELCOME_TEXT = "${welcome_text}"
+MAX_USERS = "${max_users}"
+

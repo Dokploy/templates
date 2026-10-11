@@ -1,0 +1,8 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "rsshub"
+port = 1200
+host = "${main_domain}"

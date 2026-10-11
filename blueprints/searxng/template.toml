@@ -1,0 +1,26 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${password:64}"
+
+[config]
+[[config.domains]]
+serviceName = "searxng"
+port = 8080
+host = "${main_domain}"
+env = [
+  "SEARXNG_BASE_URL=https://${main_domain}/"
+]
+
+[[config.mounts]]
+filePath = "/searxng/settings.yml"
+content = """
+use_default_settings: true
+
+server:
+  secret_key: \"${secret_key}\"
+  limiter: false
+  image_proxy: false
+
+valkey:
+  url: valkey://valkey:6379/0
+"""

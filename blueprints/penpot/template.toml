@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "penpot-frontend"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+DOMAIN_NAME = "${main_domain}"

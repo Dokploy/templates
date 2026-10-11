@@ -1,0 +1,15 @@
+services:
+  openresty-manager:
+   image: uusec/openresty-manager:latest
+   restart: always
+   volumes:
+     - /etc/localtime:/etc/localtime:ro
+     - /etc/resolv.conf:/etc/resolv.conf:ro
+     - om_acme:/opt/om/acme
+     - om_data:/opt/om/data
+     - om_conf:/opt/om/nginx/conf
+
+volumes:
+  om_acme:
+  om_data:
+  om_conf:

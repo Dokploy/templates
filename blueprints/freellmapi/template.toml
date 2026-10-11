@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+encryption_key = "${hash:64}"
+
+[config]
+[[config.domains]]
+serviceName = "freellmapi"
+port = 3001
+host = "${main_domain}"
+
+[config.env]
+NODE_ENV = "production"
+PORT = "3001"
+ENCRYPTION_KEY = "${encryption_key}"

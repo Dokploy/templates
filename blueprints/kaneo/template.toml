@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+auth_secret = "${hash:64}"
+
+[config]
+[[config.domains]]
+serviceName = "kaneo"
+port = 5_173
+host = "${main_domain}"
+
+[config.env]
+KANEO_CLIENT_URL = "http://${main_domain}"
+POSTGRES_DB = "kaneo"
+POSTGRES_USER = "kaneo"
+POSTGRES_PASSWORD = "${postgres_password}"
+AUTH_SECRET = "${auth_secret}"

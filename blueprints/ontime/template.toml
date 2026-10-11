@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "ontime"
+port = 4_001
+host = "${main_domain}"
+
+[config.env]
+TZ = "UTC"

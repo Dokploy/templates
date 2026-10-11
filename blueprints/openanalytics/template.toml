@@ -1,0 +1,144 @@
+# OpenAnalytics for Dokploy. Four hostnames, not four paths: the dashboard,
+# the api, the collector and the realtime stream are separate origins, and all
+# four route through the `edge` service below, which strips the
+# client-settable identity headers (see the mounted Caddyfile).
+#
+# After deploying, replace the four generated domains with real DNS records in
+# the Domains tab AND update the matching *_DOMAIN environment variables to
+# the same values, then redeploy: the api builds auth origins, CORS and every
+# link it hands out from those variables, not from the Domains tab.
+
+[variables]
+app_domain = "${domain}"
+api_domain = "${domain}"
+collector_domain = "${domain}"
+realtime_domain = "${domain}"
+postgres_password = "${password:32}"
+clickhouse_ingest_password = "${password:32}"
+clickhouse_read_password = "${password:32}"
+clickhouse_maintenance_password = "${password:32}"
+clickhouse_migration_password = "${password:32}"
+valkey_queue_password = "${password:32}"
+valkey_realtime_password = "${password:32}"
+auth_secret = "${base64:64}"
+trial_identity_secret = "${base64:64}"
+credential_source_secret = "${base64:64}"
+anonymous_identity_secret = "${base64:64}"
+
+[config]
+
+# All four domains point at the Caddy edge on purpose. Pointing one at its
+# service directly would skip the header hygiene the edge exists for.
+[[config.domains]]
+serviceName = "edge"
+port = 80
+host = "${app_domain}"
+
+[[config.domains]]
+serviceName = "edge"
+port = 80
+host = "${api_domain}"
+
+[[config.domains]]
+serviceName = "edge"
+port = 80
+host = "${collector_domain}"
+
+[[config.domains]]
+serviceName = "edge"
+port = 80
+host = "${realtime_domain}"
+
+[config.env]
+# The four public origins. The compose file derives AUTH_BASE_URL,
+# AUTH_TRUSTED_ORIGINS and the dashboard's NEXT_PUBLIC_* values from these,
+# so they must always equal the domains served above.
+APP_DOMAIN = "${app_domain}"
+API_DOMAIN = "${api_domain}"
+COLLECTOR_DOMAIN = "${collector_domain}"
+REALTIME_DOMAIN = "${realtime_domain}"
+
+# Store credentials. Each service receives only the ones it is allowed to
+# hold; the compose file interpolates them per service on purpose.
+POSTGRES_PASSWORD = "${postgres_password}"
+CLICKHOUSE_INGEST_PASSWORD = "${clickhouse_ingest_password}"
+CLICKHOUSE_READ_PASSWORD = "${clickhouse_read_password}"
+CLICKHOUSE_MAINTENANCE_PASSWORD = "${clickhouse_maintenance_password}"
+CLICKHOUSE_MIGRATION_PASSWORD = "${clickhouse_migration_password}"
+VALKEY_QUEUE_PASSWORD = "${valkey_queue_password}"
+VALKEY_REALTIME_PASSWORD = "${valkey_realtime_password}"
+
+# Application secrets. The two signing key pairs and the credential keyring
+# are deliberately NOT here: the `keygen` one-shot generates them inside the
+# stack, because no platform generator can produce a keypair whose halves
+# must match across two services.
+AUTH_SECRET = "${auth_secret}"
+TRIAL_IDENTITY_SECRET = "${trial_identity_secret}"
+CREDENTIAL_SOURCE_SECRET = "${credential_source_secret}"
+ANONYMOUS_IDENTITY_SECRET = "${anonymous_identity_secret}"
+
+# The sender address on outgoing mail. Only a from-address: nothing sends
+# until a transport is configured in the dashboard under Account then
+# Deployment. Replace it when you set that up.
+OA_EMAIL_FROM = "Open Analytics <analytics@analytics.example>"
+
+# The edge, behind Dokploy's Traefik.
+#
+# Traefik terminates TLS, routes all four hostnames here, and writes
+# X-Forwarded-For and X-Real-Ip from the connection. What it does not do is
+# touch CF-Connecting-IP and its family, because they are nobody's standard —
+# and the collector reads the visitor's address and geo from exactly that
+# family of headers. Without the deletions below, any visitor could pick their
+# own rate-limit bucket or write their own country into the analytics.
+#
+# X-Real-IP is deliberately NOT asserted here: the proxy in front of this one
+# owns it. Asserting it from this hop would stamp Traefik's address on every
+# visitor.
+[[config.mounts]]
+filePath = "/Caddyfile"
+content = """
+{
+	auto_https off
+}
+
+(client_identity_hygiene) {
+	header_up -Fly-Client-IP
+	header_up -CF-Connecting-IP
+	header_up -True-Client-IP
+	header_up -X-Vercel-IP-Country
+	header_up -X-Vercel-IP-City
+	header_up -Fly-Client-Country
+	header_up -CF-IPCountry
+	header_up -CF-IPCity
+}
+
+:80 {
+	@web host {$OA_APP_HOST}
+	handle @web {
+		reverse_proxy web:3000
+	}
+
+	@api host {$OA_API_HOST}
+	handle @api {
+		reverse_proxy api:8082 {
+			import client_identity_hygiene
+		}
+	}
+
+	@collector host {$OA_COLLECTOR_HOST}
+	handle @collector {
+		reverse_proxy collector:8083 {
+			import client_identity_hygiene
+		}
+	}
+
+	@realtime host {$OA_REALTIME_HOST}
+	handle @realtime {
+		reverse_proxy realtime:8084 {
+			import client_identity_hygiene
+		}
+	}
+
+	respond 404
+}
+"""

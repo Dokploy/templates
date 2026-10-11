@@ -1,0 +1,27 @@
+services:
+  openlmnp:
+    image: manganate06/openlmnp:1.6.6
+    restart: unless-stopped
+    environment:
+      # APP_URL must carry the scheme: password-reset links and e-mails are built
+      # from it, and would otherwise point at http://localhost.
+      APP_URL: https://${OPENLMNP_HOST}
+      # Sign-up closes on its own once the first account is created.
+      ALLOW_REGISTRATION: auto
+    volumes:
+      # SQLite database and uploaded receipts — the only two paths worth keeping.
+      - openlmnp-database:/var/www/html/database
+      - openlmnp-storage:/var/www/html/storage
+    healthcheck:
+      # Laravel health route. Tested with PHP rather than curl: the image is built on
+      # Alpine and ships neither curl nor wget.
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://127.0.0.1:8000/up') === false ? 1 : 0);"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      # First boot creates the SQLite database and runs the migrations.
+      start_period: 90s
+
+volumes:
+  openlmnp-database:
+  openlmnp-storage:

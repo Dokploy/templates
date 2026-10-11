@@ -1,0 +1,17 @@
+{
+  "id": "argilla",
+  "name": "Argilla",
+  "version": "latest",
+  "description": "Argilla is a robust platform designed to help engineers and data scientists streamline the management of machine learning data workflows. It simplifies tasks like data labeling, annotation, and quality control.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/argilla-io/argilla",
+    "website": "https://www.argilla.io/",
+    "docs": "https://docs.argilla.io/"
+  },
+  "tags": [
+    "machine-learning",
+    "data-labeling",
+    "ai"
+  ]
+}

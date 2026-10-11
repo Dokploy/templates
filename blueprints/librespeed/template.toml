@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "librespeed"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+PASSWORD = "${password}"
+TZ = "UTC"
+CUSTOM_RESULTS = "false"

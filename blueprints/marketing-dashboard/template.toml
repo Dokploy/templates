@@ -1,0 +1,30 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+admin_password = "${password:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "marketing-dashboard"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_DB = "marketing_dashboard"
+POSTGRES_USER = "marketing_dashboard"
+POSTGRES_PASSWORD = "${postgres_password}"
+DATABASE_URL = "postgresql://marketing_dashboard:${postgres_password}@postgres:5432/marketing_dashboard?schema=public"
+DIRECT_URL = "postgresql://marketing_dashboard:${postgres_password}@postgres:5432/marketing_dashboard?schema=public"
+MARKETING_APP_URL = "https://${main_domain}"
+MARKETING_COLLECTOR_UPSTREAM_URL = "https://${main_domain}/api/ingest/browser"
+MARKETING_SESSION_TIMEOUT_MINUTES = "30"
+MARKETING_PROXY_TIMEOUT_MS = "4000"
+MARKETING_INGEST_MAX_BODY_BYTES = "65536"
+MARKETING_INGEST_IP_RATE_LIMIT = "300"
+MARKETING_INGEST_CLIENT_RATE_LIMIT = "1200"
+MARKETING_INGEST_RATE_LIMIT_WINDOW_MS = "60000"
+MARKETING_ENABLE_PILOT_API = "false"
+MARKETING_DASHBOARD_ADMIN_USER = "admin"
+MARKETING_DASHBOARD_ADMIN_PASSWORD = "${admin_password}"

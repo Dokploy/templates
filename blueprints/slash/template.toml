@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password}"
+db_user = "slash"
+db_name = "slash"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "slash-app"
+port = 5_231
+host = "${main_domain}"
+
+[config.env]
+DB_USER = "${db_user}"
+DB_PASSWORD = "${db_password}"
+DB_NAME = "${db_name}"

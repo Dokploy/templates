@@ -1,0 +1,33 @@
+services:
+  app:
+    image: ghcr.io/logto-io/logto:1.41.0
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint: ["sh", "-c", "npm run cli db seed -- --swe && npm start"]
+    environment:
+      TRUST_PROXY_HEADER: 1
+      DB_URL: postgres://logto:${LOGTO_POSTGRES_PASSWORD}@postgres:5432/logto
+      ENDPOINT: ${LOGTO_ENDPOINT}
+      ADMIN_ENDPOINT: ${LOGTO_ADMIN_ENDPOINT}
+    volumes:
+      - logto-connectors:/etc/logto/packages/core/connectors
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: logto
+      POSTGRES_PASSWORD: ${LOGTO_POSTGRES_PASSWORD}
+      POSTGRES_DB: logto
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U logto -d logto"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  logto-connectors:
+  postgres-data:

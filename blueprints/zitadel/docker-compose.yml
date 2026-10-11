@@ -1,0 +1,67 @@
+services:
+  zitadel:
+    restart: 'always'
+    image: 'ghcr.io/zitadel/zitadel:v4.16.0'
+    command: 'start-from-init --masterkey "${ZITADEL_MASTERKEY}" --tlsMode ${ZITADEL_TLSMODE}'
+    environment:
+      # Database Configuration
+      ZITADEL_DATABASE_POSTGRES_HOST: db
+      ZITADEL_DATABASE_POSTGRES_PORT: 5432
+      ZITADEL_DATABASE_POSTGRES_DATABASE: zitadel
+      ZITADEL_DATABASE_POSTGRES_USER_USERNAME: zitadel
+      ZITADEL_DATABASE_POSTGRES_USER_PASSWORD: "${POSTGRES_PASSWORD}"
+      ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE: disable
+      ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME: postgres
+      ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD: "${POSTGRES_PASSWORD}"
+      ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE: disable
+
+      # External access configuration. These MUST match the domain configured
+      # in the Domains tab and the scheme/port it is served on, otherwise
+      # Zitadel answers {"code":5,"message":"Not Found"}.
+      # HTTP  -> ZITADEL_EXTERNALPORT=80,  ZITADEL_EXTERNALSECURE=false
+      # HTTPS -> ZITADEL_EXTERNALPORT=443, ZITADEL_EXTERNALSECURE=true
+      ZITADEL_EXTERNALDOMAIN: "${ZITADEL_EXTERNALDOMAIN}"
+      ZITADEL_EXTERNALPORT: "${ZITADEL_EXTERNALPORT}"
+      ZITADEL_EXTERNALSECURE: "${ZITADEL_EXTERNALSECURE}"
+      ZITADEL_TLS_ENABLED: false
+
+      # Custom Admin User Configuration
+      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME}"
+      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD}"
+      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS}"
+      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_FIRSTNAME: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_FIRSTNAME}"
+      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_LASTNAME: "${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_LASTNAME}"
+
+      # Use the login UI built into the API container (no extra login-v2 service needed)
+      ZITADEL_DEFAULTINSTANCE_FEATURES_LOGINV2_REQUIRED: false
+
+    healthcheck:
+      test: ["CMD", "/app/zitadel", "ready"]
+      interval: '10s'
+      timeout: '30s'
+      retries: 12
+      start_period: '30s'
+    depends_on:
+      db:
+        condition: 'service_healthy'
+    expose:
+      - 8080
+
+  db:
+    restart: 'always'
+    image: postgres:17-alpine
+    environment:
+      PGUSER: postgres
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: zitadel
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "zitadel", "-U", "postgres"]
+      interval: '10s'
+      timeout: '30s'
+      retries: 5
+      start_period: '20s'
+
+volumes:
+  postgres_data:

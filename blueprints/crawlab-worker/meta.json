@@ -1,0 +1,18 @@
+{
+  "id": "crawlab-worker",
+  "name": "Crawlab (Worker)",
+  "version": "latest",
+  "description": "Crawlab worker node for distributed web crawling. Connects to an existing Crawlab master node via gRPC.",
+  "logo": "crawlab.jpeg",
+  "links": {
+    "github": "https://github.com/crawlab-team/crawlab",
+    "website": "https://crawlab.cn",
+    "docs": "https://docs.crawlab.cn"
+  },
+  "tags": [
+    "crawler",
+    "scraping",
+    "distributed",
+    "self-hosted"
+  ]
+}

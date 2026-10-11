@@ -1,0 +1,17 @@
+{
+  "id": "coralproject",
+  "name": "Coral",
+  "version": "9.7.0",
+  "description": "Coral is a revolutionary commenting platform designed to enhance website interactions. It features smart technology for meaningful discussions, journalist identification, moderation tools with AI support, and complete data control without ads or trackers. Used by major news sites worldwide.",
+  "links": {
+    "website": "https://coralproject.net/",
+    "docs": "https://docs.coralproject.net/",
+    "github": "https://github.com/coralproject/talk"
+  },
+  "logo": "logo.png",
+  "tags": [
+    "communication",
+    "community",
+    "privacy"
+  ]
+}

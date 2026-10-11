@@ -1,0 +1,17 @@
+{
+  "id": "commento",
+  "name": "Commento",
+  "version": "v1.8.0",
+  "description": "Commento is a comments widget designed to enhance the interaction on your website. It allows your readers to contribute to the discussion by upvoting comments that add value and downvoting those that don't. The widget supports markdown formatting and provides moderation tools to manage conversations.",
+  "links": {
+    "website": "https://commento.io/",
+    "docs": "https://commento.io/",
+    "github": "https://github.com/souramoo/commentoplusplus"
+  },
+  "logo": "logo.png",
+  "tags": [
+    "comments",
+    "discussion",
+    "website"
+  ]
+}

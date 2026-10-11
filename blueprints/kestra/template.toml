@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "kestra"
+port = 8080
+host = "${main_domain}"
+
+
+[config.env]

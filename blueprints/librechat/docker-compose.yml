@@ -1,0 +1,110 @@
+# LibreChat Docker Compose for Dokploy Template
+# Setting up authentication: "npm run create-user", refer to https://www.librechat.ai/docs/configuration/authentication
+
+services:
+  librechat:
+    image: ghcr.io/danny-avila/librechat-dev:latest
+    restart: always
+    depends_on:
+      - mongodb
+      - rag_api
+    environment:
+      # Server Configuration
+      - HOST=0.0.0.0
+      - PORT=${PORT:-3080}
+      # Domain Configuration
+      - DOMAIN_CLIENT=${DOMAIN_CLIENT}
+      - DOMAIN_SERVER=${DOMAIN_SERVER}
+      # Database and Search Configuration
+      - MONGO_URI=mongodb://mongodb:27017/LibreChat
+      - MEILI_HOST=http://meilisearch:7700
+      - SEARCH=true
+      - NO_INDEX=true
+      - MEILI_NO_ANALYTICS=true
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+      # Security & Sessions
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - CREDS_KEY=${CREDS_KEY}
+      - CREDS_IV=${CREDS_IV}
+      - RAG_PORT=${RAG_PORT:-8000}
+      - RAG_API_URL=http://rag_api:${RAG_PORT:-8000}
+      # API Keys and Secrets
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENROUTER_KEY=${OPENROUTER_KEY}
+      - GOOGLE_KEY=${GOOGLE_KEY}
+      - ENDPOINTS=google,openAI,assistants,azureOpenAI,anthropic
+      # ... Additional Endpoints
+      # UI
+      - APP_TITLE=${APP_TITLE:-LibreChat}
+      - CUSTOM_FOOTER=${CUSTOM_FOOTER:-Made with ❤️ by LibreChat}
+      - ALLOW_EMAIL_LOGIN=${ALLOW_EMAIL_LOGIN:-true}
+      - ALLOW_SOCIAL_LOGIN=${ALLOW_SOCIAL_LOGIN:-false}
+      - ALLOW_REGISTRATION=${ALLOW_REGISTRATION:-false}
+    volumes:
+      - type: bind
+        source: ../files/librechat.yaml
+        target: /app/librechat.yaml
+      - librechat_data:/app/client/public/images
+      - librechat_data:/app/uploads
+      - librechat_data:/app/logs
+
+  mongodb:
+    image: mongo
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+    command: mongod --noauth
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.12.3
+    restart: always
+    environment:
+      - MEILI_HOST=http://meilisearch:7700
+      - MEILI_NO_ANALYTICS=true
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+    volumes:
+      - meili_data:/meili_data
+
+  vectordb:
+    image: pgvector/pgvector:0.8.0-pg15-trixie
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-mydatabase}
+      - POSTGRES_USER=${POSTGRES_USER:-myuser}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-mypassword}
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  rag_api:
+    image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:latest
+    environment:
+      - DB_HOST=vectordb
+      - VECTOR_DB_TYPE=pgvector
+      - POSTGRES_DB=${POSTGRES_DB:-mydatabase}
+      - POSTGRES_USER=${POSTGRES_USER:-myuser}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-mypassword}
+      - RAG_PORT=${RAG_PORT:-8000}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - RAG_OPENAI_API_KEY=${RAG_OPENAI_API_KEY}
+      - GOOGLE_KEY=${GOOGLE_KEY}
+      - RAG_GOOGLE_API_KEY=${RAG_GOOGLE_API_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+      - COLLECTION_NAME=${COLLECTION_NAME:-librechat_collection}
+      - CHUNK_SIZE=${CHUNK_SIZE:-1500}
+      - CHUNK_OVERLAP=${CHUNK_OVERLAP:-100}
+      - EMBEDDINGS_PROVIDER=${EMBEDDINGS_PROVIDER:-openai}
+      - EMBEDDINGS_MODEL=${EMBEDDINGS_MODEL:-text-embedding-3-small}
+      - DEBUG_RAG_API=false
+      - DEBUG_PGVECTOR_QUERIES=false
+      - CONSOLE_JSON=false
+    restart: always
+    depends_on:
+      - vectordb
+
+volumes:
+  mongo_data:
+  meili_data:
+  postgres_data:
+  librechat_data:

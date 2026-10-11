@@ -1,0 +1,33 @@
+[variables]
+main_domain = "${domain}"
+superuser_password = "${password:32}"
+csrf_trusted_origins = "${domain}"
+db_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "linkding"
+port = 9090
+host = "${main_domain}"
+
+[config.env]
+LD_CONTEXT_PATH = ""
+LD_SUPERUSER_NAME = ""
+LD_SUPERUSER_PASSWORD = "${superuser_password}"
+LD_DISABLE_BACKGROUND_TASKS = "False"
+LD_DISABLE_URL_VALIDATION = "False"
+LD_ENABLE_AUTH_PROXY = "False"
+LD_AUTH_PROXY_USERNAME_HEADER = ""
+LD_AUTH_PROXY_LOGOUT_URL = ""
+LD_CSRF_TRUSTED_ORIGINS = "${csrf_trusted_origins}"
+LD_DB_ENGINE = ""
+LD_DB_DATABASE = ""
+LD_DB_USER = ""
+LD_DB_PASSWORD = "${db_password}"
+LD_DB_HOST = ""
+LD_DB_PORT = ""
+LD_DB_OPTIONS = "{}"
+
+[[config.mounts]]
+filePath = "/files/linkding-data"
+content = ""

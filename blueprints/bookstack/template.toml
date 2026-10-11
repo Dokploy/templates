@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:16}"
+app_key = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "bookstack"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+DOMAIN = "${main_domain}"
+DB_PASSWORD = "${db_password}"
+APP_KEY = "${app_key}" 

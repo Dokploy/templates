@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password}"
+
+[config]
+env = [
+  "CODER_ACCESS_URL=",
+  "CODER_HTTP_ADDRESS=0.0.0.0:7080",
+  "POSTGRES_DB=coder",
+  "POSTGRES_USER=coder",
+  "POSTGRES_PASSWORD=${postgres_password}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "coder"
+port = 7_080
+host = "${main_domain}"

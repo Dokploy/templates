@@ -1,0 +1,33 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+session_pepper = "${base64:32}"
+encryption_key = "${base64:32}"
+internal_token = "${base64:32}"
+gateway_token_secret = "${base64:32}"
+connector_oauth_state_secret = "${base64:32}"
+seed_admin_email = "${email}"
+seed_admin_password = "${password:16}"
+
+[config]
+env = [
+  "ARCHE_DOMAIN=${main_domain}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "ARCHE_SESSION_PEPPER=${session_pepper}",
+  "ARCHE_ENCRYPTION_KEY=${encryption_key}",
+  "ARCHE_INTERNAL_TOKEN=${internal_token}",
+  "ARCHE_GATEWAY_TOKEN_SECRET=${gateway_token_secret}",
+  "ARCHE_CONNECTOR_OAUTH_STATE_SECRET=${connector_oauth_state_secret}",
+  "ARCHE_SEED_ADMIN_EMAIL=${seed_admin_email}",
+  "ARCHE_SEED_ADMIN_PASSWORD=${seed_admin_password}",
+  "ARCHE_SEED_ADMIN_SLUG=admin",
+  "ARCHE_WEB_IMAGE=ghcr.io/peaberry-studio/arche/web:latest",
+  "ARCHE_WORKSPACE_IMAGE=ghcr.io/peaberry-studio/arche/workspace:latest",
+  "OPENCODE_NETWORK=",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "${main_domain}"

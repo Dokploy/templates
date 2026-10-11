@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+carbone_key = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "carbone"
+port = 4000
+host = "${main_domain}"
+
+[config.env]
+CARBONE_KEY = "${carbone_key}" 

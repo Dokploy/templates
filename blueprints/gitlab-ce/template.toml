@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+gitlab_root_password = "${password:32}"
+
+[config]
+env = [
+  "GITLAB_HOST=${main_domain}",
+  "GITLAB_ROOT_PASSWORD=${gitlab_root_password}",
+]
+
+[[config.domains]]
+serviceName = "gitlab"
+port = 80
+host = "${main_domain}"

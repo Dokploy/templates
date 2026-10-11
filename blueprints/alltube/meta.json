@@ -1,0 +1,17 @@
+{
+  "id": "alltube",
+  "name": "AllTube",
+  "version": "latest",
+  "description": "AllTube Download is an application designed to facilitate the downloading of videos from YouTube and other video sites. It provides an HTML GUI for youtube-dl with video conversion capabilities and JSON API support.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/Rudloff/alltube",
+    "website": "https://github.com/Rudloff/alltube",
+    "docs": "https://github.com/Rudloff/alltube/wiki"
+  },
+  "tags": [
+    "media",
+    "video",
+    "downloader"
+  ]
+}

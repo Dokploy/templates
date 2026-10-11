@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+api_key = "${password:16}"
+enable_cors = "true"
+
+[config]
+env = ["TYPESENSE_API_KEY=${api_key}", "TYPESENSE_ENABLE_CORS=${enable_cors}"]
+
+[[config.domains]]
+serviceName = "typesense"
+port = 8108
+host = "${main_domain}"

@@ -1,0 +1,30 @@
+[variables]
+main_domain = "${domain}"
+mysql_root_password = "${password:16}"
+admin_email = "${email}"
+admin_password = "${password:16}"
+db_name = "freescout"
+db_user = "freescout_user"
+db_pass = "${password:16}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "freescout"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
+DB_NAME = "${db_name}"
+DB_USER = "${db_user}"
+DB_PASS = "${db_pass}"
+ADMIN_EMAIL = "${admin_email}"
+ADMIN_PASS = "${admin_password}"
+ADMIN_FIRST_NAME = "Admin"
+ADMIN_LAST_NAME = "User"
+SITE_URL = "http://${main_domain}"
+APPLICATION_NAME = "Customer Support"
+APP_PROXY = ""
+APP_TRUSTED_PROXIES = "172.16.0.0/12,192.168.0.0/16,10.0.0.0/8"

@@ -1,0 +1,19 @@
+{
+  "id": "openspeedtest",
+  "name": "OpenSpeedTest",
+  "version": "latest",
+  "description": "OpenSpeedTest is a 100% browser-based HTML5 network performance estimation tool for accurately measuring network speed.",
+  "logo": "openspeedtest.png",
+  "links": {
+    "github": "https://github.com/openspeedtest/Speed-Test",
+    "website": "https://openspeedtest.com/",
+    "docs": "https://github.com/openspeedtest/Speed-Test/wiki"
+  },
+  "tags": [
+    "network",
+    "testing",
+    "performance",
+    "monitoring",
+    "bandwidth"
+  ]
+}

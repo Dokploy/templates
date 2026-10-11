@@ -1,0 +1,25 @@
+services:
+  postgresus:
+    # Postgresus was renamed upstream to Databasus (https://github.com/databasus/databasus).
+    # This image is frozen at its final release; use the "databasus" template for new deployments.
+    image: rostislavdugin/postgresus:v2.15.3
+    expose:
+      - "4005"
+    volumes:
+      # Persistent data storage
+      - postgresus-data:/postgresus-data
+    restart: unless-stopped
+    environment:
+      # Optional: Set timezone
+      - TZ=UTC
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:4005" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  postgresus-data:
+    driver: local
+

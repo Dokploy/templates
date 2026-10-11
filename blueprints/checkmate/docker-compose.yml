@@ -1,0 +1,28 @@
+services:
+  server:
+    image: ghcr.io/bluewave-labs/checkmate-backend-mono:latest
+    restart: always
+    expose:
+      - 52345
+    environment:
+      - UPTIME_APP_API_BASE_URL=${UPTIME_APP_API_BASE_URL}
+      - UPTIME_APP_CLIENT_HOST=${UPTIME_APP_CLIENT_HOST}
+      - DB_CONNECTION_STRING=${DB_CONNECTION_STRING}
+      - REDIS_URL=${REDIS_URL}
+      - CLIENT_HOST=${CLIENT_HOST}
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - mongodb
+  mongodb:
+    image: ghcr.io/bluewave-labs/checkmate-mongo:latest
+    restart: always
+    command: ["mongod", "--quiet", "--replSet", "rs0", "--bind_ip_all"]
+    volumes:
+      - ../files/mongo-data:/data/db
+    healthcheck:
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongodb:27017'}]}) }" | mongosh --port 27017 --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+      start_interval: 1s
+      retries: 30

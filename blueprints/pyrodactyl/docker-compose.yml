@@ -1,0 +1,45 @@
+services:
+  database:
+    image: mariadb:11
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - "pterodb:/var/lib/mysql"
+    environment:
+      MYSQL_DATABASE: "panel"
+      MYSQL_USER: "pterodactyl"
+      MYSQL_PASSWORD:
+      MYSQL_ROOT_PASSWORD:
+  cache:
+    image: redis:alpine
+    restart: always
+  panel:
+    image: ghcr.io/pyrodactyl-oss/pyrodactyl:latest
+    restart: always
+    links:
+      - database
+      - cache
+    volumes:
+      - "pterovar:/app/var/"
+      - "pteronginx:/etc/nginx/http.d/"
+      - "pterocerts:/etc/letsencrypt/"
+      - "pterologs:/app/storage/logs"
+    environment:
+      APP_URL: "https://${APP_DOMAIN}"
+      APP_ENV: "production"
+      APP_ENVIRONMENT_ONLY: "false"
+      CACHE_DRIVER:
+      SESSION_DRIVER:
+      QUEUE_DRIVER:
+      REDIS_HOST:
+      DB_HOST:
+      DB_PORT:
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      DB_CONNECTION: "mariadb"
+
+volumes:
+  pterodb:
+  pterovar:
+  pteronginx:
+  pterocerts:
+  pterologs:

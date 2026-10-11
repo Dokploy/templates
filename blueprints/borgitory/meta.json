@@ -1,0 +1,18 @@
+{
+  "id": "borgitory",
+  "name": "Borgitory",
+  "version": "latest",
+  "description": "A web interface for managing BorgBackup archives. Allows browsing, mounting (via FUSE), and handling backup repositories.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/mlapaglia/borgitory",
+    "website": "https://github.com/mlapaglia/borgitory",
+    "docs": "https://github.com/mlapaglia/borgitory"
+  },
+  "tags": [
+    "backup",
+    "borg",
+    "archive",
+    "self-hosted"
+  ]
+}

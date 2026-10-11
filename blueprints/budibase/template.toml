@@ -1,0 +1,29 @@
+[variables]
+main_domain = "${domain}"
+api_key = "${password:32}"
+encryption_key = "${password:32}"
+jwt_secret = "${password:32}"
+couchdb_password = "${password:32}"
+redis_password = "${password:32}"
+minio_access_key = "${password:32}"
+minio_secret_key = "${password:32}"
+watchtower_password = "${password:32}"
+
+[config]
+env = [
+  "BB_HOST=${main_domain}",
+  "BB_INTERNAL_API_KEY=${api_key}",
+  "BB_API_ENCRYPTION_KEY=${encryption_key}",
+  "BB_JWT_SECRET=${jwt_secret}",
+  "BB_COUCHDB_PASSWORD=${couchdb_password}",
+  "BB_REDIS_PASSWORD=${redis_password}",
+  "BB_WATCHTOWER_PASSWORD=${watchtower_password}",
+  "BB_MINIO_ACCESS_KEY=${minio_access_key}",
+  "BB_MINIO_SECRET_KEY=${minio_secret_key}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "proxy"
+port = 10_000
+host = "${main_domain}"

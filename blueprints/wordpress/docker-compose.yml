@@ -1,0 +1,60 @@
+services:
+  wordpress:
+    image: wordpress:latest
+    # Resolve the site's own domain to the Traefik container instead of the
+    # server's public IP. Loopback requests (REST API, WP-Cron, Site Health)
+    # otherwise depend on hairpin NAT, which times out on many hosts
+    # (cURL error 28). See https://github.com/Dokploy/templates/issues/128
+    command:
+      - bash
+      - -c
+      - |
+        if [ -n "$$WP_DOMAIN" ]; then
+          (
+            for i in $$(seq 1 60); do
+              TRAEFIK_IP="$$(getent hosts dokploy-traefik | awk '{print $$1; exit}')"
+              if [ -n "$$TRAEFIK_IP" ]; then
+                grep -q "[[:space:]]$$WP_DOMAIN\$$" /etc/hosts || echo "$$TRAEFIK_IP $$WP_DOMAIN" >> /etc/hosts
+                break
+              fi
+              sleep 2
+            done
+          ) &
+        fi
+        exec docker-entrypoint.sh apache2-foreground
+    volumes:
+      - wp_app:/var/www/html
+      - ../files/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    environment:
+      WORDPRESS_DB_HOST: wp_db
+      WORDPRESS_DB_NAME: $DB_NAME
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: $DB_PASSWORD
+      WORDPRESS_DEBUG: ${WORDPRESS_DEBUG:-0}
+      WP_DOMAIN: ${WP_DOMAIN}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_MEMORY_LIMIT', '256M');
+        define('DISALLOW_FILE_EDIT', true);
+    depends_on:
+      wp_db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  wp_db:
+    image: mysql:8.4
+    restart: unless-stopped
+    volumes:
+      - wp_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: $DB_PASSWORD
+      MYSQL_DATABASE: $DB_NAME
+    healthcheck:
+      test: ["CMD-SHELL", "exit | mysql -h localhost -P 3306 -u root -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  wp_app:
+  wp_data:

@@ -1,0 +1,20 @@
+services:
+  qdrant:
+    image: "qdrant/qdrant:latest"
+    environment:
+      - SERVICE_FQDN_QDRANT_6333
+      - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY}
+    expose:
+      - "6333"
+    volumes:
+      - "qdrant_data:/qdrant/storage"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - bash -c ':> /dev/tcp/127.0.0.1/6333' || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  qdrant_data: {}

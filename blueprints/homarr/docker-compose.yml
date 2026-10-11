@@ -1,0 +1,13 @@
+services:
+  homarr:
+    image: ghcr.io/homarr-labs/homarr:latest
+    restart: unless-stopped
+    volumes:
+      # - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - homarr_appdata:/appdata
+    environment:
+      - SECRET_ENCRYPTION_KEY=${SECRET_ENCRYPTION_KEY}
+    expose:
+      - 7575
+volumes:
+  homarr_appdata:

@@ -1,0 +1,19 @@
+{
+  "id": "yamtrack",
+  "name": "Yamtrack",
+  "version": "latest",
+  "description": "Yamtrack is a self-hosted anime and manga tracker with Redis backend support.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/fuzzygrim/yamtrack",
+    "website": "https://github.com/fuzzygrim/yamtrack",
+    "docs": "https://github.com/fuzzygrim/yamtrack"
+  },
+  "tags": [
+    "media",
+    "anime",
+    "manga",
+    "tracker",
+    "redis"
+  ]
+}

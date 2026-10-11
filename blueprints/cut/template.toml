@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:24}"
+
+[config]
+env = [
+  "ADMIN_PASSWORD=${admin_password}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "cut"
+port = 3000
+host = "${main_domain}"

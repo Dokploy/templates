@@ -1,0 +1,13 @@
+[variables]
+DB_PASSWORD = "${password:16}"
+DB_ROOT_PASSWORD = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "classicpress"
+port = 80
+host = "${domain}"
+
+[config.env]
+DB_PASSWORD = "${DB_PASSWORD}"
+DB_ROOT_PASSWORD = "${DB_ROOT_PASSWORD}" 

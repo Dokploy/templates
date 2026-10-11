@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "wiki"
+port = 3_000
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_USER = "wikijs"
+POSTGRES_PASSWORD = "wikijsrocks"
+POSTGRES_DB = "wiki"
+DB_TYPE = "postgres"
+DB_HOST = "db"
+DB_PORT = "5432"
+DB_USER = "wikijs"
+DB_PASS = "wikijsrocks"
+DB_NAME = "wiki"

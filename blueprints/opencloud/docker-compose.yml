@@ -1,0 +1,40 @@
+# https://docs.opencloud.eu
+#
+# This Dokploy template for OpenCloud sets the default credentials to:
+#   USERNAME: admin
+#   PASSWORD: <SECRET GENERATED IN ENVIRONMENT VARIABLES>
+#
+# !!! IMPORTANT !!!
+#     Please review the environment variable settings and customize
+#     them prior to the first deployment!
+#
+#     If you have already deployed once, changes to some environment
+#     variables may not take effect (for example, the initial admin password).
+
+services:
+  opencloud:
+    image: opencloudeu/opencloud:7.2
+    restart: unless-stopped
+    entrypoint: /bin/sh
+    command: ["-c", "opencloud init || true; opencloud server"]
+    environment:
+      - OC_URL=${OC_URL:-https://localhost:9200}
+      - INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD:-}
+      - IDM_ADMIN_PASSWORD=${IDM_ADMIN_PASSWORD:-${INITIAL_ADMIN_PASSWORD:-}}
+      - PROXY_HTTP_ADDR=${PROXY_HTTP_ADDR:-0.0.0.0:9200}
+      - PROXY_TLS=${PROXY_TLS:-false}
+      - OC_INSECURE=${OC_INSECURE:-false}
+      - OC_LOG_LEVEL=${OC_LOG_LEVEL:-info}
+    volumes:
+      - opencloud-config:/etc/opencloud
+      - opencloud-data:/var/lib/opencloud
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 45s
+
+volumes:
+  opencloud-config: {}
+  opencloud-data: {}

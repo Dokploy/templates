@@ -1,0 +1,16 @@
+{
+  "id": "garage",
+  "name": "Garage S3",
+  "version": "latest",
+  "description": "Garage is an open-source distributed object storage service tailored for self-hosting.",
+  "logo": "garage.svg",
+  "links": {
+    "github": "https://git.deuxfleurs.fr/Deuxfleurs/garage",
+    "website": "https://garagehq.deuxfleurs.fr",
+    "docs": "https://garagehq.deuxfleurs.fr/documentation/quick-start/"
+  },
+  "tags": [
+    "storage",
+    "object-storage"
+  ]
+}

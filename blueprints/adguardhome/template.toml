@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = []
+mounts = []
+
+[[config.domains]]
+serviceName = "adguardhome"
+port = 3000
+host = "${main_domain}"
+

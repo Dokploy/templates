@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+secret_base = "${base64:64}"
+encryption_key = "${password:32}"
+cron_secret = "${base64:32}"
+
+[config]
+env = [
+  "WEBAPP_URL=http://${main_domain}",
+  "NEXTAUTH_URL=http://${main_domain}",
+  "NEXTAUTH_SECRET=${secret_base}",
+  "ENCRYPTION_KEY=${encryption_key}",
+  "CRON_SECRET=${cron_secret}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "formbricks"
+port = 3_000
+host = "${main_domain}"

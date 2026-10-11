@@ -1,0 +1,17 @@
+{
+  "id": "pyrodactyl",
+  "name": "Pyrodactyl",
+  "version": "main",
+  "description": "Pyrodactyl is the Pterodactyl-based game server panel that's faster, smaller, safer, and more accessible than Pelican. ",
+  "logo": "pyrodactyl.png",
+  "links": {
+    "github": "https://github.com/pyrohost/pyrodactyl",
+    "website": "https://pyrodactyl.dev",
+    "docs": "https://pyrodactyl.dev/docs"
+  },
+  "tags": [
+    "self-hosted",
+    "open-source",
+    "management"
+  ]
+}

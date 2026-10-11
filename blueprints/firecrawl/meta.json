@@ -1,0 +1,21 @@
+{
+  "id": "firecrawl",
+  "name": "Firecrawl",
+  "version": "2.11.230",
+  "description": "Production-ready, authenticated Firecrawl with persistent queues, browser rendering, a generated API key, and interactive OpenAPI documentation.",
+  "logo": "firecrawl.svg",
+  "links": {
+    "github": "https://github.com/firecrawl/firecrawl",
+    "website": "https://firecrawl.dev",
+    "docs": "https://docs.firecrawl.dev/contributing/self-host"
+  },
+  "tags": [
+    "api",
+    "crawler",
+    "scraping",
+    "data-extraction",
+    "llm",
+    "automation",
+    "self-hosted"
+  ]
+}

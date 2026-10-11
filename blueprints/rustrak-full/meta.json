@@ -1,0 +1,20 @@
+{
+  "id": "rustrak-full",
+  "name": "Rustrak (Full Stack)",
+  "version": "latest",
+  "description": "Self-hosted error tracking compatible with Sentry SDKs. Full stack: Rust server, web dashboard and PostgreSQL.",
+  "logo": "rustrak.svg",
+  "links": {
+    "github": "https://github.com/rustrak/rustrak",
+    "website": "https://rustrak.github.io/rustrak/",
+    "docs": "https://rustrak.github.io/rustrak/getting-started/overview"
+  },
+  "tags": [
+    "monitoring",
+    "error-tracking",
+    "sentry",
+    "rust",
+    "observability",
+    "postgresql"
+  ]
+}

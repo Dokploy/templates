@@ -1,0 +1,16 @@
+{
+  "id": "mattermost",
+  "name": "Mattermost",
+  "version": "10.6.1",
+  "description": "A single point of collaboration. Designed specifically for digital operations.",
+  "logo": "mattermost.png",
+  "links": {
+    "github": "https://github.com/mattermost/mattermost",
+    "website": "https://mattermost.com/",
+    "docs": "https://docs.mattermost.com/"
+  },
+  "tags": [
+    "chat",
+    "self-hosted"
+  ]
+}

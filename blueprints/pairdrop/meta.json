@@ -1,0 +1,18 @@
+{
+  "id": "pairdrop",
+  "name": "PairDrop",
+  "version": "latest",
+  "description": "PairDrop is a self-hosted local file sharing web app for sending files and text between nearby devices.",
+  "logo": "pairdrop.svg",
+  "links": {
+    "github": "https://github.com/schlagmichdoch/PairDrop",
+    "website": "https://pairdrop.net/",
+    "docs": "https://github.com/schlagmichdoch/PairDrop/blob/master/docs/host-your-own.md"
+  },
+  "tags": [
+    "file-sharing",
+    "p2p",
+    "web-app",
+    "self-hosted"
+  ]
+}

@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "crawl4ai"
+port = 11235
+host = "${main_domain}"
+
+[config.env]
+LLM_PROVIDER = "openai/gpt-4o-mini"
+OPENAI_API_KEY = "${password:48}"
+ANTHROPIC_API_KEY = ""
+DEEPSEEK_API_KEY = ""
+GROQ_API_KEY = ""
+TOGETHER_API_KEY = ""
+MISTRAL_API_KEY = ""
+GEMINI_API_TOKEN = ""

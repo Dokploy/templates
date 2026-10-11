@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "ai_fiesta"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+OPENROUTER_API_KEY = "${OPENROUTER_API_KEY}"
+GEMINI_API_KEY = "${GEMINI_API_KEY}"
+UNSTABLE_INFERENCE_API_KEY = "${UNSTABLE_INFERENCE_API_KEY}"
+OLLAMA_URL = "${OLLAMA_URL}"

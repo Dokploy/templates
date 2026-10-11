@@ -1,0 +1,8 @@
+services:
+  grafana:
+    image: grafana/grafana-enterprise:12.4
+    restart: unless-stopped
+    volumes:
+      - grafana-storage:/var/lib/grafana
+volumes:
+  grafana-storage: {}

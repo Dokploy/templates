@@ -1,0 +1,22 @@
+{
+  "id": "pocket-id",
+  "name": "Pocket ID",
+  "version": "2.14.0",
+  "description": "Pocket ID is a simple OpenID Connect and OAuth 2.0 provider that lets users authenticate to applications with passkeys.",
+  "logo": "pocket-id.svg",
+  "links": {
+    "github": "https://github.com/pocket-id/pocket-id",
+    "website": "https://pocket-id.org/",
+    "docs": "https://pocket-id.org/docs/"
+  },
+  "tags": [
+    "authentication",
+    "identity",
+    "sso",
+    "oidc",
+    "oauth2",
+    "passkeys",
+    "security",
+    "self-hosted"
+  ]
+}

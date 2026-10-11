@@ -1,0 +1,17 @@
+{
+  "id": "trek",
+  "name": "TREK",
+  "version": "3.3.0",
+  "description": "A minimalist, self-hosted trip planner with Kanban-style task boards, budgets, packing lists, interactive maps, real-time collaboration, and OIDC single sign-on.",
+  "logo": "trek.png",
+  "links": {
+    "github": "https://github.com/mauriceboe/TREK",
+    "website": "https://github.com/mauriceboe/TREK",
+    "docs": "https://github.com/mauriceboe/TREK/wiki"
+  },
+  "tags": [
+    "travel",
+    "planning",
+    "productivity"
+  ]
+}

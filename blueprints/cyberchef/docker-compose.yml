@@ -1,0 +1,4 @@
+services:
+  cyberchef:
+    image: ghcr.io/gchq/cyberchef:latest
+    restart: unless-stopped

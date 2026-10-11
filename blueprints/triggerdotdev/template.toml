@@ -1,0 +1,45 @@
+[variables]
+main_domain = "${domain}"
+magic_link_secret = "${base64:16}"
+session_secret = "${base64:16}"
+encryption_key = "${base64:32}"
+provider_secret = "${base64:32}"
+coordinator_secret = "${base64:32}"
+db_password = "${base64:24}"
+db_user = "triggeruser"
+db_name = "triggerdb"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "webapp"
+port = 3_000
+host = "${main_domain}"
+
+[config.env]
+NODE_ENV = "production"
+RUNTIME_PLATFORM = "docker-compose"
+V3_ENABLED = "true"
+TRIGGER_DOMAIN = "${main_domain}"
+TRIGGER_PROTOCOL = "http"
+POSTGRES_USER = "${db_user}"
+POSTGRES_PASSWORD = "${db_password}"
+POSTGRES_DB = "${db_name}"
+DATABASE_URL = "postgresql://${db_user}:${db_password}@postgres:5432/${db_name}"
+MAGIC_LINK_SECRET = "${magic_link_secret}"
+SESSION_SECRET = "${session_secret}"
+ENCRYPTION_KEY = "${encryption_key}"
+PROVIDER_SECRET = "${provider_secret}"
+COORDINATOR_SECRET = "${coordinator_secret}"
+INTERNAL_OTEL_TRACE_DISABLED = "1"
+INTERNAL_OTEL_TRACE_LOGGING_ENABLED = "0"
+DEFAULT_ORG_EXECUTION_CONCURRENCY_LIMIT = "300"
+DEFAULT_ENV_EXECUTION_CONCURRENCY_LIMIT = "100"
+DIRECT_URL = "${DATABASE_URL}"
+REDIS_HOST = "redis"
+REDIS_PORT = "6379"
+REDIS_TLS_DISABLED = "true"
+HTTP_SERVER_PORT = "9020"
+COORDINATOR_HOST = "127.0.0.1"
+COORDINATOR_PORT = "${HTTP_SERVER_PORT}"

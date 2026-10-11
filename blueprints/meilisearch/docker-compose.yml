@@ -1,0 +1,11 @@
+services:
+  meilisearch:
+    image: getmeili/meilisearch:v1.35.1
+    volumes:
+      - meili_data:/meili_data
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+
+volumes:
+  meili_data:
+    driver: local

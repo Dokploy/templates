@@ -1,0 +1,10 @@
+services:
+  collabora:
+    image: collabora/code:latest
+    expose:
+      - "9980"
+    environment:
+      - domain=${DOMAIN}
+      - username=${USERNAME}
+      - password=${PASSWORD}
+      - extra_params=--o:ssl.enable=false 

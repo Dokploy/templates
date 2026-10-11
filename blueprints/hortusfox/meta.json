@@ -1,0 +1,20 @@
+{
+  "id": "hortusfox",
+  "name": "HortusFox",
+  "version": "5.0",
+  "description": "HortusFox is an open source task and photo management app, designed for photographers and creatives to manage projects, tasks, and images effectively.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/danielbrendel/hortusfox-web",
+    "website": "https://www.hortusfox.com",
+    "docs": "https://github.com/danielbrendel/hortusfox-web#readme",
+    "discord": "https://discord.gg/kc6xGmjzVS"
+  },
+  "tags": [
+    "productivity",
+    "photo",
+    "task-management",
+    "php",
+    "mariadb"
+  ]
+}

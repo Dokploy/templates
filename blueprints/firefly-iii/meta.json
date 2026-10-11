@@ -1,0 +1,17 @@
+{
+  "id": "firefly-iii",
+  "name": "Firefly III",
+  "version": "6.6.3",
+  "description": "Firefly III is a self-hosted personal finance manager for tracking expenses, budgets, accounts, and financial reports.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/firefly-iii/firefly-iii",
+    "website": "https://www.firefly-iii.org/",
+    "docs": "https://docs.firefly-iii.org/"
+  },
+  "tags": [
+    "finance",
+    "budgeting",
+    "self-hosted"
+  ]
+}

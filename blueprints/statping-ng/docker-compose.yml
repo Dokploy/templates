@@ -1,0 +1,11 @@
+services:
+  statping-ng:
+    image: adamboutcher/statping-ng:latest
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - DB_CONN=sqlite
+    volumes:
+      - ../files/statping-ng:/app
+    expose:
+      - 8080

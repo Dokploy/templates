@@ -1,0 +1,7 @@
+[variables]
+MASTER_GRPC_ADDRESS = "<master_node_ip>:9666"
+MASTER_FILER_URL = "http://<master_node_ip>:8080/api/filer"
+CPU_LIMIT = "0.8"
+
+[config]
+env = ["MASTER_GRPC_ADDRESS=${MASTER_GRPC_ADDRESS}", "MASTER_FILER_URL=${MASTER_FILER_URL}", "CPU_LIMIT=${CPU_LIMIT}"]

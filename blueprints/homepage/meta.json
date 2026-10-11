@@ -1,0 +1,18 @@
+{
+  "id": "homepage",
+  "name": "Homepage",
+  "version": "1.13.1",
+  "description": "Homepage is a highly customizable self-hosted application dashboard and startpage with service and widget integrations.",
+  "logo": "homepage.png",
+  "links": {
+    "github": "https://github.com/gethomepage/homepage",
+    "website": "https://gethomepage.dev/",
+    "docs": "https://gethomepage.dev/installation/"
+  },
+  "tags": [
+    "dashboard",
+    "startpage",
+    "self-hosted",
+    "productivity"
+  ]
+}

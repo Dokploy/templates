@@ -1,0 +1,49 @@
+services:
+  nextcloud:
+    image: nextcloud:33.0.6
+    restart: always
+    volumes:
+      - nextcloud_data:/var/www/html
+      - ../files/fix-nextcloud.sh:/usr/local/bin/fix-nextcloud.sh:ro
+    environment:
+      - MYSQL_HOST=nextcloud_db
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    depends_on:
+      - nextcloud_db
+      - nextcloud_redis
+
+  nextcloud_cron:
+    image: nextcloud:33.0.6
+    restart: always
+    volumes:
+      - nextcloud_data:/var/www/html
+    environment:
+      - MYSQL_HOST=nextcloud_db
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    entrypoint: /cron.sh
+    depends_on:
+      - nextcloud_db
+      - nextcloud_redis
+
+  nextcloud_db:
+    image: mariadb:10.11
+    restart: always
+    volumes:
+      - nextcloud_db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
+  nextcloud_redis:
+    image: redis:alpine
+    restart: always
+
+volumes:
+  nextcloud_data:
+  nextcloud_db_data:

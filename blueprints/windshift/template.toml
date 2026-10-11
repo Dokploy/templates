@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+sso_secret = "${hash:64}"
+db_password = "${password:32}"
+
+[config]
+env = [
+  "DOMAIN=${main_domain}",
+  "SSO_SECRET=${sso_secret}",
+  "POSTGRES_USER=windshift",
+  "POSTGRES_PASSWORD=${db_password}",
+  "POSTGRES_DB=windshift",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "windshift"
+port = 8080
+host = "${main_domain}"

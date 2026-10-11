@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+"Domain=${main_domain}",
+"POSTGRES_USER=mmuser",
+"POSTGRES_PASSWORD=${password:32}",
+"POSTGRES_DB=mattermost",
+"MM_SQLSETTINGS_DRIVERNAME=postgres",
+"MM_SQLSETTINGS_DATASOURCE=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable&connect_timeout=10",
+"APP_PORT=8065",
+"TZ=UTC",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "mattermost"
+port = 8065
+host = "${main_domain}"

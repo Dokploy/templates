@@ -1,0 +1,18 @@
+{
+  "id": "naviserver",
+  "name": "NaviServer",
+  "version": "2.4.5",
+  "description": "A lightweight Minecraft server manager with a web interface, CLI, automatic JVM management, monitoring, and support for Vanilla, Paper, Fabric, Forge, and NeoForge.",
+  "logo": "naviserver.png",
+  "links": {
+    "github": "https://github.com/andre-carbajal/NaviServer",
+    "website": "https://github.com/andre-carbajal/NaviServer",
+    "docs": "https://github.com/andre-carbajal/NaviServer/wiki"
+  },
+  "tags": [
+    "minecraft",
+    "game-server",
+    "self-hosted",
+    "management"
+  ]
+}

@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+auth_secret = "${base64:32}"
+
+[config]
+env = ["APTABASE_HOST=${main_domain}", "AUTH_SECRET=${auth_secret}"]
+mounts = []
+
+[[config.domains]]
+serviceName = "aptabase"
+port = 8_080
+host = "${main_domain}"

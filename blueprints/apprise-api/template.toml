@@ -1,0 +1,8 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "apprise-api"
+port = 8000
+host = "${main_domain}" 

@@ -1,0 +1,29 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password}"
+postgres_user = "infisical"
+postgres_db = "infisical"
+encryption_key = "${hash:32}"
+auth_secret = "${base64:32}"
+
+[config]
+env = [
+  "ENCRYPTION_KEY=${encryption_key}",
+  "AUTH_SECRET=${auth_secret}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_USER=${postgres_user}",
+  "POSTGRES_DB=${postgres_db}",
+  "SITE_URL=http://${main_domain}",
+  "SMTP_HOST=",
+  "SMTP_PORT=587",
+  "SMTP_FROM_ADDRESS=",
+  "SMTP_FROM_NAME=Infisical",
+  "SMTP_USERNAME=",
+  "SMTP_PASSWORD=",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "backend"
+port = 8080
+host = "${main_domain}"

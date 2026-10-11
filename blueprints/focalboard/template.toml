@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+      "VIRTUAL_HOST=${main_domain}",
+      "VIRTUAL_PORT=8000 # Do Not Alter",
+      "DB_TYPE=postgres",
+      "POSTGRES_USER=focalboard",
+      "POSTGRES_PASSWORD=${password:32}",
+      "POSTGRES_DB=focalboard"
+    ]
+mounts = []
+
+[[config.domains]]
+serviceName = "focalboard"
+port = 8000
+host = "${main_domain}"

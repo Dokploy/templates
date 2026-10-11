@@ -1,0 +1,16 @@
+services:
+  ampache:
+    image: ampache/ampache:latest
+    restart: unless-stopped
+    expose:
+      - 80
+    volumes:
+      - config:/var/www/config
+      - log:/var/log/ampache
+      - mysql:/var/lib/mysql
+      - ${MEDIA_PATH}:/media
+
+volumes:
+  config: {}
+  log: {}
+  mysql: {} 

@@ -1,0 +1,7 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title>FileRun</title>
+  <rect width="256" height="256" rx="56" fill="#2563eb"/>
+  <path fill="#ffffff" d="M62 76c0-11 9-20 20-20h50c6 0 12 3 16 7l32 32c4 4 6 9 6 15v70c0 11-9 20-20 20H82c-11 0-20-9-20-20V76Z" opacity=".95"/>
+  <path fill="#bfdbfe" d="M132 58v42c0 7 5 12 12 12h40l-52-54Z"/>
+  <path fill="#2563eb" d="M91 143h74v14H91v-14Zm0 28h56v14H91v-14Zm0-56h40v14H91v-14Z"/>
+</svg>

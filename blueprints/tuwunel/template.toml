@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+registration_token = "${password:32}"
+
+[config]
+env = [
+  "TUWUNEL_SERVER_NAME=${main_domain}",
+  "TUWUNEL_REGISTRATION_TOKEN=${registration_token}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "tuwunel"
+port = 6167
+host = "${main_domain}"

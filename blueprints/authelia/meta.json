@@ -1,0 +1,21 @@
+{
+  "id": "authelia",
+  "name": "Authelia",
+  "version": "latest",
+  "description": "The Single Sign-On Multi-Factor portal for web apps. An open-source authentication and authorization server providing 2FA and SSO via web portal.",
+  "logo": "authelia.png",
+  "links": {
+    "github": "https://github.com/authelia/authelia",
+    "website": "https://www.authelia.com/",
+    "docs": "https://www.authelia.com/overview/prologue/introduction/"
+  },
+  "tags": [
+    "authentication",
+    "authorization",
+    "2fa",
+    "sso",
+    "security",
+    "reverse-proxy",
+    "ldap"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "bookstack",
+  "name": "BookStack",
+  "version": "24.12.1",
+  "description": "BookStack is a self-hosted platform for creating beautiful, feature-rich documentation sites.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/BookStackApp/BookStack",
+    "website": "https://www.bookstackapp.com",
+    "docs": "https://www.bookstackapp.com/docs"
+  },
+  "tags": [
+    "documentation",
+    "self-hosted"
+  ]
+}

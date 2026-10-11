@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${base64:64}"
+
+[config]
+[[config.domains]]
+serviceName = "notifuse"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+ROOT_EMAIL = "${email}"
+API_ENDPOINT = "https://${main_domain}"
+SECRET_KEY = "${secret_key}"

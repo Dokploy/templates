@@ -1,0 +1,33 @@
+[variables]
+dashboard_domain = "${domain}"
+gateway_domain = "${domain}"
+# base64 (not just alphanumeric); 96 bytes -> 128 chars
+dashboard_password = "${base64:96}"
+dashboard_secret = "${base64:32}"
+api_key = "${password:32}"
+
+[config]
+mounts = []
+
+# Web dashboard (HERMES_DASHBOARD=1). Exposed behind Traefik, so Hermes'
+# auth-gated mode kicks in — protect it with the bundled basic-auth provider.
+[[config.domains]]
+serviceName = "hermes"
+port = 9119
+host = "${dashboard_domain}"
+
+# OpenAI-compatible gateway API. Disabled and loopback-bound by default,
+# so it must be enabled, bound to 0.0.0.0, and given a bearer token.
+[[config.domains]]
+serviceName = "hermes"
+port = 8642
+host = "${gateway_domain}"
+
+[config.env]
+HERMES_DASHBOARD = "1"
+HERMES_DASHBOARD_BASIC_AUTH_USERNAME = "admin"
+HERMES_DASHBOARD_BASIC_AUTH_PASSWORD = "${dashboard_password}"
+HERMES_DASHBOARD_BASIC_AUTH_SECRET = "${dashboard_secret}"
+API_SERVER_ENABLED = "true"
+API_SERVER_HOST = "0.0.0.0"
+API_SERVER_KEY = "${api_key}"

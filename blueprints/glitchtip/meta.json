@@ -1,0 +1,15 @@
+{
+  "id": "glitchtip",
+  "name": "Glitchtip",
+  "version": "6.1.0",
+  "description": "Glitchtip is simple, open source error tracking",
+  "logo": "glitchtip.png",
+  "links": {
+    "github": "https://gitlab.com/glitchtip/",
+    "website": "https://glitchtip.com/",
+    "docs": "https://glitchtip.com/documentation"
+  },
+  "tags": [
+    "hosting"
+  ]
+}

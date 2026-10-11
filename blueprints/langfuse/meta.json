@@ -1,0 +1,13 @@
+{
+  "id": "langfuse",
+  "name": "Langfuse",
+  "version": "4",
+  "description": "Langfuse is an open-source LLM engineering platform for tracing, prompt management, evaluation, and cost/usage analytics of LLM applications.",
+  "logo": "langfuse.svg",
+  "links": {
+    "github": "https://github.com/langfuse/langfuse",
+    "website": "https://langfuse.com/",
+    "docs": "https://langfuse.com/self-hosting"
+  },
+  "tags": ["ai", "llm", "observability", "analytics", "monitoring"]
+}

@@ -1,0 +1,14 @@
+[variables]
+DOMAIN = "${domain}"
+POSTGRES_PASSWORD = "${password:16}"
+
+[config]
+[[config.domains]]
+serviceName = "commento"
+port = 8080
+host = "${DOMAIN}"
+
+[config.env]
+COMMENTO_ORIGIN = "http://${DOMAIN}"
+COMMENTO_POSTGRES = "postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=disable"
+POSTGRES_PASSWORD = "${POSTGRES_PASSWORD}" 

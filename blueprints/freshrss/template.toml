@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+timezone = "UTC"
+
+[config.env]
+FRESHRSS_VERSION = "latest"
+TZ = "${timezone}"
+CRON_MIN = "13,43"
+FRESHRSS_ENV = "production"
+COPY_LOG_TO_SYSLOG = "On"
+COPY_SYSLOG_TO_STDERR = "On"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "freshrss"
+port = 80
+host = "${main_domain}" 

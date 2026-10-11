@@ -1,0 +1,9 @@
+[variables]
+auth_log_path = "/var/log/auth.log"
+
+[config]
+mounts = []
+domains = []
+
+[config.env]
+AUTH_LOG_PATH = "${auth_log_path}"

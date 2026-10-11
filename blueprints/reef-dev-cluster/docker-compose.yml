@@ -1,0 +1,129 @@
+services:
+  reef-dev-cluster:
+    image: anukulpandey/reef-chain-node:latest
+    restart: unless-stopped
+    working_dir: /workspace
+
+    environment:
+      v1sec: "${v1sec:-}"
+      v2sec: "${v2sec:-}"
+      v3sec: "${v3sec:-}"
+      faucetsec: "${faucetsec:-}"
+      DEFAULT_AMOUNT: "${DEFAULT_AMOUNT:-2000}"
+      MAX_AMOUNT: "${MAX_AMOUNT:-2000}"
+
+    volumes:
+      - reef-dev-cluster-state:/workspace/state
+      - reef-dev-cluster-download:/workspace/download
+
+    expose:
+      - "30335"
+      - "30333"
+      - "30334"
+      - "30336"
+      - "8001"
+      - "9944"
+      - "9945"
+      - "8080"
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - bash -lc 'exec 3<>/dev/tcp/127.0.0.1/9944'
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 300s
+
+    entrypoint: /bin/sh
+
+    command:
+      - -c
+      - |
+        set -e
+
+        export DEBIAN_FRONTEND=noninteractive
+
+        echo '📦 Installing required tools...'
+
+        apt-get update
+
+        apt-get install -y \
+          wget \
+          curl \
+          python3 \
+          ca-certificates \
+          gnupg \
+          nginx
+
+        mkdir -p \
+          /etc/apt/keyrings \
+          /workspace \
+          /workspace/state \
+          /workspace/download
+
+        echo '🔑 Configuring NodeSource repository...'
+
+        curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+          | gpg --batch --yes --dearmor -o /etc/apt/keyrings/nodesource.gpg
+
+        echo 'deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main' \
+          > /etc/apt/sources.list.d/nodesource.list
+
+        apt-get update
+
+        apt-get install -y nodejs
+
+        echo '📥 Downloading cluster bootstrap...'
+
+        wget -O /workspace/run-cluster.sh \
+          https://raw.githubusercontent.com/anukulpandey/dokploy-templates/d8a82420dad013a3eb7e5d8afc0b9f2700a0045a/blueprints/reef-dev-cluster/run-cluster.sh
+
+        echo '🔧 Making script executable...'
+
+        chmod +x /workspace/run-cluster.sh
+
+        echo '🚀 Starting self-contained network...'
+
+        exec env TEMPLATE_ASSET_REF=d8a82420dad013a3eb7e5d8afc0b9f2700a0045a \
+          /workspace/run-cluster.sh
+
+  reef-dev-cluster-eth-rpc:
+    image: anukulpandey/reef-chain-eth-rpc:latest
+    restart: unless-stopped
+    working_dir: /workspace
+
+    depends_on:
+      reef-dev-cluster:
+        condition: service_healthy
+
+    expose:
+      - "8545"
+
+    environment:
+      NODE_RPC_URL: ws://reef-dev-cluster:9945
+      PORT: "8545"
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - bash -lc 'exec 3<>/dev/tcp/127.0.0.1/8545'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+    entrypoint: /bin/sh
+
+    command:
+      - -c
+      - |
+        exec eth-rpc \
+          --node-rpc-url "$$NODE_RPC_URL" \
+          --rpc-port "$$PORT" \
+          --rpc-external \
+          --rpc-cors all
+
+volumes:
+  reef-dev-cluster-state:
+  reef-dev-cluster-download:

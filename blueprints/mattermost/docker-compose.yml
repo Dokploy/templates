@@ -1,0 +1,66 @@
+services:
+  postgres:
+    image: postgres:17
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+    volumes:
+      - mattermostDbData:/var/lib/postgresql/data
+    environment:
+      - TZ
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+
+  mattermost:
+    depends_on:
+      - postgres
+    image: mattermost/mattermost-team-edition:10.6.1
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 200
+    read_only: false
+    tmpfs:
+      - /tmp
+    volumes:
+      - mattermostconf:/mattermost/config:rw
+      - mattermostdata:/mattermost/data:rw
+      - mattermostlogs:/mattermost/logs:rw
+      - mattermostplugsin:/mattermost/plugins:rw
+      - mattermostclientplugins:/mattermost/client/plugins:rw
+      - mattermostBleveIndexes:/mattermost/bleve-indexes:rw
+      
+    environment:
+      - DOMAIN
+      - TZ
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - MM_SQLSETTINGS_DRIVERNAME
+      - MM_SQLSETTINGS_DATASOURCE
+      - MM_BLEVESETTINGS_INDEXDIR
+      - MM_SERVICESETTINGS_SITEURL
+      - APP_PORT
+
+
+volumes:
+  mattermostDbData:
+    driver: local
+  mattermostconf:
+    driver: local
+  mattermostdata:
+    driver: local
+  mattermostlogs:
+    driver: local
+  mattermostplugsin:
+    driver: local
+  mattermostclientplugins:
+    driver: local
+  mattermostBleveIndexes:
+    driver: local

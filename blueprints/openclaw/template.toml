@@ -1,0 +1,21 @@
+[variables]
+gateway_token = "${password:32}"
+auth_username = "dokploy"
+auth_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "openclaw"
+port = 8080
+host = "${domain}"
+
+[config.env]
+OPENCLAW_GATEWAY_TOKEN = "${gateway_token}"
+OPENCLAW_GATEWAY_PORT = 18789
+AUTH_USERNAME="${auth_username}"
+AUTH_PASSWORD="${auth_password}"
+OPENCLAW_BRIDGE_PORT = 18790
+OPENCLAW_GATEWAY_BIND="lan"
+OPENCLAW_PLUGINS="discord,memory-core"
+# Get here https://openrouter.ai/
+OPENROUTER_API_KEY="YOUR-API-KEY"

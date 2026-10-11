@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+
+[config]
+[[config.domains]]
+serviceName = "gitingest"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+SOFTWARE_VERSION_TAG = "latest"
+ALLOWED_HOSTS = "${main_domain}"

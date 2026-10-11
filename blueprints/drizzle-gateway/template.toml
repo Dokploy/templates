@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+masterpass = "${base64:32}"
+
+[config]
+env = [
+  "MASTERPASS=${masterpass}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "drizzle-gateway"
+port = 4_983
+host = "${main_domain}"

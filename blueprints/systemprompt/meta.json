@@ -1,0 +1,16 @@
+{
+  "id": "systemprompt",
+  "name": "systemprompt",
+  "version": "0.21.0",
+  "description": "Self-owned AI control plane: governance gateway for Claude, OpenAI, and Gemini with policy checks, audit trails, rate limits, and MCP orchestration. Requires at least one AI provider API key.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/systempromptio/systemprompt-template",
+    "website": "https://systemprompt.io",
+    "docs": "https://systemprompt.io/documentation/"
+  },
+  "tags": [
+    "ai",
+    "self-hosted"
+  ]
+}

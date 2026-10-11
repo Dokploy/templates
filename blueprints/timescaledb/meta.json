@@ -1,0 +1,19 @@
+{
+  "id": "timescaledb",
+  "name": "TimescaleDB",
+  "version": "2.26.4-pg17",
+  "description": "TimescaleDB is an open-source time-series database packaged as a PostgreSQL extension, optimized for fast ingest and real-time analytics with standard SQL.",
+  "logo": "timescaledb.svg",
+  "links": {
+    "github": "https://github.com/timescale/timescaledb",
+    "website": "https://www.tigerdata.com/",
+    "docs": "https://docs.timescale.com/"
+  },
+  "tags": [
+    "database",
+    "postgresql",
+    "time-series",
+    "analytics",
+    "sql"
+  ]
+}

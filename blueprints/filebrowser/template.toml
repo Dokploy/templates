@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = ["FB_BASEURL=/filebrowser"]
+mounts = []
+
+[[config.domains]]
+serviceName = "filebrowser"
+port = 8_080
+host = "${main_domain}"

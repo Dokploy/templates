@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = ["TZ=Europe/Paris"]
+mounts = []
+
+[[config.domains]]
+serviceName = "backrest"
+port = 9_898
+host = "${main_domain}"

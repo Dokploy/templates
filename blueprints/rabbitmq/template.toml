@@ -1,0 +1,25 @@
+[variables]
+main_domain = "${domain}"
+management_domain="${domain}"
+default_user = "admin"
+default_pass = "${password:8}"
+disk_free_limit="2147483648"
+
+[config]
+env = [
+    "RABBITMQ_DEFAULT_USER=${default_user}",
+    "RABBITMQ_DEFAULT_PASS=${default_pass}",
+    "RABBITMQ_DISK_FREE_LIMIT=${disk_free_limit}"
+]
+
+[[config.domains]]
+serviceName = "rabbitmq"
+port = 15_672
+host = "${main_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "rabbitmq"
+port = 5_672
+host = "${management_domain}"
+path = "/"

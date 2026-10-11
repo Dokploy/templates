@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+postgres_user = "postgres"
+postgres_password = "${password:32}"
+postgres_db = "root_db"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "nocodb"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "${postgres_db}"

@@ -1,0 +1,6 @@
+services:
+  web-check:
+    image: lissy93/web-check
+    expose:
+      - 3000
+    restart: unless-stopped

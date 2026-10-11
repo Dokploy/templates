@@ -1,0 +1,17 @@
+{
+  "id": "classicpress",
+  "name": "ClassicPress",
+  "version": "php8.3-apache",
+  "description": "ClassicPress is a community-led open source content management system for creators. It is a fork of WordPress 6.2 that preserves the TinyMCE classic editor as the default option.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/ClassicPress/",
+    "website": "https://www.classicpress.net/",
+    "docs": "https://docs.classicpress.net/"
+  },
+  "tags": [
+    "cms",
+    "wordpress",
+    "content-management"
+  ]
+}

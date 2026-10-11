@@ -1,0 +1,17 @@
+{
+  "id": "commentoplusplus",
+  "name": "Commento++",
+  "version": "v1.8.7",
+  "description": "Commento++ is a free, open-source application designed to provide a fast, lightweight comments box that you can embed in your static website. It offers features like Markdown support, Disqus import, voting, automated spam detection, moderation tools, sticky comments, thread locking, and OAuth login.",
+  "links": {
+    "website": "https://commento.io/",
+    "docs": "https://commento.io/",
+    "github": "https://github.com/souramoo/commentoplusplus"
+  },
+  "logo": "logo.png",
+  "tags": [
+    "comments",
+    "website",
+    "open-source"
+  ]
+}

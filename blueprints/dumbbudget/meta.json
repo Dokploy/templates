@@ -1,0 +1,18 @@
+{
+  "id": "dumbbudget",
+  "name": "DumbBudget",
+  "version": "latest",
+  "description": "DumbBudget is a simple, self-hosted budget tracking service with PIN protection and no database required.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/DumbWareio/DumbBudget",
+    "website": "https://dumbware.io/DumbBudget",
+    "docs": "https://github.com/DumbWareio/DumbBudget/blob/main/README.md"
+  },
+  "tags": [
+    "budget",
+    "finance",
+    "self-hosted",
+    "simple"
+  ]
+}

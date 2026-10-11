@@ -1,0 +1,33 @@
+[variables]
+app_domain = "${domain}"
+proxy_domain = "${domain}"
+mongodb_password = "${hash:64}"
+redis_password = "${hash:64}"
+kek_version_1 = "${base64:32}"
+auth_secret = "${base64:32}"
+
+[config]
+env = [
+  "APP_DOMAIN=${app_domain}",
+  "AUTH_URL=http://${app_domain}",
+  "PROXY_DOMAIN=${proxy_domain}",
+  "MONGODB_PASSWORD=${mongodb_password}",
+  "REDIS_PASSWORD=${redis_password}",
+  "KEK_VERSION_1=${kek_version_1}",
+  "AUTH_SECRET=${auth_secret}",
+  "DISABLE_SIGNUP=false",
+  "RPM=180",
+  "ALLOWED_ORIGINS=",
+  "ALLOWED_TARGETS=",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "corsfix"
+port = 3000
+host = "${app_domain}"
+
+[[config.domains]]
+serviceName = "corsfix-proxy"
+port = 80
+host = "${proxy_domain}"

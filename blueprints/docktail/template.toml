@@ -1,0 +1,15 @@
+[variables]
+
+[config]
+mounts = []
+
+[config.env]
+# Auth key for the bundled tailscaled sidecar (Admin Console -> Settings -> Keys).
+# Use a tagged, reusable or one-off key; the node must carry a tag that your
+# ACL autoApprovers allow to advertise services.
+TAILSCALE_AUTH_KEY = ""
+TAILSCALE_HOSTNAME = "docktail"
+TAILSCALE_TAGS = "tag:server"
+# OAuth client used by DockTail to create Tailscale Services.
+TAILSCALE_OAUTH_CLIENT_ID = ""
+TAILSCALE_OAUTH_CLIENT_SECRET = ""

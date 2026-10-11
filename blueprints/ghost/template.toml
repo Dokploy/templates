@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = ["GHOST_HOST=${main_domain}"]
+mounts = []
+
+[[config.domains]]
+serviceName = "ghost"
+port = 2_368
+host = "${main_domain}"

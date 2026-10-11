@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "lfsx"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+LFSX_PUBLIC_URL = "https://${main_domain}"
+LFSX_AUTH = "github"

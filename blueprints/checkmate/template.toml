@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+jwt_secret = "${password:32}" 
+
+[config]
+[[config.domains]]
+serviceName = "server"
+port = 52345
+host = "${main_domain}"
+
+[config.env]
+UPTIME_APP_API_BASE_URL = "http://${main_domain}:52345/api/v1"
+UPTIME_APP_CLIENT_HOST = "http://${main_domain}"
+DB_CONNECTION_STRING = "mongodb://mongodb:27017/uptime_db?replicaSet=rs0"
+REDIS_URL = "redis://redis:6379"
+CLIENT_HOST = "http://${main_domain}"
+JWT_SECRET = "${jwt_secret}" # API key for JWT authentication
+
+[[config.mounts]]
+filePath = "/files/mongo-data"
+content = ""

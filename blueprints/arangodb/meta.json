@@ -1,0 +1,17 @@
+{
+  "id": "arangodb",
+  "name": "ArangoDB",
+  "version": "latest",
+  "description": "ArangoDB is a native multi-model database with flexible data models for documents, graphs, and key-values. Build high performance applications using a convenient SQL-like query language or JavaScript extensions.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/arangodb/arangodb",
+    "website": "https://www.arangodb.com/",
+    "docs": "https://www.arangodb.com/docs/"
+  },
+  "tags": [
+    "database",
+    "graph-database",
+    "nosql"
+  ]
+}

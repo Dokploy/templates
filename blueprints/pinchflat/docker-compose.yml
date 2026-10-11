@@ -1,0 +1,6 @@
+services:
+  pinchflat:
+    image: ghcr.io/kieraneglin/pinchflat:latest
+    volumes:
+      - ../files/config:/config
+      - ../files/downloads:/downloads

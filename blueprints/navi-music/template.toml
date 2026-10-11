@@ -1,0 +1,12 @@
+[config]
+env = [
+  # Required: create a Discord bot and paste its token.
+  "DISCORD_TOKEN=",
+  # Optional but recommended for Spotify links: https://developer.spotify.com/dashboard
+  "SPOTIFY_CLIENT_ID=",
+  "SPOTIFY_CLIENT_SECRET=",
+  # Optional YouTube tweaks (leave empty to use the default anonymous clients).
+  "YOUTUBE_POTOKEN=",
+  "YOUTUBE_VISITOR=",
+  "YOUTUBE_OAUTH2=",
+]

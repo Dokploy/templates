@@ -1,0 +1,26 @@
+[variables]
+main_domain = "${domain}"
+jwt_secret = "${password:32}"
+
+[config]
+env = [
+    "JWT_SECRET=${jwt_secret}",
+    "DEFAULT_DOMAIN=${main_domain}",
+    "TRUST_PROXY=false",
+    "DISALLOW_ANONYMOUS_LINKS=true",
+    "CUSTOM_DOMAIN_USE_HTTPS=true",
+    "MAIL_ENABLED=false",
+    "MAIL_HOST=''",
+    "MAIL_PORT='22'",
+    "MAIL_SECURE=true",
+    "MAIL_USER=''",
+    "MAIL_FROM=''",
+    "MAIL_PASSWORD=''",
+    "CONTACT_EMAIL=''"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "kutt"
+port = 3_000
+host = "${main_domain}"

@@ -1,0 +1,17 @@
+{
+  "id": "beszel",
+  "name": "Beszel",
+  "version": "0.10.2",
+  "description": "A lightweight server monitoring hub with historical data, docker stats, and alerts.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/henrygd/beszel",
+    "website": "https://beszel.dev",
+    "docs": "https://beszel.dev/guide/getting-started"
+  },
+  "tags": [
+    "monitoring",
+    "docker",
+    "alerts"
+  ]
+}

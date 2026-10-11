@@ -1,0 +1,22 @@
+[variables]
+main_domain = "${domain}"
+tmdb_api_key = ""
+mysql_password = "${password:32}"
+mysql_root_password = "${password:32}"
+
+[config.env]
+MOVARY_VERSION = "latest"
+MYSQL_VERSION = "8.0"
+TMDB_API_KEY = "${tmdb_api_key}"
+MYSQL_PASSWORD = "${mysql_password}"
+MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
+APP_URL = "http://${main_domain}"
+APP_ENV = "production"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "movary"
+port = 8080
+host = "${main_domain}"

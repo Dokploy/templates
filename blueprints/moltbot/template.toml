@@ -1,0 +1,18 @@
+[variables]
+gateway_token = "${password:32}"
+
+
+[config]
+[[config.domains]]
+serviceName = "moltbot-gateway"
+port = 18789
+host = "${domain}"
+
+[config.env]
+CLAWDBOT_GATEWAY_TOKEN = "${gateway_token}"
+CLAWDBOT_GATEWAY_PORT = 18789
+CLAWDBOT_BRIDGE_PORT = 18790
+CLAWDBOT_GATEWAY_BIND="lan"
+CLAWDBOT_PLUGINS="discord,memory-core"
+# Get here https://openrouter.ai/
+OPENROUTER_API_KEY="YOUR-API-KEY"

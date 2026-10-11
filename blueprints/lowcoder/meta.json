@@ -1,0 +1,17 @@
+{
+  "id": "lowcoder",
+  "name": "Lowcoder",
+  "version": "2.6.4",
+  "description": "Rapid business App Builder for Everyone",
+  "logo": "lowcoder.png",
+  "links": {
+    "github": "https://github.com/lowcoder-org/lowcoder",
+    "website": "https://www.lowcoder.cloud/",
+    "docs": "https://docs.lowcoder.cloud/lowcoder-documentation"
+  },
+  "tags": [
+    "low-code",
+    "no-code",
+    "development"
+  ]
+}

@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "gitea-mirror"
+port = 4_321
+host = "${main_domain}"
+
+[config.env]
+BETTER_AUTH_SECRET = "${base64:64}"
+BETTER_AUTH_URL = "https://${main_domain}"

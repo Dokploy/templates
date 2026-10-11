@@ -1,0 +1,19 @@
+{
+  "id": "hedgedoc",
+  "name": "HedgeDoc",
+  "version": "1.10.8",
+  "description": "HedgeDoc is a collaborative Markdown editor for teams that need real-time notes, documentation, and knowledge sharing.",
+  "logo": "hedgedoc.svg",
+  "links": {
+    "github": "https://github.com/hedgedoc/hedgedoc",
+    "website": "https://hedgedoc.org/",
+    "docs": "https://docs.hedgedoc.org/"
+  },
+  "tags": [
+    "markdown",
+    "notes",
+    "documentation",
+    "collaboration",
+    "wiki"
+  ]
+}

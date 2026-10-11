@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+username = "gotenberg"
+password = "changethis"
+
+[config]
+env = [
+  "GOTENBERG_API_BASIC_AUTH_USERNAME=${username}",
+  "GOTENBERG_API_BASIC_AUTH_PASSWORD=${password}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "gotenberg"
+port = 3_000
+host = "${main_domain}"

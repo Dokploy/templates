@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "louez"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+LOUEZ_HOST = "${main_domain}"
+DB_PASSWORD = "${password:32}" # Password of the database user Louez connects with
+DB_ROOT_PASSWORD = "${password:32}" # Password for MySQL root user
+MINIO_PASSWORD = "${password:32}" # Credentials Louez uses to read and write product images

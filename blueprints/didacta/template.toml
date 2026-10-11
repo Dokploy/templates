@@ -1,0 +1,79 @@
+# ============================================================================
+# Didacta Community — configuración del blueprint de Dokploy
+# ----------------------------------------------------------------------------
+# Dokploy resuelve los helpers de [variables], escribe [config.env] en un .env
+# junto al docker-compose.yml y publica el dominio de [[config.domains]].
+#
+# Helpers disponibles: ${domain}, ${password:N}, ${base64:N}, ${hash:N},
+# ${uuid}, ${randomPort}, ${email}, ${username}, ${timestamp}.
+# ============================================================================
+
+[variables]
+main_domain = "${domain}"
+# 64 caracteres sin símbolos: firma las sesiones. Rotarlo echa a todo el mundo.
+auth_secret = "${password:64}"
+# Token de un solo uso del alta inicial. Va en una URL, así que sin símbolos.
+setup_token = "${password:32}"
+# Va dentro de la cadena de conexión de Postgres: sin símbolos a propósito.
+postgres_password = "${password:32}"
+
+[[config.domains]]
+serviceName = "didacta"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+NODE_ENV = "production"
+# Debe coincidir SIEMPRE con el tag de la imagen del docker-compose.yml.
+DIDACTA_CORE_VERSION = "0.0.1-alpha.107"
+
+# Base absoluta de los enlaces que salen por correo (verificación de email,
+# invitaciones, recordatorios). Sin esto los correos llevan enlaces rotos.
+WEB_PUBLIC_URL = "https://${main_domain}"
+WEB_PUBLIC_ALLOWED_HOSTS = "${main_domain}"
+
+# Credenciales del Postgres del propio blueprint. El servicio `postgres` las
+# lee del mismo .env para inicializar el cluster.
+POSTGRES_USER = "didacta"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "didacta"
+
+# Conexión de BOOTSTRAP (superusuario). Se usa solo para migraciones, RLS y
+# grants — nunca para servir tráfico. El entrypoint deriva de aquí la conexión
+# de runtime hacia el rol `didacta_app` (NOBYPASSRLS), que es lo que hace real
+# el aislamiento entre tenants. Por eso NO se define DATABASE_URL.
+ADMIN_DATABASE_URL = "postgresql://didacta:${postgres_password}@postgres:5432/didacta?schema=public"
+REDIS_URL = "redis://redis:6379"
+
+AUTH_SECRET = "${auth_secret}"
+# Fijarlo evita tener que buscar el token en los logs: el alta se hace en
+# https://<dominio>/setup?token=<este valor>.
+DIDACTA_SETUP_TOKEN = "${setup_token}"
+
+# Puertos INTERNOS fijos. No tocar: el dominio apunta al 3000 y el healthcheck
+# al 4000.
+API_PORT = "4000"
+WEB_PORT = "3000"
+
+# Almacenamiento local sobre el volumen persistente `didacta-data`. Para S3
+# (AWS, Hetzner, MinIO…): STORAGE_DRIVER=s3 y rellenar las S3_*.
+STORAGE_DRIVER = "local"
+STORAGE_ROOT = "/app/data/storage"
+
+# SMTP: sin esto la instalación arranca igual, avisa por la interfaz y no puede
+# mandar correos. Rellenar desde el panel de Dokploy después del despliegue.
+SMTP_HOST = ""
+SMTP_PORT = "587"
+SMTP_USER = ""
+SMTP_PASS = ""
+SMTP_SECURE = "false"
+SMTP_FROM = ""
+
+# Licencia Enterprise (opcional). Vacío = edición Community.
+DIDACTA_LICENSE_KEY = ""
+
+# TENANT_SETTINGS_ENC_KEY se deja SIN definir a propósito: la app genera una
+# clave hex de 32 bytes en el primer arranque y la persiste en el volumen
+# `didacta-data`. Definirla con un helper que no produzca exactamente 64
+# caracteres hexadecimales rompería el cifrado de secretos (SSO, SMTP por
+# tenant, Stripe) de forma silenciosa.

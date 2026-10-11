@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+service_hash = "${hash:32}"
+
+[config]
+env = ["ANSWER_HOST=http://${main_domain}", "SERVICE_HASH=${service_hash}"]
+mounts = []
+
+[[config.domains]]
+serviceName = "answer"
+port = 9_080
+host = "${main_domain}"

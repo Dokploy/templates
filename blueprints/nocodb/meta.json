@@ -1,0 +1,18 @@
+{
+  "id": "nocodb",
+  "name": "NocoDB",
+  "version": "latest",
+  "description": "NocoDB is an opensource Airtable alternative that turns any MySQL, PostgreSQL, SQL Server, SQLite & MariaDB into a smart spreadsheet.",
+  "links": {
+    "github": "https://github.com/nocodb/nocodb",
+    "website": "https://nocodb.com/",
+    "docs": "https://docs.nocodb.com/"
+  },
+  "logo": "nocodb.png",
+  "tags": [
+    "database",
+    "spreadsheet",
+    "low-code",
+    "nocode"
+  ]
+}

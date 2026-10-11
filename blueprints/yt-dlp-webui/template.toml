@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "yt-dlp-webui"
+port = 3033
+host = "${main_domain}"
+
+[config.env]

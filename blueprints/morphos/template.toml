@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "morphos-server"
+port = 8080
+host = "${main_domain}"
+tls = true
+certResolver = "letsencrypt"
+
+[config.env]
+# No environment variables required based on provided information

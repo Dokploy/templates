@@ -1,0 +1,17 @@
+{
+  "id": "discourse",
+  "name": "Discourse",
+  "version": "2026.1.4",
+  "description": "Discourse is a modern forum software for your community. Use it as a mailing list, discussion forum, or long-form chat room.",
+  "logo": "discourse.svg",
+  "links": {
+    "github": "https://github.com/discourse/discourse",
+    "website": "https://www.discourse.org/",
+    "docs": "https://meta.discourse.org/"
+  },
+  "tags": [
+    "forum",
+    "community",
+    "discussion"
+  ]
+}

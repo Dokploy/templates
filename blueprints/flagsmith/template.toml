@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+django_secret_key = "${password:8}"
+database_password = "${password:16}"
+
+[config]
+env = [
+  "DATABASE_PASSWORD=${database_password}",
+  "DJANGO_SECRET_KEY=${django_secret_key}",
+  "FLAGSMITH_DOMAIN=${main_domain}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "flagsmith"
+port = 8_000
+host = "${main_domain}"

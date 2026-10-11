@@ -1,0 +1,17 @@
+{
+  "id": "macos",
+  "name": "MacOS (dockerized)",
+  "version": "1.14",
+  "description": "MacOS inside a Docker container.",
+  "logo": "macos.png",
+  "links": {
+    "github": "https://github.com/dockur/macos",
+    "website": "",
+    "docs": "https://github.com/dockur/macos?tab=readme-ov-file#how-do-i-use-it"
+  },
+  "tags": [
+    "self-hosted",
+    "open-source",
+    "os"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "lodestone",
+  "name": "Lodestone",
+  "version": "0.5.1",
+  "description": "A free, open source server hosting tool for Minecraft and other multiplayers games.",
+  "logo": "lodestone.png",
+  "links": {
+    "github": "https://github.com/Lodestone-Team/lodestone",
+    "website": "https://lodestone.cc",
+    "docs": "https://github.com/Lodestone-Team/lodestone/wiki"
+  },
+  "tags": [
+    "minecraft",
+    "hosting",
+    "server"
+  ]
+}

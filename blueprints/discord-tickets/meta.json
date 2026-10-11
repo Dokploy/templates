@@ -1,0 +1,17 @@
+{
+  "id": "discord-tickets",
+  "name": "Discord Tickets",
+  "version": "4.0.21",
+  "description": "An open-source Discord bot for creating and managing support ticket channels.",
+  "logo": "discord-tickets.png",
+  "links": {
+    "github": "https://github.com/discord-tickets/bot",
+    "website": "https://discordtickets.app",
+    "docs": "https://discordtickets.app/self-hosting/installation/docker/"
+  },
+  "tags": [
+    "discord",
+    "tickets",
+    "support"
+  ]
+}

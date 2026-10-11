@@ -1,0 +1,17 @@
+services:
+  vault:
+    image: hashicorp/vault:2.0.3
+    cap_add:
+      - IPC_LOCK
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: "${VAULT_DEV_ROOT_TOKEN_ID}"
+      VAULT_DEV_LISTEN_ADDRESS: "${VAULT_DEV_LISTEN_ADDRESS}"
+    expose:
+      - "8200"
+    volumes:
+      - vault-data:/vault/file
+    command: "server -dev -dev-root-token-id=${VAULT_DEV_ROOT_TOKEN_ID} -dev-listen-address=${VAULT_DEV_LISTEN_ADDRESS}"
+
+volumes:
+  vault-data:
+

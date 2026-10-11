@@ -1,0 +1,23 @@
+[variables]
+MONGO_PASSWORD = "${password:16}"
+AUTH_PASSWORD = "${password:16}"
+AUTH_SECRET = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "codex"
+port = 3000
+host = "${domain}"
+
+[config.env]
+MONGO_PASSWORD = "${MONGO_PASSWORD}"
+AUTH_PASSWORD = "${AUTH_PASSWORD}"
+AUTH_SECRET = "${AUTH_SECRET}" 
+MONGO_USERNAME = "mongo"
+
+[[config.mounts]]
+filePath = "/docs-config.yaml"
+content = """
+# Custom Config, view Here https://github.com/codex-team/codex.docs/blob/main/docs-config.yaml
+# Can Also Be configured with ENV, see here https://docs.codex.so/configuration#override-properties-with-environment-variables
+"""

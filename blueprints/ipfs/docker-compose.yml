@@ -1,0 +1,16 @@
+services:
+  ipfs:
+    image: ipfs/kubo:latest
+    restart: unless-stopped
+    environment:
+      - IPFS_PROFILE=server
+    volumes:
+      - ipfs_data:/data/ipfs
+      - ipfs_staging:/export
+    expose:
+      - 4001
+      - 8080
+      - 5001
+volumes:
+  ipfs_data: {}
+  ipfs_staging: {}

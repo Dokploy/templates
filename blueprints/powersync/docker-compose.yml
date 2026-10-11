@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    command: ["postgres", "-c", "wal_level=logical"]
+    environment:
+      POSTGRES_USER: powersync
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: powersync
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ../files/init-powersync.sql:/docker-entrypoint-initdb.d/init-powersync.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U powersync -d powersync"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  powersync:
+    image: journeyapps/powersync-service:1.21.0
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POWERSYNC_CONFIG_PATH: /config/powersync.yaml
+      NODE_OPTIONS: --max-old-space-size=1000
+    volumes:
+      - ../files/powersync.yaml:/config/powersync.yaml:ro
+    command: ["start", "-r", "unified"]
+
+volumes:
+  postgres-data:

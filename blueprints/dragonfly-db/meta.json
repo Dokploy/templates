@@ -1,0 +1,16 @@
+{
+  "id": "dragonfly-db",
+  "name": "Dragonfly",
+  "version": "1.28.1",
+  "description": "Dragonfly is a drop-in Redis replacement that is designed for heavy data workloads running on modern cloud hardware.",
+  "logo": "dragonfly-db.png",
+  "links": {
+    "github": "https://github.com/dragonflydb/dragonfly",
+    "website": "https://www.dragonflydb.io/",
+    "docs": "https://www.dragonflydb.io/docs"
+  },
+  "tags": [
+    "database",
+    "redis"
+  ]
+}

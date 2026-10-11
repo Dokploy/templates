@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+admin_email = "${email}"
+admin_password = "${password:16}"
+contact_email = "${email}"
+
+[config]
+[[config.domains]]
+serviceName = "anonupload"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+ADMIN_EMAIL = "${admin_email}"
+ADMIN_PASSWORD = "${admin_password}"
+CONTACT_EMAIL = "${contact_email}" 

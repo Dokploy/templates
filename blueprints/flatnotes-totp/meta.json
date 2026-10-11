@@ -1,0 +1,20 @@
+{
+  "id": "flatnotes-totp",
+  "name": "Flatnotes (TOTP)",
+  "version": "latest",
+  "description": "Flatnotes with TOTP authentication enabled (username + password + one-time passcode).",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/dullage/flatnotes",
+    "website": "https://flatnotes.io",
+    "docs": "https://github.com/dullage/flatnotes"
+  },
+  "tags": [
+    "notes",
+    "productivity",
+    "markdown",
+    "self-hosted",
+    "totp",
+    "2fa"
+  ]
+}

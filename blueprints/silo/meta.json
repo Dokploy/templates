@@ -1,0 +1,17 @@
+{
+  "id": "silo",
+  "name": "Silo",
+  "version": "RELEASE.2026-08-06T00-00-00Z",
+  "description": "S3-Compatible Object Storage. A MinIO fork maintained by PGSTY",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/pgsty/silo",
+    "website": "https://silo.pgsty.com",
+    "docs": "https://silo.pgsty.com/docs/"
+  },
+  "tags": [
+    "s3",
+    "file",
+    "storage"
+  ]
+}

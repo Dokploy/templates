@@ -1,0 +1,62 @@
+[variables]
+main_domain = "${domain}"
+server_name = "Soft Serve"
+initial_admin_keys = ""
+http_public_url = "http://${main_domain}"
+ssh_public_url = "ssh://${main_domain}:23231"
+log_level = "info"
+
+[[config.domains]]
+serviceName = "soft-serve"
+port = 23232
+host = "${main_domain}"
+path = "/"
+
+[[config.mounts]]
+filePath = "README.md"
+content = """# Soft Serve
+
+This template deploys Soft Serve, a self-hosted Git server with an SSH TUI, HTTP Git access, Git LFS support, and a lightweight web endpoint.
+
+## First Start
+
+Set `initial_admin_keys` to one or more SSH public keys before the first deployment. Soft Serve uses this value to create the initial `admin` user. The keys are consumed during initialization, so changing this variable later does not rewrite an already initialized data volume.
+
+Example value:
+
+```text
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA... your-name
+```
+
+## HTTP Access
+
+The Dokploy domain routes to Soft Serve's HTTP listener:
+
+- HTTP public URL: `http://${main_domain}`
+- HTTP Git clone example: `git clone http://${main_domain}/repo.git`
+
+Set `http_public_url` to `https://${main_domain}` before deploying if your Dokploy domain enforces TLS.
+
+Private HTTP access uses tokens created through the SSH admin interface.
+
+## SSH and Git Protocol Ports
+
+Soft Serve also listens inside the deployment on:
+
+- SSH/TUI: `23231`
+- Stats: `23233`
+- Git protocol: `9418`
+
+This template does not publish host TCP ports directly. Expose the SSH or Git protocol ports separately in Dokploy if you need direct terminal/TUI access, then use the configured `ssh_public_url` for clone commands.
+
+## Storage
+
+Repositories, configuration, keys, and the default SQLite database are stored in the persistent `soft-serve-data` volume mounted at `/soft-serve`.
+"""
+
+[config.env]
+SOFT_SERVE_NAME = "${server_name}"
+SOFT_SERVE_INITIAL_ADMIN_KEYS = "${initial_admin_keys}"
+SOFT_SERVE_HTTP_PUBLIC_URL = "${http_public_url}"
+SOFT_SERVE_SSH_PUBLIC_URL = "${ssh_public_url}"
+SOFT_SERVE_LOG_LEVEL = "${log_level}"

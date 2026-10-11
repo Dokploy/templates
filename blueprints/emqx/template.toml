@@ -1,0 +1,11 @@
+[variables]
+
+[[config.domains]]
+serviceName = "emqx"
+port = 18083
+host = "emqx.yourdomain.com"
+
+[[config.domains]]
+serviceName = "emqx"
+port = 8083
+host = "broker.yourdomain.com"

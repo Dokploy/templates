@@ -1,0 +1,11 @@
+services:
+  dumbbudget:
+    image: dumbwareio/dumbbudget:latest
+    restart: unless-stopped
+    expose:
+      - 3000
+    volumes:
+      - dumbbudget-data:/app/data
+
+volumes:
+  dumbbudget-data: {}

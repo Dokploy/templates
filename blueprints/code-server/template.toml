@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "code-server"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+PASSWORD = "${password}"
+TZ = "UTC"

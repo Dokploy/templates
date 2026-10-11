@@ -1,0 +1,67 @@
+[variables]
+main_domain = "${domain}"
+jwt_secret = "${password:64}"
+encryption_key = "${password:32}"
+webhook_verify_token = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "whatomate"
+port = 8_080
+host = "${main_domain}"
+
+[[config.mounts]]
+filePath = "config.toml"
+content = """
+[app]
+name = "Whatomate"
+environment = "staging"
+debug = false
+encryption_key = "${encryption_key}"
+
+[server]
+host = "0.0.0.0"
+port = 8080
+read_timeout = 30
+write_timeout = 30
+base_path = ""
+allowed_origins = ""
+
+[database]
+host = "db"
+port = 5432
+user = "whatomate"
+password = "whatomate"
+name = "whatomate"
+ssl_mode = "disable"
+max_open_conns = 25
+max_idle_conns = 5
+conn_max_lifetime = 300
+
+[redis]
+host = "redis"
+port = 6379
+username = ""
+password = ""
+db = 0
+tls = false
+
+[jwt]
+secret = "${jwt_secret}"
+access_expiry_mins = 15
+refresh_expiry_days = 1
+
+[storage]
+type = "local"
+local_path = "./uploads"
+
+[whatsapp]
+webhook_verify_token = "${webhook_verify_token}"
+api_version = "v24.0"
+base_url = "https://graph.facebook.com"
+
+[default_admin]
+email = "admin@admin.com"
+password = "admin"
+full_name = "Admin"
+"""

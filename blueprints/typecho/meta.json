@@ -1,0 +1,17 @@
+{
+  "id": "typecho",
+  "name": "Typecho",
+  "version": "stable",
+  "description": "Typecho æ˜¯ä¸€ä¸ªè½»é‡çº§çš„å¼€æºåšå®¢ç¨‹åºï¼ŒåŸºäºŽ PHP å¼€å‘ï¼Œæ”¯æŒå¤šç§æ•°æ®åº“ï¼Œç®€æ´è€Œå¼ºå¤§ã€‚",
+  "logo": "typecho.png",
+  "links": {
+    "github": "https://github.com/typecho/typecho",
+    "website": "https://typecho.org/",
+    "docs": "http://docs.typecho.org"
+  },
+  "tags": [
+    "blog",
+    "cms",
+    "php"
+  ]
+}

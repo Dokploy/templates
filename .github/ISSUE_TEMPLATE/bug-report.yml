@@ -1,0 +1,100 @@
+name: Template Bug Report
+description: Report a bug in one of our open source templates (Supabase, Appwrite, etc.)
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening a new issue, please search existing issues to see if this bug has already been reported.
+        
+        This template is specifically for bugs in our open source templates like Supabase, Appwrite, and others.
+
+  - type: input
+    attributes:
+      label: Template Name
+      description: Which template is experiencing the bug?
+      placeholder: "e.g: Supabase, Appwrite, Plausible, etc."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Relevant Logs of the Error
+      description: |
+        **IMPORTANT:** Go to the logs tab in your Dokploy dashboard and take a screenshot of the error.
+        Please be clear and include the full error message. You can also paste text logs here.
+      placeholder: |
+        Please attach a clear screenshot of the error logs from the logs tab.
+        
+        If you're pasting text logs, include them here:
+        ```
+        [Your error logs here]
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps to Reproduce the Error
+      description: |
+        Please provide clear, detailed steps to reproduce this bug.
+        Be as specific as possible with numbered steps.
+      placeholder: |
+        1. Deploy the [Template Name] template
+        2. Configure the following settings: [be specific]
+        3. Navigate to [specific page/section]
+        4. Perform [specific action]
+        5. Error occurs at [specific point]
+        
+        **Expected behavior:** What should happen
+        **Actual behavior:** What actually happens
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Environment Information
+      description: Please provide information about your environment
+      render: bash
+      placeholder: |
+        Operating System: Ubuntu 20.04
+        Dokploy version: 0.2.2
+        VPS Provider: DigitalOcean, Hetzner, etc.
+        Template Version: [if known]
+        Browser: Chrome, Firefox, etc. [if relevant]
+    validations:
+      required: true
+
+  - type: dropdown
+    attributes:
+      label: When does this error occur?
+      options:
+        - "During template deployment"
+        - "After successful deployment"
+        - "When accessing the application"
+        - "During configuration"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Additional Context
+      description: Any additional information that might help us understand and fix this bug
+      placeholder: |
+        - Did this work before? When did it stop working?
+        - Have you made any custom modifications to the template?
+        - Any workarounds you've found?
+    validations:
+      required: false
+
+  - type: dropdown
+    attributes:
+      label: Will you send a PR to fix it?
+      description: Let us know if you are planning to submit a pull request to address this issue
+      options:
+        - "Yes"
+        - "No"
+        - "Maybe, need help"
+    validations:
+      required: true 

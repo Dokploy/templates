@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="128" height="128">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="#E6522C" stroke="#CC4A1F" stroke-width="2"/>
+  
+  <!-- Prometheus flame icon adapted for monitoring -->
+  <path d="M50 15 L60 35 L80 35 L65 48 L72 68 L50 55 L28 68 L35 48 L20 35 L40 35 Z" 
+        fill="#FFF" opacity="0.95"/>
+  
+  <!-- Graph/Chart lines representing monitoring -->
+  <path d="M 20 75 L 30 65 L 40 70 L 50 60 L 60 65 L 70 55 L 80 60" 
+        stroke="#FFF" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.8"/>
+  
+  <!-- Data points on the graph -->
+  <circle cx="20" cy="75" r="2.5" fill="#FFF"/>
+  <circle cx="30" cy="65" r="2.5" fill="#FFF"/>
+  <circle cx="40" cy="70" r="2.5" fill="#FFF"/>
+  <circle cx="50" cy="60" r="2.5" fill="#FFF"/>
+  <circle cx="60" cy="65" r="2.5" fill="#FFF"/>
+  <circle cx="70" cy="55" r="2.5" fill="#FFF"/>
+  <circle cx="80" cy="60" r="2.5" fill="#FFF"/>
+</svg>

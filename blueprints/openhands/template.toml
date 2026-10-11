@@ -1,0 +1,153 @@
+[variables]
+main_domain = "${domain}"
+openhands_api_key = "${password:64}"
+
+[config]
+[[config.domains]]
+serviceName = "openhands"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+SANDBOX_RUNTIME_CONTAINER_IMAGE="docker.all-hands.dev/all-hands-ai/runtime:0.50-nikolaik"
+
+# Defines a file mount to create the OpenHands configuration file inside the container.
+# The file will be placed within the 'openhands-config' volume.
+[[config.mounts]]
+filePath = "/.openhands/config.toml"
+content = """
+###################### OpenHands Configuration Example ######################
+#
+# All settings have default values, so you only need to uncomment and
+# modify what you want to change
+# The fields within each section are sorted in alphabetical order.
+#
+##############################################################################
+
+#################################### Core ####################################
+# General core configurations
+##############################################################################
+[core]
+# workspace_base = "./workspace"
+# cache_dir = "/tmp/cache"
+# debug = false
+# disable_color = false
+# save_trajectory_path="./trajectories"
+# save_screenshots_in_trajectory = false
+# replay_trajectory_path = ""
+# file_store_path = "/tmp/file_store"
+# file_store = "memory"
+# file_uploads_max_file_size_mb = 0
+# enable_browser = true
+# max_budget_per_task = 0.0
+# max_iterations = 500
+# workspace_mount_path_in_sandbox = "/workspace"
+# workspace_mount_path = ""
+# workspace_mount_rewrite = ""
+# run_as_openhands = true
+# runtime = "docker"
+# default_agent = "CodeActAgent"
+# jwt_secret = ""
+# file_uploads_restrict_file_types = false
+# file_uploads_allowed_extensions = [".*"]
+# enable_default_condenser = true
+# max_concurrent_conversations = 3
+# conversation_max_age_seconds = 864000  # 10 days
+
+#################################### LLM #####################################
+# Configuration for LLM models (group name starts with 'llm')
+##############################################################################
+[llm]
+# API key to use. It is being sourced from the Dokploy template variables.
+api_key = "${openhands_api_key}" # API Key
+# base_url = ""
+# api_version = ""
+# reasoning_effort = "medium"
+# input_cost_per_token = 0.0
+# output_cost_per_token = 0.0
+# custom_llm_provider = ""
+# max_message_chars = 10000
+# max_input_tokens = 0
+# max_output_tokens = 0
+model = "gpt-4o"
+# num_retries = 8
+# retry_max_wait = 120
+# retry_min_wait = 15
+# retry_multiplier = 2.0
+# drop_params = false
+# modify_params = true
+# caching_prompt = true
+# ollama_base_url = ""
+# temperature = 0.0
+# timeout = 0
+# top_p = 1.0
+# disable_vision = true
+# custom_tokenizer = ""
+# native_tool_calling = None
+# safety_settings = []
+
+[llm.draft_editor]
+# correct_num = 5
+
+[llm.gpt4o-mini]
+api_key = "${openhands_api_key}" # API Key
+model = "gpt-4o"
+
+#################################### Agent ###################################
+# Configuration for agents
+##############################################################################
+[agent]
+enable_Browse = true
+# enable_llm_editor = false
+enable_editor = true
+enable_jupyter = true
+enable_cmd = true
+enable_think = true
+enable_finish = true
+# llm_config = 'your-llm-config-group'
+# enable_prompt_extensions = true
+# disabled_microagents = []
+enable_history_truncation = true
+# enable_condensation_request = false
+
+#################################### Sandbox ###################################
+# Configuration for the sandbox
+##############################################################################
+[sandbox]
+# timeout = 120
+# user_id = 1000
+# base_container_image = "nikolaik/python-nodejs:python3.12-nodejs22"
+# use_host_network = false
+# runtime_extra_build_args = ["--network=host", "--add-host=host.docker.internal:host-gateway"]
+# enable_auto_lint = false
+# initialize_plugins = true
+# runtime_extra_deps = ""
+# runtime_startup_env_vars = {}
+# browsergym_eval_env = ""
+# platform = ""
+# force_rebuild_runtime = false
+# runtime_container_image = ""
+# keep_runtime_alive = false
+# pause_closed_runtimes = false
+# close_delay = 300
+# rm_all_containers = false
+# enable_gpu = false
+# cuda_visible_devices = ''
+# docker_runtime_kwargs = {}
+# vscode_port = 41234
+# volumes = "/my/host/dir:/workspace:rw,/path2:/workspace/path2:ro"
+
+#################################### Security ###################################
+# Configuration for security features
+##############################################################################
+[security]
+# confirmation_mode = false
+# security_analyzer = ""
+# enable_security_analyzer = false
+
+#################################### Condenser #################################
+# Condensers control how conversation history is managed
+##############################################################################
+[condenser]
+type = "noop"
+"""

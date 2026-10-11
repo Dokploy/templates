@@ -1,0 +1,26 @@
+[variables]
+main_domain = "${domain}"
+APP_ADMIN_EMAIL = "${email}"
+APP_ADMIN_PASSWORD = "${password:16}"
+APP_TIMEZONE = "UTC"
+
+DB_DATABASE = "hortusfox"
+DB_USERNAME = "hortususer"
+DB_PASSWORD = "${password:20}"
+MARIADB_ROOT_PASSWORD = "${password:24}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "app"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+APP_ADMIN_EMAIL = "${APP_ADMIN_EMAIL}"
+APP_ADMIN_PASSWORD = "${APP_ADMIN_PASSWORD}"
+APP_TIMEZONE = "${APP_TIMEZONE}"
+DB_DATABASE = "${DB_DATABASE}"
+DB_USERNAME = "${DB_USERNAME}"
+DB_PASSWORD = "${DB_PASSWORD}"
+MARIADB_ROOT_PASSWORD = "${MARIADB_ROOT_PASSWORD}"

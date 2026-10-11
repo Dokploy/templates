@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+api_domain = "${domain}"
+authenticattion_token = "${base64:32}"
+
+[config]
+env = [
+    "PG_CONSOLE_API_URL=http://${api_domain}/api/v1",
+    "PG_CONSOLE_AUTHORIZATION_TOKEN=${authenticattion_token}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "autobase-console"
+port = 80
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "autobase-console"
+port = 8_080
+host = "${api_domain}"

@@ -1,0 +1,17 @@
+{
+  "id": "jellyseerr",
+  "name": "Jellyseerr",
+  "version": "2.7.3",
+  "description": "Jellyseerr is a media request and discovery manager for Jellyfin, Plex, and Emby users.",
+  "logo": "jellyseerr.svg",
+  "links": {
+    "github": "https://github.com/Fallenbagel/jellyseerr",
+    "website": "https://docs.jellyseerr.dev/",
+    "docs": "https://docs.jellyseerr.dev/"
+  },
+  "tags": [
+    "media",
+    "requests",
+    "jellyfin"
+  ]
+}

@@ -1,0 +1,6 @@
+services:
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    expose:
+      - 8191
+    restart: unless-stopped

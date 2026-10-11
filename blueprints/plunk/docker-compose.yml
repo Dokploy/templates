@@ -1,0 +1,163 @@
+# Plunk Self-Hosting Docker Compose for Dokploy
+# This setup runs all Plunk services with nginx reverse proxy
+#
+# IMPORTANT: This template requires multiple subdomains:
+#   - api.yourdomain.com -> API Server
+#   - app.yourdomain.com -> Web Dashboard
+#   - www.yourdomain.com -> Landing Page
+#   - docs.yourdomain.com -> Documentation
+#   - minio.yourdomain.com -> Minio Console (optional)
+#
+# All domains will be automatically configured in Dokploy
+
+services:
+  # ============================================
+  # Infrastructure Services
+  # ============================================
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: plunk
+      POSTGRES_USER: plunk
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U plunk"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio_data:/data
+    expose:
+      - 9000
+      - 9001
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # ============================================
+  # Plunk Application
+  # ============================================
+
+  plunk:
+    image: ghcr.io/useplunk/plunk:latest
+    restart: unless-stopped
+    environment:
+      # Service mode - runs all services in one container
+      SERVICE: all
+      NODE_ENV: production
+
+      # Database
+      DATABASE_URL: postgresql://plunk:${DB_PASSWORD}@postgres:5432/plunk
+      DIRECT_DATABASE_URL: postgresql://plunk:${DB_PASSWORD}@postgres:5432/plunk
+
+      # Redis
+      REDIS_URL: ${REDIS_URL}
+
+      # Security
+      JWT_SECRET: ${JWT_SECRET}
+
+      # Nginx configuration
+      NGINX_PORT: ${NGINX_PORT}
+
+      # Domain configuration (subdomain-based routing)
+      API_DOMAIN: ${API_DOMAIN}
+      DASHBOARD_DOMAIN: ${DASHBOARD_DOMAIN}
+      LANDING_DOMAIN: ${LANDING_DOMAIN}
+      WIKI_DOMAIN: ${WIKI_DOMAIN}
+      USE_HTTPS: ${USE_HTTPS}
+
+      # AWS SES (for sending emails) - REQUIRED
+      AWS_SES_REGION: ${AWS_SES_REGION}
+      AWS_SES_ACCESS_KEY_ID: ${AWS_SES_ACCESS_KEY_ID}
+      AWS_SES_SECRET_ACCESS_KEY: ${AWS_SES_SECRET_ACCESS_KEY}
+      SES_CONFIGURATION_SET: ${SES_CONFIGURATION_SET}
+      SES_CONFIGURATION_SET_NO_TRACKING: ${SES_CONFIGURATION_SET_NO_TRACKING}
+
+      # Optional: OAuth
+      GITHUB_OAUTH_CLIENT: ${GITHUB_OAUTH_CLIENT}
+      GITHUB_OAUTH_SECRET: ${GITHUB_OAUTH_SECRET}
+      GOOGLE_OAUTH_CLIENT: ${GOOGLE_OAUTH_CLIENT}
+      GOOGLE_OAUTH_SECRET: ${GOOGLE_OAUTH_SECRET}
+
+      # Optional: Stripe
+      STRIPE_SK: ${STRIPE_SK}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      STRIPE_PRICE_ONBOARDING: ${STRIPE_PRICE_ONBOARDING}
+      STRIPE_PRICE_EMAIL_USAGE: ${STRIPE_PRICE_EMAIL_USAGE}
+      STRIPE_METER_EVENT_NAME: ${STRIPE_METER_EVENT_NAME}
+
+      # S3-compatible storage (Minio)
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
+      S3_ACCESS_KEY_SECRET: ${S3_ACCESS_KEY_SECRET}
+      S3_BUCKET: ${S3_BUCKET}
+      S3_PUBLIC_URL: ${S3_PUBLIC_URL}
+      S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE}
+
+      # SMTP Server (for sending emails via SMTP)
+      SMTP_DOMAIN: ${SMTP_DOMAIN}
+      PORT_SECURE: ${PORT_SECURE}
+      PORT_SUBMISSION: ${PORT_SUBMISSION}
+
+      # Internal
+      PLUNK_API_KEY: ${PLUNK_API_KEY}
+      PLUNK_FROM_ADDRESS: ${PLUNK_FROM_ADDRESS}
+
+    volumes:
+      # Mount Traefik certificates for SSL
+      - /etc/dokploy/traefik/dynamic/acme.json:/certs/acme.json:ro
+
+    expose:
+      - 80
+      - 465
+      - 587
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  minio_data:
+    driver: local
+  plunk_data:
+    driver: local

@@ -1,0 +1,31 @@
+[variables]
+main_domain = "${domain}"
+monitor_name = "Example website"
+monitor_url = "https://example.org/"
+
+[config]
+[[config.domains]]
+serviceName = "gatus"
+port = 8080
+host = "${main_domain}"
+
+[[config.mounts]]
+filePath = "config.yaml"
+content = """
+storage:
+  type: sqlite
+  path: /data/data.db
+
+ui:
+  title: Gatus
+  header: Gatus
+
+endpoints:
+  - name: ${monitor_name}
+    group: external
+    url: "${monitor_url}"
+    interval: 5m
+    conditions:
+      - "[STATUS] == 200"
+      - "[CERTIFICATE_EXPIRATION] > 48h"
+"""

@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "homepage"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+HOMEPAGE_ALLOWED_HOSTS = "${main_domain}"
+PUID = "1000"
+PGID = "1000"

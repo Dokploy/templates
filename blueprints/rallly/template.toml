@@ -1,0 +1,40 @@
+[variables]
+main_domain = "${domain}"
+support_email = "${email}"
+noreply_email = "${email}"
+initial_admin_email = "${email}"
+postgres_password = "${password:32}"
+secret_password = "${password:32}"
+s3_access_key_id = "rallly"
+s3_secret_access_key = "${password:32}"
+smtp_host = "smtp.example.com"
+smtp_port = "587"
+smtp_user = "change-me"
+smtp_password = "${password:32}"
+smtp_secure = "false"
+
+[config]
+env = [
+  "NEXT_PUBLIC_BASE_URL=https://${main_domain}",
+  "DATABASE_URL=postgres://postgres:${postgres_password}@db:5432/rallly",
+  "SECRET_PASSWORD=${secret_password}",
+  "SUPPORT_EMAIL=${support_email}",
+  "NOREPLY_EMAIL=${noreply_email}",
+  "SMTP_HOST=${smtp_host}",
+  "SMTP_PORT=${smtp_port}",
+  "SMTP_USER=${smtp_user}",
+  "SMTP_PWD=${smtp_password}",
+  "SMTP_SECURE=${smtp_secure}",
+  "S3_ENDPOINT=http://minio:9000",
+  "S3_BUCKET_NAME=rallly",
+  "S3_REGION=us-east-1",
+  "S3_ACCESS_KEY_ID=${s3_access_key_id}",
+  "S3_SECRET_ACCESS_KEY=${s3_secret_access_key}",
+  "INITIAL_ADMIN_EMAIL=${initial_admin_email}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+]
+
+[[config.domains]]
+serviceName = "rallly"
+port = 3000
+host = "${main_domain}"

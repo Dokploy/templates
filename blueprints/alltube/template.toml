@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+title = "My AllTube Site"
+convert = "true"
+stream = "true"
+remux = "true"
+
+[config]
+[[config.domains]]
+serviceName = "alltube"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+TITLE = "${title}"
+CONVERT = "${convert}"
+STREAM = "${stream}"
+REMUX = "${remux}" 

@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "archivebox"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+ALLOWED_HOSTS = "*"
+PUBLIC_INDEX = "True"
+PUBLIC_SNAPSHOTS = "True"

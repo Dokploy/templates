@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "windows"
+port = 8_006
+host = "${main_domain}"
+
+[config.env]
+VERSION = "win11"
+DISK_SIZE = "64G"
+RAM_SIZE = "4G"
+CPU_CORES = "2"
+USERNAME = "Dokploy"
+PASSWORD = ""
+LANGUAGE = "English"

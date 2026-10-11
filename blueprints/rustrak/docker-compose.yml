@@ -1,0 +1,17 @@
+services:
+  rustrak:
+    image: rustrak/rustrak-server:latest
+    restart: unless-stopped
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - RUST_LOG=info
+      - SSL_PROXY=true
+      - SESSION_SECRET_KEY=${SESSION_SECRET_KEY}
+      - CREATE_SUPERUSER=${CREATE_SUPERUSER}
+    volumes:
+      - rustrak_data:/data
+    expose:
+      - 8080
+volumes:
+  rustrak_data:

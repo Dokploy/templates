@@ -1,0 +1,20 @@
+{
+  "id": "tela",
+  "name": "tela",
+  "version": "0.7.0",
+  "description": "Self-hostable, markdown-native team wiki with live collaboration, full-text and semantic search, WebDAV sync, public spaces, Slidev decks, PDF export, and a built-in MCP server so AI agents are first-class editors.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/zcag/tela",
+    "website": "https://telawiki.com",
+    "docs": "https://telawiki.com/public/spaces/16"
+  },
+  "tags": [
+    "wiki",
+    "documentation",
+    "knowledge-base",
+    "markdown",
+    "collaboration",
+    "ai"
+  ]
+}

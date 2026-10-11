@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="28" fill="#0f172a"/>
+  <path d="M64 22 L100 42 V86 L64 106 L28 86 V42 Z" fill="none" stroke="#38bdf8" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M64 22 V64 M64 64 L100 42 M64 64 L28 42 M64 64 V106" stroke="#38bdf8" stroke-width="4" stroke-linejoin="round" fill="none" opacity="0.85"/>
+  <circle cx="64" cy="64" r="9" fill="#38bdf8"/>
+  <text x="64" y="122" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#94a3b8">S3</text>
+</svg>

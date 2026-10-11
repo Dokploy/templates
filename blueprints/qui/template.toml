@@ -1,0 +1,9 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "qui"
+port = 7476
+host = "${main_domain}"
+path = "/"

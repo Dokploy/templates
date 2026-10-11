@@ -1,0 +1,51 @@
+services:
+  synapse:
+    image: matrixdotorg/synapse:v1.156.0
+    restart: unless-stopped
+    # The stock entrypoint (/start.py) does not generate the signing key when a
+    # config file is provided, so generate any missing keys on first boot and
+    # make sure the data volume is owned by the synapse user (991) before
+    # handing over to the regular entrypoint.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        python -m synapse.app.homeserver --config-path /config/homeserver.yaml --keys-directory /data --generate-keys
+        chown -R 991:991 /data
+        exec /start.py
+    environment:
+      SYNAPSE_CONFIG_PATH: /config/homeserver.yaml
+    volumes:
+      - synapse-data:/data
+      - ../files/homeserver.yaml:/config/homeserver.yaml:ro
+      - ../files/log.config:/config/log.config:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fSs http://localhost:8008/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 90s
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: synapse
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: synapse
+      # Synapse requires a database with C collation
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U synapse -d synapse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  synapse-data:
+  postgres-data:

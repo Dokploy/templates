@@ -1,0 +1,17 @@
+{
+  "id": "speedtest-tracker",
+  "name": "Speedtest Tracker",
+  "version": "latest",
+  "description": "Speedtest Tracker runs scheduled internet speed tests and stores the results in a self-hosted dashboard.",
+  "logo": "speedtest-tracker.svg",
+  "links": {
+    "github": "https://github.com/alexjustesen/speedtest-tracker",
+    "website": "https://docs.speedtest-tracker.dev/",
+    "docs": "https://docs.speedtest-tracker.dev/"
+  },
+  "tags": [
+    "monitoring",
+    "network",
+    "speedtest"
+  ]
+}

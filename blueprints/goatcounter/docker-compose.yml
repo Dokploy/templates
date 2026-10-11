@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: goatcounter
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      POSTGRES_DB: goatcounter
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U goatcounter -d goatcounter"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  goatcounter:
+    image: arp242/goatcounter:2.7
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    expose:
+      - "8080"
+    environment:
+      GOATCOUNTER_DB: "postgresql+postgresql://goatcounter:${DB_PASSWORD:?DB_PASSWORD is required}@postgres:5432/goatcounter?sslmode=disable"
+      GOATCOUNTER_LISTEN: "0.0.0.0:8080"
+    command:
+      - serve
+      - -automigrate
+
+volumes:
+  postgres_data:

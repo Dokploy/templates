@@ -1,0 +1,36 @@
+[variables]
+main_domain = "${domain}"
+minio_domain = "${domain}"
+postgres_password = "${password:32}"
+clickhouse_password = "${password:32}"
+minio_root_password = "${password:32}"
+redis_auth = "${password:32}"
+nextauth_secret = "${password:32}"
+salt = "${password:32}"
+encryption_key = "${hash:64}"
+nextauth_url = "http://${main_domain}"
+minio_public_endpoint = "http://${minio_domain}"
+
+[config]
+[[config.domains]]
+serviceName = "langfuse-web"
+port = 3000
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "minio"
+port = 9000
+host = "${minio_domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}"
+CLICKHOUSE_PASSWORD = "${clickhouse_password}"
+MINIO_ROOT_PASSWORD = "${minio_root_password}"
+REDIS_AUTH = "${redis_auth}"
+NEXTAUTH_SECRET = "${nextauth_secret}"
+SALT = "${salt}"
+ENCRYPTION_KEY = "${encryption_key}"
+# Set to https://<main-domain> once HTTPS is enabled on the domain
+NEXTAUTH_URL = "${nextauth_url}"
+# Set to https://<minio-domain> once HTTPS is enabled on the domain
+LANGFUSE_S3_MEDIA_PUBLIC_ENDPOINT = "${minio_public_endpoint}"

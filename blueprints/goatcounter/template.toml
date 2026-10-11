@@ -1,0 +1,12 @@
+[variables]
+db_password = "${password:32}"
+goatcounter_domain = "${domain}"
+
+[config]
+env = ["DB_PASSWORD=${db_password}"]
+
+[[config.domains]]
+serviceName = "goatcounter"
+port = 8080
+host = "${goatcounter_domain}"
+https = true

@@ -1,0 +1,17 @@
+{
+  "id": "evolutiongo",
+  "name": "Evolution GO",
+  "version": "latest",
+  "description": "Evolution Go is a high-performance implementation of the WhatsApp API, written in Go. Built with Go’s standard library and modern development practices, it provides a robust and efficient solution for WhatsApp integration using the whatsmeow library.",
+  "logo": "evolutionapi.png",
+  "links": {
+    "github": "https://github.com/evolution-foundation/evolution-go",
+    "docs": "https://docs.evolutionfoundation.com.br/evolution-go",
+    "website": "https://docs.evolutionfoundation.com.br/evolution-go"
+  },
+  "tags": [
+    "api",
+    "whatsapp",
+    "messaging"
+  ]
+}

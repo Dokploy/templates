@@ -1,0 +1,19 @@
+[variables]
+ACKEE_USERNAME = "default"
+ACKEE_PASSWORD = "${password:16}"
+MONGO_INITDB_ROOT_PASSWORD = "${password:16}"
+ACKEE_MONGODB = "mongodb://mongo:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017"
+
+[config]
+[[config.domains]]
+serviceName = "ackee"
+port = 3000
+host = "${domain}"
+
+
+[config.env]
+ACKEE_USERNAME = "${ACKEE_USERNAME}"
+ACKEE_PASSWORD = "${ACKEE_PASSWORD}"
+ACKEE_MONGODB = "${ACKEE_MONGODB}"
+MONGO_INITDB_ROOT_PASSWORD = "${MONGO_INITDB_ROOT_PASSWORD}"
+

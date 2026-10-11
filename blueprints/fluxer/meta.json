@@ -1,0 +1,17 @@
+{
+  "id": "fluxer",
+  "name": "Fluxer",
+  "version": "1.0.0",
+  "description": "Fluxer is a self-hosted, scalable chat and community platform.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/fluxerapp",
+    "website": "https://fluxer.app",
+    "docs": "https://github.com/fluxerapp"
+  },
+  "tags": [
+    "chat",
+    "community",
+    "communication"
+  ]
+}

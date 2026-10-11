@@ -1,0 +1,6 @@
+services:
+  bentopdf:
+    image: ghcr.io/alam00000/bentopdf-simple:sha-72d20bb
+    restart: unless-stopped
+    expose:
+      - 8080

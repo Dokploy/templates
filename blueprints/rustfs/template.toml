@@ -1,0 +1,25 @@
+[variables]
+console_domain = "${domain}"
+api_domain = "${domain}"
+access_key = "rustfsadmin"
+secret_key = "${password:16}"
+
+[config]
+env = [
+  "RUSTFS_ACCESS_KEY=${access_key}",
+  "RUSTFS_SECRET_KEY=${secret_key}",
+  "",
+  "## SET THE API URL IN CONSOLE CONFIG BY CLICKING THE COG",
+  "## API URL: ${api_domain}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "rustfs"
+port = 9001
+host = "${console_domain}"
+
+[[config.domains]]
+serviceName = "rustfs"
+port = 9000
+host = "${api_domain}"

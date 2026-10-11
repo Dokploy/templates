@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+  "POSTGRES_USER=postgres",
+  "POSTGRES_PASSWORD=postgres",
+  "POSTGRES_DB=docuseal",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "app"
+port = 3_000
+host = "${main_domain}"

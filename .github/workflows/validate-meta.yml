@@ -1,0 +1,41 @@
+name: Validate Template Metadata
+
+on:
+  push:
+    branches: [canary]
+    paths:
+      - "blueprints/**"
+      - "build-scripts/generate-meta.js"
+      - "meta.json"
+  pull_request:
+    branches: [canary]
+    paths:
+      - "blueprints/**"
+      - "build-scripts/generate-meta.js"
+      - "meta.json"
+  workflow_dispatch:
+
+jobs:
+  validate-meta:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Reject root meta.json
+        run: |
+          if [ -f "meta.json" ]; then
+            echo "❌ The root meta.json is generated at build time and must not be committed."
+            echo "   Add your template's metadata to blueprints/<id>/meta.json instead."
+            exit 1
+          fi
+          echo "✅ No root meta.json present"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate per-template metadata
+        run: node build-scripts/generate-meta.js --check

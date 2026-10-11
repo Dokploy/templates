@@ -1,0 +1,17 @@
+{
+  "id": "joplin-server",
+  "name": "Joplin Server",
+  "version": "3.7.1",
+  "description": "Joplin Server is the self-hosted sync backend for Joplin notes, notebooks, and attachments.",
+  "logo": "joplin-server.svg",
+  "links": {
+    "github": "https://github.com/laurent22/joplin",
+    "website": "https://joplinapp.org/",
+    "docs": "https://github.com/laurent22/joplin/tree/dev/packages/server"
+  },
+  "tags": [
+    "notes",
+    "sync",
+    "productivity"
+  ]
+}

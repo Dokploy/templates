@@ -1,0 +1,11 @@
+services:
+  rss-bridge:
+    image: rssbridge/rss-bridge:latest
+    restart: unless-stopped
+    expose:
+      - 80
+    volumes:
+      - rssbridge-config:/config
+
+volumes:
+  rssbridge-config: {}

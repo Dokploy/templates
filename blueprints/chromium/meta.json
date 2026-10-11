@@ -1,0 +1,17 @@
+{
+  "id": "chromium",
+  "name": "Chromium",
+  "version": "5f5dd27e-ls102",
+  "description": "Chromium is an open-source browser project that is designed to provide a safer, faster, and more stable way for all users to experience the web in a containerized environment.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/linuxserver/docker-chromium",
+    "docs": "https://docs.linuxserver.io/images/docker-chromium",
+    "website": "https://docs.linuxserver.io/images/docker-chromium"
+  },
+  "tags": [
+    "browser",
+    "development",
+    "web"
+  ]
+}

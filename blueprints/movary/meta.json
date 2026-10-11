@@ -1,0 +1,28 @@
+{
+  "id": "movary",
+  "name": "Movary",
+  "version": "latest",
+  "description": "Movary is a self-hosted platform for tracking and managing your watched movies using TMDB.",
+  "logo": "movary.png",
+  "links": {
+    "github": "https://github.com/leepeuker/movary",
+    "website": "https://movary.org/",
+    "docs": "https://docs.movary.org/"
+  },
+  "tags": [
+    "media",
+    "movies",
+    "movie-tracker",
+    "self-hosted",
+    "plex",
+    "jellyfin",
+    "emby",
+    "kodi",
+    "trakt",
+    "letterboxd",
+    "netflix",
+    "tmdb",
+    "statistics",
+    "rating"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "falkordb",
+  "name": "FalkorDB",
+  "version": "4.20.4",
+  "description": "A high-performance graph database for knowledge graphs, GraphRAG, agent memory, fraud detection and other relationship-heavy workloads. Includes the FalkorDB Browser interface.",
+  "logo": "falkordb.svg",
+  "links": {
+    "github": "https://github.com/FalkorDB/FalkorDB",
+    "website": "https://www.falkordb.com/",
+    "docs": "https://docs.falkordb.com/"
+  },
+  "tags": [
+    "database",
+    "graph-database",
+    "knowledge-graph",
+    "graphrag",
+    "ai",
+    "redis"
+  ]
+}

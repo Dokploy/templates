@@ -1,0 +1,17 @@
+{
+  "id": "cloud9",
+  "name": "Cloud9",
+  "version": "1.29.2",
+  "description": "Cloud9 is a cloud-based integrated development environment (IDE) designed for developers to code, build, and debug applications collaboratively in real time.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/c9",
+    "website": "https://aws.amazon.com/cloud9/",
+    "docs": "https://docs.aws.amazon.com/cloud9/"
+  },
+  "tags": [
+    "ide",
+    "development",
+    "cloud"
+  ]
+}

@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "umami"
+port = 3_000
+host = "${main_domain}"
+
+[config.env]
+APP_SECRET = "${base64:64}"

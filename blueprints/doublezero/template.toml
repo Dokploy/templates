@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+secret_key_base = "${base64:64}"
+
+[config]
+env = [
+  "DOUBLEZERO_HOST=${main_domain}",
+  "DOUBLEZERO_PORT=4000",
+  "SECRET_KEY_BASE=${secret_key_base}",
+  "AWS_ACCESS_KEY_ID=your-aws-access-key",
+  "AWS_SECRET_ACCESS_KEY=your-aws-secret-key",
+  "AWS_REGION=your-aws-region",
+  "SQS_URL=your-aws-sqs-url",
+  "SYSTEM_EMAIL=",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "doublezero"
+port = 4_000
+host = "${main_domain}"

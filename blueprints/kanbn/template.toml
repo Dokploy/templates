@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+better_auth_secret = "${password:32}"
+
+[config]
+
+[[config.domains]]
+serviceName = "kanbn"
+port = 3000
+host = "${main_domain}"
+https = true
+
+[config.env]
+NEXT_PUBLIC_BASE_URL = "https://${main_domain}"
+BETTER_AUTH_SECRET = "${better_auth_secret}"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_URL = "postgresql://kan:${postgres_password}@postgres:5432/kan_db"
+NEXT_PUBLIC_ALLOW_CREDENTIALS = "true"

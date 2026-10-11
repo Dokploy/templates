@@ -1,0 +1,15 @@
+{
+  "id": "glances",
+  "name": "Glances",
+  "version": "4.3.0.8",
+  "description": "Glances is a cross-platform system monitoring tool written in Python.",
+  "logo": "glances.svg",
+  "links": {
+    "github": "https://github.com/nicolargo/glances",
+    "website": "https://nicolargo.github.io/glances/",
+    "docs": "https://glances.readthedocs.io/"
+  },
+  "tags": [
+    "monitoring"
+  ]
+}

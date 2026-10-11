@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Fider</title>
+  <desc id="desc">Fider template logo</desc>
+  <rect width="256" height="256" rx="54" fill="#0f766e"/>
+  <path d="M65 74c0-12 10-22 22-22h82c12 0 22 10 22 22v58c0 12-10 22-22 22h-39l-40 36c-6 5-15 1-15-7v-29h-8c-12 0-22-10-22-22V74z" fill="#ecfeff"/>
+  <circle cx="96" cy="103" r="10" fill="#0f766e"/>
+  <circle cx="128" cy="103" r="10" fill="#0f766e"/>
+  <circle cx="160" cy="103" r="10" fill="#0f766e"/>
+</svg>

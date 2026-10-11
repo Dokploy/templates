@@ -1,0 +1,14 @@
+[variables]
+admin_password = "${password:32}"
+user_password = "${password:32}"
+jwt_secret = "${password:64}"
+
+[config]
+[[config.domains]]
+serviceName = "libredb-studio"
+port = 3000
+
+[config.env]
+ADMIN_PASSWORD = "${admin_password}"
+USER_PASSWORD = "${user_password}"
+JWT_SECRET = "${jwt_secret}"

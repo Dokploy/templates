@@ -1,0 +1,19 @@
+{
+  "id": "peerdb",
+  "name": "PeerDB",
+  "version": "v0.35.5",
+  "description": "Data integration platform that synchronizes and federates data across databases with a unified API.",
+  "logo": "peerdb.jpeg",
+  "links": {
+    "github": "https://github.com/peerdb-io/peerdb",
+    "website": "https://peerdb.io",
+    "docs": "https://docs.peerdb.io"
+  },
+  "tags": [
+    "database",
+    "integration",
+    "sync",
+    "sql",
+    "workflow"
+  ]
+}

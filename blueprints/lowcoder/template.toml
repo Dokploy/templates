@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+encryption_password = "${password:32}"
+encryption_salt = "${password:32}"
+api_secret = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "lowcoder-api-service"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+ENABLE_USER_SIGN_UP = false
+ENCRYPTION_PASSWORD = "${encryption_password}"
+ENCRYPTION_SALT = "${encryption_salt}"
+CORS_ALLOWED_DOMAINS = "*"
+LOWCODER_API_KEY_SECRET = "${api_secret}"

@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+session_key = "${base64:64}"
+form_encryption_key = "${base64:64}"
+
+[config]
+env = [
+  "APP_HOMEPAGE_URL=http://${main_domain}",
+  "SESSION_KEY=${session_key}",
+  "FORM_ENCRYPTION_KEY=${form_encryption_key}",
+  "SMTP_FROM=HeyForm <noreply@${main_domain}>",
+  "SMTP_HOST=",
+  "SMTP_PORT=587",
+  "SMTP_USER=",
+  "SMTP_SECURE=false",
+  "SMTP_IGNORE_CERT=false",
+  "SMTP_PASSWORD=",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "heyform"
+port = 8_000
+host = "${main_domain}"

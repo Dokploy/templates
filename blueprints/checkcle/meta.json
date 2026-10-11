@@ -1,0 +1,17 @@
+{
+  "id": "checkcle",
+  "name": "Checkcle",
+  "version": "latest",
+  "description": "Checkcle is a security and compliance tool by Operacle, providing insights into system configuration and runtime checks.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/Operacle/checkcle",
+    "website": "https://operacle.com/",
+    "docs": "https://github.com/Operacle/checkcle#readme"
+  },
+  "tags": [
+    "security",
+    "compliance",
+    "monitoring"
+  ]
+}

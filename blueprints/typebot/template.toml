@@ -1,0 +1,29 @@
+[variables]
+builder_domain = "${domain}"
+viewer_domain = "${domain}"
+encryption_secret = "${base64:24}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "typebot-builder"
+port = 3_000
+host = "${builder_domain}"
+
+[[config.domains]]
+serviceName = "typebot-viewer"
+port = 3_000
+host = "${viewer_domain}"
+
+[config.env]
+ENCRYPTION_SECRET = "${encryption_secret}"
+NEXTAUTH_URL = "http://${builder_domain}"
+NEXT_PUBLIC_VIEWER_URL = "http://${viewer_domain}"
+ADMIN_EMAIL = "typebot@example.com"
+SMTP_HOST = "'Fill'"
+SMTP_PORT = "25"
+SMTP_USERNAME = "'Fill'"
+SMTP_PASSWORD = "'Fill'"
+NEXT_PUBLIC_SMTP_FROM = "typebot@example.com"
+DEFAULT_WORKSPACE_PLAN = "UNLIMITED"

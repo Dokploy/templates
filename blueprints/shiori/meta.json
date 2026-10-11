@@ -1,0 +1,18 @@
+{
+  "id": "shiori",
+  "name": "Shiori",
+  "version": "v1.8.0-2-g585ea34",
+  "description": "Shiori is a simple self-hosted bookmark manager with offline archive support and a web interface.",
+  "logo": "shiori.svg",
+  "links": {
+    "github": "https://github.com/go-shiori/shiori",
+    "website": "https://go-shiori.github.io/shiori/",
+    "docs": "https://go-shiori.github.io/shiori/"
+  },
+  "tags": [
+    "bookmarks",
+    "read-it-later",
+    "archiving",
+    "self-hosted"
+  ]
+}

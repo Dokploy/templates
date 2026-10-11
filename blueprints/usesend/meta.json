@@ -1,0 +1,18 @@
+{
+  "id": "usesend",
+  "name": "useSend",
+  "version": "latest",
+  "description": "Open source alternative to Resend, Sendgrid, Postmark etc.",
+  "logo": "usesend.png",
+  "links": {
+    "github": "https://github.com/usesend/usesend",
+    "website": "https://usesend.com/",
+    "docs": "https://docs.usesend.com/introduction"
+  },
+  "tags": [
+    "e-mail",
+    "marketing",
+    "business",
+    "self-hosted"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "openstatus",
+  "name": "OpenStatus",
+  "version": "e1a9825",
+  "description": "OpenStatus is an open-source synthetic monitoring platform with beautiful status pages, uptime and API monitoring as code, and alerting.",
+  "logo": "openstatus.png",
+  "links": {
+    "github": "https://github.com/openstatusHQ/openstatus",
+    "website": "https://www.openstatus.dev",
+    "docs": "https://www.openstatus.dev/docs"
+  },
+  "tags": [
+    "monitoring",
+    "status-page",
+    "uptime"
+  ]
+}

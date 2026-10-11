@@ -1,0 +1,131 @@
+[variables]
+main_domain = "${domain}"
+links_domain = "${domain}"
+postgres_password = "${password:32}"
+redis_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "proxy"
+port = 80
+host = "${main_domain}"
+https = true
+
+[[config.domains]]
+serviceName = "links"
+port = 3005
+host = "${links_domain}"
+https = true
+
+[config.env]
+RELOOP_VERSION = "latest"
+BASE_URL = "https://${main_domain}"
+HOST_DOMAIN = "${main_domain}"
+SMTP_HOSTNAME = "${main_domain}"
+TRACKING_DOMAIN = "${links_domain}"
+TRACKING_BASE_URL = "https://${links_domain}"
+POSTGRES_USER = "reloop"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "reloop"
+REDIS_PASSWORD = "${redis_password}"
+BETTER_AUTH_SECRET = "${password:64}"
+RELOOP_INTERNAL_SECRET = "${password:64}"
+TRACKING_SECRET = "${password:64}"
+PREFERENCES_SECRET = "${password:64}"
+WEBHOOK_ENCRYPTION_KEY = "${hash:64}"
+ADMIN_SETUP_KEY = "${password:64}"
+SETUP_MODE = "true"
+WORKBENCH_USER = "${username}"
+WORKBENCH_PASS = "${password:32}"
+APP_NAME = "Reloop"
+DISABLE_SIGNUP = "true"
+DISABLE_ORG_CREATION = "false"
+RELOOP_SENDER_DOMAIN = ""
+RELOOP_API_KEY = ""
+SMTP_HOST = ""
+SMTP_PORT = "587"
+SMTP_USER = ""
+SMTP_PASSWORD = ""
+SMTP_SECURE = "false"
+S3_ENDPOINT = ""
+S3_ACCESS_KEY = ""
+S3_SECRET_KEY = ""
+S3_BUCKET = "reloop-uploads"
+S3_REGION = "us-east-1"
+
+[[config.mounts]]
+filePath = "Caddyfile"
+content = '''
+{
+	auto_https off
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+http:// {
+	encode zstd gzip
+
+	handle /dashboard* {
+		reverse_proxy dashboard:3000
+	}
+	handle /docs* {
+		redir https://reloop.sh{uri} 302
+	}
+	handle /preferences* {
+		reverse_proxy links:3005
+	}
+	handle /redirect* {
+		reverse_proxy links:3005
+	}
+
+	handle /api/auth* {
+		reverse_proxy auth:8000
+	}
+	handle /api/domain* {
+		reverse_proxy domain:8011
+	}
+	handle /api/api-key* {
+		reverse_proxy api-key:8012
+	}
+	handle /api/webhook* {
+		reverse_proxy webhook:8013
+	}
+	handle /api/contacts* {
+		reverse_proxy contacts:8014
+	}
+	handle /api/mail* {
+		reverse_proxy mail:8015
+	}
+	handle /api/logs* {
+		reverse_proxy logs:8016
+	}
+	handle /api/workflow* {
+		reverse_proxy workflow:8017
+	}
+	handle /api/upload* {
+		reverse_proxy upload:8018
+	}
+	handle /api/template* {
+		reverse_proxy template:8019
+	}
+	handle /api/campaigns* {
+		reverse_proxy campaigns:8027
+	}
+	handle /api/inbox* {
+		reverse_proxy inbox:8028
+	}
+	handle /api/email* {
+		reverse_proxy email:8022
+	}
+
+	@removed path /api/credits* /api/tool* /api/admin*
+	handle @removed {
+		respond 404
+	}
+
+	handle {
+		redir /* /dashboard 302
+	}
+}
+'''

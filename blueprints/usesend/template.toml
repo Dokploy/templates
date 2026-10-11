@@ -1,0 +1,27 @@
+[variables]
+main_domain = "${domain}"
+secret_base = "${base64:64}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "usesend"
+port = 3_000
+host = "${main_domain}"
+
+[config.env]
+REDIS_URL = "redis://usesend-redis-prod:6379"
+POSTGRES_USER = "postgres"
+POSTGRES_PASSWORD = "postgres"
+POSTGRES_DB = "usesend"
+DATABASE_URL = "postgresql://postgres:postgres@usesend-db-prod:5432/usesend"
+NEXTAUTH_URL = "http://localhost:3000"
+NEXTAUTH_SECRET = "${secret_base}"
+GITHUB_ID = "'Fill'"
+GITHUB_SECRET = "'Fill'"
+AWS_DEFAULT_REGION = "us-east-1"
+AWS_SECRET_KEY = "'Fill'"
+AWS_ACCESS_KEY = "'Fill'"
+DOCKER_OUTPUT = "1"
+API_RATE_LIMIT = "1"

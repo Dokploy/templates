@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "openseo"
+port = 3001
+host = "${main_domain}"
+
+[config.env]
+OPENSEO_HOST = "${main_domain}"
+DATAFORSEO_API_KEY = ""
+OPENROUTER_API_KEY = ""
+OPENROUTER_MODEL = "openai/gpt-4o-mini"
+OPENSEO_TELEMETRY_DISABLED = ""

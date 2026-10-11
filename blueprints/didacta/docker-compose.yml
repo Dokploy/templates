@@ -1,0 +1,77 @@
+# ============================================================================
+# Didacta Community — blueprint de Dokploy
+# ----------------------------------------------------------------------------
+# Formato de `blueprints/<id>/docker-compose.yml` del repositorio
+# Dokploy/templates. Reglas de esa casa que este fichero cumple:
+#   - Sin `ports:` (el proxy de Dokploy entra por la red interna).
+#   - Sin `container_name:` ni `networks:` (los gestiona Dokploy).
+#   - `restart: unless-stopped` en todos los servicios.
+#   - El nombre del servicio principal coincide con el id del blueprint.
+#
+# Las variables las inyecta Dokploy en un `.env` junto a este fichero a partir
+# de `[config.env]` de template.toml — de ahí el `env_file` de cada servicio.
+#
+# UN SOLO DOMINIO: el contenedor corre API (:4000) y web (:3000) juntos, y
+# Next.js reescribe `/api/*`, `/healthz` y `/readyz` al 4000 interno. El
+# dominio de template.toml apunta al 3000 y no hace falta nada más.
+# ============================================================================
+
+services:
+  didacta:
+    image: ghcr.io/va360labs/didacta-community:0.0.1-alpha.107
+    restart: unless-stopped
+    env_file:
+      - .env
+    expose:
+      - 3000
+    volumes:
+      # Uploads de cursos, certificados y evidencias + la clave de cifrado
+      # autogenerada. Es el volumen que hay que respaldar.
+      - didacta-data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://127.0.0.1:4000/healthz']
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      # El primer arranque aplica migraciones, RLS y grants antes de servir.
+      start_period: 120s
+
+  postgres:
+    # pgvector NO es opcional: la migración baseline hace
+    # `CREATE EXTENSION "vector"` y falla contra un postgres:16 estándar.
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - didacta-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - didacta-redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  didacta-data:
+    driver: local
+  didacta-postgres-data:
+    driver: local
+  didacta-redis-data:
+    driver: local

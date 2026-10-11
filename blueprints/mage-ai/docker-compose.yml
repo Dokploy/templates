@@ -1,0 +1,26 @@
+# https://docs.mage.ai/getting-started/setup#docker-compose
+#
+# The default credentials are:
+#     USERNAME: admin@admin.com
+#     PASSWORD: admin
+
+services:
+  mage-ai:
+    image: mageai/mageai:0.9.78
+    command: mage start ${PROJECT_NAME}
+    environment:
+      USER_CODE_PATH: /home/src/${PROJECT_NAME}
+      ENV: ${ENV}
+    expose:
+      - 6789
+    volumes:
+      - mageai_data:/home/src/
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-s", "-f", "-o", "/dev/null", "http://localhost:6789"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  mageai_data:

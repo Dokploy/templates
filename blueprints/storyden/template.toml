@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "storyden"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+STORYDEN_FQDN = "http://${main_domain}"

@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+better_auth_secret = "${password:64}"
+
+[config]
+env = [
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "DATABASE_URL=postgres://paperclip:${postgres_password}@postgres:5432/paperclip",
+  "BETTER_AUTH_SECRET=${better_auth_secret}",
+  "PAPERCLIP_DEPLOYMENT_MODE=authenticated",
+  "PAPERCLIP_DEPLOYMENT_EXPOSURE=private",
+  "PAPERCLIP_PUBLIC_URL=https://${main_domain}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "paperclip"
+port = 3100
+host = "${main_domain}"

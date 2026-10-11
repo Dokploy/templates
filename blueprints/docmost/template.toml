@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password}"
+app_secret = "${password}"
+
+[config]
+env = [
+  "POSTGRES_DB=docmost",
+  "POSTGRES_USER=docmost",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "APP_URL=http://${main_domain}:3000",
+  "APP_SECRET=${app_secret}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "docmost"
+port = 3_000
+host = "${main_domain}"

@@ -1,0 +1,8 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "changedetection"
+port = 5000
+host = "${main_domain}" 

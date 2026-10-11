@@ -1,0 +1,19 @@
+{
+  "id": "litellm",
+  "name": "LiteLLM",
+  "version": "main-stable",
+  "description": "LiteLLM is a lightweight OpenAI API-compatible proxy for managing multiple LLM providers with a single endpoint.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/BerriAI/litellm",
+    "website": "https://docs.litellm.ai",
+    "docs": "https://docs.litellm.ai/docs/proxy/quick_start"
+  },
+  "tags": [
+    "ai",
+    "proxy",
+    "llm",
+    "openai-compatible",
+    "monitoring"
+  ]
+}

@@ -1,0 +1,22 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:32}"
+mysql_password = "${password:32}"
+mysql_root_password = "${password:32}"
+app_secret = "${password:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "app"
+port = 8_001
+host = "${main_domain}"
+
+[config.env]
+KI_HOST = "${main_domain}"
+KI_ADMINMAIL = "admin@kimai.local"
+KI_ADMINPASS = "${admin_password}"
+KI_MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
+KI_MYSQL_PASSWORD = "${mysql_password}"
+KI_APP_SECRET = "${app_secret}"

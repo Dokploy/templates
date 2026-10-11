@@ -1,0 +1,43 @@
+[variables]
+main_domain = "${domain}"
+db_root_password = "${password:32}"
+db_password = "${password:32}"
+db_user = "pastefy"
+db_name = "pastefy"
+http_server_cors = "*"
+server_name = "https://${main_domain}"
+oauth2_interaapps_client_id = "NONE"
+oauth2_interaapps_client_secret = ""
+oauth2_github_client_id = "NONE"
+oauth2_github_client_secret = ""
+oauth2_google_client_id = "NONE"
+oauth2_google_client_secret = ""
+oauth2_discord_client_id = "NONE"
+oauth2_discord_client_secret = ""
+oauth2_twitch_client_id = "NONE"
+oauth2_twitch_client_secret = ""
+
+[[config.domains]]
+serviceName = "pastefy"
+port = 80
+host = "${main_domain}"
+
+[config]
+env = [
+  "DB_ROOT_PASSWORD=${db_root_password}",
+  "DB_NAME=${db_name}",
+  "DB_USER=${db_user}",
+  "DB_PASSWORD=${db_password}",
+  "HTTP_SERVER_CORS=${http_server_cors}",
+  "SERVER_NAME=${server_name}",
+  "OAUTH2_INTERAAPPS_CLIENT_ID=${oauth2_interaapps_client_id} # Interaapps API Key (optional)",
+  "OAUTH2_INTERAAPPS_CLIENT_SECRET=${oauth2_interaapps_client_secret} # Interaapps API Secret (optional)",
+  "OAUTH2_GITHUB_CLIENT_ID=${oauth2_github_client_id} # GitHub API Key (optional)",
+  "OAUTH2_GITHUB_CLIENT_SECRET=${oauth2_github_client_secret} # GitHub API Secret (optional)",
+  "OAUTH2_GOOGLE_CLIENT_ID=${oauth2_google_client_id} # Google API Key (optional)",
+  "OAUTH2_GOOGLE_CLIENT_SECRET=${oauth2_google_client_secret} # Google API Secret (optional)",
+  "OAUTH2_DISCORD_CLIENT_ID=${oauth2_discord_client_id} # Discord API Key (optional)",
+  "OAUTH2_DISCORD_CLIENT_SECRET=${oauth2_discord_client_secret} # Discord API Secret (optional)",
+  "OAUTH2_TWITCH_CLIENT_ID=${oauth2_twitch_client_id} # Twitch API Key (optional)",
+  "OAUTH2_TWITCH_CLIENT_SECRET=${oauth2_twitch_client_secret} # Twitch API Secret (optional)"
+]

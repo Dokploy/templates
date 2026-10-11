@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = ["BASEROW_HOST=${main_domain}"]
+mounts = []
+
+[[config.domains]]
+serviceName = "baserow"
+port = 80
+host = "${main_domain}"

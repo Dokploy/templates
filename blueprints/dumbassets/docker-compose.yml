@@ -1,0 +1,11 @@
+services:
+  dumbassets:
+    image: dumbwareio/dumbassets:latest
+    restart: unless-stopped
+    expose:
+      - 3000
+    volumes:
+      - dumbassets-data:/app/data
+
+volumes:
+  dumbassets-data: {}

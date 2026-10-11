@@ -1,0 +1,58 @@
+name: Validate Blueprints Structure and Meta
+
+on:
+  pull_request:
+    branches:
+      - canary
+  push:
+    branches:
+      - canary
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate blueprint folders and files
+        run: |
+          echo "🔍 Validating blueprints folder structure..."
+
+          ERROR=0
+
+          # Loop through each blueprint folder
+          for dir in blueprints/*; do
+            if [ -d "$dir" ]; then
+              TEMPLATE_NAME=$(basename "$dir")
+
+              COMPOSE_FILE="$dir/docker-compose.yml"
+              TEMPLATE_FILE="$dir/template.toml"
+
+              if [ ! -f "$COMPOSE_FILE" ]; then
+                echo "❌ Missing docker-compose.yml in $TEMPLATE_NAME"
+                ERROR=1
+              fi
+
+              if [ ! -f "$TEMPLATE_FILE" ]; then
+                echo "❌ Missing template.toml in $TEMPLATE_NAME"
+                ERROR=1
+              fi
+            fi
+          done
+
+          if [ $ERROR -eq 1 ]; then
+            echo "❌ Blueprint folder validation failed."
+            exit 1
+          else
+            echo "✅ Blueprint folders validated successfully."
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate per-template metadata (blueprints/<id>/meta.json)
+        run: node build-scripts/generate-meta.js --check

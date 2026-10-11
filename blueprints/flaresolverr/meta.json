@@ -1,0 +1,18 @@
+{
+  "id": "flaresolverr",
+  "name": "FlareSolverr",
+  "version": "latest",
+  "description": "FlareSolverr is a proxy server to bypass Cloudflare and DDoS-GUARD protection.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/FlareSolverr/FlareSolverr",
+    "website": "https://github.com/FlareSolverr/FlareSolverr",
+    "docs": "https://github.com/FlareSolverr/FlareSolverr"
+  },
+  "tags": [
+    "proxy",
+    "cloudflare",
+    "bypass",
+    "ddos-guard"
+  ]
+}

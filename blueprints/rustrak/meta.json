@@ -1,0 +1,19 @@
+{
+  "id": "rustrak",
+  "name": "Rustrak",
+  "version": "latest",
+  "description": "Self-hosted error tracking compatible with Sentry SDKs. Server only, written in Rust: 32 MB of memory at idle, with SQLite storage. No external database required.",
+  "logo": "rustrak.svg",
+  "links": {
+    "github": "https://github.com/rustrak/rustrak",
+    "website": "https://rustrak.github.io/rustrak/",
+    "docs": "https://rustrak.github.io/rustrak/getting-started/overview"
+  },
+  "tags": [
+    "monitoring",
+    "error-tracking",
+    "sentry",
+    "rust",
+    "observability"
+  ]
+}

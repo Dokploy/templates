@@ -1,0 +1,28 @@
+# IMPORTANT: Please update the admin credentials in your .env file
+# Access PocketBase Admin UI at: https://your-domain.com/_/ (replace with your configured domain)
+# Note: Admin UI may take up to 1 minute to load on first startup
+
+services:
+  pocketbase:
+    image: adrianmusante/pocketbase:latest
+    restart: always
+    expose:
+      - 8090
+    volumes:
+      - pocketbase-data:/pocketbase
+    environment:
+      - POCKETBASE_ADMIN_EMAIL=${ADMIN_EMAIL}
+      - POCKETBASE_ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - POCKETBASE_ADMIN_UPSERT=true
+      - POCKETBASE_PORT_NUMBER=8090
+      # Optional: Encryption key for securing app settings (OAuth2 secrets, SMTP passwords, etc.)
+      # Uncomment and set a secure key in your .env file for production use
+      # - POCKETBASE_ENCRYPTION_KEY=${ENCRYPTION_KEY}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8090/_/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  pocketbase-data: {}

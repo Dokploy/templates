@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+wa_user = "admin"
+wa_password = "${password:32}"
+
+[config]
+env = [
+  "WA_USER=${wa_user}",
+  "WA_PASSWORD=${wa_password}"
+]
+
+[[config.domains]]
+serviceName = "whatsapp"
+port = 3080
+host = "${main_domain}"

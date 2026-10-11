@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+retention_period = "90d"
+
+[config]
+[[config.domains]]
+serviceName = "victoriametrics"
+port = 8428
+host = "${main_domain}"
+
+[config.env]
+RETENTION_PERIOD = "${retention_period}"

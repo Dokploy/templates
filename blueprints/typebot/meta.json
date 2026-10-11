@@ -1,0 +1,17 @@
+{
+  "id": "typebot",
+  "name": "Typebot",
+  "version": "2.27.0",
+  "description": "Typebot is an open-source chatbot builder platform.",
+  "logo": "typebot.svg",
+  "links": {
+    "github": "https://github.com/baptisteArno/typebot.io",
+    "website": "https://typebot.io/",
+    "docs": "https://docs.typebot.io/get-started/introduction"
+  },
+  "tags": [
+    "chatbot",
+    "builder",
+    "open-source"
+  ]
+}

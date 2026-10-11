@@ -1,0 +1,23 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+any_helper = "${uuid}"
+
+[config]
+env = [
+    "DFLY_requirepass=${db_password}",
+]
+
+[[config.domains]]
+serviceName = "dragonflydb"
+port = 6379
+host = "${main_domain}"
+path = "/"
+
+[[config.mounts]]
+filePath = "/content/configuration.conf"
+content = """
+bind-address = "0.0.0.0"
+port = 6379
+log-level = "info"
+"""

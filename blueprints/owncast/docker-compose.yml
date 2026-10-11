@@ -1,0 +1,12 @@
+
+services:
+  owncast:
+    image: owncast/owncast:latest
+    restart: unless-stopped
+    volumes:
+      - owncast-data:/app/data
+    expose:
+      - 8080
+      - 1935
+volumes:
+  owncast-data: {}

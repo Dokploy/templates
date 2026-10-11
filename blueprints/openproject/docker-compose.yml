@@ -1,0 +1,131 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: openproject
+      POSTGRES_USER: openproject
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  cache:
+    image: memcached:1.6-alpine
+    restart: unless-stopped
+
+  web:
+    image: openproject/openproject:17-slim
+    restart: unless-stopped
+    command: "./docker/prod/web"
+    environment: &openproject-env
+      OPENPROJECT_HOST__NAME: ${OPENPROJECT_HOST__NAME}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      OPENPROJECT_RAILS__CACHE__STORE: "memcache"
+      OPENPROJECT_CACHE__EXPIRES__IN__SECONDS: ${OPENPROJECT_CACHE__EXPIRES__IN__SECONDS}
+      OPENPROJECT_CACHE__MEMCACHE__SERVER: "cache:11211"
+      OPENPROJECT_RAILS__RELATIVE__URL__ROOT: ""
+      DATABASE_URL: "postgres://openproject:${POSTGRES_PASSWORD}@db:5432/openproject?pool=20&encoding=unicode&reconnect=true"
+      RAILS_MIN_THREADS: ${RAILS_MIN_THREADS:-4}
+      RAILS_MAX_THREADS: ${RAILS_MAX_THREADS:-16}
+      OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__URL: ""
+      OPENPROJECT_HTTPS: "true"
+
+      # IMAP
+      IMAP_ENABLED: ${IMAP_ENABLED:-flase}
+      IMAP_HOST: ${IMAP_HOST}
+      IMAP_USERNAME: ${IMAP_USERNAME}
+      IMAP_PASSWORD: ${IMAP_PASSWORD}
+      IMAP_PORT: ${IMAP_PORT:-993}
+      IMAP_SSL: ${IMAP_SSL:-true}
+      IMAP_FOLDER: ${IMAP_FOLDER:-INBOX}
+      IMAP_SSL_VERIFICATION: "true"
+      IMAP_CHECK_INTERVAL: ${IMAP_CHECK_INTERVAL:-600}
+      IMAP_ALLOW_OVERRIDE: ${IMAP_ALLOW_OVERRIDE}
+
+      #SMTP
+      OPENPROJECT_EMAIL__DELIVERY__METHOD: "smtp"
+      OPENPROJECT_SMTP__ADDRESS: ${SMTP_HOST}
+      OPENPROJECT_SMTP__PORT: ${SMTP_PORT:-587}
+      OPENPROJECT_SMTP__DOMAIN: ${SMTP_DOMAIN}
+      OPENPROJECT_SMTP__AUTHENTICATION: ${SMTP_AUTHENTICATION:-plain}
+      OPENPROJECT_SMTP__USER__NAME: ${SMTP_USERNAME}
+      OPENPROJECT_SMTP__PASSWORD: ${SMTP_PASSWORD}
+      OPENPROJECT_SMTP__ENABLE__STARTTLS__AUTO: ${SMTP_STARTTLS:-true}
+      OPENPROJECT_SMTP__OPENSSL__VERIFY__MODE: ${SMTP_VERIFY_MODE:-peer}
+
+      # S3 Attachments
+      OPENPROJECT_ATTACHMENTS__STORAGE: ${ATTACHMENTS_STORAGE:-file} # for S3, use 'fog' instead of 'file'
+      OPENPROJECT_FOG_DIRECTORY: ${S3_BUCKET}
+      OPENPROJECT_FOG_CREDENTIALS_PROVIDER: "AWS"
+      OPENPROJECT_FOG_CREDENTIALS_AWS__ACCESS__KEY__ID: ${S3_ACCESS_KEY}
+      OPENPROJECT_FOG_CREDENTIALS_AWS__SECRET__ACCESS__KEY: ${S3_SECRET_KEY}
+      OPENPROJECT_FOG_CREDENTIALS_REGION: ${S3_REGION}
+      OPENPROJECT_FOG_CREDENTIALS_ENDPOINT: ${S3_ENDPOINT}
+      OPENPROJECT_FOG_CREDENTIALS_PATH__STYLE: "true"
+      OPENPROJECT_FOG__DOWNLOAD__URL__EXPIRES__IN: "300"
+      OPENPROJECT_DIRECT__UPLOADS: "true"
+
+    volumes:
+      - opdata:/var/openproject/assets
+
+    depends_on:
+      - db
+      - cache
+      - seeder
+    expose:
+      - "8080"
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health_checks/default"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  seeder:
+    image: openproject/openproject:17-slim
+    restart: on-failure
+    command: "./docker/prod/seeder"
+    environment:
+      <<: *openproject-env
+
+    volumes:
+      - opdata:/var/openproject/assets
+
+    depends_on:
+      - db
+      - cache
+
+  worker:
+    image: openproject/openproject:17-slim
+    restart: unless-stopped
+    command: "./docker/prod/worker"
+    environment:
+      <<: *openproject-env
+
+    volumes:
+      - opdata:/var/openproject/assets
+
+    depends_on:
+      - db
+      - cache
+      - seeder
+
+  cron:
+    image: openproject/openproject:17-slim
+    restart: unless-stopped
+    command: "./docker/prod/cron"
+    environment:
+      <<: *openproject-env
+
+    volumes:
+      - opdata:/var/openproject/assets
+
+    depends_on:
+      - db
+      - cache
+      - seeder
+
+volumes:
+  pgdata:
+  opdata:

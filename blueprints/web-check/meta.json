@@ -1,0 +1,18 @@
+{
+  "id": "web-check",
+  "name": "Web-Check",
+  "version": "latest",
+  "description": "Web-Check is a powerful all-in-one website analyzer that provides detailed insights into any website's security, performance, and functionality.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/lissy93/web-check",
+    "website": "https://github.com/lissy93/web-check",
+    "docs": "https://github.com/lissy93/web-check"
+  },
+  "tags": [
+    "website-analyzer",
+    "security",
+    "performance",
+    "seo"
+  ]
+}

@@ -1,0 +1,197 @@
+services:
+  libsql:
+    image: ghcr.io/tursodatabase/libsql-server:v0.24.33
+    restart: unless-stopped
+    expose:
+      - 8080
+    volumes:
+      - libsql-data:/var/lib/sqld
+    environment:
+      - SQLD_NODE=primary
+      # Increase limits to handle multiple services without connection pooling
+      - SQLD_MAX_CONCURRENT_CONNECTIONS=512
+      - SQLD_MAX_CONCURRENT_REQUESTS=1024
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'perl -e ''use IO::Socket::INET; exit(IO::Socket::INET->new(PeerAddr=>"127.0.0.1:8080",Timeout=>1) ? 0 : 1);''',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # One-shot migration runner (idempotent — drizzle skips applied migrations).
+  # No published image exists for it upstream, so it is built from the pinned
+  # commit the ghcr.io app images were built from.
+  db-migrate:
+    build:
+      context: https://github.com/openstatusHQ/openstatus.git#e1a98255e39c9cc9f6d4853dbce30c3f6c42514a
+      dockerfile: packages/db/Dockerfile
+    restart: on-failure:3
+    environment:
+      - DATABASE_URL=http://libsql:8080
+      - DATABASE_AUTH_TOKEN=
+    depends_on:
+      libsql:
+        condition: service_healthy
+
+  workflows:
+    image: ghcr.io/openstatushq/openstatus-workflows:e1a9825
+    restart: unless-stopped
+    expose:
+      - 3000
+    volumes:
+      - workflows-data:/app/data
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=http://libsql:8080
+      - DATABASE_AUTH_TOKEN=
+      - CRON_SECRET=${CRON_SECRET}
+      - RESEND_API_KEY=${RESEND_API_KEY:-re_selfhost_placeholder}
+      - SITE_URL=https://${DASHBOARD_HOST}
+      - TINYBIRD_NOOP=true
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+      libsql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/ping"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  server:
+    image: ghcr.io/openstatushq/openstatus-server:e1a9825
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=http://libsql:8080
+      - DATABASE_AUTH_TOKEN=
+      - CRON_SECRET=${CRON_SECRET}
+      - RESEND_API_KEY=${RESEND_API_KEY:-re_selfhost_placeholder}
+      - SUPER_ADMIN_TOKEN=${SUPER_ADMIN_TOKEN}
+      - SELF_HOST=true
+      - FLY_REGION=self-hosted
+      - TINYBIRD_NOOP=true
+      - UPSTASH_REDIS_REST_URL=http://localhost:6379
+      - UPSTASH_REDIS_REST_TOKEN=placeholder
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+      workflows:
+        condition: service_healthy
+      libsql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/ping"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  dashboard:
+    image: ghcr.io/openstatushq/openstatus-dashboard:e1a9825
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - AUTH_TRUST_HOST=true
+      - DATABASE_URL=http://libsql:8080
+      - DATABASE_AUTH_TOKEN=
+      - AUTH_SECRET=${AUTH_SECRET}
+      - SELF_HOST=true
+      - NEXT_PUBLIC_URL=https://${DASHBOARD_HOST}
+      - CRON_SECRET=${CRON_SECRET}
+      - RESEND_API_KEY=${RESEND_API_KEY:-re_selfhost_placeholder}
+      - TINYBIRD_NOOP=true
+      - UPSTASH_REDIS_REST_URL=http://localhost:6379
+      - UPSTASH_REDIS_REST_TOKEN=placeholder
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+      workflows:
+        condition: service_healthy
+      libsql:
+        condition: service_healthy
+      server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+
+  status-page:
+    image: ghcr.io/openstatushq/openstatus-status-page:e1a9825
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - AUTH_TRUST_HOST=true
+      - DATABASE_URL=http://libsql:8080
+      - DATABASE_AUTH_TOKEN=
+      - AUTH_SECRET=${AUTH_SECRET}
+      - SELF_HOST=true
+      - NEXT_PUBLIC_URL=https://${DASHBOARD_HOST}
+      - CRON_SECRET=${CRON_SECRET}
+      - RESEND_API_KEY=${RESEND_API_KEY:-re_selfhost_placeholder}
+      - TINYBIRD_NOOP=true
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+      workflows:
+        condition: service_healthy
+      libsql:
+        condition: service_healthy
+      server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+
+  # Ingest server for private-location probes (the probe itself,
+  # ghcr.io/openstatushq/private-location, runs wherever you monitor from).
+  private-location:
+    image: ghcr.io/openstatushq/openstatus-private-location:e1a9825
+    restart: unless-stopped
+    expose:
+      - 8080
+    environment:
+      - PORT=8080
+      - GIN_MODE=release
+      - DB_URL=http://libsql:8080
+      - WORKFLOWS_URL=http://workflows:3000
+      - CRON_SECRET=${CRON_SECRET}
+      - TINYBIRD_URL=${TINYBIRD_URL}
+      - TINYBIRD_TOKEN=${TINYBIRD_TOKEN}
+    depends_on:
+      server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  libsql-data:
+  workflows-data:

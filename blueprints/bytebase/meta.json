@@ -1,0 +1,16 @@
+{
+  "id": "bytebase",
+  "name": "Bytebase",
+  "version": "latest",
+  "description": "Bytebase is a database management tool that allows you to manage your databases with ease. It provides a simple and effective solution for managing your databases from anywhere.",
+  "logo": "image.png",
+  "links": {
+    "github": "https://github.com/bytebase/bytebase",
+    "website": "https://www.bytebase.com",
+    "docs": "https://www.bytebase.com/docs"
+  },
+  "tags": [
+    "database",
+    "self-hosted"
+  ]
+}

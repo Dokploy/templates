@@ -1,0 +1,19 @@
+{
+  "id": "databasement",
+  "name": "Databasement",
+  "version": "1.8.4",
+  "description": "Self-hosted database backup manager with a web UI. Schedule, backup, and restore MySQL, PostgreSQL, MariaDB, Microsoft SQL Server, MongoDB, SQLite, Firebird and Redis to S3, SFTP, Samba or local storage. SSH tunnel support.",
+  "logo": "databasement.png",
+  "links": {
+    "github": "https://github.com/David-Crty/databasement",
+    "website": "https://david-crty.github.io/databasement/",
+    "docs": "https://david-crty.github.io/databasement/self-hosting/docker"
+  },
+  "tags": [
+    "backup",
+    "database",
+    "mysql",
+    "postgres",
+    "mongodb"
+  ]
+}

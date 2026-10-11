@@ -1,0 +1,49 @@
+[variables]
+main_domain = "${domain}"
+owner_token = "${password:48}"
+owner_id = "opendots-owner"
+intelligence_api_key = ""
+intelligence_api_url = ""
+intelligence_ws_url = ""
+openai_api_key = ""
+openai_base_url = "https://api.openai.com/v1"
+openai_model = ""
+web_search_provider = "parallel"
+parallel_api_key = ""
+browser_secret = "${password:48}"
+voice_api_key = ""
+voice_model = ""
+voice_name = "marin"
+slack_channel_name = ""
+slack_team_id = ""
+slack_user_ids = ""
+slack_dot_id = ""
+
+[config]
+env = [
+  "OWNER_TOKEN=${owner_token}",
+  "OWNER_ID=${owner_id}",
+  "APP_ORIGIN=https://${main_domain}",
+  "INTELLIGENCE_API_KEY=${intelligence_api_key}",
+  "INTELLIGENCE_API_URL=${intelligence_api_url}",
+  "INTELLIGENCE_WS_URL=${intelligence_ws_url}",
+  "OPENAI_API_KEY=${openai_api_key}",
+  "OPENAI_BASE_URL=${openai_base_url}",
+  "OPENAI_MODEL=${openai_model}",
+  "WEB_SEARCH_PROVIDER=${web_search_provider}",
+  "PARALLEL_API_KEY=${parallel_api_key}",
+  "BROWSER_SECRET=${browser_secret}",
+  "VOICE_API_KEY=${voice_api_key}",
+  "VOICE_MODEL=${voice_model}",
+  "VOICE_NAME=${voice_name}",
+  "SLACK_CHANNEL_NAME=${slack_channel_name}",
+  "SLACK_TEAM_ID=${slack_team_id}",
+  "SLACK_USER_IDS=${slack_user_ids}",
+  "SLACK_DOT_ID=${slack_dot_id}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "opendots"
+port = 4310
+host = "${main_domain}"

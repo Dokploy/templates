@@ -1,0 +1,17 @@
+#Default id pass Username: admin@example.com Password: Admin123456
+
+services:
+  checkcle:
+    image: operacle/checkcle:latest
+    restart: unless-stopped
+    expose:
+      - 8090
+    volumes:
+      - checkcle-data:/mnt/pb_data
+    ulimits:
+      nofile:
+        soft: 4096
+        hard: 8192
+
+volumes:
+  checkcle-data: {}

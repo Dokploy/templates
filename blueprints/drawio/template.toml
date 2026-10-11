@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+  "DRAWIO_HOST=${main_domain}",
+  "DRAWIO_BASE_URL=https://${main_domain}",
+  "DRAWIO_SERVER_URL=https://${main_domain}/",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "drawio"
+port = 8_080
+host = "${main_domain}"

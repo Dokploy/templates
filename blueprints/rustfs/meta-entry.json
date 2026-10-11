@@ -1,0 +1,18 @@
+{
+  "id": "rustfs",
+  "name": "RustFS",
+  "version": "latest",
+  "description": "RustFS is a high-performance, S3-compatible distributed object storage system built in Rust. 2.3x faster than MinIO for small objects, with full S3 API compatibility.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/rustfs/rustfs",
+    "website": "https://rustfs.com/",
+    "docs": "https://docs.rustfs.com/"
+  },
+  "tags": [
+    "storage",
+    "s3",
+    "object-storage",
+    "rust"
+  ]
+}

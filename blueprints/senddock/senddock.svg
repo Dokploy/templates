@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#000000"/>
+  <g stroke="#ffffff" stroke-width="8" stroke-linejoin="round" stroke-linecap="round" fill="#000000">
+    <polyline points="106,236 206,176 306,236" fill="none"/>
+    <polygon points="106,236 66,216 166,156 206,176"/>
+    <polygon points="206,176 246,156 346,216 306,236"/>
+    <path d="M 206 266 Q 260 180 355 155" fill="none" stroke-dasharray="12 16"/>
+    <polygon points="106,236 106,356 206,416 206,296"/>
+    <polygon points="306,236 306,356 206,416 206,296"/>
+    <polygon points="106,236 66,256 166,316 206,296"/>
+    <polygon points="206,296 246,316 346,256 306,236"/>
+    <polygon points="336,136 371,146 446,96"/>
+    <polygon points="406,126 371,146 446,96"/>
+    <polygon points="371,146 381,176 446,96"/>
+  </g>
+</svg>

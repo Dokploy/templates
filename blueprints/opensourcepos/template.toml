@@ -1,0 +1,51 @@
+[variables]
+main_domain = "${domain}"
+mysql_root_password = "${password:32}"
+mysql_password = "${password:32}"
+php_timezone = "UTC"
+force_https = "false"
+allowed_hostnames = "${main_domain}"
+
+[[config.domains]]
+serviceName = "opensourcepos"
+port = 80
+host = "${main_domain}"
+path = "/"
+
+[[config.mounts]]
+filePath = "README.md"
+content = """# OpenSourcePOS
+
+This template deploys Open Source Point of Sale with MariaDB using the upstream Docker image and persistent storage for uploads, logs, and database data.
+
+## Access
+
+- URL: `http://${main_domain}`
+- Default application user: `admin`
+- Default application password: `pointofsale`
+
+Change the default application password immediately after the first login.
+
+## Hostnames and HTTPS
+
+OpenSourcePOS validates incoming host headers in production. The `allowed_hostnames` variable defaults to `${main_domain}` and can be set to a comma-separated list such as `pos.example.com,www.pos.example.com`.
+
+The template defaults `force_https` to `false` because Dokploy terminates TLS outside the container. Set it to `true` only when your deployment always reaches OpenSourcePOS through HTTPS and the reverse proxy sends the expected headers.
+
+## Storage
+
+The template creates persistent volumes for:
+
+- MariaDB data
+- uploaded files
+- application logs
+"""
+
+[config.env]
+MYSQL_ROOT_PASSWORD = "${mysql_root_password}"
+MYSQL_DATABASE = "ospos"
+MYSQL_USER = "admin"
+MYSQL_PASSWORD = "${mysql_password}"
+PHP_TIMEZONE = "${php_timezone}"
+FORCE_HTTPS = "${force_https}"
+ALLOWED_HOSTNAMES = "${allowed_hostnames}"

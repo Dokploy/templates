@@ -1,0 +1,17 @@
+{
+  "id": "authorizer",
+  "name": "Authorizer",
+  "version": "1.4.4",
+  "description": "Authorizer is a powerful tool designed to simplify the process of user authentication and authorization in your applications. It allows you to build secure apps 10x faster with its low code tool and low-cost deployment.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/authorizerdev/authorizer",
+    "website": "https://authorizer.dev",
+    "docs": "https://docs.authorizer.dev/"
+  },
+  "tags": [
+    "authentication",
+    "authorization",
+    "security"
+  ]
+}

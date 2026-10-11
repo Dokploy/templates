@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+secret_base = "${base64:64}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "zipline"
+port = 3_000
+host = "${main_domain}"
+
+[config.env]
+ZIPLINE_PORT = "3000"
+ZIPLINE_SECRET = "${secret_base}"
+ZIPLINE_RETURN_HTTPS = "false"
+ZIPLINE_LOGGER = "true"

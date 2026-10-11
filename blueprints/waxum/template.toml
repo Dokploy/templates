@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+superadmin_token = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "waxum"
+port = 3451
+host = "${main_domain}"
+
+[config.env]
+SUPERADMIN_TOKEN = "${superadmin_token}"

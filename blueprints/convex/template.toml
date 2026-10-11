@@ -1,0 +1,27 @@
+[variables]
+dashboard_domain = "${domain}"
+backend_domain = "${domain}"
+actions_domain = "${domain}"
+
+[config]
+env = [
+  "NEXT_PUBLIC_DEPLOYMENT_URL=http://${backend_domain}",
+  "CONVEX_CLOUD_ORIGIN=http://${backend_domain}",
+  "CONVEX_SITE_ORIGIN=http://${actions_domain}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "dashboard"
+port = 6_791
+host = "${dashboard_domain}"
+
+[[config.domains]]
+serviceName = "backend"
+port = 3_210
+host = "${backend_domain}"
+
+[[config.domains]]
+serviceName = "backend"
+port = 3_211
+host = "${actions_domain}"

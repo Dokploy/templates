@@ -1,0 +1,17 @@
+{
+  "id": "obsidian-livesync",
+  "name": "Obsidian LiveSync",
+  "version": "latest",
+  "description": "Obsidian LiveSync with CouchDB for real-time note synchronization.",
+  "logo": "obsidian.png",
+  "links": {
+    "github": "https://github.com/vrtmrz/obsidian-livesync",
+    "website": "https://obsidian.md/sync",
+    "docs": "https://docs.couchdb.apache.org/"
+  },
+  "tags": [
+    "database",
+    "sync",
+    "obsidian"
+  ]
+}

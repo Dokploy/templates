@@ -6,12 +6,37 @@ mqtt_domain = "mqtt.${main_domain}"
 openssl_key = "${password:32}"
 notifications_tracking_secret = "${password:32}"
 db_pw = "${password:32}"
+db_root_pw = "${password:32}"
+db_user_pw = "${password:32}"
 usage_pw = "${password:32}"
 executor_secret = "${password:32}"
 jobs_secret = "${password:32}"
 geo_secret = "${password:32}"
+console_domain = "console.${main_domain}"
 
-[config]
+[[config.mounts]]
+filePath = "mongo-init.js"
+content = """// mongo-init.js
+
+const adminDb = db.getSiblingDB('admin');
+
+const username = process.env.MONGO_INITDB_USERNAME;
+const password = process.env.MONGO_INITDB_PASSWORD;
+const database = process.env.MONGO_INITDB_DATABASE;
+
+// Idempotent: the official entrypoint races the real server on port 27017 when
+// initialising a fresh volume (appwrite/appwrite#13593), so this script may run
+// more than once. Skip if the user already exists.
+if (adminDb.getUser(username) === null) {
+  adminDb.createUser({
+    user: username,
+    pwd: password,
+    roles: [
+      { role: 'readWrite', db: database }
+    ]
+  });
+}
+"""
 # Build jobs and runtimes join <appName>_default, which isolated deployments never create
 # (every service sits on the external <appName> network instead).
 isolated = false
@@ -30,7 +55,7 @@ env = [
   "_APP_OPENSSL_KEY_V1=${openssl_key}",
   "_APP_NOTIFICATIONS_TRACKING_SECRET=${notifications_tracking_secret}",
   "_APP_DOMAIN=${main_domain}",
-  "_APP_CONSOLE_DOMAIN=${main_domain}",
+  "_APP_CONSOLE_DOMAIN=${console_domain}",
   "_APP_CONSOLE_URL=",
   "_APP_CONSOLE_TRUSTED_PROJECTS=",
   "_APP_CUSTOM_DOMAIN_DENY_LIST=example.com,test.com,app.example.com",
@@ -160,7 +185,7 @@ env = [
   "_APP_FUNCTIONS_TIMEOUT=900",
   "_APP_FUNCTIONS_CREATION_ABUSE_LIMIT=5000",
   "_APP_FUNCTIONS_SCHEDULE_SPREAD=0",
-  "_APP_FUNCTIONS_RUNTIMES=node-22,python-3.12,php-8.3,ruby-3.3,dart-3.5,go-1.23,rust-1.83,bun-1.1,deno-1.46,java-21.0,dotnet-8.0",
+  "_APP_FUNCTIONS_RUNTIMES=node-22,node-24,node-26,python-3.12,php-8.3,ruby-3.3,dart-3.5,go-1.23,rust-1.83,bun-1.1,deno-1.46,java-21.0,dotnet-8.0",
   "_APP_SITES_TIMEOUT=900",
   "_APP_SITES_RUNTIMES=static-1,node-22",
   "_APP_EXECUTOR_SECRET=${executor_secret}",
@@ -214,6 +239,8 @@ env = [
   "_APP_MIGRATIONS_FIREBASE_CLIENT_ID=",
   "_APP_MIGRATIONS_FIREBASE_CLIENT_SECRET=",
   "_APP_ASSISTANT_OPENAI_API_KEY=",
+  "_APP_DB_ROOT_PASS=${db_root_pw}",
+  "_APP_DB_USER_PASS=${db_user_pw}",
 ]
 
 [[config.domains]]
@@ -256,4 +283,10 @@ path = "/"
 serviceName = "appwrite-mqtt"
 port = 8083
 host = "${mqtt_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "mariadb"
+port = 3306
+host = "${main_domain}"
 path = "/"

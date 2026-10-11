@@ -638,9 +638,16 @@ services:
       - _APP_LOGGING_FORMAT
 
   appwrite-browser:
-    image: appwrite/browser:0.3.4
+    image: appwrite/browser:0.3.6
     <<: *x-logging
     restart: unless-stopped
+    environment:
+      - ALLOWED_HOSTS=appwrite
+    # Public resolvers only, so the browser cannot resolve internal service
+    # names (e.g. redis, appwrite-mariadb) and render them via a user URL.
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
 
   appwrite-autogravity:
     image: ghcr.io/appwrite/autogravity:0.0.11
@@ -650,7 +657,7 @@ services:
       - MODEL_BACKEND=focalnet
 
   appwrite-geo:
-    image: appwrite/geo:0.3.1
+    image: appwrite/geo:0.3.2
     <<: *x-logging
     restart: unless-stopped
     environment:
@@ -671,8 +678,11 @@ services:
       - CLICKHOUSE_USER=appwrite
       - CLICKHOUSE_PASSWORD=${_APP_USAGE_PASS:-appwrite}
       - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+      - CLICKHOUSE_ALWAYS_RUN_INITDB_SCRIPTS=1
     volumes:
       - appwrite-clickhouse:/var/lib/clickhouse:rw
+      - ../files/clickhouse-config.xml:/etc/clickhouse-server/config.d/appwrite.xml:ro
+      - ../files/clickhouse-init.sh:/docker-entrypoint-initdb.d/clickhouse-init.sh:ro
     ulimits:
       nofile:
         soft: 262144

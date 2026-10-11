@@ -1,0 +1,31 @@
+services:
+  openbot:
+    image: ghcr.io/copilotkit/openbot:v0.1.2
+    restart: unless-stopped
+    environment:
+      - PORT=3001
+      # A pgvector PostgreSQL runs inside the container; its data lives on the volume below.
+      - EMBEDDED_POSTGRES=on
+      # Single-user mode: no sign-in, every visitor is an administrator. Set to "false" and
+      # configure an OAuth provider (Google/Microsoft/Okta) before exposing this publicly.
+      - OPENBOT_SINGLE_USER=${OPENBOT_SINGLE_USER}
+      # 32 random bytes, base64-encoded. Production refuses the public example value.
+      - KEY_ENCRYPTION_KEY=${KEY_ENCRYPTION_KEY}
+      # CopilotKit Intelligence is required; the server refuses to start without a project key.
+      - INTELLIGENCE_API_URL=${INTELLIGENCE_API_URL}
+      - INTELLIGENCE_GATEWAY_WS_URL=${INTELLIGENCE_GATEWAY_WS_URL}
+      - INTELLIGENCE_API_KEY=${INTELLIGENCE_API_KEY}
+      # Model provider key used by the shipped Bots (OpenAI by default).
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    expose:
+      - "3001"
+    volumes:
+      # Mount the parent directory, not /var/lib/postgresql/data (see the upstream deployment docs).
+      - openbot-postgres:/var/lib/postgresql
+      - openbot-workspace:/workspace
+      - openbot-profiles:/profiles
+
+volumes:
+  openbot-postgres:
+  openbot-workspace:
+  openbot-profiles:

@@ -1,0 +1,20 @@
+{
+  "id": "openbot",
+  "name": "OpenBot",
+  "version": "v0.1.2",
+  "description": "OpenBot is an open-source, self-hosted AI coworker platform: each Bot gets its own browser, files and tools, every action is governed before it happens and recorded after, and any AG-UI agent can be brought in. Requires a CopilotKit Intelligence project key and a model provider key.",
+  "logo": "openbot.png",
+  "links": {
+    "github": "https://github.com/CopilotKit/OpenBot",
+    "website": "https://www.copilotkit.ai/openbot",
+    "docs": "https://github.com/CopilotKit/OpenBot/blob/main/docs/README.md"
+  },
+  "tags": [
+    "ai",
+    "agents",
+    "automation",
+    "browser",
+    "ag-ui",
+    "self-hosted"
+  ]
+}

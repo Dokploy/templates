@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+openbot_single_user = "true"
+key_encryption_key = "${base64:32}"
+intelligence_api_url = "https://api.intelligence.copilotkit.ai"
+intelligence_gateway_ws_url = "wss://realtime.intelligence.copilotkit.ai"
+intelligence_api_key = ""
+openai_api_key = ""
+
+[config]
+env = [
+  "OPENBOT_SINGLE_USER=${openbot_single_user}",
+  "KEY_ENCRYPTION_KEY=${key_encryption_key}",
+  "INTELLIGENCE_API_URL=${intelligence_api_url}",
+  "INTELLIGENCE_GATEWAY_WS_URL=${intelligence_gateway_ws_url}",
+  "INTELLIGENCE_API_KEY=${intelligence_api_key}",
+  "OPENAI_API_KEY=${openai_api_key}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "openbot"
+port = 3_001
+host = "${main_domain}"

@@ -11,3 +11,4 @@ host = "${main_domain}"
 
 [config.env]
 APP_SECRET = "${base64:64}"
+DB_PASSWORD = "${password:32}"

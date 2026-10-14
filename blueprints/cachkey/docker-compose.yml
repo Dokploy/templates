@@ -1,0 +1,53 @@
+services:
+  web:
+    image: ghcr.io/joyboy-dy/cachkey-web:0.1.0
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      APP_URL: ${APP_URL}
+      API_INTERNAL_URL: http://api:3001
+    depends_on:
+      api:
+        condition: service_healthy
+
+  # Applies pending database migrations at startup, then serves /api.
+  api:
+    image: ghcr.io/joyboy-dy/cachkey-api:0.1.0
+    restart: unless-stopped
+    expose:
+      - 3001
+    environment:
+      APP_URL: ${APP_URL}
+      DATABASE_URL: postgresql://cachkey:${POSTGRES_PASSWORD}@postgres:5432/cachkey
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER}
+      EMAIL_FROM: ${EMAIL_FROM}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_SECURE: ${SMTP_SECURE}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cachkey
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: cachkey
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cachkey -d cachkey"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  postgres-data: {}

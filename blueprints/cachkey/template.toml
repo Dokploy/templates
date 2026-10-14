@@ -1,0 +1,32 @@
+[variables]
+main_domain = "${domain}"
+# Hexadecimal: safe inside the database URL (no @, #, / or $).
+postgres_password = "${hash:32}"
+better_auth_secret = "${base64:48}"
+# 32 random bytes, base64-encoded: the master key encrypting every stored value.
+# Back it up outside the server: without it, stored values cannot be read.
+encryption_key = "${base64:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "web"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+APP_URL = "http://${main_domain}"
+POSTGRES_PASSWORD = "${postgres_password}"
+BETTER_AUTH_SECRET = "${better_auth_secret}"
+ENCRYPTION_KEY = "${encryption_key}"
+# Required: Cachkey confirms every address by email before the first sign-in.
+# Fill in SMTP_* (EMAIL_PROVIDER=smtp) or RESEND_API_KEY (EMAIL_PROVIDER=resend).
+EMAIL_PROVIDER = "smtp"
+EMAIL_FROM = "Cachkey <no-reply@example.com>"
+SMTP_HOST = ""
+SMTP_PORT = "587"
+SMTP_SECURE = "false"
+SMTP_USER = ""
+SMTP_PASSWORD = ""
+RESEND_API_KEY = ""

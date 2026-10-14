@@ -1,0 +1,14 @@
+{
+  "id": "cachkey",
+  "name": "Cachkey",
+  "version": "0.1.0",
+  "description": "Cachkey is an open-source, self-hosted manager for secrets and environment variables: encrypted values, per-environment access for your team, a CLI and a read-only API for servers and CI.",
+  "logo": "cachkey.svg",
+  "links": {
+    "github": "https://github.com/Joyboy-dy/cachkey",
+    "website": "https://github.com/Joyboy-dy/cachkey",
+    "docs": "https://github.com/Joyboy-dy/cachkey/tree/main/docs"
+  },
+  "tags": ["security", "secrets", "self-hosted"],
+  "license": "AGPL-3.0"
+}

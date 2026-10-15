@@ -1,0 +1,33 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:32}"
+api_token = "${password:48}"
+
+[config]
+mounts = []
+env = [
+  # Generated: the console's sign-in, and the token scripts carry. Change the email
+  # to yours if you like; the password is in this tab whenever you need it.
+  "PONOS_WEB_EMAIL=admin@${main_domain}",
+  "PONOS_WEB_PASSWORD=${admin_password}",
+  "PONOS_WEB_TOKEN=${api_token}",
+  # en or fr: the reports Ponos writes, and the console until you pick another.
+  "PONOS_LANGUAGE=en",
+  # Required, one of the two. Your Claude subscription: run `claude setup-token`
+  # on a machine with a browser and paste what it prints...
+  "CLAUDE_CODE_OAUTH_TOKEN=",
+  # ...or an Anthropic API key, billed by the token (https://console.anthropic.com).
+  "ANTHROPIC_API_KEY=",
+  # Optional: a GitHub token (repo scope), so Ponos clones, pushes and opens pull
+  # requests. The console's GitHub step says what is missing without it.
+  "GH_TOKEN=",
+  # Optional: a Notion integration token. Without one the board is kept in Markdown
+  # files on the ponos-data volume, and the console is all you need.
+  "PONOS_NOTION_TOKEN=",
+]
+
+# The console: sign in with PONOS_WEB_EMAIL and PONOS_WEB_PASSWORD above.
+[[config.domains]]
+serviceName = "ponos"
+port = 8_787
+host = "${main_domain}"

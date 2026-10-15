@@ -1,0 +1,32 @@
+services:
+  ponos:
+    image: ghcr.io/salvadorcardona/ponos:0.1.0
+    restart: unless-stopped
+    expose:
+      - "8787"
+    environment:
+      PONOS_WEB_EMAIL: ${PONOS_WEB_EMAIL}
+      PONOS_WEB_PASSWORD: ${PONOS_WEB_PASSWORD}
+      PONOS_WEB_TOKEN: ${PONOS_WEB_TOKEN}
+      PONOS_LANGUAGE: ${PONOS_LANGUAGE}
+      CLAUDE_CODE_OAUTH_TOKEN: ${CLAUDE_CODE_OAUTH_TOKEN}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      GH_TOKEN: ${GH_TOKEN}
+      PONOS_NOTION_TOKEN: ${PONOS_NOTION_TOKEN}
+    volumes:
+      - ponos-data:/data
+      - ponos-workspace:/workspace
+      - ponos-claude:/home/ponos/.claude
+      - ponos-gh:/home/ponos/.config/gh
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8787/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  ponos-data:
+  ponos-workspace:
+  ponos-claude:
+  ponos-gh:

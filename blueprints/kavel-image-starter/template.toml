@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+  "KAVEL_API_KEY=",
+  "KAVEL_MODEL=kavel-image-v1"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "kavel-image-starter"
+port = 3000
+host = "${main_domain}"

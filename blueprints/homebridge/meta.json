@@ -2,7 +2,7 @@
   "id": "homebridge",
   "name": "Homebridge",
   "version": "latest",
-  "description": "Bringing HomeKit support where there is none. Homebridge allows you to integrate with smart home devices that do not natively support HomeKit.",
+  "description": "Homebridge is a tool that brings Apple HomeKit support to smart home devices that don't support it natively. Self-host it on your own server with Dokploy, which deploys Homebridge as a Docker Compose service in a few clicks.",
   "logo": "homebridge.svg",
   "links": {
     "github": "https://github.com/homebridge/homebridge",
@@ -15,5 +15,8 @@
     "internet-of-things",
     "self-hosted",
     "server"
-  ]
+  ],
+  "seoTitle": "Homebridge Docker Compose Setup",
+  "seoDescription": "Brings HomeKit support to smart home devices. Deploy Homebridge with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

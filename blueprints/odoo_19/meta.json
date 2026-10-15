@@ -2,7 +2,7 @@
   "id": "odoo_19",
   "name": "Odoo",
   "version": "19.0",
-  "description": "Odoo is a free and open source business management software that helps you manage your company's operations.",
+  "description": "Odoo is a suite of business management apps, including ERP, CRM, and accounting. Self-host it on your own server with Dokploy, which deploys Odoo as a Docker Compose service in a few clicks.",
   "logo": "odoo.png",
   "links": {
     "github": "https://github.com/odoo/odoo",
@@ -11,5 +11,8 @@
   },
   "tags": [
     "erp"
-  ]
+  ],
+  "seoTitle": "Odoo Docker Compose Setup",
+  "seoDescription": "Business management software and ERP. Deploy Odoo with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

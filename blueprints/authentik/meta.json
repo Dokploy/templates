@@ -2,7 +2,7 @@
   "id": "authentik",
   "name": "Authentik",
   "version": "2026.8.2",
-  "description": "Authentik is an open-source Identity Provider for authentication and authorization. It provides a comprehensive solution for managing user authentication, authorization, and identity federation with support for SAML, OAuth2, OIDC, and more.",
+  "description": "Authentik is an identity provider for single sign-on (SSO) authorization and authentication, with support for SAML, OAuth2, OIDC, and more. Self-host it on your own server with Dokploy, which deploys Authentik as a Docker Compose service in a few clicks.",
   "links": {
     "github": "https://github.com/goauthentik/authentik",
     "website": "https://goauthentik.io/",
@@ -17,5 +17,8 @@
     "saml",
     "oauth2",
     "self-hosted"
-  ]
+  ],
+  "seoTitle": "Authentik Docker Compose Setup",
+  "seoDescription": "Identity provider for SSO and authentication. Deploy Authentik with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

@@ -2,7 +2,7 @@
   "id": "joplin-server",
   "name": "Joplin Server",
   "version": "3.7.1",
-  "description": "Joplin Server is the self-hosted sync backend for Joplin notes, notebooks, and attachments.",
+  "description": "Joplin Server is the sync backend for the Joplin note-taking app. Self-host it on your own server with Dokploy, which deploys Joplin Server as a Docker Compose service in a few clicks.",
   "logo": "joplin-server.svg",
   "links": {
     "github": "https://github.com/laurent22/joplin",
@@ -13,5 +13,8 @@
     "notes",
     "sync",
     "productivity"
-  ]
+  ],
+  "seoTitle": "Joplin Server Docker Compose Setup",
+  "seoDescription": "Sync backend for the Joplin note-taking app. Deploy Joplin Server with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

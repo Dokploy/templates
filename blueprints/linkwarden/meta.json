@@ -2,7 +2,7 @@
   "id": "linkwarden",
   "name": "Linkwarden",
   "version": "2.9.3",
-  "description": "Self-hosted, open-source collaborative bookmark manager to collect, organize and archive webpages.",
+  "description": "Linkwarden is an open-source bookmark manager for saving, organizing, and archiving links. Self-host it on your own server with Dokploy, which deploys Linkwarden as a Docker Compose service in a few clicks.",
   "logo": "linkwarden.png",
   "links": {
     "github": "https://github.com/linkwarden/linkwarden",
@@ -12,5 +12,7 @@
   "tags": [
     "bookmarks",
     "link-sharing"
-  ]
+  ],
+  "seoTitle": "Self-Host Linkwarden in minutes",
+  "seoDescription": "Bookmark manager for saving and organizing links. Self-host Linkwarden on Dokploy in minutes – no manual setup needed."
 }

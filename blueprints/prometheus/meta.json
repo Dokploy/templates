@@ -2,7 +2,7 @@
   "id": "prometheus",
   "name": "Prometheus",
   "version": "latest",
-  "description": "Prometheus is an open-source monitoring and alerting toolkit designed for reliability and scalability.",
+  "description": "Prometheus is an open-source monitoring and alerting toolkit that collects metrics from your systems. Self-host it on your own server with Dokploy, which deploys Prometheus as a Docker Compose service in a few clicks.",
   "logo": "Prometheus.svg",
   "links": {
     "github": "https://github.com/prometheus/prometheus",
@@ -13,5 +13,8 @@
     "monitoring",
     "alerting",
     "metrics"
-  ]
+  ],
+  "seoTitle": "Prometheus Docker Compose Setup",
+  "seoDescription": "Monitoring and alerting toolkit. Deploy Prometheus with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

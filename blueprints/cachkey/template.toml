@@ -9,24 +9,24 @@ encryption_key = "${base64:32}"
 
 [config]
 mounts = []
+env = [
+  "APP_URL=http://${main_domain}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "BETTER_AUTH_SECRET=${better_auth_secret}",
+  "ENCRYPTION_KEY=${encryption_key}",
+  # Required: Cachkey confirms every address by email before the first sign-in.
+  # Fill in SMTP_* (EMAIL_PROVIDER=smtp) or RESEND_API_KEY (EMAIL_PROVIDER=resend).
+  "EMAIL_PROVIDER=smtp",
+  "EMAIL_FROM=Cachkey <no-reply@example.com>",
+  "SMTP_HOST=",
+  "SMTP_PORT=587",
+  "SMTP_SECURE=false",
+  "SMTP_USER=",
+  "SMTP_PASSWORD=",
+  "RESEND_API_KEY=",
+]
 
 [[config.domains]]
-serviceName = "web"
+serviceName = "cachkey"
 port = 3000
 host = "${main_domain}"
-
-[config.env]
-APP_URL = "http://${main_domain}"
-POSTGRES_PASSWORD = "${postgres_password}"
-BETTER_AUTH_SECRET = "${better_auth_secret}"
-ENCRYPTION_KEY = "${encryption_key}"
-# Required: Cachkey confirms every address by email before the first sign-in.
-# Fill in SMTP_* (EMAIL_PROVIDER=smtp) or RESEND_API_KEY (EMAIL_PROVIDER=resend).
-EMAIL_PROVIDER = "smtp"
-EMAIL_FROM = "Cachkey <no-reply@example.com>"
-SMTP_HOST = ""
-SMTP_PORT = "587"
-SMTP_SECURE = "false"
-SMTP_USER = ""
-SMTP_PASSWORD = ""
-RESEND_API_KEY = ""

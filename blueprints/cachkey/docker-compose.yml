@@ -1,5 +1,6 @@
 services:
-  web:
+  # Web app (public): named after the template, as Dokploy requires.
+  cachkey:
     image: ghcr.io/joyboy-dy/cachkey-web:0.1.0
     restart: unless-stopped
     expose:

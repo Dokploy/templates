@@ -5,6 +5,7 @@ services:
       - .env
     environment:
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/uptimekit
+      - TIMESERIES_BACKEND=clickhouse
       - CLICKHOUSE_URL=http://clickhouse:8123
       - CLICKHOUSE_USER=default
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}

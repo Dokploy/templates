@@ -1,0 +1,46 @@
+services:
+  openwa:
+    image: ghcr.io/rmyndharis/openwa:0.24.0
+    restart: unless-stopped
+    # Hardened runtime matching the upstream production defaults: Chromium (used by the
+    # whatsapp-web.js engine) launches with --no-sandbox, so the container is the confinement
+    # boundary. The caps that remain are only what the entrypoint needs to fix named-volume
+    # ownership and drop to the non-root `openwa` user via gosu.
+    security_opt:
+      - "no-new-privileges:true"
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - KILL
+      - SETGID
+      - SETUID
+    read_only: true
+    tmpfs:
+      - /tmp
+    pids_limit: 2048
+    environment:
+      - NODE_ENV=production
+      - PORT=2785
+      # Writable HOME/XDG dirs on tmpfs so Chromium does not write to the read-only rootfs.
+      - HOME=/tmp
+      - XDG_CONFIG_HOME=/tmp/.config
+      - XDG_CACHE_HOME=/tmp/.cache
+      - ENGINE_TYPE=${ENGINE_TYPE}
+      - AUTO_START_SESSIONS=${AUTO_START_SESSIONS}
+      - TZ=${TZ}
+      # Production OpenWA sets the CSP "upgrade-insecure-requests" directive. When the dashboard is
+      # reached over plain HTTP the browser upgrades the SPA's own /assets/*.js requests to https://,
+      # which a non-TLS server cannot answer, so no JavaScript runs and the page renders blank.
+      # Off by default so the template works over HTTP or HTTPS; set "true" when you only ever reach
+      # it through a TLS-terminating proxy.
+      - CSP_UPGRADE_INSECURE_REQUESTS=${CSP_UPGRADE_INSECURE_REQUESTS}
+    expose:
+      - "2785"
+    volumes:
+      - openwa-data:/app/data
+
+volumes:
+  openwa-data:

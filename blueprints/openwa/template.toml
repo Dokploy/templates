@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+engine_type = "whatsapp-web.js"
+auto_start_sessions = "true"
+timezone = "UTC"
+# Set to "true" only when the dashboard is reached exclusively through a TLS-terminating proxy.
+# Left "false" so the bundled SPA loads over plain HTTP (see comments in docker-compose.yml).
+csp_upgrade_insecure_requests = "false"
+
+[config]
+env = [
+  "NODE_ENV=production",
+  "PORT=2785",
+  "ENGINE_TYPE=${engine_type}",
+  "AUTO_START_SESSIONS=${auto_start_sessions}",
+  "TZ=${timezone}",
+  "CSP_UPGRADE_INSECURE_REQUESTS=${csp_upgrade_insecure_requests}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "openwa"
+port = 2_785
+host = "${main_domain}"

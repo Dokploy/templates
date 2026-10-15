@@ -1,6 +1,6 @@
 services:
   wise-mcp:
-    image: ghcr.io/blanketbyte/wise-mcp:latest
+    image: ghcr.io/blanketbyte/wise-mcp:1.1.1
     restart: unless-stopped
     expose:
       - 3000

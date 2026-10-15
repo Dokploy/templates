@@ -7,13 +7,15 @@ services:
       - 3000
     environment:
       APP_URL: ${APP_URL}
-      API_INTERNAL_URL: http://api:3001
+      # Unique name: Dokploy also attaches this service to its shared network, where a
+      # plain `api` could resolve to another application's container.
+      API_INTERNAL_URL: http://cachkey-api:3001
     depends_on:
-      api:
+      cachkey-api:
         condition: service_healthy
 
   # Applies pending database migrations at startup, then serves /api.
-  api:
+  cachkey-api:
     image: ghcr.io/joyboy-dy/cachkey-api:0.1.0
     restart: unless-stopped
     expose:

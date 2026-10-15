@@ -1,0 +1,16 @@
+services:
+  wise-mcp:
+    image: ghcr.io/blanketbyte/wise-mcp:latest
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      - PUBLIC_URL=${PUBLIC_URL}
+      - TOKEN_ENCRYPTION_KEY=${TOKEN_ENCRYPTION_KEY}
+      - ALLOWED_WISE_USERS=${ALLOWED_WISE_USERS}
+      - WRITES_ENABLED=${WRITES_ENABLED}
+    volumes:
+      - wise-mcp-data:/data
+
+volumes:
+  wise-mcp-data: {}

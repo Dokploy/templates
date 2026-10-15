@@ -2,7 +2,7 @@
   "id": "excalidraw",
   "name": "Excalidraw",
   "version": "latest",
-  "description": "Excalidraw is a free and open source online diagramming tool that lets you easily create and share beautiful diagrams.",
+  "description": "Excalidraw is an open-source whiteboard tool for sketching hand-drawn-style diagrams. Self-host it on your own server with Dokploy, which deploys Excalidraw as a Docker Compose service in a few clicks.",
   "logo": "excalidraw.jpg",
   "links": {
     "github": "https://github.com/excalidraw/excalidraw",
@@ -11,5 +11,7 @@
   },
   "tags": [
     "drawing"
-  ]
+  ],
+  "seoTitle": "Self-Host Excalidraw in minutes",
+  "seoDescription": "Online tool for sketching diagrams. Self-host Excalidraw on Dokploy in minutes – no manual setup needed."
 }

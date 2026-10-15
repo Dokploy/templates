@@ -2,7 +2,7 @@
   "id": "code-server",
   "name": "code-server",
   "version": "4.121.0",
-  "description": "code-server runs VS Code in the browser, enabling a self-hosted development environment from any machine.",
+  "description": "code-server is a version of VS Code that runs in your browser. Self-host it on your own server with Dokploy, which deploys code-server as a Docker Compose service in a few clicks.",
   "logo": "code-server.png",
   "links": {
     "github": "https://github.com/coder/code-server",
@@ -14,5 +14,8 @@
     "development",
     "vscode",
     "self-hosted"
-  ]
+  ],
+  "seoTitle": "code-server Docker Compose Setup",
+  "seoDescription": "Run VS Code in your browser. Deploy code-server with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

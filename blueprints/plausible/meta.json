@@ -2,7 +2,7 @@
   "id": "plausible",
   "name": "Plausible",
   "version": "v3.2.1",
-  "description": "Plausible is a open source, self-hosted web analytics platform that lets you track website traffic and user behavior.",
+  "description": "Plausible is an open-source, lightweight, and privacy-friendly web analytics tool. Self-host it on your own server with Dokploy, which deploys Plausible as a Docker Compose service in a few clicks.",
   "logo": "logo.svg",
   "links": {
     "github": "https://github.com/plausible/plausible",
@@ -11,5 +11,7 @@
   },
   "tags": [
     "analytics"
-  ]
+  ],
+  "seoTitle": "Self-Host Plausible in minutes",
+  "seoDescription": "Privacy-friendly web analytics. Self-host Plausible on Dokploy in minutes – no manual setup needed."
 }

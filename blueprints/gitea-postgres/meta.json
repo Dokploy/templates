@@ -2,7 +2,7 @@
   "id": "gitea-postgres",
   "name": "Gitea (PostgreSQL)",
   "version": "1.27.3",
-  "description": "Gitea bundled with PostgreSQL.",
+  "description": "Gitea is a lightweight Git service for hosting code repositories. Self-host it on your own server with Dokploy, which deploys Gitea as a Docker Compose service in a few clicks.",
   "logo": "gitea.png",
   "links": {
     "github": "https://github.com/go-gitea/gitea",
@@ -15,5 +15,8 @@
     "postgres",
     "developer-tools",
     "self-hosted"
-  ]
+  ],
+  "seoTitle": "Gitea Docker Compose Setup",
+  "seoDescription": "Lightweight self-hosted Git service. Deploy Gitea with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

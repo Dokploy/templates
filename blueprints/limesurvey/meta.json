@@ -2,7 +2,7 @@
   "id": "limesurvey",
   "name": "LimeSurvey",
   "version": "6.17.2+260507",
-  "description": "LimeSurvey is a powerful, open-source survey platform, making it simple to create online surveys and forms with unmatched flexibility.",
+  "description": "LimeSurvey is an open-source research platform for building and running online surveys. Self-host it on your own server with Dokploy, which deploys LimeSurvey as a Docker Compose service in a few clicks.",
   "logo": "limesurvey.svg",
   "links": {
     "github": "https://github.com/LimeSurvey/LimeSurvey",
@@ -13,5 +13,8 @@
     "forms",
     "questionnaire",
     "survey"
-  ]
+  ],
+  "seoTitle": "LimeSurvey Docker Compose Setup",
+  "seoDescription": "Platform for building online surveys. Deploy LimeSurvey with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

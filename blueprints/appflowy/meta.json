@@ -2,7 +2,7 @@
   "id": "appflowy",
   "name": "App Flowy",
   "version": "0.9.3",
-  "description": "AppFlowy is an open-source alternative to Notion. You are in charge of your data and customizations.",
+  "description": "AppFlowy is a workspace app for notes, docs, and projects, and an open-source alternative to Notion. Self-host it on your own server with Dokploy, which deploys AppFlowy as a Docker Compose service in a few clicks.",
   "links": {
     "github": "https://github.com/AppFlowy-IO/AppFlowy",
     "website": "https://appflowy.io/",
@@ -15,5 +15,7 @@
     "notes",
     "knowledge-base",
     "notion-alternative"
-  ]
+  ],
+  "seoTitle": "Self-Host AppFlowy in minutes",
+  "seoDescription": "Workspace app, an alternative to Notion. Self-host AppFlowy on Dokploy in minutes – no manual setup needed."
 }

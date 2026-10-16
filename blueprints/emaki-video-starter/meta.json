@@ -1,0 +1,17 @@
+{
+  "id": "emaki-video-starter",
+  "name": "Seedance 2.5 Video Generator",
+  "version": "1.0.0",
+  "description": "One-page text-to-video and image-to-video web app on the Seedance 2.5 API from emaki. Set EMAKI_API_KEY; an access password is generated so only people you share it with can spend your credits.",
+  "logo": "emaki-video-starter.png",
+  "links": {
+    "github": "https://github.com/hanshs474/emaki-video-starter",
+    "website": "https://emaki.ai/seedance-2-5",
+    "docs": "https://emaki.readthedocs.io/"
+  },
+  "tags": [
+    "ai",
+    "video-generation",
+    "text-to-video"
+  ]
+}

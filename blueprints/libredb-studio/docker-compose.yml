@@ -1,6 +1,6 @@
 services:
   libredb-studio:
-    image: ghcr.io/libredb/libredb-studio:0.18.2
+    image: ghcr.io/libredb/libredb-studio:0.18.3
     restart: unless-stopped
     environment:
       # Since 0.18.0 ADMIN_PASSWORD and USER_PASSWORD seed the account table only

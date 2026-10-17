@@ -1,0 +1,19 @@
+{
+  "id": "legejo",
+  "name": "Legejo",
+  "version": "1.23.1",
+  "description": "Legejo is a self-hosted library for your EPUB books, with a web reader, Kobo sync, OPDS for reading apps, KOReader progress sync, shared shelves and audiobooks. Runs on SQLite with no other services needed.",
+  "logo": "legejo.svg",
+  "links": {
+    "github": "https://github.com/jularboolean/legejo",
+    "website": "https://github.com/jularboolean/legejo",
+    "docs": "https://github.com/jularboolean/legejo#readme"
+  },
+  "tags": [
+    "ebooks",
+    "library",
+    "reading",
+    "kobo",
+    "opds"
+  ]
+}

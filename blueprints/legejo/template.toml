@@ -1,0 +1,36 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:24}"
+
+[config]
+[[config.domains]]
+serviceName = "legejo"
+port = 3000
+host = "${main_domain}"
+
+# Every LEGEJO_* variable is described in the README:
+# https://github.com/jularboolean/legejo#configuration
+# An empty value counts as unset.
+[config.env]
+# The first admin account, created on the first start; sign in with these.
+LEGEJO_ADMIN_USER = "admin"
+LEGEJO_ADMIN_PASSWORD = "${admin_password}"
+# Change to https:// once the domain has a certificate: session cookies are
+# then marked Secure, and federation and mailed links use it.
+LEGEJO_PUBLIC_URL = "http://${main_domain}"
+# Mail, for self-registration, invitations and password reset.
+LEGEJO_SMTP_HOST = ""
+LEGEJO_SMTP_PORT = "587"
+LEGEJO_SMTP_USER = ""
+LEGEJO_SMTP_PASSWORD = ""
+LEGEJO_MAIL_FROM = ""
+# Searching inside the books; keeps the text of the EPUBs in the database.
+LEGEJO_FULLTEXT = "false"
+# Read-only MCP server for AI assistants at /api/mcp.
+LEGEJO_MCP = "false"
+# The librarian: book suggestions from an OpenAI-compatible language model.
+LEGEJO_AI_API_KEY = ""
+# Single sign-on with OpenID Connect.
+LEGEJO_OIDC_ISSUER = ""
+LEGEJO_OIDC_CLIENT_ID = ""
+LEGEJO_OIDC_CLIENT_SECRET = ""

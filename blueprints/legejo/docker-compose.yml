@@ -1,0 +1,15 @@
+services:
+  legejo:
+    image: slurvdjur/legejo:1.23.1
+    restart: unless-stopped
+    expose:
+      - "3000"
+    # Every variable in the template's environment reaches Legejo, so one
+    # added in Dokploy (mail, single sign-on, ...) takes effect on redeploy.
+    env_file:
+      - .env
+    volumes:
+      - legejo-data:/data
+
+volumes:
+  legejo-data:

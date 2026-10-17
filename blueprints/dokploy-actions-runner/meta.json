@@ -1,0 +1,13 @@
+{
+  "id": "dokploy-actions-runner",
+  "name": "GitHub Actions Runner",
+  "version": "2.338.0-ubuntu-noble",
+  "description": "Self-hosted GitHub Actions runner for repositories or organizations, with independent names, labels and runner groups. Runs without privileged mode or Docker socket access.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/Simplarix/dokploy-actions-runner",
+    "website": "https://docs.github.com/en/actions/concepts/runners/self-hosted-runners",
+    "docs": "https://github.com/Simplarix/dokploy-actions-runner#readme"
+  },
+  "tags": ["development", "automation", "ci"]
+}

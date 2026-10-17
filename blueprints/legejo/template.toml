@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:24}"
+
+[config]
+[[config.domains]]
+serviceName = "legejo"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+# The first admin account, created on the first start; sign in with these.
+LEGEJO_ADMIN_USER = "admin"
+LEGEJO_ADMIN_PASSWORD = "${admin_password}"
+# Change to https:// once the domain has a certificate: session cookies are
+# then marked Secure, and federation and mailed links use it.
+LEGEJO_PUBLIC_URL = "http://${main_domain}"

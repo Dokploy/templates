@@ -1,0 +1,15 @@
+services:
+  legejo:
+    image: slurvdjur/legejo:1.23.1
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      - LEGEJO_ADMIN_USER=${LEGEJO_ADMIN_USER}
+      - LEGEJO_ADMIN_PASSWORD=${LEGEJO_ADMIN_PASSWORD}
+      - LEGEJO_PUBLIC_URL=${LEGEJO_PUBLIC_URL}
+    volumes:
+      - legejo-data:/data
+
+volumes:
+  legejo-data:

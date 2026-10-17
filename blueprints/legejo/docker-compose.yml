@@ -4,10 +4,10 @@ services:
     restart: unless-stopped
     expose:
       - "3000"
-    environment:
-      - LEGEJO_ADMIN_USER=${LEGEJO_ADMIN_USER}
-      - LEGEJO_ADMIN_PASSWORD=${LEGEJO_ADMIN_PASSWORD}
-      - LEGEJO_PUBLIC_URL=${LEGEJO_PUBLIC_URL}
+    # Every variable in the template's environment reaches Legejo, so one
+    # added in Dokploy (mail, single sign-on, ...) takes effect on redeploy.
+    env_file:
+      - .env
     volumes:
       - legejo-data:/data
 

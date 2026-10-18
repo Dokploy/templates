@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+app_key = "${base64:32}"
+
+[config]
+env = [
+  "APP_KEY=base64:${app_key}",
+  "APP_URL=http://${main_domain}",
+  "OCTANE_HTTPS=false",
+  "SESSION_SECURE_COOKIE=false",
+  "INSTANCE_REGISTRATIONS_ENABLED=false",
+  "MAIL_MAILER=log"
+]
+
+[[config.domains]]
+serviceName = "shoutrrr"
+port = 8080
+host = "${main_domain}"

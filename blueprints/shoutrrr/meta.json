@@ -1,0 +1,13 @@
+{
+  "id": "shoutrrr",
+  "name": "Shoutrrr",
+  "version": "1.5.4",
+  "description": "Shoutrrr is an open source social media scheduler for drafting, scheduling, and publishing posts across multiple accounts and workspaces.",
+  "logo": "shoutrrr.svg",
+  "links": {
+    "github": "https://github.com/coollabsio/shoutrrr",
+    "website": "https://shoutrrr.com",
+    "docs": "https://shoutrrr.com/docs/getting-started"
+  },
+  "tags": ["social-media", "marketing", "scheduling"]
+}

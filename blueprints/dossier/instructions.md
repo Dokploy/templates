@@ -38,4 +38,8 @@ The template sets `DOSSIER_TELEMETRY=off`. Upstream defaults to `on`; enabling i
 
 GET `/api/health` is public and checks database connectivity without returning private data. Behind Dokploy's Traefik proxy, Dossier uses `X-Forwarded-Proto` for secure cookies and `X-Forwarded-For` for login rate limiting. Keep the application reachable through the trusted proxy and use HTTPS for regular access.
 
+### Upstream time zone caveat
+
+In v1.5.0, testing `TZ=Europe/Paris` with a UTC browser produced a React hydration warning on the dashboard's weekly activity chart. That chart formats dates in both the server and browser time zones. The template's default `TZ=UTC` passed the tested UTC browser flow. Review the dashboard after changing `TZ`, especially when your browser uses a different zone; this template does not modify upstream application code.
+
 See [environment.md](environment.md) for required and optional variables and [testing.md](testing.md) for a repeatable verification checklist.

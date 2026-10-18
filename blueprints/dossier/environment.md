@@ -21,7 +21,7 @@ Add optional values to Dokploy's Environment tab and redeploy. The app loads tha
 | --- | --- | --- |
 | `DOSSIER_TELEMETRY` | Template `off`; upstream `on` | `on` or `off`. Controls the daily usage ping, independently of update checks. |
 | `DOSSIER_BACKUP_RETENTION_DAYS` | `14` | Whole number, at least 1. Retention of nightly backups. |
-| `TZ` | `UTC` | Time zone for the app and its 03:00 backup schedule, for example `Europe/Paris`. |
+| `TZ` | `UTC` | Time zone for the app and its 03:00 backup schedule. See the v1.5.0 dashboard caveat in [instructions.md](instructions.md) before changing it. |
 | `DOSSIER_DATA_DIR` | `/data`, fixed by Compose | Mounted persistent directory. If customizing, change the volume target and this value together in Compose. |
 
 ## Optional AI defaults

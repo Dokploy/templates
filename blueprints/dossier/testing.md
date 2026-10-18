@@ -12,3 +12,5 @@ Use disposable data and a fresh Dokploy Compose service. Do not run upstream's d
 8. In the disposable fixture, stop PostgreSQL temporarily: `/api/health` should return 503, then recover after PostgreSQL restarts. Inspect app and database logs for migration, permission, connection, and browser errors.
 
 Record the image versions, Dokploy version, checks, and integration limits in the PR. Capture screenshots using synthetic data only. Remove the test service, its volumes, and test images after collecting evidence.
+
+When testing a non-default server time zone, also inspect the populated dashboard for hydration warnings. Dossier v1.5.0 showed a weekly-chart date mismatch with `TZ=Europe/Paris` and a UTC browser; see [instructions.md](instructions.md).

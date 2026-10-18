@@ -1,0 +1,64 @@
+services:
+  dossier:
+    image: ghcr.io/aientech/dossier:v1.5.0
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: "postgresql://dossier:${POSTGRES_PASSWORD:?Keep the generated database password}@dossier-postgres:5432/dossier"
+      DOSSIER_PASSWORD: "${DOSSIER_PASSWORD:?Set DOSSIER_PASSWORD to the argon2id hash printed by hash-password}"
+      DOSSIER_SECRET: "${DOSSIER_SECRET:?Keep the generated DOSSIER_SECRET}"
+      DOSSIER_DATA_DIR: /data
+      DOSSIER_TELEMETRY: "${DOSSIER_TELEMETRY:-off}"
+      DOSSIER_BACKUP_RETENTION_DAYS: "${DOSSIER_BACKUP_RETENTION_DAYS:-14}"
+      TZ: "${TZ:-UTC}"
+    expose:
+      - "3000"
+    volumes:
+      - dossier-data:/data
+    depends_on:
+      dossier-postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/api/health').then(r => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+      start_period: 60s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    # The bundled Chromium prints PDFs in this process.
+    mem_limit: 1g
+    stop_grace_period: 30s
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  dossier-postgres:
+    image: postgres:18.6-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dossier
+      POSTGRES_DB: dossier
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?Keep the generated database password}"
+    volumes:
+      - dossier-postgres:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dossier -d dossier"]
+      start_period: 20s
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    stop_grace_period: 30s
+    logging: *logging
+
+volumes:
+  dossier-data:
+  dossier-postgres:

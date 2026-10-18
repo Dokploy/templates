@@ -36,7 +36,7 @@ Falco collects events at `notice` or higher. Changing `TELEGRAM_MINIMUM_PRIORITY
 
 Deploy with Dokploy's isolated deployments enabled. Open the domain assigned to `falco-ui` on port `2802` and log in with `FALCO_UI_USER` and `FALCO_UI_PASSWORD`. Enable HTTPS for that domain in Dokploy.
 
-Dokploy manages the stack's network and domain routing. No host ports are published. Redis requires authentication and stores data in the `falco-events` volume, with append-only persistence and a seven-day UI event lifetime.
+Dokploy manages the stack's network and domain routing. No host ports are published. Redis loads the RediSearch and RedisJSON modules required by the UI, requires authentication, and stores data in the `falco-events` volume, with append-only persistence and a seven-day UI event lifetime.
 
 ## Verify alerts
 

@@ -1,7 +1,7 @@
 [variables]
 main_domain = "${domain}"
-ui_password = "${hash:32}"
-redis_password = "${hash:32}"
+ui_password = "${hash:64}"
+redis_password = "${hash:64}"
 
 [config]
 env = [

@@ -111,13 +111,26 @@ services:
   falco-redis:
     image: redis/redis-stack-server:7.4.0-v8
     restart: unless-stopped
+    # Falcosidekick UI needs RediSearch and RedisJSON, not RedisGears or RedisAI.
+    command:
+      - /opt/redis-stack/bin/redis-server
+      - --dir
+      - /data
+      - --loadmodule
+      - /opt/redis-stack/lib/redisearch.so
+      - --loadmodule
+      - /opt/redis-stack/lib/rejson.so
+      - --requirepass
+      - "${FALCO_REDIS_PASSWORD:?Set FALCO_REDIS_PASSWORD}"
+      - --appendonly
+      - "yes"
+      - --appendfsync
+      - everysec
+      - --maxmemory
+      - 512mb
+      - --maxmemory-policy
+      - noeviction
     environment:
-      REDIS_ARGS: >-
-        --requirepass ${FALCO_REDIS_PASSWORD:?Set FALCO_REDIS_PASSWORD}
-        --appendonly yes
-        --appendfsync everysec
-        --maxmemory 512mb
-        --maxmemory-policy noeviction
       REDISCLI_AUTH: "${FALCO_REDIS_PASSWORD:?Set FALCO_REDIS_PASSWORD}"
     volumes:
       - falco-events:/data

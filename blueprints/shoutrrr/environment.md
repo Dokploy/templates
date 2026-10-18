@@ -246,11 +246,11 @@ Optional positive pixel limit for image decode memory protection; the image defa
 
 | Variable | Default |
 | --- | --- |
-| `MEDIA_MAX_IMAGE_PIXELS` | `unset` |
+| `MEDIA_MAX_IMAGE_PIXELS` | `16000000` |
 
 ### Direct messages
 
-Optional inbox/DM polling controls. Poll intervals and rate-limit backoff use minutes; fetch rates are per minute. Platform permissions and instance UI settings also control availability.
+Optional inbox/DM polling controls. Poll intervals use minutes, rate-limit backoff uses seconds, and fetch rates are per minute. Platform permissions and instance UI settings also control availability.
 
 | Variable | Default |
 | --- | --- |

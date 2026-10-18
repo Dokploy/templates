@@ -53,8 +53,8 @@ Provider permissions, app review, and account eligibility still apply. Bluesky a
 
 ## Backups and maintenance
 
-Back up **both volumes** and the original **`APP_KEY`** together. Stop the service while taking a filesystem backup of SQLite to keep the database and any journal/WAL files consistent. Storage also holds encrypted account-related files and Passport signing keys. Never replace `APP_KEY` during an ordinary upgrade or redeployment.
+Back up **both volumes** and the original **`APP_KEY`** together. Stop the service while taking a filesystem backup of SQLite to keep the database and any journal/WAL files consistent. Storage holds uploads and Passport signing keys. Never replace `APP_KEY` during an ordinary upgrade or redeployment.
 
-Keep one replica and the bundled worker/scheduler for this deployment. For larger installations, provision an external database/queue and follow upstream's scaling guidance; changing `DB_CONNECTION` alone does not migrate existing SQLite data or add a database service. Keep `DB_DATABASE` at its mounted path with SQLite. Health checks cover the web process and database connectivity; also check worker/scheduler status and failed jobs when diagnosing missed posts.
+Keep one replica and the bundled worker/scheduler for this deployment. For larger installations, provision an external database/queue and follow upstream's scaling guidance; changing `DB_CONNECTION` alone does not migrate existing SQLite data or add a database service. Keep `DB_DATABASE` at its mounted path with SQLite. The health check covers the web endpoint; also check database access, worker/scheduler status, and failed jobs when diagnosing missed posts.
 
 Upgrade by changing the pinned image version after backing up, then redeploy and check migrations, health, and a scheduled test post. The container runs as upstream's non-root user, and Docker logs rotate at three 10 MB files. See [testing notes](https://github.com/Dokploy/templates/blob/canary/blueprints/shoutrrr/testing.md) for validation steps and their scope.

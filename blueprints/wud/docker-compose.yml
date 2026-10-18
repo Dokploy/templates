@@ -1,0 +1,85 @@
+services:
+  wud:
+    image: ghcr.io/getwud/wud:9.5.0
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      WUD_AUTH_ADMIN_USER: "${WUD_AUTH_ADMIN_USER:-admin}"
+      WUD_AUTH_ADMIN_PASSWORD: "${WUD_AUTH_ADMIN_PASSWORD:?Keep the generated administrator password}"
+      WUD_SERVER_PORT: "3000"
+      WUD_SERVER_TLS_ENABLED: "false"
+      WUD_STORE_PATH: /store
+      WUD_STORE_FILE: wud.sqlite
+      WUD_WATCHER_DOCKER_LOCAL_HOST: wud-socket-proxy
+      WUD_WATCHER_DOCKER_LOCAL_PORT: "2375"
+      WUD_WATCHER_DOCKER_LOCAL_WATCHBYDEFAULT: "${WUD_WATCHER_DOCKER_LOCAL_WATCHBYDEFAULT:-true}"
+      WUD_WATCHER_DOCKER_LOCAL_WATCHALL: "${WUD_WATCHER_DOCKER_LOCAL_WATCHALL:-false}"
+      WUD_WATCHER_DOCKER_LOCAL_WATCHATSTART: "true"
+      WUD_WATCHER_DOCKER_LOCAL_CRON: "${WUD_WATCHER_DOCKER_LOCAL_CRON:-0 * * * *}"
+      WUD_LOG_LEVEL: "${WUD_LOG_LEVEL:-info}"
+      WUD_LOG_FORMAT: json
+      TZ: "${TZ:-UTC}"
+    expose:
+      - "3000"
+    volumes:
+      - wud-data:/store
+    depends_on:
+      wud-socket-proxy:
+        condition: service_healthy
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    stop_grace_period: 30s
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  wud-socket-proxy:
+    image: ghcr.io/tecnativa/docker-socket-proxy:v0.5.0
+    restart: unless-stopped
+    environment:
+      CONTAINERS: "1"
+      IMAGES: "1"
+      EVENTS: "1"
+      PING: "1"
+      VERSION: "1"
+      POST: "0"
+    expose:
+      - "2375"
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+        bind:
+          create_host_path: false
+    read_only: true
+    tmpfs:
+      - /run
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--output-document=-", "http://127.0.0.1:2375/_ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    stop_grace_period: 30s
+    logging: *logging
+
+volumes:
+  wud-data:

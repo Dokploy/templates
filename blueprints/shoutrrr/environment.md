@@ -44,7 +44,7 @@ Advanced overrides; keep the supplied authentication guard/model. Email verifica
 | `AUTH_PASSWORD_BROKER` | `users` |
 | `MAIL_MAILER` | `log` |
 | `SIGNED_URL_IGNORED_PARAMETERS` | `utm_source,utm_medium,utm_campaign,utm_term,utm_content,bento_uuid` |
-| `AUTH_MODEL` | `User::class` |
+| `AUTH_MODEL` | `App\Models\User` |
 | `AUTH_PASSWORD_RESET_TOKEN_TABLE` | `password_reset_tokens` |
 | `AUTH_PASSWORD_TIMEOUT` | `10800` |
 
@@ -351,10 +351,10 @@ Optional browser telemetry. Omit the frontend DSN to disable it. Browser DSNs ar
 
 | Variable | Default |
 | --- | --- |
-| `SENTRY_RELEASE` | `unset` |
+| `SENTRY_RELEASE` | `APP_VERSION (1.5.4)` |
 | `SENTRY_FRONTEND_DSN` | `unset` |
-| `SENTRY_ENVIRONMENT` | `unset` |
-| `SENTRY_FRONTEND_TRACES_SAMPLE_RATE` | `unset` |
+| `SENTRY_ENVIRONMENT` | `APP_ENV (production)` |
+| `SENTRY_FRONTEND_TRACES_SAMPLE_RATE` | `0.2` |
 
 ### Server error reporting
 
@@ -362,17 +362,17 @@ Optional server telemetry and sampling. Omit the DSN to disable delivery. The fo
 
 | Variable | Default |
 | --- | --- |
-| `SENTRY_LARAVEL_DSN` | `env('SENTRY_DSN')` |
+| `SENTRY_LARAVEL_DSN` | `SENTRY_DSN if configured` |
 | `SENTRY_DSN` | `unset` |
 | `SENTRY_ORG_ID` | `unset` |
-| `SENTRY_SAMPLE_RATE` | `unset` |
-| `SENTRY_TRACES_SAMPLE_RATE` | `unset` |
-| `SENTRY_PROFILES_SAMPLE_RATE` | `unset` |
+| `SENTRY_SAMPLE_RATE` | `1.0` |
+| `SENTRY_TRACES_SAMPLE_RATE` | `0.2` |
+| `SENTRY_PROFILES_SAMPLE_RATE` | `null` |
 | `SENTRY_STRICT_TRACE_CONTINUATION` | `false` |
 | `SENTRY_ENABLE_LOGS` | `false` |
-| `SENTRY_LOG_FLUSH_THRESHOLD` | `unset` |
-| `SENTRY_LOG_LEVEL` | `env('SENTRY_LOGS_LEVEL', env('LOG_LEVEL', 'debug'))` |
-| `SENTRY_LOGS_LEVEL` | `env('LOG_LEVEL', 'debug')` |
+| `SENTRY_LOG_FLUSH_THRESHOLD` | `null` |
+| `SENTRY_LOG_LEVEL` | `SENTRY_LOGS_LEVEL, then LOG_LEVEL (info)` |
+| `SENTRY_LOGS_LEVEL` | `LOG_LEVEL (info)` |
 | `SENTRY_SEND_DEFAULT_PII` | `false` |
 | `SENTRY_BREADCRUMBS_LOGS_ENABLED` | `true` |
 | `SENTRY_BREADCRUMBS_CACHE_ENABLED` | `true` |

@@ -31,3 +31,17 @@ Confirm that metadata and the pinned image both identify version 1.5.4. With a t
 ## Scope
 
 These checks validate the deployment template and selected application workflows. Live OAuth permissions, provider app review, public certificate issuance, real social-platform delivery, external databases/queues, S3 permissions, and all advanced upstream feature combinations need their own credentials and infrastructure. They are not implied by a healthy container or a successful mock response.
+
+## Verified configuration
+
+Tested on 2026-10-18 with Dokploy 0.30.8, Traefik 3.6.7, and `ghcr.io/coollabsio/shoutrrr:1.5.4` on Linux amd64. The application image digest was `sha256:9292ade51bae9477232aebaaf419e43b8f7bf8877391a5db2d9227e3af379ca2`.
+
+- Repository metadata, Compose/TOML validators, required-variable guards, and catalog production build passed. The catalog build reports its existing JavaScript chunk-size warning.
+- The PR preview's exported Base64 contained byte-identical Compose and TOML files and was imported into a fresh Dokploy Compose service.
+- Default deployment, database migrations, `/up`, non-root execution, isolated routing, first-owner signup, and dashboard rendering passed without optional credentials. Subsequent public registration was unavailable; unauthenticated API calls returned 401.
+- A workspace API key created a draft, uploaded an image, and scheduled another post. The bundled scheduler and worker published that post to a **local HTTPS Discord mock**, which captured the expected content; the app saved its remote ID.
+- Stop/start and container recreation preserved the original owner login, draft, media bytes, usable API token, RSA signing-key hashes, application key, and decrypted connected-account secret.
+- Additional variables entered only through Dokploy Environment reached Laravel's cached configuration. Optional SMTP delivered a verification message to a **local capture server**, and its signed HTTPS link verified the owner.
+- HTTPS routing with a **local/default certificate**, secure cookies, fresh login, public media access, and saved posts passed in Chrome. No JavaScript errors were observed in these browser flows; the application finished healthy with zero unexpected restarts and no application errors in its logs.
+
+No messages were sent to real social accounts. Public ACME certificate issuance, live provider OAuth/delivery, external databases/queues, and S3 were not exercised.

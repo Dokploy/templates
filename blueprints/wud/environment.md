@@ -15,11 +15,14 @@ No provider credential or separate session secret is required. Upstream also sup
 
 | Variable | Template value | Purpose |
 | --- | --- | --- |
-| `WUD_WATCHER_DOCKER_LOCAL_WATCHBYDEFAULT` | `true` | Monitor running containers unless filtered or labeled `wud.watch=false`. Set `false` for explicit opt-in labels. |
+| `WUD_WATCHER_DOCKER_LOCAL_WATCHBYDEFAULT` | `true` | Monitor running containers that pass the filters. Set `false` for explicit opt-in labels. |
+| `WUD_WATCHER_DOCKER_LOCAL_EXCLUDE` | `^dokploy([._-]\|$)` | Skip standard Dokploy infrastructure names by default. Remove this variable and redeploy to include them. Explicit `wud.watch=true` labels override the filter. See [monitoring scope](instructions.md#dokploy-infrastructure-is-ignored-by-default). |
 | `WUD_WATCHER_DOCKER_LOCAL_WATCHALL` | `false` | Set `true` to include stopped containers. |
 | `WUD_WATCHER_DOCKER_LOCAL_CRON` | `0 * * * *` | Hourly scan in `TZ`; upstream adds up to 60 seconds of random jitter. |
 | `WUD_LOG_LEVEL` | `info` | `trace`, `debug`, `info`, `warn`, `error`, or `fatal`. |
 | `TZ` | `UTC` | Time zone for cron and timestamps, for example `Europe/Paris`. |
+
+The exclusion matches container names, not image names: application Redis/PostgreSQL containers with other names remain monitored. To include Dokploy infrastructure, remove the entire exclusion line, save and redeploy, then select **Containers → Watch now**. Do not leave an empty `WUD_WATCHER_DOCKER_LOCAL_EXCLUDE=` entry: WUD rejects empty filter values. No Compose edit is needed.
 
 ## Fixed service settings
 
@@ -44,7 +47,7 @@ WUD's provider names are dynamic. For example, `LOCAL` identifies this template'
 
 | Variable or family | Default / use | Documentation |
 | --- | --- | --- |
-| `WUD_WATCHER_DOCKER_LOCAL_INCLUDE`, `WUD_WATCHER_DOCKER_LOCAL_EXCLUDE` | Unset; container-name or `label:` regular expressions. Explicit `wud.watch` labels take precedence. | [Docker watcher](https://getwud.app/docs/configuration/watchers/) |
+| `WUD_WATCHER_DOCKER_LOCAL_INCLUDE` | Unset; optional container-name or `label:` allowlist. The template's default exclusion is documented above. Explicit `wud.watch` labels take precedence over both filters. | [Docker watcher](https://getwud.app/docs/configuration/watchers/) |
 | `WUD_WATCHER_DOCKER_LOCAL_WATCHEVENTS` | `true`; follows lifecycle events. | [Docker watcher](https://getwud.app/docs/configuration/watchers/) |
 | `WUD_WATCHER_DOCKER_LOCAL_JITTER` | `60000` milliseconds; random scan delay. | [Docker watcher](https://getwud.app/docs/configuration/watchers/) |
 | `WUD_REGISTRY_{TYPE}_{NAME}_*` | Optional private-registry credentials and registry-specific options. Public images can use anonymous access, subject to rate limits. | [Registries](https://getwud.app/docs/configuration/registries/) |

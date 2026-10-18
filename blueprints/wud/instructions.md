@@ -10,13 +10,29 @@ Official documentation: [Quick start](https://getwud.app/docs/quickstart/), [con
 2. Enable **Isolated Deployment** for this Compose service before deploying. Dokploy should place WUD and its socket proxy on the stack's private network. Do not add a domain or publish a port for `wud-socket-proxy`.
 3. Set your domain to service `wud`, port `3000`, and enable HTTPS with HTTP redirection in Dokploy. Traefik terminates TLS; WUD uses HTTP inside the stack.
 4. Deploy and wait for both services to become healthy. Open the domain and sign in using the values from the Environment tab.
-5. Inspect the Containers page. The local watcher monitors running containers on the Docker host where this stack is deployed. Registry checks run hourly, with up to 60 seconds of jitter. Use the UI's watch action when you need an immediate scan.
+5. Inspect the Containers page. The local watcher monitors running containers on the Docker host where this stack is deployed, excluding Dokploy infrastructure by default as described below. Registry checks run hourly, with up to 60 seconds of jitter. Use the UI's watch action when you need an immediate scan.
 
 No external database, registry account, notification service, or password-hashing command is required. Public registries work anonymously within their rate limits. Large hosts or frequent scans may need registry credentials.
 
 ## Monitoring scope and Docker access
 
-`WUD_WATCHER_DOCKER_LOCAL_WATCHBYDEFAULT=true` discovers running containers automatically. Set it to `false` for opt-in monitoring, then add `wud.watch: "true"` to each monitored service's Docker labels. A `wud.watch: "false"` label excludes a container. These labels belong on the services being monitored, not in WUD's Environment tab.
+### Dokploy infrastructure is ignored by default
+
+The template adds this editable filter to Dokploy's Environment tab:
+
+```dotenv
+WUD_WATCHER_DOCKER_LOCAL_EXCLUDE=^dokploy([._-]|$)
+```
+
+It skips version tracking for containers named `dokploy` or beginning with `dokploy-`, `dokploy_`, or `dokploy.`. This covers standard Dokploy infrastructure names such as `dokploy-traefik`, `dokploy-postgres`, and `dokploy-redis`, including their usual Compose/Swarm suffixes. Dokploy upgrades remain managed through Dokploy.
+
+This is a **container-name** filter. Your application databases and other workloads with different names are still monitored; an application deliberately named with a matching `dokploy` prefix is also excluded. Customize the expression if your infrastructure uses different names.
+
+To track Dokploy infrastructure too, remove the entire `WUD_WATCHER_DOCKER_LOCAL_EXCLUDE` line from Dokploy's Environment tab, save, and redeploy. Do not leave an empty `WUD_WATCHER_DOCKER_LOCAL_EXCLUDE=` entry: WUD rejects empty filter values. Then select **Containers → Watch now** to run a fresh scan. To include just one excluded container, add `wud.watch: "true"` to that service's Docker labels and recreate it; this explicit label takes precedence over the exclusion filter.
+
+### Other monitoring controls
+
+`WUD_WATCHER_DOCKER_LOCAL_WATCHBYDEFAULT=true` discovers running containers that pass the filter. Set it to `false` for opt-in monitoring, then add `wud.watch: "true"` to each monitored service's Docker labels. A `wud.watch: "false"` label excludes a container. These labels belong on the services being monitored, not in WUD's Environment tab.
 
 Stopped containers are excluded by default. Set `WUD_WATCHER_DOCKER_LOCAL_WATCHALL=true` to include them. Optional include/exclude patterns, tag filters, digest tracking, and release links are covered in [environment.md](environment.md) and the [container label guide](https://getwud.app/docs/configuration/watchers/labels/).
 

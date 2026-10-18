@@ -72,8 +72,8 @@ services:
     image: falcosecurity/falcosidekick:2.35.0
     restart: unless-stopped
     environment:
-      TELEGRAM_TOKEN: "${TELEGRAM_BOT_TOKEN:?Set TELEGRAM_BOT_TOKEN}"
-      TELEGRAM_CHATID: "${TELEGRAM_CHAT_ID:?Set TELEGRAM_CHAT_ID}"
+      TELEGRAM_TOKEN: "${TELEGRAM_BOT_TOKEN:-}"
+      TELEGRAM_CHATID: "${TELEGRAM_CHAT_ID:-}"
       TELEGRAM_MINIMUMPRIORITY: "${TELEGRAM_MINIMUM_PRIORITY:-notice}"
       WEBUI_URL: http://falco-ui:2802
     depends_on:

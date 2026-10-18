@@ -1,6 +1,6 @@
 # Falco
 
-This template runs Falco with the modern eBPF engine, sends alerts to Telegram through Falcosidekick, and stores events in Redis Stack for Falcosidekick UI.
+This template runs Falco with the modern eBPF engine and stores events in Redis Stack for Falcosidekick UI. Telegram alerts through Falcosidekick are optional.
 
 ## Host requirements
 
@@ -19,14 +19,16 @@ Set these values in Dokploy's **Environment** tab:
 | Variable | Value |
 | --- | --- |
 | `MONITORED_HOST` | A hostname label for the monitored server, such as `production-01`. This appears in alerts and is not the UI domain. |
-| `TELEGRAM_BOT_TOKEN` | The token for your Telegram bot. |
-| `TELEGRAM_CHAT_ID` | The target chat ID, including its leading minus sign for a group chat. |
-| `TELEGRAM_MINIMUM_PRIORITY` | Defaults to `notice`. Change it to filter Telegram alerts. |
+| `TELEGRAM_BOT_TOKEN` | Optional. Leave empty to disable Telegram alerts, or set it together with `TELEGRAM_CHAT_ID` to enable them. |
+| `TELEGRAM_CHAT_ID` | Optional. The target chat ID, including its leading minus sign for a group chat. Set it together with `TELEGRAM_BOT_TOKEN`. |
+| `TELEGRAM_MINIMUM_PRIORITY` | Defaults to `notice`. Filters Telegram alerts when Telegram is configured. |
 | `FALCO_UI_USER` | Defaults to `admin`. |
 | `FALCO_UI_PASSWORD` | Generated automatically when you import the template. |
 | `FALCO_REDIS_PASSWORD` | Generated automatically when you import the template. |
 
-Start a conversation with the bot, or add it to the target group, before deploying. Deployment stops with a clear error if the monitored hostname, Telegram credentials, or passwords are empty.
+For deployment without Telegram, leave `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` empty. Falco still detects events and sends them to the dashboard. Only the monitored hostname and the UI and Redis passwords are required.
+
+To enable Telegram alerts, provide both credentials, start a conversation with the bot or add it to the target group, and redeploy.
 
 The generated passwords are independent 64-character hexadecimal strings. To replace one, generate a new value with `openssl rand -hex 32`. Keep the Redis password unchanged across redeployments unless you also update all services that use it.
 
@@ -46,4 +48,4 @@ On the monitored server, start an interactive shell in a disposable container:
 docker run --rm -it alpine:3.21 sh
 ```
 
-Exit the shell after it starts. Check the Falco logs, the dashboard, and the Telegram chat for the **Terminal shell in container** event. Its hostname should match `MONITORED_HOST`.
+Exit the shell after it starts. Check the Falco logs and dashboard for the **Terminal shell in container** event. Its hostname should match `MONITORED_HOST`. If Telegram is configured, check the Telegram chat as well.

@@ -6,6 +6,7 @@ redis_password = "${hash:64}"
 [config]
 env = [
   "MONITORED_HOST=",
+  # Optional Telegram notifications; leave both credentials empty to disable.
   "TELEGRAM_BOT_TOKEN=",
   "TELEGRAM_CHAT_ID=",
   "TELEGRAM_MINIMUM_PRIORITY=notice",

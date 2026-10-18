@@ -1,0 +1,24 @@
+services:
+  whatsupdocker:
+    image: getwud/wud:latest
+    expose:
+      - "3000"
+
+    environment:
+      WUD_AUTH_ADMIN_USER: ${WUD_AUTH_ADMIN_USER}
+      WUD_AUTH_ADMIN_PASSWORD: ${WUD_AUTH_ADMIN_PASSWORD}
+
+      # Explicitly configure the local Docker watcher
+      WUD_WATCHER_LOCAL_SOCKET: /var/run/docker.sock
+      WUD_WATCHER_LOCAL_WATCHALL: "true"
+      WUD_WATCHER_LOCAL_WATCHBYDEFAULT: "true"
+      WUD_WATCHER_LOCAL_WATCHATSTART: "true"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - wud_data:/store
+
+    restart: unless-stopped
+
+volumes:
+  wud_data:

@@ -1,0 +1,13 @@
+{
+	"id": "mosquitto",
+	"name": "Eclipse Mosquitto",
+	"version": "2.1.2",
+	"description": "A lightweight, open-source MQTT broker for IoT and home automation with persistent messaging and WebSocket support.",
+	"logo": "mosquitto.svg",
+	"links": {
+		"github": "https://github.com/eclipse-mosquitto/mosquitto",
+		"website": "https://mosquitto.org/",
+		"docs": "https://mosquitto.org/documentation/"
+	},
+	"tags": ["broker", "iot", "mqtt"]
+}

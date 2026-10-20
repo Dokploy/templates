@@ -13,9 +13,13 @@ services:
       - -ec
       - |
         umask 077
-        mosquitto_passwd -b -c /mosquitto/data/passwordfile "$$MQTT_USERNAME" "$$MQTT_PASSWORD"
-        chown 1883:1883 /mosquitto/data/passwordfile
-        chmod 600 /mosquitto/data/passwordfile
+        password_file=$$(mktemp /mosquitto/data/passwordfile.XXXXXX)
+        trap 'rm -f "$$password_file"' EXIT
+        mosquitto_passwd -b -c - "$$MQTT_USERNAME" "$$MQTT_PASSWORD" > "$$password_file"
+        chown 1883:1883 "$$password_file"
+        chmod 600 "$$password_file"
+        mv -f "$$password_file" /mosquitto/data/passwordfile
+        trap - EXIT
         exec /docker-entrypoint.sh /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf
     expose:
       - 1883 # MQTT over TCP (TLS terminated by Traefik on 8883)

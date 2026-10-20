@@ -1,7 +1,6 @@
 # Dokploy Open Source Templates
 
-This fork adds a Harbor 2.15.4 + Trivy template to the official Dokploy Open Source Templates.
-See [Harbor setup](HARBOR.md) and [deployment instructions](blueprints/harbor/instructions.md).
+This is the official repository for the Dokploy Open Source Templates.
 
 ### How to add a new template
 

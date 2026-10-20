@@ -21,11 +21,6 @@ Init source: `fc224d78800ffad4cd2a21ecd08f24c6fa122b82`.
   forced container recreation.
 - Explicit reconfiguration refused running workloads; changing worker count
   with workloads stopped preserved the existing keys and private project.
-- The catalogue production build passed on Windows after fixing the handling
-  of Git's `public/blueprints` symlink. The HTTP preview served Harbor metadata,
-  Compose, TOML, instructions and the official logo successfully.
-
-The catalogue build reports its existing JavaScript chunk-size warning.
 Integration tests use a unique random `harbor-ci-*` instance and remove only
 their own containers, volumes and default network.
 
@@ -40,5 +35,15 @@ their own containers, volumes and default network.
   vulnerability scan require the deployed domain and vulnerability DB download.
 - No production data migration or Harbor version upgrade was attempted.
 
-See [instructions.md](instructions.md) for deployment acceptance steps and
-[../../HARBOR.md](../../HARBOR.md) for local validation commands.
+See [instructions.md](instructions.md) for deployment acceptance steps.
+
+## Reproduce local checks
+
+```sh
+node build-scripts/generate-meta.js --check
+node blueprints/harbor/tools/check.mjs
+docker build --target test -t harbor-template-init-test:local blueprints/harbor
+node blueprints/harbor/tools/integration.mjs
+```
+
+Install the existing `app` dependencies with pnpm before running `check.mjs`.

@@ -16,30 +16,6 @@ port = 8000
 host = "${broker_domain}"
 
 [[config.mounts]]
-filePath = "config.xml"
-content = """
-<?xml version="1.0" encoding="UTF-8"?>
-<hivemq>
-  <listeners>
-    <tcp-listener>
-      <port>1883</port>
-      <bind-address>0.0.0.0</bind-address>
-    </tcp-listener>
-    <websocket-listener>
-      <port>8000</port>
-      <bind-address>0.0.0.0</bind-address>
-      <path>/mqtt</path>
-      <subprotocols>
-        <subprotocol>mqttv3.1</subprotocol>
-        <subprotocol>mqtt</subprotocol>
-      </subprotocols>
-    </websocket-listener>
-  </listeners>
-  <persistence><mode>file</mode></persistence>
-</hivemq>
-"""
-
-[[config.mounts]]
 filePath = "hivemq-ce-init.sh"
 content = '''
 #!/bin/sh
@@ -75,7 +51,8 @@ escape_xml() {
 }
 username=$(escape_xml "$MQTT_USERNAME")
 password=$(escape_xml "$MQTT_PASSWORD")
-cat > "$extension/extension-config.xml" <<'CONFIG'
+mkdir -p "$extension/conf"
+cat > "$extension/conf/config.xml" <<'CONFIG'
 <?xml version="1.0" encoding="UTF-8"?>
 <extension-configuration>
   <password-type>PLAIN</password-type>
@@ -83,7 +60,7 @@ cat > "$extension/extension-config.xml" <<'CONFIG'
 </extension-configuration>
 CONFIG
 
-credentials=$(mktemp "$extension/.credentials.XXXXXX")
+credentials=$(mktemp "$extension/conf/.credentials.XXXXXX")
 cat > "$credentials" <<CREDENTIALS
 <?xml version="1.0" encoding="UTF-8"?>
 <file-rbac>
@@ -104,5 +81,8 @@ cat > "$credentials" <<CREDENTIALS
 CREDENTIALS
 chown -R 10000:10000 "$extension"
 chmod 600 "$credentials"
-mv -f "$credentials" "$extension/credentials.xml"
+mv -f "$credentials" "$extension/conf/credentials.xml"
+
+# Remove deprecated paths from existing deployments after the new files are ready.
+rm -f "$extension/extension-config.xml" "$extension/credentials.xml"
 '''

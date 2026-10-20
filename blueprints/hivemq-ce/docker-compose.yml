@@ -28,14 +28,13 @@ services:
       - |
         test -f /opt/hivemq/extensions/hivemq-file-rbac-extension/hivemq-extension.xml
         test -f /opt/hivemq/extensions/hivemq-file-rbac-extension/hivemq-file-rbac-extension-4.6.17.jar
-        test -f /opt/hivemq/extensions/hivemq-file-rbac-extension/credentials.xml
+        test -f /opt/hivemq/extensions/hivemq-file-rbac-extension/conf/credentials.xml
         test ! -e /opt/hivemq/extensions/hivemq-allow-all-extension
         exec /opt/docker-entrypoint.sh /opt/hivemq/bin/run.sh
     expose:
       - 1883 # MQTT over TCP (TLS terminated by Traefik on 8883)
       - 8000 # MQTT over WebSockets (WSS via Dokploy HTTPS, path /mqtt)
     volumes:
-      - ../files/config.xml:/opt/hivemq/conf/config.xml:ro
       - hivemq_data:/opt/hivemq/data
       - hivemq_log:/opt/hivemq/log
       - hivemq_extensions:/opt/hivemq/extensions

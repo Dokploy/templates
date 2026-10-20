@@ -14,16 +14,17 @@ passwords.
 `origin` points to `https://github.com/XnCN/harbor-dokploy-template.git`;
 `upstream` points to the official Dokploy templates repository.
 
-Create the public GitHub repository, then publish the branch with its full
-history. This makes the pinned init source commit accessible to Docker's Git
-builder. Do not squash away that commit. No image publication is required.
+The public fork is published at
+[XnCN/harbor-dokploy-template](https://github.com/XnCN/harbor-dokploy-template),
+with `feat/harbor-template` as its default branch. The pinned init source commit
+is accessible to Docker's Git builder. Publish future updates with their full
+history; do not squash away that commit. No image publication is required.
 
 ```sh
 git push -u origin feat/harbor-template
 ```
 
-You can set this branch as the default branch on GitHub. Build and host the
-existing `app` application to publish the template catalogue. Inclusion in the
+Build and host the existing `app` application to publish the template catalogue. Inclusion in the
 official catalogue requires a separate upstream PR; pushing this fork does not
 add Harbor to the official catalogue automatically.
 

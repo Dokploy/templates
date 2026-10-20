@@ -7,22 +7,18 @@ Use Docker Compose mode, not Docker Stack/Swarm mode.
 
 ## Before the first deployment
 
-1. Publish this fork, including the init source commit referenced by
-   `tools/build-source.json`, to the public repository
-   `https://github.com/XnCN/harbor-dokploy-template`. Git builds cannot use
-   unpublished files. No image registry or GHCR publication is required.
-2. Import Harbor from the template catalogue or paste its Base64 configuration
+1. Import Harbor from the template catalogue or paste its Base64 configuration
    into **Compose → Advanced → Import**.
-3. Keep the generated `HARBOR_INSTANCE_ID` and both generated passwords.
+2. Keep the generated `HARBOR_INSTANCE_ID` and both generated passwords.
    The instance ID is the permanent volume prefix; never reuse it for another
    deployment. Re-importing generates new credentials and a new volume prefix.
-4. Set the domain to a dedicated FQDN pointing to the Dokploy host. Ensure
+3. Set the domain to a dedicated FQDN pointing to the Dokploy host. Ensure
    `HARBOR_HOSTNAME` matches the domain exactly, without a scheme, port or path.
    Change both before the first deployment if replacing the generated domain.
-5. Confirm domain routing uses service **proxy**, port **8080**, path **/**,
+4. Confirm domain routing uses service **proxy**, port **8080**, path **/**,
    HTTPS and your Let's Encrypt certificate. Enable HTTP-to-HTTPS redirection
    in Dokploy. Do not add Basic Auth/ForwardAuth in front of Harbor.
-6. Deploy. The init service must finish with exit code 0 before workloads start.
+5. Deploy. The init service must finish with exit code 0 before workloads start.
    Log in at `https://YOUR_DOMAIN` as **admin**, with `HARBOR_ADMIN_PASSWORD`.
 
 Dokploy supplies network isolation and Traefik routing. Do not add host ports,

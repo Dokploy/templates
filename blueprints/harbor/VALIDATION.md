@@ -11,6 +11,8 @@ Init source: `fc224d78800ffad4cd2a21ecd08f24c6fa122b82`.
   immutable Git source and local source/commit consistency checks passed.
 - The Base64 import payload matches the catalogue's `{ compose, config }` format.
 - Docker built the init image and ran all 14 Python unit tests successfully.
+- After publication, Docker fetched the pinned source commit from the public
+  GitHub repository and built the runtime init image successfully.
 - A fresh isolated Compose deployment completed init and reached healthy state
   for all workloads, including Trivy.
 - Harbor health, admin login, registry authentication challenge and public token
@@ -29,10 +31,9 @@ their own containers, volumes and default network.
 
 ## Remaining deployment acceptance checks
 
-- The new GitHub repository has not been published by this task. Git builds
-  require the pinned source commit to be accessible in that public repository.
-- Remote Git fetching and actual Dokploy Base64 import have not been exercised.
-  Local integration builds the same pinned support files from disk.
+- Actual Dokploy Base64 import has not been exercised. Local integration builds
+  the same pinned support files from disk; remote Git building was verified
+  separately after publication.
 - Public DNS, Let's Encrypt certificate issuance and Dokploy's generated
   network/domain configuration require verification on the target server.
 - End-to-end Docker login, push/pull over trusted HTTPS and a complete Trivy

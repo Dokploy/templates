@@ -1,0 +1,48 @@
+name: Validate Harbor
+
+on:
+  pull_request:
+    paths: ['blueprints/harbor/**', '.github/workflows/validate-harbor.yml']
+  push:
+    paths: ['blueprints/harbor/**', '.github/workflows/validate-harbor.yml']
+  workflow_dispatch:
+    inputs:
+      integration:
+        description: Run isolated Docker installation and redeploy tests
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+          cache-dependency-path: |
+            app/pnpm-lock.yaml
+            build-scripts/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+        working-directory: app
+      - run: node build-scripts/generate-meta.js --check
+      - run: node blueprints/harbor/tools/check.mjs
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+        working-directory: build-scripts
+      - run: pnpm exec tsx validate-docker-compose.ts --file ../blueprints/harbor/docker-compose.yml
+        working-directory: build-scripts
+      - run: pnpm exec tsx validate-template.ts --dir ../blueprints/harbor
+        working-directory: build-scripts
+      - run: docker build --target test -t harbor-template-init-test:ci blueprints/harbor
+      - if: ${{ github.event_name == 'workflow_dispatch' && inputs.integration }}
+        run: node blueprints/harbor/tools/integration.mjs

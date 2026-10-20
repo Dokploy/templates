@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+instance_id = "harbor-${uuid}"
+admin_password = "${password:32}"
+db_password = "${password:32}"
+
+[config]
+env = [
+  "HARBOR_INSTANCE_ID=${instance_id}",
+  "HARBOR_HOSTNAME=${main_domain}",
+  "HARBOR_ADMIN_PASSWORD=${admin_password}",
+  "HARBOR_DB_PASSWORD=${db_password}"
+]
+
+[[config.domains]]
+serviceName = "proxy"
+port = 8080
+host = "${main_domain}"
+path = "/"
+https = true
+certificateType = "letsencrypt"

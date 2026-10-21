@@ -1,0 +1,22 @@
+# VAULT_OIDC_CLIENT_ID and VAULT_OIDC_CLIENT_SECRET are a Google OAuth client (type "Web application", redirect URI
+# https://<your domain>/auth/callback). Fill them in the Environment tab before deploying: while empty, the server
+# exits at startup with a message saying which setting is missing.
+# Set your real domain in the Domains tab, turn HTTPS on, and set VAULT_DOMAIN to the same domain.
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+env = [
+  "VAULT_DOMAIN=${main_domain}",
+  # Required: a Google OAuth client (see the comment at the top).
+  "VAULT_OIDC_CLIENT_ID=",
+  "VAULT_OIDC_CLIENT_SECRET=",
+  # Optional: `cloudflare` when Cloudflare's proxy is in front, so the audit log sees the real client IP.
+  "VAULT_TRUSTED_PROXIES=",
+]
+
+[[config.domains]]
+serviceName = "kuukura"
+port = 8080
+host = "${main_domain}"

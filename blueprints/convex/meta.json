@@ -1,7 +1,7 @@
 {
   "id": "convex",
   "name": "Convex",
-  "version": "latest",
+  "version": "72ce13c",
   "description": "Convex is an open-source reactive database designed to make life easy for web app developers.",
   "logo": "convex.svg",
   "links": {

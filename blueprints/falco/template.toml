@@ -5,7 +5,8 @@ redis_password = "${hash:64}"
 
 [config]
 env = [
-  "MONITORED_HOST=",
+  # Name shown for this host in alerts.
+  "MONITORED_HOST=dokploy",
   # Optional Telegram notifications; leave both credentials empty to disable.
   "TELEGRAM_BOT_TOKEN=",
   "TELEGRAM_CHAT_ID=",

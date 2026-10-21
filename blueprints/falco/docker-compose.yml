@@ -7,7 +7,7 @@ x-logging: &default-logging
 services:
   falco:
     image: falcosecurity/falco:0.45.0
-    hostname: "${MONITORED_HOST:?Set MONITORED_HOST}"
+    hostname: "${MONITORED_HOST:-dokploy}"
     restart: unless-stopped
     cap_drop:
       - ALL

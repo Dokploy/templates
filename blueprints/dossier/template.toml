@@ -2,12 +2,14 @@
 main_domain = "${domain}"
 postgres_password = "${hash:48}"
 dossier_secret = "${hash:64}"
+admin_password = "${password:24}"
 
 [config]
 env = [
   "POSTGRES_PASSWORD=${postgres_password}",
   "DOSSIER_SECRET=${dossier_secret}",
-  "DOSSIER_PASSWORD=",
+  # Sign-in password. Its argon2id hash is computed at startup.
+  "DOSSIER_ADMIN_PASSWORD=${admin_password}",
   "DOSSIER_TELEMETRY=off",
   "DOSSIER_BACKUP_RETENTION_DAYS=14",
   "TZ=UTC"

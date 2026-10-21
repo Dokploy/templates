@@ -1,0 +1,49 @@
+# MQTT over TLS requires a Traefik TCP entrypoint named "mqtts" on port 8883
+# and a corresponding port mapping on the Traefik container.
+# Dokploy exposes the internal WebSocket listener (9001) over WSS on port 443.
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2.1.2-alpine
+    restart: unless-stopped
+    environment:
+      - MQTT_USERNAME=${MQTT_USERNAME}
+      - MQTT_PASSWORD=${MQTT_PASSWORD}
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        umask 077
+        password_file=$$(mktemp /mosquitto/data/passwordfile.XXXXXX)
+        trap 'rm -f "$$password_file"' EXIT
+        mosquitto_passwd -b -c - "$$MQTT_USERNAME" "$$MQTT_PASSWORD" > "$$password_file"
+        chown 1883:1883 "$$password_file"
+        chmod 600 "$$password_file"
+        mv -f "$$password_file" /mosquitto/data/passwordfile
+        trap - EXIT
+        exec /docker-entrypoint.sh /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf
+    expose:
+      - 1883 # MQTT over TCP (TLS terminated by Traefik on 8883)
+      - 9001 # MQTT over WebSockets (WSS via Dokploy HTTPS)
+    volumes:
+      - ../files/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto_data:/mosquitto/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          mosquitto_pub -h 127.0.0.1 -p 1883 -u "$$MQTT_USERNAME"
+          -P "$$MQTT_PASSWORD" -t __healthcheck -m ok -q 1 >/dev/null 2>&1
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "traefik.tcp.routers.mosquitto-mqtts.entrypoints=mqtts"
+      - "traefik.tcp.routers.mosquitto-mqtts.rule=HostSNI(`${MQTT_DOMAIN}`)"
+      - "traefik.tcp.routers.mosquitto-mqtts.tls=true"
+      - "traefik.tcp.routers.mosquitto-mqtts.tls.certresolver=letsencrypt"
+      - "traefik.tcp.routers.mosquitto-mqtts.service=mosquitto-mqtts"
+      - "traefik.tcp.services.mosquitto-mqtts.loadbalancer.server.port=1883"
+
+volumes:
+  mosquitto_data:

@@ -1,0 +1,13 @@
+{
+  "id": "wud",
+  "name": "WUD (What's Up Docker?)",
+  "version": "9.5.0",
+  "description": "WUD monitors Docker containers for image updates and shows available versions in a web dashboard. This template includes administrator authentication, persistent storage, and a Docker socket proxy that blocks write requests.",
+  "logo": "wud.svg",
+  "links": {
+    "github": "https://github.com/getwud/wud",
+    "website": "https://getwud.app/",
+    "docs": "https://getwud.app/docs/quickstart/"
+  },
+  "tags": ["monitoring", "docker", "devops"]
+}

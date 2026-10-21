@@ -1,0 +1,80 @@
+services:
+  cypht:
+    image: cypht/cypht:2.13.0
+    restart: unless-stopped
+    depends_on:
+      cypht-db:
+        condition: service_healthy
+      cypht-redis:
+        condition: service_healthy
+    expose:
+      - 80
+    environment:
+      # Initial account (created on first start) and admin
+      AUTH_USERNAME: ${ADMIN_USERNAME}
+      AUTH_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_USERS: ${ADMIN_USERNAME}
+
+      # Accounts and user settings stored in MariaDB
+      AUTH_TYPE: DB
+      USER_CONFIG_TYPE: DB
+      DB_CONNECTION_TYPE: host
+      DB_DRIVER: mysql
+      DB_HOST: cypht-db
+      DB_PORT: 3306
+      DB_NAME: cypht
+      DB_USER: cypht
+      DB_PASS: ${DB_PASSWORD}
+
+      # Sessions and cache in Redis
+      SESSION_TYPE: REDIS
+      ENABLE_REDIS: "true"
+      REDIS_SERVER: cypht-redis
+      REDIS_PORT: 6379
+      REDIS_PASS: ${REDIS_PASSWORD}
+      # The image's baked-in .env sets a unix socket path, which takes precedence over host/port
+      REDIS_SOCKET: ""
+      ENABLE_MEMCACHED: "false"
+
+      ENCRYPT_LOCAL_STORAGE: "true"
+    volumes:
+      - cypht-attachments:/var/lib/hm3/attachments
+
+  cypht-db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: cypht
+      MARIADB_USER: cypht
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - cypht-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cypht-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    # volatile-lru: sessions and cache keys both carry a TTL, so only they can be evicted
+    command:
+      - sh
+      - -c
+      - exec redis-server --requirepass "$$REDIS_PASSWORD" --appendonly yes --maxmemory 256mb --maxmemory-policy volatile-lru
+    volumes:
+      - cypht-redis:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  cypht-attachments: {}
+  cypht-db: {}
+  cypht-redis: {}

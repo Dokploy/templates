@@ -1,0 +1,10 @@
+services:
+  3dokploy:
+    image: ghcr.io/suleyman/3dokploy:0.1.1
+    restart: unless-stopped
+    environment:
+      - DOKPLOY_URL=${DOKPLOY_URL}
+      - DOKPLOY_API_KEY=${DOKPLOY_API_KEY}
+      - BASIC_AUTH=${BASIC_AUTH}
+    extra_hosts:
+      - host.docker.internal:host-gateway

@@ -1,19 +1,15 @@
 {
   "id": "seafile",
   "name": "Seafile",
-  "version": "13.0-latest",
+  "version": "14.0-latest",
   "description": "Seafile is an open-source file sync and sharing platform. Self-host it on your own server with Dokploy, which deploys Seafile as a Docker Compose service in a few clicks.",
   "logo": "seafile.svg",
   "links": {
     "github": "https://github.com/haiwen/seafile",
     "website": "https://seafile.com",
-    "docs": "https://manual.seafile.com/13.0"
+    "docs": "https://manual.seafile.com/14.0"
   },
-  "tags": [
-    "file-manager",
-    "file-sharing",
-    "storage"
-  ],
+  "tags": ["file-manager", "file-sharing", "storage"],
   "seoTitle": "Self-Host Seafile in minutes",
   "seoDescription": "Cloud storage for file sync and sharing. Self-host Seafile on Dokploy in minutes – no manual setup needed."
 }

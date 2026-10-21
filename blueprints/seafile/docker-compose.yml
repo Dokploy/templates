@@ -1,4 +1,4 @@
-# https://manual.seafile.com/latest/setup/setup_ce_by_docker/
+# https://manual.seafile.com/14.0/setup/setup_ce_by_docker/
 #
 # This Dokploy template for seafile sets the default credentials to:
 #   USERNAME: admin@example.com
@@ -10,6 +10,10 @@
 #
 #     If you have already deployed once, changes to some environment
 #     variables may not take effect. For example, initial passwords.
+#
+# Upgrading an existing Seafile 13 instance requires a backup and migration
+# of any customised settings stored in its persistent volume. See:
+# https://manual.seafile.com/14.0/upgrade/upgrade_docker_14.0/
 
 services:
   seafile-db:
@@ -46,7 +50,7 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD:?Variable is not set or empty}
 
   seafile:
-    image: seafileltd/seafile-mc:13.0-latest
+    image: seafileltd/seafile-mc:14.0-latest
     restart: unless-stopped
     volumes:
       - seafile-data:/shared
@@ -69,6 +73,8 @@ services:
       - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
       - SEAFILE_LOG_TO_STDOUT=${SEAFILE_LOG_TO_STDOUT:-false}
       - ENABLE_GO_FILESERVER=${ENABLE_GO_FILESERVER:-true}
+      - ENABLE_SEAFDAV=${ENABLE_SEAFDAV:-false}
+      - SEAFDAV_WORKERS=${SEAFDAV_WORKERS:-5}
       - ENABLE_SEADOC=${ENABLE_SEADOC:-true}
       - SEADOC_SERVER_URL=${SEADOC_SERVER_URL:?Variable is not set or empty}
       - CACHE_PROVIDER=${CACHE_PROVIDER:-redis}
@@ -110,7 +116,7 @@ services:
       - DB_PORT=${SEAFILE_MYSQL_DB_PORT:-3306}
       - DB_USER=${SEAFILE_MYSQL_DB_USER:-seafile}
       - DB_PASSWORD=${SEAFILE_MYSQL_DB_PASSWORD:?Variable is not set or empty}
-      - DB_NAME=${SEADOC_MYSQL_DB_NAME:-seahub_db}
+      - DB_NAME=${SEADOC_MYSQL_DB_NAME:-${SEAFILE_MYSQL_DB_SEAHUB_DB_NAME:-seahub_db}}
       - TIME_ZONE=${TIME_ZONE:-Etc/UTC}
       - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
       - NON_ROOT=${NON_ROOT:-false}

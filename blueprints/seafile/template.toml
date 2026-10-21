@@ -30,5 +30,7 @@ INIT_SEAFILE_ADMIN_EMAIL = "admin@example.com"
 INIT_SEAFILE_ADMIN_PASSWORD = "${admin_password}"
 
 ENABLE_GO_FILESERVER = "true"
+ENABLE_SEAFDAV = "false"
+SEAFDAV_WORKERS = "5"
 ENABLE_SEADOC = "true"
 SEADOC_SERVER_URL = "https://${main_domain}/sdoc-server"

@@ -6,10 +6,13 @@ mqtt_domain = "mqtt.${main_domain}"
 openssl_key = "${password:32}"
 notifications_tracking_secret = "${password:32}"
 db_pw = "${password:32}"
+db_root_pw = "${password:32}"
+db_user_pw = "${password:32}"
 usage_pw = "${password:32}"
 executor_secret = "${password:32}"
 jobs_secret = "${password:32}"
 geo_secret = "${password:32}"
+console_domain = "console.${main_domain}"
 
 [config]
 # Build jobs and runtimes join <appName>_default, which isolated deployments never create
@@ -30,8 +33,9 @@ env = [
   "_APP_OPENSSL_KEY_V1=${openssl_key}",
   "_APP_NOTIFICATIONS_TRACKING_SECRET=${notifications_tracking_secret}",
   "_APP_DOMAIN=${main_domain}",
-  "_APP_CONSOLE_DOMAIN=${main_domain}",
-  "_APP_CONSOLE_URL=",
+  "_APP_CONSOLE_DOMAIN=${console_domain}",
+  "_APP_CONSOLE_URL=https://${console_domain}",
+  "_APP_CONSOLE_HOSTNAMES=${console_domain}",
   "_APP_CONSOLE_TRUSTED_PROJECTS=",
   "_APP_CUSTOM_DOMAIN_DENY_LIST=example.com,test.com,app.example.com",
   "_APP_DOMAIN_FUNCTIONS=${functions_domain}",
@@ -83,7 +87,7 @@ env = [
   "_APP_DATABASE_SHARED_TABLES=",
   "_APP_DATABASE_SHARED_NAMESPACE=",
   "_APP_LIMIT_DATABASE_BATCH=100",
-  "_APP_DOCUMENTSDB=disabled",
+  "_APP_DOCUMENTSDB=enabled",
   "_APP_DB_ADAPTER_DOCUMENTSDB=mongodb",
   "_APP_DB_HOST_DOCUMENTSDB=mongodb",
   "_APP_DB_PORT_DOCUMENTSDB=27017",
@@ -91,7 +95,7 @@ env = [
   "_APP_DB_USER_DOCUMENTSDB=",
   "_APP_DB_PASS_DOCUMENTSDB=",
   "_APP_CONNECTIONS_DATABASE_DOCUMENTSDB=",
-  "_APP_VECTORSDB=disabled",
+  "_APP_VECTORSDB=enabled",
   "_APP_DB_ADAPTER_VECTORSDB=postgresql",
   "_APP_DB_HOST_VECTORSDB=postgresql",
   "_APP_DB_PORT_VECTORSDB=5432",
@@ -160,7 +164,7 @@ env = [
   "_APP_FUNCTIONS_TIMEOUT=900",
   "_APP_FUNCTIONS_CREATION_ABUSE_LIMIT=5000",
   "_APP_FUNCTIONS_SCHEDULE_SPREAD=0",
-  "_APP_FUNCTIONS_RUNTIMES=node-22,python-3.12,php-8.3,ruby-3.3,dart-3.5,go-1.23,rust-1.83,bun-1.1,deno-1.46,java-21.0,dotnet-8.0",
+  "_APP_FUNCTIONS_RUNTIMES=node-22,node-24,node-26,python-3.12,php-8.3,ruby-3.3,dart-3.5,go-1.23,rust-1.83,bun-1.1,deno-1.46,java-21.0,dotnet-8.0",
   "_APP_SITES_TIMEOUT=900",
   "_APP_SITES_RUNTIMES=static-1,node-22",
   "_APP_EXECUTOR_SECRET=${executor_secret}",
@@ -213,8 +217,180 @@ env = [
   "_APP_MIGRATION_HOST=appwrite",
   "_APP_MIGRATIONS_FIREBASE_CLIENT_ID=",
   "_APP_MIGRATIONS_FIREBASE_CLIENT_SECRET=",
-  "_APP_ASSISTANT_OPENAI_API_KEY=",
+  "_APP_DB_ROOT_PASS=${db_root_pw}",
+  "_APP_DB_USER_PASS=${db_user_pw}",
 ]
+
+[[config.mounts]]
+filePath = "mongo-init.js"
+content = """// mongo-init.js
+
+const adminDb = db.getSiblingDB('admin');
+
+const username = process.env.MONGO_INITDB_USERNAME;
+const password = process.env.MONGO_INITDB_PASSWORD;
+const database = process.env.MONGO_INITDB_DATABASE;
+
+// Idempotent: the official entrypoint races the real server on port 27017 when
+// initialising a fresh volume (appwrite/appwrite#13593), so this script may run
+// more than once. Skip if the user already exists.
+if (adminDb.getUser(username) === null) {
+  adminDb.createUser({
+    user: username,
+    pwd: password,
+    roles: [
+      { role: 'readWrite', db: database }
+    ]
+  });
+}
+"""
+
+[[config.mounts]]
+filePath = "mongo-entrypoint.sh"
+content = """#!/bin/bash
+set -e
+
+KEYFILE_PATH="/data/keyfile/mongo-keyfile"
+
+if [ ! -f "$KEYFILE_PATH" ]; then
+  echo "Generating random MongoDB keyfile..."
+  mkdir -p /data/keyfile
+  openssl rand -base64 756 > "$KEYFILE_PATH"
+fi
+
+chmod 400 "$KEYFILE_PATH"
+chown mongodb:mongodb "$KEYFILE_PATH" 2>/dev/null || chown 999:999 "$KEYFILE_PATH"
+
+# The standard entrypoint initialises an empty data directory with a second
+# mongod on 27017, stopped with `mongod --shutdown`. That returns once the
+# server clears <dbpath>/mongod.lock, several steps before it exits and
+# releases the port, and the real server binds a millisecond after it starts --
+# so a slow shutdown tail leaves it exiting 48, "Address already in use",
+# taking the container with it (appwrite/appwrite#13593). Initialise here
+# instead, on a port the real server never binds, and hand over a directory
+# the standard entrypoint has nothing left to do.
+INIT_MARKER=/data/db/.appwrite-initialised
+if [ ! -e "$INIT_MARKER" ]; then
+  INIT_PORT=27018
+  echo "Initialising MongoDB data directory..."
+  find -L /data/db \\! -user mongodb -exec chown mongodb '{}' +
+  export MONGO_INITDB_DATABASE="${MONGO_INITDB_DATABASE:-test}"
+  gosu mongodb mongod --dbpath /data/db --bind_ip 127.0.0.1 --port "$INIT_PORT" &
+  INIT_SERVER=$!
+  READY=
+  for _ in $(seq 1 30); do
+    if mongosh --host 127.0.0.1 --port "$INIT_PORT" --quiet --eval 'quit(0)' > /dev/null 2>&1; then
+      READY=1
+      break
+    fi
+    if ! kill -0 "$INIT_SERVER" 2>/dev/null; then
+      break
+    fi
+    sleep 1
+  done
+  if [ -z "$READY" ]; then
+    echo "MongoDB did not accept connections for initialisation" >&2
+    exit 1
+  fi
+  mongosh --host 127.0.0.1 --port "$INIT_PORT" --quiet admin --eval '
+    const username = process.env.MONGO_INITDB_ROOT_USERNAME;
+    if (db.getUser(username) === null) {
+      db.createUser({
+        user: username,
+        pwd: process.env.MONGO_INITDB_ROOT_PASSWORD,
+        roles: [{ role: "root", db: "admin" }]
+      });
+    }
+  '
+  mongosh --host 127.0.0.1 --port "$INIT_PORT" --quiet "$MONGO_INITDB_DATABASE" /mongo-init.js
+  touch "$INIT_MARKER"
+  kill -TERM "$INIT_SERVER"
+  wait "$INIT_SERVER"
+  echo "MongoDB data directory initialised."
+fi
+
+exec docker-entrypoint.sh mongod --replSet rs0 --bind_ip_all --auth --keyFile "$KEYFILE_PATH"
+"""
+
+[[config.mounts]]
+filePath = "clickhouse-config.xml"
+content = """<?xml version="1.0"?>
+<!--
+    Retention for ClickHouse's own system log tables.
+
+    Every <ttl> in the image's config.xml sits inside an XML comment, so these
+    tables keep every row forever, and the metric ones add a row per second
+    whether or not the instance serves traffic. Left alone they outgrow the
+    usage data they sit next to and fill the volume.
+
+    When a window here changes, ClickHouse replaces the table on the next
+    restart and keeps the old one, rows and all, as <log>_<N>.
+    clickhouse-init.sh gives those old tables the same window.
+-->
+<clickhouse>
+    <!-- The metric, trace and profile logs sample the server every second whether
+         or not Appwrite serves traffic, and nothing reads them back, so their
+         writes and the merges behind them are pure overhead. -->
+    <asynchronous_metric_log remove="1"/>
+    <metric_log remove="1"/>
+    <histogram_metric_log remove="1"/>
+    <query_metric_log remove="1"/>
+    <processors_profile_log remove="1"/>
+    <trace_log remove="1"/>
+    <!-- text_log repeats the server log the container already writes. -->
+    <text_log remove="1"/>
+
+    <!-- Kept for debugging, capped so they cannot fill the volume. -->
+    <asynchronous_insert_log><ttl>event_date + INTERVAL 3 DAY DELETE</ttl></asynchronous_insert_log>
+    <query_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></query_log>
+    <query_views_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></query_views_log>
+    <query_thread_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></query_thread_log>
+    <part_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></part_log>
+    <background_schedule_pool_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></background_schedule_pool_log>
+
+    <!-- Longer, so it still covers a report that reaches us late. crash_log is
+         deliberately left alone: it is tiny and worth keeping. -->
+    <error_log><ttl>event_date + INTERVAL 14 DAY DELETE</ttl></error_log>
+</clickhouse>
+"""
+
+[[config.mounts]]
+filePath = "clickhouse-init.sh"
+content = """#!/bin/bash
+# The ClickHouse entrypoint sources this file, so a subshell keeps these options out of it.
+(
+  set -euo pipefail
+
+  client() {
+    clickhouse-client --host 127.0.0.1 --user "$CLICKHOUSE_USER" --password "$CLICKHOUSE_PASSWORD" "$@"
+  }
+
+  # Flushing replaces log tables whose definition changed, keeping each old table as <log>_<N>.
+  client --query 'SYSTEM FLUSH LOGS'
+
+  # Tables left behind never expire on their own: take the TTL of the log that
+  # replaced this one, or a week when the log is no longer written at all.
+  # The named logs must match the ones clickhouse-config.xml removes: a log that
+  # is still written gets replaced on the next restart if its TTL is altered here.
+  client --format TSVRaw <<'SQL' | client --multiquery
+SELECT concat('ALTER TABLE system.', stale.name, ' MODIFY TTL ', if(active.name = '', 'event_date + INTERVAL 7 DAY DELETE', splitByString(' SETTINGS ', splitByString(' TTL ', active.engine_full)[2])[1]), ';')
+FROM (
+  SELECT name, splitByChar('_', name)[-1] AS suffix, arrayStringConcat(arrayPopBack(splitByChar('_', name)), '_') AS log
+  FROM system.tables
+  WHERE database = 'system'
+    AND position(engine_full, ' TTL ') = 0
+    AND endsWith(engine, 'MergeTree')
+    AND name IN (SELECT table FROM system.columns WHERE database = 'system' AND name = 'event_date' AND type = 'Date')
+) AS stale
+LEFT JOIN system.tables AS active
+  ON active.database = 'system'
+  AND active.name = stale.log
+  AND position(active.engine_full, ' TTL ') > 0
+WHERE (endsWith(stale.log, '_log') AND toUInt64OrNull(stale.suffix) IS NOT NULL)
+  OR stale.name IN ('asynchronous_metric_log', 'metric_log', 'histogram_metric_log', 'query_metric_log', 'processors_profile_log', 'trace_log', 'text_log')
+SQL
+)
+"""
 
 [[config.domains]]
 serviceName = "appwrite-console"
@@ -238,6 +414,28 @@ path = "/.well-known"
 serviceName = "appwrite-realtime"
 port = 80
 host = "${main_domain}"
+path = "/v1/realtime"
+
+# --- Dedicated Console domain ---
+# The Console SPA is served at the root of ${console_domain}, with /v1 and
+# /v1/realtime proxied to the API and Realtime so the Console reaches the API
+# on its own origin.
+[[config.domains]]
+serviceName = "appwrite-console"
+port = 3000
+host = "${console_domain}"
+path = "/"
+
+[[config.domains]]
+serviceName = "appwrite"
+port = 80
+host = "${console_domain}"
+path = "/v1"
+
+[[config.domains]]
+serviceName = "appwrite-realtime"
+port = 80
+host = "${console_domain}"
 path = "/v1/realtime"
 
 [[config.domains]]

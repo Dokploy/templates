@@ -1,0 +1,17 @@
+{
+  "id": "wazuh",
+  "name": "Wazuh",
+  "version": "4.14.8",
+  "description": "Open source security platform (SIEM/XDR): threat detection, integrity monitoring, vulnerability detection and compliance. Single-node manager, indexer and dashboard.",
+  "logo": "wazuh.png",
+  "links": {
+    "github": "https://github.com/wazuh/wazuh",
+    "website": "https://wazuh.com",
+    "docs": "https://documentation.wazuh.com/current/deployment-options/docker/index.html"
+  },
+  "tags": [
+    "security",
+    "siem",
+    "monitoring"
+  ]
+}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Actions runner</title>
+  <rect width="512" height="512" rx="112" fill="#172033"/>
+  <path d="M120 170h92m88 172h92M256 170v172" fill="none" stroke="#8ba3c7" stroke-width="24" stroke-linecap="round"/>
+  <circle cx="120" cy="170" r="28" fill="#6ee7b7"/>
+  <circle cx="392" cy="342" r="28" fill="#6ee7b7"/>
+  <rect x="192" y="192" width="128" height="128" rx="32" fill="#6ee7b7"/>
+  <path d="m240 226 44 30-44 30Z" fill="#172033"/>
+</svg>

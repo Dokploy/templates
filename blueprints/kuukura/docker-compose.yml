@@ -1,0 +1,32 @@
+# The master key is generated on the first start and kept in the kuukura-keys volume, apart from the database in
+# kuukura-data. After the first start, open the service terminal and run `/ku-server key show` once to back it up.
+services:
+  kuukura:
+    image: ghcr.io/victorlunam/kuukura:2026.10.13
+    restart: unless-stopped
+    environment:
+      VAULT_DOMAIN: ${VAULT_DOMAIN}
+      VAULT_STORAGE: sqlite
+      VAULT_SQLITE_PATH: /data/kuukura.db
+      VAULT_KEY_PROVIDER: manual
+      VAULT_MASTER_KEY_FILE: /keys/master_key
+      VAULT_MASTER_KEY_GENERATE: "true"
+      VAULT_OIDC_CLIENT_ID: ${VAULT_OIDC_CLIENT_ID}
+      VAULT_OIDC_CLIENT_SECRET: ${VAULT_OIDC_CLIENT_SECRET}
+      # set to `cloudflare` when Cloudflare's proxy is in front, so the audit log sees the real client IP
+      VAULT_TRUSTED_PROXIES: ${VAULT_TRUSTED_PROXIES:-}
+    volumes:
+      - kuukura-data:/data
+      - kuukura-keys:/keys
+    expose:
+      - 8080
+    healthcheck:
+      test: ["CMD", "/ku-server", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  kuukura-data: {}
+  kuukura-keys: {}

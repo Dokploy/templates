@@ -2,7 +2,7 @@
   "id": "huly",
   "name": "Huly",
   "version": "0.6.377",
-  "description": "Huly â€” All-in-One Project Management Platform (alternative to Linear, Jira, Slack, Notion, Motion)",
+  "description": "Huly is an all-in-one project management platform and an alternative to Linear and Jira. Self-host it on your own server with Dokploy, which deploys Huly as a Docker Compose service in a few clicks.",
   "logo": "huly.svg",
   "links": {
     "github": "https://github.com/hcengineering/huly-selfhost",
@@ -13,5 +13,7 @@
     "project-management",
     "community",
     "discussion"
-  ]
+  ],
+  "seoTitle": "Self-Host Huly in minutes",
+  "seoDescription": "All-in-one project management, an alternative to Linear and Jira. Self-host Huly on Dokploy in minutes – no manual setup needed."
 }

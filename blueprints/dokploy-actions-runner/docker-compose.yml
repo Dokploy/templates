@@ -1,0 +1,70 @@
+services:
+  dokploy-actions-runner:
+    # Maintained upstream runner, Ubuntu 24.04; multi-architecture index digest.
+    image: ghcr.io/myoung34/docker-github-actions-runner:2.338.0-ubuntu-noble@sha256:2112bde2ee92b7480babfbe3043d0461e322b97ca01e6ac94698895f3dc1f528
+    restart: unless-stopped
+    user: runner
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 2m
+    # Dokploy's .env supplies interpolation, not automatic container injection.
+    # Allowlist inputs explicitly. Never replace this with env_file: .env.
+    environment:
+      ACCESS_TOKEN: ${ACCESS_TOKEN:?Set ACCESS_TOKEN to a GitHub PAT in Dokploy Environment}
+      RUNNER_SCOPE: ${RUNNER_SCOPE:?Set RUNNER_SCOPE to repo or org}
+      REPO_URL: ${REPO_URL:-}
+      ORG_NAME: ${ORG_NAME:-}
+      RUNNER_NAME: ${RUNNER_NAME:?Set a unique RUNNER_NAME for each deployment}
+      LABELS: ${LABELS:?Set comma-separated runner LABELS}
+      RUNNER_GROUP: ${RUNNER_GROUP:-Default}
+      RUN_AS_ROOT: "false"
+      START_DOCKER_SERVICE: "false"
+      DISABLE_AUTOMATIC_DEREGISTRATION: "false"
+      RUNNER_WORKDIR: /_work
+      # Keep the PAT in the entrypoint shell for shutdown deregistration.
+      # Upstream un-exports it before starting the listener. See the linked project security guide.
+      UNSET_CONFIG_VARS: "false"
+    # Only validates configuration, then execs the upstream lifecycle handler.
+    # Inline so Dokploy imports need no custom image or repository file mounts.
+    # Double dollars defer expansion to the container, not Compose/Dokploy.
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        set -euo pipefail
+        fail() { printf 'Configuration error: %s\n' "$$1" >&2; exit 64; }
+        [[ "$${ACCESS_TOKEN:-}" =~ ^[A-Za-z0-9_]+$$ ]] || fail 'ACCESS_TOKEN must be a PAT without whitespace, quotes or variable placeholders'
+        case "$${ACCESS_TOKEN}" in
+          changeme|CHANGEME|replace_me|your_token) fail 'Replace the ACCESS_TOKEN placeholder with a GitHub PAT' ;;
+        esac
+        [[ "$${RUNNER_NAME:-}" =~ ^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$$ ]] || fail 'RUNNER_NAME must be 1-64 letters, digits, dots, underscores or hyphens; start with a letter or digit'
+        [[ "$${LABELS:-}" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*(,[A-Za-z0-9][A-Za-z0-9._-]*)*$$ ]] || fail 'LABELS must be comma-separated labels without spaces (letters, digits, dots, underscores or hyphens)'
+        [[ "$${RUNNER_GROUP:-}" =~ ^[A-Za-z0-9][A-Za-z0-9\ ._-]{0,99}$$ ]] || fail 'RUNNER_GROUP must be 1-100 letters, digits, spaces, dots, underscores or hyphens; start with a letter or digit'
+        case "$${RUNNER_SCOPE:-}" in
+          repo)
+            [[ "$${REPO_URL:-}" =~ ^https://github\.com/[A-Za-z0-9][A-Za-z0-9-]*/[A-Za-z0-9._-]+$$ ]] || fail 'repo scope requires REPO_URL=https://github.com/OWNER/REPO (no trailing slash or .git suffix)'
+            [[ "$${REPO_URL}" != *.git ]] || fail 'REPO_URL must not have a .git suffix'
+            [[ -z "$${ORG_NAME:-}" ]] || fail 'Clear ORG_NAME when RUNNER_SCOPE=repo'
+            [[ "$${RUNNER_GROUP}" == Default ]] || fail 'Custom RUNNER_GROUP is only supported with RUNNER_SCOPE=org'
+            ;;
+          org)
+            [[ "$${ORG_NAME:-}" =~ ^[A-Za-z0-9][A-Za-z0-9-]{0,38}$$ ]] || fail 'org scope requires an ORG_NAME slug (not a URL)'
+            [[ -z "$${REPO_URL:-}" ]] || fail 'Clear REPO_URL when RUNNER_SCOPE=org'
+            ;;
+          *) fail 'RUNNER_SCOPE must be exactly repo or org' ;;
+        esac
+        exec /entrypoint.sh ./bin/Runner.Listener run --startuptype service
+    # Local listener liveness only; does not prove GitHub connectivity/readiness.
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -x 'Runner[.]Listener' > /dev/null"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 2m
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

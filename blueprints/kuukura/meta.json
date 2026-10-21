@@ -1,0 +1,13 @@
+{
+  "id": "kuukura",
+  "name": "kuukura",
+  "version": "2026.10.13",
+  "description": "kuukura is a self-hosted secrets vault for small teams: values are decrypted only on your server, reveals require a passkey, and every access is audit-logged. Requires a Google OAuth client ID and secret, set in the Environment tab before deploying.",
+  "logo": "kuukura.svg",
+  "links": {
+    "github": "https://github.com/victorlunam/kuukura",
+    "website": "https://kuukura-main-landing.neodev-f72.workers.dev",
+    "docs": "https://github.com/victorlunam/kuukura/blob/main/docs/deploy.md"
+  },
+  "tags": ["security", "secrets", "self-hosted"]
+}

@@ -1,0 +1,148 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  falco:
+    image: falcosecurity/falco:0.45.0
+    hostname: "${MONITORED_HOST:-dokploy}"
+    restart: unless-stopped
+    cap_drop:
+      - ALL
+    cap_add:
+      - SYS_ADMIN
+      - SYS_RESOURCE
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    environment:
+      HOST_ROOT: /host
+    command:
+      - /usr/bin/falco
+      - -o
+      - engine.kind=modern_ebpf
+      - -o
+      - json_output=true
+      - -o
+      - json_include_output_property=true
+      - -o
+      - stdout_output.enabled=true
+      - -o
+      - http_output.enabled=true
+      - -o
+      - http_output.url=http://falcosidekick:2801/
+      - -o
+      - priority=notice
+    # Falco needs the real host paths to inspect host and container activity.
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /host/var/run/docker.sock
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /proc
+        target: /host/proc
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /etc
+        target: /host/etc
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /sys/kernel/tracing
+        target: /sys/kernel/tracing
+        read_only: true
+        bind:
+          create_host_path: false
+    depends_on:
+      falcosidekick:
+        condition: service_started
+    mem_limit: 1g
+    stop_grace_period: 30s
+    logging: *default-logging
+
+  falcosidekick:
+    image: falcosecurity/falcosidekick:2.35.0
+    restart: unless-stopped
+    environment:
+      TELEGRAM_TOKEN: "${TELEGRAM_BOT_TOKEN:-}"
+      TELEGRAM_CHATID: "${TELEGRAM_CHAT_ID:-}"
+      TELEGRAM_MINIMUMPRIORITY: "${TELEGRAM_MINIMUM_PRIORITY:-notice}"
+      WEBUI_URL: http://falco-ui:2802
+    depends_on:
+      falco-ui:
+        condition: service_started
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 256m
+    stop_grace_period: 30s
+    logging: *default-logging
+
+  falco-ui:
+    image: falcosecurity/falcosidekick-ui:2.3.1
+    restart: unless-stopped
+    environment:
+      FALCOSIDEKICK_UI_USER: "${FALCO_UI_USER:-admin}:${FALCO_UI_PASSWORD:?Set FALCO_UI_PASSWORD}"
+      FALCOSIDEKICK_UI_REDIS_URL: falco-redis:6379
+      FALCOSIDEKICK_UI_REDIS_PASSWORD: "${FALCO_REDIS_PASSWORD:?Set FALCO_REDIS_PASSWORD}"
+      FALCOSIDEKICK_UI_TTL: "168h"
+    expose:
+      - "2802"
+    depends_on:
+      falco-redis:
+        condition: service_healthy
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 256m
+    stop_grace_period: 30s
+    logging: *default-logging
+
+  falco-redis:
+    image: redis/redis-stack-server:7.4.0-v8
+    restart: unless-stopped
+    # Falcosidekick UI needs RediSearch and RedisJSON, not RedisGears or RedisAI.
+    command:
+      - /opt/redis-stack/bin/redis-server
+      - --dir
+      - /data
+      - --loadmodule
+      - /opt/redis-stack/lib/redisearch.so
+      - --loadmodule
+      - /opt/redis-stack/lib/rejson.so
+      - --requirepass
+      - "${FALCO_REDIS_PASSWORD:?Set FALCO_REDIS_PASSWORD}"
+      - --appendonly
+      - "yes"
+      - --appendfsync
+      - everysec
+      - --maxmemory
+      - 512mb
+      - --maxmemory-policy
+      - noeviction
+    environment:
+      REDISCLI_AUTH: "${FALCO_REDIS_PASSWORD:?Set FALCO_REDIS_PASSWORD}"
+    volumes:
+      - falco-events:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    mem_limit: 1g
+    stop_grace_period: 30s
+    logging: *default-logging
+
+volumes:
+  falco-events:

@@ -2,7 +2,7 @@
   "id": "homepage",
   "name": "Homepage",
   "version": "1.13.1",
-  "description": "Homepage is a highly customizable self-hosted application dashboard and startpage with service and widget integrations.",
+  "description": "Homepage is a customizable dashboard and start page for your apps and services. Self-host it on your own server with Dokploy, which deploys Homepage as a Docker Compose service in a few clicks.",
   "logo": "homepage.png",
   "links": {
     "github": "https://github.com/gethomepage/homepage",
@@ -14,5 +14,7 @@
     "startpage",
     "self-hosted",
     "productivity"
-  ]
+  ],
+  "seoTitle": "Self-Host Homepage in minutes",
+  "seoDescription": "Customizable startpage for self-hosted apps. Self-host Homepage on Dokploy in minutes – no manual setup needed."
 }

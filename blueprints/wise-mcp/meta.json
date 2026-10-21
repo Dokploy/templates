@@ -1,0 +1,13 @@
+{
+  "id": "wise-mcp",
+  "name": "Wise MCP (unofficial)",
+  "version": "1.1.1",
+  "description": "Self-hosted MCP connector that lets Claude and ChatGPT read your Wise balances, card payments and transfers, and prepare transfers you approve twice.",
+  "logo": "wise-mcp.svg",
+  "links": {
+    "github": "https://github.com/BlanketByte/wise-mcp",
+    "website": "https://blanketbyte.com",
+    "docs": "https://github.com/BlanketByte/wise-mcp#readme"
+  },
+  "tags": ["ai", "mcp", "finance"]
+}

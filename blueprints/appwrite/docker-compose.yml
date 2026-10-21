@@ -6,7 +6,7 @@ x-logging: &x-logging
       max-size: "10m"
 services:
   appwrite:
-    image: appwrite/appwrite:2.3.0
+    image: appwrite/appwrite:2.5.0
     <<: *x-logging
     restart: unless-stopped
     labels:
@@ -110,6 +110,8 @@ services:
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
+      - _APP_DB_ROOT_PASS
+      - _APP_DB_USER_PASS
       - _APP_DATABASE_SHARED_TABLES
       - _APP_DATABASE_SHARED_NAMESPACE
       - _APP_LIMIT_DATABASE_BATCH
@@ -231,12 +233,11 @@ services:
       - _APP_MIGRATION_HOST
       - _APP_MIGRATIONS_FIREBASE_CLIENT_ID
       - _APP_MIGRATIONS_FIREBASE_CLIENT_SECRET
-      - _APP_ASSISTANT_OPENAI_API_KEY
       - _APP_CONSOLE_COUNTRIES_DENYLIST
       - _APP_PWNED_PASSWORDS_DSN
 
   appwrite-console:
-    image: appwrite/new:1.1.159-self-hosted
+    image: appwrite/new:1.2.74-self-hosted
     <<: *x-logging
     restart: unless-stopped
     environment:
@@ -245,7 +246,7 @@ services:
       - VITE_GROWTH_ENDPOINT=https://growth.appwrite.io/v1
 
   appwrite-realtime:
-    image: appwrite/appwrite:2.3.0
+    image: appwrite/appwrite:2.5.0
     entrypoint: realtime
     <<: *x-logging
     restart: unless-stopped
@@ -297,7 +298,7 @@ services:
       - _APP_LOGGING_FORMAT
 
   appwrite-mqtt:
-    image: appwrite/appwrite:2.3.0
+    image: appwrite/appwrite:2.5.0
     entrypoint: mqtt
     <<: *x-logging
     restart: unless-stopped
@@ -347,7 +348,7 @@ services:
       - _APP_MQTT_MAX_PACKET_SIZE
 
   appwrite-worker:
-    image: appwrite/appwrite:2.3.0
+    image: appwrite/appwrite:2.5.0
     entrypoint: worker
     <<: *x-logging
     restart: unless-stopped
@@ -508,7 +509,7 @@ services:
       - _APP_MAINTENANCE_RETENTION_AUDIT_CONSOLE
 
   appwrite-task-scheduler:
-    image: appwrite/appwrite:2.3.0
+    image: appwrite/appwrite:2.5.0
     entrypoint: schedule
     <<: *x-logging
     restart: unless-stopped
@@ -556,7 +557,7 @@ services:
       - _APP_LOGGING_FORMAT
 
   appwrite-task-maintenance:
-    image: appwrite/appwrite:2.3.0
+    image: appwrite/appwrite:2.5.0
     entrypoint: maintenance
     <<: *x-logging
     restart: unless-stopped
@@ -600,7 +601,7 @@ services:
       - _APP_LOGGING_FORMAT
 
   appwrite-task-interval:
-    image: appwrite/appwrite:2.3.0
+    image: appwrite/appwrite:2.5.0
     entrypoint: interval
     <<: *x-logging
     restart: unless-stopped
@@ -637,9 +638,16 @@ services:
       - _APP_LOGGING_FORMAT
 
   appwrite-browser:
-    image: appwrite/browser:0.3.4
+    image: appwrite/browser:0.3.6
     <<: *x-logging
     restart: unless-stopped
+    environment:
+      - ALLOWED_HOSTS=appwrite
+    # Public resolvers only, so the browser cannot resolve internal service
+    # names (e.g. redis, appwrite-mariadb) and render them via a user URL.
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
 
   appwrite-autogravity:
     image: ghcr.io/appwrite/autogravity:0.0.11
@@ -649,7 +657,7 @@ services:
       - MODEL_BACKEND=focalnet
 
   appwrite-geo:
-    image: appwrite/geo:0.3.1
+    image: appwrite/geo:0.3.2
     <<: *x-logging
     restart: unless-stopped
     environment:
@@ -670,8 +678,11 @@ services:
       - CLICKHOUSE_USER=appwrite
       - CLICKHOUSE_PASSWORD=${_APP_USAGE_PASS:-appwrite}
       - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+      - CLICKHOUSE_ALWAYS_RUN_INITDB_SCRIPTS=1
     volumes:
       - appwrite-clickhouse:/var/lib/clickhouse:rw
+      - ../files/clickhouse-config.xml:/etc/clickhouse-server/config.d/appwrite.xml:ro
+      - ../files/clickhouse-init.sh:/docker-entrypoint-initdb.d/clickhouse-init.sh:ro
     ulimits:
       nofile:
         soft: 262144
@@ -686,7 +697,7 @@ services:
       start_period: 30s
 
   openruntimes-executor:
-    image: openruntimes/executor:0.29.0
+    image: openruntimes/executor:1.1.2
     # The executor looks up its own container by hostname to join the runtimes network.
     hostname: openruntimes-executor
     <<: *x-logging
@@ -787,13 +798,69 @@ services:
       timeout: 5s
       retries: 12
 
-  # Appwrite Assistant (optional): set _APP_ASSISTANT_OPENAI_API_KEY and uncomment.
-  # appwrite-assistant:
-  #   image: appwrite/assistant:0.8.4
-  #   <<: *x-logging
-  #   restart: unless-stopped
-  #   environment:
-  #     - _APP_ASSISTANT_OPENAI_API_KEY
+  mariadb:
+    image: mariadb:10.11
+    <<: *x-logging
+    restart: unless-stopped
+    volumes:
+      - appwrite-mariadb:/var/lib/mysql:rw
+    environment:
+      - MYSQL_ROOT_PASSWORD=${_APP_DB_ROOT_PASS}
+      - MYSQL_DATABASE=${_APP_DB_SCHEMA}
+      - MYSQL_USER=${_APP_DB_USER}
+      - MYSQL_PASSWORD=${_APP_DB_PASS}
+      - MARIADB_AUTO_UPGRADE=1
+    command:
+      - mysqld
+      - --innodb-flush-method=fsync
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - mariadb --protocol=tcp -h127.0.0.1 -uroot -p"$$MYSQL_ROOT_PASSWORD" --silent -e "SELECT 1"
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+  mongodb:
+    image: mongo:8.2.5
+    <<: *x-logging
+    restart: unless-stopped
+    volumes:
+      - appwrite-mongodb:/data/db
+      - appwrite-mongodb-keyfile:/data/keyfile
+      - ../files/mongo-init.js:/mongo-init.js:ro
+      - ../files/mongo-entrypoint.sh:/mongo-entrypoint.sh:ro
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=${_APP_DB_ROOT_PASS}
+      - MONGO_INITDB_DATABASE=${_APP_DB_SCHEMA}
+      - MONGO_INITDB_USERNAME=${_APP_DB_USER}
+      - MONGO_INITDB_PASSWORD=${_APP_DB_PASS}
+    entrypoint:
+      - /bin/bash
+      - /mongo-entrypoint.sh
+    healthcheck:
+      test: |
+        bash -c "
+          mongosh -u root -p ${_APP_DB_ROOT_PASS} --authenticationDatabase admin --quiet --eval \"
+            try {
+              const hello = db.adminCommand({hello: 1});
+              if (hello.isWritablePrimary && hello.setName === 'rs0') {
+                quit(0);
+              }
+            } catch (e) {}
+
+            try {
+              rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'mongodb:27017'}]});
+            } catch (e) {}
+
+            quit(1);
+          \" 2>/dev/null
+        "
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
 
   # Embeddings API (optional, resource heavy): set _APP_EMBEDDING=enabled and uncomment.
   # appwrite-embedding:
@@ -825,4 +892,7 @@ volumes:
   appwrite-builds:
     name: ${COMPOSE_PROJECT_NAME:-appwrite}_appwrite-builds
   appwrite-config:
+  appwrite-mariadb:
+  appwrite-mongodb:
+  appwrite-mongodb-keyfile:
   # appwrite-models:

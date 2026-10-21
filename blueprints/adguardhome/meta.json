@@ -2,7 +2,7 @@
   "id": "adguardhome",
   "name": "AdGuard Home",
   "version": "latest",
-  "description": "AdGuard Home is a comprehensive solution designed to enhance your online browsing experience by eliminating all kinds of ads, from annoying banners and pop-ups to intrusive video ads. It provides privacy protection, browsing security, and parental control features while maintaining website functionality.",
+  "description": "AdGuard Home is a network-wide ad and tracker blocker. Self-host it on your own server with Dokploy, which deploys AdGuard Home as a Docker Compose service in a few clicks.",
   "logo": "logo.svg",
   "links": {
     "github": "https://github.com/AdguardTeam/AdGuardHome",
@@ -14,5 +14,8 @@
     "security",
     "dns",
     "ad-blocking"
-  ]
+  ],
+  "seoTitle": "AdGuard Home Docker Compose Setup",
+  "seoDescription": "Network-wide ad and tracker blocker. Deploy AdGuard Home with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

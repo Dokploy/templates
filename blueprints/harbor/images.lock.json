@@ -1,0 +1,126 @@
+{
+  "harbor_version": "v2.15.4",
+  "platform": "linux/amd64",
+  "verified_at": "2026-10-20",
+  "images": {
+    "prepare": {
+      "repository": "goharbor/prepare",
+      "tag": "v2.15.4",
+      "digest": "sha256:79b5614d0d02b5d2c6c9b7b9755f5caaea882797353bfcb6421f77e6d69cc317",
+      "entrypoint": [
+        "python3",
+        "main.py"
+      ],
+      "command": [],
+      "user": "root"
+    },
+    "harbor-core": {
+      "repository": "goharbor/harbor-core",
+      "tag": "v2.15.4",
+      "digest": "sha256:7d2ba5304a729887cdec7cb222a82b500278423de230ae5150c386a6c332b112",
+      "entrypoint": [
+        "/harbor/entrypoint.sh"
+      ],
+      "command": [],
+      "user": "harbor"
+    },
+    "harbor-db": {
+      "repository": "goharbor/harbor-db",
+      "tag": "v2.15.4",
+      "digest": "sha256:a32d51e636d76303e086a7c5251a2c8415c6f165b2f87bafa914efd866c5403f",
+      "entrypoint": [
+        "/docker-entrypoint.sh",
+        "15",
+        "18"
+      ],
+      "command": [],
+      "user": "postgres"
+    },
+    "valkey-photon": {
+      "repository": "goharbor/valkey-photon",
+      "tag": "v2.15.4",
+      "digest": "sha256:bb022e8f236f56f53cee7bb1f609595e497da67d829048e0af2284f97e6eb54f",
+      "entrypoint": [],
+      "command": [
+        "valkey-server",
+        "/etc/redis.conf"
+      ],
+      "user": "valkey"
+    },
+    "registry-photon": {
+      "repository": "goharbor/registry-photon",
+      "tag": "v2.15.4",
+      "digest": "sha256:dc0cb388a6445c69c8a0c406679290d2991c9698833d9e6e86a23bdfaf2f83c3",
+      "entrypoint": [
+        "/home/harbor/entrypoint.sh"
+      ],
+      "command": [],
+      "user": "harbor"
+    },
+    "harbor-registryctl": {
+      "repository": "goharbor/harbor-registryctl",
+      "tag": "v2.15.4",
+      "digest": "sha256:30bd1ace4e3bb390d75b84673f98ddb4a69fcc6d116932ea764391df01943fb7",
+      "entrypoint": [
+        "/home/harbor/start.sh"
+      ],
+      "command": [],
+      "user": "harbor"
+    },
+    "harbor-jobservice": {
+      "repository": "goharbor/harbor-jobservice",
+      "tag": "v2.15.4",
+      "digest": "sha256:f143578ef30e2be5c48873298257ed0fca31545025958c534e536a06765d2b82",
+      "entrypoint": [
+        "/harbor/entrypoint.sh"
+      ],
+      "command": [],
+      "user": "harbor"
+    },
+    "harbor-portal": {
+      "repository": "goharbor/harbor-portal",
+      "tag": "v2.15.4",
+      "digest": "sha256:01edf478505b21dba23a83c095f6ecac0c1e705690093edbab41e9a4d6754a75",
+      "entrypoint": [],
+      "command": [
+        "nginx",
+        "-g",
+        "daemon off;"
+      ],
+      "user": "nginx"
+    },
+    "nginx-photon": {
+      "repository": "goharbor/nginx-photon",
+      "tag": "v2.15.4",
+      "digest": "sha256:7eff0287d5ad0f35754e162c8481ced04bbde107153ce586cefb15ee74fa1311",
+      "entrypoint": [],
+      "command": [
+        "nginx",
+        "-g",
+        "daemon off;"
+      ],
+      "user": "nginx"
+    },
+    "trivy-adapter-photon": {
+      "repository": "goharbor/trivy-adapter-photon",
+      "tag": "v2.15.4",
+      "digest": "sha256:813ca81b4a4ea0f44f5fa81cca2645eeb58d4b1f6c66b428df9d506174bb71d9",
+      "entrypoint": [
+        "/home/scanner/entrypoint.sh"
+      ],
+      "command": [],
+      "user": "scanner"
+    },
+    "harbor-exporter": {
+      "repository": "goharbor/harbor-exporter",
+      "tag": "v2.15.4",
+      "digest": "sha256:9ffede33dc519b4be035596a72f00f354754a22a3769077731f81ee7d6852f4f",
+      "entrypoint": [
+        "/harbor/entrypoint.sh"
+      ],
+      "command": [],
+      "user": "harbor"
+    }
+  },
+  "template_sha256": "0d3a9098005b202c28e5618c0082de271c0e4f726c27b6c475fc45e2a07c560a"
+}

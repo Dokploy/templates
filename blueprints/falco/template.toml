@@ -1,0 +1,23 @@
+[variables]
+main_domain = "${domain}"
+ui_password = "${hash:64}"
+redis_password = "${hash:64}"
+
+[config]
+env = [
+  # Name shown for this host in alerts.
+  "MONITORED_HOST=dokploy",
+  # Optional Telegram notifications; leave both credentials empty to disable.
+  "TELEGRAM_BOT_TOKEN=",
+  "TELEGRAM_CHAT_ID=",
+  "TELEGRAM_MINIMUM_PRIORITY=notice",
+  "FALCO_UI_USER=admin",
+  "FALCO_UI_PASSWORD=${ui_password}",
+  "FALCO_REDIS_PASSWORD=${redis_password}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "falco-ui"
+port = 2802
+host = "${main_domain}"

@@ -1,0 +1,17 @@
+{
+  "id": "ponos",
+  "name": "Ponos",
+  "version": "0.1.0",
+  "description": "Ponos runs your tickets with Claude Code: a ticket set to Ready becomes a session on a throwaway git worktree, and comes back as a pull request. Board in Notion or in Markdown files, with a web console.",
+  "logo": "ponos.svg",
+  "links": {
+    "github": "https://github.com/SalvadorCardona/ponos",
+    "website": "https://the-ponos.app/",
+    "docs": "https://github.com/SalvadorCardona/ponos#install-with-dokploy"
+  },
+  "tags": [
+    "ai",
+    "automation",
+    "developer-tools"
+  ]
+}

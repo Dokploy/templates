@@ -1,0 +1,13 @@
+{
+  "id": "falco",
+  "name": "Falco",
+  "version": "0.45.0",
+  "description": "Monitor Linux host and container activity with Falco's modern eBPF engine. Includes Falcosidekick UI, persistent event storage, and optional Telegram alerts.",
+  "logo": "falco.svg",
+  "links": {
+    "github": "https://github.com/falcosecurity/falco",
+    "website": "https://falco.org/",
+    "docs": "https://falco.org/docs/"
+  },
+  "tags": ["security", "monitoring"]
+}

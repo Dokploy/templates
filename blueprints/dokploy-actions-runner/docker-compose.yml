@@ -1,7 +1,7 @@
 services:
   dokploy-actions-runner:
     # Maintained upstream runner, Ubuntu 24.04; multi-architecture index digest.
-    image: ghcr.io/myoung34/docker-github-actions-runner:2.338.0-ubuntu-noble@sha256:2112bde2ee92b7480babfbe3043d0461e322b97ca01e6ac94698895f3dc1f528
+    image: ghcr.io/myoung34/docker-github-actions-runner:2.338.1-ubuntu-noble@sha256:36782fe0e5994b301652408c32113a3562fabb1f0ead865ccc196d3e870f9109
     restart: unless-stopped
     user: runner
     cap_drop:
@@ -19,6 +19,9 @@ services:
       RUNNER_NAME: ${RUNNER_NAME:?Set a unique RUNNER_NAME for each deployment}
       LABELS: ${LABELS:?Set comma-separated runner LABELS}
       RUNNER_GROUP: ${RUNNER_GROUP:-Default}
+      # Use the maintained embedded Node24 for shell steps as well as JS actions.
+      # Keep upstream runtime slots intact; this is not a Node20 binary replacement.
+      PATH: /actions-runner/externals/node24/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
       RUN_AS_ROOT: "false"
       START_DOCKER_SERVICE: "false"
       DISABLE_AUTOMATIC_DEREGISTRATION: "false"
@@ -26,7 +29,7 @@ services:
       # Keep the PAT in the entrypoint shell for shutdown deregistration.
       # Upstream un-exports it before starting the listener. See the linked project security guide.
       UNSET_CONFIG_VARS: "false"
-    # Only validates configuration, then execs the upstream lifecycle handler.
+    # Validates configuration and the runtime floor, then execs upstream lifecycle.
     # Inline so Dokploy imports need no custom image or repository file mounts.
     # Double dollars defer expansion to the container, not Compose/Dokploy.
     entrypoint:
@@ -55,6 +58,14 @@ services:
             ;;
           *) fail 'RUNNER_SCOPE must be exactly repo or org' ;;
         esac
+        # Runtime gate: refuse fallback to distro Node after a runner self-update.
+        node_binary=/actions-runner/externals/node24/bin/node
+        [[ -x "$${node_binary}" ]] || fail 'The maintained Node24 runtime is missing; update the image'
+        [[ "$$(command -v node)" == "$${node_binary}" ]] || fail 'Default node must use the maintained Node24 runtime'
+        node_version="$$("$${node_binary}" --version)"
+        [[ "$${node_version}" =~ ^v24\.([0-9]+)\.([0-9]+)$$ ]] || fail 'The maintained Node24 runtime is required'
+        (( 10#$${BASH_REMATCH[1]} > 22 || (10#$${BASH_REMATCH[1]} == 22 && 10#$${BASH_REMATCH[2]} >= 1) )) || fail 'Node24 is below the security baseline; update the image'
+        # End runtime gate.
         exec /entrypoint.sh ./bin/Runner.Listener run --startuptype service
     # Local listener liveness only; does not prove GitHub connectivity/readiness.
     healthcheck:

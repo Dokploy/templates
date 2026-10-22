@@ -1,7 +1,7 @@
 {
   "id": "dokploy-actions-runner",
   "name": "GitHub Actions Runner",
-  "version": "2.338.0-ubuntu-noble",
+  "version": "2.338.1-ubuntu-noble",
   "description": "Self-hosted GitHub Actions runner for repositories or organizations, with independent names, labels and runner groups. Runs without privileged mode or Docker socket access.",
   "logo": "logo.svg",
   "links": {

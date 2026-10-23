@@ -43,6 +43,8 @@ services:
       # MCP server at POST /mcp. Read-only unless MCP_READONLY is explicitly "false".
       - MCP_ENABLED=${MCP_ENABLED}
       - MCP_READONLY=${MCP_READONLY}
+      # Swagger UI at /api/docs; enabled here despite the production default.
+      - ENABLE_SWAGGER=${ENABLE_SWAGGER}
     expose:
       - "2785"
     volumes:

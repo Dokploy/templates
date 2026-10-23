@@ -1,0 +1,55 @@
+services:
+  reelsaw:
+    image: ghcr.io/osbytes/reelsaw:0.18.2
+    restart: always
+    # a deploy waits for running renders instead of killing them (SHUTDOWN_GRACE_SECONDS=300)
+    stop_grace_period: 330s
+    expose:
+      - 3000
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: "3000"
+      DATA_DIR: /data
+      LOG_FILE: /data/logs/reelsaw.log
+      RUN_HTTP: "true"
+      RUN_WORKERS: "true"
+      TRUST_PROXY: "true"
+      DATABASE_URL: postgres://reelsaw:${DB_PASSWORD}@db:5432/reelsaw
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      APP_URL: ${APP_URL}
+      SIGNUP_MODE: ${SIGNUP_MODE}
+      AI_MODEL: ${AI_MODEL}
+      TRANSCRIPTION_MODEL: ${TRANSCRIPTION_MODEL}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      GOOGLE_GENERATIVE_AI_API_KEY: ${GOOGLE_GENERATIVE_AI_API_KEY}
+      GROQ_API_KEY: ${GROQ_API_KEY}
+      DEEPGRAM_API_KEY: ${DEEPGRAM_API_KEY}
+    volumes:
+      - data:/data
+
+  db:
+    image: postgres:17-alpine
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    environment:
+      POSTGRES_USER: reelsaw
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: reelsaw
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  data:
+  pgdata:

@@ -1,0 +1,23 @@
+{
+  "id": "container-monitoring",
+  "name": "Container Monitoring",
+  "version": "13.2.4",
+  "description": "Per-container and host monitoring with cAdvisor, node-exporter, Prometheus and Grafana. Ships two ready dashboards: a cluster overview and a container detail view with project/container filters.",
+  "logo": "container-monitoring.svg",
+  "links": {
+    "github": "https://github.com/google/cadvisor",
+    "website": "https://prometheus.io/",
+    "docs": "https://prometheus.io/docs/introduction/overview/"
+  },
+  "tags": [
+    "monitoring",
+    "observability",
+    "metrics",
+    "prometheus",
+    "grafana",
+    "docker"
+  ],
+  "seoTitle": "Container Monitoring with Prometheus and Grafana",
+  "seoDescription": "Self-host cAdvisor, node-exporter, Prometheus and Grafana with Docker Compose on Dokploy. Includes per-container CPU, memory and network dashboards.",
+  "newConfig": true
+}

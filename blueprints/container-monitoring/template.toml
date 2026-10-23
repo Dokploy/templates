@@ -526,10 +526,9 @@ content = '''
           "refId": "StandardVariableQuery"
         },
         "refresh": 2,
-        "multi": true,
-        "includeAll": true,
-        "allValue": ".*",
-        "current": { "selected": true, "text": ["All"], "value": ["$__all"] },
+        "multi": false,
+        "includeAll": false,
+        "current": {},
         "options": [],
         "sort": 1
       }

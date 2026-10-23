@@ -1,7 +1,10 @@
 services:
   openwa:
-    image: ghcr.io/rmyndharis/openwa:0.24.0
+    image: ghcr.io/rmyndharis/openwa:0.25.0
     restart: unless-stopped
+    # Bounded teardown: drain + engines + webhook flush + queue closes can take up to
+    # 63s in the worst case; the process force-exits after 67s.
+    stop_grace_period: 75s
     # Hardened runtime matching the upstream production defaults: Chromium (used by the
     # whatsapp-web.js engine) launches with --no-sandbox, so the container is the confinement
     # boundary. The caps that remain are only what the entrypoint needs to fix named-volume

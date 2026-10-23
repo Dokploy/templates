@@ -6,7 +6,7 @@ x-logging: &x-logging
       max-size: "10m"
 services:
   appwrite:
-    image: appwrite/appwrite:2.5.0
+    image: appwrite/appwrite:2.6.1
     <<: *x-logging
     restart: unless-stopped
     labels:
@@ -29,7 +29,7 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - 'curl -fsS -o /dev/null -H "Host: $${_APP_DOMAIN:-localhost}" http://localhost/v1/health/version'
+        - 'test -f /tmp/.appwrite-ready && curl -fsS -o /dev/null -H "Host: $${_APP_DOMAIN:-localhost}" http://localhost/v1/health/version'
       interval: 5s
       timeout: 5s
       retries: 12
@@ -51,6 +51,8 @@ services:
       appwrite-geo:
         condition: service_started
       appwrite-autogravity:
+        condition: service_started
+      appwrite-exiftool:
         condition: service_started
     environment:
       - _APP_ENV
@@ -153,6 +155,7 @@ services:
       - _APP_STORAGE_LIMIT
       - _APP_STORAGE_PREVIEW_LIMIT
       - _APP_AUTOGRAVITY_HOST
+      - _APP_EXIFTOOL_HOST
       - _APP_STORAGE_ANTIVIRUS
       - _APP_STORAGE_ANTIVIRUS_HOST
       - _APP_STORAGE_ANTIVIRUS_PORT
@@ -162,6 +165,7 @@ services:
       - _APP_STORAGE_S3_REGION
       - _APP_STORAGE_S3_BUCKET
       - _APP_STORAGE_S3_ENDPOINT
+      - _APP_STORAGE_S3_PATH_STYLE
       - _APP_STORAGE_DO_SPACES_ACCESS_KEY
       - _APP_STORAGE_DO_SPACES_SECRET
       - _APP_STORAGE_DO_SPACES_REGION
@@ -229,6 +233,10 @@ services:
       - _APP_VCS_BITBUCKET_WEBHOOK_SECRET
       - _APP_VCS_ORIGIN_CLIENT_ID
       - _APP_VCS_ORIGIN_PRIVATE_KEY
+      - _APP_VCS_ENTIRE_PLUGIN
+      - _APP_VCS_ENTIRE_PRIVATE_KEY
+      - _APP_VCS_ENTIRE_ISSUER
+      - _APP_VCS_ENTIRE_ENDPOINT
       - _APP_VCS_WEBHOOK_URL
       - _APP_MIGRATION_HOST
       - _APP_MIGRATIONS_FIREBASE_CLIENT_ID
@@ -237,16 +245,17 @@ services:
       - _APP_PWNED_PASSWORDS_DSN
 
   appwrite-console:
-    image: appwrite/new:1.2.74-self-hosted
+    image: appwrite/new:1.2.97-self-hosted
     <<: *x-logging
     restart: unless-stopped
     environment:
       - VITE_CONSOLE_PROFILE=self-hosted
+      - VITE_APPWRITE_VERSION=${_APP_VERSION:-2.6.1}
       - APPWRITE_ENDPOINT_SAME_ORIGIN=true
       - VITE_GROWTH_ENDPOINT=https://growth.appwrite.io/v1
 
   appwrite-realtime:
-    image: appwrite/appwrite:2.5.0
+    image: appwrite/appwrite:2.6.1
     entrypoint: realtime
     <<: *x-logging
     restart: unless-stopped
@@ -298,7 +307,7 @@ services:
       - _APP_LOGGING_FORMAT
 
   appwrite-mqtt:
-    image: appwrite/appwrite:2.5.0
+    image: appwrite/appwrite:2.6.1
     entrypoint: mqtt
     <<: *x-logging
     restart: unless-stopped
@@ -348,7 +357,7 @@ services:
       - _APP_MQTT_MAX_PACKET_SIZE
 
   appwrite-worker:
-    image: appwrite/appwrite:2.5.0
+    image: appwrite/appwrite:2.6.1
     entrypoint: worker
     <<: *x-logging
     restart: unless-stopped
@@ -371,8 +380,8 @@ services:
     environment:
       - _APP_ENV
       - _APP_WORKERS_NUM=1
-      # Pool sizing only (sum of per-queue caps). Each queue keeps its own maxCoroutines in PHP; databases stays at 1.
-      - _APP_WORKER_MAX_COROUTINES=78
+      # Pool sizing only (sum of per-queue caps). Each queue keeps its own maxCoroutines in PHP; databases and maintenance stay at 1.
+      - _APP_WORKER_MAX_COROUTINES=79
       - _APP_WORKER_PER_CORE
       - _APP_OPENSSL_KEY_V1
       - _APP_NOTIFICATIONS_TRACKING_SECRET
@@ -416,6 +425,7 @@ services:
       - _APP_MAINTENANCE_RETENTION_USAGE_TTL
       - _APP_STATS_USAGE_QUEUE_NAME
       - _APP_STATS_RESOURCES_QUEUE_NAME
+      - _APP_MAINTENANCE_QUEUE_NAME
       - _APP_STATS_RESOURCES_INTERVAL
       - _APP_LOGGING_CONFIG
       - _APP_LOGGING_FORMAT
@@ -440,6 +450,7 @@ services:
       - _APP_STORAGE_S3_REGION
       - _APP_STORAGE_S3_BUCKET
       - _APP_STORAGE_S3_ENDPOINT
+      - _APP_STORAGE_S3_PATH_STYLE
       - _APP_STORAGE_DO_SPACES_ACCESS_KEY
       - _APP_STORAGE_DO_SPACES_SECRET
       - _APP_STORAGE_DO_SPACES_REGION
@@ -491,6 +502,10 @@ services:
       - _APP_VCS_BITBUCKET_WEBHOOK_SECRET
       - _APP_VCS_ORIGIN_CLIENT_ID
       - _APP_VCS_ORIGIN_PRIVATE_KEY
+      - _APP_VCS_ENTIRE_PLUGIN
+      - _APP_VCS_ENTIRE_PRIVATE_KEY
+      - _APP_VCS_ENTIRE_ISSUER
+      - _APP_VCS_ENTIRE_ENDPOINT
       - _APP_VCS_WEBHOOK_URL
       - _APP_SYSTEM_EMAIL_NAME
       - _APP_SYSTEM_EMAIL_ADDRESS
@@ -509,7 +524,7 @@ services:
       - _APP_MAINTENANCE_RETENTION_AUDIT_CONSOLE
 
   appwrite-task-scheduler:
-    image: appwrite/appwrite:2.5.0
+    image: appwrite/appwrite:2.6.1
     entrypoint: schedule
     <<: *x-logging
     restart: unless-stopped
@@ -552,12 +567,14 @@ services:
       - _APP_MAINTENANCE_RETENTION_USAGE_TTL
       - _APP_STATS_USAGE_QUEUE_NAME
       - _APP_STATS_RESOURCES_QUEUE_NAME
+      - _APP_MAINTENANCE_QUEUE_NAME
       - _APP_STATS_RESOURCES_INTERVAL
       - _APP_FUNCTIONS_SCHEDULE_SPREAD
+      - _APP_MAINTENANCE_INACTIVE_INTERVAL
       - _APP_LOGGING_FORMAT
 
   appwrite-task-maintenance:
-    image: appwrite/appwrite:2.5.0
+    image: appwrite/appwrite:2.6.1
     entrypoint: maintenance
     <<: *x-logging
     restart: unless-stopped
@@ -601,7 +618,7 @@ services:
       - _APP_LOGGING_FORMAT
 
   appwrite-task-interval:
-    image: appwrite/appwrite:2.5.0
+    image: appwrite/appwrite:2.6.1
     entrypoint: interval
     <<: *x-logging
     restart: unless-stopped
@@ -655,6 +672,11 @@ services:
     restart: unless-stopped
     environment:
       - MODEL_BACKEND=focalnet
+
+  appwrite-exiftool:
+    image: ghcr.io/appwrite/exiftool:0.1.0
+    <<: *x-logging
+    restart: unless-stopped
 
   appwrite-geo:
     image: appwrite/geo:0.3.2
@@ -738,7 +760,7 @@ services:
       start_period: 5s
 
   orchestrator:
-    image: ghcr.io/open-runtimes/orchestrator/orchestrator:2.2.2
+    image: ghcr.io/open-runtimes/orchestrator/orchestrator:2.2.4
     hostname: orchestrator
     <<: *x-logging
     restart: unless-stopped
@@ -761,6 +783,7 @@ services:
     image: appwrite/postgres:0.1.0
     <<: *x-logging
     restart: unless-stopped
+    shm_size: 1g
     volumes:
       - appwrite-postgresql:/var/lib/postgresql:rw
     environment:

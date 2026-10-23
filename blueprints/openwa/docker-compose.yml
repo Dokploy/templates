@@ -40,6 +40,9 @@ services:
       # Off by default so the template works over HTTP or HTTPS; set "true" when you only ever reach
       # it through a TLS-terminating proxy.
       - CSP_UPGRADE_INSECURE_REQUESTS=${CSP_UPGRADE_INSECURE_REQUESTS}
+      # MCP server at POST /mcp. Read-only unless MCP_READONLY is explicitly "false".
+      - MCP_ENABLED=${MCP_ENABLED}
+      - MCP_READONLY=${MCP_READONLY}
     expose:
       - "2785"
     volumes:

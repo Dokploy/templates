@@ -1,7 +1,10 @@
 services:
   ponos:
-    image: ghcr.io/salvadorcardona/ponos:0.1.0
+    image: ghcr.io/hermez-agency/ponos:0.2.0
     restart: unless-stopped
+    # The image's own user, said again so that nothing runs it as root: Claude
+    # Code refuses bypassPermissions to root.
+    user: ponos
     expose:
       - "8787"
     environment:
@@ -9,10 +12,14 @@ services:
       PONOS_WEB_PASSWORD: ${PONOS_WEB_PASSWORD}
       PONOS_WEB_TOKEN: ${PONOS_WEB_TOKEN}
       PONOS_LANGUAGE: ${PONOS_LANGUAGE}
+      TZ: ${TZ}
       CLAUDE_CODE_OAUTH_TOKEN: ${CLAUDE_CODE_OAUTH_TOKEN}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
       GH_TOKEN: ${GH_TOKEN}
       PONOS_NOTION_TOKEN: ${PONOS_NOTION_TOKEN}
+      PONOS_TELEGRAM_TOKEN: ${PONOS_TELEGRAM_TOKEN}
+      PONOS_SLACK_TOKEN: ${PONOS_SLACK_TOKEN}
     volumes:
       - ponos-data:/data
       - ponos-workspace:/workspace
@@ -24,6 +31,14 @@ services:
       timeout: 5s
       retries: 3
       start_period: 60s
+    # A ceiling, not a reservation: a Claude Code session is a Node process of
+    # a few hundred megabytes, and a build or a test suite it runs adds its own.
+    # Four gigabytes hold the two runner.max_concurrent allows by default; raise
+    # it with that number.
+    deploy:
+      resources:
+        limits:
+          memory: 4g
 
 volumes:
   ponos-data:

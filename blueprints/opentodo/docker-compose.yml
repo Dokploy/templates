@@ -1,0 +1,22 @@
+services:
+  opentodo:
+    image: ghcr.io/pixari/opentodo:0.11.0
+    restart: unless-stopped
+    expose:
+      - 8080
+    environment:
+      - OPENTODO_BASE_URL=${OPENTODO_BASE_URL:-}
+      - OPENTODO_SETUP_TOKEN=${OPENTODO_SETUP_TOKEN:-}
+      - OPENTODO_ALLOW_SIGNUP=${OPENTODO_ALLOW_SIGNUP:-false}
+      - OPENTODO_TRUSTED_PROXIES=${OPENTODO_TRUSTED_PROXIES:-}
+    volumes:
+      - opentodo-data:/data
+    healthcheck:
+      test: ["CMD", "/opentodo", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  opentodo-data:

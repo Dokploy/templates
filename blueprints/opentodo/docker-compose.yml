@@ -1,6 +1,6 @@
 services:
   opentodo:
-    image: ghcr.io/pixari/opentodo:0.12.0
+    image: ghcr.io/pixari/opentodo:0.13.0
     restart: unless-stopped
     expose:
       - 8080

@@ -1,0 +1,25 @@
+[variables]
+main_domain = "${domain}"
+api_domain = "${domain}"
+
+[config]
+mounts = []
+
+# The dashboard, where you sign in.
+[[config.domains]]
+serviceName = "dashboard"
+port = 6270
+host = "${main_domain}"
+
+# Where your MCP servers send their calls, with the API key from the dashboard.
+[[config.domains]]
+serviceName = "api"
+port = 6271
+host = "${api_domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${password:32}"
+# Signs API keys; changing it later invalidates every key issued.
+API_KEY_SECRET = "${base64:48}"
+# The address the dashboard's setup snippet tells MCP servers to send to.
+MCPSPAN_INGEST_URL = "http://${api_domain}"

@@ -1,0 +1,17 @@
+{
+  "id": "mcpspan",
+  "name": "mcpspan",
+  "version": "0.12.0",
+  "description": "mcpspan is open-source analytics for MCP servers: which tools agents call, how often they fail and why, which clients call them, and how fast they answer. Add one line with an SDK in any of eight languages, or none at all behind its proxy, and see it in the dashboard. Parameter values never leave your server.",
+  "logo": "mcpspan.svg",
+  "links": {
+    "github": "https://github.com/mcpspan/mcpspan",
+    "website": "https://mcpspan.com",
+    "docs": "https://mcpspan.com/docs/self-hosting/"
+  },
+  "tags": [
+    "analytics",
+    "monitoring",
+    "mcp"
+  ]
+}

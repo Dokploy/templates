@@ -1,6 +1,6 @@
 services:
   junctio:
-    image: ghcr.io/k2so-dev/junctio:0.2.1
+    image: ghcr.io/k2so-dev/junctio:0.2.5
     restart: unless-stopped
     expose:
       - 3000

@@ -4,7 +4,7 @@ x-puppetflow-environment: &puppetflow-environment
   APP_ENV: production
   APP_URL: ${APP_URL}
   APP_KEY: ${APP_KEY}
-  APP_QUEUES_COUNTER: "1"
+  APP_QUEUES_COUNTER: "2"
   DB_CONNECTION: pgsql
   DB_HOST: postgres
   DB_PORT: "5432"
@@ -60,9 +60,24 @@ services:
       postgres:
         condition: service_healthy
 
-  queue:
+  queue-1:
     image: ghcr.io/puppetflow/puppetflow:v2026.10.25
     command: ["php", "artisan", "queue:work", "--queue=1", "--tries=1", "--timeout=630", "--sleep=3", "--max-jobs=500", "--max-time=3600"]
+    restart: unless-stopped
+    volumes:
+      - puppetflow-framework:/app/storage
+      - puppetflow-execution:/app/data/execution
+      - puppetflow-uploads:/app/data/storage
+    environment: *puppetflow-environment
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      stream-server:
+        condition: service_started
+
+  queue-2:
+    image: ghcr.io/puppetflow/puppetflow:v2026.10.25
+    command: ["php", "artisan", "queue:work", "--queue=2", "--tries=1", "--timeout=630", "--sleep=3", "--max-jobs=500", "--max-time=3600"]
     restart: unless-stopped
     volumes:
       - puppetflow-framework:/app/storage

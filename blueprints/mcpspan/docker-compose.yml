@@ -15,7 +15,7 @@ services:
       retries: 10
 
   migrate:
-    image: ghcr.io/mcpspan/core-api:0.12.0
+    image: ghcr.io/mcpspan/core-api:0.13.0
     restart: "no"
     depends_on:
       db:
@@ -25,7 +25,7 @@ services:
     command: ["./node_modules/.bin/node-pg-migrate", "up"]
 
   api:
-    image: ghcr.io/mcpspan/core-api:0.12.0
+    image: ghcr.io/mcpspan/core-api:0.13.0
     restart: unless-stopped
     depends_on:
       migrate:
@@ -34,6 +34,7 @@ services:
       DATABASE_URL: postgres://mcpspan:${POSTGRES_PASSWORD}@db:5432/mcpspan
       PORT: 6271
       API_KEY_SECRET: ${API_KEY_SECRET}
+      MCPSPAN_DASHBOARD_URL: ${MCPSPAN_DASHBOARD_URL}
     expose:
       - 6271
     healthcheck:
@@ -44,7 +45,7 @@ services:
       start_period: 10s
 
   dashboard:
-    image: ghcr.io/mcpspan/core-dashboard:0.12.0
+    image: ghcr.io/mcpspan/core-dashboard:0.13.0
     restart: unless-stopped
     depends_on:
       api:

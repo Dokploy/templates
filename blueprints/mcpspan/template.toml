@@ -23,3 +23,5 @@ POSTGRES_PASSWORD = "${password:32}"
 API_KEY_SECRET = "${base64:48}"
 # The address the dashboard's setup snippet tells MCP servers to send to.
 MCPSPAN_INGEST_URL = "http://${api_domain}"
+# Where MCP clients that sign in to the API's /mcp (claude.ai, Claude Code...) send people to allow them.
+MCPSPAN_DASHBOARD_URL = "http://${main_domain}"

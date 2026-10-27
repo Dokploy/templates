@@ -13,7 +13,6 @@ services:
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/uptime-kotlin
       ENCRYPTION_MASTER_KEY: ${ENCRYPTION_MASTER_KEY:?ENCRYPTION_MASTER_KEY manquant}
       MP_JWT_VERIFY_ISSUER: ${MP_JWT_VERIFY_ISSUER:-https://uptime.example.com/}
-      NOTIFICATIONS_DISPLAY_TIMEZONE: ${TZ:-Europe/Paris}
     depends_on:
       postgres:
         condition: service_healthy

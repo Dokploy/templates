@@ -12,18 +12,16 @@ instance_id = "${hash:8}"
 serviceName = "puppetflow"
 port = 8000
 host = "${main_domain}"
-https = true
 
 [[config.domains]]
 serviceName = "stream-server"
 port = 6080
 host = "${stream_domain}"
-https = true
 
 [config.env]
-APP_URL = "https://${main_domain}"
+APP_URL = "http://${main_domain}"
 APP_KEY = "base64:${app_key}"
-BROWSER_STREAM_PUBLIC_URL = "https://${stream_domain}"
+BROWSER_STREAM_PUBLIC_URL = "http://${stream_domain}"
 BROWSER_STREAM_SECRET = "${browser_stream_secret}"
 PINOKIO_TOKEN = "${pinokio_token}"
 PUPPETFLOW_INSTANCE_ID = "${instance_id}"

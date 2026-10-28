@@ -22,6 +22,9 @@ port = 6080
 host = "${stream_domain}"
 
 [config.env]
+LANG = "C.UTF-8"
+LANGUAGE = "en-US"
+CONNECTION_TIMEOUT_MS = "60000000"
 APP_URL = "http://${main_domain}"
 APP_KEY = "base64:${app_key}"
 BROWSER_STREAM_PUBLIC_URL = "http://${stream_domain}"

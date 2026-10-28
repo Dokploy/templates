@@ -4,6 +4,9 @@ version: "3.8"
 x-puppetflow-environment: &puppetflow-environment
   APP_ENV: production
   LOG_STACK: single,stderr
+  LANG: ${LANG}
+  LANGUAGE: ${LANGUAGE}
+  CONNECTION_TIMEOUT_MS: ${CONNECTION_TIMEOUT_MS}
   APP_URL: ${APP_URL}
   APP_KEY: ${APP_KEY}
   APP_QUEUES_COUNTER: "2"

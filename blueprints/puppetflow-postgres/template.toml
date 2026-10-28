@@ -16,14 +16,12 @@ serviceName = "puppetflow"
 port = 8000
 host = "${main_domain}"
 https = true
-certificateType = "letsencrypt"
 
 [[config.domains]]
 serviceName = "stream-server"
 port = 6080
 host = "${stream_domain}"
 https = true
-certificateType = "letsencrypt"
 
 [config.env]
 APP_URL = "https://${main_domain}"

@@ -11,17 +11,31 @@ services:
     restart: unless-stopped
     labels:
       - traefik.enable=true
+      # Dokploy generates the specific routers (console, API, realtime) from the
+      # domains declared in template.toml, naming them
+      # "<appName>-<uniqueConfigKey>-<entrypoint>" and never setting a priority.
+      # Their priority is therefore Traefik's default: the length of the rule.
+      # The wildcard routers below are owned by this template, and a HostRegexp
+      # rule is longer than a Host rule, so without an explicit priority they can
+      # outrank the console/API router whenever the wildcard also matches the
+      # host (for example a Sites/Functions wildcard rooted at the same apex as
+      # the console). Pin every wildcard router to the lowest useful priority so
+      # the specific router always wins; 1 is below any rule-derived priority.
       - 'traefik.http.routers.appwrite-sites-wildcard.rule=HostRegexp(`^.+\.${_APP_DOMAIN_SITES}$$`)'
+      - traefik.http.routers.appwrite-sites-wildcard.priority=1
       - traefik.http.routers.appwrite-sites-wildcard.entrypoints=web
       - traefik.http.routers.appwrite-sites-wildcard.service=appwrite-wildcard
       - 'traefik.http.routers.appwrite-sites-wildcard-secure.rule=HostRegexp(`^.+\.${_APP_DOMAIN_SITES}$$`)'
+      - traefik.http.routers.appwrite-sites-wildcard-secure.priority=1
       - traefik.http.routers.appwrite-sites-wildcard-secure.entrypoints=websecure
       - traefik.http.routers.appwrite-sites-wildcard-secure.tls=true
       - traefik.http.routers.appwrite-sites-wildcard-secure.service=appwrite-wildcard
       - 'traefik.http.routers.appwrite-functions-wildcard.rule=HostRegexp(`^.+\.${_APP_DOMAIN_FUNCTIONS}$$`)'
+      - traefik.http.routers.appwrite-functions-wildcard.priority=1
       - traefik.http.routers.appwrite-functions-wildcard.entrypoints=web
       - traefik.http.routers.appwrite-functions-wildcard.service=appwrite-wildcard
       - 'traefik.http.routers.appwrite-functions-wildcard-secure.rule=HostRegexp(`^.+\.${_APP_DOMAIN_FUNCTIONS}$$`)'
+      - traefik.http.routers.appwrite-functions-wildcard-secure.priority=1
       - traefik.http.routers.appwrite-functions-wildcard-secure.entrypoints=websecure
       - traefik.http.routers.appwrite-functions-wildcard-secure.tls=true
       - traefik.http.routers.appwrite-functions-wildcard-secure.service=appwrite-wildcard

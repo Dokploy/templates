@@ -7,6 +7,7 @@ pinokio_token = "${hash:32}"
 postgres_user = "${username}"
 postgres_password = "${password:32}"
 postgres_database = "puppetflow"
+instance_id = "${hash:8}"
 
 [config]
 
@@ -15,12 +16,14 @@ serviceName = "puppetflow"
 port = 8000
 host = "${main_domain}"
 https = true
+certificateType = "letsencrypt"
 
 [[config.domains]]
 serviceName = "stream-server"
 port = 6080
 host = "${stream_domain}"
 https = true
+certificateType = "letsencrypt"
 
 [config.env]
 APP_URL = "https://${main_domain}"
@@ -31,3 +34,4 @@ PINOKIO_TOKEN = "${pinokio_token}"
 POSTGRES_USER = "${postgres_user}"
 POSTGRES_PASSWORD = "${postgres_password}"
 POSTGRES_DB = "${postgres_database}"
+PUPPETFLOW_INSTANCE_ID = "${instance_id}"

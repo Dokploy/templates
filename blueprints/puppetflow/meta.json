@@ -1,7 +1,7 @@
 {
   "id": "puppetflow",
   "name": "Puppetflow",
-  "version": "v2026.10.29",
+  "version": "v2026.10.30",
   "description": "A self-hosted browser automation platform for building, running, and monitoring JavaScript workflows powered by Puppeteer.",
   "logo": "puppetflow.png",
   "links": {

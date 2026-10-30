@@ -1,7 +1,7 @@
 {
   "id": "privatepaste",
   "name": "PrivatePaste",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "description": "Self-hosted clipboard sync: copy on one device, paste on your others, with an encrypted, searchable history and apps for Windows, macOS, Linux and Android.",
   "logo": "privatepaste.svg",
   "links": {

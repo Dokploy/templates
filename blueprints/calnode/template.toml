@@ -43,7 +43,7 @@ env = [
 # share one S3-compatible bucket. No in-app form for this — set as environment
 # variables/secrets with your hosting provider and redeploy.
 
-"LITESTREAM_REPLICA_URL=s3://your-bucket-name/calnode",
+"LITESTREAM_REPLICA_URL=",
 "LITESTREAM_ACCESS_KEY_ID=",
 "LITESTREAM_SECRET_ACCESS_KEY=",
 # LITESTREAM_ENDPOINT is required for any provider other than AWS S3 (Cloudflare

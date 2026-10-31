@@ -108,6 +108,17 @@ class DockerComposeValidator {
 	}
 
 	/**
+	 * Validate that the deprecated top-level Compose version field is absent
+	 */
+	private validateNoDeprecatedVersion(compose: ComposeSpecification): void {
+		if ("version" in compose) {
+			this.error(
+				"Found deprecated top-level 'version' field in docker-compose.yml. Remove it."
+			);
+		}
+	}
+
+	/**
 	 * Validate services don't use container_name (Dokploy best practice)
 	 */
 	private validateNoContainerName(services: Record<string, DefinitionsService>): void {
@@ -286,6 +297,8 @@ class DockerComposeValidator {
 			}
 			return { valid: false, errors: this.errors, warnings: this.warnings };
 		}
+
+		this.validateNoDeprecatedVersion(compose);
 
 		// Validate services exist
 		if (!this.validateServicesExist(compose)) {

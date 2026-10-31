@@ -1,5 +1,7 @@
 [variables]
 main_domain = "${domain}"
+postgres_password = "${password:32}"
+database_url = "postgresql://calcom:${postgres_password}@postgres:5432/calendso"
 nextauth_secret = "${base64:32}"
 calendso_encryption_key = "${base64:24}"
 calcom_credential_sync_secret = "${base64:32}"

@@ -1,6 +1,6 @@
 services:
   legejo:
-    image: slurvdjur/legejo:1.23.1
+    image: slurvdjur/legejo:1.33.0
     restart: unless-stopped
     expose:
       - "3000"

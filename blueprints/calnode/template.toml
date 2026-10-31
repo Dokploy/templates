@@ -1,0 +1,64 @@
+[variables]
+main_domain = "${domain}"
+calnode_encryption_key = "${base64:32}"
+
+[config]
+env = [
+"PORT=3000",
+"BASE_URL=http:${main_domain}",
+"PUBLIC_BASE_URL=",
+"DATABASE_URL=sqlite://./data/calnode.db",
+"COOKIE_SECURE=",
+
+"CALNODE_ENCRYPTION_KEY=${calnode_encryption_key}",
+"CALNODE_RECOVERY_SECRET=",
+
+# Redirect URIs to add:
+#   http://<domain>/v1/auth/callback
+#   http://<domain>/v1/calendar/callback
+"GOOGLE_CLIENT_ID=",
+"GOOGLE_CLIENT_SECRET=",
+
+# Add a Web platform with these redirect URIs:
+#   http://<domain>/v1/auth/microsoft/callback
+#   http://<domain>/v1/calendar/callback
+"MICROSOFT_CLIENT_ID=",
+"MICROSOFT_CLIENT_SECRET=",
+"MICROSOFT_TENANT=common",
+
+"EMAIL_SMTP_HOST=",
+"EMAIL_SMTP_PORT=587",
+"EMAIL_SMTP_CONNECT_HOST=",
+"EMAIL_SMTP_CONNECT_PORT=",
+"EMAIL_SMTP_USER=",
+"EMAIL_SMTP_PASS=",
+"EMAIL_FROM_ADDRESS=",
+"EMAIL_FROM_NAME=Calnode",
+"EMAIL_SMTP_TLS=",
+"EMAIL_SMTP_STARTTLS=",
+
+# Object storage (Litestream) — optional, but required for two things: continuous
+# SQLite backups, and meeting recordings (Settings → Storage; the "Record" button
+# only appears once this is configured AND recordings are turned on there). Both
+# share one S3-compatible bucket. No in-app form for this — set as environment
+# variables/secrets with your hosting provider and redeploy.
+
+"LITESTREAM_REPLICA_URL=",
+"LITESTREAM_ACCESS_KEY_ID=",
+"LITESTREAM_SECRET_ACCESS_KEY=",
+# LITESTREAM_ENDPOINT is required for any provider other than AWS S3 (Cloudflare
+# R2, Backblaze B2, MinIO, etc.) — set it to that provider's S3-compatible endpoint.
+"LITESTREAM_ENDPOINT=",
+# LITESTREAM_REGION is optional — only some providers need it.
+"LITESTREAM_REGION=",
+
+"TRUSTED_PROXY_CIDRS=",
+"FRAME_ANCESTORS=",
+"LOG_LEVEL=",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "calnode"
+port = 3_000
+host = "${main_domain}"

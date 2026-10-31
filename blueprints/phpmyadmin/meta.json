@@ -1,7 +1,7 @@
 {
   "id": "phpmyadmin",
   "name": "Phpmyadmin",
-  "version": "5.2.1",
+  "version": "5.2.3",
   "description": "phpMyAdmin is an open-source web interface for managing MySQL and MariaDB databases. Self-host it on your own server with Dokploy, which deploys phpMyAdmin as a Docker Compose service in a few clicks.",
   "logo": "phpmyadmin.png",
   "links": {

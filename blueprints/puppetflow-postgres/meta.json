@@ -1,7 +1,7 @@
 {
   "id": "puppetflow-postgres",
   "name": "Puppetflow with Postgres",
-  "version": "v2026.10.30",
+  "version": "v2026.10.32",
   "description": "A self-hosted browser automation platform for building, running, and monitoring JavaScript workflows powered by Puppeteer and PostgreSQL.",
   "logo": "puppetflow.png",
   "links": {

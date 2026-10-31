@@ -1,0 +1,20 @@
+{
+    "id": "calnode",
+    "name": "Calnode",
+    "version": "v0.12.0",
+    "description": "Calnode is a Calendly-style booking app — with first-party video meetings, recording, and AI notetaking built in. It's API-first, webhook-native, and built for a world where agents do the booking. Nothing is paywalled.",
+    "links": {
+        "github": "https://github.com/Calnode/calnode",
+        "website": "https://calnode.com/",
+        "docs": "https://github.com/Calnode/calnode/tree/main/docs"
+    },
+    "logo": "calnode.svg",
+    "tags": [
+        "scheduling",
+        "booking",
+        "calendar",
+        "meetings"
+    ],
+    "seoTitle": "Self-Host Calnode in minutes",
+    "seoDescription": "Scheduling and booking tool, an alternative to Calendly. Self-host Calnode on Dokploy in minutes – no manual setup needed."
+}

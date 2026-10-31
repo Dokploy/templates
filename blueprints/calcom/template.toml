@@ -1,19 +1,301 @@
 [variables]
 main_domain = "${domain}"
-calcom_encryption_key = "${base64:32}"
 nextauth_secret = "${base64:32}"
+calendso_encryption_key = "${base64:24}"
+calcom_credential_sync_secret = "${base64:32}"
+calcom_app_credential_encryption_key = "${base64:24}"
+calcom_service_account_encryption_key = "${base64:24}"
+cal_video_recording_token_secret = "${base64:32}"
+cron_api_key = "${hash:32}"
 
 [config]
 env = [
-  "CALCOM_HOST=${main_domain}",
+  # --- POSTGRES (consumed by the `postgres` service) -----------------------------------------
+  "POSTGRES_USER=calcom",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_DB=calendso",
+
+  # --- DATABASE ------------------------------------------------------------------------------
+  "DATABASE_URL=${database_url}",
+  "DATABASE_DIRECT_URL=${database_url}",
+  # Optional read replica for the Insights dashboard. Falls back to DATABASE_URL when empty.
+  "INSIGHTS_DATABASE_URL=",
+
+  # --- SHARED --------------------------------------------------------------------------------
+  "NEXT_PUBLIC_WEBAPP_URL=http://${main_domain}",
+  "NEXT_PUBLIC_WEBSITE_URL=http://${main_domain}",
+  "NEXT_PUBLIC_EMBED_LIB_URL=http://${main_domain}/embed/embed.js",
+  "ALLOWED_HOSTNAMES=${main_domain}",
+
+  # SAML login needs a separate database and is Enterprise Edition only.
+  "SAML_DATABASE_URL=",
+  "SAML_ADMINS=",
+  "NEXT_PUBLIC_HOSTED_CAL_FEATURES=",
+  # Set to no-verify only when your Postgres uses a self-signed certificate.
+  "PGSSLMODE=",
+
+  #   - NEXTAUTH
+  "NEXTAUTH_URL=http://${main_domain}",
   "NEXTAUTH_SECRET=${nextauth_secret}",
-  "CALENDSO_ENCRYPTION_KEY=${calcom_encryption_key}",
-  "DISABLE_SIGNUP=true",
-  "SMTP_SERVER=",
-  "SMTP_PORT=",
-  "SMTP_PASSWORD=",
+  "NEXTAUTH_COOKIE_DOMAIN=",
+
+  # 1 disables anonymous usage collection.
+  "CALCOM_TELEMETRY_DISABLED=1",
+
+  "CRON_API_KEY=${cron_api_key}",
+  "CRON_ENABLE_APP_SYNC=false",
+  "CALENDSO_ENCRYPTION_KEY=${calendso_encryption_key}",
+
+  # --- SUPPORT / ANALYTICS WIDGETS -----------------------------------------------------------
+  "NEXT_PUBLIC_INTERCOM_APP_ID=",
+  "INTERCOM_SECRET=",
+  "INTERCOM_API_TOKEN=",
+  "NEXT_PUBLIC_POSTHOG_KEY=",
+  "NEXT_PUBLIC_POSTHOG_HOST=",
+  "NEXT_PUBLIC_ZENDESK_KEY=",
+  "NEXT_PUBLIC_HELPSCOUT_KEY=",
+  "NEXT_PUBLIC_FRESHCHAT_TOKEN=",
+  "NEXT_PUBLIC_FRESHCHAT_HOST=",
+
+  # --- URL SHORTENERS (SMS workflow links) ---------------------------------------------------
+  "DUB_API_KEY=",
+  "NEXT_PUBLIC_DUB_PROGRAM_ID=",
+  "DUB_SMS_DOMAIN=",
+  "DUB_SMS_FOLDER_ID=",
+  "SINK_API_URL=",
+  "SINK_API_KEY=",
+
+  # --- OAUTH / CALENDAR INTEGRATIONS ---------------------------------------------------------
+  "OUTLOOK_LOGIN_ENABLED=false",
+  "GOOGLE_CALENDAR_API_KEY=",
+  "GOOGLE_LOGIN_ENABLED=false",
+  "GOOGLE_API_CREDENTIALS=",
+  "GOOGLE_WEBHOOK_TOKEN=",
+  # Defaults to NEXT_PUBLIC_WEBAPP_URL when empty.
+  "GOOGLE_WEBHOOK_URL=",
+  "MICROSOFT_WEBHOOK_TOKEN=",
+  "MICROSOFT_WEBHOOK_URL=",
+
+  # --- FEEDBACK / TRANSACTIONAL PROVIDERS ----------------------------------------------------
+  "SEND_FEEDBACK_EMAIL=",
+  "SENDGRID_API_KEY=",
+  "SENDGRID_EMAIL=",
+  "NEXT_PUBLIC_SENDGRID_SENDER_NAME=",
+  "SENDGRID_SYNC_API_KEY=",
+  "RESEND_API_KEY=",
+
+  # --- SENTRY --------------------------------------------------------------------------------
+  "SENTRY_ORG=",
+  "SENTRY_PROJECT=",
+  "SENTRY_AUTH_TOKEN=",
+  "NEXT_PUBLIC_SENTRY_DSN=",
+  "NEXT_PUBLIC_SENTRY_DSN_CLIENT=",
+  "SENTRY_DEBUG=",
+  "SENTRY_MAX_SPANS=",
+  "SENTRY_SAMPLE_RATE=",
+  "SENTRY_TRACES_SAMPLE_RATE=",
+  "SENTRY_REPLAYS_SESSION_SAMPLE_RATE=",
+  "SENTRY_REPLAYS_ON_ERROR_SAMPLE_RATE=",
+
+  # --- FORMBRICKS ----------------------------------------------------------------------------
+  "NEXT_PUBLIC_FORMBRICKS_HOST_URL=https://app.formbricks.com",
+  "NEXT_PUBLIC_FORMBRICKS_ENVIRONMENT_ID=",
+  "FORMBRICKS_FEEDBACK_SURVEY_ID=",
+
+  # --- AVATARAPI (pre-fills avatars during signup) -------------------------------------------
+  "AVATARAPI_USERNAME=",
+  "AVATARAPI_PASSWORD=",
+
+  # --- TWILIO (SMS workflows) ----------------------------------------------------------------
+  # NEXT_PUBLIC_SENDER_ID: letters, numbers and spaces only, max 11 characters.
+  "NEXT_PUBLIC_SENDER_ID=",
+  "TWILIO_VERIFY_SID=",
+  "TWILIO_OPT_OUT_ENABLED=",
+
+  # --- STRIPE (internal billing, teams and organizations) ------------------------------------
+  "NEXT_PUBLIC_STRIPE_PRO_PLAN_PRICE=",
+  "NEXT_PUBLIC_STRIPE_PREMIUM_PLAN_PRICE=",
+  "NEXT_PUBLIC_IS_PREMIUM_NEW_PLAN=0",
+  "NEXT_PUBLIC_STRIPE_PREMIUM_NEW_PLAN_PRICE=",
+  "STRIPE_TEAM_MONTHLY_PRICE_ID=",
+  "STRIPE_TEAM_ANNUAL_PRICE_ID=",
+  "NEXT_PUBLIC_STRIPE_CREDITS_PRICE_ID=",
+  "ORG_MONTHLY_CREDITS=",
+  "STRIPE_TEAM_PRODUCT_ID=",
+  # A price ID belonging to the product in STRIPE_ORG_PRODUCT_ID.
+  "STRIPE_ORG_MONTHLY_PRICE_ID=",
+  "STRIPE_ORG_ANNUAL_PRICE_ID=",
+  "STRIPE_ORG_PRODUCT_ID=",
+  # Trial days passed to the Stripe checkout session for organizations.
+  "STRIPE_ORG_TRIAL_DAYS=",
+  "STRIPE_WEBHOOK_SECRET=",
+  "STRIPE_WEBHOOK_SECRET_APPS=",
+  "STRIPE_WEBHOOK_SECRET_BILLING=",
+  "STRIPE_PRIVATE_KEY=",
+  "STRIPE_CLIENT_ID=",
+
+  # Prefix for public API keys.
+  "API_KEY_PREFIX=cal_",
+
+  # --- E-MAIL SETTINGS -----------------------------------------------------------------------
+  "EMAIL_FROM=notifications@${main_domain}",
+  "EMAIL_FROM_NAME=Cal.com",
+  "EMAIL_SERVER_HOST=",
+  "EMAIL_SERVER_PORT=587",
   "EMAIL_SERVER_USER=",
-  "EMAIL_FROM=",
+  "EMAIL_SERVER_PASSWORD=",
+  "AWAITING_PAYMENT_EMAIL_DELAY_MINUTES=",
+
+  # --- BOT PROTECTION ------------------------------------------------------------------------
+  "NEXT_PUBLIC_CLOUDFLARE_SITEKEY=",
+  "NEXT_PUBLIC_CLOUDFLARE_USE_TURNSTILE_IN_BOOKER=",
+  "CLOUDFLARE_TURNSTILE_SECRET=",
+  "NEXT_PUBLIC_VERCEL_USE_BOTID_IN_BOOKER=0",
+
+  # --- CLOSE.COM INTERNAL CRM ----------------------------------------------------------------
+  "CLOSECOM_CLIENT_ID=",
+  "CLOSECOM_CLIENT_SECRET=",
+
+  # --- BRANDING ------------------------------------------------------------------------------
+  "NEXT_PUBLIC_APP_NAME=Cal.com",
+  "NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS=help@cal.com",
+  "NEXT_PUBLIC_COMPANY_NAME=Cal.com, Inc.",
+  "NEXT_PUBLIC_DISABLE_SIGNUP=false",
+  "NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL=",
+  "NEXT_PUBLIC_WEBSITE_TERMS_URL=",
+  # Deprecated: NEXT_PUBLIC_HEAD_SCRIPTS is injected into the body only, use BODY_SCRIPTS.
+  "NEXT_PUBLIC_HEAD_SCRIPTS=",
+  "NEXT_PUBLIC_BODY_SCRIPTS=",
+
+  # Set to non-strict to enable a Content Security Policy for support pages.
+  "CSP_POLICY=",
+  # Vercel Edge Config, unused outside Vercel.
+  "EDGE_CONFIG=",
+
+  # --- BOOKER BEHAVIOUR ----------------------------------------------------------------------
+  "NEXT_PUBLIC_MINUTES_TO_BOOK=5",
+  # Override the booker to only load X days worth of data. 0 = no override.
+  "NEXT_PUBLIC_BOOKER_NUMBER_OF_DAYS_TO_LOAD=0",
+  "NEXT_PUBLIC_AVAILABILITY_SCHEDULE_INTERVAL=",
+  # Retry interval for stale slot-reservation checks.
+  "NEXT_PUBLIC_QUERY_RESERVATION_INTERVAL_SECONDS=",
+  # Must be lower than NEXT_PUBLIC_QUERY_RESERVATION_INTERVAL_SECONDS.
+  "NEXT_PUBLIC_QUERY_RESERVATION_STALE_TIME_SECONDS=",
+  # Keep high (minutes) — low values put significant load on the instance.
+  "NEXT_PUBLIC_QUERY_AVAILABLE_SLOTS_INTERVAL_SECONDS=",
+  "NEXT_PUBLIC_INVALIDATE_AVAILABLE_SLOTS_ON_BOOKING_FORM=0",
+  # Percentage of visitors that get quick availability checks.
+  "NEXT_PUBLIC_QUICK_AVAILABILITY_ROLLOUT=10",
+  # Emails that may never be added as booking guests.
+  "BLACKLISTED_GUEST_EMAILS=",
+
+  # --- ORGANIZATIONS -------------------------------------------------------------------------
+  # Organizations need a full domain pointing at the app and must also be enabled at build
+  # time, so setting this on a prebuilt image is not enough on its own.
+  "ORGANIZATIONS_ENABLED=",
+  "NEXT_PUBLIC_ORGANIZATIONS_MIN_SELF_SERVE_SEATS=30",
+  # $37.00 per seat
+  "NEXT_PUBLIC_ORGANIZATIONS_SELF_SERVE_PRICE_NEW=37",
+  # Autolink external provider sign-ups to existing orgs by email domain.
+  "ORGANIZATIONS_AUTOLINK=",
+  # Serve only one organization's booking pages. Baked in at build time.
+  "NEXT_PUBLIC_SINGLE_ORG_SLUG=",
+
+  # Vercel/Cloudflare subdomain management for organizations. Only relevant on Vercel.
+  "PROJECT_ID_VERCEL=",
+  "TEAM_ID_VERCEL=",
+  "AUTH_BEARER_TOKEN_VERCEL=",
+  "LOCAL_TESTING_DOMAIN_VERCEL=",
+  "CLOUDFLARE_DNS=",
+  "AUTH_BEARER_TOKEN_CLOUDFLARE=",
+  "CLOUDFLARE_ZONE_ID=",
+  "CLOUDFLARE_VERCEL_CNAME=",
+
+  # --- APP CREDENTIAL SYNC -------------------------------------------------------------------
+  # For self-hosters embedding Cal into an app that already holds the integration secrets.
+  "CALCOM_CREDENTIAL_SYNC_SECRET=${calcom_credential_sync_secret}",
+  # Header used to verify the webhook secret. Must be lowercase.
+  "CALCOM_CREDENTIAL_SYNC_HEADER_NAME=calcom-credential-sync-secret",
+  "CALCOM_CREDENTIAL_SYNC_ENDPOINT=",
+  # Must match the key configured in your application.
+  "CALCOM_APP_CREDENTIAL_ENCRYPTION_KEY=${calcom_app_credential_encryption_key}",
+  "CALCOM_SERVICE_ACCOUNT_ENCRYPTION_KEY=${calcom_service_account_encryption_key}",
+
+  # --- API V2 --------------------------------------------------------------------------------
+  # This blueprint does not ship the API v2 service (upstream builds it from source and has no
+  # published image). Point this at your own deployment to enable the v2 API.
+  "NEXT_PUBLIC_API_V2_URL=",
+
+  # --- TASKER / BACKGROUND JOBS --------------------------------------------------------------
+  "TASKER_ENABLE_WEBHOOKS=0",
+  "TASKER_ENABLE_EMAILS=0",
+  "ENABLE_ASYNC_TASKER=false",
+  "TRIGGER_SECRET_KEY=",
+  "TRIGGER_API_URL=https://api.trigger.dev",
+  "TRIGGER_DEV_PROJECT_REF=",
+
+  # --- RATE LIMITING (Unkey) -----------------------------------------------------------------
+  # Optional. Not needed for self-hosting unless you want rate limiting.
+  "UNKEY_ROOT_KEY=",
+
+  # --- CAL.AI VOICE AGENTS (Retell AI) -------------------------------------------------------
+  "RETELL_AI_KEY=",
+  "RETELL_AI_TEST_MODE=false",
+  # JSON map of local to production event type IDs.
+  "RETELL_AI_TEST_EVENT_TYPE_MAP=",
+  "RETELL_AI_TEST_CAL_API_KEY=",
+  "STRIPE_PHONE_NUMBER_MONTHLY_PRICE_ID=",
+  "CAL_AI_CALL_RATE_PER_MINUTE=0.29",
+  # Price for buying a phone number for the Cal.ai voice agent (default 5).
+  "NEXT_PUBLIC_CAL_AI_PHONE_NUMBER_MONTHLY_PRICE=",
+
+  # --- VIDEO ---------------------------------------------------------------------------------
+  "HUDDLE01_API_TOKEN=",
+  # S3 storage for Daily Video recordings.
+  "CAL_VIDEO_BUCKET_NAME=",
+  "CAL_VIDEO_BUCKET_REGION=",
+  "CAL_VIDEO_ASSUME_ROLE_ARN=",
+  "CAL_VIDEO_MEETING_LINK_FOR_TESTING=",
+  "CAL_VIDEO_RECORDING_TOKEN_SECRET=${cal_video_recording_token_secret}",
+
+  # --- WEB PUSH NOTIFICATIONS ----------------------------------------------------------------
+  # Generate a pair with: npx web-push generate-vapid-keys
+  "NEXT_PUBLIC_VAPID_PUBLIC_KEY=",
+  "VAPID_PRIVATE_KEY=",
+
+  # --- MISC ----------------------------------------------------------------------------------
+  # Real-time AI localization via lingo.dev.
+  "LINGO_DOT_DEV_API_KEY=",
+  # Content moderation.
+  "IFFY_API_KEY=",
+  # Comma-separated DSyncData.directoryId values to log SCIM requests for (debugging only).
+  "DIRECTORY_IDS_TO_LOG=",
+  # 0: silly, 1: trace, 2: debug, 3: info, 4: warn, 5: error/fatal, 6: fatal
+  "NEXT_PUBLIC_LOGGER_LEVEL=",
+  "DATABASE_CHUNK_SIZE=",
+  "SALESFORCE_GRAPHQL_DELAY_MS=500",
+  "SALESFORCE_GRAPHQL_MAX_DELAY_MS=2000",
+  "SALESFORCE_GRAPHQL_MAX_RETRIES=3",
+  # Force Node.js to use UTC as the process timezone.
+  "TZ=UTC",
+  # Ad click tracking (gclid / li_fat_id). Off by default for self-hosted instances.
+  "GOOGLE_ADS_ENABLED=0",
+  "LINKEDIN_ADS_ENABLED=0",
+
+  # --- DEVELOPMENT / E2E ONLY ----------------------------------------------------------------
+  # Leave empty on a real deployment.
+  "NEXT_PUBLIC_IS_E2E=",
+  "E2E_TEST_MAILHOG_ENABLED=",
+  "E2E_TEST_APPLE_CALENDAR_EMAIL=",
+  "E2E_TEST_APPLE_CALENDAR_PASSWORD=",
+  "E2E_TEST_CALCOM_QA_EMAIL=",
+  "E2E_TEST_CALCOM_QA_PASSWORD=",
+  "E2E_TEST_CALCOM_QA_GCAL_CREDENTIALS=",
+  "E2E_TEST_CALCOM_GCAL_KEYS=",
+  "SEED_PLATFORM_OAUTH_CLIENT_ID=",
+  "SEED_PLATFORM_OAUTH_CLIENT_SECRET=",
+  "SEED_OAUTH2_CLIENT_ID=",
+  "SEED_OAUTH2_CLIENT_SECRET_HASHED=",
 ]
 mounts = []
 

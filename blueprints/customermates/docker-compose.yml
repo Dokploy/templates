@@ -1,0 +1,38 @@
+services:
+  customermates:
+    image: ghcr.io/customermates/customermates:sha-4f4d61c
+    restart: unless-stopped
+    depends_on:
+      customermates-postgres:
+        condition: service_healthy
+    environment:
+      APP_MODE: self-hosted
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@customermates-postgres:5432/${POSTGRES_DB}
+      WORKFLOW_TARGET_WORLD: "@workflow/world-postgres"
+      WORKFLOW_POSTGRES_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@customermates-postgres:5432/${POSTGRES_DB}
+      BASE_URL: ${BASE_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      CRON_SECRET: ${CRON_SECRET}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      RESEND_OPERATOR_EMAIL: ${RESEND_OPERATOR_EMAIL}
+    expose:
+      - 4000
+
+  customermates-postgres:
+    image: postgres:16.15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - customermates-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  customermates-postgres-data: {}

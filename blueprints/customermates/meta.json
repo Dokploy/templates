@@ -1,0 +1,17 @@
+{
+  "id": "customermates",
+  "name": "Customermates",
+  "version": "sha-4f4d61c",
+  "description": "Customermates is an open-source CRM for contacts, organizations, deals, services and tasks, with a REST API, webhooks and an MCP endpoint for external AI clients. Self-hosted, it runs on PostgreSQL 16 and uses the Starter feature set.",
+  "logo": "customermates.svg",
+  "links": {
+    "github": "https://github.com/customermates/customermates",
+    "website": "https://customermates.com",
+    "docs": "https://customermates.com/docs/self-hosting"
+  },
+  "tags": [
+    "crm",
+    "sales",
+    "business"
+  ]
+}

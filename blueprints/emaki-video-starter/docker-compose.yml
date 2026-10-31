@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   emaki-video-starter:
     image: san8888/emaki-video-starter:1.0.0

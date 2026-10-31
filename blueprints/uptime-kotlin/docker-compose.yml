@@ -1,0 +1,35 @@
+services:
+  uptime-kotlin:
+    image: ghcr.io/theomeunier/uptime-kotlin:1.5.0
+    restart: unless-stopped
+    mem_limit: 512m
+    expose:
+      - 8080
+    environment:
+      TZ: ${TZ:-Europe/Paris}
+      QUARKUS_DATASOURCE_USERNAME: uptime-kotlin
+      QUARKUS_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/uptime-kotlin
+      ENCRYPTION_MASTER_KEY: ${ENCRYPTION_MASTER_KEY:?ENCRYPTION_MASTER_KEY is required}
+      MP_JWT_VERIFY_ISSUER: ${MP_JWT_VERIFY_ISSUER}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:18.6-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: uptime-kotlin
+      POSTGRES_USER: uptime-kotlin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - uptime-kotlin-db:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U uptime-kotlin -d uptime-kotlin" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  uptime-kotlin-db:

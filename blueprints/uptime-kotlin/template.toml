@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+encryption_key = "${base64:64}"
+timezone = "Europe/Paris"
+
+[config]
+env = [
+    "POSTGRES_PASSWORD=${db_password}",
+    "ENCRYPTION_MASTER_KEY=${encryption_key}",
+    "MP_JWT_VERIFY_ISSUER=https://${main_domain}/",
+    "TZ=${timezone}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "uptime-kotlin"
+port = 8080
+host = "${main_domain}"

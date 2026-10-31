@@ -1,5 +1,3 @@
-version: "3.8"
-
 # dokploy: allow-container-names
 x-puppetflow-environment: &puppetflow-environment
   APP_ENV: production

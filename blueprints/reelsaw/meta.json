@@ -1,0 +1,20 @@
+{
+  "id": "reelsaw",
+  "name": "Reelsaw",
+  "version": "v0.18.2",
+  "description": "Reelsaw is a self-hosted, AI-powered video clipper: paste a YouTube link or upload a video and it transcribes it, asks a language model for the most clippable moments, reframes the speaker into vertical 9:16 with face tracking, cuts fillers and burns in word-highlight captions. Open source (AGPL-3.0), any model provider (OpenAI, Anthropic, Google, Groq, Deepgram, or a local Ollama and Whisper), and an MCP server so agents can drive it. Deploy it on Dokploy with Docker Compose and a Postgres database in a few clicks.",
+  "logo": "reelsaw.png",
+  "links": {
+    "github": "https://github.com/osbytes/reelsaw",
+    "website": "https://reelsaw.com",
+    "docs": "https://github.com/osbytes/reelsaw#readme"
+  },
+  "tags": [
+    "video",
+    "ai",
+    "self-hosted"
+  ],
+  "seoTitle": "Reelsaw Docker Compose Setup",
+  "seoDescription": "Self-hosted AI video clipper: long videos to vertical shorts with face-tracked reframing and word-highlight captions. Deploy Reelsaw with Docker Compose on Dokploy in minutes – free, open source, any AI provider.",
+  "newConfig": true
+}

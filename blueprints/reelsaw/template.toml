@@ -1,0 +1,26 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "reelsaw"
+port = 3_000
+host = "${main_domain}"
+
+[config.env]
+APP_URL = "https://${main_domain}"
+BETTER_AUTH_SECRET = "${base64:48}"
+DB_PASSWORD = "${password:32}"
+# open: anyone may sign up; the first account becomes the admin. Switch to approval or closed afterwards.
+SIGNUP_MODE = "open"
+# One model provider key is required before first boot (Reelsaw exits with a readable reason otherwise).
+# Defaults use OpenAI for both models; any provider works, see https://github.com/osbytes/reelsaw#model-configuration
+AI_MODEL = "openai:gpt-4o-mini"
+TRANSCRIPTION_MODEL = "openai:whisper-1"
+OPENAI_API_KEY = ""
+ANTHROPIC_API_KEY = ""
+GOOGLE_GENERATIVE_AI_API_KEY = ""
+GROQ_API_KEY = ""
+DEEPGRAM_API_KEY = ""

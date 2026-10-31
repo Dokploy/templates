@@ -1,7 +1,7 @@
 {
   "id": "legejo",
   "name": "Legejo",
-  "version": "1.23.1",
+  "version": "1.33.0",
   "description": "Legejo is a self-hosted library for your EPUB books, with a web reader, Kobo sync, OPDS for reading apps, KOReader progress sync, shared shelves and audiobooks. Runs on SQLite with no other services needed.",
   "logo": "legejo.svg",
   "links": {

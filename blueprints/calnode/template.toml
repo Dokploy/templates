@@ -5,7 +5,7 @@ calnode_encryption_key = "${base64:32}"
 [config]
 env = [
 "PORT=3000",
-"BASE_URL=${main_domain}",
+"BASE_URL=http:${main_domain}",
 "PUBLIC_BASE_URL=",
 "DATABASE_URL=sqlite://./data/calnode.db",
 "COOKIE_SECURE=",

@@ -6,22 +6,36 @@ x-logging: &x-logging
       max-size: "10m"
 services:
   appwrite:
-    image: appwrite/appwrite:2.5.0
+    image: appwrite/appwrite:2.6.2
     <<: *x-logging
     restart: unless-stopped
     labels:
       - traefik.enable=true
+      # Dokploy generates the specific routers (console, API, realtime) from the
+      # domains declared in template.toml, naming them
+      # "<appName>-<uniqueConfigKey>-<entrypoint>" and never setting a priority.
+      # Their priority is therefore Traefik's default: the length of the rule.
+      # The wildcard routers below are owned by this template, and a HostRegexp
+      # rule is longer than a Host rule, so without an explicit priority they can
+      # outrank the console/API router whenever the wildcard also matches the
+      # host (for example a Sites/Functions wildcard rooted at the same apex as
+      # the console). Pin every wildcard router to the lowest useful priority so
+      # the specific router always wins; 1 is below any rule-derived priority.
       - 'traefik.http.routers.appwrite-sites-wildcard.rule=HostRegexp(`^.+\.${_APP_DOMAIN_SITES}$$`)'
+      - traefik.http.routers.appwrite-sites-wildcard.priority=1
       - traefik.http.routers.appwrite-sites-wildcard.entrypoints=web
       - traefik.http.routers.appwrite-sites-wildcard.service=appwrite-wildcard
       - 'traefik.http.routers.appwrite-sites-wildcard-secure.rule=HostRegexp(`^.+\.${_APP_DOMAIN_SITES}$$`)'
+      - traefik.http.routers.appwrite-sites-wildcard-secure.priority=1
       - traefik.http.routers.appwrite-sites-wildcard-secure.entrypoints=websecure
       - traefik.http.routers.appwrite-sites-wildcard-secure.tls=true
       - traefik.http.routers.appwrite-sites-wildcard-secure.service=appwrite-wildcard
       - 'traefik.http.routers.appwrite-functions-wildcard.rule=HostRegexp(`^.+\.${_APP_DOMAIN_FUNCTIONS}$$`)'
+      - traefik.http.routers.appwrite-functions-wildcard.priority=1
       - traefik.http.routers.appwrite-functions-wildcard.entrypoints=web
       - traefik.http.routers.appwrite-functions-wildcard.service=appwrite-wildcard
       - 'traefik.http.routers.appwrite-functions-wildcard-secure.rule=HostRegexp(`^.+\.${_APP_DOMAIN_FUNCTIONS}$$`)'
+      - traefik.http.routers.appwrite-functions-wildcard-secure.priority=1
       - traefik.http.routers.appwrite-functions-wildcard-secure.entrypoints=websecure
       - traefik.http.routers.appwrite-functions-wildcard-secure.tls=true
       - traefik.http.routers.appwrite-functions-wildcard-secure.service=appwrite-wildcard
@@ -29,7 +43,7 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - 'curl -fsS -o /dev/null -H "Host: $${_APP_DOMAIN:-localhost}" http://localhost/v1/health/version'
+        - 'test -f /tmp/.appwrite-ready && curl -fsS -o /dev/null -H "Host: $${_APP_DOMAIN:-localhost}" http://localhost/v1/health/version'
       interval: 5s
       timeout: 5s
       retries: 12
@@ -52,8 +66,11 @@ services:
         condition: service_started
       appwrite-autogravity:
         condition: service_started
+      appwrite-exiftool:
+        condition: service_started
     environment:
       - _APP_ENV
+      - _APP_MEMORY_LIMIT
       - _APP_EDITION
       - _APP_WORKER_PER_CORE
       - _APP_LOCALE
@@ -153,6 +170,7 @@ services:
       - _APP_STORAGE_LIMIT
       - _APP_STORAGE_PREVIEW_LIMIT
       - _APP_AUTOGRAVITY_HOST
+      - _APP_EXIFTOOL_HOST
       - _APP_STORAGE_ANTIVIRUS
       - _APP_STORAGE_ANTIVIRUS_HOST
       - _APP_STORAGE_ANTIVIRUS_PORT
@@ -162,6 +180,7 @@ services:
       - _APP_STORAGE_S3_REGION
       - _APP_STORAGE_S3_BUCKET
       - _APP_STORAGE_S3_ENDPOINT
+      - _APP_STORAGE_S3_PATH_STYLE
       - _APP_STORAGE_DO_SPACES_ACCESS_KEY
       - _APP_STORAGE_DO_SPACES_SECRET
       - _APP_STORAGE_DO_SPACES_REGION
@@ -229,6 +248,10 @@ services:
       - _APP_VCS_BITBUCKET_WEBHOOK_SECRET
       - _APP_VCS_ORIGIN_CLIENT_ID
       - _APP_VCS_ORIGIN_PRIVATE_KEY
+      - _APP_VCS_ENTIRE_PLUGIN
+      - _APP_VCS_ENTIRE_PRIVATE_KEY
+      - _APP_VCS_ENTIRE_ISSUER
+      - _APP_VCS_ENTIRE_ENDPOINT
       - _APP_VCS_WEBHOOK_URL
       - _APP_MIGRATION_HOST
       - _APP_MIGRATIONS_FIREBASE_CLIENT_ID
@@ -237,16 +260,17 @@ services:
       - _APP_PWNED_PASSWORDS_DSN
 
   appwrite-console:
-    image: appwrite/new:1.2.74-self-hosted
+    image: appwrite/new:1.2.108-self-hosted
     <<: *x-logging
     restart: unless-stopped
     environment:
       - VITE_CONSOLE_PROFILE=self-hosted
+      - VITE_APPWRITE_VERSION=${_APP_VERSION:-2.6.1}
       - APPWRITE_ENDPOINT_SAME_ORIGIN=true
       - VITE_GROWTH_ENDPOINT=https://growth.appwrite.io/v1
 
   appwrite-realtime:
-    image: appwrite/appwrite:2.5.0
+    image: appwrite/appwrite:2.6.2
     entrypoint: realtime
     <<: *x-logging
     restart: unless-stopped
@@ -257,6 +281,7 @@ services:
         condition: service_healthy
     environment:
       - _APP_ENV
+      - _APP_MEMORY_LIMIT
       - _APP_WORKER_PER_CORE
       - _APP_OPTIONS_ABUSE
       - _APP_OPTIONS_ROUTER_PROTECTION
@@ -298,7 +323,7 @@ services:
       - _APP_LOGGING_FORMAT
 
   appwrite-mqtt:
-    image: appwrite/appwrite:2.5.0
+    image: appwrite/appwrite:2.6.2
     entrypoint: mqtt
     <<: *x-logging
     restart: unless-stopped
@@ -319,6 +344,7 @@ services:
       start_period: 20s
     environment:
       - _APP_ENV
+      - _APP_MEMORY_LIMIT
       - _APP_WORKER_PER_CORE
       - _APP_OPTIONS_ABUSE
       - _APP_OPTIONS_ROUTER_PROTECTION
@@ -348,7 +374,7 @@ services:
       - _APP_MQTT_MAX_PACKET_SIZE
 
   appwrite-worker:
-    image: appwrite/appwrite:2.5.0
+    image: appwrite/appwrite:2.6.2
     entrypoint: worker
     <<: *x-logging
     restart: unless-stopped
@@ -370,9 +396,10 @@ services:
       - host.docker.internal:host-gateway
     environment:
       - _APP_ENV
+      - _APP_MEMORY_LIMIT
       - _APP_WORKERS_NUM=1
-      # Pool sizing only (sum of per-queue caps). Each queue keeps its own maxCoroutines in PHP; databases stays at 1.
-      - _APP_WORKER_MAX_COROUTINES=78
+      # Pool sizing only (sum of per-queue caps). Each queue keeps its own maxCoroutines in PHP; databases and maintenance stay at 1.
+      - _APP_WORKER_MAX_COROUTINES=79
       - _APP_WORKER_PER_CORE
       - _APP_OPENSSL_KEY_V1
       - _APP_NOTIFICATIONS_TRACKING_SECRET
@@ -416,6 +443,7 @@ services:
       - _APP_MAINTENANCE_RETENTION_USAGE_TTL
       - _APP_STATS_USAGE_QUEUE_NAME
       - _APP_STATS_RESOURCES_QUEUE_NAME
+      - _APP_MAINTENANCE_QUEUE_NAME
       - _APP_STATS_RESOURCES_INTERVAL
       - _APP_LOGGING_CONFIG
       - _APP_LOGGING_FORMAT
@@ -440,6 +468,7 @@ services:
       - _APP_STORAGE_S3_REGION
       - _APP_STORAGE_S3_BUCKET
       - _APP_STORAGE_S3_ENDPOINT
+      - _APP_STORAGE_S3_PATH_STYLE
       - _APP_STORAGE_DO_SPACES_ACCESS_KEY
       - _APP_STORAGE_DO_SPACES_SECRET
       - _APP_STORAGE_DO_SPACES_REGION
@@ -491,6 +520,10 @@ services:
       - _APP_VCS_BITBUCKET_WEBHOOK_SECRET
       - _APP_VCS_ORIGIN_CLIENT_ID
       - _APP_VCS_ORIGIN_PRIVATE_KEY
+      - _APP_VCS_ENTIRE_PLUGIN
+      - _APP_VCS_ENTIRE_PRIVATE_KEY
+      - _APP_VCS_ENTIRE_ISSUER
+      - _APP_VCS_ENTIRE_ENDPOINT
       - _APP_VCS_WEBHOOK_URL
       - _APP_SYSTEM_EMAIL_NAME
       - _APP_SYSTEM_EMAIL_ADDRESS
@@ -509,7 +542,7 @@ services:
       - _APP_MAINTENANCE_RETENTION_AUDIT_CONSOLE
 
   appwrite-task-scheduler:
-    image: appwrite/appwrite:2.5.0
+    image: appwrite/appwrite:2.6.2
     entrypoint: schedule
     <<: *x-logging
     restart: unless-stopped
@@ -520,6 +553,7 @@ services:
         condition: service_healthy
     environment:
       - _APP_ENV
+      - _APP_MEMORY_LIMIT
       # Combined mode runs functions/executions/messages timers + enqueue coroutines
       # against shared console/cache pools; floor must cover concurrent ticks.
       - _APP_WORKER_MAX_COROUTINES=8
@@ -552,12 +586,14 @@ services:
       - _APP_MAINTENANCE_RETENTION_USAGE_TTL
       - _APP_STATS_USAGE_QUEUE_NAME
       - _APP_STATS_RESOURCES_QUEUE_NAME
+      - _APP_MAINTENANCE_QUEUE_NAME
       - _APP_STATS_RESOURCES_INTERVAL
       - _APP_FUNCTIONS_SCHEDULE_SPREAD
+      - _APP_MAINTENANCE_INACTIVE_INTERVAL
       - _APP_LOGGING_FORMAT
 
   appwrite-task-maintenance:
-    image: appwrite/appwrite:2.5.0
+    image: appwrite/appwrite:2.6.2
     entrypoint: maintenance
     <<: *x-logging
     restart: unless-stopped
@@ -568,6 +604,7 @@ services:
         condition: service_healthy
     environment:
       - _APP_ENV
+      - _APP_MEMORY_LIMIT
       - _APP_EDITION
       - _APP_WORKER_PER_CORE
       - _APP_DOMAIN
@@ -601,7 +638,7 @@ services:
       - _APP_LOGGING_FORMAT
 
   appwrite-task-interval:
-    image: appwrite/appwrite:2.5.0
+    image: appwrite/appwrite:2.6.2
     entrypoint: interval
     <<: *x-logging
     restart: unless-stopped
@@ -612,6 +649,7 @@ services:
         condition: service_healthy
     environment:
       - _APP_ENV
+      - _APP_MEMORY_LIMIT
       - _APP_WORKER_PER_CORE
       - _APP_DOMAIN
       - _APP_DOMAIN_TARGET_CNAME
@@ -638,7 +676,7 @@ services:
       - _APP_LOGGING_FORMAT
 
   appwrite-browser:
-    image: appwrite/browser:0.3.6
+    image: appwrite/browser:0.3.8
     <<: *x-logging
     restart: unless-stopped
     environment:
@@ -655,6 +693,11 @@ services:
     restart: unless-stopped
     environment:
       - MODEL_BACKEND=focalnet
+
+  appwrite-exiftool:
+    image: ghcr.io/appwrite/exiftool:0.1.1
+    <<: *x-logging
+    restart: unless-stopped
 
   appwrite-geo:
     image: appwrite/geo:0.3.2
@@ -738,7 +781,7 @@ services:
       start_period: 5s
 
   orchestrator:
-    image: ghcr.io/open-runtimes/orchestrator/orchestrator:2.2.2
+    image: ghcr.io/open-runtimes/orchestrator/orchestrator:2.2.4
     hostname: orchestrator
     <<: *x-logging
     restart: unless-stopped
@@ -761,6 +804,8 @@ services:
     image: appwrite/postgres:0.1.0
     <<: *x-logging
     restart: unless-stopped
+    init: true
+    shm_size: 1g
     volumes:
       - appwrite-postgresql:/var/lib/postgresql:rw
     environment:

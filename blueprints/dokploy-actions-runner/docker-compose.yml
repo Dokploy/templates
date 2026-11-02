@@ -1,7 +1,7 @@
 services:
   dokploy-actions-runner:
     # Maintained upstream runner, Ubuntu 24.04; multi-architecture index digest.
-    image: ghcr.io/myoung34/docker-github-actions-runner:2.338.1-ubuntu-noble@sha256:36782fe0e5994b301652408c32113a3562fabb1f0ead865ccc196d3e870f9109
+    image: ghcr.io/myoung34/docker-github-actions-runner:2.338.2-ubuntu-noble@sha256:23e3a4a1da30de5b462ad0ae13d901288e803a688075c3b9b5bb79b7148c07fa
     restart: unless-stopped
     user: runner
     cap_drop:

@@ -130,7 +130,7 @@ services:
       - pinokio-downloads:/browsers
 
   pinokio:
-    image: ghcr.io/puppetflow/pinokio:v2026.9.6
+    image: ghcr.io/puppetflow/pinokio:v2026.11.1
     container_name: puppetflow-${PUPPETFLOW_INSTANCE_ID}-pinokio
     restart: unless-stopped
     user: "33:33"
@@ -143,6 +143,8 @@ services:
       HOME: /tmp
       XDG_CONFIG_HOME: /tmp/.config
       XDG_CACHE_HOME: /tmp/.cache
+      LANG: ${LANG}
+      LANGUAGE: ${LANGUAGE}
     depends_on:
       init-volumes:
         condition: service_completed_successfully

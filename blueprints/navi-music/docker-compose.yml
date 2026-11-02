@@ -4,6 +4,17 @@ services:
     restart: unless-stopped
     depends_on:
       - yt-cipher
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        java $$JAVA_OPTS -jar /app/NaviMusic.jar nogui --spring.profiles.active=prod;
+        code=$$?;
+        if [ "$$code" -eq 0 ]; then
+        echo "NaviMusic is idle. Set DISCORD_TOKEN and required YouTube credentials in the Environment tab, then redeploy.";
+        tail -f /dev/null;
+        fi;
+        exit $$code
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}

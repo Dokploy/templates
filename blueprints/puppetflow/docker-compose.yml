@@ -1,24 +1,30 @@
+# dokploy: allow-container-names
 x-puppetflow-environment: &puppetflow-environment
   APP_ENV: production
+  LOG_STACK: single,stderr
+  LANG: ${LANG}
+  LANGUAGE: ${LANGUAGE}
+  CONNECTION_TIMEOUT_MS: ${CONNECTION_TIMEOUT_MS}
   APP_URL: ${APP_URL}
   APP_KEY: ${APP_KEY}
-  APP_QUEUES_COUNTER: "1"
+  APP_QUEUES_COUNTER: "2"
   DB_CONNECTION: sqlite
   DB_DATABASE: /app/storage/database.sqlite
-  REDIS_HOST: redis
+  REDIS_HOST: puppetflow-${PUPPETFLOW_INSTANCE_ID}-redis
   REDIS_PORT: "6379"
-  PINOKIO_HOST: pinokio
+  PINOKIO_HOST: puppetflow-${PUPPETFLOW_INSTANCE_ID}-pinokio
   PINOKIO_PORT: "3000"
   PINOKIO_TOKEN: ${PINOKIO_TOKEN}
-  RUNNER_API_INTERNAL_URL: http://puppetflow:8000/api/internal/runner
-  BROWSER_STREAM_INTERNAL_URL: http://stream-server:6080
+  RUNNER_API_INTERNAL_URL: http://puppetflow-${PUPPETFLOW_INSTANCE_ID}-app:8000/api/internal/runner
+  BROWSER_STREAM_INTERNAL_URL: http://puppetflow-${PUPPETFLOW_INSTANCE_ID}-stream:6080
   BROWSER_STREAM_PUBLIC_URL: ${BROWSER_STREAM_PUBLIC_URL}
   BROWSER_STREAM_ALLOWED_ORIGINS: ${APP_URL}
   BROWSER_STREAM_SECRET: ${BROWSER_STREAM_SECRET}
 
 services:
   puppetflow:
-    image: ghcr.io/puppetflow/puppetflow:v2026.10.20
+    image: ghcr.io/puppetflow/puppetflow:v2026.11.1
+    container_name: puppetflow-${PUPPETFLOW_INSTANCE_ID}-app
     restart: unless-stopped
     expose:
       - 8000
@@ -42,7 +48,7 @@ services:
         condition: service_started
 
   migrate:
-    image: ghcr.io/puppetflow/puppetflow:v2026.10.20
+    image: ghcr.io/puppetflow/puppetflow:v2026.11.1
     command: ["php", "artisan", "migrate", "--force"]
     restart: "no"
     volumes:
@@ -52,8 +58,8 @@ services:
       init-volumes:
         condition: service_completed_successfully
 
-  queue:
-    image: ghcr.io/puppetflow/puppetflow:v2026.10.20
+  queue-1:
+    image: ghcr.io/puppetflow/puppetflow:v2026.11.1
     command: ["php", "artisan", "queue:work", "--queue=1", "--tries=1", "--timeout=630", "--sleep=3", "--max-jobs=500", "--max-time=3600"]
     restart: unless-stopped
     volumes:
@@ -67,8 +73,23 @@ services:
       stream-server:
         condition: service_started
 
+  queue-2:
+    image: ghcr.io/puppetflow/puppetflow:v2026.11.1
+    command: ["php", "artisan", "queue:work", "--queue=2", "--tries=1", "--timeout=630", "--sleep=3", "--max-jobs=500", "--max-time=3600"]
+    restart: unless-stopped
+    volumes:
+      - puppetflow-framework:/app/storage
+      - puppetflow-execution:/app/data/execution
+      - puppetflow-uploads:/app/data/storage
+    environment: *puppetflow-environment
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      stream-server:
+        condition: service_started
+
   scheduler:
-    image: ghcr.io/puppetflow/puppetflow:v2026.10.20
+    image: ghcr.io/puppetflow/puppetflow:v2026.11.1
     command: ["php", "artisan", "schedule:work"]
     restart: unless-stopped
     volumes:
@@ -81,7 +102,8 @@ services:
         condition: service_completed_successfully
 
   stream-server:
-    image: ghcr.io/puppetflow/puppetflow-stream-server:v2026.10.20
+    image: ghcr.io/puppetflow/puppetflow-stream-server:v2026.11.1
+    container_name: puppetflow-${PUPPETFLOW_INSTANCE_ID}-stream
     restart: unless-stopped
     stop_grace_period: 30s
     expose:
@@ -93,28 +115,37 @@ services:
 
   init-volumes:
     image: busybox:1.37.0
-    command: ["sh", "-c", "touch /framework/database.sqlite && chown -R 33:33 /framework /execution /uploads"]
+    command: ["sh", "-c", "touch /framework/database.sqlite && chown -R 33:33 /framework /execution /uploads /browsers"]
     restart: "no"
     volumes:
       - puppetflow-framework:/framework
       - puppetflow-execution:/execution
       - puppetflow-uploads:/uploads
+      - pinokio-downloads:/browsers
 
   pinokio:
-    image: ghcr.io/puppetflow/pinokio:v2026.9.6
+    image: ghcr.io/puppetflow/pinokio:v2026.11.1
+    container_name: puppetflow-${PUPPETFLOW_INSTANCE_ID}-pinokio
     restart: unless-stopped
+    user: "33:33"
     shm_size: "1gb"
     volumes:
       - puppetflow-execution:/app/data/execution
       - pinokio-downloads:/opt/browsers
     environment:
       TOKEN: ${PINOKIO_TOKEN}
+      HOME: /tmp
+      XDG_CONFIG_HOME: /tmp/.config
+      XDG_CACHE_HOME: /tmp/.cache
+      LANG: ${LANG}
+      LANGUAGE: ${LANGUAGE}
     depends_on:
       init-volumes:
         condition: service_completed_successfully
 
   redis:
     image: redis:8.2.1-alpine
+    container_name: puppetflow-${PUPPETFLOW_INSTANCE_ID}-redis
     command: ["redis-server", "--save", "", "--appendonly", "no"]
     restart: unless-stopped
     healthcheck:

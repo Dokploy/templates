@@ -12,7 +12,9 @@ usage_pw = "${password:32}"
 executor_secret = "${password:32}"
 jobs_secret = "${password:32}"
 geo_secret = "${password:32}"
-reviews_secret = "${password:32}"
+# Optional AI code review of GitHub pull requests. Uncomment together with the
+# _APP_REVIEWS_* variables and the appwrite-hansi service in docker-compose.yml.
+# reviews_secret = "${password:32}"
 console_domain = "console.${main_domain}"
 
 [config]
@@ -192,10 +194,12 @@ env = [
   "_APP_JOBS_HOST=http://orchestrator:8080",
   "_APP_JOBS_SECRET=${jobs_secret}",
   "_APP_JOBS_ENDPOINT=http://appwrite",
-  "_APP_REVIEWS_SECRET=${reviews_secret}",
-  "_APP_REVIEWS_MODEL=anthropic/claude-sonnet-4.5",
-  "_APP_REVIEWS_VERIFY_MODEL=",
-  "_APP_REVIEWS_AI_GATEWAY_KEY=",
+  # Reviews are opt-in: the shared secret turns the /v1/reviews API on, and the
+  # console hides the screen in the self-hosted profile regardless.
+  # "_APP_REVIEWS_SECRET=${reviews_secret}",
+  # "_APP_REVIEWS_MODEL=anthropic/claude-sonnet-4.5",
+  # "_APP_REVIEWS_VERIFY_MODEL=",
+  # "_APP_REVIEWS_AI_GATEWAY_KEY=",
   "_APP_BROWSER_HOST=http://appwrite-browser:3000/v1",
   "_APP_WORKER_SCREENSHOTS_ROUTER=http://appwrite",
   "_APP_DOCKER_HUB_USERNAME=",

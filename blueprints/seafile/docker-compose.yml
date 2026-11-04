@@ -50,7 +50,7 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD:?Variable is not set or empty}
 
   seafile:
-    image: seafileltd/seafile-mc:14.0-latest
+    image: seafileltd/seafile-mc:14.0.9
     restart: unless-stopped
     volumes:
       - seafile-data:/shared
@@ -107,7 +107,7 @@ services:
         condition: service_started
 
   seadoc:
-    image: seafileltd/sdoc-server:2.0-latest
+    image: seafileltd/sdoc-server:2.0.11
     restart: unless-stopped
     volumes:
       - seadoc-data:/shared

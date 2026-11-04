@@ -1,7 +1,7 @@
 {
   "id": "seafile",
   "name": "Seafile",
-  "version": "14.0-latest",
+  "version": "14.0.9",
   "description": "Seafile is an open-source file sync and sharing platform. Self-host it on your own server with Dokploy, which deploys Seafile as a Docker Compose service in a few clicks.",
   "logo": "seafile.svg",
   "links": {

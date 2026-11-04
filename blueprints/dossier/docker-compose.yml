@@ -1,6 +1,6 @@
 services:
   dossier:
-    image: ghcr.io/aientech/dossier:v1.5.0
+    image: ghcr.io/aientech/dossier:v1.9.0
     restart: unless-stopped
     env_file:
       - path: .env
@@ -14,6 +14,7 @@ services:
       DOSSIER_SECRET: "${DOSSIER_SECRET:?Keep the generated DOSSIER_SECRET}"
       DOSSIER_DATA_DIR: /data
       DOSSIER_TELEMETRY: "${DOSSIER_TELEMETRY:-off}"
+      DOSSIER_JOBS_ARBEITSAGENTUR: "${DOSSIER_JOBS_ARBEITSAGENTUR:-off}"
       DOSSIER_BACKUP_RETENTION_DAYS: "${DOSSIER_BACKUP_RETENTION_DAYS:-14}"
       TZ: "${TZ:-UTC}"
     command:

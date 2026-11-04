@@ -1,7 +1,7 @@
 {
   "id": "cakephp",
   "name": "CakePHP 5",
-  "version": "5.4",
+  "version": "1.0.0",
   "description": "CakePHP 5 starter app running on the themusicdev/php-apache 8.5 Apache + PHP runtime image, backed by MariaDB. Fork the starter repo, build your app, and deploy it on Dokploy in a few clicks.",
   "logo": "cakephp.svg",
   "links": {

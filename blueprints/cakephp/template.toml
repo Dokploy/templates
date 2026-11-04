@@ -18,4 +18,7 @@ host = "${main_domain}"
 [config.env]
 DEBUG = "${app_debug}"
 SECURITY_SALT = "${security_salt}"
-DATABASE_URL = "mysql://${database_username}:${database_password}@mariadb:3306/${database_name}?encoding=utf8mb4"
+MARIADB_ROOT_PASSWORD = "${root_password}"
+MARIADB_DATABASE = "${database_name}"
+MARIADB_USER = "${database_username}"
+MARIADB_PASSWORD = "${database_password}"

@@ -1,15 +1,15 @@
 services:
   cakephp:
-    image: ghcr.io/themusicdev/cakephp-hello:latest
+    image: ghcr.io/themusicdev/cakephp-hello:1.0.0
     restart: unless-stopped
     depends_on:
       - mariadb
     environment:
-      # CakePHP skeleton reads its app config from these three env vars
+      # CakePHP skeleton reads its app config from these env vars
       # (config/app_local.php in the starter repo is env-driven)
-      - DEBUG=${app_debug}
-      - SECURITY_SALT=${security_salt}
-      - DATABASE_URL=mysql://${database_username}:${database_password}@mariadb:3306/${database_name}?encoding=utf8mb4
+      - DEBUG=${DEBUG}
+      - SECURITY_SALT=${SECURITY_SALT}
+      - DATABASE_URL=mysql://${MARIADB_USER}:${MARIADB_PASSWORD}@mariadb:3306/${MARIADB_DATABASE}?encoding=utf8mb4
     expose:
       - 80
 
@@ -17,10 +17,10 @@ services:
     image: mariadb:11
     restart: unless-stopped
     environment:
-      - MARIADB_ROOT_PASSWORD=${root_password}
-      - MARIADB_DATABASE=${database_name}
-      - MARIADB_USER=${database_username}
-      - MARIADB_PASSWORD=${database_password}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
     volumes:
       - mariadb-data:/var/lib/mysql
     expose:

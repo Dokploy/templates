@@ -122,7 +122,7 @@ services:
       - pinokio-downloads:/browsers
 
   pinokio:
-    image: ghcr.io/puppetflow/pinokio:v2026.11.7
+    image: ghcr.io/puppetflow/pinokio:v2026.11.1
     restart: unless-stopped
     user: "33:33"
     shm_size: "1gb"

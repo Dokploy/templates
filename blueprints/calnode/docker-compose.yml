@@ -1,7 +1,7 @@
 
 services:
   calnode:
-    image: ghcr.io/calnode/calnode:0.12
+    image: ghcr.io/calnode/calnode:0.12.0
     restart: unless-stopped
 
     volumes:

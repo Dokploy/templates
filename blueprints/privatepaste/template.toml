@@ -16,6 +16,7 @@ host = "${main_domain}"
 PP_DB_KEY = "${db_key}"
 PP_PASSWORD = "${login_password}"
 PP_MAX_IMAGE_MB = "20"
+PP_MAX_FILE_MB = "25"
 PP_MAX_TEXT_KB = "1024"
 # Set to "true" only if the server is reachable exclusively through a Cloudflare tunnel.
 PP_TRUST_CLOUDFLARE = "false"

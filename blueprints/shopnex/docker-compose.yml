@@ -17,7 +17,7 @@ services:
       retries: 10
 
   shopnex:
-    image: ghcr.io/shopnex-ai/shopnex:${SHOPNEX_VERSION:-latest}
+    image: ghcr.io/shopnex-ai/shopnex:${SHOPNEX_VERSION:-v0.13.1}
     pull_policy: always
     restart: unless-stopped
     depends_on:
@@ -36,7 +36,7 @@ services:
       SHOPNEX_BUNDLED_APPS: docker
 
   stripe:
-    image: ghcr.io/shopnex-ai/shopnex-stripe:${SHOPNEX_VERSION:-latest}
+    image: ghcr.io/shopnex-ai/shopnex-stripe:${SHOPNEX_VERSION:-v0.13.1}
     pull_policy: always
     restart: unless-stopped
     volumes:

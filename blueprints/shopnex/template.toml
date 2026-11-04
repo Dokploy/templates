@@ -18,6 +18,6 @@ host = "${stripe_domain}"
 [config.env]
 APP_URL = "https://${main_domain}"
 STRIPE_APP_URL = "https://${stripe_domain}"
-SHOPNEX_VERSION = "latest"
+SHOPNEX_VERSION = "v0.13.1"
 BETTER_AUTH_SECRET = "${auth_secret}"
 SHOPNEX_SECRET = "${shopnex_secret}"

@@ -1,7 +1,7 @@
 {
   "id": "shopnex",
   "name": "ShopNex",
-  "version": "v0.9.1",
+  "version": "v0.13.1",
   "description": "Open-source ecommerce platform with an admin, hosted checkout, storefront and Stripe payments, all configured from the browser.",
   "logo": "shopnex.svg",
   "links": {

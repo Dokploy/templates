@@ -1,0 +1,15 @@
+{
+  "id": "itsaplan",
+  "name": "It's a Plan",
+  "version": "1.9.0",
+  "description": "It's a Plan is an open-source project management and issue tracking platform where people and AI agents work together.",
+  "logo": "itsaplan.svg",
+  "links": {
+    "github": "https://github.com/croffasia/itsaplan",
+    "website": "https://itsaplan.dev",
+    "docs": "https://github.com/croffasia/itsaplan/blob/main/docs/self-hosting.md"
+  },
+  "tags": ["project-management", "issue-tracking", "ai"],
+  "seoTitle": "Self-host It's a Plan with Dokploy",
+  "seoDescription": "Deploy the open-source project management and issue tracking platform It's a Plan with Dokploy."
+}

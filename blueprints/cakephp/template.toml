@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+root_password = "${password:32}"
+database_password = "${password:32}"
+database_username = "${username:8}"
+database_name = "cakephp"
+security_salt = "${base64:32}"
+app_debug = "false"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "cakephp"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+DEBUG = "${app_debug}"
+SECURITY_SALT = "${security_salt}"
+DATABASE_URL = "mysql://${database_username}:${database_password}@mariadb:3306/${database_name}?encoding=utf8mb4"

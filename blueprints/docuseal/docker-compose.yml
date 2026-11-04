@@ -11,9 +11,9 @@ services:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-docuseal}:${POSTGRES_PASSWORD}@docu-postgres:5432/${POSTGRES_DB:-docuseal}
       
   docu-postgres:
-    image: postgres:latest
+    image: postgres:18
     volumes:
-      - docuseal-db:/var/lib/postgresql/data
+      - docuseal-db:/var/lib/postgresql
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -24,6 +24,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
       
   docu-redis:
     image: redis:alpine

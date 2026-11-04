@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+auth_secret = "${base64:32}"
+encryption_key = "${base64:32}"
+
+[config]
+[[config.domains]]
+serviceName = "zeqqat"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+ZEQQAT_PUBLIC_URL = "https://${main_domain}"
+POSTGRES_PASSWORD = "${postgres_password}"
+BETTER_AUTH_SECRET = "${auth_secret}"
+ZEQQAT_ENCRYPTION_KEY = "${encryption_key}"
+# Sign-in: create a GitHub OAuth app with the callback URL
+# https://<your domain>/api/auth/callback/github and paste its keys here.
+ENABLED_AUTH_PROVIDERS = "github"
+GITHUB_CLIENT_ID = ""
+GITHUB_CLIENT_SECRET = ""
+GOOGLE_CLIENT_ID = ""
+GOOGLE_CLIENT_SECRET = ""

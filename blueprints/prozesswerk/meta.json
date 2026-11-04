@@ -1,0 +1,13 @@
+{
+  "id": "prozesswerk",
+  "name": "Prozesswerk",
+  "version": "1.0.0",
+  "description": "Describe business processes in plain language and get editable BPMN 2.0 diagrams. Self-hosted and model-agnostic — works with any OpenAI-compatible LLM.",
+  "logo": "prozesswerk.svg",
+  "links": {
+    "github": "https://github.com/guidoesser/prozesswerk",
+    "website": "",
+    "docs": "https://github.com/guidoesser/prozesswerk#readme"
+  },
+  "tags": ["bpmn", "ai", "automation", "self-hosted"]
+}

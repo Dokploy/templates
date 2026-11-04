@@ -1,7 +1,9 @@
-version: "3.8"
 services:
   metabase:
-    image: metabase/metabase:v0.50.8
+    image: metabase/metabase:v0.63.18
+    restart: unless-stopped
+    expose:
+      - 3000
     volumes:
       - /dev/urandom:/dev/random:ro
     environment:
@@ -9,17 +11,29 @@ services:
       MB_DB_DBNAME: metabaseappdb
       MB_DB_PORT: 5432
       MB_DB_USER: metabase
-      MB_DB_PASS: mysecretpassword
+      MB_DB_PASS: ${POSTGRES_PASSWORD}
       MB_DB_HOST: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
     healthcheck:
       test: curl --fail -I http://localhost:3000/api/health || exit 1
       interval: 15s
       timeout: 5s
       retries: 5
   postgres:
-    image: postgres:14
+    image: postgres:16
+    restart: unless-stopped
     environment:
       POSTGRES_USER: metabase
       POSTGRES_DB: metabaseappdb
-      POSTGRES_PASSWORD: mysecretpassword
-
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U metabase -d metabaseappdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  postgres-data:

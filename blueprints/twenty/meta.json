@@ -2,7 +2,7 @@
   "id": "twenty",
   "name": "Twenty CRM",
   "version": "latest",
-  "description": "Twenty is a modern CRM offering a powerful spreadsheet interface and open-source alternative to Salesforce.",
+  "description": "Twenty is a modern CRM and an open-source alternative to Salesforce. Self-host it on your own server with Dokploy, which deploys Twenty as a Docker Compose service in a few clicks.",
   "logo": "twenty.svg",
   "links": {
     "github": "https://github.com/twentyhq/twenty",
@@ -13,5 +13,7 @@
     "crm",
     "sales",
     "business"
-  ]
+  ],
+  "seoTitle": "Self-Host Twenty CRM in minutes",
+  "seoDescription": "Modern CRM, an alternative to Salesforce. Self-host Twenty CRM on Dokploy in minutes – no manual setup needed."
 }

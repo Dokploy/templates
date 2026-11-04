@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   gel:
     image: geldata/gel:6

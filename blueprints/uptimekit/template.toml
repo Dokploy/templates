@@ -10,10 +10,6 @@ clickhouse_password = "${password:32}"
 serviceName = "dash"
 port = 3000
 host = "${main_domain}"
-[[config.domains]]
-serviceName = "status-page"
-port = 3001
-host = "${second_domain}"
 
 
 [config.env]

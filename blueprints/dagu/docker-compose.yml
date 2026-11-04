@@ -2,8 +2,6 @@
 # Sign in with the basic auth credentials from your .env file (default user: admin).
 # Place your DAG definitions (YAML) in the dags directory via the Web UI or the API.
 
-version: "3.8"
-
 services:
   dagu:
     image: ghcr.io/dagucloud/dagu:2.10.7

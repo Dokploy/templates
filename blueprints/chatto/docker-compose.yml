@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   chatto:
     image: ghcr.io/chattocorp/chatto:0.4

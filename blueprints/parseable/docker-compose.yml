@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   parseable:
     image: parseable/parseable:v1.6.0

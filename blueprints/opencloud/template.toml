@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:32}"
+
+[[config.domains]]
+serviceName = "opencloud"
+port = 9200
+host = "${main_domain}"
+
+[config.env]
+OC_URL = "https://${main_domain}"
+INITIAL_ADMIN_PASSWORD = "${admin_password}"
+IDM_ADMIN_PASSWORD = "${admin_password}"
+PROXY_HTTP_ADDR = "0.0.0.0:9200"
+PROXY_TLS = "false"
+OC_INSECURE = "false"
+OC_LOG_LEVEL = "info"

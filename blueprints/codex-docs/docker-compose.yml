@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   codex:
     image: ghcr.io/codex-team/codex.docs:v2.2

@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   immich-server:
     image: ghcr.io/immich-app/immich-server:v3.0.2

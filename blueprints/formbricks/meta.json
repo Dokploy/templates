@@ -2,7 +2,7 @@
   "id": "formbricks",
   "name": "Formbricks",
   "version": "v3.1.3",
-  "description": "Formbricks is an open-source survey and form platform for collecting user data.",
+  "description": "Formbricks is an open-source survey platform for collecting user and customer feedback. Self-host it on your own server with Dokploy, which deploys Formbricks as a Docker Compose service in a few clicks.",
   "logo": "formbricks.png",
   "links": {
     "github": "https://github.com/formbricks/formbricks",
@@ -12,5 +12,7 @@
   "tags": [
     "forms",
     "analytics"
-  ]
+  ],
+  "seoTitle": "Self-Host Formbricks in minutes",
+  "seoDescription": "Survey and form platform for collecting feedback. Self-host Formbricks on Dokploy in minutes – no manual setup needed."
 }

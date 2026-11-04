@@ -1,0 +1,18 @@
+{
+  "id": "orca-server",
+  "name": "Orca Server",
+  "version": "v1.4.205",
+  "description": "Headless Orca runtime: run a fleet of parallel coding agents in isolated git worktrees on your server and drive them from the Orca desktop, web or mobile app.",
+  "logo": "orca-server.png",
+  "links": {
+    "github": "https://github.com/stablyai/orca",
+    "website": "https://www.onorca.dev",
+    "docs": "https://github.com/stablyai/orca/blob/main/docs/reference/headless-linux-server.md"
+  },
+  "tags": [
+    "ai",
+    "developer-tools",
+    "agents",
+    "self-hosted"
+  ]
+}

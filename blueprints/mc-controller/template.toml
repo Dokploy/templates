@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+jwt_secret = "${hash:64}"
+image_tag = "1.0.2"
+curseforge_api_key = ""
+minecraft_bind_ip = "0.0.0.0"
+port_range_start = "25565"
+port_range_end = "25600"
+
+[config]
+env = [
+  "JWT_SECRET=${jwt_secret}",
+  "IMAGE_TAG=${image_tag}",
+  "CURSEFORGE_API_KEY=${curseforge_api_key}",
+  "MC_BIND_IP=${minecraft_bind_ip}",
+  "PORT_RANGE_START=${port_range_start}",
+  "PORT_RANGE_END=${port_range_end}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "mc-controller"
+port = 3000
+host = "${main_domain}"

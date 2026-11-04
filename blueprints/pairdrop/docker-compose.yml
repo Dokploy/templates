@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   pairdrop:
     image: lscr.io/linuxserver/pairdrop:latest

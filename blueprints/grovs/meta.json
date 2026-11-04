@@ -1,0 +1,16 @@
+{
+  "id": "grovs",
+  "name": "Grovs",
+  "version": "2.3.1",
+  "description": "Self-hosted deep linking, attribution and analytics for mobile and web apps.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/grovs-io/self-host",
+    "website": "https://www.grovs.io",
+    "docs": "https://github.com/grovs-io/self-host/blob/main/deploy/catalogs/dokploy/README.md"
+  },
+  "tags": [
+    "analytics",
+    "developer-tools"
+  ]
+}

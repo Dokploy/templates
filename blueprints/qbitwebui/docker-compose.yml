@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   qbitwebui:
     image: ghcr.io/maciejonos/qbitwebui:latest

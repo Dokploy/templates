@@ -1,0 +1,17 @@
+{
+  "id": "privatepaste",
+  "name": "PrivatePaste",
+  "version": "0.3.1",
+  "description": "Self-hosted clipboard sync: copy on one device, paste on your others, with an encrypted, searchable history and apps for Windows, macOS, Linux and Android.",
+  "logo": "privatepaste.svg",
+  "links": {
+    "github": "https://github.com/DynamicsNinja/privatepaste",
+    "website": "https://github.com/DynamicsNinja/privatepaste",
+    "docs": "https://github.com/DynamicsNinja/privatepaste/blob/main/docs/self-hosting.md"
+  },
+  "tags": [
+    "productivity",
+    "clipboard",
+    "sync"
+  ]
+}

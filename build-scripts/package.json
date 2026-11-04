@@ -9,8 +9,8 @@
     "process-meta": "node process-meta.js"
   },
   "dependencies": {
-    "toml": "^3.0.0",
-    "yaml": "2.7.1"
+    "toml": "4.2.0",
+    "yaml": "2.8.3"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

@@ -1,11 +1,17 @@
 [variables]
 main_domain = "${domain}"
 postgres_password = "${password:32}"
+auth_password = "${password:32}"
 
 [config]
 env = [
   "PREFECT_DOMAIN=${main_domain}",
   "POSTGRES_PASSWORD=${postgres_password}",
+  # Set to True to protect the UI and API with basic auth (login: PREFECT_AUTH_USER / PREFECT_AUTH_PASSWORD).
+  # Clients must then set PREFECT_API_AUTH_STRING="<user>:<password>".
+  "USE_AUTH=False",
+  "PREFECT_AUTH_USER=admin",
+  "PREFECT_AUTH_PASSWORD=${auth_password}",
 ]
 mounts = []
 

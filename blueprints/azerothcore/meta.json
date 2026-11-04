@@ -1,0 +1,17 @@
+{
+  "id": "azerothcore",
+  "name": "AzerothCore",
+  "version": "17.0.0-dev",
+  "description": "A modular open source World of Warcraft: Wrath of the Lich King 3.3.5a game server emulator.",
+  "logo": "azerothcore.svg",
+  "links": {
+    "github": "https://github.com/azerothcore/azerothcore-wotlk",
+    "website": "https://www.azerothcore.org/",
+    "docs": "https://www.azerothcore.org/wiki/install-with-docker"
+  },
+  "tags": [
+    "gaming",
+    "mmorpg",
+    "server"
+  ]
+}

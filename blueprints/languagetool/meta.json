@@ -2,7 +2,7 @@
   "id": "languagetool",
   "name": "LanguageTool",
   "version": "6.6",
-  "description": "LanguageTool is an open-source grammar, style, and spell checker that can run as a self-hosted HTTP service.",
+  "description": "LanguageTool is an open-source grammar, spelling, and style checker. Self-host it on your own server with Dokploy, which deploys LanguageTool as a Docker Compose service in a few clicks.",
   "logo": "languagetool.svg",
   "links": {
     "github": "https://github.com/languagetool-org/languagetool",
@@ -14,5 +14,7 @@
     "grammar",
     "spellcheck",
     "api"
-  ]
+  ],
+  "seoTitle": "Self-Host LanguageTool in minutes",
+  "seoDescription": "Grammar and style checking tool. Self-host LanguageTool on Dokploy in minutes – no manual setup needed."
 }

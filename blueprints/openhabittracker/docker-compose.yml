@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   openhabittracker:
     image: jinjinov/openhabittracker:latest

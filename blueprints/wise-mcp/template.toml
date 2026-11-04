@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+encryption_key = "${password:48}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "wise-mcp"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+PUBLIC_URL = "https://${main_domain}"
+TOKEN_ENCRYPTION_KEY = "${encryption_key}"
+# Leave empty for the first login: the "Not allowed" page shows your Wise user id. Then set it and redeploy.
+ALLOWED_WISE_USERS = ""
+# false = read-only (no transfer/recipient tools). Writes are always two-step and paid by you in the Wise app.
+WRITES_ENABLED = "true"

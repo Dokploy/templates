@@ -4,6 +4,6 @@ main_domain = "${domain}"
 [config]
 [[config.domains]]
 serviceName = "bentopdf"
-port = 80
+port = 8080
 host = "${main_domain}"
 path = "/"

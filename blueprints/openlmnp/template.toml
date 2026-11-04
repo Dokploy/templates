@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+  "OPENLMNP_HOST=${main_domain}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "openlmnp"
+port = 8000
+host = "${main_domain}"

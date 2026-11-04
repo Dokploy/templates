@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   argilla-web:
     image: argilla/argilla-server:latest

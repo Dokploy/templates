@@ -5,7 +5,6 @@ valkey_password = "${password:32}"
 env = [
   "VALKEY_PASSWORD=${valkey_password}"
 ]
-mounts = []
 
 [[config.mounts]]
 filePath = "valkey.conf"

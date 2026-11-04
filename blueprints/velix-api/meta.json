@@ -1,7 +1,7 @@
 {
   "id": "velix-api",
   "name": "Velix API",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "description": "Self-hosted WhatsApp API with multi-instance support, webhooks, n8n node, and Chatwoot integration.",
   "logo": "velix-api.svg",
   "links": {

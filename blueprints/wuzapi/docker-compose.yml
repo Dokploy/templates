@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   wuzapi-server:
     image: asternic/wuzapi:sha-30c1805

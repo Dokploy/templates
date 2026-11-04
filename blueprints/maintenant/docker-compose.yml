@@ -1,0 +1,44 @@
+services:
+  maintenant:
+    image: nginxinc/nginx-unprivileged:1.29-alpine
+    restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=16m
+    entrypoint:
+      - /bin/sh
+      - -c
+      - printf '%s:{PLAIN}%s\n' "$$AUTH_USER" "$$AUTH_PASSWORD" > /tmp/htpasswd && exec nginx -g 'daemon off;'
+    environment:
+      AUTH_USER: ${AUTH_USER}
+      AUTH_PASSWORD: ${AUTH_PASSWORD}
+    volumes:
+      - ../files/default.conf:/etc/nginx/conf.d/default.conf:ro
+    expose:
+      - 8080
+    depends_on:
+      - maintenant-app
+
+  maintenant-app:
+    image: ghcr.io/kolapsis/maintenant:1.10.1
+    restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=64m
+    volumes:
+      - maintenant-data:/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc:/host/proc:ro
+      - /etc/os-release:/host/etc/os-release:ro
+    environment:
+      MAINTENANT_ADDR: 0.0.0.0:8080
+      MAINTENANT_DB: /data/maintenant.db
+      MAINTENANT_BASE_URL: ${MAINTENANT_BASE_URL}
+      MAINTENANT_TRUSTED_PROXIES: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+
+volumes:
+  maintenant-data: {}

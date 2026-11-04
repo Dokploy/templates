@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+admin_username = "admin"
+admin_password = "${password:24}"
+db_password = "${password:32}"
+redis_password = "${password:32}"
+
+[config]
+env = [
+  "ADMIN_USERNAME=${admin_username}",
+  "ADMIN_PASSWORD=${admin_password}",
+  "DB_PASSWORD=${db_password}",
+  "REDIS_PASSWORD=${redis_password}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "cypht"
+port = 80
+host = "${main_domain}"

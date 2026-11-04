@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   lobe-chat:
     image: lobehub/lobe-chat:v1.26.1

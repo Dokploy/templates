@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   snapp:
     image: uraniadev/snapp:0.9-rc-020

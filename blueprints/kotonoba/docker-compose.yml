@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   kotonoba:
     image: ghcr.io/trixtylab/kotonoba:1.0.19

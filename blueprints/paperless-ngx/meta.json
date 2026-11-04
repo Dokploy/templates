@@ -2,7 +2,7 @@
   "id": "paperless-ngx",
   "name": "Paperless-ngx",
   "version": "2.20.15",
-  "description": "Paperless-ngx is a self-hosted document management system for scanning, indexing, and archiving documents.",
+  "description": "Paperless-ngx is a document management system that turns scanned paperwork into a searchable archive. Self-host it on your own server with Dokploy, which deploys Paperless-ngx as a Docker Compose service in a few clicks.",
   "logo": "paperless-ngx.svg",
   "links": {
     "github": "https://github.com/paperless-ngx/paperless-ngx",
@@ -14,5 +14,8 @@
     "ocr",
     "productivity",
     "self-hosted"
-  ]
+  ],
+  "seoTitle": "Paperless-ngx Docker Compose Setup",
+  "seoDescription": "Document scanning and archiving system. Deploy Paperless-ngx with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

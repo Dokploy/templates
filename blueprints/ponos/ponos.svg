@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img">
+<title>Ponos</title>
+<style>.ground { fill: #FFFFFF; } .screen { fill: #1c1917; }</style>
+<rect x="4" y="4" width="112" height="112" rx="26" class="ground" stroke="#E8611A" stroke-width="8"/>
+<path d="M60 20C67 27 69 32 66 36C64 39 56 39 54 36C51 32 53 27 60 20Z" fill="#E8611A"/>
+<rect x="28" y="44" width="64" height="50" rx="16" class="screen"/>
+<circle cx="48" cy="69" r="7" fill="#FFE1CC"/>
+<circle cx="72" cy="69" r="7" fill="#FFE1CC"/>
+</svg>

@@ -1,0 +1,13 @@
+{
+  "id": "openlivery",
+  "name": "OpenLivery",
+  "version": "v0.4.0",
+  "description": "MIT-licensed WhatsApp AI agents for agencies, with separate client workspaces and branded portals in one self-hosted installation",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/sarrazola/openlivery",
+    "website": "https://www.openlivery.com",
+    "docs": "https://github.com/sarrazola/openlivery/blob/main/docs/en/self-hosting.md"
+  },
+  "tags": ["ai", "chat", "customer-support"]
+}

@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   mediafetch:
     image: lukedunsmoto/mediafetch:1.3.5

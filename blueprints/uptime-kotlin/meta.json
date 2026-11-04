@@ -1,0 +1,18 @@
+{
+  "id": "uptime-kotlin",
+  "name": "Uptime Kotlin",
+  "version": "1.5.0",
+  "description": "Uptime Kotlin is an open-source monitoring tool that tracks the uptime of your websites and services. Self-host it on your own server with Dokploy, which deploys Uptime Kotlin as a Docker Compose service in a few clicks.",
+  "logo": "uptime-kotlin.png",
+  "links": {
+    "github": "https://github.com/TheoMeunier/uptime-kotlin",
+    "website": "https://uptime-kotlin.com/",
+    "docs": "https://uptime-kotlin.com/docs"
+  },
+  "tags": [
+    "monitoring"
+  ],
+  "seoTitle": "Uptime Kotlin Docker Compose Setup",
+  "seoDescription": "Uptime and website monitoring tool. Deploy Uptime Kotlin with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
+}

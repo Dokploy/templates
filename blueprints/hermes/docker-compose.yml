@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   hermes:
     image: nousresearch/hermes-agent:v2026.6.19

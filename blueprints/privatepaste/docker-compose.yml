@@ -1,0 +1,18 @@
+services:
+  privatepaste:
+    image: ghcr.io/dynamicsninja/privatepaste:0.3.1
+    restart: unless-stopped
+    stop_grace_period: 15s
+    environment:
+      PP_DB_KEY: ${PP_DB_KEY}
+      PP_PASSWORD: ${PP_PASSWORD}
+      PP_MAX_IMAGE_MB: ${PP_MAX_IMAGE_MB}
+      PP_MAX_TEXT_KB: ${PP_MAX_TEXT_KB}
+      PP_TRUST_CLOUDFLARE: ${PP_TRUST_CLOUDFLARE}
+    volumes:
+      - privatepaste-data:/data
+    expose:
+      - 8080
+
+volumes:
+  privatepaste-data:

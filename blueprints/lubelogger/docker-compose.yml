@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   lubelogger:
     image: ghcr.io/hargata/lubelogger:v1.6.5

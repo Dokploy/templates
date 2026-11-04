@@ -1,6 +1,4 @@
 
-version: "3.8"
-
 services:
   owncast:
     image: owncast/owncast:latest

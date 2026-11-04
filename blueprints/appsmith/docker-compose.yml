@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   appsmith:
     image: appsmith/appsmith-ee:v1.94

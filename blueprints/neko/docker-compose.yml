@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   neko:
     image: "ghcr.io/m1k1o/neko/firefox:latest"

@@ -1,0 +1,16 @@
+services:
+  dexio:
+    image: ghcr.io/dexio-wiki/dexio:1.0.0
+    restart: unless-stopped
+    environment:
+      - DEXIO_PUBLIC_URL=${DEXIO_PUBLIC_URL}
+      - DEXIO_SECRET_KEY=${DEXIO_SECRET_KEY}
+      - DEXIO_DB=/data/dexio.db
+      - DEXIO_FILES_DIR=/data/files
+    expose:
+      - 8080
+    volumes:
+      - dexio-data:/data
+
+volumes:
+  dexio-data:

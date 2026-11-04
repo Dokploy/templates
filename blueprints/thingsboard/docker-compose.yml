@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   thingsboard:
     image: thingsboard/tb-node:4.3.1.1

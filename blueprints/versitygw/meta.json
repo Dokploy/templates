@@ -1,0 +1,18 @@
+{
+  "id": "versitygw",
+  "name": "VersityGW",
+  "version": "1.8.0",
+  "description": "VersityGW is a high-performance S3-compatible gateway that exposes POSIX filesystems, ScoutFS, Azure Blob, or other S3 servers over the S3 API, with a built-in WebUI for bucket and user management.",
+  "logo": "versitygw.svg",
+  "links": {
+    "github": "https://github.com/versity/versitygw",
+    "website": "https://www.versity.com/",
+    "docs": "https://github.com/versity/versitygw/wiki"
+  },
+  "tags": [
+    "s3",
+    "storage",
+    "gateway",
+    "object-storage"
+  ]
+}

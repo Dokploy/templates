@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+  "SITE_URL=https://${main_domain}"
+]
+
+[[config.domains]]
+serviceName = "heyo-docs"
+port = 3000
+host = "${main_domain}"

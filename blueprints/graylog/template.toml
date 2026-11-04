@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${password:32}"
+password_secret = "${password:96}"
+
+[config]
+env = [
+  "GRAYLOG_ADMIN_PASSWORD=${admin_password}",
+  "GRAYLOG_PASSWORD_SECRET=${password_secret}",
+  "GRAYLOG_HTTP_EXTERNAL_URI=http://${main_domain}/"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "graylog"
+port = 9000
+host = "${main_domain}"

@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   openinary:
     image: openinary/openinary:${IMAGE_TAG:-latest}

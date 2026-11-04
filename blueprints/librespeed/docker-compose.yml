@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   librespeed:
     image: lscr.io/linuxserver/librespeed:latest

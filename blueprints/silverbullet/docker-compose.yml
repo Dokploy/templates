@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   silverbullet:
     image: ghcr.io/silverbulletmd/silverbullet:v2

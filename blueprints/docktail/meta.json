@@ -1,0 +1,18 @@
+{
+  "id": "docktail",
+  "name": "DockTail",
+  "version": "1.6.0",
+  "description": "DockTail exposes Docker containers as native Tailscale Services using labels, with no published ports and no per-container Tailscale devices.",
+  "logo": "docktail.png",
+  "links": {
+    "github": "https://github.com/marvinvr/docktail",
+    "website": "https://docktail.org/",
+    "docs": "https://docktail.org/docs/"
+  },
+  "tags": [
+    "networking",
+    "tailscale",
+    "vpn",
+    "docker"
+  ]
+}

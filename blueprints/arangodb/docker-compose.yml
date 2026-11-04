@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   arangodb:
     image: arangodb:3.12.4

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 160 160">
+  <title>Wise MCP</title>
+  <rect width="160" height="160" rx="36" fill="#1a4d5c"/>
+  <rect x="28" y="38" width="104" height="70" rx="8" fill="#9fe870"/>
+  <path transform="translate(54.4,47.4) scale(1.6)" d="M0 20.2803L8.65113 9.64374H8.64862L3.38975 0H32L20.9261 32H14.6508L23.8219 5.45086H11.9916L14.6223 10.2126L14.6092 10.3439L10.5644 15.2642H17.1828L15.4463 20.2803H0Z" fill="#163300"/>
+  <path d="M18 114 H142 L134 126 H26 Z" fill="#5ba3b8"/>
+</svg>

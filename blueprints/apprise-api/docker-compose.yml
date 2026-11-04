@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   apprise-api:
     image: linuxserver/apprise-api:latest

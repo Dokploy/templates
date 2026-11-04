@@ -1,5 +1,3 @@
-version: "3.8"
-
 # The database schema and OpenAPI artifact are generated from Firecrawl
 # v2.11.230 and embedded as Compose configs so Dokploy can import the entire
 # authenticated stack as one template without external files.

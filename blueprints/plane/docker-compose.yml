@@ -1,5 +1,3 @@
-version: "3.8"
-
 # DNS collision avoidance for multi-stack Dokploy:
 # Internal services renamed with `plane-*` prefix (unique cluster-wide) and
 # `links:` on the `proxy` service creates /etc/hosts entries (`<plane-web-IP>

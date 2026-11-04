@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+access_password = "${password:16}"
+
+[config]
+env = [
+  "EMAKI_API_KEY=",
+  "ACCESS_PASSWORD=${access_password}",
+  "EMAKI_MODEL=seedance_2_5"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "emaki-video-starter"
+port = 3000
+host = "${main_domain}"

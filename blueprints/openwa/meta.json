@@ -1,0 +1,19 @@
+{
+  "id": "openwa",
+  "name": "OpenWA",
+  "version": "0.24.0",
+  "description": "OpenWA is a free, self-hosted WhatsApp API gateway with a REST API, webhooks, multi-session support, and a bundled web dashboard.",
+  "logo": "openwa.svg",
+  "links": {
+    "github": "https://github.com/rmyndharis/OpenWA",
+    "website": "https://www.open-wa.org",
+    "docs": "https://github.com/rmyndharis/OpenWA/tree/main/docs"
+  },
+  "tags": [
+    "whatsapp",
+    "api",
+    "gateway",
+    "automation",
+    "messaging"
+  ]
+}

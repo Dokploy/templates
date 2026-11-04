@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   convertx:
     image: ghcr.io/c4illin/convertx

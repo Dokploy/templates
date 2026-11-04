@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   bytebase:
     image: bytebase/bytebase:3.3.0

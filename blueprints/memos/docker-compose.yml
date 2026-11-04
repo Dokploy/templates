@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   memos:
     image: neosmemo/memos:stable

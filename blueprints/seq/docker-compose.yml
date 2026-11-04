@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   seq:
     image: datalust/seq:2025.2

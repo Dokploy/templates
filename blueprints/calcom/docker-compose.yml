@@ -1,40 +1,271 @@
-# If you are on a machine with ARM architecture, please add a "-arm" suffix to the calcom image on line 19.
+# If you are on a machine with ARM architecture, please add a "-arm" suffix to the calcom image.
 # For example, `calcom/cal.com:v6.2.0` will become `calcom/cal.com:v6.2.0-arm`
-
-# If serving the instance on https, change `NEXT_PUBLIC_WEBAPP_URL` (Line 28) and `NEXTAUTH_URL` (Line 30) to https
+#
+# If serving the instance over https, change NEXT_PUBLIC_WEBAPP_URL, NEXT_PUBLIC_WEBSITE_URL,
+# NEXT_PUBLIC_EMBED_LIB_URL and NEXTAUTH_URL in template.toml to use the https scheme.
 
 services:
   postgres:
     image: postgres:16-alpine
-
+    restart: unless-stopped
     volumes:
       - calcom-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=db
-      - DATABASE_URL=postgres://postgres:password@postgres:5432/db
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   calcom:
     image: calcom/cal.com:v6.2.0
+    restart: unless-stopped
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    expose:
+      - 3000
     environment:
-      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      - CALENDSO_ENCRYPTION_KEY=${CALENDSO_ENCRYPTION_KEY}
-      - DATABASE_URL=postgres://postgres:password@postgres:5432/db
-      - DATABASE_DIRECT_URL=postgres://postgres:password@postgres:5432/db
-      - DATABASE_HOST=postgres:5432
-      - NEXT_PUBLIC_WEBAPP_URL=http://${CALCOM_HOST}
-      - ALLOWED_HOSTNAMES="${CALCOM_HOST}"
-      - NEXTAUTH_URL=http://${CALCOM_HOST}/api/auth
-      - NEXT_PUBLIC_DISABLE_SIGNUP=${DISABLE_SIGNUP}
-      - EMAIL_SERVER_HOST=${SMTP_SERVER}
-      - EMAIL_SERVER_PORT=${SMTP_PORT}
-      - EMAIL_SERVER_USER=${EMAIL_SERVER_USER}
-      - EMAIL_SERVER_PASSWORD=${SMTP_PASSWORD}
-      - EMAIL_FROM=${EMAIL_FROM}
+      # --- DATABASE ---------------------------------------------------------------------------
+      - DATABASE_URL
+      - DATABASE_DIRECT_URL
+      - INSIGHTS_DATABASE_URL
 
+      # --- SHARED -----------------------------------------------------------------------------
+      - NEXT_PUBLIC_WEBAPP_URL
+      - NEXT_PUBLIC_WEBSITE_URL
+      - NEXT_PUBLIC_EMBED_LIB_URL
+      - 'ALLOWED_HOSTNAMES="${ALLOWED_HOSTNAMES}"'
+      - 'RESERVED_SUBDOMAINS="app","auth","docs","design","console","go","status","api","saml","www","matrix","developer","cal","my","team","support","security","blog","learn","admin"'
+      - SAML_DATABASE_URL
+      - SAML_ADMINS
+      - NEXT_PUBLIC_HOSTED_CAL_FEATURES
+      - PGSSLMODE
+
+      # --- NEXTAUTH ---------------------------------------------------------------------------
+      - NEXTAUTH_URL
+      - NEXTAUTH_SECRET
+      - NEXTAUTH_COOKIE_DOMAIN
+
+      - CALCOM_TELEMETRY_DISABLED
+      - CRON_API_KEY
+      - CRON_ENABLE_APP_SYNC
+      - CALENDSO_ENCRYPTION_KEY
+
+      # --- SUPPORT / ANALYTICS WIDGETS --------------------------------------------------------
+      - NEXT_PUBLIC_INTERCOM_APP_ID
+      - INTERCOM_SECRET
+      - INTERCOM_API_TOKEN
+      - NEXT_PUBLIC_POSTHOG_KEY
+      - NEXT_PUBLIC_POSTHOG_HOST
+      - NEXT_PUBLIC_ZENDESK_KEY
+      - NEXT_PUBLIC_HELPSCOUT_KEY
+      - NEXT_PUBLIC_FRESHCHAT_TOKEN
+      - NEXT_PUBLIC_FRESHCHAT_HOST
+
+      # --- URL SHORTENERS ---------------------------------------------------------------------
+      - DUB_API_KEY
+      - NEXT_PUBLIC_DUB_PROGRAM_ID
+      - DUB_SMS_DOMAIN
+      - DUB_SMS_FOLDER_ID
+      - SINK_API_URL
+      - SINK_API_KEY
+
+      # --- OAUTH / CALENDAR INTEGRATIONS ------------------------------------------------------
+      - OUTLOOK_LOGIN_ENABLED
+      - GOOGLE_CALENDAR_API_KEY
+      - GOOGLE_LOGIN_ENABLED
+      - GOOGLE_API_CREDENTIALS
+      - GOOGLE_WEBHOOK_TOKEN
+      - GOOGLE_WEBHOOK_URL
+      - MICROSOFT_WEBHOOK_TOKEN
+      - MICROSOFT_WEBHOOK_URL
+
+      # --- FEEDBACK / TRANSACTIONAL PROVIDERS -------------------------------------------------
+      - SEND_FEEDBACK_EMAIL
+      - SENDGRID_API_KEY
+      - SENDGRID_EMAIL
+      - NEXT_PUBLIC_SENDGRID_SENDER_NAME
+      - SENDGRID_SYNC_API_KEY
+      - RESEND_API_KEY
+
+      # --- SENTRY -----------------------------------------------------------------------------
+      - SENTRY_ORG
+      - SENTRY_PROJECT
+      - SENTRY_AUTH_TOKEN
+      - NEXT_PUBLIC_SENTRY_DSN
+      - NEXT_PUBLIC_SENTRY_DSN_CLIENT
+      - SENTRY_DEBUG
+      - SENTRY_MAX_SPANS
+      - SENTRY_SAMPLE_RATE
+      - SENTRY_TRACES_SAMPLE_RATE
+      - SENTRY_REPLAYS_SESSION_SAMPLE_RATE
+      - SENTRY_REPLAYS_ON_ERROR_SAMPLE_RATE
+
+      # --- FORMBRICKS -------------------------------------------------------------------------
+      - NEXT_PUBLIC_FORMBRICKS_HOST_URL
+      - NEXT_PUBLIC_FORMBRICKS_ENVIRONMENT_ID
+      - FORMBRICKS_FEEDBACK_SURVEY_ID
+
+      # --- AVATARAPI --------------------------------------------------------------------------
+      - AVATARAPI_USERNAME
+      - AVATARAPI_PASSWORD
+
+      # --- TWILIO -----------------------------------------------------------------------------
+      - NEXT_PUBLIC_SENDER_ID
+      - TWILIO_VERIFY_SID
+      - TWILIO_OPT_OUT_ENABLED
+
+      # --- STRIPE -----------------------------------------------------------------------------
+      - NEXT_PUBLIC_STRIPE_PRO_PLAN_PRICE
+      - NEXT_PUBLIC_STRIPE_PREMIUM_PLAN_PRICE
+      - NEXT_PUBLIC_IS_PREMIUM_NEW_PLAN
+      - NEXT_PUBLIC_STRIPE_PREMIUM_NEW_PLAN_PRICE
+      - STRIPE_TEAM_MONTHLY_PRICE_ID
+      - STRIPE_TEAM_ANNUAL_PRICE_ID
+      - NEXT_PUBLIC_STRIPE_CREDITS_PRICE_ID
+      - ORG_MONTHLY_CREDITS
+      - STRIPE_TEAM_PRODUCT_ID
+      - STRIPE_ORG_MONTHLY_PRICE_ID
+      - STRIPE_ORG_ANNUAL_PRICE_ID
+      - STRIPE_ORG_PRODUCT_ID
+      - STRIPE_ORG_TRIAL_DAYS
+      - STRIPE_WEBHOOK_SECRET
+      - STRIPE_WEBHOOK_SECRET_APPS
+      - STRIPE_WEBHOOK_SECRET_BILLING
+      - STRIPE_PRIVATE_KEY
+      - STRIPE_CLIENT_ID
+      - API_KEY_PREFIX
+
+      # --- E-MAIL SETTINGS --------------------------------------------------------------------
+      - EMAIL_FROM
+      - EMAIL_FROM_NAME
+      - EMAIL_SERVER_HOST
+      - EMAIL_SERVER_PORT
+      - EMAIL_SERVER_USER
+      - EMAIL_SERVER_PASSWORD
+      - AWAITING_PAYMENT_EMAIL_DELAY_MINUTES
+
+      # --- BOT PROTECTION ---------------------------------------------------------------------
+      - NEXT_PUBLIC_CLOUDFLARE_SITEKEY
+      - NEXT_PUBLIC_CLOUDFLARE_USE_TURNSTILE_IN_BOOKER
+      - CLOUDFLARE_TURNSTILE_SECRET
+      - NEXT_PUBLIC_VERCEL_USE_BOTID_IN_BOOKER
+
+      # --- CLOSE.COM INTERNAL CRM -------------------------------------------------------------
+      - CLOSECOM_CLIENT_ID
+      - CLOSECOM_CLIENT_SECRET
+
+      # --- BRANDING ---------------------------------------------------------------------------
+      - NEXT_PUBLIC_APP_NAME
+      - NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS
+      - NEXT_PUBLIC_COMPANY_NAME
+      - NEXT_PUBLIC_DISABLE_SIGNUP
+      - NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL
+      - NEXT_PUBLIC_WEBSITE_TERMS_URL
+      - NEXT_PUBLIC_HEAD_SCRIPTS
+      - NEXT_PUBLIC_BODY_SCRIPTS
+      - CSP_POLICY
+      - EDGE_CONFIG
+
+      # --- BOOKER BEHAVIOUR -------------------------------------------------------------------
+      - NEXT_PUBLIC_MINUTES_TO_BOOK
+      - NEXT_PUBLIC_BOOKER_NUMBER_OF_DAYS_TO_LOAD
+      - NEXT_PUBLIC_AVAILABILITY_SCHEDULE_INTERVAL
+      - NEXT_PUBLIC_QUERY_RESERVATION_INTERVAL_SECONDS
+      - NEXT_PUBLIC_QUERY_RESERVATION_STALE_TIME_SECONDS
+      - NEXT_PUBLIC_QUERY_AVAILABLE_SLOTS_INTERVAL_SECONDS
+      - NEXT_PUBLIC_INVALIDATE_AVAILABLE_SLOTS_ON_BOOKING_FORM
+      - NEXT_PUBLIC_QUICK_AVAILABILITY_ROLLOUT
+      - BLACKLISTED_GUEST_EMAILS
+
+      # --- ORGANIZATIONS ----------------------------------------------------------------------
+      - ORGANIZATIONS_ENABLED
+      - NEXT_PUBLIC_ORGANIZATIONS_MIN_SELF_SERVE_SEATS
+      - NEXT_PUBLIC_ORGANIZATIONS_SELF_SERVE_PRICE_NEW
+      - ORGANIZATIONS_AUTOLINK
+      - NEXT_PUBLIC_SINGLE_ORG_SLUG
+      - PROJECT_ID_VERCEL
+      - TEAM_ID_VERCEL
+      - AUTH_BEARER_TOKEN_VERCEL
+      - LOCAL_TESTING_DOMAIN_VERCEL
+      - CLOUDFLARE_DNS
+      - AUTH_BEARER_TOKEN_CLOUDFLARE
+      - CLOUDFLARE_ZONE_ID
+      - CLOUDFLARE_VERCEL_CNAME
+
+      # --- APP CREDENTIAL SYNC ----------------------------------------------------------------
+      - CALCOM_CREDENTIAL_SYNC_SECRET
+      - CALCOM_CREDENTIAL_SYNC_HEADER_NAME
+      - CALCOM_CREDENTIAL_SYNC_ENDPOINT
+      - CALCOM_APP_CREDENTIAL_ENCRYPTION_KEY
+      - CALCOM_SERVICE_ACCOUNT_ENCRYPTION_KEY
+
+      # --- API V2 -----------------------------------------------------------------------------
+      - NEXT_PUBLIC_API_V2_URL
+
+      # --- TASKER / BACKGROUND JOBS -----------------------------------------------------------
+      - TASKER_ENABLE_WEBHOOKS
+      - TASKER_ENABLE_EMAILS
+      - ENABLE_ASYNC_TASKER
+      - TRIGGER_SECRET_KEY
+      - TRIGGER_API_URL
+      - TRIGGER_DEV_PROJECT_REF
+
+      # --- RATE LIMITING ----------------------------------------------------------------------
+      - UNKEY_ROOT_KEY
+
+      # --- CAL.AI VOICE AGENTS ----------------------------------------------------------------
+      - RETELL_AI_KEY
+      - RETELL_AI_TEST_MODE
+      - RETELL_AI_TEST_EVENT_TYPE_MAP
+      - RETELL_AI_TEST_CAL_API_KEY
+      - STRIPE_PHONE_NUMBER_MONTHLY_PRICE_ID
+      - CAL_AI_CALL_RATE_PER_MINUTE
+      - NEXT_PUBLIC_CAL_AI_PHONE_NUMBER_MONTHLY_PRICE
+
+      # --- VIDEO ------------------------------------------------------------------------------
+      - HUDDLE01_API_TOKEN
+      - CAL_VIDEO_BUCKET_NAME
+      - CAL_VIDEO_BUCKET_REGION
+      - CAL_VIDEO_ASSUME_ROLE_ARN
+      - CAL_VIDEO_MEETING_LINK_FOR_TESTING
+      - CAL_VIDEO_RECORDING_TOKEN_SECRET
+
+      # --- WEB PUSH NOTIFICATIONS -------------------------------------------------------------
+      - NEXT_PUBLIC_VAPID_PUBLIC_KEY
+      - VAPID_PRIVATE_KEY
+
+      # --- MISC -------------------------------------------------------------------------------
+      - LINGO_DOT_DEV_API_KEY
+      - IFFY_API_KEY
+      - DIRECTORY_IDS_TO_LOG
+      - NEXT_PUBLIC_LOGGER_LEVEL
+      - DATABASE_CHUNK_SIZE
+      - SALESFORCE_GRAPHQL_DELAY_MS
+      - SALESFORCE_GRAPHQL_MAX_DELAY_MS
+      - SALESFORCE_GRAPHQL_MAX_RETRIES
+      - TZ
+      - GOOGLE_ADS_ENABLED
+      - LINKEDIN_ADS_ENABLED
+
+      # --- DEVELOPMENT / E2E ONLY -------------------------------------------------------------
+      - NEXT_PUBLIC_IS_E2E
+      - E2E_TEST_MAILHOG_ENABLED
+      - E2E_TEST_APPLE_CALENDAR_EMAIL
+      - E2E_TEST_APPLE_CALENDAR_PASSWORD
+      - E2E_TEST_CALCOM_QA_EMAIL
+      - E2E_TEST_CALCOM_QA_PASSWORD
+      - E2E_TEST_CALCOM_QA_GCAL_CREDENTIALS
+      - E2E_TEST_CALCOM_GCAL_KEYS
+      - SEED_PLATFORM_OAUTH_CLIENT_ID
+      - SEED_PLATFORM_OAUTH_CLIENT_SECRET
+      - SEED_OAUTH2_CLIENT_ID
+      - SEED_OAUTH2_CLIENT_SECRET_HASHED
 
 volumes:
   calcom-data:

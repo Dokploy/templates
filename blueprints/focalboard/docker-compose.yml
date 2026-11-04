@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   focalboard:
     image: mattermost/focalboard:7.11.4

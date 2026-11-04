@@ -1,0 +1,30 @@
+[variables]
+main_domain = "${domain}"
+session_secret = "${password:64}"
+clickhouse_password = "${password:32}"
+
+[config]
+env = [
+  "HYPERDX_URL=http://${main_domain}",
+  "SESSION_SECRET=${session_secret}",
+  "CLICKHOUSE_PASSWORD=${clickhouse_password}"
+]
+
+[[config.domains]]
+serviceName = "hyperdx"
+port = 8080
+host = "${main_domain}"
+
+[[config.mounts]]
+filePath = "clickhouse-config.xml"
+content = """
+<clickhouse>
+  <logger>
+    <level>warning</level>
+  </logger>
+  <custom_settings_prefixes>hyperdx</custom_settings_prefixes>
+  <max_server_memory_usage>2147483648</max_server_memory_usage>
+  <mark_cache_size>134217728</mark_cache_size>
+  <uncompressed_cache_size>67108864</uncompressed_cache_size>
+</clickhouse>
+"""

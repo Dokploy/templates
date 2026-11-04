@@ -1,0 +1,60 @@
+services:
+  db:
+    image: timescale/timescaledb:2.30.1-pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mcpspan
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: mcpspan
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U mcpspan -d mcpspan"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    image: ghcr.io/mcpspan/core-api:0.13.0
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://mcpspan:${POSTGRES_PASSWORD}@db:5432/mcpspan
+    command: ["./node_modules/.bin/node-pg-migrate", "up"]
+
+  api:
+    image: ghcr.io/mcpspan/core-api:0.13.0
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: postgres://mcpspan:${POSTGRES_PASSWORD}@db:5432/mcpspan
+      PORT: 6271
+      API_KEY_SECRET: ${API_KEY_SECRET}
+      MCPSPAN_DASHBOARD_URL: ${MCPSPAN_DASHBOARD_URL}
+    expose:
+      - 6271
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:6271/health').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  dashboard:
+    image: ghcr.io/mcpspan/core-dashboard:0.13.0
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      CORE_API_URL: http://api:6271
+      MCPSPAN_INGEST_URL: ${MCPSPAN_INGEST_URL}
+    expose:
+      - 6270
+
+volumes:
+  db-data: {}

@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   rocketchat:
     image: registry.rocket.chat/rocketchat/rocket.chat:6.9.2

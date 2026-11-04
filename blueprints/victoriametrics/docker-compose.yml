@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   victoriametrics:
     image: victoriametrics/victoria-metrics:v1.108.1

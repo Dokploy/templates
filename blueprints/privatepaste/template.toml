@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+# 32 random bytes, base64: the encryption key for the database and images. Back it up: without it the data is lost.
+db_key = "${base64:32}"
+login_password = "${password:24}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "privatepaste"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+PP_DB_KEY = "${db_key}"
+PP_PASSWORD = "${login_password}"
+PP_MAX_IMAGE_MB = "20"
+PP_MAX_TEXT_KB = "1024"
+# Set to "true" only if the server is reachable exclusively through a Cloudflare tunnel.
+PP_TRUST_CLOUDFLARE = "false"

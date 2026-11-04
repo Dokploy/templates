@@ -1,4 +1,4 @@
-# https://manual.seafile.com/12.0/setup/setup_ce_by_docker
+# https://manual.seafile.com/latest/setup/setup_ce_by_docker/
 #
 # This Dokploy template for seafile sets the default credentials to:
 #   USERNAME: admin@example.com
@@ -14,12 +14,13 @@
 services:
   seafile-db:
     image: mariadb:10.11
+    restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=${INIT_SEAFILE_MYSQL_ROOT_PASSWORD:-}
       - MYSQL_LOG_CONSOLE=true
       - MARIADB_AUTO_UPGRADE=1
     volumes:
-      - seafile-mysql-db:/var/lib/mysql"
+      - seafile-mysql-db:/var/lib/mysql
     healthcheck:
       test:
         [
@@ -34,29 +35,27 @@ services:
       timeout: 5s
       retries: 10
 
-  memcached:
-    image: memcached:1.6.29
-    entrypoint: memcached -m 256
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          'bash -c "echo version | (exec 3<>/dev/tcp/localhost/11211; cat >&3; timeout 0.5 cat <&3; exec 3<&-)"',
-        ]
-      interval: 20s
-      timeout: 5s
-      retries: 10
+  redis:
+    image: redis:8.8
+    restart: unless-stopped
+    command:
+      - /bin/sh
+      - -c
+      - exec redis-server --requirepass "$$REDIS_PASSWORD" --save "" --appendonly no
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:?Variable is not set or empty}
 
   seafile:
-    image: seafileltd/seafile-mc:12.0-latest
+    image: seafileltd/seafile-mc:13.0-latest
+    restart: unless-stopped
     volumes:
       - seafile-data:/shared
     environment:
-      - DB_HOST=${SEAFILE_MYSQL_DB_HOST:-seafile-db}
-      - DB_PORT=${SEAFILE_MYSQL_DB_PORT:-3306}
-      - DB_USER=${SEAFILE_MYSQL_DB_USER:-seafile}
-      - DB_ROOT_PASSWD=${INIT_SEAFILE_MYSQL_ROOT_PASSWORD:-}
-      - DB_PASSWORD=${SEAFILE_MYSQL_DB_PASSWORD:?Variable is not set or empty}
+      - SEAFILE_MYSQL_DB_HOST=${SEAFILE_MYSQL_DB_HOST:-seafile-db}
+      - SEAFILE_MYSQL_DB_PORT=${SEAFILE_MYSQL_DB_PORT:-3306}
+      - SEAFILE_MYSQL_DB_USER=${SEAFILE_MYSQL_DB_USER:-seafile}
+      - SEAFILE_MYSQL_DB_PASSWORD=${SEAFILE_MYSQL_DB_PASSWORD:?Variable is not set or empty}
+      - INIT_SEAFILE_MYSQL_ROOT_PASSWORD=${INIT_SEAFILE_MYSQL_ROOT_PASSWORD:-}
       - SEAFILE_MYSQL_DB_CCNET_DB_NAME=${SEAFILE_MYSQL_DB_CCNET_DB_NAME:-ccnet_db}
       - SEAFILE_MYSQL_DB_SEAFILE_DB_NAME=${SEAFILE_MYSQL_DB_SEAFILE_DB_NAME:-seafile_db}
       - SEAFILE_MYSQL_DB_SEAHUB_DB_NAME=${SEAFILE_MYSQL_DB_SEAHUB_DB_NAME:-seahub_db}
@@ -64,22 +63,87 @@ services:
       - INIT_SEAFILE_ADMIN_EMAIL=${INIT_SEAFILE_ADMIN_EMAIL:-me@example.com}
       - INIT_SEAFILE_ADMIN_PASSWORD=${INIT_SEAFILE_ADMIN_PASSWORD:-asecret}
       - SEAFILE_SERVER_HOSTNAME=${SEAFILE_SERVER_HOSTNAME:?Variable is not set or empty}
-      - SEAFILE_SERVER_PROTOCOL=${SEAFILE_SERVER_PROTOCOL:-http}
+      - SEAFILE_SERVER_PROTOCOL=${SEAFILE_SERVER_PROTOCOL:-https}
       - SITE_ROOT=${SITE_ROOT:-/}
       - NON_ROOT=${NON_ROOT:-false}
       - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
-      - SEAFILE_LOG_TO_STDOUT=${SEAFILE_LOG_TO_STDOUT:-true}
+      - SEAFILE_LOG_TO_STDOUT=${SEAFILE_LOG_TO_STDOUT:-false}
+      - ENABLE_GO_FILESERVER=${ENABLE_GO_FILESERVER:-true}
+      - ENABLE_SEADOC=${ENABLE_SEADOC:-true}
+      - SEADOC_SERVER_URL=${SEADOC_SERVER_URL:?Variable is not set or empty}
+      - CACHE_PROVIDER=${CACHE_PROVIDER:-redis}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:?Variable is not set or empty}
+      - MD_FILE_COUNT_LIMIT=${MD_FILE_COUNT_LIMIT:-100000}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.seafile-websecure.rule=Host(`${SEAFILE_SERVER_HOSTNAME}`)"
+      - "traefik.http.routers.seafile-websecure.entrypoints=websecure"
+      - "traefik.http.routers.seafile-websecure.tls=true"
+      - "traefik.http.routers.seafile-websecure.priority=1"
+      - "traefik.http.routers.seafile-websecure.service=seafile"
+      - "traefik.http.routers.seafile-web.rule=Host(`${SEAFILE_SERVER_HOSTNAME}`)"
+      - "traefik.http.routers.seafile-web.entrypoints=web"
+      - "traefik.http.routers.seafile-web.priority=1"
+      - "traefik.http.routers.seafile-web.service=seafile"
+      - "traefik.http.services.seafile.loadbalancer.server.port=80"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     depends_on:
       seafile-db:
         condition: service_healthy
-      memcached:
+      redis:
         condition: service_started
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:80/api2/ping"]
-      interval: 20s
-      timeout: 5s
-      retries: 10
+
+  seadoc:
+    image: seafileltd/sdoc-server:2.0-latest
+    restart: unless-stopped
+    volumes:
+      - seadoc-data:/shared
+    environment:
+      - DB_HOST=${SEAFILE_MYSQL_DB_HOST:-seafile-db}
+      - DB_PORT=${SEAFILE_MYSQL_DB_PORT:-3306}
+      - DB_USER=${SEAFILE_MYSQL_DB_USER:-seafile}
+      - DB_PASSWORD=${SEAFILE_MYSQL_DB_PASSWORD:?Variable is not set or empty}
+      - DB_NAME=${SEADOC_MYSQL_DB_NAME:-seahub_db}
+      - TIME_ZONE=${TIME_ZONE:-Etc/UTC}
+      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
+      - NON_ROOT=${NON_ROOT:-false}
+      - SEAHUB_SERVICE_URL=http://seafile
+    depends_on:
+      seafile-db:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.seadoc-server.rule=Host(`${SEAFILE_SERVER_HOSTNAME}`) && PathPrefix(`/sdoc-server`)"
+      - "traefik.http.routers.seadoc-server.entrypoints=websecure"
+      - "traefik.http.routers.seadoc-server.tls=true"
+      - "traefik.http.routers.seadoc-server.priority=100"
+      - "traefik.http.routers.seadoc-server.middlewares=seadoc-strip"
+      - "traefik.http.routers.seadoc-server.service=seadoc"
+      - "traefik.http.routers.seadoc-server-http.rule=Host(`${SEAFILE_SERVER_HOSTNAME}`) && PathPrefix(`/sdoc-server`)"
+      - "traefik.http.routers.seadoc-server-http.entrypoints=web"
+      - "traefik.http.routers.seadoc-server-http.priority=100"
+      - "traefik.http.routers.seadoc-server-http.middlewares=seadoc-strip"
+      - "traefik.http.routers.seadoc-server-http.service=seadoc"
+      - "traefik.http.routers.seadoc-socket.rule=Host(`${SEAFILE_SERVER_HOSTNAME}`) && PathPrefix(`/socket.io`)"
+      - "traefik.http.routers.seadoc-socket.entrypoints=websecure"
+      - "traefik.http.routers.seadoc-socket.tls=true"
+      - "traefik.http.routers.seadoc-socket.priority=100"
+      - "traefik.http.routers.seadoc-socket.service=seadoc"
+      - "traefik.http.routers.seadoc-socket-http.rule=Host(`${SEAFILE_SERVER_HOSTNAME}`) && PathPrefix(`/socket.io`)"
+      - "traefik.http.routers.seadoc-socket-http.entrypoints=web"
+      - "traefik.http.routers.seadoc-socket-http.priority=100"
+      - "traefik.http.routers.seadoc-socket-http.service=seadoc"
+      - "traefik.http.middlewares.seadoc-strip.stripprefix.prefixes=/sdoc-server"
+      - "traefik.http.services.seadoc.loadbalancer.server.port=80"
 
 volumes:
   seafile-mysql-db:
   seafile-data:
+  seadoc-data:

@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   paperless-ngx:
     image: ghcr.io/paperless-ngx/paperless-ngx:2.20.15

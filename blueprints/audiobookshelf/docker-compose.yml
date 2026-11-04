@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   audiobookshelf:
     image: ghcr.io/advplyr/audiobookshelf:2.19.4

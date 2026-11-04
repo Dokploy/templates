@@ -1,7 +1,7 @@
 {
   "id": "minio",
   "name": "Minio",
-  "description": "MinIO is an open source object storage server compatible with Amazon S3 cloud storage service. This template uses pgsty/minio, the actively maintained community fork, because MinIO Inc. stopped publishing Docker images in October 2025 and archived the upstream open source project in February 2026.",
+  "description": "MinIO is an open-source, S3-compatible object storage server. Self-host it on your own server with Dokploy, which deploys MinIO as a Docker Compose service in a few clicks.",
   "logo": "minio.png",
   "version": "RELEASE.2026-06-18T00-00-00Z",
   "links": {
@@ -11,5 +11,8 @@
   },
   "tags": [
     "storage"
-  ]
+  ],
+  "seoTitle": "MinIO Docker Compose Setup",
+  "seoDescription": "S3-compatible object storage server. Deploy MinIO with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

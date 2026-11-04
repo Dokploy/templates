@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   miniflux:
     image: miniflux/miniflux:2.2.19

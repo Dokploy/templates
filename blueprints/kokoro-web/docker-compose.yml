@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   kokoro-web:
     image: ghcr.io/eduardolat/kokoro-web:latest

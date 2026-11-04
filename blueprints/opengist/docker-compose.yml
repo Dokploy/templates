@@ -1,5 +1,4 @@
 # docker-compose.yml
-version: "3.8"
 services:
   opengist:
     image: ghcr.io/thomiceli/opengist:1

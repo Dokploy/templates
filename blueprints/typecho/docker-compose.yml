@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   typecho:
     image: 80x86/typecho:latest

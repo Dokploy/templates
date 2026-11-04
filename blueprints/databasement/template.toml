@@ -1,0 +1,22 @@
+[variables]
+main_domain = "${domain}"
+app_key = "${base64:32}"
+timezone = "UTC"
+
+[config]
+env = [
+  "APP_KEY=base64:${app_key}",
+  "APP_URL=https://${main_domain}",
+  "APP_DISPLAY_TIMEZONE=${timezone}",
+  "TRUSTED_PROXIES=*",
+  "LOG_CHANNEL=stderr",
+  "DB_CONNECTION=sqlite",
+  "DB_DATABASE=/data/database.sqlite",
+  "ENABLE_QUEUE_WORKER=true"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "databasement"
+port = 2226
+host = "${main_domain}"

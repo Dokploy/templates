@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+secret_key = "${password:64}"
+
+[config]
+env = [
+  "PRETIX_URL=http://${main_domain}",
+  "PRETIX_SECRET_KEY=${secret_key}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "PRETIX_INSTANCE_NAME=pretix",
+  "PRETIX_CURRENCY=EUR",
+  "PRETIX_MAIL_FROM=tickets@example.com",
+  "PRETIX_MAIL_HOST=localhost",
+  "PRETIX_MAIL_PORT=25",
+  "PRETIX_MAIL_USER=",
+  "PRETIX_MAIL_PASSWORD=",
+  "PRETIX_MAIL_TLS=false",
+]
+
+[[config.domains]]
+serviceName = "pretix"
+port = 80
+host = "${main_domain}"

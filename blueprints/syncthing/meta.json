@@ -2,7 +2,7 @@
   "id": "syncthing",
   "name": "Syncthing",
   "version": "latest",
-  "description": "Syncthing is a continuous file synchronization program that synchronizes files between two or more computers in real time.",
+  "description": "Syncthing keeps your devices and files continuously in sync. Self-host it on your own server with Dokploy, which deploys Syncthing as a Docker Compose service in a few clicks.",
   "logo": "syncthing.svg",
   "links": {
     "github": "https://github.com/syncthing/syncthing",
@@ -13,5 +13,8 @@
     "file-sync",
     "synchronization",
     "backup"
-  ]
+  ],
+  "seoTitle": "Syncthing Docker Compose Setup",
+  "seoDescription": "Continuous file sync between devices. Deploy Syncthing with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   chiefonboarding:
     image: chiefonboarding/chiefonboarding:v2.2.5

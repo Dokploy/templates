@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+  "ORCA_PAIRING_ADDRESS=http://${main_domain}",
+  "ORCA_SERVE_ARGS=",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "orca-server"
+port = 6768
+host = "${main_domain}"

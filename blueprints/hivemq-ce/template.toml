@@ -1,0 +1,88 @@
+[variables]
+broker_domain = "${domain}"
+mqtt_username = "mqtt"
+mqtt_password = "${password:32}"
+
+[config]
+env = [
+  "MQTT_DOMAIN=${broker_domain}",
+  "MQTT_USERNAME=${mqtt_username}",
+  "MQTT_PASSWORD=${mqtt_password}"
+]
+
+[[config.domains]]
+serviceName = "hivemq-ce"
+port = 8000
+host = "${broker_domain}"
+
+[[config.mounts]]
+filePath = "hivemq-ce-init.sh"
+content = '''
+#!/bin/sh
+set -eu
+
+test -n "$MQTT_USERNAME" || { echo "MQTT_USERNAME is required" >&2; exit 1; }
+test -n "$MQTT_PASSWORD" || { echo "MQTT_PASSWORD is required" >&2; exit 1; }
+case "$MQTT_USERNAME" in
+  *[!a-zA-Z0-9_.-]*) echo 'Invalid MQTT username' >&2; exit 1 ;;
+esac
+
+extension=/extensions/hivemq-file-rbac-extension
+work_dir=$(mktemp -d)
+trap 'rm -rf "$work_dir"' EXIT
+if [ ! -f "$extension/hivemq-file-rbac-extension-4.6.17.jar" ]; then
+  curl --fail --silent --show-error --location --retry 3 \
+    --proto '=https' --proto-redir '=https' \
+    --output "$work_dir/rbac.zip" \
+    https://github.com/hivemq/hivemq-file-rbac-extension/releases/download/4.6.17/hivemq-file-rbac-extension-4.6.17.zip
+  unzip -oq "$work_dir/rbac.zip" -d "$work_dir"
+  test -f "$work_dir/hivemq-file-rbac-extension/hivemq-extension.xml"
+  mkdir -p "$extension"
+  cp -R "$work_dir/hivemq-file-rbac-extension/." "$extension/"
+fi
+
+# The CE image enables anonymous MQTT by default. Never retain that extension.
+rm -rf /extensions/hivemq-allow-all-extension
+
+escape_xml() {
+  printf '%s' "$1" | sed \
+    -e 's/\&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g' \
+    -e 's/"/\&quot;/g' -e "s/'/\&apos;/g"
+}
+username=$(escape_xml "$MQTT_USERNAME")
+password=$(escape_xml "$MQTT_PASSWORD")
+mkdir -p "$extension/conf"
+cat > "$extension/conf/config.xml" <<'CONFIG'
+<?xml version="1.0" encoding="UTF-8"?>
+<extension-configuration>
+  <password-type>PLAIN</password-type>
+  <next-extension-instead-of-fail>false</next-extension-instead-of-fail>
+</extension-configuration>
+CONFIG
+
+credentials=$(mktemp "$extension/conf/.credentials.XXXXXX")
+cat > "$credentials" <<CREDENTIALS
+<?xml version="1.0" encoding="UTF-8"?>
+<file-rbac>
+  <users>
+    <user>
+      <name>$username</name>
+      <password>$password</password>
+      <roles><id>mqtt</id></roles>
+    </user>
+  </users>
+  <roles>
+    <role>
+      <id>mqtt</id>
+      <permissions><permission><topic>#</topic></permission></permissions>
+    </role>
+  </roles>
+</file-rbac>
+CREDENTIALS
+chown -R 10000:10000 "$extension"
+chmod 600 "$credentials"
+mv -f "$credentials" "$extension/conf/credentials.xml"
+
+# Remove deprecated paths from existing deployments after the new files are ready.
+rm -f "$extension/extension-config.xml" "$extension/credentials.xml"
+'''

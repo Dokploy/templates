@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   glances:
     image: nicolargo/glances:4.3.0.8-full

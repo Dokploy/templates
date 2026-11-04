@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   rustrak-server:
     image: rustrak/rustrak-server:latest

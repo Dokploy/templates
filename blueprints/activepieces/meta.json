@@ -1,7 +1,7 @@
 {
   "id": "activepieces",
   "name": "Activepieces",
-  "version": "0.35.0",
+  "version": "0.91.2",
   "description": "Open-source no-code business automation tool. An alternative to Zapier, Make.com, and Tray.",
   "logo": "activepieces.svg",
   "links": {

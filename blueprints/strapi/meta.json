@@ -2,7 +2,7 @@
   "id": "strapi",
   "name": "Strapi",
   "version": "v5.33.0",
-  "description": "Open-source headless CMS to build powerful APIs with built-in content management.",
+  "description": "Strapi is an open-source headless CMS for building APIs and managing content. Self-host it on your own server with Dokploy, which deploys Strapi as a Docker Compose service in a few clicks.",
   "logo": "strapi.svg",
   "links": {
     "github": "https://github.com/strapi/strapi",
@@ -14,5 +14,7 @@
     "headless",
     "cms",
     "content-management"
-  ]
+  ],
+  "seoTitle": "Self-Host Strapi in minutes",
+  "seoDescription": "Headless CMS for building APIs. Self-host Strapi on Dokploy in minutes – no manual setup needed."
 }

@@ -1,0 +1,13 @@
+{
+  "id": "dossier",
+  "name": "Dossier",
+  "version": "v1.5.0",
+  "description": "Dossier is a personal job search app with a career profile, resume and cover letter drafting, PDF export, and an application tracking board. It supports local and hosted AI providers.",
+  "logo": "dossier.svg",
+  "links": {
+    "github": "https://github.com/AienTech/dossier",
+    "website": "https://github.com/AienTech/dossier",
+    "docs": "https://github.com/AienTech/dossier#self-hosting"
+  },
+  "tags": ["productivity", "job-search", "ai"]
+}

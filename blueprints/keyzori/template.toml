@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+admin_key = "${hash:32}"
+postgres_password = "${hash:32}"
+
+[config]
+env = [
+  "KEYZORI_ADMIN_KEY=${admin_key}",
+  "KEYZORI_POSTGRES_PASSWORD=${postgres_password}",
+]
+
+[[config.domains]]
+serviceName = "keyzori"
+port = 6284
+host = "${main_domain}"

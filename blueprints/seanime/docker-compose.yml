@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   seanime-init:
     image: busybox:1.37.0

@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   tuwunel:
     image: ghcr.io/matrix-construct/tuwunel:v1.5.0

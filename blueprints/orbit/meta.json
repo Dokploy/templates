@@ -1,0 +1,18 @@
+{
+  "id": "orbit",
+  "name": "Orbit by Noveum",
+  "version": "2026.09.24",
+  "description": "Open-source task management with issues, projects, sprints, docs, files, realtime collaboration and an OAuth MCP endpoint.",
+  "logo": "orbit.png",
+  "links": {
+    "github": "https://github.com/Noveum/orbit",
+    "website": "https://orbit.noveum.ai",
+    "docs": "https://github.com/Noveum/orbit/blob/containers-2026.09.24/docs/container-catalogs.md"
+  },
+  "tags": [
+    "productivity",
+    "project-management",
+    "collaboration",
+    "mcp"
+  ]
+}

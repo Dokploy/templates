@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   surrealdb:
     image: surrealdb/surrealdb:v2.3.10

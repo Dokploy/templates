@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   dumbbudget:
     image: dumbwareio/dumbbudget:latest

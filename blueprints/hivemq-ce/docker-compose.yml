@@ -1,0 +1,58 @@
+# Native MQTT over TLS requires a Traefik TCP entrypoint named "mqtts"
+# on port 8883 and a corresponding port mapping on the Traefik container.
+# WebSocket clients connect using wss://<broker_domain>/mqtt via Dokploy HTTPS.
+services:
+  hivemq-ce-init:
+    image: curlimages/curl:8.22.0
+    restart: "no"
+    user: "0:0"
+    environment:
+      - MQTT_USERNAME=${MQTT_USERNAME}
+      - MQTT_PASSWORD=${MQTT_PASSWORD}
+    entrypoint: ["/bin/sh", "/tmp/hivemq-ce-init.sh"]
+    volumes:
+      - ../files/hivemq-ce-init.sh:/tmp/hivemq-ce-init.sh:ro
+      - hivemq_extensions:/extensions
+
+  hivemq-ce:
+    image: hivemq/hivemq-ce:2026.5
+    restart: unless-stopped
+    depends_on:
+      hivemq-ce-init:
+        condition: service_completed_successfully
+    environment:
+      - HIVEMQ_ALLOW_ALL_CLIENTS=false
+    entrypoint:
+      - /bin/bash
+      - -ec
+      - |
+        test -f /opt/hivemq/extensions/hivemq-file-rbac-extension/hivemq-extension.xml
+        test -f /opt/hivemq/extensions/hivemq-file-rbac-extension/hivemq-file-rbac-extension-4.6.17.jar
+        test -f /opt/hivemq/extensions/hivemq-file-rbac-extension/conf/credentials.xml
+        test ! -e /opt/hivemq/extensions/hivemq-allow-all-extension
+        exec /opt/docker-entrypoint.sh /opt/hivemq/bin/run.sh
+    expose:
+      - 1883 # MQTT over TCP (TLS terminated by Traefik on 8883)
+      - 8000 # MQTT over WebSockets (WSS via Dokploy HTTPS, path /mqtt)
+    volumes:
+      - hivemq_data:/opt/hivemq/data
+      - hivemq_log:/opt/hivemq/log
+      - hivemq_extensions:/opt/hivemq/extensions
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/1883'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    labels:
+      - "traefik.tcp.routers.hivemq-ce-mqtts.entrypoints=mqtts"
+      - "traefik.tcp.routers.hivemq-ce-mqtts.rule=HostSNI(`${MQTT_DOMAIN}`)"
+      - "traefik.tcp.routers.hivemq-ce-mqtts.tls=true"
+      - "traefik.tcp.routers.hivemq-ce-mqtts.tls.certresolver=letsencrypt"
+      - "traefik.tcp.routers.hivemq-ce-mqtts.service=hivemq-ce-mqtts"
+      - "traefik.tcp.services.hivemq-ce-mqtts.loadbalancer.server.port=1883"
+
+volumes:
+  hivemq_data:
+  hivemq_log:
+  hivemq_extensions:

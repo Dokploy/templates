@@ -2,7 +2,7 @@
   "id": "firefly-iii",
   "name": "Firefly III",
   "version": "6.6.3",
-  "description": "Firefly III is a self-hosted personal finance manager for tracking expenses, budgets, accounts, and financial reports.",
+  "description": "Firefly III is a personal finance manager for tracking budgets and expenses. Self-host it on your own server with Dokploy, which deploys Firefly III as a Docker Compose service in a few clicks.",
   "logo": "logo.svg",
   "links": {
     "github": "https://github.com/firefly-iii/firefly-iii",
@@ -13,5 +13,8 @@
     "finance",
     "budgeting",
     "self-hosted"
-  ]
+  ],
+  "seoTitle": "Firefly III Docker Compose Setup",
+  "seoDescription": "Personal finance manager for budgets and expenses. Deploy Firefly III with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

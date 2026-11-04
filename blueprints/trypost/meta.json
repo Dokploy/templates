@@ -1,0 +1,13 @@
+{
+  "id": "trypost",
+  "name": "TryPost",
+  "version": "2.0.0",
+  "description": "TryPost is an open source social media scheduler with team workspaces, a post composer, publishing queues, analytics, a REST API, and MCP tools.",
+  "logo": "trypost.svg",
+  "links": {
+    "github": "https://github.com/trypostit/trypost",
+    "website": "https://trypost.it",
+    "docs": "https://docs.trypost.it"
+  },
+  "tags": ["social-media", "marketing", "scheduling"]
+}

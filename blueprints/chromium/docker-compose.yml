@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   chromium:
     image: lscr.io/linuxserver/chromium:5f5dd27e-ls102

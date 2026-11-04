@@ -1,5 +1,3 @@
-version: "3.8"
-
 x-environment: &default-environment
   DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
   VALKEY_URL: redis://valkey:6379

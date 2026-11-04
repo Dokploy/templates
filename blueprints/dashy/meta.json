@@ -2,7 +2,7 @@
   "id": "dashy",
   "name": "Dashy",
   "version": "latest",
-  "description": "A self-hostable personal dashboard built for you. Includes status-checking, widgets, themes, icon packs, a UI editor and tons more!",
+  "description": "Dashy is a customizable dashboard for organizing your apps and services. Self-host it on your own server with Dokploy, which deploys Dashy as a Docker Compose service in a few clicks.",
   "logo": "dashy.png",
   "links": {
     "github": "https://github.com/Lissy93/dashy",
@@ -14,5 +14,8 @@
     "monitoring",
     "self-hosted",
     "homelab"
-  ]
+  ],
+  "seoTitle": "Dashy Docker Compose Setup",
+  "seoDescription": "Customizable personal dashboard. Deploy Dashy with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "newConfig": true
 }

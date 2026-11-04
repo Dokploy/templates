@@ -3,8 +3,6 @@
 # Password: unleash4all
 # It is highly recommended to change the password after first login.
 # More info: https://github.com/Unleash/unleash?tab=readme-ov-file#unleash-open-source
-version: "3.8"
-
 services:
   unleash:
     image: unleashorg/unleash-server:7.4.0

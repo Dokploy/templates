@@ -1,0 +1,17 @@
+{
+  "id": "hydrodactyl",
+  "name": "Hydrodactyl",
+  "version": "v6.4.1",
+  "description": "Hydrodactyl is a modern, performance-focused game server management panel forked from Pterodactyl with smaller bundles and a reimagined interface.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/blueprintframework/hydrodactyl",
+    "website": "https://hydrodactyl.dev",
+    "docs": "https://hydrodactyl.dev/docs/hydrodactyl"
+  },
+  "tags": [
+    "gaming",
+    "dashboard",
+    "self-hosted"
+  ]
+}

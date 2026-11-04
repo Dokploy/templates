@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   homebox:
     image: ghcr.io/sysadminsmedia/homebox:latest

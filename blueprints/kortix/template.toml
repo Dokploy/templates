@@ -1,0 +1,38 @@
+[variables]
+main_domain = "${domain}"
+api_domain = "${domain}"
+supabase_domain = "${domain}"
+postgres_password = "${password:64}"
+jwt_secret = "${password:128}"
+kortix_secret_seed = "${password:64}"
+
+[config]
+env = [
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "JWT_SECRET=${jwt_secret}",
+  "KORTIX_SECRET_SEED=${kortix_secret_seed}",
+  "PUBLIC_URL=https://${main_domain}",
+  "API_PUBLIC_URL=https://${api_domain}",
+  "SUPABASE_PUBLIC_URL=https://${supabase_domain}",
+  "PLATINUM_API_KEY=REPLACE_ME",
+  "KORTIX_ADMIN_EMAIL=REPLACE_ME",
+  "DISABLE_SIGNUP=false",
+  "EMAIL_URL=",
+  "EMAIL_FROM=",
+  "COMPOSIO_API_KEY=",
+]
+
+[[config.domains]]
+serviceName = "frontend"
+port = 3000
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "api"
+port = 8008
+host = "${api_domain}"
+
+[[config.domains]]
+serviceName = "kong"
+port = 8000
+host = "${supabase_domain}"

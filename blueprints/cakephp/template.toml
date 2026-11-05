@@ -1,0 +1,24 @@
+[variables]
+main_domain = "${domain}"
+root_password = "${password:32}"
+database_password = "${password:32}"
+database_username = "${username:8}"
+database_name = "cakephp"
+security_salt = "${base64:32}"
+app_debug = "false"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "cakephp"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+DEBUG = "${app_debug}"
+SECURITY_SALT = "${security_salt}"
+MARIADB_ROOT_PASSWORD = "${root_password}"
+MARIADB_DATABASE = "${database_name}"
+MARIADB_USER = "${database_username}"
+MARIADB_PASSWORD = "${database_password}"

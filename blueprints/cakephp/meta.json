@@ -1,0 +1,21 @@
+{
+  "id": "cakephp",
+  "name": "CakePHP 5",
+  "version": "1.0.0",
+  "description": "CakePHP 5 starter app running on the themusicdev/php-apache 8.5 Apache + PHP runtime image, backed by MariaDB. Fork the starter repo, build your app, and deploy it on Dokploy in a few clicks.",
+  "logo": "cakephp.svg",
+  "links": {
+    "github": "https://github.com/TheMusicDev/cakephp-hello",
+    "website": "https://cakephp.org/",
+    "docs": "https://book.cakephp.org/5/en/index.html"
+  },
+  "tags": [
+    "php",
+    "framework",
+    "cakephp",
+    "website"
+  ],
+  "seoTitle": "CakePHP 5 Docker Compose Setup",
+  "seoDescription": "Deploy a CakePHP 5 application with MariaDB on Dokploy in minutes — runs on the themusicdev/php-apache Apache + PHP 8.5 runtime image with Traefik proxy awareness built in.",
+  "newConfig": true
+}

@@ -10,6 +10,7 @@ s3_secret_key = "${password:32}"
 [config]
 env = [
   "POSTGRES_USER=itsaplan",
+  "VERSION=1.10.0",
   "POSTGRES_PASSWORD=${postgres_password}",
   "POSTGRES_DB=itsaplan",
   "BETTER_AUTH_SECRET=${auth_secret}",

@@ -1,0 +1,23 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${hash:16}"
+auth_secret = "${hash:32}"
+cron_secret = "${hash:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "customermates"
+port = 4000
+host = "${main_domain}"
+
+[config.env]
+BASE_URL = "http://${main_domain}"
+BETTER_AUTH_SECRET = "${auth_secret}"
+CRON_SECRET = "${cron_secret}"
+POSTGRES_USER = "customermates"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "customermates"
+RESEND_API_KEY = ""
+RESEND_OPERATOR_EMAIL = "mail@your-company.com"

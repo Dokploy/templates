@@ -1,17 +1,21 @@
 {
   "id": "ponos",
   "name": "Ponos",
-  "version": "0.1.0",
-  "description": "Ponos runs your tickets with Claude Code: a ticket set to Ready becomes a session on a throwaway git worktree, and comes back as a pull request. Board in Notion or in Markdown files, with a web console.",
+  "version": "0.2.0",
+  "description": "A harness around Claude Code that runs your tasks — code or not — from Notion or its own board: a ticket comes back as a pull request on GitHub, a text, an action carried out or a post, and nothing ships until you say yes. Web console, Telegram and Slack.",
   "logo": "ponos.svg",
   "links": {
-    "github": "https://github.com/SalvadorCardona/ponos",
+    "github": "https://github.com/hermez-agency/ponos",
     "website": "https://the-ponos.app/",
-    "docs": "https://github.com/SalvadorCardona/ponos#install-with-dokploy"
+    "docs": "https://github.com/hermez-agency/ponos/blob/main/guide/server.md#install-with-dokploy"
   },
   "tags": [
     "ai",
+    "ai-agent",
     "automation",
-    "developer-tools"
+    "claude",
+    "developer-tools",
+    "notion",
+    "github"
   ]
 }

@@ -1,0 +1,20 @@
+{
+  "id": "kortix",
+  "name": "Kortix",
+  "version": "0.14.19",
+  "description": "Kortix is an open source AI Operating System: AI agents that do real work for your team, with your own models and tools. Self-host it on your own server with Dokploy in a few clicks.",
+  "logo": "kortix.svg",
+  "links": {
+    "github": "https://github.com/kortix-ai/suna",
+    "website": "https://kortix.com",
+    "docs": "https://kortix.com/docs/developers#self-hosting"
+  },
+  "tags": [
+    "ai",
+    "agents",
+    "automation",
+    "self-hosted"
+  ],
+  "seoTitle": "Kortix: Self-Hosted AI Agents & Docker Compose",
+  "seoDescription": "Open source AI agents for your team. Self-host Kortix via Docker Compose on Dokploy: your data, your model keys."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "postgres-extensor",
+  "name": "PostgreSQL with 80+ Extensions",
+  "version": "18-v1.1.0",
+  "description": "The official PostgreSQL 18 image with 80+ tested extensions preinstalled: pgvector, PostGIS, TimescaleDB, pgmq, pg_cron, pg_duckdb, Apache AGE, pg_graphql and more. Multi-arch (amd64, arm64).",
+  "logo": "postgres-extensor.svg",
+  "links": {
+    "github": "https://github.com/ruxwez/postgres",
+    "website": "https://hub.docker.com/r/ruxwez/postgres",
+    "docs": "https://github.com/ruxwez/postgres/blob/main/.docs/included-extensions.md"
+  },
+  "tags": ["database", "postgres", "postgresql", "vector", "pgvector", "postgis", "timescaledb", "ai"]
+}

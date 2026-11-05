@@ -1,6 +1,6 @@
 services:
   solidping:
-    image: ghcr.io/fclairamb/solidping:0.32.1
+    image: ghcr.io/fclairamb/solidping:0.41.0
     restart: unless-stopped
     expose:
       - 4000

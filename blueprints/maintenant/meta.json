@@ -1,0 +1,17 @@
+{
+  "id": "maintenant",
+  "name": "maintenant",
+  "version": "1.10.1",
+  "description": "Self-hosted monitoring for Docker, Swarm and Kubernetes in a single Go binary that uses about 100 MB of RAM. maintenant has no login of its own, so this template puts an nginx basic-auth proxy in front of it: the user is admin and the password is the AUTH_PASSWORD variable in the Environment tab. Heartbeat pings and the public status page stay reachable without auth.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/kolapsis/maintenant",
+    "website": "https://maintenant.dev",
+    "docs": "https://docs.maintenant.dev/"
+  },
+  "tags": [
+    "monitoring",
+    "docker",
+    "alerts"
+  ]
+}

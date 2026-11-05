@@ -1,0 +1,13 @@
+{
+  "id": "zeqqat",
+  "name": "Zeqqat",
+  "version": "0.1.0",
+  "description": "Give AI agents access to your Dokploy without handing them your API key. Per-tool permissions, team roles and a full log of every call.",
+  "logo": "zeqqat.svg",
+  "links": {
+    "github": "https://github.com/zeqqat/zeqqat",
+    "website": "https://zeqqat.com",
+    "docs": "https://zeqqat.com/docs/self-host"
+  },
+  "tags": ["ai", "mcp", "devops", "security"]
+}

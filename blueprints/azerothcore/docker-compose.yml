@@ -1,6 +1,4 @@
 # dokploy: allow-host-ports — WoW clients connect directly over raw TCP (3724 authentication, 8085 world); Traefik cannot route the game protocol.
-version: "3.8"
-
 services:
   azerothcore-database:
     image: mysql:8.4.11

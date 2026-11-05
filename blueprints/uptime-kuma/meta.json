@@ -1,7 +1,7 @@
 {
   "id": "uptime-kuma",
   "name": "Uptime Kuma",
-  "version": "2.1.0",
+  "version": "2.5.8",
   "description": "Uptime Kuma is an open-source monitoring tool that tracks the uptime of your websites and services. Self-host it on your own server with Dokploy, which deploys Uptime Kuma as a Docker Compose service in a few clicks.",
   "logo": "uptime-kuma.png",
   "links": {

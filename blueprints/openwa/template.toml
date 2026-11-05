@@ -6,6 +6,13 @@ timezone = "UTC"
 # Set to "true" only when the dashboard is reached exclusively through a TLS-terminating proxy.
 # Left "false" so the bundled SPA loads over plain HTTP (see comments in docker-compose.yml).
 csp_upgrade_insecure_requests = "false"
+# The MCP server is opt-in upstream. Enabled here so the template exposes POST /mcp by default.
+# Read-only is the upstream-recommended default; set to "false" to mount the write tools too.
+mcp_enabled = "true"
+mcp_readonly = "true"
+# Swagger UI at /api/docs. Upstream disables it under NODE_ENV=production by default.
+# Note: the docs mount is not behind the API-key guard, so it exposes the schema publicly.
+enable_swagger = "true"
 
 [config]
 env = [
@@ -15,6 +22,9 @@ env = [
   "AUTO_START_SESSIONS=${auto_start_sessions}",
   "TZ=${timezone}",
   "CSP_UPGRADE_INSECURE_REQUESTS=${csp_upgrade_insecure_requests}",
+  "MCP_ENABLED=${mcp_enabled}",
+  "MCP_READONLY=${mcp_readonly}",
+  "ENABLE_SWAGGER=${enable_swagger}",
 ]
 mounts = []
 

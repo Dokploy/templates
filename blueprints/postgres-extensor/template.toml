@@ -1,0 +1,11 @@
+[variables]
+postgres_user = "${username}"
+postgres_password = "${password:32}"
+postgres_db = "postgres"
+
+[config.env]
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "${postgres_db}"
+# Add more preload extensions here, comma-separated (e.g. timescaledb, pg_duckdb).
+SHARED_PRELOAD_LIBRARIES = "pg_stat_statements,pg_cron"

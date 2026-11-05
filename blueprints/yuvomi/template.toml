@@ -1,6 +1,7 @@
 [variables]
 main_domain = "${domain}"
 session_secret = "${password:64}"
+db_encryption_key = "${password:64}"
 
 [config]
 mounts = []
@@ -12,6 +13,7 @@ host = "${main_domain}"
 
 [config.env]
 SESSION_SECRET = "${session_secret}"
+DB_ENCRYPTION_KEY = "${db_encryption_key}"
 SESSION_SECURE = "true"
 TRUST_PROXY = "1"
 DOCUMENT_STORAGE_LOCAL_ENABLED = "false"

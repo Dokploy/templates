@@ -4,7 +4,7 @@
 
 services:
   dagu:
-    image: ghcr.io/dagucloud/dagu:2.10.7
+    image: ghcr.io/dagucloud/dagu:2.25.4
     command: dagu start-all
     restart: unless-stopped
     expose:

@@ -1,0 +1,17 @@
+{
+  "id": "cypht",
+  "name": "Cypht",
+  "version": "2.13.0",
+  "description": "Lightweight open source webmail aggregator. Read and send mail from multiple IMAP, SMTP, JMAP and EWS accounts in one place.",
+  "logo": "cypht.svg",
+  "links": {
+    "github": "https://github.com/cypht-org/cypht",
+    "website": "https://cypht.org/",
+    "docs": "https://cypht.org/install.html"
+  },
+  "tags": [
+    "self-hosted",
+    "email",
+    "webmail"
+  ]
+}

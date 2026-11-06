@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+auth_password = "${password:24}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "3dokploy"
+port = 3_000
+host = "${main_domain}"
+
+[config.env]
+# The Dokploy on this same server. If its port 3000 is closed, use its public URL instead.
+DOKPLOY_URL = "http://host.docker.internal:3000"
+# Required: an API key from Settings → Profile → API/CLI. It stays on the server.
+DOKPLOY_API_KEY = ""
+# Site login (user admin).
+BASIC_AUTH = "admin:${auth_password}"

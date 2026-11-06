@@ -6,24 +6,53 @@ api_token = "${password:48}"
 [config]
 mounts = []
 env = [
-  # Generated: the console's sign-in, and the token scripts carry. Change the email
-  # to yours if you like; the password is in this tab whenever you need it.
+  # -- Generated -------------------------------------------------------------
+  # The console's sign-in: both set, it is claimed before anybody opens it. The
+  # email is only a login, never written to — change it to yours if you like;
+  # the password is in this tab whenever you need it.
   "PONOS_WEB_EMAIL=admin@${main_domain}",
   "PONOS_WEB_PASSWORD=${admin_password}",
+  # What a script carries in `Authorization: Bearer`.
   "PONOS_WEB_TOKEN=${api_token}",
+
+  # -- Who answers the sessions: one of these is required --------------------
+  # Your Claude subscription: run `claude setup-token` on a machine with a
+  # browser and paste what it prints...
+  "CLAUDE_CODE_OAUTH_TOKEN=",
+  # ...or an Anthropic API key, billed by the token (console.anthropic.com).
+  # Given without the token above, the sessions are billed to it from the start.
+  "ANTHROPIC_API_KEY=",
+  # Optional: an OpenRouter key (openrouter.ai/keys), in every session's
+  # environment for the other models a ticket may call. The sessions only run
+  # there once Settings › OpenRouter says so.
+  "OPENROUTER_API_KEY=",
+
+  # -- GitHub, optional ------------------------------------------------------
+  # A token (repo scope, or a fine-grained one with Contents and Pull requests
+  # on read and write), so Ponos clones, pushes and opens pull requests as that
+  # account. Leave it empty to create a GitHub App from the console instead:
+  # Settings › GitHub › Connect GitHub. Writing tickets need neither.
+  "GH_TOKEN=",
+
+  # -- The board, optional ---------------------------------------------------
+  # A Notion integration token. Without one the board is kept in Markdown files
+  # on the ponos-data volume, and the console is all you need.
+  "PONOS_NOTION_TOKEN=",
+
+  # -- Your phone, optional --------------------------------------------------
+  # A Telegram bot token, from @BotFather (/newbot). Say anything to the bot,
+  # then `ponos notify --pair` in Dokploy's Terminal finds your chat.
+  "PONOS_TELEGRAM_TOKEN=",
+  # A Slack bot token (xoxb-…, chat:write and channels:history); the channel's
+  # ID goes in the console's Settings › Slack.
+  "PONOS_SLACK_TOKEN=",
+
+  # -- Where and in what words -----------------------------------------------
   # en or fr: the reports Ponos writes, and the console until you pick another.
   "PONOS_LANGUAGE=en",
-  # Required, one of the two. Your Claude subscription: run `claude setup-token`
-  # on a machine with a browser and paste what it prints...
-  "CLAUDE_CODE_OAUTH_TOKEN=",
-  # ...or an Anthropic API key, billed by the token (https://console.anthropic.com).
-  "ANTHROPIC_API_KEY=",
-  # Optional: a GitHub token (repo scope), so Ponos clones, pushes and opens pull
-  # requests. The console's GitHub step says what is missing without it.
-  "GH_TOKEN=",
-  # Optional: a Notion integration token. Without one the board is kept in Markdown
-  # files on the ponos-data volume, and the console is all you need.
-  "PONOS_NOTION_TOKEN=",
+  # The zone a schedule's hours are read in: 09:00 is nine there. An IANA name,
+  # Europe/Paris for instance.
+  "TZ=UTC",
 ]
 
 # The console: sign in with PONOS_WEB_EMAIL and PONOS_WEB_PASSWORD above.

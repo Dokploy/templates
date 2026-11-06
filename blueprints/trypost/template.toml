@@ -1,0 +1,33 @@
+[variables]
+main_domain = "${domain}"
+app_key = "${base64:32}"
+database_password = "${password:48}"
+redis_password = "${password:48}"
+reverb_key = "${hash:32}"
+reverb_secret = "${password:64}"
+reverb_app_id = "${uuid}"
+initial_password = "${password:32}"
+
+[config]
+env = [
+  "TRYPOST_HOST=${main_domain}",
+  "APP_URL=http://${main_domain}",
+  "APP_KEY=base64:${app_key}",
+  "DB_PASSWORD=${database_password}",
+  "REDIS_PASSWORD=${redis_password}",
+  "REVERB_APP_ID=${reverb_app_id}",
+  "REVERB_APP_KEY=${reverb_key}",
+  "REVERB_APP_SECRET=${reverb_secret}",
+  "TRYPOST_PUBLIC_SCHEME=http",
+  "TRYPOST_PUBLIC_PORT=80",
+  "SESSION_SECURE_COOKIE=false",
+  "INITIAL_USER_EMAIL=admin@example.com",
+  "INITIAL_USER_PASSWORD=${initial_password}",
+  "INITIAL_USER_NAME=Administrator",
+  "MAIL_MAILER=log"
+]
+
+[[config.domains]]
+serviceName = "trypost"
+port = 80
+host = "${main_domain}"

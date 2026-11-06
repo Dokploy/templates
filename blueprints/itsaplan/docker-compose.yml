@@ -1,0 +1,182 @@
+# Dokploy template for the Community edition of It's a Plan.
+# Dokploy routes the api and web services through its proxy, so this file uses
+# expose instead of publishing host ports.
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-itsaplan}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in Dokploy}
+      POSTGRES_DB: ${POSTGRES_DB:-itsaplan}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-itsaplan} -d ${POSTGRES_DB:-itsaplan}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    image: rustfs/rustfs:1.0.0
+    restart: unless-stopped
+    environment:
+      RUSTFS_ACCESS_KEY: ${S3_ACCESS_KEY_ID:?set S3_ACCESS_KEY_ID in Dokploy}
+      RUSTFS_SECRET_KEY: ${S3_SECRET_ACCESS_KEY:?set S3_SECRET_ACCESS_KEY in Dokploy}
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-fsS",
+          "-o",
+          "/dev/null",
+          "http://127.0.0.1:9000/health",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  minio-init:
+    image: rustfs/rustfs:1.0.0
+    restart: "no"
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
+      S3_BUCKET: ${S3_BUCKET:-planner-attachments}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - >-
+        curl -fsS -X PUT --aws-sigv4 aws:amz:us-east-1:s3
+        --user "$$S3_ACCESS_KEY_ID:$$S3_SECRET_ACCESS_KEY"
+        "http://minio:9000/$$S3_BUCKET" &&
+        echo "bucket ready: $$S3_BUCKET"
+
+  migrate:
+    image: ghcr.io/croffasia/itsaplan-api:1.9.0
+    restart: "no"
+    command: ["bun", "run", "packages/db/src/migrate.ts"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-itsaplan}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-itsaplan}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-30}
+      SKIP_PRE_MIGRATION_BACKUP: ${SKIP_PRE_MIGRATION_BACKUP:-}
+    volumes:
+      - db-backups:/backups
+
+  api:
+    image: ghcr.io/croffasia/itsaplan-api:1.9.0
+    restart: unless-stopped
+    command: ["bun", "run", "apps/api/src/index.ts"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      minio-init:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: production
+      API_PORT: 3000
+      DATABASE_URL: postgres://${POSTGRES_USER:-itsaplan}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-itsaplan}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set BETTER_AUTH_SECRET in Dokploy}
+      APP_ENCRYPTION_KEY: ${APP_ENCRYPTION_KEY:?set APP_ENCRYPTION_KEY in Dokploy}
+      API_URL: ${API_URL:?set API_URL in Dokploy}
+      APP_URL: ${APP_URL:?set APP_URL in Dokploy}
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
+      CLIENT_IP_HEADER: ${CLIENT_IP_HEADER:-}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-}
+      GIT_WEBHOOK_BASE_URL: ${GIT_WEBHOOK_BASE_URL:-}
+      S3_ENDPOINT: http://minio:9000
+      S3_BUCKET: ${S3_BUCKET:-planner-attachments}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:?set S3_ACCESS_KEY_ID in Dokploy}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?set S3_SECRET_ACCESS_KEY in Dokploy}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-true}
+      SSRF_ALLOWED_HOSTS: ${SSRF_ALLOWED_HOSTS:-}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    expose:
+      - "3000"
+
+  worker:
+    image: ghcr.io/croffasia/itsaplan-worker:1.9.0
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://${POSTGRES_USER:-itsaplan}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-itsaplan}
+      APP_ENCRYPTION_KEY: ${APP_ENCRYPTION_KEY:?set APP_ENCRYPTION_KEY in Dokploy}
+      TELEMETRY_DISABLED: ${TELEMETRY_DISABLED:-}
+      DO_NOT_TRACK: ${DO_NOT_TRACK:-}
+      TELEMETRY_DEBUG: ${TELEMETRY_DEBUG:-}
+      SSRF_ALLOWED_HOSTS: ${SSRF_ALLOWED_HOSTS:-}
+      S3_ENDPOINT: http://minio:9000
+      S3_BUCKET: ${S3_BUCKET:-planner-attachments}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:?set S3_ACCESS_KEY_ID in Dokploy}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?set S3_SECRET_ACCESS_KEY in Dokploy}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-true}
+
+  bot:
+    image: ghcr.io/croffasia/itsaplan-bot:1.9.0
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://${POSTGRES_USER:-itsaplan}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-itsaplan}
+      APP_ENCRYPTION_KEY: ${APP_ENCRYPTION_KEY:?set APP_ENCRYPTION_KEY in Dokploy}
+
+  web:
+    image: ghcr.io/croffasia/itsaplan-web:1.9.0
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      HOSTNAME: 0.0.0.0
+      API_URL: ${API_URL:?set API_URL in Dokploy}
+      SERVICE_URL_API: http://api:3000
+      PRIVACY_URL: ${PRIVACY_URL:-}
+      TERMS_URL: ${TERMS_URL:-}
+    healthcheck:
+      test:
+        ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3001/login"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    expose:
+      - "3001"
+
+volumes:
+  postgres-data: {}
+  minio-data: {}
+  db-backups: {}

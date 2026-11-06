@@ -1,0 +1,38 @@
+services:
+  zeqqat:
+    image: ghcr.io/zeqqat/zeqqat:0.1.0
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ZEQQAT_PUBLIC_URL: ${ZEQQAT_PUBLIC_URL}
+      ZEQQAT_EDITION: self-hosted
+      DATABASE_URL: postgresql://zeqqat:${POSTGRES_PASSWORD}@postgres:5432/zeqqat
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      ZEQQAT_ENCRYPTION_KEY: ${ZEQQAT_ENCRYPTION_KEY}
+      ENABLED_AUTH_PROVIDERS: ${ENABLED_AUTH_PROVIDERS}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+    expose:
+      - "3000"
+
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: zeqqat
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: zeqqat
+    volumes:
+      - zeqqat-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zeqqat -d zeqqat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  zeqqat-postgres:

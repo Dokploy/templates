@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   docktail:
     image: ghcr.io/marvinvr/docktail:1.6.0

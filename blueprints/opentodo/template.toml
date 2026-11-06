@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+setup_token = "${password:32}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "opentodo"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+# Empty while the domain is plain http (an https value there breaks sign-in).
+# Once the domain has HTTPS, set https://<your domain> and redeploy.
+OPENTODO_BASE_URL = ""
+# Asked for when you create the owner account on the first visit.
+OPENTODO_SETUP_TOKEN = "${setup_token}"
+OPENTODO_ALLOW_SIGNUP = "false"
+OPENTODO_TRUSTED_PROXIES = ""

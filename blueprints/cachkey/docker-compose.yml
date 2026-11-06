@@ -1,7 +1,7 @@
 services:
   # Web app (public): named after the template, as Dokploy requires.
   cachkey:
-    image: ghcr.io/joyboy-dy/cachkey-web:0.1.0
+    image: ghcr.io/joyboy-dy/cachkey-web:0.2.0
     restart: unless-stopped
     expose:
       - 3000
@@ -16,7 +16,7 @@ services:
 
   # Applies pending database migrations at startup, then serves /api.
   cachkey-api:
-    image: ghcr.io/joyboy-dy/cachkey-api:0.1.0
+    image: ghcr.io/joyboy-dy/cachkey-api:0.2.0
     restart: unless-stopped
     expose:
       - 3001

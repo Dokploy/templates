@@ -1,0 +1,33 @@
+[variables]
+broker_domain = "${domain}"
+mqtt_username = "mqtt"
+mqtt_password = "${password:32}"
+
+[config]
+env = [
+  "MQTT_DOMAIN=${broker_domain}",
+  "MQTT_USERNAME=${mqtt_username}",
+  "MQTT_PASSWORD=${mqtt_password}"
+]
+
+[[config.domains]]
+serviceName = "mosquitto"
+port = 9001
+host = "${broker_domain}"
+
+[[config.mounts]]
+filePath = "mosquitto.conf"
+content = """
+persistence true
+persistence_location /mosquitto/data/
+log_dest stdout
+
+listener 1883
+protocol mqtt
+
+listener 9001
+protocol websockets
+
+allow_anonymous false
+password_file /mosquitto/data/passwordfile
+"""

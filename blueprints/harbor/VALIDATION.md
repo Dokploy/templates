@@ -1,0 +1,49 @@
+# Harbor validation record
+
+Date: 2026-10-20. Harbor: 2.15.4. Docker server: Linux, Engine 29.6.2.
+Init source: `fc224d78800ffad4cd2a21ecd08f24c6fa122b82`.
+
+## Passed
+
+- All 573 template metadata entries validated with the upstream metadata checker.
+- Upstream Compose and template validators accepted the Harbor blueprint.
+- YAML and TOML parsing, generated Compose consistency, vendor checksum,
+  immutable Git source and local source/commit consistency checks passed.
+- The Base64 import payload matches the catalogue's `{ compose, config }` format.
+- Docker built the init image and ran all 14 Python unit tests successfully.
+- After publication, Docker fetched the pinned source commit from the public
+  GitHub repository and built the runtime init image successfully.
+- A fresh isolated Compose deployment completed init and reached healthy state
+  for all workloads, including Trivy.
+- Harbor health, admin login, registry authentication challenge and public token
+  URL were verified using the deployment's domain as the HTTP Host header.
+- A private Harbor project and signing/encryption keys survived restart and
+  forced container recreation.
+- Explicit reconfiguration refused running workloads; changing worker count
+  with workloads stopped preserved the existing keys and private project.
+Integration tests use a unique random `harbor-ci-*` instance and remove only
+their own containers, volumes and default network.
+
+## Remaining deployment acceptance checks
+
+- Actual Dokploy Base64 import has not been exercised. Local integration builds
+  the same pinned support files from disk; remote Git building was verified
+  separately after publication.
+- Public DNS, Let's Encrypt certificate issuance and Dokploy's generated
+  network/domain configuration require verification on the target server.
+- End-to-end Docker login, push/pull over trusted HTTPS and a complete Trivy
+  vulnerability scan require the deployed domain and vulnerability DB download.
+- No production data migration or Harbor version upgrade was attempted.
+
+See [instructions.md](instructions.md) for deployment acceptance steps.
+
+## Reproduce local checks
+
+```sh
+node build-scripts/generate-meta.js --check
+node blueprints/harbor/tools/check.mjs
+docker build --target test -t harbor-template-init-test:local blueprints/harbor
+node blueprints/harbor/tools/integration.mjs
+```
+
+Install the existing `app` dependencies with pnpm before running `check.mjs`.

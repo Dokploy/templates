@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">HiveMQ</title>
+  <g fill="#F5A623">
+    <path d="m32 3 13 7.5v15L32 33l-13-7.5v-15L32 3Zm0 7-7 4v8l7 4 7-4v-8l-7-4Z" fill-rule="evenodd"/>
+    <path d="m15 28 13 7.5v15L15 58 2 50.5v-15L15 28Zm0 7-7 4v8l7 4 7-4v-8l-7-4Z" fill-rule="evenodd"/>
+    <path d="m49 28 13 7.5v15L49 58l-13-7.5v-15L49 28Zm0 7-7 4v8l7 4 7-4v-8l-7-4Z" fill-rule="evenodd"/>
+  </g>
+</svg>

@@ -5,8 +5,11 @@ env = [
   # Optional but recommended for Spotify links: https://developer.spotify.com/dashboard
   "SPOTIFY_CLIENT_ID=",
   "SPOTIFY_CLIENT_SECRET=",
-  # Optional YouTube tweaks (leave empty to use the default anonymous clients).
+  # YouTube OAuth2 refresh token is required by current NaviMusic versions.
+  "YOUTUBE_OAUTH2=",
+  # Optional YouTube tweaks.
   "YOUTUBE_POTOKEN=",
   "YOUTUBE_VISITOR=",
-  "YOUTUBE_OAUTH2=",
+  # Shared secret for the internal yt-cipher service.
+  "YOUTUBE_CIPHER_PASSWORD=${password:32}",
 ]

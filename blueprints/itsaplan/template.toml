@@ -1,0 +1,36 @@
+[variables]
+main_domain = "${domain}"
+api_domain = "api.${main_domain}"
+postgres_password = "${password:32}"
+auth_secret = "${base64:32}"
+encryption_key = "${base64:32}"
+s3_access_key = "${username}"
+s3_secret_key = "${password:32}"
+
+[config]
+env = [
+  "POSTGRES_USER=itsaplan",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_DB=itsaplan",
+  "BETTER_AUTH_SECRET=${auth_secret}",
+  "APP_ENCRYPTION_KEY=${encryption_key}",
+  "API_URL=https://${api_domain}",
+  "APP_URL=https://${main_domain}",
+  "S3_BUCKET=planner-attachments",
+  "S3_ACCESS_KEY_ID=${s3_access_key}",
+  "S3_SECRET_ACCESS_KEY=${s3_secret_key}",
+  "S3_REGION=us-east-1",
+  "S3_FORCE_PATH_STYLE=true",
+  "BACKUP_RETENTION_DAYS=30",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "api"
+port = 3000
+host = "${api_domain}"
+
+[[config.domains]]
+serviceName = "web"
+port = 3001
+host = "${main_domain}"

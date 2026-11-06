@@ -1,7 +1,7 @@
 {
   "id": "dagu",
   "name": "Dagu",
-  "version": "2.10.7",
+  "version": "2.25.4",
   "description": "Dagu is a self-contained workflow engine with a Web UI. Schedule and orchestrate jobs as DAGs defined in declarative YAML, with no DBMS required.",
   "logo": "logo.png",
   "links": {

@@ -1,0 +1,36 @@
+[variables]
+main_domain = "${domain}"
+stream_domain = "${domain}"
+app_key = "${base64:32}"
+browser_stream_secret = "${hash:32}"
+pinokio_token = "${hash:32}"
+postgres_user = "${username}"
+postgres_password = "${password:32}"
+postgres_database = "puppetflow"
+instance_id = "${hash:8}"
+
+[config]
+
+[[config.domains]]
+serviceName = "puppetflow"
+port = 8000
+host = "${main_domain}"
+
+[[config.domains]]
+serviceName = "stream-server"
+port = 6080
+host = "${stream_domain}"
+
+[config.env]
+LANG = "C.UTF-8"
+LANGUAGE = "en-US"
+CONNECTION_TIMEOUT_MS = "60000000"
+APP_URL = "http://${main_domain}"
+APP_KEY = "base64:${app_key}"
+BROWSER_STREAM_PUBLIC_URL = "http://${stream_domain}"
+BROWSER_STREAM_SECRET = "${browser_stream_secret}"
+PINOKIO_TOKEN = "${pinokio_token}"
+POSTGRES_USER = "${postgres_user}"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "${postgres_database}"
+PUPPETFLOW_INSTANCE_ID = "${instance_id}"

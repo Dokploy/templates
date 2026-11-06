@@ -1,0 +1,154 @@
+services:
+  trypost:
+    # Rebuild only browser assets: the published bundle points at localhost.
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM ghcr.io/trypostit/trypost:2.0.0 AS assets
+        RUN apk add --no-cache nodejs npm
+        ARG VITE_REVERB_HOST
+        ARG VITE_REVERB_PORT
+        ARG VITE_REVERB_SCHEME
+        ARG VITE_REVERB_APP_KEY
+        RUN APP_URL=http://localhost npm run build
+        FROM ghcr.io/trypostit/trypost:2.0.0
+        COPY --from=assets /var/www/html/public/build /var/www/html/public/build
+      args:
+        VITE_REVERB_HOST: "${TRYPOST_HOST:?Set TRYPOST_HOST}"
+        VITE_REVERB_PORT: "${TRYPOST_PUBLIC_PORT:-80}"
+        VITE_REVERB_SCHEME: "${TRYPOST_PUBLIC_SCHEME:-http}"
+        VITE_REVERB_APP_KEY: "${REVERB_APP_KEY:?Keep the generated Reverb key}"
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: "${APP_KEY:?Keep the generated APP_KEY}"
+      APP_URL: "${APP_URL:?Set APP_URL}"
+      SELF_HOSTED: "true"
+      TRYPOST_TARGET: production
+      DB_CONNECTION: pgsql
+      DB_HOST: trypost-postgres
+      DB_PORT: "5432"
+      DB_DATABASE: trypost
+      DB_USERNAME: trypost
+      DB_PASSWORD: "${DB_PASSWORD:?Keep the generated database password}"
+      REDIS_HOST: trypost-redis
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: "${REDIS_PASSWORD:?Keep the generated Redis password}"
+      QUEUE_CONNECTION: redis
+      CACHE_STORE: redis
+      SESSION_DRIVER: database
+      SESSION_SECURE_COOKIE: "${SESSION_SECURE_COOKIE:-false}"
+      BROADCAST_CONNECTION: reverb
+      REVERB_APP_ID: "${REVERB_APP_ID:?Keep the generated Reverb app ID}"
+      REVERB_APP_KEY: "${REVERB_APP_KEY:?Keep the generated Reverb key}"
+      REVERB_APP_SECRET: "${REVERB_APP_SECRET:?Keep the generated Reverb secret}"
+      # Server broadcasts stay inside the container; browser uses build args.
+      REVERB_HOST: 127.0.0.1
+      REVERB_PORT: "8080"
+      REVERB_SCHEME: http
+      PASSPORT_PRIVATE_KEY: file:///var/www/html/storage/oauth-private.key
+      PASSPORT_PUBLIC_KEY: file:///var/www/html/storage/oauth-public.key
+      FILESYSTEM_DISK: "${FILESYSTEM_DISK:-public}"
+      MAIL_MAILER: "${MAIL_MAILER:-log}"
+      LOG_CHANNEL: "${LOG_CHANNEL:-stderr}"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+      NIGHTWATCH_ENABLED: "false"
+      TELESCOPE_ENABLED: "false"
+      POSTHOG_ENABLED: "false"
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        cd /var/www/html
+        if [ ! -f storage/oauth-private.key ] && [ ! -f storage/oauth-public.key ]; then
+          php artisan passport:keys --no-interaction
+        elif [ ! -s storage/oauth-private.key ] || [ ! -s storage/oauth-public.key ]; then
+          echo 'Incomplete Passport key pair: restore both keys from backup.' >&2
+          exit 1
+        fi
+        php artisan migrate --force --no-interaction
+        php <<'PHP'
+        <?php
+        require 'vendor/autoload.php';
+        $$app = require 'bootstrap/app.php';
+        $$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+        if (! App\Models\User::query()->exists()) {
+            $$email = getenv('INITIAL_USER_EMAIL');
+            $$password = getenv('INITIAL_USER_PASSWORD');
+            if (! filter_var($$email, FILTER_VALIDATE_EMAIL) || strlen($$password ?: '') < 16) {
+                throw new RuntimeException('Set INITIAL_USER_EMAIL and a password of at least 16 characters for first startup.');
+            }
+            App\Actions\User\CreateUser::execute([
+                'name' => getenv('INITIAL_USER_NAME') ?: 'Administrator',
+                'email' => $$email,
+                'password' => $$password,
+                'email_verified_at' => now(),
+            ]);
+        }
+        PHP
+        exec /usr/local/bin/entrypoint.sh
+    expose:
+      - "80"
+    volumes:
+      - trypost-storage:/var/www/html/storage
+    depends_on:
+      trypost-postgres:
+        condition: service_healthy
+      trypost-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1/up"]
+      start_period: 120s
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    stop_grace_period: 60s
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  trypost-postgres:
+    image: postgres:18.6-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: trypost
+      POSTGRES_USER: trypost
+      POSTGRES_PASSWORD: "${DB_PASSWORD:?Keep the generated database password}"
+    volumes:
+      - trypost-postgres:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trypost -d trypost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    stop_grace_period: 60s
+    logging: *logging
+
+  trypost-redis:
+    image: redis:8.10.2-alpine
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASSWORD:?Keep the generated Redis password}"
+      REDISCLI_AUTH: "${REDIS_PASSWORD:?Keep the generated Redis password}"
+    command: ["/bin/sh", "-ec", "exec redis-server --requirepass \"$$REDIS_PASSWORD\" --appendonly yes --maxmemory-policy noeviction"]
+    volumes:
+      - trypost-redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    stop_grace_period: 30s
+    logging: *logging
+
+volumes:
+  trypost-storage:
+  trypost-postgres:
+  trypost-redis:

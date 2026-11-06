@@ -1,7 +1,6 @@
 # dokploy: allow-host-ports
 # LiveKit requires public TCP/UDP media ports 7881 and 7882 for WebRTC.
 # Dokploy owns routing and the isolated network.
-version: "3.8"
 services:
   frontend:
     build:

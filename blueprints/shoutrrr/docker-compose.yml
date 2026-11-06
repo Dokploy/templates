@@ -1,0 +1,54 @@
+services:
+  shoutrrr:
+    image: ghcr.io/coollabsio/shoutrrr:1.5.4
+    restart: unless-stopped
+    # Dokploy writes its Environment tab to .env. Pass optional settings through
+    # without replacing upstream's nullable defaults with empty strings.
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: "${APP_KEY:?Keep the generated APP_KEY}"
+      APP_URL: "${APP_URL:?Set APP_URL to the public URL}"
+      SELF_HOSTED: "true"
+      TRUSTED_PROXIES: "${TRUSTED_PROXIES:-*}"
+      OCTANE_SERVER: frankenphp
+      OCTANE_HTTPS: "${OCTANE_HTTPS:-false}"
+      SESSION_SECURE_COOKIE: "${SESSION_SECURE_COOKIE:-false}"
+      DB_CONNECTION: "${DB_CONNECTION:-sqlite}"
+      DB_DATABASE: "${DB_DATABASE:-/var/www/html/database/sqlite/database.sqlite}"
+      CACHE_STORE: "${CACHE_STORE:-database}"
+      QUEUE_CONNECTION: "${QUEUE_CONNECTION:-database}"
+      SESSION_DRIVER: "${SESSION_DRIVER:-database}"
+      FILESYSTEM_DISK: "${FILESYSTEM_DISK:-public}"
+      MAIL_MAILER: "${MAIL_MAILER:-log}"
+      LOG_CHANNEL: "${LOG_CHANNEL:-stderr}"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+      INSTANCE_REGISTRATIONS_ENABLED: "${INSTANCE_REGISTRATIONS_ENABLED:-false}"
+      QUEUE_WORKER_ENABLED: "${QUEUE_WORKER_ENABLED:-true}"
+      QUEUE_WORKER_COUNT: "${QUEUE_WORKER_COUNT:-1}"
+      SCHEDULER_ENABLED: "${SCHEDULER_ENABLED:-true}"
+      INERTIA_SSR_ENABLED: "${INERTIA_SSR_ENABLED:-false}"
+    expose:
+      - "8080"
+    volumes:
+      - shoutrrr-storage:/var/www/html/storage
+      - shoutrrr-sqlite:/var/www/html/database/sqlite
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "--show-error", "http://127.0.0.1:8080/up"]
+      start_period: 60s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    stop_grace_period: 60s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  shoutrrr-storage:
+  shoutrrr-sqlite:

@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+admin_password = "${hash:48}"
+
+[config]
+env = [
+  "WUD_AUTH_ADMIN_USER=admin",
+  "WUD_AUTH_ADMIN_PASSWORD=${admin_password}",
+  "WUD_WATCHER_DOCKER_LOCAL_WATCHBYDEFAULT=true",
+  "WUD_WATCHER_DOCKER_LOCAL_EXCLUDE=^dokploy([._-]|$)",
+  "WUD_WATCHER_DOCKER_LOCAL_WATCHALL=false",
+  "WUD_WATCHER_DOCKER_LOCAL_CRON=0 * * * *",
+  "WUD_LOG_LEVEL=info",
+  "TZ=UTC"
+]
+
+[[config.domains]]
+serviceName = "wud"
+port = 3000
+host = "${main_domain}"

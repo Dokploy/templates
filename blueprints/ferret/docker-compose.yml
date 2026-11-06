@@ -1,0 +1,18 @@
+services:
+  ferret:
+    image: ghcr.io/ferret-project/ferret:2026.11.4
+    restart: unless-stopped
+    environment:
+      # The address people (and AI assistants over MCP) use: Dokploy's domain for this app.
+      PUBLIC_URL: ${PUBLIC_URL}
+      # Dokploy's Traefik is the proxy in front: believe its X-Forwarded-For.
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES}
+      # AUTH_SECRET, FILES_KEY and the push keys are made by Ferret on first start and kept in /data.
+      # Optional settings (email, AI, backups, single sign-on): https://github.com/ferret-project/ferret/blob/main/apps/docs/hosting/configuration.md
+    volumes:
+      - ferret-data:/data
+    expose:
+      - 8787
+
+volumes:
+  ferret-data:

@@ -52,14 +52,18 @@ those three are not optional).
    admin login, the project, the uploaded media and every rendition survive, and that the
    bucket still holds the objects — `freeframe-postgres-data`, `freeframe-redis-data` and
    `freeframe-silo-data` are the only state.
-8. **HTTPS.** Enable it on both domains and redeploy. `FRONTEND_URL` and `S3_PUBLIC_ENDPOINT`
-   default to `https://`, so nothing needs editing; verify that uploads and playback still
-   work (a CORS or presign scheme mismatch shows up here and nowhere else), then test a
-   plain-HTTP request redirects.
+8. **HTTPS.** With a real domain, enable it on all three domains and change
+   `FRONTEND_URL` and `S3_PUBLIC_ENDPOINT` to `https://` in the same redeploy, then recreate
+   the API so the bucket CORS is rewritten. Verify uploads and playback still work (a
+   scheme mismatch shows up here and nowhere else). Leaving everything on `http://` is the
+   supported default and needs nothing. A `*.traefik.me` host cannot serve a trusted
+   certificate: over HTTPS there, every part `PUT` fails with
+   `ERR_CERT_AUTHORITY_INVALID` and the upload sits at 0%.
 9. **Optional settings.** Set `SMTP_*` only in Dokploy's Environment, redeploy, and check
-   magic-code login and an invitation email against a local capture server. Lower
-   `TRANSCODING_CONCURRENCY` to `1` and confirm a second upload queues behind the first
-   instead of both encoding at once.
+   magic-code login and an invitation email against a local capture server. Uncomment
+   `TRANSCODER_CPU_LIMIT = "40%"` (and `TRANSCODING_CONCURRENCY = "2"`) in the imported
+   config, redeploy the transcoding worker, and confirm the log reports the budget while a
+   second upload waits behind the first instead of both encoding at once.
 
 ## Scope
 

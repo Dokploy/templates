@@ -60,10 +60,11 @@ those three are not optional).
    certificate: over HTTPS there, every part `PUT` fails with
    `ERR_CERT_AUTHORITY_INVALID` and the upload sits at 0%.
 9. **Optional settings.** Set `SMTP_*` only in Dokploy's Environment, redeploy, and check
-   magic-code login and an invitation email against a local capture server. Uncomment
-   `TRANSCODER_CPU_LIMIT = "40%"` (and `TRANSCODING_CONCURRENCY = "2"`) in the imported
-   config, redeploy the transcoding worker, and confirm the log reports the budget while a
-   second upload waits behind the first instead of both encoding at once.
+   magic-code login and an invitation email against a local capture server. Confirm the six
+   tuning variables arrived in the Environment tab (TOML comments do not survive the import,
+   so only key/value pairs do), set `TRANSCODER_CPU_LIMIT` to `40%`, redeploy the transcoding
+   worker, and check that the log reports the budget while a second upload waits behind the
+   first instead of both encoding at once.
 
 ## Scope
 

@@ -61,9 +61,10 @@ to check, and the second is whether the storage domain redirects HTTP to HTTPS.
 Video transcoding is the only heavy operation, and it runs on the CPU here. 2 cores
 / 4 GB is the documented minimum; 4 cores / 8 GB is the recommended starting point.
 
-`template.toml` ships the tuning settings **commented out**, at the value FreeFrame
-would use anyway, and `docker-compose.yml` already passes each one through — so
-uncommenting a line and redeploying is all it takes to override it. They are:
+`template.toml` sets the tuning settings to the values FreeFrame would use anyway,
+so they are visible and editable in Dokploy's **Environment** tab after import (TOML
+comments are not carried over — only key/value pairs are). `docker-compose.yml` also
+defaults each one, so deleting a variable falls back to the same value. They are:
 
 | Setting | Default | What it does |
 |---|---|---|

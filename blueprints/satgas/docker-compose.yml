@@ -1,6 +1,6 @@
 services:
   satgas:
-    image: ghcr.io/zeative/satgas:0.1.11
+    image: ghcr.io/zeative/satgas:0.1.12
     restart: unless-stopped
     environment:
       SATGAS_PUBLIC_URL: ${SATGAS_PUBLIC_URL}

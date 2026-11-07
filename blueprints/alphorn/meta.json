@@ -1,0 +1,13 @@
+{
+  "id": "alphorn",
+  "name": "Alphorn",
+  "version": "1.4.0",
+  "description": "Self-hostable notification router: receive webhooks and route them to Slack, Discord, Telegram, email and 20+ more channels with filters.",
+  "logo": "alphorn.svg",
+  "links": {
+    "github": "https://github.com/alphorn-dev/alphorn",
+    "website": "https://alphorn.dev/",
+    "docs": "https://docs.alphorn.dev/"
+  },
+  "tags": ["notifications", "webhooks", "monitoring"]
+}

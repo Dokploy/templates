@@ -1,0 +1,13 @@
+{
+  "id": "freeframe",
+  "name": "FreeFrame",
+  "version": "1.22.0",
+  "description": "FreeFrame is an open-source, self-hostable alternative to Frame.io: frame-accurate video, image and audio review with annotations, version comparison, share links and approvals.",
+  "logo": "freeframe.png",
+  "links": {
+    "github": "https://github.com/Techiebutler/freeframe",
+    "website": "https://github.com/Techiebutler/freeframe",
+    "docs": "https://github.com/Techiebutler/freeframe/blob/main/docs/deployment.md"
+  },
+  "tags": ["media", "video", "collaboration", "file-sharing", "self-hosted"]
+}

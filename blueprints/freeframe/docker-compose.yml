@@ -1,0 +1,280 @@
+# FreeFrame — collaborative media review and approval for images, audio and
+# video (a self-hosted Frame.io alternative).
+#
+# Adapted from the upstream production compose files:
+#   docker-compose.prod.yml, docker-compose.images.yml and
+#   docker-compose.storage.yml in https://github.com/Techiebutler/freeframe
+#
+# Three things differ from upstream, all Dokploy-specific:
+#   * Dokploy's Traefik is the only reverse proxy: no `traefik` service here.
+#     Domains are declared in template.toml, not in this file.
+#   * The API registers its routes WITHOUT a prefix while the web image calls
+#     /api/*, so the API domain needs `path = "/api"` + `stripPath = true` in
+#     template.toml — that is what makes both services share one domain.
+#   * Storage (Silo, a MinIO fork) is exposed on a second domain, because the
+#     browser fetches presigned S3 URLs directly and cannot resolve the
+#     internal `freeframe-silo` hostname.
+#
+# No GPU is involved anywhere: the transcoding worker detects none and encodes
+# in software (x264/x265) on the CPU. Size TRANSCODING_CONCURRENCY to the cores.
+#
+# The API and the four Celery containers are the same image and read the same
+# settings at import, so the same environment block repeats in each of them.
+
+services:
+  freeframe-postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - freeframe-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-freeframe}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  freeframe-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # Password-protected and AOF-persisted: this holds the Celery queues (video
+    # transcodes survive a restart) and the login magic codes.
+    command: >
+      sh -c "redis-server --requirepass \"$$REDIS_PASSWORD\" --appendonly yes"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - freeframe-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$${REDIS_PASSWORD}\" --no-auth-warning ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Object storage. FreeFrame has no local-filesystem backend: uploads, the
+  # HLS renditions, posters and avatars all live in a bucket.
+  freeframe-silo:
+    image: pgsty/silo:RELEASE.2026-09-16T00-00-00Z
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
+    volumes:
+      - freeframe-silo-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  freeframe-api:
+    image: ghcr.io/techiebutler/freeframe-api:1.22.0
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL}
+      S3_STORAGE: ${S3_STORAGE}
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_PUBLIC_ENDPOINT: ${S3_PUBLIC_ENDPOINT}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_BUCKET: ${S3_BUCKET}
+      S3_REGION: ${S3_REGION}
+      MAIL_PROVIDER: ${MAIL_PROVIDER}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_USE_TLS: ${SMTP_USE_TLS}
+      TRANSCODING_CONCURRENCY: ${TRANSCODING_CONCURRENCY}
+      DISABLE_DOCS: "true"
+    depends_on:
+      freeframe-postgres:
+        condition: service_healthy
+      freeframe-redis:
+        condition: service_healthy
+      freeframe-silo:
+        condition: service_healthy
+    # The schema is created on first start and upgraded on every deploy. The
+    # bucket and its CORS rules are created by the API itself, from
+    # FRONTEND_URL, so no init container is needed.
+    command:
+      - sh
+      - -c
+      - >-
+        cd /workspace/apps/api && alembic upgrade head && cd /workspace &&
+        gunicorn apps.api.main:app
+        -w $${API_WORKERS:-4}
+        -k uvicorn.workers.UvicornWorker
+        --bind 0.0.0.0:8000
+        --timeout 120
+        --graceful-timeout 30
+        --access-logfile -
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 40s
+      retries: 3
+
+  # Video transcoding. CPU-bound, and the reason a 4+ core box is recommended.
+  freeframe-worker:
+    image: ghcr.io/techiebutler/freeframe-api:1.22.0
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL}
+      S3_STORAGE: ${S3_STORAGE}
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_PUBLIC_ENDPOINT: ${S3_PUBLIC_ENDPOINT}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_BUCKET: ${S3_BUCKET}
+      S3_REGION: ${S3_REGION}
+      MAIL_PROVIDER: ${MAIL_PROVIDER}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_USE_TLS: ${SMTP_USE_TLS}
+      TRANSCODING_CONCURRENCY: ${TRANSCODING_CONCURRENCY}
+    depends_on:
+      freeframe-postgres:
+        condition: service_healthy
+      freeframe-redis:
+        condition: service_healthy
+      freeframe-silo:
+        condition: service_healthy
+    command: sh -c "celery -A apps.api.tasks.celery_app worker -Q transcoding -c $${TRANSCODING_CONCURRENCY:-2} --loglevel=INFO"
+
+  freeframe-email-worker:
+    image: ghcr.io/techiebutler/freeframe-api:1.22.0
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL}
+      S3_STORAGE: ${S3_STORAGE}
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_PUBLIC_ENDPOINT: ${S3_PUBLIC_ENDPOINT}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_BUCKET: ${S3_BUCKET}
+      S3_REGION: ${S3_REGION}
+      MAIL_PROVIDER: ${MAIL_PROVIDER}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_USE_TLS: ${SMTP_USE_TLS}
+      TRANSCODING_CONCURRENCY: ${TRANSCODING_CONCURRENCY}
+    depends_on:
+      freeframe-redis:
+        condition: service_healthy
+    command: sh -c "celery -A apps.api.tasks.celery_app worker -Q email_high,email_low -c 2 --loglevel=INFO"
+
+  # Housekeeping: retention GC, stale-upload reaper, orphan sweep. Kept off the
+  # transcoding worker (these hold a slot for minutes) and off the email worker
+  # (a magic code queued behind a bucket listing is a login someone waits on).
+  # These tasks hard-delete past their retention windows.
+  freeframe-maintenance-worker:
+    image: ghcr.io/techiebutler/freeframe-api:1.22.0
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL}
+      S3_STORAGE: ${S3_STORAGE}
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_PUBLIC_ENDPOINT: ${S3_PUBLIC_ENDPOINT}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_BUCKET: ${S3_BUCKET}
+      S3_REGION: ${S3_REGION}
+      MAIL_PROVIDER: ${MAIL_PROVIDER}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_USE_TLS: ${SMTP_USE_TLS}
+      TRANSCODING_CONCURRENCY: ${TRANSCODING_CONCURRENCY}
+    depends_on:
+      freeframe-postgres:
+        condition: service_healthy
+      freeframe-redis:
+        condition: service_healthy
+      freeframe-silo:
+        condition: service_healthy
+    command: sh -c "celery -A apps.api.tasks.celery_app worker -Q maintenance -c 1 --loglevel=INFO"
+
+  freeframe-beat:
+    image: ghcr.io/techiebutler/freeframe-api:1.22.0
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL}
+      S3_STORAGE: ${S3_STORAGE}
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_PUBLIC_ENDPOINT: ${S3_PUBLIC_ENDPOINT}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_BUCKET: ${S3_BUCKET}
+      S3_REGION: ${S3_REGION}
+      MAIL_PROVIDER: ${MAIL_PROVIDER}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_USE_TLS: ${SMTP_USE_TLS}
+      TRANSCODING_CONCURRENCY: ${TRANSCODING_CONCURRENCY}
+    depends_on:
+      freeframe-redis:
+        condition: service_healthy
+    command: sh -c "celery -A apps.api.tasks.celery_app beat --loglevel=INFO -s /tmp/celerybeat-schedule"
+
+  freeframe:
+    image: ghcr.io/techiebutler/freeframe-web:1.22.0
+    restart: unless-stopped
+    environment:
+      # Server-to-server, for the branding Next renders into the first byte. It
+      # cannot reuse NEXT_PUBLIC_API_URL, which is the `/api` path the browser
+      # resolves against this origin: a fetch inside this container has no
+      # origin to resolve it against. The browser-facing URL is baked into the
+      # published image and is always /api.
+      API_INTERNAL_URL: http://freeframe-api:8000
+    depends_on:
+      freeframe-api:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:3000/login"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+
+volumes:
+  freeframe-postgres-data:
+  freeframe-redis-data:
+  freeframe-silo-data:

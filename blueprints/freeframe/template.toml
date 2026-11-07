@@ -1,0 +1,73 @@
+[variables]
+main_domain = "${domain}"
+storage_domain = "${domain}"
+postgres_password = "${password:32}"
+redis_password = "${password:32}"
+jwt_secret = "${hash:64}"
+s3_access_key = "freeframe"
+s3_secret_key = "${password:32}"
+frontend_url = "https://${main_domain}"
+database_url = "postgresql://freeframe:${postgres_password}@freeframe-postgres:5432/freeframe"
+redis_url = "redis://:${redis_password}@freeframe-redis:6379/0"
+s3_endpoint = "http://freeframe-silo:9000"
+s3_public_endpoint = "https://${storage_domain}"
+
+[config]
+[[config.domains]]
+serviceName = "freeframe"
+port = 3000
+host = "${main_domain}"
+
+# The API's routes have no prefix, but the browser calls /api/*, so the path is
+# stripped before the request reaches the container.
+[[config.domains]]
+serviceName = "freeframe-api"
+port = 8000
+host = "${main_domain}"
+path = "/api"
+stripPath = true
+
+# Presigned S3 URLs are handed to the browser, so the store needs its own
+# publicly reachable hostname.
+[[config.domains]]
+serviceName = "freeframe-silo"
+port = 9000
+host = "${storage_domain}"
+
+[config.env]
+POSTGRES_USER = "freeframe"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "freeframe"
+REDIS_PASSWORD = "${redis_password}"
+DATABASE_URL = "${database_url}"
+REDIS_URL = "${redis_url}"
+JWT_SECRET = "${jwt_secret}"
+
+# Exact origin people browse to. The API derives its CORS policy and the
+# bucket's CORS rules from it, so it must match the scheme and host after HTTPS
+# is enabled (see instructions.md).
+FRONTEND_URL = "${frontend_url}"
+
+S3_STORAGE = "minio"
+S3_ENDPOINT = "${s3_endpoint}"
+S3_PUBLIC_ENDPOINT = "${s3_public_endpoint}"
+S3_ACCESS_KEY = "${s3_access_key}"
+S3_SECRET_KEY = "${s3_secret_key}"
+S3_BUCKET = "freeframe"
+S3_REGION = "us-east-1"
+
+# Parallel video transcodes, each of which saturates a core. 1 on 2 cores,
+# 2-3 on 4, 4-6 on 8+. There is no GPU here: encoding is software x264/x265.
+TRANSCODING_CONCURRENCY = "2"
+
+# Optional. The first account is created in the setup wizard with a password,
+# so the app is usable without a mail server; magic-code login, invitations and
+# notification emails need one.
+MAIL_PROVIDER = "smtp"
+MAIL_FROM_ADDRESS = "noreply@${main_domain}"
+MAIL_FROM_NAME = "FreeFrame"
+SMTP_HOST = ""
+SMTP_PORT = "587"
+SMTP_USER = ""
+SMTP_PASSWORD = ""
+SMTP_USE_TLS = "true"

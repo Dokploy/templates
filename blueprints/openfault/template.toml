@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+setup_token = "${password:32}"
+
+[config]
+env = [
+  "OPENFAULT_HOST=${main_domain}",
+  "OPENFAULT_SETUP_TOKEN=${setup_token}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "openfault"
+port = 8080
+host = "${main_domain}"

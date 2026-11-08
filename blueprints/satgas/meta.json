@@ -1,7 +1,7 @@
 {
   "id": "satgas",
   "name": "Satgas",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Your own AI team, self-hosted. Describe what you want, and a lead hires the right agents, runs them in parallel on the model you choose, and puts the results on a shared canvas you can watch and edit.",
   "logo": "satgas.svg",
   "links": {

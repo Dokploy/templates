@@ -1,7 +1,7 @@
 {
   "id": "zeqqat",
   "name": "Zeqqat",
-  "version": "0.1.0",
+  "version": "latest",
   "description": "Give AI agents access to your Dokploy without handing them your API key. Per-tool permissions, team roles and a full log of every call.",
   "logo": "zeqqat.svg",
   "links": {

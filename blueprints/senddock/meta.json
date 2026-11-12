@@ -1,7 +1,7 @@
 {
   "id": "senddock",
   "name": "SendDock",
-  "version": "latest",
+  "version": "0.8.3",
   "description": "Open-source, self-hosted email marketing platform with BYO SMTP. Manage subscribers, templates, broadcasts, and scheduled campaigns from one place.",
   "logo": "senddock.svg",
   "links": {

@@ -1,0 +1,21 @@
+{
+  "id": "openbao",
+  "name": "OpenBao",
+  "version": "2.7.2",
+  "description": "OpenBao is an open-source, community-driven fork of HashiCorp Vault under the Linux Foundation for managing secrets, encryption keys and certificates. This template runs a single node with persistent Raft storage and the web UI. After deploy, open the UI to initialize OpenBao, store the unseal keys and root token safely, then unseal it (unseal again after every restart).",
+  "logo": "openbao.svg",
+  "links": {
+    "github": "https://github.com/openbao/openbao",
+    "website": "https://openbao.org/",
+    "docs": "https://openbao.org/docs/"
+  },
+  "tags": [
+    "security",
+    "secrets",
+    "devops",
+    "infrastructure"
+  ],
+  "seoTitle": "OpenBao Docker Compose Setup",
+  "seoDescription": "Open-source secrets manager forked from Vault. Deploy OpenBao with Docker Compose on Dokploy – persistent Raft storage, web UI, manual init and unseal.",
+  "newConfig": true
+}

@@ -1,0 +1,18 @@
+{
+  "id": "excaliself",
+  "name": "Excaliself",
+  "version": "0.11.1",
+  "description": "Self-hosted, open-source alternative to Excalidraw+ for teams. Shared drawings, folders, live collaboration, comments and SSO, stored in Postgres.",
+  "logo": "excaliself.svg",
+  "links": {
+    "github": "https://github.com/maciekzygmunt/excaliself",
+    "website": "https://excaliself.com/",
+    "docs": "https://excaliself.com/docs/"
+  },
+  "tags": [
+    "whiteboard",
+    "diagrams",
+    "collaboration",
+    "self-hosted"
+  ]
+}

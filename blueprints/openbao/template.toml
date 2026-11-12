@@ -15,7 +15,7 @@ ui            = true
 disable_mlock = true
 
 api_addr     = "https://${main_domain}"
-cluster_addr = "http://openbao:8201"
+cluster_addr = "https://openbao:8201"
 
 storage "raft" {
   path    = "/openbao/file"

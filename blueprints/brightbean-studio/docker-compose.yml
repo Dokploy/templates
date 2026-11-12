@@ -1,0 +1,95 @@
+# Dokploy blueprint for Brightbean Studio
+# https://github.com/brightbeanxyz/brightbean-studio
+#
+# Stack: Django app (gunicorn) + background-task worker + PostgreSQL 16.
+# The public edge (Caddy in the upstream compose) is intentionally dropped:
+# Dokploy's Traefik terminates TLS and routes to `app:8000`.
+#
+# Images are built from source on deploy (the project publishes no image yet).
+# Swap the anchor below to your own fork to deploy your fork:
+#   x-brightbean-repo: &brightbean-repo https://github.com/H54collective/brightbean-studio.git#main
+
+x-brightbean-repo: &brightbean-repo https://github.com/brightbeanxyz/brightbean-studio.git#main
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: brightbean
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d brightbean"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    build:
+      context: *brightbean-repo
+    command: python manage.py migrate --noinput
+    restart: "no"
+    environment:
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
+      SECRET_KEY: ${SECRET_KEY}
+      ENCRYPTION_KEY_SALT: ${ENCRYPTION_KEY_SALT}
+      DATABASE_URL: ${DATABASE_URL}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      APP_URL: ${APP_URL}
+      STORAGE_BACKEND: ${STORAGE_BACKEND}
+      MEDIA_ROOT: ${MEDIA_ROOT}
+      SERVE_MEDIA: ${SERVE_MEDIA}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  app:
+    build:
+      context: *brightbean-repo
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2 --threads 4
+    restart: unless-stopped
+    expose:
+      - "8000"
+    environment:
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
+      SECRET_KEY: ${SECRET_KEY}
+      ENCRYPTION_KEY_SALT: ${ENCRYPTION_KEY_SALT}
+      DATABASE_URL: ${DATABASE_URL}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      APP_URL: ${APP_URL}
+      STORAGE_BACKEND: ${STORAGE_BACKEND}
+      MEDIA_ROOT: ${MEDIA_ROOT}
+      SERVE_MEDIA: ${SERVE_MEDIA}
+    volumes:
+      - media_data:/app/media
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  worker:
+    build:
+      context: *brightbean-repo
+    command: python manage.py process_tasks
+    restart: unless-stopped
+    environment:
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
+      SECRET_KEY: ${SECRET_KEY}
+      ENCRYPTION_KEY_SALT: ${ENCRYPTION_KEY_SALT}
+      DATABASE_URL: ${DATABASE_URL}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      APP_URL: ${APP_URL}
+      STORAGE_BACKEND: ${STORAGE_BACKEND}
+      MEDIA_ROOT: ${MEDIA_ROOT}
+      SERVE_MEDIA: ${SERVE_MEDIA}
+    volumes:
+      - media_data:/app/media
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  postgres_data:
+  media_data:

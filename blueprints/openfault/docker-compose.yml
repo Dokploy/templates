@@ -1,0 +1,13 @@
+services:
+  openfault:
+    image: ghcr.io/openfault/openfault:0.1.0
+    restart: unless-stopped
+    environment:
+      - OPENFAULT_BASE_URL=https://${OPENFAULT_HOST}
+      - OPENFAULT_TRUST_PROXY=1
+      - OPENFAULT_SETUP_TOKEN=${OPENFAULT_SETUP_TOKEN}
+    volumes:
+      - openfault-data:/data
+
+volumes:
+  openfault-data: {}

@@ -1,0 +1,60 @@
+services:
+  terarouter:
+    image: ghcr.io/montara-project/tera-router:v1.23.0
+    restart: unless-stopped
+    expose:
+      - 8080
+    environment:
+      ENV: production
+      DEBUG: "false"
+      MACHINE_ID: ${MACHINE_ID}
+      APP_SECRET: ${APP_SECRET}
+      APP_NAME: tera-router-server
+      
+      # For Default Super User
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+
+      # No published port: every request arrives via Dokploy's proxy on the
+      # internal network, so private ranges are safe to trust for X-Forwarded-For, this forward Real IP using DNS Cloudflare
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES}
+      CORS_ALLOWED_ORIGINS: https://${TERA_HOST}
+      API_URL: https://${TERA_HOST}
+
+      # For Database
+      DATABASE_PATH: /app/data/terarouter.db
+      MIGRATE_ON_BOOT: "true"
+      SEED_ON_BOOT: "true"
+
+      # Optional for token reduction proxy
+      HEADROOM_URL: http://headroom:8787
+      HEADROOM_PROXY_TOKEN: ${HEADROOM_PROXY_TOKEN}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/health", "||", "exit", "1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    volumes:
+      - terarouter-data:/app/data
+    depends_on:
+      - headroom
+
+  # Token-reduction proxy the gateway calls through HEADROOM_URL; switch it on
+  # under Settings > Token Saving. HEADROOM_PROXY_TOKEN is required because the
+  # sidecar binds beyond loopback on the internal network.
+  headroom:
+    image: ghcr.io/headroomlabs-ai/headroom:0.41.0
+    restart: unless-stopped
+    environment:
+      HEADROOM_HOST: "0.0.0.0"
+      HEADROOM_PORT: "8787"
+      HEADROOM_COMPRESS_ALLOW_REMOTE: "1"
+      HEADROOM_PROXY_TOKEN: ${HEADROOM_PROXY_TOKEN}
+      # Kompress (ModernBERT on CPU) outruns the gateway's 5s Headroom timeout
+      # on large tool results; the structural compressors stay on.
+      HEADROOM_DISABLE_KOMPRESS: "1"
+      HEADROOM_DISABLE_KOMPRESS_FALLBACK: "1"
+
+volumes:
+  terarouter-data:

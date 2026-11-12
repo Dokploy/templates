@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "app"
+port = 8_080
+host = "${main_domain}"
+
+[config.env]
+DB_PASSWORD = "${password:32}"
+# http matches Dokploy's generated domain; change to https:// once HTTPS is on for the domain
+APP_URL = "http://${main_domain}"

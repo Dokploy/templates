@@ -1,0 +1,23 @@
+{
+  "id": "frameleaf",
+  "name": "Frameleaf",
+  "version": "1.2.3",
+  "description": "Frameleaf is a self-hosted photo and video library with native apps, private face and smart search, photo and video editing, and optional cloud backup. It is an open-source (AGPLv3) fork of Immich and is currently in beta.",
+  "logo": "frameleaf.png",
+  "links": {
+    "github": "https://github.com/Frameleaf/frameleaf-app",
+    "website": "https://frameleaf.app/",
+    "docs": "https://frameleaf.app/docs/start/introduction/"
+  },
+  "tags": [
+    "photos",
+    "videos",
+    "media",
+    "backup",
+    "photo-management",
+    "self-hosted"
+  ],
+  "seoTitle": "Frameleaf Docker Compose Setup",
+  "seoDescription": "Self-hosted photo and video library (beta, fork of Immich) with face and smart search, photo and video editing. Deploy with Docker Compose on Dokploy in minutes.",
+  "newConfig": true
+}

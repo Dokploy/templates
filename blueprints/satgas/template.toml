@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+sign_in_token = "${password:32}"
+
+[config]
+# Must match how the domain is served: Dokploy's generated domain is http, so switch this to https with your own domain.
+env = [
+  "SATGAS_PUBLIC_URL=http://${main_domain}",
+  "SATGAS_TOKEN=${sign_in_token}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "satgas"
+port = 4317
+host = "${main_domain}"

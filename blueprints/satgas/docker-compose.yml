@@ -1,0 +1,15 @@
+services:
+  satgas:
+    image: ghcr.io/zeative/satgas:0.1.13
+    restart: unless-stopped
+    environment:
+      SATGAS_PUBLIC_URL: ${SATGAS_PUBLIC_URL}
+      SATGAS_TOKEN: ${SATGAS_TOKEN}
+    volumes:
+      - satgas-data:/data
+      - satgas-home:/home/node
+    stop_grace_period: 15s
+
+volumes:
+  satgas-data: {}
+  satgas-home: {}

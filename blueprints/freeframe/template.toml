@@ -1,0 +1,111 @@
+[variables]
+main_domain = "${domain}"
+storage_domain = "${domain}"
+postgres_password = "${password:32}"
+redis_password = "${password:32}"
+jwt_secret = "${hash:64}"
+s3_access_key = "freeframe"
+s3_secret_key = "${password:32}"
+frontend_url = "http://${main_domain}"
+database_url = "postgresql://freeframe:${postgres_password}@freeframe-postgres:5432/freeframe"
+redis_url = "redis://:${redis_password}@freeframe-redis:6379/0"
+s3_endpoint = "http://freeframe-silo:9000"
+s3_public_endpoint = "http://${storage_domain}"
+
+[config]
+[[config.domains]]
+serviceName = "freeframe"
+port = 3000
+host = "${main_domain}"
+
+# The API's routes have no prefix, but the browser calls /api/*, so the path is
+# stripped before the request reaches the container.
+[[config.domains]]
+serviceName = "freeframe-api"
+port = 8000
+host = "${main_domain}"
+path = "/api"
+stripPath = true
+
+# Presigned S3 URLs are handed to the browser, so the store needs its own
+# publicly reachable hostname.
+[[config.domains]]
+serviceName = "freeframe-silo"
+port = 9000
+host = "${storage_domain}"
+
+[config.env]
+POSTGRES_USER = "freeframe"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "freeframe"
+REDIS_PASSWORD = "${redis_password}"
+DATABASE_URL = "${database_url}"
+REDIS_URL = "${redis_url}"
+JWT_SECRET = "${jwt_secret}"
+
+# Exact origin people browse to. The API derives its CORS policy and the
+# bucket's CORS rules from it, so it must match the scheme and host actually
+# served: http by default (works without a certificate), https once HTTPS is
+# enabled on the domains — then change this AND S3_PUBLIC_ENDPOINT together and
+# recreate the API, see instructions.md.
+FRONTEND_URL = "${frontend_url}"
+
+S3_STORAGE = "minio"
+S3_ENDPOINT = "${s3_endpoint}"
+S3_PUBLIC_ENDPOINT = "${s3_public_endpoint}"
+S3_ACCESS_KEY = "${s3_access_key}"
+S3_SECRET_KEY = "${s3_secret_key}"
+S3_BUCKET = "freeframe"
+S3_REGION = "us-east-1"
+
+# ── Tuning ───────────────────────────────────────────────────────────────────
+# These are set to FreeFrame's own defaults, so a fresh deploy behaves exactly
+# like upstream. Change a value in Dokploy's Environment tab and redeploy the
+# container it affects. (TOML comments like this one are not carried into the
+# Environment tab — Dokploy keeps key/value pairs only — so there is nothing to
+# uncomment here: the lines below are already active.)
+#
+# Parallel video encodes (Celery workers on the transcoding queue). Size it to
+# the cores: 1 on 2 cores, 2-3 on 4, 4-6 on 8+. There is no GPU here, so
+# encoding is software x264/x265 and each job saturates the machine unless it
+# is capped below.
+# TRANSCODING_CONCURRENCY (below)
+#
+# Cores ONE ffmpeg process may use: a count ("4") or a share of what the
+# container may use ("40%"). Empty = unbounded, which on a 10-core host is
+# about 8 cores for a single three-rung ladder. The machine-wide ceiling is
+# this times TRANSCODING_CONCURRENCY; it does not cover decoding, so a heavy
+# master can run ~25% over.
+# TRANSCODER_CPU_LIMIT (below; empty by default = unbounded)
+#
+# Review stream ladder. Dropping 360p saves CPU and storage, at the cost of a
+# lower rendition for viewers on slow connections.
+# TRANSCODER_QUALITIES (below)
+#
+# Remux a browser-safe H.264 8-bit master instead of re-encoding it: minutes
+# become seconds. Only applies when the ladder resolves to ONE rendition at the
+# source's own size, e.g. TRANSCODER_QUALITIES = "1080p".
+# TRANSCODER_SOURCE_COPY (below)
+#
+# API gunicorn workers, and upload parts in flight per browser tab (6 is the
+# useful maximum over HTTP/1.1; more only helps with HTTP/2).
+# API_WORKERS, UPLOAD_CONCURRENCY (below)
+
+TRANSCODING_CONCURRENCY = "2"
+TRANSCODER_CPU_LIMIT = ""
+TRANSCODER_QUALITIES = "1080p,720p,360p"
+TRANSCODER_SOURCE_COPY = "false"
+API_WORKERS = "4"
+UPLOAD_CONCURRENCY = "5"
+
+# Optional. The first account is created in the setup wizard with a password,
+# so the app is usable without a mail server; magic-code login, invitations and
+# notification emails need one.
+MAIL_PROVIDER = "smtp"
+MAIL_FROM_ADDRESS = "noreply@${main_domain}"
+MAIL_FROM_NAME = "FreeFrame"
+SMTP_HOST = ""
+SMTP_PORT = "587"
+SMTP_USER = ""
+SMTP_PASSWORD = ""
+SMTP_USE_TLS = "true"

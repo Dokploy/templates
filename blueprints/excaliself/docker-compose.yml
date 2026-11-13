@@ -1,0 +1,42 @@
+services:
+  excaliself:
+    image: ghcr.io/maciekzygmunt/excaliself:0.11.1
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      DATABASE_URL: postgresql://excaliself:${POSTGRES_PASSWORD}@db:5432/excaliself
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BASE_URL: ${BASE_URL}
+      # Optional single sign-on, see https://excaliself.com/docs/single-sign-on/
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID:-}
+      MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET:-}
+      MICROSOFT_TENANT_ID: ${MICROSOFT_TENANT_ID:-}
+      OIDC_ISSUER: ${OIDC_ISSUER:-}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:-}
+      OIDC_NAME: ${OIDC_NAME:-}
+      SSO_ALLOWED_DOMAINS: ${SSO_ALLOWED_DOMAINS:-}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: excaliself
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: excaliself
+    volumes:
+      - excaliself-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U excaliself -d excaliself"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  excaliself-db:

@@ -1,0 +1,18 @@
+{
+  "id": "life-console",
+  "name": "Life Console",
+  "version": "0.1.0",
+  "description": "Life Console is a keyboard-first planner that shows what to do right now: time-block your week from a backlog, count down deadlines and link each task to the goal it serves. Multi-user, works offline and installs on phones.",
+  "logo": "life-console.png",
+  "links": {
+    "github": "https://github.com/TJ-coding/life-console",
+    "website": "https://life-console.dev",
+    "docs": "https://life-console.dev/docs/self-hosting"
+  },
+  "tags": [
+    "productivity",
+    "planner",
+    "time-blocking",
+    "tasks"
+  ]
+}

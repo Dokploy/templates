@@ -1,0 +1,14 @@
+services:
+  maily:
+    image: ghcr.io/stormsia/maily:latest
+    restart: unless-stopped
+    expose:
+      - 8477
+    environment:
+      MAILY_PORT: 8477
+      MAILY_SECRET_KEY: ${MAILY_SECRET_KEY}
+    volumes:
+      - maily_data:/app/data
+
+volumes:
+  maily_data:

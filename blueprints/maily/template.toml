@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+fernet_secret = "${base64:32}"
+
+[config]
+env = [
+  "MAILY_PORT=8477",
+  "MAILY_SECRET_KEY=${fernet_secret}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "maily"
+port = 8477
+host = "${main_domain}"

@@ -1,0 +1,18 @@
+{
+  "id": "maily",
+  "name": "Maily",
+  "version": "0.9.1",
+  "description": "Temporary email REST API gateway with multi-provider rotation, real-time SSE streaming, and persistent storage.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/stormsia/maily",
+    "website": "https://github.com/stormsia/maily",
+    "docs": "https://github.com/stormsia/maily#readme"
+  },
+  "tags": [
+    "email",
+    "api",
+    "gateway",
+    "temporary-email"
+  ]
+}

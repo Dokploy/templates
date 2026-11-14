@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+api_key = "${password:48}"
+postgres_db = "evolution_api"
+postgres_user = "evolution"
+postgres_password = "${password:32}"
+
+[config]
+
+[[config.domains]]
+serviceName = "almogapi"
+port = 8080
+host = "${main_domain}"
+

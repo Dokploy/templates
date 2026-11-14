@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Evolution API">
+  <rect width="128" height="128" rx="24" fill="#147d64"/>
+  <path d="M30 35h68v14H46v12h44v14H46v12h52v14H30z" fill="#fff"/>
+  <circle cx="94" cy="30" r="8" fill="#7ee0b8"/>
+</svg>

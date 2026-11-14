@@ -1,6 +1,6 @@
 services:
   maily:
-    image: ghcr.io/stormsia/maily:0.9.1
+    image: ghcr.io/stormsia/maily:latest
     restart: unless-stopped
     expose:
       - 8477

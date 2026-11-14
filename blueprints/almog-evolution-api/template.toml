@@ -8,7 +8,7 @@ postgres_password = "${password:32}"
 [config]
 
 [[config.domains]]
-serviceName = "almogapi"
+serviceName = "almog-evolution-api"
 port = 8080
 host = "${main_domain}"
 

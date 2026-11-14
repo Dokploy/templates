@@ -1,5 +1,5 @@
 services:
-  almogapi:
+  almog-evolution-api:
     build:
       context: https://github.com/AlmogCohen/evolution-api.git#316448a3c23f9361e0ac82efadb6113651ea2521
       dockerfile: Dockerfile

@@ -11,7 +11,7 @@ Dokploy template for the unofficial [Almog Cohen Evolution API fork](https://git
 
 ## After deployment
 
-1. Check the `almogapi` service logs and wait for its database migrations and startup to complete.
+1. Check the `almog-evolution-api` service logs and wait for its database migrations and startup to complete.
 2. Open the generated domain and review the API documentation.
 3. Use the generated `AUTHENTICATION_API_KEY` from the service environment for authenticated API requests.
 4. Configure external integrations only when needed; the template leaves optional integrations disabled by default.

@@ -1,0 +1,30 @@
+# dokploy: allow-host-ports — RouterOS services (WinBox, API, SSH, SSTP) are raw TCP; Traefik cannot route them, so the ports must be published on the host.
+services:
+  mikrotik:
+    image: ghcr.io/ramezhany/mikrotik-chr-containerized:7.20.4
+    privileged: true
+    restart: unless-stopped
+    mem_limit: 4g
+    cpus: 4.0
+    environment:
+      - QEMU_RAM=4096
+      - QEMU_CPUS=4
+      - DISK_SIZE=1G
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    volumes:
+      - mikrotik_data:/routeros/data
+    ports:
+      - "8291:8291" # WinBox
+      - "8728:8728" # RouterOS API (WinBox mobile / API clients)
+      - "808:80" # WebFig — RouterOS web interface (HTTP) on host port 808
+      - "322:22" # SSH — host port 322 so it never clashes with the server's own SSH
+      - "1010:443" # SSTP — RouterOS keeps its default port 443 inside the container; the host port is 1010 because Traefik owns the host's 443 (see README)
+      # Optional: open the full 1000-1999 range for extra RouterOS services.
+      # If you uncomment this, remove the "1010:443" line above (1010 is inside the range).
+      # - "1000-1999:1000-1999"
+
+volumes:
+  mikrotik_data:

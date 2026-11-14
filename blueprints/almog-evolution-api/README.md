@@ -1,13 +1,13 @@
 # Evolution API — Almog Cohen fork
 
-Dokploy template for the unofficial [Almog Cohen Evolution API fork](https://github.com/AlmogCohen/evolution-api), based on the `fork/2.3.7` line. It deploys the API with PostgreSQL and Redis and persists API instances, database data, and Redis data in named volumes.
+Dokploy template for the unofficial [Almog Cohen Evolution API fork](https://github.com/AlmogCohen/evolution-api), pinned to commit [`316448a`](https://github.com/AlmogCohen/evolution-api/commit/316448a3c23f9361e0ac82efadb6113651ea2521) on the `fork/2.3.7` line. Dokploy builds the API image from that public Git commit; no unpublished GHCR image is required. PostgreSQL and Redis are included, and API instances, database data, and Redis data use persistent named volumes.
 
 ## Deployment notes
 
-- The API receives the public Dokploy domain on port `8080`; PostgreSQL and Redis are private to the Compose project.
+- The API receives the public Dokploy domain on port `8080`; PostgreSQL and Redis remain private to the Compose project.
+- The first deployment builds the API from source, so it takes longer than pulling a prebuilt image.
 - Dokploy generates the API key and database password at import. Keep the API key private; use it in the `apikey` request header when authenticating API calls.
-- The image reference is `ghcr.io/almogcohen/evolution-api:2.3.7`. The upstream fork repository does not publish an image under this name as far as this template verifies. Before deploying, the owner/maintainer must publish the fork image to that registry/tag, or update `docker-compose.yml` to a verified image/build source. Do not silently substitute the official Evolution API image, as that would no longer deploy this fork.
-- This is an unofficial fork and is not endorsed by Evolution Foundation.
+- This is an unofficial community fork and is not endorsed by Evolution Foundation.
 
 ## After deployment
 

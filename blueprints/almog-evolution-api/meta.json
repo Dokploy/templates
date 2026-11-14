@@ -1,8 +1,8 @@
 {
   "id": "almog-evolution-api",
   "name": "Evolution API (Almog Cohen fork)",
-  "version": "2.3.7-fork",
-  "description": "Unofficial Evolution API 2.3.7 fork by Almog Cohen, with WhatsApp integration improvements. Community fork; not endorsed by Evolution Foundation.",
+  "version": "2.3.7-fork.316448a",
+  "description": "Unofficial Evolution API 2.3.7 fork by Almog Cohen, built from a pinned source commit and including WhatsApp integration improvements. Not endorsed by Evolution Foundation.",
   "logo": "logo.svg",
   "links": {
     "github": "https://github.com/AlmogCohen/evolution-api",

@@ -1,0 +1,18 @@
+{
+  "id": "fitv-video-starter",
+  "name": "Free Image to Video Generator",
+  "version": "1.0.0",
+  "description": "Free image to video AI with no daily cap: start with no sign-up, keep going on a free account. Every video comes with sound and no watermark. One-page web app on the Free Image to Video API; set FREEIMAGETOVIDEO_API_KEY and ACCESS_PASSWORD.",
+  "logo": "fitv-video-starter.png",
+  "links": {
+    "github": "https://github.com/hanshs474/fitv-video-starter",
+    "website": "https://freeimagetovideo.ai/?utm_source=dokploy&utm_medium=template",
+    "docs": "https://freeimagetovideo.readthedocs.io/en/latest/"
+  },
+  "tags": [
+    "ai",
+    "video-generation",
+    "text-to-video",
+    "image-to-video"
+  ]
+}

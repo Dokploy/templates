@@ -1,0 +1,23 @@
+services:
+  orbit:
+    image: ghcr.io/coollabsio/orbit:0.3.0
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: [/tmp]
+    stop_grace_period: 40s
+    environment:
+      - ORBIT_ENV=${ORBIT_ENV}
+      - ORBIT_PUBLIC_ORIGIN=${ORBIT_PUBLIC_ORIGIN}
+      - ORBIT_TRUSTED_PROXIES=${ORBIT_TRUSTED_PROXIES}
+      - ORBIT_APP_KEY=${ORBIT_APP_KEY}
+    expose:
+      - "8080"
+    volumes:
+      - orbit-data:/var/lib/orbit
+      - orbit-backups:/var/backups/orbit
+
+volumes:
+  orbit-data:
+  orbit-backups:

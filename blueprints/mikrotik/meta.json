@@ -1,0 +1,17 @@
+{
+  "id": "mikrotik",
+  "name": "MikroTik RouterOS",
+  "version": "7.20.4",
+  "description": "MikroTik RouterOS CHR running in a container — routing and firewall managed with WinBox, WebFig and SSH, with an SSTP passthrough on host port 1010.",
+  "logo": "mikrotik.svg",
+  "links": {
+    "github": "https://github.com/RamezHany/Mikrotik-CHR-Containerized",
+    "website": "https://mikrotik.com",
+    "docs": "https://help.mikrotik.com/docs/"
+  },
+  "tags": [
+    "networking",
+    "vpn",
+    "router"
+  ]
+}

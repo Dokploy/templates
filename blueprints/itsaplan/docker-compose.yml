@@ -65,7 +65,7 @@ services:
         echo "bucket ready: $$S3_BUCKET"
 
   migrate:
-    image: ghcr.io/croffasia/itsaplan-api:1.9.0
+    image: ghcr.io/croffasia/itsaplan-api:${VERSION:-1.10.0}
     restart: "no"
     command: ["bun", "run", "packages/db/src/migrate.ts"]
     depends_on:
@@ -79,7 +79,7 @@ services:
       - db-backups:/backups
 
   api:
-    image: ghcr.io/croffasia/itsaplan-api:1.9.0
+    image: ghcr.io/croffasia/itsaplan-api:${VERSION:-1.10.0}
     restart: unless-stopped
     command: ["bun", "run", "apps/api/src/index.ts"]
     depends_on:
@@ -118,7 +118,7 @@ services:
       - "3000"
 
   worker:
-    image: ghcr.io/croffasia/itsaplan-worker:1.9.0
+    image: ghcr.io/croffasia/itsaplan-worker:${VERSION:-1.10.0}
     restart: unless-stopped
     depends_on:
       postgres:
@@ -141,7 +141,7 @@ services:
       S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-true}
 
   bot:
-    image: ghcr.io/croffasia/itsaplan-bot:1.9.0
+    image: ghcr.io/croffasia/itsaplan-bot:${VERSION:-1.10.0}
     restart: unless-stopped
     depends_on:
       postgres:
@@ -154,7 +154,7 @@ services:
       APP_ENCRYPTION_KEY: ${APP_ENCRYPTION_KEY:?set APP_ENCRYPTION_KEY in Dokploy}
 
   web:
-    image: ghcr.io/croffasia/itsaplan-web:1.9.0
+    image: ghcr.io/croffasia/itsaplan-web:${VERSION:-1.10.0}
     restart: unless-stopped
     depends_on:
       - api

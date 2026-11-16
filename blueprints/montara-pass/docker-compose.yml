@@ -1,0 +1,68 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/18.
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # What the API must remember between requests and share between replicas:
+  # rate limit counts and idempotent answers. All of it expires within the
+  # hour, so nothing is written to disk.
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    command: ['redis-server', '--save', '', '--appendonly', 'no']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  montara-pass:
+    image: ghcr.io/montara-project/montara-pass/community:v2.12.2
+    restart: unless-stopped
+    expose:
+      - 8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      ENV: production
+      PORT: 8080
+      APP_NAME: montara-pass
+      APP_SECRET: ${APP_SECRET}
+      REDIS_URL: redis://redis:6379/0
+      DB_DSN: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+      MIGRATE_ON_BOOT: 'true'
+      SEED_ON_BOOT: 'true'
+      # email:password — the seeded super_user account; password must be 12-128 chars.
+      SUPER_USER: ${SUPER_USER}
+      AUTH_BASE_URL: https://${BASE_URL}
+      # Resend sender + API key for sign-in emails. Community Edition may leave
+      # both empty, which turns off password reset and magic-link sign-in.
+      FROM_ADDRESS: ${FROM_ADDRESS}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      # No published port: every request arrives via Dokploy's proxy on the
+      # internal network, so private ranges are safe to trust for client IPs.
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/api/health || exit 1"]
+      interval: 5m
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  postgres-data:

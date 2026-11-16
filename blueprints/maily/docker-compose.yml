@@ -1,0 +1,17 @@
+services:
+  maily:
+    image: ghcr.io/stormsia/maily:0.9.1
+    restart: unless-stopped
+    expose:
+      - 8477
+    environment:
+      MAILY_PORT: 8477
+      # Required when listening on 0.0.0.0; send it as the API key header to call the API.
+      MAILY_API_KEY: ${MAILY_API_KEY}
+      # Leave empty to let Maily generate the Fernet key and persist it in /data/maily.key.
+      MAILY_SECRET_KEY: ${MAILY_SECRET_KEY:-}
+    volumes:
+      - maily_data:/data
+
+volumes:
+  maily_data:

@@ -1,0 +1,13 @@
+{
+  "id": "openfault",
+  "name": "OpenFault",
+  "version": "0.1.0",
+  "description": "Self-hosted, Sentry-compatible error tracker. One container, SQLite inside, built for coding agents.",
+  "logo": "openfault.svg",
+  "links": {
+    "github": "https://github.com/OpenFault/openfault",
+    "website": "https://openfault.dev",
+    "docs": "https://openfault.dev/docs/install"
+  },
+  "tags": ["monitoring"]
+}

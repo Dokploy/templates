@@ -1,0 +1,17 @@
+{
+  "id": "terarouter",
+  "name": "Tera Router",
+  "version": "v1.23.0",
+  "description": "Self-hosted AI router: a single OpenAI/Anthropic-compatible gateway in front of all your providers, with a dashboard for accounts, routing, model catalogs, and cost analytics.",
+  "logo": "tera.png",
+  "links": {
+    "github": "https://github.com/montara-project/tera-router",
+    "website": "https://terarouter.xyz",
+    "docs": "https://docs.terarouter.xyz"
+  },
+  "tags": [
+    "ai",
+    "proxy",
+    "developer-tools"
+  ]
+}

@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+app_key = "${base64:32}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "orbit"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+ORBIT_ENV = "production"
+ORBIT_PUBLIC_ORIGIN = "https://${main_domain}"
+ORBIT_TRUSTED_PROXIES = "127.0.0.1/32,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+ORBIT_APP_KEY = "${app_key}"

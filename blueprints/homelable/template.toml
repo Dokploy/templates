@@ -1,0 +1,22 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${base64:32}"
+admin_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "homelable"
+port = 80
+host = "${main_domain}"
+path = "/"
+
+[config.env]
+SECRET_KEY = "${secret_key}"
+SQLITE_PATH = "/app/data/homelab.db"
+CORS_ORIGINS = '["https://${main_domain}", "http://${main_domain}"]'
+AUTH_MODE = "local"
+AUTH_USERNAME = "admin"
+INITIAL_ADMIN_PASSWORD = "${admin_password}"
+SCANNER_RANGES = '["192.168.1.0/24"]'
+STATUS_CHECKER_INTERVAL = "60"
+STATUS_CHECKER_ENABLED = "true"

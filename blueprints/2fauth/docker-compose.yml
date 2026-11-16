@@ -1,0 +1,14 @@
+services:
+  2fauth:
+    image: 2fauth/2fauth:9.0.1
+    restart: unless-stopped
+    environment:
+      - APP_URL=${APP_URL}
+      - APP_KEY=${APP_KEY}
+    volumes:
+      - 2fauth_data:/2fauth
+    expose:
+      - "8000"
+
+volumes:
+  2fauth_data:

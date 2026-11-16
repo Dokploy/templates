@@ -1,0 +1,17 @@
+{
+  "id": "2fauth",
+  "name": "2FAuth",
+  "version": "9.0.1",
+  "description": "2FAuth is a self-hosted web app for managing two-factor authentication tokens: organize all your 2FA accounts, generate codes in the browser, and sign in with passkeys or WebAuthn.",
+  "logo": "2fauth.svg",
+  "links": {
+    "docs": "https://docs.2fauth.app",
+    "github": "https://github.com/Bubka/2FAuth",
+    "website": "https://2fauth.app"
+  },
+  "tags": [
+    "security",
+    "2fa",
+    "authentication"
+  ]
+}

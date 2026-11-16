@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Uptimy"><title>Uptimy</title><rect width="512" height="512" rx="112" fill="#0b0c0e"/><g transform="translate(256 262) scale(0.78) translate(-399.5 -231.5)"><defs>
+    <linearGradient id="a-rise" gradientUnits="userSpaceOnUse" x1="318" y1="321" x2="416" y2="141">
+      <stop offset="0.16" stop-color="#ffffff"/>
+      <stop offset="0.52" stop-color="#0fca82"/>
+    </linearGradient>
+    <linearGradient id="a-tail" gradientUnits="userSpaceOnUse" x1="440" y1="0" x2="660" y2="0">
+      <stop offset="0.55" stop-color="#0fca82"/>
+      <stop offset="1" stop-color="#0fca82" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <path fill="#ffffff" d="M140.5 246.5Q230 244 272 240.5V258.5Q230 255 140.5 253.5A3.5 3.5 0 0 1 140.5 246.5Z"/>
+  <path fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" d="M272 249.5L318 321"/>
+  <path fill="none" stroke="url(#a-rise)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" d="M318 321L416 141L440 171"/>
+  <path fill="url(#a-tail)" d="M440 162Q452 165.5 480 165.5L662 163.5V172.5L480 177Q452 177 440 180Z"/></g></svg>

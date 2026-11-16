@@ -1,0 +1,19 @@
+{
+  "id": "kividb",
+  "name": "KiviDB",
+  "version": "1.2.0",
+  "description": "KiviDB is a Redis-compatible in-memory database written in Rust, with full-text and vector search (FT.*) built in.",
+  "logo": "kividb.png",
+  "links": {
+    "github": "https://github.com/kividbio/kividb",
+    "website": "https://kividb.io/",
+    "docs": "https://kividb.io/docs"
+  },
+  "tags": [
+    "database",
+    "cache",
+    "redis",
+    "in-memory",
+    "vector-database"
+  ]
+}

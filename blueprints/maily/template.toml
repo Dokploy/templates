@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+api_key = "${password:32}"
+
+[config]
+env = [
+  "MAILY_API_KEY=${api_key}",
+  "MAILY_SECRET_KEY=",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "maily"
+port = 8477
+host = "${main_domain}"

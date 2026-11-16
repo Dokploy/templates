@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "ferret"
+port = 8787
+host = "${main_domain}"
+
+[config.env]
+PUBLIC_URL = "http://${main_domain}"
+TRUSTED_PROXIES = "172.16.0.0/12"

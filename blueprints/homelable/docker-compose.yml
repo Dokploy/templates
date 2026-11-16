@@ -1,0 +1,58 @@
+services:
+  homelable-backend:
+    image: ghcr.io/pouzor/homelable-backend:3.6.0
+    restart: unless-stopped
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      SQLITE_PATH: ${SQLITE_PATH}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      AUTH_MODE: ${AUTH_MODE}
+      AUTH_USERNAME: ${AUTH_USERNAME}
+      INITIAL_ADMIN_PASSWORD: ${INITIAL_ADMIN_PASSWORD}
+      SCANNER_RANGES: ${SCANNER_RANGES}
+      STATUS_CHECKER_INTERVAL: ${STATUS_CHECKER_INTERVAL}
+      STATUS_CHECKER_ENABLED: ${STATUS_CHECKER_ENABLED}
+    # The upstream image accepts a bcrypt hash, while Dokploy can generate a
+    # password but cannot generate a bcrypt hash. Hash the generated password
+    # before starting uvicorn, then remove the plaintext from the app process.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        export AUTH_PASSWORD_HASH="$$(python -c 'import bcrypt, os; print(bcrypt.hashpw(os.environ["INITIAL_ADMIN_PASSWORD"].encode(), bcrypt.gensalt()).decode())')"
+        unset INITIAL_ADMIN_PASSWORD
+        exec "$$@"
+      - --
+    command:
+      - uvicorn
+      - app.main:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+    expose:
+      - "8000"
+    cap_add:
+      - NET_RAW
+    volumes:
+      - homelable-data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/api/v1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  homelable:
+    image: ghcr.io/pouzor/homelable-frontend:3.6.0
+    restart: unless-stopped
+    depends_on:
+      homelable-backend:
+        condition: service_healthy
+    environment:
+      BACKEND_UPSTREAM: homelable-backend:8000
+    expose:
+      - "80"
+
+volumes:
+  homelable-data:

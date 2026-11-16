@@ -1,0 +1,14 @@
+services:
+  uptimy-agent:
+    image: ghcr.io/uptimy/agent:0.3.2
+    restart: unless-stopped
+    expose:
+      - 8080
+    environment:
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+    volumes:
+      - uptimy-agent-data:/data
+
+volumes:
+  uptimy-agent-data: {}

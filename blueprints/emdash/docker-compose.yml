@@ -1,0 +1,36 @@
+services:
+  emdash:
+    build:
+      context: https://github.com/emdash-cms/emdash.git#10beb8c5a99e41c3a8554b09ac5123c4dddc8d11
+    restart: unless-stopped
+    environment:
+      EMDASH_SITE_URL: "${EMDASH_SITE_URL:?Set the public HTTPS origin}"
+      EMDASH_ENCRYPTION_KEY: "${EMDASH_ENCRYPTION_KEY:-}"
+      EMDASH_TRUSTED_PROXY_HEADERS: x-forwarded-for
+      HOST: 0.0.0.0
+      PORT: "4321"
+    expose:
+      - "4321"
+    volumes:
+      - emdash-data:/app/data
+      - emdash-uploads:/app/uploads
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:4321/_emdash/api/setup/status').then(r => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+      start_period: 60s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  emdash-data:
+  emdash-uploads:

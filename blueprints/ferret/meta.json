@@ -1,0 +1,18 @@
+{
+  "id": "ferret",
+  "name": "Ferret",
+  "version": "2026.11.4",
+  "description": "Self-hosted home inventory: find anything you own. Photos, barcodes, QR labels, warranties, maintenance and an insurance report, with a REST API, an MCP server and optional AI on your own models.",
+  "logo": "ferret.svg",
+  "links": {
+    "github": "https://github.com/ferret-project/ferret",
+    "website": "https://github.com/ferret-project/ferret",
+    "docs": "https://github.com/ferret-project/ferret/tree/main/apps/docs/hosting"
+  },
+  "tags": [
+    "inventory",
+    "home",
+    "self-hosted",
+    "mcp"
+  ]
+}

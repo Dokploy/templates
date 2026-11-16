@@ -1,0 +1,18 @@
+{
+  "id": "brightbean-studio",
+  "name": "Brightbean Studio",
+  "version": "latest",
+  "description": "Open-source, self-hostable social media management platform: schedule, publish and manage content across 10+ platforms (Facebook, Instagram, LinkedIn, TikTok, YouTube, Pinterest, Threads, Bluesky, Mastodon, Google Business, DEV.to) from a single dashboard. Free alternative to Buffer, Sendible and SocialPilot.",
+  "logo": "brightbean-studio.svg",
+  "links": {
+    "github": "https://github.com/brightbeanxyz/brightbean-studio",
+    "website": "https://brightbean.xyz/studio/",
+    "docs": "https://github.com/brightbeanxyz/brightbean-studio#readme"
+  },
+  "tags": [
+    "social-media",
+    "django",
+    "self-hosted",
+    "marketing"
+  ]
+}

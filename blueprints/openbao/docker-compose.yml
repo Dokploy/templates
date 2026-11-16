@@ -1,0 +1,22 @@
+services:
+  openbao:
+    image: openbao/openbao:2.7.2
+    restart: unless-stopped
+    command: server
+    environment:
+      BAO_ADDR: "http://127.0.0.1:8200"
+    expose:
+      - "8200"
+    volumes:
+      - ../files/config/openbao.hcl:/openbao/config/openbao.hcl:ro
+      - openbao-data:/openbao/file
+    healthcheck:
+      # exit code 1 = server unreachable; 2 = sealed (still healthy, so the UI stays reachable for init/unseal)
+      test: ["CMD-SHELL", "bao status >/dev/null 2>&1; [ $$? -ne 1 ]"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+
+volumes:
+  openbao-data:

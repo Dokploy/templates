@@ -1,0 +1,17 @@
+{
+  "id": "nakama",
+  "name": "Nakama",
+  "version": "0.4.71",
+  "description": "AI agent platform for teams: a shared workspace where agents get their own tools, skills, memory and channels (Telegram, WhatsApp, Discord, Slack) with orgs, invites and roles built in.",
+  "logo": "nakama.svg",
+  "links": {
+    "github": "https://github.com/ahmadrosid/nakama",
+    "website": "https://getnakama.cloud",
+    "docs": "https://ahmadrosid.github.io/nakama/"
+  },
+  "tags": [
+    "ai",
+    "agents",
+    "automation"
+  ]
+}

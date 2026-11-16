@@ -1,0 +1,18 @@
+{
+  "id": "orbit-coollabs",
+  "name": "Orbit by Coolify",
+  "version": "0.3.0",
+  "description": "Self-hosted workspace for teams: tasks, docs and chat in one app on your own server, with an MCP endpoint for AI clients. By the team behind Coolify, on the latest stable release, without the inbound mail server.",
+  "logo": "orbit.png",
+  "links": {
+    "github": "https://github.com/coollabsio/orbit",
+    "website": "",
+    "docs": "https://github.com/coollabsio/orbit/blob/main/docs/operations.md"
+  },
+  "tags": [
+    "productivity",
+    "collaboration",
+    "workspace",
+    "mcp"
+  ]
+}

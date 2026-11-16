@@ -1,0 +1,61 @@
+services:
+  app:
+    image: ghcr.io/bookorbit/bookorbit:3.8.0
+    restart: unless-stopped
+    init: true
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+      - DATABASE_URL=${DATABASE_URL}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - JWT_SECRET=${JWT_SECRET}
+      # First-run setup token: BookOrbit has no preset admin account, so the
+      # setup form asks for this token to create the administrator. Dokploy
+      # generates it at deploy time — after deploying, open this service's
+      # environment in Dokploy, copy the SETUP_BOOTSTRAP_TOKEN value, and
+      # enter it in the setup form. It only guards this first account creation.
+      - SETUP_BOOTSTRAP_TOKEN=${SETUP_BOOTSTRAP_TOKEN}
+      - APP_URL=${APP_URL}
+      - CLIENT_URL=${CLIENT_URL}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    expose:
+      - "3000"
+    volumes:
+      - books:/books
+      - app_data:/data
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER, SETGID, SETUID]
+    security_opt: [no-new-privileges:true]
+    stop_grace_period: 30s
+
+  postgres:
+    image: pgvector/pgvector:pg18
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bookorbit -d bookorbit"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  books:
+  app_data:
+  postgres_data:

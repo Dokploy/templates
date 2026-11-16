@@ -1,0 +1,19 @@
+{
+  "id": "bookorbit",
+  "name": "BookOrbit",
+  "version": "3.8.0",
+  "description": "BookOrbit is a self-hosted reading space to organize, track, and read your personal book library, with OPDS feeds and KOReader and Kobo sync.",
+  "logo": "bookorbit.png",
+  "links": {
+    "github": "https://github.com/bookorbit/bookorbit",
+    "website": "https://bookorbit.app",
+    "docs": "https://bookorbit.app/installation"
+  },
+  "tags": [
+    "books",
+    "reading",
+    "library",
+    "ebooks",
+    "opds"
+  ]
+}

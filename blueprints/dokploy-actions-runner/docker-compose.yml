@@ -1,7 +1,7 @@
 services:
   dokploy-actions-runner:
     # First-party release pinned by its multi-architecture index digest.
-    image: ghcr.io/simplarix/dokploy-actions-runner:2.338.2-node24.22.2-ubuntu-noble-r1@sha256:23bc9a79093d5a051e90fbe9344ef7e4a83a6744395c54d5490b618eeb5ca6e2
+    image: ghcr.io/simplarix/dokploy-actions-runner:2.338.2-node24.22.3-ubuntu-noble-r1@sha256:15106e016f3714ebbb6eea749d39ee4b4f51403e0da546fd34d5779daa85d6a4
     restart: unless-stopped
     user: runner
     init: true
@@ -57,7 +57,7 @@ services:
         [[ "$$(command -v node)" == "$${node_binary}" ]] || fail 'Default node must use the maintained Node24 runtime'
         node_version="$$("$${node_binary}" --version)"
         [[ "$${node_version}" =~ ^v24\.([0-9]+)\.([0-9]+)$$ ]] || fail 'The maintained Node24 runtime is required'
-        (( 10#$${BASH_REMATCH[1]} > 22 || (10#$${BASH_REMATCH[1]} == 22 && 10#$${BASH_REMATCH[2]} >= 2) )) || fail 'Node24 is below the security baseline; update the image'
+        (( 10#$${BASH_REMATCH[1]} > 22 || (10#$${BASH_REMATCH[1]} == 22 && 10#$${BASH_REMATCH[2]} >= 3) )) || fail 'Node24 is below the security baseline; update the image'
         # End runtime gate.
         exec /entrypoint.sh ./bin/Runner.Listener run --startuptype service
     # Local listener liveness only; does not prove GitHub connectivity/readiness.

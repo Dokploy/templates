@@ -1,7 +1,7 @@
 {
   "id": "kavel-image-starter",
   "name": "Kavel Image Starter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "One-page text-to-image web app: type a prompt, pick an aspect ratio, get the image back in about a minute. Runs on Kavel's free tier with nothing configured; set KAVEL_API_KEY to use your own account.",
   "logo": "kavel-image-starter.png",
   "links": {

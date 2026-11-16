@@ -1,7 +1,7 @@
 services:
   dokploy-actions-runner:
     # First-party release pinned by its multi-architecture index digest.
-    image: ghcr.io/simplarix/dokploy-actions-runner:2.338.2-node24.22.3-ubuntu-noble-r1@sha256:15106e016f3714ebbb6eea749d39ee4b4f51403e0da546fd34d5779daa85d6a4
+    image: ghcr.io/simplarix/dokploy-actions-runner:2.338.2-node24.22.3-ubuntu-noble-r2@sha256:67a0863b831643700c8a2870b326d6451e131fd21a69535aa29aa7693b3adad2
     restart: unless-stopped
     user: runner
     init: true

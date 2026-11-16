@@ -16,6 +16,11 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
       - JWT_SECRET=${JWT_SECRET}
+      # First-run setup token: BookOrbit has no preset admin account, so the
+      # setup form asks for this token to create the administrator. Dokploy
+      # generates it at deploy time — after deploying, open this service's
+      # environment in Dokploy, copy the SETUP_BOOTSTRAP_TOKEN value, and
+      # enter it in the setup form. It only guards this first account creation.
       - SETUP_BOOTSTRAP_TOKEN=${SETUP_BOOTSTRAP_TOKEN}
       - APP_URL=${APP_URL}
       - CLIENT_URL=${CLIENT_URL}

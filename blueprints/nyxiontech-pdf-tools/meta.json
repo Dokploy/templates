@@ -1,0 +1,19 @@
+{
+  "id": "nyxiontech-pdf-tools",
+  "name": "Nyxiontech PDF Tools",
+  "version": "1.2.0",
+  "description": "25 PDF and image tools that run entirely in the browser. No backend, so documents are never uploaded to the server.",
+  "logo": "nyxiontech-pdf-tools.svg",
+  "links": {
+    "github": "https://github.com/jurecki007/nyxiontech-tools",
+    "website": "https://tools.nyxiontech.com",
+    "docs": "https://tools.nyxiontech.com/guides"
+  },
+  "tags": [
+    "pdf",
+    "ocr",
+    "privacy",
+    "productivity",
+    "utility"
+  ]
+}

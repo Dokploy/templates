@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+app_key = "${password:32}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "2fauth"
+port = 8000
+host = "${main_domain}"
+
+[config.env]
+APP_URL = "https://${main_domain}"
+APP_KEY = "${app_key}"

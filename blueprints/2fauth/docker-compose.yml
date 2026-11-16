@@ -1,6 +1,6 @@
 services:
   2fauth:
-    image: 2fauth/2fauth:latest
+    image: 2fauth/2fauth:9.0.1
     restart: unless-stopped
     environment:
       - APP_URL=${APP_URL}

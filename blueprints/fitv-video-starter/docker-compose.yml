@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   fitv-video-starter:
     image: san8888/fitv-video-starter:1.0.0

@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+auth_secret = "${base64:32}"
+db_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "alphorn"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+# Switch to https:// once the domain has a certificate.
+BETTER_AUTH_URL = "http://${main_domain}"
+BETTER_AUTH_SECRET = "${auth_secret}"
+POSTGRES_PASSWORD = "${db_password}"

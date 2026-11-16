@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+encryption_key = "${password:48}"
+
+[config]
+[[config.domains]]
+serviceName = "erd-builder-pro"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+POSTGRES_PASSWORD = "${postgres_password}"
+ERD_ENCRYPTION_KEY = "${encryption_key}"

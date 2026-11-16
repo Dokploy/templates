@@ -1,6 +1,6 @@
 services:
   excaliself:
-    image: ghcr.io/maciekzygmunt/excaliself:0.11.1
+    image: ghcr.io/maciekzygmunt/excaliself:0.12.0
     restart: unless-stopped
     expose:
       - 3000

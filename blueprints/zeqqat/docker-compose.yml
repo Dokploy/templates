@@ -1,9 +1,6 @@
 services:
   zeqqat:
-    image: ghcr.io/zeqqat/zeqqat:${ZEQQAT_VERSION:-latest}
-    # Pull on every deploy, so redeploying picks up a new "latest" instead of
-    # reusing an older image Docker already has.
-    pull_policy: always
+    image: ghcr.io/zeqqat/zeqqat:${ZEQQAT_VERSION:-0.3.40}
     restart: unless-stopped
     depends_on:
       postgres:

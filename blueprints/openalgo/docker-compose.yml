@@ -1,0 +1,56 @@
+services:
+  openalgo:
+    # OpenAlgo only publishes commit tags; ee12327 is the 2.0.3.3 release build.
+    image: marketcalls/openalgo:ee12327
+    restart: unless-stopped
+    shm_size: 512m
+    environment:
+      - ENV_CONFIG_VERSION=${ENV_CONFIG_VERSION}
+      - FLASK_ENV=${FLASK_ENV}
+      - FLASK_DEBUG=${FLASK_DEBUG}
+      - FLASK_HOST_IP=${FLASK_HOST_IP}
+      - FLASK_PORT=${FLASK_PORT}
+      - TZ=${TZ}
+      - HOST_SERVER=${HOST_SERVER}
+      - REDIRECT_URL=${REDIRECT_URL}
+      - BROKER_API_KEY=${BROKER_API_KEY}
+      - BROKER_API_SECRET=${BROKER_API_SECRET}
+      - VALID_BROKERS=${VALID_BROKERS}
+      # Dokploy generates these three secrets at deploy time. OpenAlgo uses
+      # them to sign sessions and encrypt broker credentials — they are set
+      # once here, so the app never needs its placeholder-rotation flow.
+      - APP_KEY=${APP_KEY}
+      - API_KEY_PEPPER=${API_KEY_PEPPER}
+      - FERNET_SALT=${FERNET_SALT}
+      - DATABASE_URL=${DATABASE_URL}
+      - LATENCY_DATABASE_URL=${LATENCY_DATABASE_URL}
+      - LOGS_DATABASE_URL=${LOGS_DATABASE_URL}
+      - HEALTH_DATABASE_URL=${HEALTH_DATABASE_URL}
+      - SANDBOX_DATABASE_URL=${SANDBOX_DATABASE_URL}
+      - HISTORIFY_DATABASE_URL=${HISTORIFY_DATABASE_URL}
+      - NGROK_ALLOW=${NGROK_ALLOW}
+      - WEBSOCKET_HOST=${WEBSOCKET_HOST}
+      - WEBSOCKET_PORT=${WEBSOCKET_PORT}
+      - WEBSOCKET_URL=${WEBSOCKET_URL}
+      - OPENBLAS_NUM_THREADS=${OPENBLAS_NUM_THREADS}
+      - OMP_NUM_THREADS=${OMP_NUM_THREADS}
+      - MKL_NUM_THREADS=${MKL_NUM_THREADS}
+      - NUMEXPR_NUM_THREADS=${NUMEXPR_NUM_THREADS}
+      - NUMBA_NUM_THREADS=${NUMBA_NUM_THREADS}
+      - STRATEGY_MEMORY_LIMIT_MB=${STRATEGY_MEMORY_LIMIT_MB}
+    expose:
+      - "5000"
+      - "8765"
+    volumes:
+      - openalgo_db:/app/db
+      - openalgo_log:/app/log
+      - openalgo_strategies:/app/strategies
+      - openalgo_keys:/app/keys
+      - openalgo_tmp:/app/tmp
+
+volumes:
+  openalgo_db:
+  openalgo_log:
+  openalgo_strategies:
+  openalgo_keys:
+  openalgo_tmp:

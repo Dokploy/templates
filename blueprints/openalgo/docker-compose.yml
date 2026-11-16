@@ -1,6 +1,7 @@
 services:
   openalgo:
-    image: marketcalls/openalgo:latest
+    # OpenAlgo only publishes commit tags; ee12327 is the 2.0.3.3 release build.
+    image: marketcalls/openalgo:ee12327
     restart: unless-stopped
     shm_size: 512m
     environment:

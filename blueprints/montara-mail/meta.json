@@ -1,0 +1,17 @@
+{
+  "id": "montara-mail",
+  "name": "Montara Mail",
+  "version": "v1.8.0",
+  "description": "AI mail client for teams: connect Gmail, Outlook, Yahoo, iCloud, Lark, Zoho or any IMAP mailbox and get inbox triage, summaries and suggested replies, with send/reply/forward built in.",
+  "logo": "logo.png",
+  "links": {
+    "github": "https://github.com/montara-project/montara-mail-agent",
+    "website": "https://montaramail.web.id",
+    "docs": "https://docs.montaramail.web.id"
+  },
+  "tags": [
+    "email",
+    "ai",
+    "webmail"
+  ]
+}

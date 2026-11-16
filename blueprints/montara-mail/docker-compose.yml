@@ -1,0 +1,88 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/18.
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  montara-mail:
+    image: ghcr.io/montara-project/montara-mail-agent/community:v1.8.0
+    restart: unless-stopped
+    expose:
+      - 8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ENV: production
+      PORT: 8080
+      APP_NAME: montara-mail-agent
+      APP_SECRET: ${APP_SECRET}
+      DB_DSN: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+      MIGRATE_ON_BOOT: "true"
+      # Community Edition is single-user: the seeded super_user is the only
+      # account (email:password; password must be 12-128 chars).
+      SEED_ON_BOOT: "true"
+      SUPER_USER: ${SUPER_USER}
+      AUTH_BASE_URL: https://${BASE_URL}
+
+      # Resend sender + API key for sign-in emails. Community Edition may leave
+      # both empty, which turns off password reset and magic-link sign-in.
+      FROM_ADDRESS: ${FROM_ADDRESS}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+
+      # Mailbox OAuth connectors; empty disables that provider's OAuth connect
+      # (its app-password way in keeps working).
+      OAUTH_GOOGLE_CLIENT_ID: ${OAUTH_GOOGLE_CLIENT_ID}
+      OAUTH_GOOGLE_CLIENT_SECRET: ${OAUTH_GOOGLE_CLIENT_SECRET}
+
+      OAUTH_MICROSOFT_CLIENT_ID: ${OAUTH_MICROSOFT_CLIENT_ID}
+      OAUTH_MICROSOFT_CLIENT_SECRET: ${OAUTH_MICROSOFT_CLIENT_SECRET}
+
+      OAUTH_YAHOO_CLIENT_ID: ${OAUTH_YAHOO_CLIENT_ID}
+      OAUTH_YAHOO_CLIENT_SECRET: ${OAUTH_YAHOO_CLIENT_SECRET}
+
+      OAUTH_ZOHO_CLIENT_ID: ${OAUTH_ZOHO_CLIENT_ID}
+      OAUTH_ZOHO_CLIENT_SECRET: ${OAUTH_ZOHO_CLIENT_SECRET}
+
+      # Fallback Anthropic key for organizations without their own LLM
+      # provider; empty means those organizations get no AI features.
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES}
+      CORS_ALLOWED_ORIGINS: https://${BASE_URL}
+      SENTRY_DSN: ${SENTRY_DSN}
+
+      # How often connected mailboxes are synced (0 disables the background sync)
+      MAIL_SYNC_INTERVAL: "5m"
+      ALLOW_PRIVATE_HOSTS: "false"
+
+      # How long activity log entries are kept (they carry IPs and mail subjects);
+      # a daily sweep deletes the older ones. 0 keeps them forever.
+      ACTIVITY_LOG_RETENTION: "8760h"
+
+      # How often the agent drafts replies for important mail into the review
+      # queue (0 disables), and how many it may queue per organization per day.
+      AGENT_AUTO_DRAFT_INTERVAL: "1h"
+      AGENT_AUTO_DRAFT_DAILY_CAP: "10"
+      TOKEN_USAGE_RETENTION: "4320h"
+    healthcheck:
+      test: ["CMD", "/app/healthcheck"]
+      interval: 5m
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  postgres-data:

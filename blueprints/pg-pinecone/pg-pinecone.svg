@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 59.13 64.09">
-  <defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 92.29 92.29">
+  <rect width="92.29" height="92.29" fill="#FFFFFF"/>
+  <g transform="translate(16.58 14.1)">
+    <defs>
     <style>
       .cls-1 {
         fill-rule: evenodd;
@@ -24,5 +25,6 @@
       <path class="cls-1" d="M16,59l1.03-3.86-6.15-1.65,6.19-4.34-2.29-3.28-6.19,4.34.55-6.34-3.98-.34-.97,11.03c-.06.73.4,1.39,1.11,1.58l10.69,2.86Z"/>
       <path class="cls-1" d="M34.27,62.22l.35-3.98,6.34.55-4.34-6.19,3.28-2.29,4.34,6.19,1.65-6.15,3.85,1.04-2.87,10.7c-.19.7-.85,1.17-1.58,1.11l-11.03-.97Z"/>
     </g>
+  </g>
   </g>
 </svg>

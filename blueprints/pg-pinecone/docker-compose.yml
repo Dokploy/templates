@@ -1,6 +1,6 @@
 services:
   pg-pinecone:
-    image: pineconeteam/pg_pinecone:0.13.0-pg18
+    image: pineconeteam/pg_pinecone:pg18
     restart: unless-stopped
     command:
       - /bin/sh

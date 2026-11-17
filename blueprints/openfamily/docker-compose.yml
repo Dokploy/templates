@@ -1,0 +1,11 @@
+services:
+  openfamily:
+    image: ghcr.io/nexaflowfrance/openfamily:2.2.0
+    restart: unless-stopped
+    expose:
+      - 3000
+    volumes:
+      - openfamily-data:/data
+
+volumes:
+  openfamily-data: {}

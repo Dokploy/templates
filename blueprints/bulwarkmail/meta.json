@@ -1,0 +1,13 @@
+{
+  "id": "bulwarkmail",
+  "name": "Bulwark Webmail",
+  "version": "1.21.2",
+  "description": "Bulwark is a self-hosted webmail client for JMAP mail servers such as Stalwart: mail, calendar, contacts, and files behind one login, plus an admin dashboard. You bring your own mail server; Bulwark is the interface.",
+  "logo": "bulwarkmail.png",
+  "links": {
+    "github": "https://github.com/bulwarkmail/webmail",
+    "website": "https://bulwarkmail.org",
+    "docs": "https://bulwarkmail.org/docs"
+  },
+  "tags": ["email", "webmail", "jmap", "mail", "stalwart"]
+}

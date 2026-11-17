@@ -1,0 +1,17 @@
+{
+  "id": "budgero",
+  "name": "Budgero",
+  "version": "v1.21.5",
+  "description": "Zero-based budgeting app with end-to-end encryption and offline use. The admin password is printed once in the logs on first start.",
+  "logo": "budgero.png",
+  "links": {
+    "github": "https://github.com/tombadilo-bombadilo/budgero",
+    "website": "https://budgero.app",
+    "docs": "https://budgero.app/docs/self-hosting-guide"
+  },
+  "tags": [
+    "budgeting",
+    "finance",
+    "money"
+  ]
+}

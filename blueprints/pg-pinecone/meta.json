@@ -1,0 +1,13 @@
+{
+  "id": "pg-pinecone",
+  "name": "pg_pinecone",
+  "version": "pg18",
+  "description": "PostgreSQL 18 with pg_pinecone. Same SQL as pgvector, and the rows stay in Postgres.",
+  "logo": "pg-pinecone.svg",
+  "links": {
+    "github": "https://github.com/pinecone-io/pg_pinecone",
+    "website": "https://www.pinecone.io/",
+    "docs": "https://docs.pinecone.io/guides/pg-pinecone/overview"
+  },
+  "tags": ["database", "postgres", "postgresql", "vector", "search"]
+}

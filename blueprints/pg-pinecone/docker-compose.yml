@@ -1,0 +1,29 @@
+services:
+  pg-pinecone:
+    image: pineconeteam/pg_pinecone:pg18
+    restart: unless-stopped
+    command:
+      - /bin/sh
+      - -c
+      - |
+        unset PGHOST PGPORT
+        mkdir -p /docker-entrypoint-initdb.d
+        printf '%s\n' 'CREATE EXTENSION IF NOT EXISTS vector;' 'CREATE EXTENSION IF NOT EXISTS pg_pinecone;' > /docker-entrypoint-initdb.d/00-pg-pinecone.sql
+        exec docker-entrypoint.sh postgres -c shared_preload_libraries=pg_pinecone
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - pg-pinecone-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    expose:
+      - "5432"
+
+volumes:
+  pg-pinecone-data:

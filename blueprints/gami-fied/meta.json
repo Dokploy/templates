@@ -1,0 +1,20 @@
+{
+  "id": "gami-fied",
+  "name": "Gami.Fied",
+  "version": "1.3.0",
+  "description": "Gami.Fied is a gamification engine for any app. Send events from your app and it handles XP, levels, badges, streaks, challenges, leaderboards and a reward store, with a dashboard to manage it all. Deploy it with Dokploy as a Docker Compose service in a few clicks.",
+  "logo": "gami-fied.svg",
+  "links": {
+    "github": "https://github.com/gami-fied/gami.fied",
+    "website": "https://gami.fied.cc",
+    "docs": "https://gami.fied.cc/docs/"
+  },
+  "tags": [
+    "gamification",
+    "developer-tools",
+    "api"
+  ],
+  "seoTitle": "Gami.Fied Docker Compose Setup",
+  "seoDescription": "Add XP, badges, streaks and leaderboards to any app. Deploy Gami.Fied, an open source gamification engine, with Docker Compose on Dokploy.",
+  "newConfig": true
+}

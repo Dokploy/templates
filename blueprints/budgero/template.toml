@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+jwt_secret = "${password:64}"
+
+[config]
+env = [
+  "WEBSOCKET_ALLOWED_ORIGINS=https://${main_domain},http://${main_domain}",
+  "SELF_HOST_JWT_SECRET=${jwt_secret}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "budgero"
+port = 3001
+host = "${main_domain}"

@@ -1,0 +1,16 @@
+services:
+  veida-image-starter:
+    build:
+      context: https://github.com/hanshs474/veida-image-starter.git#e9028006228fcf09891923c409727afaf02a98e2
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      - PORT=3000
+      - VEIDA_API_KEY=${VEIDA_API_KEY}
+      - VEIDA_MODEL=${VEIDA_MODEL}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+  "VEIDA_API_KEY=",
+  "VEIDA_MODEL=veida-image-v1"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "veida-image-starter"
+port = 3000
+host = "${main_domain}"

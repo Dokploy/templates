@@ -1,0 +1,17 @@
+{
+  "id": "veida-image-starter",
+  "name": "Veida AI Image Starter",
+  "version": "1.0.0",
+  "description": "Unlimited free AI image generator. One-page web app on the Veida AI HTTP API: runs on the free anonymous tier out of the box, or set VEIDA_API_KEY to use your own account.",
+  "logo": "veida-image-starter.png",
+  "links": {
+    "github": "https://github.com/hanshs474/veida-image-starter",
+    "website": "https://veida.ai/?utm_source=dokploy&utm_medium=template",
+    "docs": "https://veida.readthedocs.io/en/latest/"
+  },
+  "tags": [
+    "ai",
+    "image-generation",
+    "text-to-image"
+  ]
+}

@@ -1,0 +1,113 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: gami
+      POSTGRES_USER: gami
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gami -d gami"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["sh", "-c", "exec redis-server --appendonly yes --maxmemory-policy noeviction --requirepass \"$$REDIS_PASSWORD\""]
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" ping | grep PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migration:
+    image: ghcr.io/gami-fied/gami-api:${GAMI_VERSION}
+    command: ["node", "packages/database/dist/migrate.js"]
+    restart: "no"
+    environment:
+      DATABASE_URL: postgres://gami:${POSTGRES_PASSWORD}@postgres:5432/gami
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    image: ghcr.io/gami-fied/gami-api:${GAMI_VERSION}
+    restart: unless-stopped
+    expose:
+      - 3001
+    environment:
+      DATABASE_URL: postgres://gami:${POSTGRES_PASSWORD}@postgres:5432/gami
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      NODE_ENV: production
+      PORT: 3001
+      HOST: 0.0.0.0
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${PUBLIC_URL}
+      NEXT_PUBLIC_APP_URL: ${PUBLIC_URL}
+      ENCRYPTION_MASTER_KEY: ${ENCRYPTION_MASTER_KEY}
+      PLATFORM_BOOTSTRAP_SECRET: ${PLATFORM_BOOTSTRAP_SECRET}
+      BACKUP_STORAGE_PATH: /app/storage/backups
+      TRUST_PROXY: "true"
+    volumes:
+      - backups_data:/app/storage/backups
+    depends_on:
+      redis:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3001/ready').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+
+  worker:
+    image: ghcr.io/gami-fied/gami-worker:${GAMI_VERSION}
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://gami:${POSTGRES_PASSWORD}@postgres:5432/gami
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      NODE_ENV: production
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${PUBLIC_URL}
+      NEXT_PUBLIC_APP_URL: ${PUBLIC_URL}
+      ENCRYPTION_MASTER_KEY: ${ENCRYPTION_MASTER_KEY}
+      TRUST_PROXY: "true"
+      OUTBOX_POLL_INTERVAL_MS: 1000
+    depends_on:
+      redis:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+
+  dashboard:
+    image: ghcr.io/gami-fied/gami-dashboard:${GAMI_VERSION}
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      PORT: 3000
+      API_URL: http://api:3001
+      NODE_ENV: production
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
+  backups_data:

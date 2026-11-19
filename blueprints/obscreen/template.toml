@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+secret_key = "${hash:32}"
+
+[config]
+
+[[config.domains]]
+serviceName = "obscreen"
+port = 5000
+host = "${main_domain}"
+
+[config.env]
+SECRET_KEY = "${secret_key}"
+EXTERNAL_URL = "http://${main_domain}"

@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+  "FCAPTCHA_SECRET=${password:48}",
+  "FCAPTCHA_VERIFY_SECRET=${password:48}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "fcaptcha"
+port = 3000
+host = "${main_domain}"

@@ -1,0 +1,10 @@
+services:
+  fcaptcha:
+    image: ghcr.io/webdecoy/fcaptcha:1.51.0
+    restart: unless-stopped
+    expose:
+      - '3000'
+    environment:
+      FCAPTCHA_SECRET: ${FCAPTCHA_SECRET:?Set the FCaptcha signing secret}
+      FCAPTCHA_VERIFY_SECRET: ${FCAPTCHA_VERIFY_SECRET:?Set the FCaptcha verification secret}
+      PORT: '3000'

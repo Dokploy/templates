@@ -1,6 +1,6 @@
 services:
   imgproxy:
-    image: darthsim/imgproxy:v3.30.1
+    image: darthsim/imgproxy:v3.31.4
     restart: unless-stopped
     expose:
       - 8080
@@ -28,7 +28,7 @@ services:
       IMGPROXY_LOG_LEVEL: ${IMGPROXY_LOG_LEVEL:-error}
 
   nginx:
-    image: nginx:1.28.2-alpine
+    image: nginx:1.30.7-alpine
     restart: unless-stopped
     expose:
       - 80

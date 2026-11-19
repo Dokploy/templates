@@ -13,6 +13,8 @@ services:
       BEHIND_REVERSE_PROXY: "true"
       SECRET_KEY: ${SECRET_KEY}
       FROZEN_VAR_EXTERNAL_URL: ${EXTERNAL_URL}
+      MALLOC_MMAP_THRESHOLD_: "1048576"
+      MALLOC_TRIM_THRESHOLD_: "1048576"
     healthcheck:
       test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:5000/"]
       interval: 30s

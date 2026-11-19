@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+auth_secret = "${base64:32}"
+encryption_key = "${base64:32}"
+
+[[config.domains]]
+serviceName = "openpromoter"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+APP_URL = "https://${main_domain}"
+POSTGRES_PASSWORD = "${postgres_password}"
+BETTER_AUTH_SECRET = "${auth_secret}"
+ENCRYPTION_KEY = "${encryption_key}"
+EMAIL_FROM = "OpenPromoter <hello@${main_domain}>"

@@ -1,0 +1,34 @@
+services:
+  openpromoter:
+    image: ghcr.io/openpromoter/openpromoter:0.1.2
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    expose:
+      - 3000
+    environment:
+      DATABASE_URL: postgres://openpromoter:${POSTGRES_PASSWORD}@postgres:5432/openpromoter
+      APP_URL: ${APP_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      EMAIL_FROM: ${EMAIL_FROM}
+      SEED_DEMO: "false"
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    volumes:
+      - openpromoter-db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: openpromoter
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: openpromoter
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openpromoter"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  openpromoter-db: {}

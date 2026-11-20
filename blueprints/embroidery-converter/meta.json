@@ -1,0 +1,13 @@
+{
+  "id": "embroidery-converter",
+  "name": "Embroidery File Converter",
+  "version": "1.0.0",
+  "description": "A browser-only viewer and converter for PES, DST, JEF, EXP and VP3 embroidery files. Files never leave the device: the container only serves a static page. A TypeScript port of pystitch (the library Ink/Stitch uses), free and MIT licensed. Made by MavenWright, the team behind StitchKit. SHOW_CREDIT=false removes the footer link.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/mavenwright/embroidery-converter",
+    "website": "https://mavenwright.com/en/stitchkit/tools/embroidery-file-converter",
+    "docs": "https://github.com/mavenwright/embroidery-converter#readme"
+  },
+  "tags": ["utilities", "media", "embroidery"]
+}

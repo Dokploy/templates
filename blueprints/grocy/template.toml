@@ -1,0 +1,9 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "grocy"
+port = 80
+host = "${main_domain}"

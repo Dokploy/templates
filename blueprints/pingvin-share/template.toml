@@ -1,0 +1,9 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "pingvin-share"
+port = 3000
+host = "${main_domain}"

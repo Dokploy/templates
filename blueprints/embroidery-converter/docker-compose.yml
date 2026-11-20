@@ -1,0 +1,8 @@
+services:
+  embroidery-converter:
+    image: mavenwright/embroidery-converter:1.0.0
+    restart: unless-stopped
+    expose:
+      - 8080
+    environment:
+      SHOW_CREDIT: ${SHOW_CREDIT:-true}

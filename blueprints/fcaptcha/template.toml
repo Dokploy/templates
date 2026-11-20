@@ -3,8 +3,8 @@ main_domain = "${domain}"
 
 [config]
 env = [
-  "FCAPTCHA_SECRET=${password:48}",
-  "FCAPTCHA_VERIFY_SECRET=${password:48}",
+  "FCAPTCHA_SECRET=${base64:32}",
+  "FCAPTCHA_VERIFY_SECRET=${base64:32}",
 ]
 mounts = []
 

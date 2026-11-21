@@ -1,0 +1,20 @@
+{
+  "id": "trackhop",
+  "name": "Trackhop",
+  "version": "2.1.2",
+  "description": "Trackhop keeps your playlists in sync between music services (Spotify, YouTube Music, TIDAL, Navidrome, Jellyfin, Plex, Last.fm and more), one way or both ways, on a schedule, from a web page on your server. Open source, in beta.",
+  "logo": "trackhop.png",
+  "links": {
+    "github": "https://github.com/xlollx/Trackhop",
+    "website": "https://trackhop.org",
+    "docs": "https://trackhop.org/guide/docker"
+  },
+  "tags": [
+    "music",
+    "playlists",
+    "sync"
+  ],
+  "seoTitle": "Trackhop Docker Compose Setup",
+  "seoDescription": "Sync playlists between Spotify, YouTube Music, TIDAL, Navidrome, Jellyfin and more. Deploy Trackhop on Dokploy: free, open source, self-hosted.",
+  "newConfig": true
+}

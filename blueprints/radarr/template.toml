@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+movies_path = "/path/to/movies"
+downloads_path = "/path/to/downloads"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "radarr"
+port = 7878
+host = "${main_domain}"
+
+[config.env]
+MOVIES_PATH = "${movies_path}"
+DOWNLOADS_PATH = "${downloads_path}"

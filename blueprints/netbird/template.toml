@@ -1,0 +1,39 @@
+[variables]
+main_domain = "${domain}"
+auth_secret = "${base64:32}"
+session_key = "${base64:32}"
+store_key = "${base64:32}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "dashboard"
+port = 80
+host = "${main_domain}"
+path = "/"
+[[config.domains]]
+serviceName = "netbird-server"
+port = 80
+host = "${main_domain}"
+path = "/api"
+[[config.domains]]
+serviceName = "netbird-server"
+port = 80
+host = "${main_domain}"
+path = "/oauth2"
+[[config.domains]]
+serviceName = "netbird-server"
+port = 80
+host = "${main_domain}"
+path = "/relay"
+[[config.domains]]
+serviceName = "netbird-server"
+port = 80
+host = "${main_domain}"
+path = "/ws-proxy"
+
+[config.env]
+NETBIRD_DOMAIN = "${main_domain}"
+NB_AUTH_SECRET = "${auth_secret}"
+NB_SESSION_KEY = "${session_key}"
+NB_STORE_KEY = "${store_key}"

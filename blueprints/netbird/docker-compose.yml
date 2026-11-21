@@ -48,7 +48,7 @@ services:
       config-init:
         condition: service_completed_successfully
     ports:
-      - "3478:3478/udp"
+      - "3478/udp"
     volumes:
       - netbird_data:/var/lib/netbird
       - cfg:/etc/netbird

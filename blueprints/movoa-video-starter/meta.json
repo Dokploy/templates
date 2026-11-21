@@ -1,0 +1,18 @@
+{
+  "id": "movoa-video-starter",
+  "name": "Movoa AI Video Generator",
+  "version": "1.0.0",
+  "description": "Unlimited AI video generator with sound: on paid plans the tenth take of a shot costs what the first did, and your first clip is free to make right now. Self-hosted one-page web app on the Movoa HTTP API; set MOVOA_API_KEY and ACCESS_PASSWORD.",
+  "logo": "movoa-video-starter.png",
+  "links": {
+    "github": "https://github.com/hanshs474/movoa-video-starter",
+    "website": "https://movoa.ai/?utm_source=dokploy&utm_medium=template",
+    "docs": "https://movoa.readthedocs.io/en/latest/"
+  },
+  "tags": [
+    "ai",
+    "video-generation",
+    "text-to-video",
+    "image-to-video"
+  ]
+}

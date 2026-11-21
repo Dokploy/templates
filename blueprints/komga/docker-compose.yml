@@ -1,0 +1,14 @@
+services:
+  komga:
+    image: gotson/komga:latest
+    restart: unless-stopped
+    expose:
+      - 25600
+    environment:
+      - TZ=UTC
+    volumes:
+      - config:/config
+      - ${BOOKS_PATH}:/data
+
+volumes:
+  config: {}

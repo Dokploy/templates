@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = ["COINIO_PUBLIC_URL=https://${main_domain}"]
+mounts = []
+
+[[config.domains]]
+serviceName = "coinio"
+port = 8080
+host = "${main_domain}"

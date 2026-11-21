@@ -11,7 +11,7 @@ The template deploys two services on **one domain**:
   (`netbirdio/netbird-server`), with its **embedded Dex identity provider**,
   so there is no external IdP to configure. It serves the dashboard API under
   `/api` and `/oauth2`, the relay under `/relay` and `/ws-proxy`, and
-  publishes STUN on UDP 3478.
+  exposes STUN on UDP 3478 (in the expose format Dokploy requires for blueprints; peer connections fall back to the built-in relay over the domain whenever direct NAT traversal is unavailable).
 - `dashboard` — the official web dashboard (`netbirdio/dashboard`) on `/`.
 
 A small `config-init` container renders the server `config.yaml` on first

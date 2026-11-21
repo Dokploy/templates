@@ -1,0 +1,16 @@
+services:
+  movoa-video-starter:
+    build:
+      context: https://github.com/hanshs474/movoa-video-starter.git#aac06c1a9fea92c0dec83cce40a43698a7eeb099
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      - PORT=3000
+      - MOVOA_API_KEY=${MOVOA_API_KEY}
+      - ACCESS_PASSWORD=${ACCESS_PASSWORD}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

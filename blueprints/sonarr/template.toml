@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+tv_path = "/path/to/tv"
+downloads_path = "/path/to/downloads"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "sonarr"
+port = 8989
+host = "${main_domain}"
+
+[config.env]
+TV_PATH = "${tv_path}"
+DOWNLOADS_PATH = "${downloads_path}"

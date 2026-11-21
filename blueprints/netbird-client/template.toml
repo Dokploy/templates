@@ -1,0 +1,12 @@
+[variables]
+setup_key = ""
+management_url = ""
+client_hostname = "netbird-client"
+
+[config]
+mounts = []
+
+[config.env]
+NB_SETUP_KEY = "${setup_key}"
+NB_MANAGEMENT_URL = "${management_url}"
+NB_HOSTNAME = "${client_hostname}"

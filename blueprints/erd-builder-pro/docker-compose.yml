@@ -1,6 +1,6 @@
 services:
   erd-builder-pro:
-    image: bekenweb/erd-builder-pro:3.5.5
+    image: bekenweb/erd-builder-pro:3.5.6
     restart: unless-stopped
     expose:
       - 3000

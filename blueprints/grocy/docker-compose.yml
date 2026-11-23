@@ -1,6 +1,6 @@
 services:
   grocy:
-    image: linuxserver/grocy:latest
+    image: linuxserver/grocy:4.7.1
     restart: unless-stopped
     expose:
       - 80

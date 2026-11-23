@@ -1,0 +1,14 @@
+{
+  "id": "fcaptcha",
+  "name": "FCaptcha",
+  "version": "1.51.0",
+  "description": "Self-hosted CAPTCHA for web forms and applications. Includes a browser widget, a server-side token verification API, and a demo page.",
+  "logo": "fcaptcha.png",
+  "links": {
+    "github": "https://github.com/WebDecoy/FCaptcha",
+    "website": "https://webdecoy.com/product/fcaptcha/",
+    "docs": "https://docs.webdecoy.com/fcaptcha/quickstart/"
+  },
+  "tags": ["security", "authentication"],
+  "newConfig": true
+}

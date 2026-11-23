@@ -1,0 +1,20 @@
+{
+  "description": "Sonarr is a PVR for Usenet and BitTorrent users — it monitors RSS feeds for new episodes of your favourite shows and grabs, sorts and renames them for your media server.",
+  "id": "sonarr",
+  "links": {
+    "docs": "https://wiki.servarr.com/sonarr",
+    "github": "https://github.com/Sonarr/Sonarr",
+    "website": "https://sonarr.tv"
+  },
+  "logo": "sonarr.png",
+  "name": "Sonarr",
+  "newConfig": true,
+  "seoDescription": "TV series manager that grabs and organizes episodes automatically. Deploy Sonarr with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "seoTitle": "Sonarr Docker Compose Setup",
+  "tags": [
+    "media",
+    "tv",
+    "automation"
+  ],
+  "version": "4.0.20"
+}

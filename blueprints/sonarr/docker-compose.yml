@@ -1,0 +1,17 @@
+services:
+  sonarr:
+    image: linuxserver/sonarr:4.0.20
+    restart: unless-stopped
+    expose:
+      - 8989
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+    volumes:
+      - config:/config
+      - ${TV_PATH}:/tv
+      - ${DOWNLOADS_PATH}:/downloads
+
+volumes:
+  config: {}

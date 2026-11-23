@@ -29,7 +29,7 @@ services:
       retries: 10
 
   api:
-    image: ghcr.io/montara-project/montara-pass/community/api:v2.16.0
+    image: ghcr.io/montara-project/montara-pass/community/api:v2.17.0
     restart: unless-stopped
     expose:
       - 8080
@@ -85,7 +85,7 @@ services:
   # The vault web app: nginx serving the SPA on port 3000. API_PUBLIC_URL is
   # read at container start for the page's Content-Security-Policy.
   web:
-    image: ghcr.io/montara-project/montara-pass/community/web:v2.16.0
+    image: ghcr.io/montara-project/montara-pass/community/web:v2.17.0
     restart: unless-stopped
     expose:
       - 3000

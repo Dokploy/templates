@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+app_key = "${password:32}"
+db_password = "${password:32}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "app"
+port = 80
+host = "${main_domain}"
+
+[config.env]
+APP_KEY = "${app_key}"
+APP_URL = "https://${main_domain}"
+DB_PASSWORD = "${db_password}"

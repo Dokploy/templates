@@ -1,0 +1,31 @@
+services:
+  app:
+    image: monica:4.1.2
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      - APP_KEY=${APP_KEY}
+      - APP_URL=${APP_URL}
+      - DB_HOST=db
+      - DB_USERNAME=monica
+      - DB_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - monica_data:/var/www/html/storage
+    expose:
+      - "80"
+
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_DATABASE=monica
+      - MYSQL_USER=monica
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - monica_mysql:/var/lib/mysql
+
+volumes:
+  monica_data:
+  monica_mysql:

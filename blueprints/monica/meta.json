@@ -1,0 +1,17 @@
+{
+  "id": "monica",
+  "name": "Monica",
+  "version": "4.1.2",
+  "description": "Monica is an open-source personal CRM to organize your interactions with the people you care about: contacts, reminders, notes, activities, gifts and journals, all in one private place.",
+  "logo": "monica.svg",
+  "links": {
+    "github": "https://github.com/monicahq/monica",
+    "website": "https://www.monicahq.com",
+    "docs": "https://www.monicahq.com/documentation"
+  },
+  "tags": [
+    "crm",
+    "personal",
+    "productivity"
+  ]
+}

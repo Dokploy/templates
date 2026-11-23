@@ -1,0 +1,15 @@
+services:
+  grocy:
+    image: linuxserver/grocy:4.7.1
+    restart: unless-stopped
+    expose:
+      - 80
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+    volumes:
+      - config:/config
+
+volumes:
+  config: {}

@@ -1,0 +1,20 @@
+{
+  "description": "Grocy is a web-based self-hosted groceries and household management solution — stock tracking with barcode scanning, meal planning, recipes, chores and battery tracking for your home.",
+  "id": "grocy",
+  "links": {
+    "docs": "https://grocy.info",
+    "github": "https://github.com/grocy/grocy",
+    "website": "https://grocy.info"
+  },
+  "logo": "grocy.png",
+  "name": "Grocy",
+  "newConfig": true,
+  "seoDescription": "Self-hosted groceries and household ERP for your home. Deploy Grocy with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "seoTitle": "Grocy Docker Compose Setup",
+  "tags": [
+    "home",
+    "groceries",
+    "inventory"
+  ],
+  "version": "4.7.1"
+}

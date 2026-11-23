@@ -1,0 +1,17 @@
+{
+  "id": "obscreen",
+  "name": "Obscreen",
+  "version": "v2026.11.4",
+  "description": "A self-hosted digital signage platform to manage playlists and display images, videos, and web pages on TVs, computers, tablets, or any browser.",
+  "logo": "obscreen.png",
+  "links": {
+    "github": "https://github.com/obscreen/obscreen",
+    "website": "https://obscreen.io/",
+    "docs": "https://docs.obscreen.io/"
+  },
+  "tags": [
+    "digital-signage",
+    "media",
+    "display"
+  ]
+}

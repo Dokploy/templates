@@ -1,0 +1,27 @@
+services:
+  obscreen:
+    image: obscreen/obscreen:v2026.11.4
+    restart: unless-stopped
+    expose:
+      - 5000
+    volumes:
+      - obscreen-data:/app/data
+      - obscreen-license:/app/license
+    environment:
+      PORT: "5000"
+      NO_ZEROCONF: "true"
+      BEHIND_REVERSE_PROXY: "true"
+      SECRET_KEY: ${SECRET_KEY}
+      FROZEN_VAR_EXTERNAL_URL: ${EXTERNAL_URL}
+      MALLOC_MMAP_THRESHOLD_: "1048576"
+      MALLOC_TRIM_THRESHOLD_: "1048576"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  obscreen-data:
+  obscreen-license:

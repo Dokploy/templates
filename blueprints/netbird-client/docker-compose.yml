@@ -1,0 +1,23 @@
+services:
+  netbird-client:
+    image: netbirdio/netbird:0.83.2
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    environment:
+      # Create a setup key in your NetBird dashboard first (Peers -> Add Peer,
+      # or Settings -> Setup Keys) and set NB_SETUP_KEY in the template
+      # variables before deploying; NB_MANAGEMENT_URL is your NetBird
+      # domain, e.g. https://netbird.example.com
+      - NB_SETUP_KEY=${NB_SETUP_KEY}
+      - NB_MANAGEMENT_URL=${NB_MANAGEMENT_URL}
+      - NB_HOSTNAME=${NB_HOSTNAME}
+      # Safety first: with this set, the peer rejects default routes
+      # (0.0.0.0/0 and larger), so it can serve as a routing peer / exit
+      # node but can never hijack the routing of the host it runs on.
+      # Do not remove it.
+      - NB_DISABLE_CUSTOM_ROUTING=true
+    volumes:
+      - client_state:/var/lib/netbird
+volumes:
+  client_state:

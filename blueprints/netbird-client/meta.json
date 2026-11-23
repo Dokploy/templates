@@ -1,0 +1,21 @@
+{
+  "description": "Companion template to NetBird: runs the NetBird agent as a hardened routing peer (for example an exit node) on a Docker host, joining an existing self-hosted NetBird network with a setup key.",
+  "id": "netbird-client",
+  "links": {
+    "docs": "https://docs.netbird.io",
+    "github": "https://github.com/netbirdio/netbird",
+    "website": "https://netbird.io"
+  },
+  "logo": "netbird-client.png",
+  "name": "NetBird Client",
+  "newConfig": true,
+  "seoDescription": "Deploy a hardened NetBird routing peer / exit node with Docker Compose on Dokploy — joins your self-hosted NetBird network with a setup key.",
+  "seoTitle": "NetBird Client Docker Compose Setup",
+  "tags": [
+    "networking",
+    "vpn",
+    "wireguard",
+    "security"
+  ],
+  "version": "0.83.2"
+}

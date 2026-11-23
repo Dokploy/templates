@@ -1,0 +1,21 @@
+{
+  "description": "NetBird is an open-source, WireGuard-based overlay network that connects devices, servers and containers into one private mesh — this template runs the self-hosted management server (with its embedded Dex identity provider) and the web dashboard on a single domain.",
+  "id": "netbird",
+  "links": {
+    "docs": "https://docs.netbird.io",
+    "github": "https://github.com/netbirdio/netbird",
+    "website": "https://netbird.io"
+  },
+  "logo": "netbird.png",
+  "name": "NetBird",
+  "newConfig": true,
+  "seoDescription": "Self-host NetBird on Dokploy in minutes: WireGuard mesh VPN with management server, embedded IdP and dashboard on one domain — free and open source.",
+  "seoTitle": "NetBird Docker Compose Setup",
+  "tags": [
+    "networking",
+    "vpn",
+    "wireguard",
+    "security"
+  ],
+  "version": "0.83.2"
+}

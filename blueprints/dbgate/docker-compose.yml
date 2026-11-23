@@ -1,0 +1,14 @@
+services:
+  dbgate:
+    image: dbgate/dbgate:7.3.6
+    restart: unless-stopped
+    environment:
+      - LOGIN=${LOGIN}
+      - PASSWORD=${PASSWORD}
+    volumes:
+      - dbgate_data:/root/.dbgate
+    expose:
+      - "3000"
+
+volumes:
+  dbgate_data:

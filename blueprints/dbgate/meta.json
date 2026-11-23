@@ -1,0 +1,17 @@
+{
+  "description": "DbGate is a modern web-based database manager for MySQL, PostgreSQL, SQL Server, MongoDB, Redis, SQLite and more — browse data, run queries, import and export, all from one interface.",
+  "id": "dbgate",
+  "links": {
+    "docs": "https://docs.dbgate.io",
+    "github": "https://github.com/dbgate/dbgate",
+    "website": "https://www.dbgate.io"
+  },
+  "logo": "dbgate.png",
+  "name": "DbGate",
+  "tags": [
+    "database",
+    "sql",
+    "management"
+  ],
+  "version": "7.3.6"
+}

@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+dbgate_login = "${username}"
+dbgate_password = "${password:32}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "dbgate"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+LOGIN = "${dbgate_login}"
+PASSWORD = "${dbgate_password}"

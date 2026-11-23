@@ -1,6 +1,6 @@
 services:
   ghostfolio:
-    image: ghostfolio/ghostfolio:latest
+    image: ghostfolio/ghostfolio:3.100.0
     restart: unless-stopped
     expose:
       - 3333
@@ -25,7 +25,7 @@ services:
       - db_data:/var/lib/postgresql/data
 
   ghostfolio-redis:
-    image: redis:alpine
+    image: redis:7-alpine
     restart: unless-stopped
     command: redis-server --appendonly yes
     volumes:

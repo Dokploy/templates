@@ -1,0 +1,20 @@
+{
+  "description": "Pingvin Share is a self-hosted file sharing platform — a private WeTransfer alternative: upload files and share them with a link, optional password, expiry date and download limits.",
+  "id": "pingvin-share",
+  "links": {
+    "docs": "https://stonith404.github.io/pingvin-share/",
+    "github": "https://github.com/stonith404/pingvin-share",
+    "website": "https://stonith404.github.io/pingvin-share/"
+  },
+  "logo": "pingvin-share.png",
+  "name": "Pingvin Share",
+  "newConfig": true,
+  "seoDescription": "Self-hosted file sharing platform and WeTransfer alternative. Deploy Pingvin Share with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "seoTitle": "Pingvin Share Docker Compose Setup",
+  "tags": [
+    "files",
+    "sharing",
+    "upload"
+  ],
+  "version": "v1.13.0"
+}

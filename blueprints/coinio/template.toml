@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+# Set COINIO_PUBLIC_URL to your https address (e.g. https://coinio.example.com) once the domain has a certificate.
+# It turns on OAuth for remote MCP clients and secure cookies; leave it empty on plain http or login will not stick.
+env = ["COINIO_PUBLIC_URL="]
+mounts = []
+
+[[config.domains]]
+serviceName = "coinio"
+port = 8080
+host = "${main_domain}"

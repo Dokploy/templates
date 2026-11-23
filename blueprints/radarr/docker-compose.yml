@@ -1,6 +1,6 @@
 services:
   radarr:
-    image: linuxserver/radarr:latest
+    image: linuxserver/radarr:7.0.3
     restart: unless-stopped
     expose:
       - 7878

@@ -42,7 +42,7 @@ services:
     volumes:
       - cfg:/cfg
   netbird-server:
-    image: netbirdio/netbird-server:latest
+    image: netbirdio/netbird-server:0.83.2
     restart: unless-stopped
     depends_on:
       config-init:
@@ -79,7 +79,7 @@ services:
       - "traefik.http.services.nb-grpc.loadbalancer.server.port=80"
     command: ["--config", "/etc/netbird/config.yaml"]
   dashboard:
-    image: netbirdio/dashboard:latest
+    image: netbirdio/dashboard:v2.98.0
     restart: unless-stopped
     environment:
       - NETBIRD_MGMT_API_ENDPOINT=https://${NETBIRD_DOMAIN}

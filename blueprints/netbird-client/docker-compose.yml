@@ -1,6 +1,6 @@
 services:
   netbird-client:
-    image: netbirdio/netbird:latest
+    image: netbirdio/netbird:0.83.2
     restart: unless-stopped
     network_mode: host
     privileged: true

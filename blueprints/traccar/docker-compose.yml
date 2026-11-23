@@ -1,0 +1,13 @@
+services:
+  traccar:
+    image: traccar/traccar:6.17.0
+    restart: unless-stopped
+    expose:
+      - 8082
+    volumes:
+      - data:/opt/traccar/data
+      - logs:/opt/traccar/logs
+
+volumes:
+  data: {}
+  logs: {}

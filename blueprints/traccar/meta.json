@@ -1,0 +1,20 @@
+{
+  "description": "Traccar is an open-source GPS tracking platform that supports 2,000+ tracker models — live positions, geofences, reports and alerts for vehicles, assets and people on one map.",
+  "id": "traccar",
+  "links": {
+    "docs": "https://www.traccar.org/documentation/",
+    "github": "https://github.com/traccar/traccar",
+    "website": "https://www.traccar.org"
+  },
+  "logo": "traccar.png",
+  "name": "Traccar",
+  "newConfig": true,
+  "seoDescription": "Self-hosted GPS tracking platform for vehicles and assets. Deploy Traccar with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "seoTitle": "Traccar Docker Compose Setup",
+  "tags": [
+    "gps",
+    "tracking",
+    "maps"
+  ],
+  "version": "6.17.0"
+}

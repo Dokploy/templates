@@ -1,6 +1,6 @@
 services:
   sonarr:
-    image: linuxserver/sonarr:latest
+    image: linuxserver/sonarr:4.0.20
     restart: unless-stopped
     expose:
       - 8989

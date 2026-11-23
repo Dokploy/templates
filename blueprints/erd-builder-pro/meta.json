@@ -1,0 +1,13 @@
+{
+  "id": "erd-builder-pro",
+  "name": "ERD Builder Pro",
+  "version": "3.5.6",
+  "description": "Design database schemas in an ERD canvas or DBML editor, export SQL DDL, and keep flowcharts, notes, and drawings in the same project. Create the administrator account right after deployment: the first account becomes the SuperAdmin. amd64 only.",
+  "logo": "erd-builder-pro.svg",
+  "links": {
+    "github": "https://github.com/hadziqmtqn/erd-builder-pro",
+    "website": "https://www.erdbuilderpro.com/",
+    "docs": "https://docs.erdbuilderpro.com/"
+  },
+  "tags": ["database", "diagram", "documentation", "developer-tools"]
+}

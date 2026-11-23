@@ -1,6 +1,6 @@
 services:
   dbgate:
-    image: dbgate/dbgate:latest
+    image: dbgate/dbgate:7.3.6
     restart: unless-stopped
     environment:
       - LOGIN=${LOGIN}

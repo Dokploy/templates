@@ -1,0 +1,20 @@
+{
+  "description": "Node-RED is a flow-based programming tool for wiring together hardware devices, APIs and online services — drag nodes onto a canvas, connect them, and deploy automations for your smart home, MQTT devices and webhooks.",
+  "id": "node-red",
+  "links": {
+    "docs": "https://nodered.org/docs/",
+    "github": "https://github.com/node-red/node-red",
+    "website": "https://nodered.org"
+  },
+  "logo": "node-red.svg",
+  "name": "Node-RED",
+  "newConfig": true,
+  "seoDescription": "Flow-based automation for APIs, MQTT and smart-home devices. Deploy Node-RED with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "seoTitle": "Node-RED Docker Compose Setup",
+  "tags": [
+    "automation",
+    "iot",
+    "flows"
+  ],
+  "version": "5.0.10"
+}

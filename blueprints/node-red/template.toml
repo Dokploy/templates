@@ -1,0 +1,9 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "node-red"
+port = 1880
+host = "${main_domain}"

@@ -1,0 +1,13 @@
+services:
+  node-red:
+    image: nodered/node-red:5.0.10
+    restart: unless-stopped
+    expose:
+      - 1880
+    environment:
+      - TZ=UTC
+    volumes:
+      - node_red_data:/data
+
+volumes:
+  node_red_data: {}

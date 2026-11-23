@@ -1,0 +1,14 @@
+services:
+  trackhop:
+    image: ghcr.io/xlollx/trackhop:2.1.2
+    restart: unless-stopped
+    environment:
+      - SONGPORT_URL=${SONGPORT_URL}
+      - SONGPORT_PASSWORD=${SONGPORT_PASSWORD}
+    volumes:
+      - trackhop-data:/data
+    expose:
+      - "8080"
+
+volumes:
+  trackhop-data:

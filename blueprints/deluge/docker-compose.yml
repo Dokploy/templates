@@ -1,6 +1,6 @@
 services:
   deluge:
-    image: linuxserver/deluge:latest
+    image: linuxserver/deluge:2.2.0
     restart: unless-stopped
     expose:
       - 8112

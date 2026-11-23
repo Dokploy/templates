@@ -1,0 +1,20 @@
+{
+  "description": "Deluge is a lightweight, full-featured BitTorrent client with a web UI — daemon-based, plugin-driven, and a long-time favourite for seedboxes and download servers.",
+  "id": "deluge",
+  "links": {
+    "docs": "https://deluge-torrent.org",
+    "github": "https://github.com/deluge-torrent/deluge",
+    "website": "https://deluge-torrent.org"
+  },
+  "logo": "deluge.png",
+  "name": "Deluge",
+  "newConfig": true,
+  "seoDescription": "Lightweight BitTorrent client with a clean web UI. Deploy Deluge with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "seoTitle": "Deluge Docker Compose Setup",
+  "tags": [
+    "downloads",
+    "torrent",
+    "media"
+  ],
+  "version": "2.2.0"
+}

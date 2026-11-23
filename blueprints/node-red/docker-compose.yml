@@ -1,6 +1,6 @@
 services:
   node-red:
-    image: nodered/node-red:latest
+    image: nodered/node-red:5.0.10
     restart: unless-stopped
     expose:
       - 1880

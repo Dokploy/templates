@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+books_path = "/path/to/books"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "komga"
+port = 25600
+host = "${main_domain}"
+
+[config.env]
+BOOKS_PATH = "${books_path}"

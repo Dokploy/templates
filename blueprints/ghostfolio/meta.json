@@ -1,0 +1,20 @@
+{
+  "description": "Ghostfolio is an open-source wealth management software that helps you track your assets — stocks, ETFs, cryptocurrencies and bank accounts — with performance, allocation and dividend analytics.",
+  "id": "ghostfolio",
+  "links": {
+    "docs": "https://ghostfol.io/en/resources",
+    "github": "https://github.com/ghostfolio/ghostfolio",
+    "website": "https://ghostfol.io"
+  },
+  "logo": "ghostfolio.png",
+  "name": "Ghostfolio",
+  "newConfig": true,
+  "seoDescription": "Self-hosted wealth and portfolio tracker for stocks, ETFs and crypto. Deploy Ghostfolio with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "seoTitle": "Ghostfolio Docker Compose Setup",
+  "tags": [
+    "finance",
+    "portfolio",
+    "investing"
+  ],
+  "version": "3.100.0"
+}

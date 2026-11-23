@@ -1,0 +1,15 @@
+services:
+  tautulli:
+    image: tautulli/tautulli:v2.19.1
+    restart: unless-stopped
+    expose:
+      - 8181
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+    volumes:
+      - config:/config
+
+volumes:
+  config: {}

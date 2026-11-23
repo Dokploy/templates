@@ -5,7 +5,7 @@
   "description": "Open-source, self-hosted email marketing platform with BYO SMTP. Manage subscribers, templates, broadcasts, and scheduled campaigns from one place.",
   "logo": "senddock.svg",
   "links": {
-    "github": "https://github.com/Arkhe-Systems/senddock",
+    "github": "https://github.com/SendDock/senddock",
     "website": "https://senddock.dev",
     "docs": "https://docs.senddock.dev"
   },

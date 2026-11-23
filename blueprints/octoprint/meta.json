@@ -1,0 +1,20 @@
+{
+  "description": "OctoPrint is the web interface for your 3D printer — control and monitor prints remotely, upload G-code, watch progress and webcam feeds, and extend it with plugins, all from the browser.",
+  "id": "octoprint",
+  "links": {
+    "docs": "https://docs.octoprint.org",
+    "github": "https://github.com/OctoPrint/OctoPrint",
+    "website": "https://octoprint.org"
+  },
+  "logo": "logo.png",
+  "name": "OctoPrint",
+  "newConfig": true,
+  "seoDescription": "Remote control and monitoring for your 3D printer. Deploy OctoPrint with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "seoTitle": "OctoPrint Docker Compose Setup",
+  "tags": [
+    "3d-printing",
+    "maker",
+    "monitoring"
+  ],
+  "version": "1.11.8"
+}

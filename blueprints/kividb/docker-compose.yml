@@ -1,0 +1,12 @@
+services:
+  kividb:
+    image: kividb/kividb:v1.2.0
+    restart: unless-stopped
+    command: ["--requirepass", "${KIVIDB_PASSWORD}", "--aof"]
+    expose:
+      - 6380
+    volumes:
+      - kividb-data:/home/kividb
+
+volumes:
+  kividb-data: {}

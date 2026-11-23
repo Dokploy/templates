@@ -1,0 +1,20 @@
+{
+  "description": "Tautulli is a monitoring and tracking tool for Plex Media Server — watch statistics, history, graphs and custom notifications for everything your Plex server streams.",
+  "id": "tautulli",
+  "links": {
+    "docs": "https://docs.tautulli.com",
+    "github": "https://github.com/Tautulli/Tautulli",
+    "website": "https://tautulli.com"
+  },
+  "logo": "tautulli.png",
+  "name": "Tautulli",
+  "newConfig": true,
+  "seoDescription": "Monitoring and statistics for your Plex Media Server. Deploy Tautulli with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "seoTitle": "Tautulli Docker Compose Setup",
+  "tags": [
+    "media",
+    "plex",
+    "monitoring"
+  ],
+  "version": "v2.19.1"
+}

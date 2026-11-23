@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+access_password = "${password:16}"
+
+[config]
+env = [
+  "FREEIMAGETOVIDEO_API_KEY=",
+  "ACCESS_PASSWORD=${access_password}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "fitv-video-starter"
+port = 3000
+host = "${main_domain}"

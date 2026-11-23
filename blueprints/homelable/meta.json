@@ -1,0 +1,19 @@
+{
+  "id": "homelable",
+  "name": "Homelable",
+  "version": "3.6.0",
+  "description": "Self-hosted homelab infrastructure visualisation, documentation, network scanning and live monitoring.",
+  "logo": "homelable.svg",
+  "links": {
+    "github": "https://github.com/Pouzor/homelable",
+    "website": "https://homelable.net",
+    "docs": "https://github.com/Pouzor/homelable/blob/main/INSTALLATION.md"
+  },
+  "tags": [
+    "homelab",
+    "network",
+    "monitoring",
+    "documentation",
+    "self-hosted"
+  ]
+}

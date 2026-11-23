@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = [
+  "EMDASH_SITE_URL=https://${main_domain}",
+  "EMDASH_ENCRYPTION_KEY=",
+]
+
+[[config.domains]]
+serviceName = "emdash"
+port = 4321
+host = "${main_domain}"

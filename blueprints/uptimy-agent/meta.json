@@ -1,0 +1,18 @@
+{
+  "id": "uptimy-agent",
+  "name": "Uptimy Agent",
+  "version": "0.3.2",
+  "description": "Uptimy Agent is a lightweight, open-source uptime monitor with a status page: HTTP, TCP, ping, DNS, TLS and database checks, heartbeats for cron jobs, and alerts to Slack, Discord, Telegram, email and more. A single Go binary that idles at a few MiB of memory.",
+  "logo": "uptimy-agent.svg",
+  "links": {
+    "github": "https://github.com/uptimy/agent",
+    "website": "https://www.upti.my/agent",
+    "docs": "https://www.upti.my/docs/agent"
+  },
+  "tags": [
+    "monitoring",
+    "uptime",
+    "status-page",
+    "alerts"
+  ]
+}

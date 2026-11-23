@@ -1,0 +1,20 @@
+services:
+  bulwarkmail:
+    image: ghcr.io/bulwarkmail/webmail:1.21.2
+    restart: unless-stopped
+    environment:
+      - HOSTNAME=${HOSTNAME}
+      - PORT=${PORT}
+      # JMAP_SERVER_URL is intentionally not set here. On first launch
+      # Bulwark prints a one-time setup token in its container logs (the
+      # "SETUP REQUIRED" block) — open the app, enter the token, create the
+      # admin account, then connect your own JMAP mail server in the admin
+      # settings. Alternatively, set JMAP_SERVER_URL in the environment to
+      # the public HTTPS address of your mail server before deploying.
+    expose:
+      - "3000"
+    volumes:
+      - bulwarkmail_data:/app/data
+
+volumes:
+  bulwarkmail_data:

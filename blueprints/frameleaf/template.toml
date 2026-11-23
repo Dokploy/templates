@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+
+[config]
+env = [
+  "DB_USERNAME=frameleaf",
+  "DB_PASSWORD=${db_password}",
+  "DB_DATABASE_NAME=frameleaf",
+  "TZ=Etc/UTC",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "frameleaf"
+port = 2283
+host = "${main_domain}"

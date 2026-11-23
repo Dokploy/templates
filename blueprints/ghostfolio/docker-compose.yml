@@ -1,0 +1,36 @@
+services:
+  ghostfolio:
+    image: ghostfolio/ghostfolio:3.100.0
+    restart: unless-stopped
+    expose:
+      - 3333
+    environment:
+      - DATABASE_URL=postgresql://ghostfolio:${DB_PASSWORD}@ghostfolio-db:5432/ghostfolio?sslmode=disable
+      - REDIS_HOST=ghostfolio-redis
+      - REDIS_PORT=6379
+      - ACCESS_TOKEN_SALT=${ACCESS_TOKEN_SALT}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    depends_on:
+      - ghostfolio-db
+      - ghostfolio-redis
+
+  ghostfolio-db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=ghostfolio
+      - POSTGRES_USER=ghostfolio
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  ghostfolio-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+
+volumes:
+  db_data: {}
+  redis_data: {}

@@ -1,0 +1,13 @@
+{
+  "id": "emdash",
+  "name": "EmDash",
+  "version": "1.4.0",
+  "description": "EmDash is an Astro-native CMS with a visual editor, structured content, media library, and passkey authentication. This template builds the official blog site with persistent SQLite and local media storage.",
+  "logo": "emdash.svg",
+  "links": {
+    "github": "https://github.com/emdash-cms/emdash",
+    "website": "https://emdashcms.com/",
+    "docs": "https://docs.emdashcms.com/"
+  },
+  "tags": ["cms", "blog", "publishing"]
+}

@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+app_key = "base64:${base64:32}"
+db_password = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "relaticle"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+APP_KEY = "${app_key}"
+APP_URL = "http://${main_domain}"
+DB_PASSWORD = "${db_password}"

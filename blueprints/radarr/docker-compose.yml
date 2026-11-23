@@ -1,0 +1,17 @@
+services:
+  radarr:
+    image: linuxserver/radarr:7.0.3
+    restart: unless-stopped
+    expose:
+      - 7878
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+    volumes:
+      - config:/config
+      - ${MOVIES_PATH}:/movies
+      - ${DOWNLOADS_PATH}:/downloads
+
+volumes:
+  config: {}

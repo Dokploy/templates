@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+nakama_secrets_key = "${base64:32}"
+
+[config]
+env = [
+  "NAKAMA_HOST=${main_domain}",
+  "NAKAMA_SECRETS_KEY=${nakama_secrets_key}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "nakama"
+port = 4310
+host = "${main_domain}"

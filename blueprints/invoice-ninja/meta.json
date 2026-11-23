@@ -1,0 +1,17 @@
+{
+  "id": "invoice-ninja",
+  "name": "Invoice Ninja",
+  "version": "5.13.56",
+  "description": "Invoice Ninja is open-source software for invoicing, payments, expenses and time tracking: create and send invoices, accept online payments, manage clients and projects, and automate recurring billing.",
+  "logo": "invoice-ninja.svg",
+  "links": {
+    "github": "https://github.com/invoiceninja/invoiceninja",
+    "website": "https://invoiceninja.com",
+    "docs": "https://invoiceninja.github.io"
+  },
+  "tags": [
+    "invoicing",
+    "billing",
+    "business"
+  ]
+}

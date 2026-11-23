@@ -1,0 +1,13 @@
+services:
+  octoprint:
+    image: octoprint/octoprint:1.11.8
+    restart: unless-stopped
+    expose:
+      - 5000
+    environment:
+      - TZ=UTC
+    volumes:
+      - octoprint_data:/octoprint
+
+volumes:
+  octoprint_data: {}

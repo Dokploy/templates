@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+api_key = "${password:48}"
+postgres_db = "evolution_api"
+postgres_user = "evolution"
+postgres_password = "${password:32}"
+
+[config]
+env = [
+  "main_domain=${main_domain}",
+  "api_key=${api_key}",
+  "postgres_db=${postgres_db}",
+  "postgres_user=${postgres_user}",
+  "postgres_password=${postgres_password}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "almog-evolution-api"
+port = 8080
+host = "${main_domain}"

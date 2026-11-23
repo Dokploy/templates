@@ -1,0 +1,14 @@
+services:
+  nyxiontech-pdf-tools:
+    image: ghcr.io/jurecki007/nyxiontech-tools:1.2.0
+    restart: unless-stopped
+    expose:
+      - 80
+    # 127.0.0.1 rather than localhost: nginx in this image listens on IPv4 only,
+    # and inside the container localhost resolves to ::1 first, which is refused.
+    # wget rather than curl: the image is nginx:alpine and ships busybox wget.
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

@@ -1,0 +1,17 @@
+services:
+  fitv-video-starter:
+    # The published san8888/fitv-video-starter:1.0.0 image is arm64-only, so build from a pinned source commit.
+    build:
+      context: https://github.com/hanshs474/fitv-video-starter.git#1df9221e56636b81007ed8fbc9936b923f30f8e5
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      - PORT=3000
+      - FREEIMAGETOVIDEO_API_KEY=${FREEIMAGETOVIDEO_API_KEY}
+      - ACCESS_PASSWORD=${ACCESS_PASSWORD}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

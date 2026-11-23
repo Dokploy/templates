@@ -1,0 +1,20 @@
+{
+  "description": "Komga is a media server for comics and mangas — it serves CBZ, CBR, EPUB and PDF libraries with a web reader, OPDS support and smart collections.",
+  "id": "komga",
+  "links": {
+    "docs": "https://komga.org/docs/introduction/",
+    "github": "https://github.com/gotson/komga",
+    "website": "https://komga.org"
+  },
+  "logo": "komga.png",
+  "name": "Komga",
+  "newConfig": true,
+  "seoDescription": "Self-hosted comics and manga media server with a web reader. Deploy Komga with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "seoTitle": "Komga Docker Compose Setup",
+  "tags": [
+    "media",
+    "comics",
+    "books"
+  ],
+  "version": "1.30.1"
+}

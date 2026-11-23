@@ -1,0 +1,11 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+env = ["SHOW_CREDIT=true"]
+mounts = []
+
+[[config.domains]]
+serviceName = "embroidery-converter"
+port = 8080
+host = "${main_domain}"

@@ -1,0 +1,93 @@
+services:
+  app:
+    image: invoiceninja/invoiceninja-debian:5.13.56
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_URL=${APP_URL}
+      - APP_KEY=${APP_KEY}
+      - REQUIRE_HTTPS=false
+      - TRUSTED_PROXIES=*
+      - PDF_GENERATOR=snappdf
+      - CACHE_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - SESSION_DRIVER=redis
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=null
+      - FILESYSTEM_DISK=debian_docker
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=ninja
+      - DB_USERNAME=ninja
+      - DB_PASSWORD=${DB_PASSWORD}
+      - IN_USER_EMAIL=${IN_USER_EMAIL}
+      - IN_PASSWORD=${IN_PASSWORD}
+    volumes:
+      - app_public:/var/www/html/public
+      - app_storage:/var/www/html/storage
+
+  server:
+    image: nginx:1.30.7-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    command:
+      - sh
+      - -c
+      - |
+        cat > /etc/nginx/conf.d/default.conf <<'EOF'
+        server {
+            listen 80 default_server;
+            server_name _;
+            root /var/www/html/public;
+            index index.php;
+            client_max_body_size 20M;
+            location / {
+                try_files $$uri $$uri/ /index.php?$$query_string;
+            }
+            location ~ \.php$$ {
+                fastcgi_split_path_info ^(.+\.php)(/.+)$$;
+                fastcgi_pass app:9000;
+                fastcgi_index index.php;
+                include fastcgi_params;
+                fastcgi_param SCRIPT_FILENAME $$document_root$$fastcgi_script_name;
+            }
+            location ~ /\.(?!well-known).* {
+                deny all;
+            }
+        }
+        EOF
+        exec nginx -g 'daemon off;'
+    volumes:
+      - app_public:/var/www/html/public:ro
+      - app_storage:/var/www/html/storage:ro
+    expose:
+      - "80"
+
+  mysql:
+    image: mysql:8
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=ninja
+      - MYSQL_USER=ninja
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+volumes:
+  app_public:
+  app_storage:
+  mysql_data:
+  redis_data:

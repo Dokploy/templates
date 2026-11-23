@@ -1,0 +1,249 @@
+services:
+  relaticle:
+    image: ghcr.io/relaticle/relaticle:3.12.0
+    restart: unless-stopped
+    environment:
+      APP_NAME: ${APP_NAME:-Relaticle}
+      APP_ENV: ${APP_ENV:-production}
+      APP_KEY: ${APP_KEY:?APP_KEY is required}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_TIMEZONE: ${APP_TIMEZONE:-UTC}
+      APP_URL: ${APP_URL:-http://localhost}
+      TRUSTED_HOSTS: ${TRUSTED_HOSTS:-localhost}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-}
+      HSTS_MAX_AGE: ${HSTS_MAX_AGE:-15552000}
+      HSTS_INCLUDE_SUBDOMAINS: ${HSTS_INCLUDE_SUBDOMAINS:-false}
+      CSP_MODE: ${CSP_MODE:-enforce}
+      CSP_SCRIPT_SRC: ${CSP_SCRIPT_SRC:-}
+      CSP_STYLE_SRC: ${CSP_STYLE_SRC:-}
+      CSP_IMG_SRC: ${CSP_IMG_SRC:-}
+      CSP_FONT_SRC: ${CSP_FONT_SRC:-}
+      CSP_CONNECT_SRC: ${CSP_CONNECT_SRC:-}
+      CSP_FRAME_SRC: ${CSP_FRAME_SRC:-}
+      APP_PANEL_DOMAIN: ${APP_PANEL_DOMAIN:-}
+      SYSADMIN_DOMAIN: ${SYSADMIN_DOMAIN:-}
+      SYSADMIN_SESSION_DRIVER: ${SYSADMIN_SESSION_DRIVER:-database}
+      SYSADMIN_SESSION_CONNECTION: ${SYSADMIN_SESSION_CONNECTION:-null}
+      SYSADMIN_SESSION_LIFETIME: ${SYSADMIN_SESSION_LIFETIME:-60}
+      SYSADMIN_SESSION_EXPIRE_ON_CLOSE: ${SYSADMIN_SESSION_EXPIRE_ON_CLOSE:-true}
+      REQUIRE_EMAIL_VERIFICATION: ${REQUIRE_EMAIL_VERIFICATION:-true}
+      LOG_CHANNEL: ${LOG_CHANNEL:-stderr}
+      LOG_LEVEL: ${LOG_LEVEL:-warning}
+      DB_CONNECTION: pgsql
+      DB_HOST: relaticle-postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-relaticle}
+      DB_USERNAME: ${DB_USERNAME:-relaticle}
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      REDIS_HOST: relaticle-redis
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-null}
+      REDIS_PORT: 6379
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
+      SESSION_SECURE_COOKIE: ${SESSION_SECURE_COOKIE:-}
+      QUEUE_CONNECTION: redis
+      BROADCAST_CONNECTION: reverb
+      BROADCAST_REVERB_HOST: relaticle-reverb
+      BROADCAST_REVERB_PORT: 8080
+      BROADCAST_REVERB_SCHEME: http
+      REVERB_APP_SECRET:
+      ANTHROPIC_API_KEY:
+      OPENAI_API_KEY:
+      OLLAMA_BASE_URL:
+      OLLAMA_MODEL:
+      SELF_HOSTED_AI_URL:
+      SELF_HOSTED_AI_KEY:
+      SELF_HOSTED_AI_MODELS:
+      CHAT_RATE_LIMIT_PER_MINUTE: ${CHAT_RATE_LIMIT_PER_MINUTE:-60}
+      MAIL_MAILER: ${MAIL_MAILER:-log}
+      MAIL_HOST: ${MAIL_HOST:-}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_ENCRYPTION: ${MAIL_ENCRYPTION:-tls}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-hello@example.com}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-Relaticle}
+      AUTORUN_ENABLED: "true"
+      AUTORUN_LARAVEL_MIGRATION: "true"
+      AUTORUN_LARAVEL_MIGRATION_ISOLATION: "true"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - storage:/var/www/html/storage/app
+    depends_on:
+      relaticle-postgres:
+        condition: service_healthy
+      relaticle-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/up"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  relaticle-horizon:
+    image: ghcr.io/relaticle/relaticle:3.12.0
+    restart: unless-stopped
+    command: ["php", "/var/www/html/artisan", "horizon"]
+    stop_signal: SIGTERM
+    environment:
+      APP_NAME: ${APP_NAME:-Relaticle}
+      APP_ENV: ${APP_ENV:-production}
+      APP_KEY: ${APP_KEY:?APP_KEY is required}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_URL: ${APP_URL:-http://localhost}
+      APP_PANEL_DOMAIN: ${APP_PANEL_DOMAIN:-}
+      SYSADMIN_DOMAIN: ${SYSADMIN_DOMAIN:-}
+      SYSADMIN_SESSION_DRIVER: ${SYSADMIN_SESSION_DRIVER:-database}
+      SYSADMIN_SESSION_CONNECTION: ${SYSADMIN_SESSION_CONNECTION:-null}
+      SYSADMIN_SESSION_LIFETIME: ${SYSADMIN_SESSION_LIFETIME:-60}
+      SYSADMIN_SESSION_EXPIRE_ON_CLOSE: ${SYSADMIN_SESSION_EXPIRE_ON_CLOSE:-true}
+      REQUIRE_EMAIL_VERIFICATION: ${REQUIRE_EMAIL_VERIFICATION:-true}
+      LOG_CHANNEL: ${LOG_CHANNEL:-stderr}
+      DB_CONNECTION: pgsql
+      DB_HOST: relaticle-postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-relaticle}
+      DB_USERNAME: ${DB_USERNAME:-relaticle}
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      REDIS_HOST: relaticle-redis
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-null}
+      REDIS_PORT: 6379
+      CACHE_STORE: redis
+      QUEUE_CONNECTION: redis
+      BROADCAST_CONNECTION: reverb
+      BROADCAST_REVERB_HOST: relaticle-reverb
+      BROADCAST_REVERB_PORT: 8080
+      BROADCAST_REVERB_SCHEME: http
+      REVERB_APP_SECRET:
+      ANTHROPIC_API_KEY:
+      OPENAI_API_KEY:
+      OLLAMA_BASE_URL:
+      OLLAMA_MODEL:
+      SELF_HOSTED_AI_URL:
+      SELF_HOSTED_AI_KEY:
+      SELF_HOSTED_AI_MODELS:
+      AUTORUN_ENABLED: "false"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - storage:/var/www/html/storage/app
+    depends_on:
+      relaticle:
+        condition: service_healthy
+      relaticle-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "healthcheck-horizon"]
+      start_period: 10s
+
+  relaticle-scheduler:
+    image: ghcr.io/relaticle/relaticle:3.12.0
+    restart: unless-stopped
+    command: ["php", "/var/www/html/artisan", "schedule:work"]
+    stop_signal: SIGTERM
+    environment:
+      APP_NAME: ${APP_NAME:-Relaticle}
+      APP_ENV: ${APP_ENV:-production}
+      APP_KEY: ${APP_KEY:?APP_KEY is required}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_URL: ${APP_URL:-http://localhost}
+      APP_PANEL_DOMAIN: ${APP_PANEL_DOMAIN:-}
+      SYSADMIN_DOMAIN: ${SYSADMIN_DOMAIN:-}
+      SYSADMIN_SESSION_DRIVER: ${SYSADMIN_SESSION_DRIVER:-database}
+      SYSADMIN_SESSION_CONNECTION: ${SYSADMIN_SESSION_CONNECTION:-null}
+      SYSADMIN_SESSION_LIFETIME: ${SYSADMIN_SESSION_LIFETIME:-60}
+      SYSADMIN_SESSION_EXPIRE_ON_CLOSE: ${SYSADMIN_SESSION_EXPIRE_ON_CLOSE:-true}
+      REQUIRE_EMAIL_VERIFICATION: ${REQUIRE_EMAIL_VERIFICATION:-true}
+      LOG_CHANNEL: ${LOG_CHANNEL:-stderr}
+      DB_CONNECTION: pgsql
+      DB_HOST: relaticle-postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-relaticle}
+      DB_USERNAME: ${DB_USERNAME:-relaticle}
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      REDIS_HOST: relaticle-redis
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-null}
+      REDIS_PORT: 6379
+      CACHE_STORE: redis
+      QUEUE_CONNECTION: redis
+      BROADCAST_CONNECTION: reverb
+      BROADCAST_REVERB_HOST: relaticle-reverb
+      BROADCAST_REVERB_PORT: 8080
+      BROADCAST_REVERB_SCHEME: http
+      REVERB_APP_SECRET:
+      AUTORUN_ENABLED: "false"
+    volumes:
+      - storage:/var/www/html/storage/app
+    depends_on:
+      relaticle:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "healthcheck-schedule"]
+      start_period: 10s
+
+  relaticle-reverb:
+    image: ghcr.io/relaticle/relaticle:3.12.0
+    restart: unless-stopped
+    command: ["php", "/var/www/html/artisan", "reverb:start", "--host=0.0.0.0", "--port=8080"]
+    stop_signal: SIGTERM
+    environment:
+      APP_NAME: ${APP_NAME:-Relaticle}
+      APP_ENV: ${APP_ENV:-production}
+      APP_KEY: ${APP_KEY:?APP_KEY is required}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_URL: ${APP_URL:-http://localhost}
+      LOG_CHANNEL: ${LOG_CHANNEL:-stderr}
+      DB_CONNECTION: pgsql
+      DB_HOST: relaticle-postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-relaticle}
+      DB_USERNAME: ${DB_USERNAME:-relaticle}
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      REDIS_HOST: relaticle-redis
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-null}
+      REDIS_PORT: 6379
+      CACHE_STORE: redis
+      BROADCAST_CONNECTION: reverb
+      REVERB_APP_SECRET:
+      REVERB_ALLOWED_ORIGIN_EXTRA: ${APP_PANEL_DOMAIN:-}
+      AUTORUN_ENABLED: "false"
+    depends_on:
+      relaticle:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "healthcheck-reverb"]
+      start_period: 10s
+
+  relaticle-postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-relaticle}
+      POSTGRES_USER: ${DB_USERNAME:-relaticle}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-relaticle} -d ${DB_DATABASE:-relaticle}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  relaticle-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres:
+  redis:
+  storage:

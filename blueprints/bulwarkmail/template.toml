@@ -1,0 +1,12 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+[[config.domains]]
+serviceName = "bulwarkmail"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+HOSTNAME = "0.0.0.0"
+PORT = "3000"

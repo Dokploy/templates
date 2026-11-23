@@ -1,0 +1,15 @@
+services:
+  kanboard:
+    image: kanboard/kanboard:v1.2.58
+    restart: unless-stopped
+    expose:
+      - 80
+    environment:
+      - TZ=UTC
+    volumes:
+      - data:/var/www/app/data
+      - plugins:/var/www/app/plugins
+
+volumes:
+  data: {}
+  plugins: {}

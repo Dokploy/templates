@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Embroidery File Converter">
+  <rect width="512" height="512" rx="96" fill="#1f3a5f"/>
+  <g fill="none" stroke="#f4f1ea" stroke-width="22" stroke-linecap="round">
+    <path d="M96 352 L176 352"/>
+    <path d="M208 352 L288 352"/>
+    <path d="M320 352 L416 352"/>
+  </g>
+  <path d="M152 224 C152 160 232 160 256 208 C280 256 360 256 360 192" fill="none" stroke="#e8a33d" stroke-width="22" stroke-linecap="round"/>
+  <circle cx="152" cy="224" r="20" fill="#e8a33d"/>
+  <circle cx="360" cy="192" r="20" fill="#e8a33d"/>
+</svg>

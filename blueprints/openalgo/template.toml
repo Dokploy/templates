@@ -1,0 +1,43 @@
+[variables]
+main_domain = "${domain}"
+app_key = "${password:32}"
+api_key_pepper = "${password:32}"
+fernet_salt = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "openalgo"
+port = 5000
+host = "${main_domain}"
+
+[config.env]
+ENV_CONFIG_VERSION = "1.0.7"
+FLASK_ENV = "production"
+FLASK_DEBUG = "False"
+FLASK_HOST_IP = "0.0.0.0"
+FLASK_PORT = "5000"
+TZ = "Asia/Kolkata"
+HOST_SERVER = "https://${main_domain}"
+REDIRECT_URL = "https://${main_domain}/<broker>/callback"
+BROKER_API_KEY = ""
+BROKER_API_SECRET = ""
+VALID_BROKERS = "fivepaisa,fivepaisaxts,aliceblue,angel,arrow,compositedge,dhan,dhan_sandbox,definedge,deltaexchange,firstock,flattrade,fyers,groww,hdfcsecurities,hdfcsky,ibulls,iifl,iiflcapital,indmoney,jainamxts,kotak,motilal,mstock,nubra,nuvama,paytm,pocketful,rmoney,rupeezy,sahi,samco,shoonya,tradejini,tradesmart,upstox,wisdom,zebu,zerodha"
+APP_KEY = "${app_key}"
+API_KEY_PEPPER = "${api_key_pepper}"
+FERNET_SALT = "${fernet_salt}"
+DATABASE_URL = "sqlite:////app/db/openalgo.db"
+LATENCY_DATABASE_URL = "sqlite:////app/db/latency.db"
+LOGS_DATABASE_URL = "sqlite:////app/db/logs.db"
+HEALTH_DATABASE_URL = "sqlite:////app/db/health.db"
+SANDBOX_DATABASE_URL = "sqlite:////app/db/sandbox.db"
+HISTORIFY_DATABASE_URL = "sqlite:////app/db/historify.db"
+NGROK_ALLOW = "FALSE"
+WEBSOCKET_HOST = "0.0.0.0"
+WEBSOCKET_PORT = "8765"
+WEBSOCKET_URL = "wss://${main_domain}"
+OPENBLAS_NUM_THREADS = "2"
+OMP_NUM_THREADS = "2"
+MKL_NUM_THREADS = "2"
+NUMEXPR_NUM_THREADS = "2"
+NUMBA_NUM_THREADS = "2"
+STRATEGY_MEMORY_LIMIT_MB = "1024"

@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+downloads_path = "/path/to/downloads"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "deluge"
+port = 8112
+host = "${main_domain}"
+
+[config.env]
+DOWNLOADS_PATH = "${downloads_path}"

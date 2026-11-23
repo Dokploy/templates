@@ -1,0 +1,18 @@
+{
+  "id": "coinio",
+  "name": "Coinio",
+  "version": "0.2.0",
+  "description": "Self-hosted subscription and bill tracker: reminders before every charge, totals in your own currency, eight languages and a built-in MCP server for AI assistants.",
+  "logo": "coinio.svg",
+  "links": {
+    "github": "https://github.com/YakupEmreYerli/Coinio",
+    "website": "https://getcoinio.me",
+    "docs": "https://docs.getcoinio.me/docs/installation/dokploy"
+  },
+  "tags": [
+    "finance",
+    "subscription",
+    "budgeting",
+    "self-hosted"
+  ]
+}

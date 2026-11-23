@@ -1,0 +1,13 @@
+services:
+  pingvin-share:
+    image: stonith404/pingvin-share:v1.13.0
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      - TZ=UTC
+    volumes:
+      - data:/opt/app/data
+
+volumes:
+  data: {}

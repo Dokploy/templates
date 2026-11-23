@@ -1,0 +1,17 @@
+{
+  "id": "montara-pass",
+  "name": "Montara Pass",
+  "version": "v2.17.0",
+  "description": "Self-hosted password manager with an end-to-end encrypted vault — the server stores ciphertext and wrapped keys only — featuring passkeys, item sharing, folders, a web app and a browser extension.",
+  "logo": "logo-128.png",
+  "links": {
+    "github": "https://github.com/montara-project/montara-pass",
+    "website": "https://montarapass.com",
+    "docs": "https://docs.montarapass.com"
+  },
+  "tags": [
+    "password-manager",
+    "security",
+    "encryption"
+  ]
+}

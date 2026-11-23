@@ -1,0 +1,20 @@
+{
+  "id": "openfamily",
+  "name": "OpenFamily",
+  "version": "2.2.0",
+  "description": "Self-hosted family organizer with shared calendars, chores, shopping lists, recipes, meal planning, pantry and household budget. Web/PWA and Android clients; AGPL-3.0.",
+  "logo": "openfamily.png",
+  "links": {
+    "github": "https://github.com/NexaFlowFrance/OpenFamily",
+    "website": "https://openfamily.fr/",
+    "docs": "https://github.com/NexaFlowFrance/OpenFamily/blob/main/INSTALLATION.md"
+  },
+  "tags": [
+    "family",
+    "calendar",
+    "productivity",
+    "shopping",
+    "budget",
+    "self-hosted"
+  ]
+}

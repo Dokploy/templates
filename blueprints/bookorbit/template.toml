@@ -1,0 +1,28 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+jwt_secret = "${password:32}"
+setup_token = "${password:32}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "app"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+NODE_ENV = "production"
+PORT = "3000"
+DATABASE_URL = "postgresql://bookorbit:${postgres_password}@postgres:5432/bookorbit"
+POSTGRES_HOST = "postgres"
+POSTGRES_PORT = "5432"
+POSTGRES_USER = "bookorbit"
+POSTGRES_PASSWORD = "${postgres_password}"
+POSTGRES_DB = "bookorbit"
+JWT_SECRET = "${jwt_secret}"
+SETUP_BOOTSTRAP_TOKEN = "${setup_token}"
+APP_URL = "https://${main_domain}"
+CLIENT_URL = "https://${main_domain}"
+PUID = "1000"
+PGID = "1000"

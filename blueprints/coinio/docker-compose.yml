@@ -1,0 +1,13 @@
+services:
+  coinio:
+    image: ghcr.io/yakupemreyerli/coinio:0.2.0
+    restart: unless-stopped
+    expose:
+      - "8080"
+    environment:
+      COINIO_PUBLIC_URL: ${COINIO_PUBLIC_URL:-}
+    volumes:
+      - coinio-data:/data
+
+volumes:
+  coinio-data: {}

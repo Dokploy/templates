@@ -1,0 +1,20 @@
+{
+  "description": "Kanboard is a free and open-source Kanban project management software — visual boards, swimlanes, task automation and no bloat, focused on simplicity and minimalism.",
+  "id": "kanboard",
+  "links": {
+    "docs": "https://docs.kanboard.org",
+    "github": "https://github.com/kanboard/kanboard",
+    "website": "https://kanboard.org"
+  },
+  "logo": "kanboard.png",
+  "name": "Kanboard",
+  "newConfig": true,
+  "seoDescription": "Simple, visual Kanban project management for teams. Deploy Kanboard with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "seoTitle": "Kanboard Docker Compose Setup",
+  "tags": [
+    "productivity",
+    "kanban",
+    "projects"
+  ],
+  "version": "v1.2.58"
+}

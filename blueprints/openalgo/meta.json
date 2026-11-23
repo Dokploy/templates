@@ -1,0 +1,13 @@
+{
+  "id": "openalgo",
+  "name": "OpenAlgo",
+  "version": "2.0.3.3",
+  "description": "OpenAlgo is an open-source algorithmic trading platform with a unified API layer across 38+ broker plugins, a strategy and flow builder, and live trading from the web UI.",
+  "logo": "openalgo.png",
+  "links": {
+    "github": "https://github.com/marketcalls/openalgo",
+    "website": "https://openalgo.in",
+    "docs": "https://docs.openalgo.in"
+  },
+  "tags": ["trading", "algo-trading", "finance", "brokers", "automation"]
+}

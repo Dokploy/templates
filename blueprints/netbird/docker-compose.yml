@@ -1,0 +1,101 @@
+services:
+  config-init:
+    image: alpine:3.20
+    environment:
+      - NETBIRD_DOMAIN=${NETBIRD_DOMAIN}
+      - NB_AUTH_SECRET=${NB_AUTH_SECRET}
+      - NB_SESSION_KEY=${NB_SESSION_KEY}
+      - NB_STORE_KEY=${NB_STORE_KEY}
+    command:
+      - sh
+      - -c
+      - |
+        cat > /cfg/config.yaml <<'EOF'
+        server:
+          listenAddress: ":80"
+          exposedAddress: "https://${NETBIRD_DOMAIN}:443"
+          stunPorts:
+            - 3478
+          metricsPort: 9090
+          healthcheckAddress: ":9000"
+          logLevel: "info"
+          logFile: "console"
+          authSecret: "${NB_AUTH_SECRET}"
+          dataDir: "/var/lib/netbird"
+          auth:
+            issuer: "https://${NETBIRD_DOMAIN}/oauth2"
+            signKeyRefreshEnabled: true
+            sessionCookieEncryptionKey: "${NB_SESSION_KEY}"
+            dashboardRedirectURIs:
+              - "https://${NETBIRD_DOMAIN}/nb-auth"
+              - "https://${NETBIRD_DOMAIN}/nb-silent-auth"
+            cliRedirectURIs:
+              - "http://localhost:53000/"
+          reverseProxy:
+            trustedHTTPProxies:
+              - "0.0.0.0/0"
+          store:
+            engine: "sqlite"
+            encryptionKey: "${NB_STORE_KEY}"
+        EOF
+        cat /cfg/config.yaml
+    volumes:
+      - cfg:/cfg
+  netbird-server:
+    image: netbirdio/netbird-server:0.83.2
+    restart: unless-stopped
+    depends_on:
+      config-init:
+        condition: service_completed_successfully
+    ports:
+      - "3478/udp"
+    volumes:
+      - netbird_data:/var/lib/netbird
+      - cfg:/etc/netbird
+    environment:
+      - CONFIG_REV=1
+    # Dokploy domains cannot express the h2c scheme the NetBird gRPC
+    # services need, so the three gRPC paths are routed with Traefik
+    # labels instead of domains (the HTTP paths use regular domains).
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=dokploy-network"
+      - "traefik.http.routers.nb-grpc-mgmt.rule=Host(`${NETBIRD_DOMAIN}`) && PathPrefix(`/management.ManagementService`)"
+      - "traefik.http.routers.nb-grpc-mgmt.entrypoints=websecure"
+      - "traefik.http.routers.nb-grpc-mgmt.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.nb-grpc-mgmt.priority=100"
+      - "traefik.http.routers.nb-grpc-mgmt.service=nb-grpc"
+      - "traefik.http.routers.nb-grpc-signal.rule=Host(`${NETBIRD_DOMAIN}`) && PathPrefix(`/signalexchange.SignalExchange`)"
+      - "traefik.http.routers.nb-grpc-signal.entrypoints=websecure"
+      - "traefik.http.routers.nb-grpc-signal.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.nb-grpc-signal.priority=100"
+      - "traefik.http.routers.nb-grpc-signal.service=nb-grpc"
+      - "traefik.http.routers.nb-grpc-proxy.rule=Host(`${NETBIRD_DOMAIN}`) && PathPrefix(`/management.ProxyService`)"
+      - "traefik.http.routers.nb-grpc-proxy.entrypoints=websecure"
+      - "traefik.http.routers.nb-grpc-proxy.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.nb-grpc-proxy.priority=100"
+      - "traefik.http.routers.nb-grpc-proxy.service=nb-grpc"
+      - "traefik.http.services.nb-grpc.loadbalancer.server.scheme=h2c"
+      - "traefik.http.services.nb-grpc.loadbalancer.server.port=80"
+    command: ["--config", "/etc/netbird/config.yaml"]
+  dashboard:
+    image: netbirdio/dashboard:v2.98.0
+    restart: unless-stopped
+    environment:
+      - NETBIRD_MGMT_API_ENDPOINT=https://${NETBIRD_DOMAIN}
+      - NETBIRD_MGMT_GRPC_API_ENDPOINT=https://${NETBIRD_DOMAIN}
+      - AUTH_AUDIENCE=netbird-dashboard
+      - AUTH_CLIENT_ID=netbird-dashboard
+      # Must stay EMPTY: the embedded Dex IdP registers the dashboard as a
+      # public client; any value here breaks sign-in with invalid_client.
+      - AUTH_CLIENT_SECRET=
+      - AUTH_AUTHORITY=https://${NETBIRD_DOMAIN}/oauth2
+      - USE_AUTH0=false
+      - AUTH_SUPPORTED_SCOPES=openid profile email groups
+      - AUTH_REDIRECT_URI=/nb-auth
+      - AUTH_SILENT_REDIRECT_URI=/nb-silent-auth
+      - NGINX_SSL_PORT=443
+      - LETSENCRYPT_DOMAIN=none
+volumes:
+  netbird_data:
+  cfg:

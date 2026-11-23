@@ -1,0 +1,98 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/18.
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # What the API must remember between requests and share between replicas:
+  # rate limit counts and idempotent answers. All of it expires within the
+  # hour, so nothing is written to disk.
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    command: ['redis-server', '--save', '', '--appendonly', 'no']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    image: ghcr.io/montara-project/montara-pass/community/api:v2.17.0
+    restart: unless-stopped
+    expose:
+      - 8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      ENV: production
+      PORT: 8080
+      APP_NAME: montara-pass
+      APP_SECRET: ${APP_SECRET}
+      DB_DSN: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+      MIGRATE_ON_BOOT: 'true'
+      # Community Edition is single-user: the seeded super_user is the only
+      # account (email:password; password must be 12-128 chars).
+      SEED_ON_BOOT: 'true'
+      SUPER_USER: ${SUPER_USER}
+      # Public origin of this API (the api.* domain): sign-in emails, OAuth
+      # callbacks and webhooks are built from it. AUTH_BASE_URL is the
+      # server-side name; API_PUBLIC_URL also feeds the web app's CSP.
+      API_PUBLIC_URL: ${API_PUBLIC_URL}
+      AUTH_BASE_URL: ${API_PUBLIC_URL}
+      # Required: the web app calls the API cross-origin and OAuth redirect_to
+      # may only point at listed origins.
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
+      # A passkey works on this domain and its subdomains: the generated
+      # domain covers the app (apex) and api.* alike.
+      PASSKEY_RP_ID: ${PASSKEY_RP_ID}
+      EXTENSION_IDS: ${EXTENSION_IDS}
+      # Resend sender + API key for sign-in emails. Community Edition may leave
+      # both empty, which turns off password reset and magic-link sign-in.
+      FROM_ADDRESS: ${FROM_ADDRESS}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      # Google OAuth (optional). If set, users can sign in with Google.
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      # Disable password login (optional). If set to true, users can only sign in with Google.
+      DISABLE_PASSWORD_LOGIN: ${DISABLE_PASSWORD_LOGIN}
+      # Trust Dokploy's proxy for client IPs (comma-separated CIDRs).
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES}
+      # Cloudflare Turnstile (optional). If set, users must pass the challenge.
+      TURNSTILE_ENABLED: ${TURNSTILE_ENABLED}
+      TURNSTILE_SECRET: ${TURNSTILE_SECRET}
+      TURNSTILE_HOSTNAMES: ${TURNSTILE_HOSTNAMES}
+      # Redis for rate limiting and caching.
+      REDIS_URL: redis://redis:6379/0
+      SENTRY_DSN: ${SENTRY_DSN}
+    # No compose healthcheck: the api image is distroless (no shell, no wget).
+    # Use Dokploy's HTTP check against /health instead.
+
+  # The vault web app: nginx serving the SPA on port 3000. API_PUBLIC_URL is
+  # read at container start for the page's Content-Security-Policy.
+  web:
+    image: ghcr.io/montara-project/montara-pass/community/web:v2.17.0
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      API_PUBLIC_URL: ${API_PUBLIC_URL}
+    depends_on:
+      - api
+
+volumes:
+  postgres-data:

@@ -1,0 +1,9 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+[[config.domains]]
+serviceName = "octoprint"
+port = 5000
+host = "${main_domain}"

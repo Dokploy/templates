@@ -1,0 +1,20 @@
+{
+  "id": "openpromoter",
+  "name": "OpenPromoter",
+  "version": "0.1.2",
+  "description": "OpenPromoter is open-source affiliate and referral program software for SaaS. It tracks referrals from Stripe, Paddle and Lemon Squeezy, checks for fraud and prepares partner payouts with 0% payout fees.",
+  "logo": "openpromoter.svg",
+  "links": {
+    "github": "https://github.com/openpromoter/openpromoter",
+    "website": "https://openpromoter.com/",
+    "docs": "https://openpromoter.com/docs/self-hosting/"
+  },
+  "tags": [
+    "business",
+    "finance",
+    "open-source",
+    "self-hosted"
+  ],
+  "seoTitle": "Self-Host OpenPromoter on Dokploy",
+  "seoDescription": "Open-source affiliate and referral software for SaaS. Self-host OpenPromoter on Dokploy with Postgres in a few clicks."
+}

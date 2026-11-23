@@ -1,0 +1,20 @@
+services:
+  budgero:
+    image: budgero/budgero:v1.21.5
+    restart: unless-stopped
+    environment:
+      # The browser origin(s) Budgero is opened from. Sync is rejected for any other origin.
+      WEBSOCKET_ALLOWED_ORIGINS: ${WEBSOCKET_ALLOWED_ORIGINS}
+      # Fixed signing key, so logins survive restarts and redeploys.
+      SELF_HOST_JWT_SECRET: ${SELF_HOST_JWT_SECRET}
+    volumes:
+      - budgero-data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3001/api/v1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  budgero-data:

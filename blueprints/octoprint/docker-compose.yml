@@ -1,6 +1,6 @@
 services:
   octoprint:
-    image: octoprint/octoprint:latest
+    image: octoprint/octoprint:1.11.8
     restart: unless-stopped
     expose:
       - 5000

@@ -1,6 +1,6 @@
 services:
   app:
-    image: invoiceninja/invoiceninja-debian:latest
+    image: invoiceninja/invoiceninja-debian:5.13.56
     restart: unless-stopped
     depends_on:
       - mysql
@@ -32,7 +32,7 @@ services:
       - app_storage:/var/www/html/storage
 
   server:
-    image: nginx:alpine
+    image: nginx:1.30.7-alpine
     restart: unless-stopped
     depends_on:
       - app
@@ -81,7 +81,7 @@ services:
       - mysql_data:/var/lib/mysql
 
   redis:
-    image: redis:alpine
+    image: redis:7-alpine
     restart: unless-stopped
     volumes:
       - redis_data:/data

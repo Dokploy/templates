@@ -1,0 +1,13 @@
+{
+  "id": "relaticle",
+  "name": "Relaticle",
+  "version": "3.12.0",
+  "description": "Open-source CRM your AI agents can read and update: companies, people, opportunities, tasks and notes. REST API, self-hosted or cloud.",
+  "logo": "relaticle.svg",
+  "links": {
+    "github": "https://github.com/Relaticle/relaticle",
+    "website": "https://relaticle.com",
+    "docs": "https://relaticle.com/docs"
+  },
+  "tags": ["crm", "business"]
+}

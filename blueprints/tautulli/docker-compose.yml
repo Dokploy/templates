@@ -1,6 +1,6 @@
 services:
   tautulli:
-    image: tautulli/tautulli:latest
+    image: tautulli/tautulli:v2.19.1
     restart: unless-stopped
     expose:
       - 8181

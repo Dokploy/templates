@@ -1,0 +1,20 @@
+{
+  "description": "Radarr is a movie collection manager for Usenet and BitTorrent users — it monitors RSS feeds for new releases of your wanted movies and grabs, sorts and renames them for your media server.",
+  "id": "radarr",
+  "links": {
+    "docs": "https://wiki.servarr.com/radarr",
+    "github": "https://github.com/Radarr/Radarr",
+    "website": "https://radarr.video"
+  },
+  "logo": "radarr.png",
+  "name": "Radarr",
+  "newConfig": true,
+  "seoDescription": "Movie collection manager that grabs and organizes movies automatically. Deploy Radarr with Docker Compose on Dokploy in minutes – free, open source, self-hosted.",
+  "seoTitle": "Radarr Docker Compose Setup",
+  "tags": [
+    "media",
+    "movies",
+    "automation"
+  ],
+  "version": "7.0.3"
+}

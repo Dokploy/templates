@@ -1,6 +1,6 @@
 services:
   app:
-    image: monica:latest
+    image: monica:4.1.2
     restart: unless-stopped
     depends_on:
       - db

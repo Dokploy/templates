@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/tj-coding/life-console:0.1.0
+    image: ghcr.io/tj-coding/life-console:0.2.0
     restart: unless-stopped
     depends_on:
       db:

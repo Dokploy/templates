@@ -1,0 +1,191 @@
+# dokploy: allow-container-names
+# Nod (by n8n) — open-source personal agent with its own computer.
+# Adapted from upstream's official self-host compose:
+#   https://github.com/n8n-io/nod/blob/main/deployment/self-host/compose.yaml
+#
+# Notes for reviewers:
+# - Upstream publishes no registry images for the server, browser or workspace;
+#   its own self-host flow builds them from source, so this template does the
+#   same with pinned Git build contexts (upstream v0.1.0, commit 9c58eeb).
+#   The first deployment takes a while (roughly 30-40 minutes on a small VPS).
+# - The browser and workspace services MUST keep their container_name: the Nod
+#   server locates them by name, and its runtime proxy refuses to operate on
+#   containers whose names do not match nod-workspace-* / nod-browser-*.
+#   That is why this file carries the allow-container-names marker above.
+# - Upstream isolates the services on five custom networks; per this repo's
+#   rules the template uses Dokploy's project network instead. The sandbox
+#   hardening (cap_drop ALL, read_only, no-new-privileges) is unchanged.
+services:
+  nod:
+    build:
+      context: "https://github.com/n8n-io/nod.git#9c58eeb998ca4c5d4ee9f645d739303ed82c3c30"
+      dockerfile: deployment/self-host/Dockerfile
+    image: nod-server:local
+    restart: unless-stopped
+    init: true
+    env_file: ${NOD_ENV_FILE:-.env}
+    environment:
+      NODE_ENV: production
+      NOD_ENVIRONMENT: production
+      NOD_HOST: 0.0.0.0
+      PORT: ${PORT:-4310}
+      NOD_DATA_ROOT: /var/lib/nod
+      NOD_PUBLIC_URL: ${NOD_PUBLIC_URL:-http://localhost:${PORT:-4310}}
+      # The login token for the web UI — find it in this stack's environment
+      # variables in Dokploy (NOD_AUTH_TOKEN) and enter it on the login screen.
+      NOD_AUTH_TOKEN: ${NOD_AUTH_TOKEN}
+      NOD_VAULT_KEY: ${NOD_VAULT_KEY:?Set NOD_VAULT_KEY in the template variables}
+      DATABASE_URL: postgres://nod:${NOD_POSTGRES_PASSWORD}@postgres:5432/nod
+      DOCKER_HOST: tcp://runtime:2375
+      WORKSPACE_CONTAINER: nod-workspace-${COMPOSE_PROJECT_NAME:-nod-server}
+      BROWSER_CONTAINER: nod-browser-${COMPOSE_PROJECT_NAME:-nod-server}
+    expose:
+      - 4310
+    volumes:
+      - server-data:/var/lib/nod
+      - workspace-data:/var/lib/nod/workspaces
+    tmpfs:
+      - /tmp:uid=1000,gid=1000,mode=1777,size=256m
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 512
+    mem_limit: 2g
+    depends_on:
+      postgres:
+        condition: service_healthy
+      runtime:
+        condition: service_started
+      browser:
+        condition: service_healthy
+      workspace:
+        condition: service_started
+    healthcheck:
+      test: ['CMD', 'node', '/app/healthcheck.mjs']
+      interval: 15s
+      timeout: 6s
+      retries: 10
+      start_period: 60s
+
+  postgres:
+    image: postgres:17-alpine@sha256:eee6c6e1b0894fa4fe0075eb054af9fd1cf39a35321c2d4110626cfe506411fb
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nod
+      POSTGRES_PASSWORD: ${NOD_POSTGRES_PASSWORD}
+      POSTGRES_DB: nod
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U nod -d nod']
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  # Guards the host Docker socket: the Nod server may only manage its own
+  # workspace and browser containers through this proxy.
+  runtime:
+    build:
+      context: "https://github.com/n8n-io/nod.git#9c58eeb998ca4c5d4ee9f645d739303ed82c3c30:deployment/self-host"
+      dockerfile_inline: |
+        FROM node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+        WORKDIR /app
+        COPY docker-proxy.mjs /app/docker-proxy.mjs
+    image: nod-runtime:local
+    restart: unless-stopped
+    init: true
+    command: ['node', '/app/docker-proxy.mjs']
+    environment:
+      WORKSPACE_CONTAINER: nod-workspace-${COMPOSE_PROJECT_NAME:-nod-server}
+      BROWSER_CONTAINER: nod-browser-${COMPOSE_PROJECT_NAME:-nod-server}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 64
+    mem_limit: 128m
+
+  browser:
+    build:
+      context: "https://github.com/n8n-io/nod.git#9c58eeb998ca4c5d4ee9f645d739303ed82c3c30"
+      dockerfile: Dockerfile.browser
+    image: nod-browser:local
+    container_name: nod-browser-${COMPOSE_PROJECT_NAME:-nod-server}
+    hostname: nod-browser
+    restart: unless-stopped
+    init: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    read_only: true
+    pids_limit: 1024
+    mem_limit: 3g
+    shm_size: 512m
+    volumes:
+      - browser-data:/data
+    tmpfs:
+      - /tmp:size=512m
+      - /home/node:uid=1000,gid=1000,mode=700,size=256m
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          'const s=require("node:net").connect("/data/control.sock");s.on("connect",()=>{s.end();process.exit(0)});s.on("error",()=>process.exit(1))',
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  workspace:
+    build:
+      context: "https://github.com/n8n-io/nod.git#9c58eeb998ca4c5d4ee9f645d739303ed82c3c30"
+      dockerfile: Dockerfile.workspace
+    image: nod-workspace:local
+    container_name: nod-workspace-${COMPOSE_PROJECT_NAME:-nod-server}
+    restart: unless-stopped
+    init: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 512
+    mem_limit: 2g
+    volumes:
+      - workspace-data:/workspace
+      - workspace-tools:/home/node
+    network_mode: service:workspace-network
+    depends_on:
+      workspace-network:
+        condition: service_healthy
+        restart: true
+    command: ['sleep', 'infinity']
+
+  # Gives the workspace its outbound connectivity; the workspace itself
+  # shares this service's network namespace and has no direct route out.
+  workspace-network:
+    image: nod-workspace:local
+    pull_policy: never
+    user: root
+    restart: unless-stopped
+    init: true
+    entrypoint: /usr/local/bin/nod-workspace-network
+    cap_drop: [ALL]
+    cap_add: [NET_ADMIN]
+    security_opt: [no-new-privileges:true]
+    read_only: true
+    tmpfs:
+      - /tmp:size=1m
+    pids_limit: 32
+    mem_limit: 64m
+    healthcheck:
+      test: ['CMD', 'test', '-f', '/tmp/network-ready']
+      interval: 2s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  server-data: {}
+  postgres-data: {}
+  workspace-data: {}
+  workspace-tools: {}
+  browser-data: {}

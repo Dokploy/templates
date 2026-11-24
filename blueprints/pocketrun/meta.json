@@ -1,0 +1,18 @@
+{
+  "id": "pocketrun",
+  "name": "PocketRun",
+  "version": "1.8.0",
+  "description": "PocketRun is a self-hosted backend for personal projects. One instance gives every project a JSON key-value store with access tokens and roles, HTML micro-pages on short slugs and short links with QR codes and visit analytics, all managed from a web panel.",
+  "logo": "pocketrun.svg",
+  "links": {
+    "github": "https://github.com/odutradev/pocketrun",
+    "website": "",
+    "docs": "https://github.com/odutradev/pocketrun#readme"
+  },
+  "tags": [
+    "backend",
+    "database",
+    "url-shortener",
+    "self-hosted"
+  ]
+}

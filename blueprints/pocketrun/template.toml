@@ -1,0 +1,32 @@
+[variables]
+panel_domain = "${domain}"
+api_domain = "${domain}"
+links_domain = "${domain}"
+jwt_secret = "${password:48}"
+page_access_secret = "${password:48}"
+
+[config]
+mounts = []
+env = [
+  "API_URL=http://${api_domain}",
+  "LINKS_URL=http://${links_domain}",
+  "ADMIN_CORS_ALLOWED_ORIGINS=http://${panel_domain}",
+  "ALLOW_HTTP=true",
+  "JWT_SECRET=${jwt_secret}",
+  "PAGE_ACCESS_SECRET=${page_access_secret}",
+]
+
+[[config.domains]]
+serviceName = "pocketrun"
+port = 80
+host = "${panel_domain}"
+
+[[config.domains]]
+serviceName = "pocketrun-api"
+port = 80
+host = "${api_domain}"
+
+[[config.domains]]
+serviceName = "pocketrun-api"
+port = 80
+host = "${links_domain}"

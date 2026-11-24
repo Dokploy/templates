@@ -1,0 +1,17 @@
+{
+  "id": "rakazo",
+  "name": "Rakazo",
+  "version": "v0.15.0",
+  "description": "Rakazo runs a team of persistent AI teammates, each with its own memory, routines, apps and computer. Self-host it with the model of your choice.",
+  "logo": "rakazo.png",
+  "links": {
+    "github": "https://github.com/elie222/rakazo",
+    "website": "https://rakazo.com",
+    "docs": "https://github.com/elie222/rakazo/blob/main/docs/self-host.md"
+  },
+  "tags": [
+    "ai",
+    "agents",
+    "productivity"
+  ]
+}

@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "web"
+port = 5173
+host = "${main_domain}"
+
+[config.env]
+RAKAZO_PUBLIC_URL = "http://${main_domain}"

@@ -1,0 +1,18 @@
+{
+  "id": "abvg-video-starter",
+  "name": "AI Birthday Video Generator",
+  "version": "1.0.0",
+  "description": "AI birthday video generator from a single photo: they pop champagne on a park bench, blow out a Scorpio cake, or light a crown cake at the car window. Self-hosted one-page web app on the aibirthdayvideogenerator.com API; set ABVG_API_KEY and optional ACCESS_PASSWORD.",
+  "logo": "abvg-video-starter.png",
+  "links": {
+    "github": "https://github.com/hanshs474/abvg-video-starter",
+    "website": "https://aibirthdayvideogenerator.com/?utm_source=dokploy&utm_medium=template",
+    "docs": "https://aibirthdayvideogenerator.readthedocs.io/en/latest/"
+  },
+  "tags": [
+    "ai",
+    "video-generation",
+    "image-to-video",
+    "text-to-video"
+  ]
+}

@@ -1,0 +1,16 @@
+services:
+  abvg-video-starter:
+    build:
+      context: https://github.com/hanshs474/abvg-video-starter.git#undefined
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      - PORT=3000
+      - ABVG_API_KEY=${ABVG_API_KEY}
+      - ACCESS_PASSWORD=${ACCESS_PASSWORD}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+auth_token = "${password:64}"
+vault_key = "${base64:32}"
+db_password = "${password:32}"
+
+[config]
+env = [
+  "PORT=4310",
+  "NOD_PUBLIC_URL=https://${main_domain}",
+  "NOD_AUTH_TOKEN=${auth_token}",
+  "NOD_VAULT_KEY=${vault_key}",
+  "NOD_POSTGRES_PASSWORD=${db_password}",
+  "NOD_ANALYTICS_ENABLED=false"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "nod"
+port = 4310
+host = "${main_domain}"

@@ -1,0 +1,48 @@
+services:
+  pocketrun:
+    image: odutradev/pocketrun-ui:1.8.0
+    restart: unless-stopped
+    expose:
+      - 80
+    environment:
+      API_URL: ${API_URL}
+      LINKS_URL: ${LINKS_URL}
+    depends_on:
+      pocketrun-api:
+        condition: service_healthy
+
+  pocketrun-api:
+    image: odutradev/pocketrun-api:1.8.0
+    restart: unless-stopped
+    expose:
+      - 80
+    environment:
+      HOST: 0.0.0.0
+      PORT: 80
+      APP_ENV: production
+      LINKS_URL: ${LINKS_URL}
+      CORS_ALLOWED_ORIGINS: "*"
+      ADMIN_CORS_ALLOWED_ORIGINS: ${ADMIN_CORS_ALLOWED_ORIGINS}
+      ALLOW_HTTP: ${ALLOW_HTTP}
+      MONGODB_URI: mongodb://mongo:27017
+      MONGODB_NAME: pocketrun
+      JWT_SECRET: ${JWT_SECRET}
+      PAGE_ACCESS_SECRET: ${PAGE_ACCESS_SECRET}
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  mongo:
+    image: mongo:7.0
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  mongo-data:

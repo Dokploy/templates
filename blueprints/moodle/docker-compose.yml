@@ -1,0 +1,36 @@
+services:
+  moodle:
+    image: erseco/alpine-moodle:5.3
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      - SITE_URL=${SITE_URL}
+      - SSLPROXY=true
+      - DB_TYPE=pgsql
+      - DB_HOST=db
+      - DB_NAME=moodle
+      - DB_USER=moodle
+      - DB_PASS=${DB_PASSWORD}
+      - MOODLE_USERNAME=admin
+      - MOODLE_PASSWORD=${MOODLE_ADMIN_PASSWORD}
+    volumes:
+      - moodledata:/var/www/moodledata
+      - moodlehtml:/var/www/html
+    expose:
+      - "8080"
+
+  db:
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=moodle
+      - POSTGRES_USER=moodle
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql
+
+volumes:
+  moodledata:
+  moodlehtml:
+  pgdata:

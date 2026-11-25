@@ -1,0 +1,17 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+moodle_admin_password = "${password:32}"
+
+[config]
+env = [
+  "SITE_URL=https://${main_domain}",
+  "DB_PASSWORD=${db_password}",
+  "MOODLE_ADMIN_PASSWORD=${moodle_admin_password}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "moodle"
+port = 8080
+host = "${main_domain}"

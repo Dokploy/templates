@@ -1,0 +1,28 @@
+[variables]
+main_domain = "${domain}"
+public_url = "https://${main_domain}"
+postgres_user = "rebase"
+postgres_db = "rebase"
+postgres_password = "${password:32}"
+jwt_secret = "${base64:48}"
+service_key = "${base64:48}"
+admin_email = "${email}"
+admin_password = "${password:24}"
+
+[config]
+env = [
+  "PUBLIC_URL=${public_url}",
+  "POSTGRES_USER=${postgres_user}",
+  "POSTGRES_DB=${postgres_db}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "JWT_SECRET=${jwt_secret}",
+  "REBASE_SERVICE_KEY=${service_key}",
+  "REBASE_ADMIN_EMAIL=${admin_email}",
+  "REBASE_ADMIN_PASSWORD=${admin_password}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "rebase"
+port = 8_080
+host = "${main_domain}"

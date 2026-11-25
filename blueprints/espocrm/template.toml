@@ -1,0 +1,19 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+db_root_password = "${password:32}"
+admin_password = "${password:32}"
+
+[config]
+env = [
+  "SITE_URL=https://${main_domain}",
+  "DB_PASSWORD=${db_password}",
+  "DB_ROOT_PASSWORD=${db_root_password}",
+  "ADMIN_PASSWORD=${admin_password}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "espocrm"
+port = 80
+host = "${main_domain}"

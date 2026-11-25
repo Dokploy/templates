@@ -1,0 +1,46 @@
+services:
+  espocrm:
+    image: espocrm:10.1.4-apache
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      - ESPOCRM_DATABASE_HOST=db
+      - ESPOCRM_DATABASE_NAME=espocrm
+      - ESPOCRM_DATABASE_USER=espocrm
+      - ESPOCRM_DATABASE_PASSWORD=${DB_PASSWORD}
+      - ESPOCRM_ADMIN_USERNAME=admin
+      - ESPOCRM_ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - ESPOCRM_SITE_URL=${SITE_URL}
+    volumes:
+      - espocrm_data:/var/www/html/data
+      - espocrm_custom:/var/www/html/custom
+      - espocrm_custom_client:/var/www/html/client/custom
+    expose:
+      - "80"
+
+  espocrm-daemon:
+    image: espocrm:10.1.4-apache
+    restart: unless-stopped
+    depends_on:
+      - espocrm
+    entrypoint: docker-daemon.sh
+    volumes_from:
+      - espocrm
+
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      - MARIADB_DATABASE=espocrm
+      - MARIADB_USER=espocrm
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    volumes:
+      - espocrm_db:/var/lib/mysql
+
+volumes:
+  espocrm_data:
+  espocrm_custom:
+  espocrm_custom_client:
+  espocrm_db:

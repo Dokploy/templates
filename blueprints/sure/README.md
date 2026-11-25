@@ -1,7 +1,8 @@
 # Sure
 
 [Sure](https://sure.am) is a self-hosted personal finance application. This
-blueprint runs Sure 0.6.7 with a Sidekiq worker, PostgreSQL 16 and Valkey 8.
+blueprint runs Sure 0.7.6-hotfix.2 with a Sidekiq worker, PostgreSQL 16.16 and
+Redis 8.12.0.
 
 ## First steps
 
@@ -19,11 +20,11 @@ blueprint runs Sure 0.6.7 with a Sidekiq worker, PostgreSQL 16 and Valkey 8.
 
 - `sure-postgresql-data` stores the database.
 - `sure-app-storage` stores uploaded files and is shared by the web service and worker.
-- `sure-valkey` persists the background job queue and cache.
+- `sure-redis` persists the background job queue and cache.
 
 Back up the volumes and generated environment variables. Keep `SECRET_KEY_BASE`
 unchanged across redeployments and restores because Sure derives its default
 Active Record encryption keys from it.
 
-See the [upstream self-hosting guide for v0.6.7](https://github.com/we-promise/sure/blob/v0.6.7/docs/hosting/docker.md)
+See the [upstream self-hosting guide for v0.7.6-hotfix.2](https://github.com/we-promise/sure/blob/v0.7.6-hotfix.2/docs/hosting/docker.md)
 for additional configuration.

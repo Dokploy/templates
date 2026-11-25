@@ -1,6 +1,6 @@
 services:
   sure:
-    image: ghcr.io/we-promise/sure:0.6.7
+    image: ghcr.io/we-promise/sure:0.7.6-hotfix.2
     restart: unless-stopped
     expose:
       - 3000
@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB:-sure}
-      REDIS_URL: redis://valkey:6379
+      REDIS_URL: redis://redis:6379/1
       DB_HOST: postgresql
       DB_PORT: "5432"
       SELF_HOSTED: "true"
@@ -20,7 +20,7 @@ services:
     depends_on:
       postgresql:
         condition: service_healthy
-      valkey:
+      redis:
         condition: service_healthy
     volumes:
       - sure-app-storage:/rails/storage
@@ -40,7 +40,7 @@ services:
       start_period: 120s
 
   worker:
-    image: ghcr.io/we-promise/sure:0.6.7
+    image: ghcr.io/we-promise/sure:0.7.6-hotfix.2
     restart: unless-stopped
     command: bundle exec sidekiq
     environment:
@@ -49,7 +49,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB:-sure}
-      REDIS_URL: redis://valkey:6379
+      REDIS_URL: redis://redis:6379/1
       DB_HOST: postgresql
       DB_PORT: "5432"
       SELF_HOSTED: "true"
@@ -63,7 +63,7 @@ services:
         condition: service_healthy
       postgresql:
         condition: service_healthy
-      valkey:
+      redis:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "pgrep", "-f", "sidekiq"]
@@ -72,7 +72,7 @@ services:
       retries: 5
 
   postgresql:
-    image: postgres:16-alpine
+    image: postgres:16.16-alpine
     restart: unless-stopped
     volumes:
       - sure-postgresql-data:/var/lib/postgresql/data
@@ -90,14 +90,14 @@ services:
       timeout: 20s
       retries: 10
 
-  valkey:
-    image: valkey/valkey:8-alpine
+  redis:
+    image: redis:8.12.0-alpine
     restart: unless-stopped
-    command: valkey-server --appendonly yes
+    command: redis-server --appendonly yes
     volumes:
-      - sure-valkey:/data
+      - sure-redis:/data
     healthcheck:
-      test: ["CMD-SHELL", "valkey-cli ping | grep -qx PONG"]
+      test: ["CMD-SHELL", "redis-cli ping | grep -qx PONG"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -106,4 +106,4 @@ services:
 volumes:
   sure-app-storage:
   sure-postgresql-data:
-  sure-valkey:
+  sure-redis:

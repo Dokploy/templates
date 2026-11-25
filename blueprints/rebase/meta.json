@@ -1,0 +1,20 @@
+{
+  "id": "rebase",
+  "name": "Rebase",
+  "version": "0.37.0",
+  "description": "Rebase is an open-source backend for PostgreSQL: REST API, auth, realtime, storage, cron and an admin panel, with row-level security enforced by Postgres. This template starts it with no code: open /_studio on your domain, sign in with the generated admin account, and every table you create there is served at once.",
+  "logo": "logo.svg",
+  "links": {
+    "github": "https://github.com/rebasepro/rebase",
+    "website": "https://rebase.pro/",
+    "docs": "https://rebase.pro/docs/"
+  },
+  "tags": [
+    "backend",
+    "database",
+    "postgres",
+    "api"
+  ],
+  "seoTitle": "Self-Host Rebase on Dokploy",
+  "seoDescription": "Open-source Postgres backend with REST, auth, realtime, storage and an admin panel. Self-host Rebase on Dokploy in a few clicks."
+}

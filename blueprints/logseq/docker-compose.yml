@@ -1,0 +1,6 @@
+services:
+  logseq:
+    image: ghcr.io/logseq/logseq-webapp:latest
+    restart: unless-stopped
+    expose:
+      - "80"

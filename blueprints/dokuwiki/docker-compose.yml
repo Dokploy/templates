@@ -1,0 +1,15 @@
+services:
+  dokuwiki:
+    image: linuxserver/dokuwiki:version-2026-07-14c
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - dokuwiki_config:/config
+    expose:
+      - "80"
+
+volumes:
+  dokuwiki_config:

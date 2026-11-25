@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+access_auth_code = "${password:32}"
+
+[config]
+env = [
+  "ACCESS_AUTH_CODE=${access_auth_code}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "siyuan"
+port = 6806
+host = "${main_domain}"

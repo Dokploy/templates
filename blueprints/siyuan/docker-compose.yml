@@ -1,0 +1,15 @@
+services:
+  siyuan:
+    image: b3log/siyuan:v3.8.12
+    restart: unless-stopped
+    command: serve --workspace=/siyuan/workspace/ --accessAuthCode=${ACCESS_AUTH_CODE}
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - siyuan_workspace:/siyuan/workspace
+    expose:
+      - "6806"
+
+volumes:
+  siyuan_workspace:

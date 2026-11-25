@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+secret_key_base = "${hash:64}"
+postgres_password = "${hash:32}"
+
+[config]
+env = [
+  "APP_DOMAIN=${main_domain}",
+  "SECRET_KEY_BASE=${secret_key_base}",
+  "POSTGRES_USER=sure",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "POSTGRES_DB=sure",
+  "ONBOARDING_STATE=open"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "sure"
+port = 3000
+host = "${main_domain}"

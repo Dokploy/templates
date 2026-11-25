@@ -1,7 +1,7 @@
 [variables]
 main_domain = "${domain}"
 db_password = "${password:32}"
-moodle_admin_password = "${password:32}"
+moodle_admin_password="Md1!${password:24}"
 
 [config]
 env = [

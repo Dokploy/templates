@@ -1,0 +1,13 @@
+{
+  "id": "sure",
+  "name": "Sure",
+  "version": "0.7.6-hotfix.2",
+  "description": "Sure is an open-source personal finance application for tracking accounts, transactions, budgets, investments and net worth. It is a community-maintained fork of Maybe Finance.",
+  "logo": "sure.svg",
+  "links": {
+    "github": "https://github.com/we-promise/sure",
+    "website": "https://sure.am",
+    "docs": "https://docs.sure.am"
+  },
+  "tags": ["finance", "budgeting", "self-hosted"]
+}

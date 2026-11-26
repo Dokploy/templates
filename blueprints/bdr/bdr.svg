@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="128" height="128" role="img" aria-label="BDR Self-Hosted">
+  <rect width="64" height="64" rx="12" fill="#06090c"/>
+  <path d="M32 8 13 15v14.5C13 41.6 20.8 50 32 53c11.2-3 19-11.4 19-23.5V15L32 8Z" fill="none" stroke="#c8ff4d" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M23.5 30.6l6 6 12-12.4" fill="none" stroke="#c8ff4d" stroke-width="4" stroke-linecap="square"/>
+</svg>

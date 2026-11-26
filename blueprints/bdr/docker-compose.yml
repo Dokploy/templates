@@ -1,0 +1,144 @@
+# dokploy: allow-host-ports — the bdr-agents reach the control plane and the Kopia Repository Server directly, not through the HTTP proxy: the agent listener is strict mTLS on TCP 8443 (client certificates issued by the control's own CA) and the repository server is TLS with a pinned self-signed certificate on TCP 51515.
+services:
+  bdr:
+    image: ghcr.io/juansoler/bdr-control:v0.16.59
+    restart: unless-stopped
+    # bdr-control closes its HTTP listeners (up to 10 s each) and then the
+    # store after SIGTERM: the default 10 s grace can cut that short.
+    stop_grace_period: 30s
+    environment:
+      - BDR_ADMIN_TOKEN=${BDR_ADMIN_TOKEN}
+      - BDR_SECRET_KEY=${BDR_SECRET_KEY}
+      - BDR_KOPIA_PASSWORD=${BDR_KOPIA_PASSWORD}
+      - BDR_KOPIA_CONTROL_PASSWORD=${BDR_KOPIA_CONTROL_PASSWORD}
+      - BDR_PUBLIC_HOST=${BDR_PUBLIC_HOST}
+      - BDR_PUBLIC_URL=${BDR_PUBLIC_URL}
+      - BDR_AGENT_PORT=${BDR_AGENT_PORT:-8443}
+      - BDR_KOPIA_PORT=${BDR_KOPIA_PORT:-51515}
+    # The wrapper loads the fingerprint of the repository server certificate
+    # and hands over to bdr-control, which reads its configuration from the
+    # environment once at startup.
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        [ -n "$$BDR_ADMIN_TOKEN" ] && [ -n "$$BDR_SECRET_KEY" ] && [ -n "$$BDR_KOPIA_PASSWORD" ] && [ -n "$$BDR_KOPIA_CONTROL_PASSWORD" ] && [ -n "$$BDR_PUBLIC_HOST" ] && [ -n "$$BDR_PUBLIC_URL" ] || {
+          echo "bdr: BDR_ADMIN_TOKEN, BDR_SECRET_KEY, BDR_KOPIA_PASSWORD, BDR_KOPIA_CONTROL_PASSWORD, BDR_PUBLIC_HOST and BDR_PUBLIC_URL are required" >&2
+          exit 1
+        }
+        set -a
+        . /data/krs.env
+        set +a
+        export BDR_KOPIA_KIND=server \
+          BDR_KOPIA_SERVER_URL="https://$$BDR_PUBLIC_HOST:$$BDR_KOPIA_PORT" \
+          BDR_KOPIA_SERVER_CONTROL_USER=bdr-control \
+          BDR_KOPIA_SERVER_CONTROL_PASSWORD="$$BDR_KOPIA_CONTROL_PASSWORD"
+        exec /opt/bdr/bin/bdr-control \
+          --addr 0.0.0.0:8080 \
+          --agent-addr 0.0.0.0:8443 \
+          --public-url "$$BDR_PUBLIC_URL" \
+          --agent-url "https://$$BDR_PUBLIC_HOST:$$BDR_AGENT_PORT" \
+          --agent-tls-names "$$BDR_PUBLIC_HOST,localhost" \
+          --data-dir /data \
+          --downloads-dir /opt/bdr/agents \
+          --kopia-binary /opt/bdr/bin/kopia
+    ports:
+      - "${BDR_AGENT_PORT:-8443}:8443"
+    expose:
+      - 8080
+    volumes:
+      - bdr-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    depends_on:
+      kopia-server:
+        condition: service_healthy
+
+  # Kopia Repository Server: every agent gets its own repository user and
+  # only sees its own snapshots. It ships in the control image, on the same
+  # Kopia version the control plane drives, and shares the /data volume.
+  kopia-server:
+    image: ghcr.io/juansoler/bdr-control:v0.16.59
+    restart: unless-stopped
+    environment:
+      - BDR_KOPIA_PASSWORD=${BDR_KOPIA_PASSWORD}
+      - BDR_KOPIA_CONTROL_PASSWORD=${BDR_KOPIA_CONTROL_PASSWORD}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        mkdir -p /data/repo
+        # The control plane never creates its primary repository: without
+        # kopia.config it starts without a direct connection and backups fail.
+        if [ ! -f /data/kopia.config ]; then
+          echo "kopia-server: creating the Kopia repository"
+          KOPIA_CHECK_FOR_UPDATES=false KOPIA_PASSWORD="$$BDR_KOPIA_PASSWORD" /opt/bdr/bin/kopia \
+            --no-persist-credentials --config-file=/data/kopia.config repository create filesystem \
+            --path=/data/repo --cache-directory=/data/kcache
+        fi
+        export KOPIA_PASSWORD="$$BDR_KOPIA_PASSWORD" KOPIA_CHECK_FOR_UPDATES=false
+        exec /opt/bdr/bin/kopia server start \
+          --config-file=/data/kopia.config \
+          --address=0.0.0.0:51515 \
+          --tls-cert-file=/data/krs.crt \
+          --tls-key-file=/data/krs.key \
+          --server-control-username=bdr-control \
+          --server-control-password="$$BDR_KOPIA_CONTROL_PASSWORD" \
+          --refresh-interval=15s \
+          --cache-directory=/data/krs-cache \
+          --no-persistent-logs
+    ports:
+      - "${BDR_KOPIA_PORT:-51515}:51515"
+    expose:
+      - 51515
+    volumes:
+      - bdr-data:/data
+    # Answers 200 once the repository is open and the control credentials that
+    # the control plane uses for `server refresh` are accepted. The certificate
+    # is validated, not skipped.
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl -sf -o /dev/null --cacert /data/krs.crt -u "bdr-control:$$BDR_KOPIA_CONTROL_PASSWORD" https://127.0.0.1:51515/api/v1/control/status
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      kopia-certs:
+        condition: service_completed_successfully
+
+  # One-shot: self-signed TLS certificate of the repository server. The agents
+  # pin its SHA-256 fingerprint, which this job writes to /data/krs.env for the
+  # control plane. The certificate is generated once per data volume and never
+  # depends on BDR_PUBLIC_HOST: a pinned fingerprint is all a kopia client
+  # checks, so the server can be reached later by another name or IP and this
+  # job has nothing to rotate on redeploys.
+  kopia-certs:
+    image: alpine:3.20
+    restart: "no"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        mkdir -p /data
+        if [ ! -s /data/krs.crt ] || [ ! -s /data/krs.key ]; then
+          apk add --no-cache openssl >/dev/null
+          openssl genrsa -out /data/krs.key 2048 >/dev/null 2>&1 || { echo "kopia-certs: could not generate the key" >&2; exit 1; }
+          openssl req -x509 -new -key /data/krs.key -out /data/krs.crt -days 3650 \
+            -subj "/CN=kopia" -addext "subjectAltName=DNS:kopia-server,DNS:localhost,IP:127.0.0.1"
+          echo "kopia-certs: repository server certificate generated"
+        fi
+        fp="$$(sed -n '/^-----BEGIN CERTIFICATE-----$$/,/^-----END CERTIFICATE-----$$/p' /data/krs.crt | sed '1d;$$d' | base64 -d | sha256sum | cut -d' ' -f1)"
+        printf 'BDR_KOPIA_SERVER_FP=sha256:%s\n' "$$fp" > /data/krs.env
+        chown 10001:10001 /data /data/krs.crt /data/krs.key /data/krs.env
+        chmod 600 /data/krs.key
+    volumes:
+      - bdr-data:/data
+
+volumes:
+  bdr-data:

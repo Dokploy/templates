@@ -1,0 +1,29 @@
+[variables]
+main_domain = "${domain}"
+public_host = "${main_domain}"
+
+[config]
+[[config.domains]]
+serviceName = "bdr"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+# Generated once when the template is imported. BDR_SECRET_KEY (32 bytes in
+# base64), BDR_KOPIA_PASSWORD and BDR_KOPIA_CONTROL_PASSWORD are bound to the
+# data volume: back them up and never regenerate them on an existing deployment.
+BDR_ADMIN_TOKEN = "${hash:32}"
+BDR_SECRET_KEY = "${base64:32}"
+BDR_KOPIA_PASSWORD = "${hash:32}"
+BDR_KOPIA_CONTROL_PASSWORD = "${hash:32}"
+# Base URL of the panel and API, as opened in the browser. Enable HTTPS on the
+# domain in Dokploy to keep the default: the admin token and the one-time
+# enrollment tokens travel in these requests.
+BDR_PUBLIC_URL = "https://${main_domain}"
+# Hostname the agents use to reach this server: the mTLS listener (the names
+# of its certificate) and the repository server. Change it if the agents do
+# not reach the server by the domain above.
+BDR_PUBLIC_HOST = "${public_host}"
+# Host ports published for the agents: mTLS listener and repository server.
+BDR_AGENT_PORT = "8443"
+BDR_KOPIA_PORT = "51515"

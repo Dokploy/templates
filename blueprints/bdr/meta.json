@@ -1,0 +1,13 @@
+{
+  "id": "bdr",
+  "name": "BDR Self-Hosted",
+  "version": "v0.16.59",
+  "description": "BDR Self-Hosted is an open source backup and disaster recovery platform: a single control plane with a web panel, agents for Linux, Windows and macOS, and client-side encrypted file backups powered by Kopia. It also runs native SQL Server and PostgreSQL backups and verifies that restore points are recoverable.",
+  "logo": "bdr.svg",
+  "links": {
+    "github": "https://github.com/juansoler/bdr",
+    "website": "https://juansoler.github.io/bdr/",
+    "docs": "https://github.com/juansoler/bdr#readme"
+  },
+  "tags": ["backup", "self-hosted", "storage"]
+}

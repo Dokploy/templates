@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+encryption_key = "${base64:32}"
+postgres_password = "${password:32}"
+
+[config]
+env = [
+  "PBW_ENCRYPTION_KEY=${encryption_key}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "pgbackweb"
+port = 8085
+host = "${main_domain}"

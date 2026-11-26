@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+secret_key_base = "${password:64}"
+
+[config]
+env = [
+  "SECRET_KEY_BASE=${secret_key_base}",
+  "BASE_URL=https://${main_domain}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "fizzy"
+port = 80
+host = "${main_domain}"

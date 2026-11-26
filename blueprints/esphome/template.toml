@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+esphome_password = "${password:32}"
+
+[config]
+env = [
+  "ESPHOME_PASSWORD=${esphome_password}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "esphome"
+port = 6052
+host = "${main_domain}"

@@ -1,0 +1,15 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "enterplace"
+port = 8080
+host = "${main_domain}"
+
+[config.env]
+OPENAI_API_KEY = ""
+ANTHROPIC_API_KEY = ""
+GEMINI_API_KEY = ""

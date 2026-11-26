@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+db_root_password = "${password:32}"
+redis_password = "${password:32}"
+analytics_salt = "${password:64}"
+
+[config]
+env = [
+  "CP_BASEURL=https://${main_domain}",
+  "DB_PASSWORD=${db_password}",
+  "DB_ROOT_PASSWORD=${db_root_password}",
+  "REDIS_PASSWORD=${redis_password}",
+  "ANALYTICS_SALT=${analytics_salt}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "castopod"
+port = 8080
+host = "${main_domain}"

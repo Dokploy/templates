@@ -1,0 +1,58 @@
+services:
+  castopod:
+    image: castopod/castopod:1.15.7
+    restart: unless-stopped
+    depends_on:
+      mariadb:
+        condition: service_healthy
+        restart: true
+      redis:
+        condition: service_started
+    environment:
+      - MYSQL_DATABASE=castopod
+      - MYSQL_USER=castopod
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - CP_BASEURL=${CP_BASEURL}
+      - CP_ANALYTICS_SALT=${ANALYTICS_SALT}
+      - CP_CACHE_HANDLER=redis
+      - CP_REDIS_HOST=redis
+      - CP_REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - castopod-media:/app/public/media
+    expose:
+      - "8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  mariadb:
+    image: mariadb:12.1
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=castopod
+      - MYSQL_USER=castopod
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - castopod-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  redis:
+    image: redis:8.4-alpine
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - castopod-cache:/data
+
+volumes:
+  castopod-media:
+  castopod-db:
+  castopod-cache:

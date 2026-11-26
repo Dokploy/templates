@@ -1,0 +1,13 @@
+[variables]
+main_domain = "${domain}"
+
+[config]
+mounts = []
+
+[[config.domains]]
+serviceName = "allswap-validator"
+port = 3000
+host = "${main_domain}"
+
+[config.env]
+PUBLIC_URL = "https://${main_domain}"

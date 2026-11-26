@@ -1,0 +1,13 @@
+{
+  "id": "allswap-validator",
+  "name": "AllSwap MultiChain Address Validator",
+  "version": "1.0.0",
+  "description": "Stateless self-hosted microservice validating multi-chain cryptocurrency wallet address syntax, checksums, mandatory Memo/Destination Tag routing, and vanity address-poisoning across 46+ blockchains.",
+  "logo": "allswap-validator.svg",
+  "links": {
+    "github": "https://github.com/zhangglnuo-art/multichain-memo-address-validator",
+    "website": "https://allswap.io",
+    "docs": "https://allswap.io/docs"
+  },
+  "tags": ["security", "crypto", "validator", "api"]
+}

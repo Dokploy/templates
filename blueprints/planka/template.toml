@@ -1,0 +1,18 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+secret_key = "${base64:64}"
+admin_password = "${password:32}"
+
+[config]
+env = [
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "SECRET_KEY=${secret_key}",
+  "DEFAULT_ADMIN_PASSWORD=${admin_password}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "planka"
+port = 1337
+host = "${main_domain}"

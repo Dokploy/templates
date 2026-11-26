@@ -1,0 +1,14 @@
+services:
+  marimo:
+    image: ghcr.io/marimo-team/marimo:0.25.2
+    restart: unless-stopped
+    # Token auth is on: Dokploy generates MARIMO_TOKEN at deploy time (see template.toml).
+    # Find it in Dokploy under this app's Environment tab and paste it on marimo's login page.
+    command: marimo edit --token-password ${MARIMO_TOKEN} --allow-origins https://${main_domain} --host 0.0.0.0 -p 2718
+    volumes:
+      - marimo_data:/app
+    expose:
+      - "2718"
+
+volumes:
+  marimo_data:

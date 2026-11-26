@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+marimo_token = "${password:32}"
+
+[config]
+env = [
+  "MARIMO_TOKEN=${marimo_token}"
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "marimo"
+port = 2718
+host = "${main_domain}"

@@ -1,0 +1,15 @@
+services:
+  enterplace:
+    image: ghcr.io/eliransu/enterplace:0.2.0
+    restart: unless-stopped
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      - enterplace-data:/var/lib/enterplace
+    expose:
+      - "8080"
+
+volumes:
+  enterplace-data:

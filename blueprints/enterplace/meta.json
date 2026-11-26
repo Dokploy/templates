@@ -1,0 +1,18 @@
+{
+  "id": "enterplace",
+  "name": "Enterplace",
+  "version": "0.2.0",
+  "description": "Enterplace is your organization's AI gateway: an OpenAI and Anthropic compatible endpoint with a name on every call, budgets, guardrails, an MCP gateway and an admin console at /console.",
+  "logo": "enterplace.svg",
+  "links": {
+    "github": "https://github.com/eliransu/enterplace",
+    "website": "https://enterplace.dev",
+    "docs": "https://docs.enterplace.dev"
+  },
+  "tags": [
+    "ai",
+    "gateway",
+    "llm",
+    "mcp"
+  ]
+}

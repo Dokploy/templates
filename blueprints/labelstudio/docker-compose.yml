@@ -1,0 +1,16 @@
+services:
+  labelstudio:
+    image: heartexlabs/label-studio:1.23.2
+    restart: unless-stopped
+    environment:
+      # Public origin of this instance, used in links and exports.
+      - LABEL_STUDIO_HOST=https://${main_domain}
+      - CSRF_TRUSTED_ORIGINS=https://${main_domain}
+    volumes:
+      # Uploaded assets, projects and the built-in SQLite database.
+      - labelstudio-data:/label-studio/data
+    expose:
+      - "8080"
+
+volumes:
+  labelstudio-data:

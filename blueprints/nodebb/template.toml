@@ -1,0 +1,14 @@
+[variables]
+main_domain = "${domain}"
+mongo_password = "${password:32}"
+
+[config]
+env = [
+  "MONGO_PASSWORD=${mongo_password}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "nodebb"
+port = 4567
+host = "${main_domain}"

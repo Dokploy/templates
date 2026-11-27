@@ -1,0 +1,16 @@
+services:
+  heimdall:
+    image: linuxserver/heimdall:2.8.4
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      # Settings, items and icons persist here.
+      - config:/config
+    expose:
+      - "80"
+
+volumes:
+  config:

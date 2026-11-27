@@ -1,0 +1,13 @@
+services:
+  flipt:
+    image: ghcr.io/flipt-io/flipt:v2.14.2
+    restart: unless-stopped
+    volumes:
+      # Flag state (a local Git-backed store), configuration and data.
+      - flipt-data:/var/opt/flipt
+    expose:
+      - "8080"
+      - "9000"
+
+volumes:
+  flipt-data:

@@ -1,0 +1,20 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${password:32}"
+app_db_password = "${password:32}"
+encryption_key = "${hash:64}"
+auth_secret = "${base64:64}"
+
+[config]
+env = [
+  "SPARKY_FITNESS_DB_PASSWORD=${postgres_password}",
+  "SPARKY_FITNESS_APP_DB_PASSWORD=${app_db_password}",
+  "SPARKY_FITNESS_API_ENCRYPTION_KEY=${encryption_key}",
+  "BETTER_AUTH_SECRET=${auth_secret}",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "sparkyfitness"
+port = 80
+host = "${main_domain}"

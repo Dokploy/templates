@@ -1,0 +1,18 @@
+services:
+  cryptgeon:
+    image: cupcakearmy/cryptgeon:2.9.3
+    restart: unless-stopped
+    depends_on:
+      - redis
+    environment:
+      - SIZE_LIMIT=4 MiB
+    expose:
+      - "8000"
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # Upstream requires Redis to stay RAM-only (notes are ephemeral by design).
+    command: redis-server --save "" --appendonly no
+    tmpfs:
+      - /data

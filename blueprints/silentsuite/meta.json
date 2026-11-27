@@ -1,0 +1,13 @@
+{
+  "id": "silentsuite",
+  "name": "SilentSuite",
+  "version": "v0.5.22-beta",
+  "description": "SilentSuite is an end-to-end encrypted calendar, contacts, tasks and notes suite: your browser encrypts the data before it reaches this server. It needs a domain with HTTPS, and syncs with the SilentSuite Android app and the Bridge for CalDAV/CardDAV apps.",
+  "logo": "silentsuite.svg",
+  "links": {
+    "github": "https://github.com/silent-suite/silentsuite",
+    "website": "https://silentsuite.io",
+    "docs": "https://github.com/silent-suite/silentsuite/blob/main/self-host/dokploy/README.md"
+  },
+  "tags": ["calendar", "contacts", "privacy", "self-hosted", "productivity"]
+}

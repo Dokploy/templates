@@ -1,0 +1,48 @@
+services:
+  nodebb:
+    image: ghcr.io/nodebb/nodebb:4.16.9
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    volumes:
+      # config.json (created by the installer) lives in /opt/config; build
+      # output and uploads persist in their own volumes, as in upstream's
+      # own Docker Compose example.
+      - config:/opt/config
+      - build:/usr/src/app/build
+      - uploads:/usr/src/app/public/uploads
+    expose:
+      - "4567"
+
+  mongo:
+    image: mongo:7-jammy
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=nodebb
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_DATABASE=nodebb
+    volumes:
+      - mongo-data:/data/db
+    configs:
+      - source: nodebb-mongo-init
+        target: /docker-entrypoint-initdb.d/10-create-app-user.js
+
+configs:
+  nodebb-mongo-init:
+    content: |
+      // NodeBB authenticates its user against the application database, while the
+      // MONGO_INITDB root user lives in the admin database - so create a dedicated
+      // app user inside the nodebb database on first initialisation. The mongo
+      // entrypoint runs .js files through mongosh already authenticated as root.
+      db.getSiblingDB('nodebb').createUser({
+        user: 'nodebb',
+        pwd: process.env.MONGO_INITDB_ROOT_PASSWORD,
+        roles: [{ role: 'readWrite', db: 'nodebb' }],
+      });
+
+
+volumes:
+  config:
+  build:
+  uploads:
+  mongo-data:

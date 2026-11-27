@@ -1,0 +1,21 @@
+[variables]
+main_domain = "${domain}"
+postgres_password = "${hash:24}"
+folio_secret = "${hash:32}"
+
+[config]
+env = [
+  "PUBLIC_URL=https://${main_domain}",
+  "POSTGRES_PASSWORD=${postgres_password}",
+  "FOLIO_SECRET=${folio_secret}",
+  "GOOGLE_CLIENT_ID=",
+  "GOOGLE_CLIENT_SECRET=",
+  "GOOGLE_ALLOWED_DOMAINS=",
+  "CURSOR_API_KEY=",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "foliowiki"
+port = 4870
+host = "${main_domain}"

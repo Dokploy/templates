@@ -1,0 +1,13 @@
+{
+  "id": "foliowiki",
+  "name": "Folio Wiki",
+  "version": "v0.4.6",
+  "description": "Folio (foliowiki) is a git-native collaborative wiki with a built-in AI assistant and an MCP server for AI agents: pages are plain files in a Git repository, edited together in real time, with access rights and history.",
+  "logo": "foliowiki.svg",
+  "links": {
+    "github": "https://github.com/evergreen-it-dev/folio",
+    "website": "https://foliowiki.online",
+    "docs": "https://github.com/evergreen-it-dev/folio/blob/main/docs/INSTALL.md"
+  },
+  "tags": ["ai", "wiki", "knowledge-base", "self-hosted"]
+}

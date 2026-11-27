@@ -1,0 +1,65 @@
+services:
+  foliowiki:
+    image: ghcr.io/evergreen-it-dev/folio:v0.4.6
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: '4870'
+      DATABASE_URL: postgresql://folio:${POSTGRES_PASSWORD}@postgres:5432/folio
+      REDIS_URL: redis://redis:6379
+      PUBLIC_URL: ${PUBLIC_URL}
+      ASSET_BACKEND: local
+      FOLIO_SECRET: ${FOLIO_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_ALLOWED_DOMAINS: ${GOOGLE_ALLOWED_DOMAINS:-}
+      CURSOR_API_KEY: ${CURSOR_API_KEY:-}
+      CURSOR_AGENT_WORKSPACE_ROOT: /app/data/assistant/workspaces
+      CURSOR_AGENT_STATE_DIR: /app/data/assistant/state
+    volumes:
+      - folio-data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:4870/api/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: folio
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: folio
+    volumes:
+      - folio-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U folio -d folio']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Transient data only (presence, rate limits): persistence is off on purpose.
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --save '' --appendonly no
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  folio-data: {}
+  folio-pg: {}

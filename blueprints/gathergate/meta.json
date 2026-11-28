@@ -1,0 +1,22 @@
+{
+  "description": "Self-hosted, open-source client document collection portal with passwordless magic links, deterministic tax and bank ID checksum validation, per-record AES-256-GCM encryption, keyboard-first review, signed webhooks, and a metadata-only MCP 2.0 server.",
+  "id": "gathergate",
+  "links": {
+    "docs": "https://gathergate.app/docs/",
+    "github": "https://github.com/FAAS19/gathergate",
+    "website": "https://gathergate.app"
+  },
+  "logo": "logo.svg",
+  "name": "GatherGate",
+  "newConfig": true,
+  "seoDescription": "Self-hosted magic-link client document intake portal with deterministic validation and AES-256-GCM encryption. Deploy GatherGate with Docker Compose on Dokploy.",
+  "seoTitle": "GatherGate Docker Compose Setup",
+  "tags": [
+    "documents",
+    "client-portal",
+    "forms",
+    "intake",
+    "productivity"
+  ],
+  "version": "1.1.1"
+}

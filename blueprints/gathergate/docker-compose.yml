@@ -1,0 +1,40 @@
+services:
+  gathergate:
+    image: ghcr.io/faas19/gathergate:1.1.1
+    user: "1000:1000"
+    restart: unless-stopped
+    expose:
+      - "3080"
+    environment:
+      - NODE_ENV=production
+      - HOST=0.0.0.0
+      - PORT=3080
+      - DATA_DIR=/data
+      - TRUST_PROXY=true
+      - BASE_URL=${BASE_URL}
+      - MASTER_KEY=${MASTER_KEY}
+      - TZ=${TZ:-UTC}
+    volumes:
+      - gathergate_data:/data
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=64m
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3080/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  gathergate_data: {}

@@ -1,0 +1,16 @@
+[variables]
+main_domain = "${domain}"
+master_key = "${hash:64}"
+
+[config]
+env = [
+  "BASE_URL=https://${main_domain}",
+  "MASTER_KEY=${master_key}",
+  "TZ=UTC",
+]
+mounts = []
+
+[[config.domains]]
+serviceName = "gathergate"
+port = 3080
+host = "${main_domain}"
